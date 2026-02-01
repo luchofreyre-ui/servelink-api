@@ -1,64 +1,45 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { Role } from "@prisma/client";
-import { JwtService } from "@nestjs/jwt";
-import { prisma } from "../prisma";
-
-function requiredEnv(name: string): string {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing env var: ${name}`);
-  return v;
-}
+import { PrismaService } from "../prisma";
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwt: JwtService) {}
+  constructor(private readonly db: PrismaService) {}
 
-  async register(email: string, password: string) {
-    const passwordHash = await bcrypt.hash(password, 12);
+  async register(email: string, password: string, phone?: string) {
+    const passwordHash = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
+    const user = await this.db.user.create({
       data: {
         email,
+        phone: phone || null,
         passwordHash,
         role: Role.customer,
       },
     });
 
-    const accessToken = this.jwt.sign(
-      { email: user.email, role: user.role },
-      {
-        subject: user.id,
-        expiresIn: requiredEnv("JWT_ACCESS_EXPIRES_IN") as any,
-        secret: requiredEnv("JWT_ACCESS_SECRET"),
-      }
-    );
+    return { id: user.id, email: user.email, role: user.role, phone: user.phone };
+  }
 
-    return {
-      user_id: user.id,
-      access_token: accessToken,
-    };
+  async validateUser(email: string, password: string) {
+    const user = await this.db.user.findUnique({ where: { email } });
+
+    if (!user) return null;
+
+    const ok = await bcrypt.compare(password, user.passwordHash);
+    if (!ok) return null;
+
+    return user;
   }
 
   async login(email: string, password: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) throw new UnauthorizedException("Invalid credentials");
+    const user = await this.validateUser(email, password);
+    if (!user) {
+      throw new UnauthorizedException("Invalid credentials");
+    }
 
-    const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) throw new UnauthorizedException("Invalid credentials");
-
-    const accessToken = this.jwt.sign(
-      { email: user.email, role: user.role },
-      {
-        subject: user.id,
-        expiresIn: requiredEnv("JWT_ACCESS_EXPIRES_IN") as any,
-        secret: requiredEnv("JWT_ACCESS_SECRET"),
-      }
-    );
-
-    return {
-      user_id: user.id,
-      access_token: accessToken,
-    };
+    return { id: user.id, email: user.email, role: user.role, phone: user.phone };
   }
 }
+

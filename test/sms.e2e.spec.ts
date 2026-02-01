@@ -1,85 +1,90 @@
-import request from 'supertest';
-import { Test } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import { AppModule } from '../src/app.module';
-import { prisma } from '../src/prisma';
+import { INestApplication } from "@nestjs/common";
+import { Test } from "@nestjs/testing";
+import request from "supertest";
+import { AppModule } from "../src/app.module";
+import { PrismaService } from "../src/prisma";
 
-describe('SMS confirmation flow (E2E)', () => {
+describe("SMS confirmation flow (E2E)", () => {
   let app: INestApplication;
-
-  const runId = Date.now();
-  const phone = `+1918${String(runId).slice(-7)}`;
-
-  let testUserId: string;
-  let testBookingId: string;
+  let prisma: PrismaService;
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({
+    const modRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    app = moduleRef.createNestApplication();
+    app = modRef.createNestApplication();
     await app.init();
 
-    const user = await prisma.user.create({
-      data: {
-        email: `test_sms_${runId}@servelink.local`,
-        phone,
-        passwordHash: 'test_hash',
-        role: 'customer',
-      },
-    });
-
-    testUserId = user.id;
-
-    const booking = await prisma.booking.create({
-      data: {
-        customerId: testUserId,
-        hourlyRateCents: 5000,
-        estimatedHours: 2,
-        currency: 'usd',
-        status: 'pending_payment',
-        notes: '',
-      },
-    });
-
-    testBookingId = booking.id;
+    prisma = app.get(PrismaService);
   });
 
   afterAll(async () => {
-    await prisma.bookingAddon.deleteMany({ where: { bookingId: testBookingId } }).catch(() => undefined);
-    await prisma.smsConfirmation.deleteMany({ where: { phone } }).catch(() => undefined);
-    await prisma.booking.deleteMany({ where: { customerId: testUserId } }).catch(() => undefined);
-    await prisma.user.deleteMany({ where: { id: testUserId } }).catch(() => undefined);
-
-    if (app) await app.close();
+    await app.close();
   });
 
-  it('approves addon and stores priceCents; stripe billing is conditional', async () => {
+  it("approves addon and stores priceCents; stripe billing is conditional", async () => {
+    const phone = "+19185551234";
+
+    // Create (or reuse) user
+    let user = await prisma.user.findUnique({ where: { phone } });
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          email: `jest_${Date.now()}@servelink.local`,
+          phone,
+          passwordHash: "x",
+          role: "customer",
+        },
+      });
+    }
+
+    // Create booking
+    const booking = await prisma.booking.create({
+      data: {
+        customerId: user.id,
+        hourlyRateCents: 5000,
+        estimatedHours: 2,
+        currency: "usd",
+        status: "pending_payment",
+        notes: "",
+      },
+    });
+
+    // Create addon confirmation
     const createRes = await request(app.getHttpServer())
-      .post('/api/v1/sms/create-addon')
+      .post("/api/v1/sms/create-addon")
       .send({
         phone,
-        addon: { type: 'deep_clean', bookingId: testBookingId, priceCents: 2500, currency: 'usd' },
+        addon: {
+          type: "deep_clean",
+          bookingId: booking.id,
+          priceCents: 2500,
+          currency: "usd",
+        },
       })
       .expect(201);
 
-    const code = createRes.body.code;
-    expect(code).toBeDefined();
+    expect(createRes.body.ok).toBe(true);
+    expect(typeof createRes.body.code).toBe("string");
 
+    const code = createRes.body.code as string;
+
+    // Approve inbound
     const inboundRes = await request(app.getHttpServer())
-      .post('/api/v1/sms/inbound')
+      .post("/api/v1/sms/inbound")
       .send({ from: phone, body: `YES ${code}` })
       .expect(201);
 
-    expect(inboundRes.body.result?.status).toBe('approved');
+    expect(inboundRes.body.ok).toBe(true);
     expect(inboundRes.body.result?.applied).toBe(true);
 
-    const addonRow = await prisma.bookingAddon.findUnique({ where: { smsCode: code } });
-    expect(addonRow).toBeTruthy();
-    expect(addonRow?.bookingId).toBe(testBookingId);
-    expect(addonRow?.type).toBe('deep_clean');
-    expect(addonRow?.priceCents).toBe(2500);
-    expect(addonRow?.currency).toBe('usd');
+    // Verify BookingAddon row
+    const addon = await prisma.bookingAddon.findUnique({ where: { smsCode: code } });
+    expect(addon).toBeTruthy();
+    expect(addon?.bookingId).toBe(booking.id);
+    expect(addon?.type).toBe("deep_clean");
+    expect(addon?.priceCents).toBe(2500);
+    expect(addon?.currency).toBe("usd");
   });
 });

@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
@@ -9,10 +10,22 @@ if (!connectionString) {
 
 const adapter = new PrismaPg({ connectionString });
 
-export class PrismaService extends PrismaClient {
+/**
+ * PrismaService is the ONLY supported way to access Prisma in this codebase.
+ * Do not export singleton clients. Always inject PrismaService via PrismaModule.
+ */
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
     super({ adapter });
   }
-}
 
-export const prisma = new PrismaService();
+  async onModuleInit() {
+    // Establish connection early so failures surface on boot.
+    await this.$connect();
+  }
+
+  async onModuleDestroy() {
+    await this.$disconnect();
+  }
+}

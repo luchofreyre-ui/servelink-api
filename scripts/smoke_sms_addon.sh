@@ -15,13 +15,15 @@ echo "PRICE_CENTS= $PRICE_CENTS"
 echo "CURRENCY   = $CURRENCY"
 echo
 
-# 1) Create (or reuse) user + create booking in DB via Prisma
+# 1) Create (or reuse) user + create booking in DB via PrismaService (NO singleton export)
 echo "1) Creating/reusing user + creating booking..."
 BOOKING_JSON="$(node -r ts-node/register - <<'NODE'
-const { prisma } = require('./src/prisma');
+const { PrismaService } = require('./src/prisma');
 
 (async () => {
   const phone = process.env.PHONE || "+19185551234";
+  const prisma = new PrismaService();
+  await prisma.$connect();
 
   let user = await prisma.user.findUnique({ where: { phone } });
   if (!user) {
@@ -47,6 +49,7 @@ const { prisma } = require('./src/prisma');
   });
 
   console.log(JSON.stringify({ phone, userId: user.id, bookingId: booking.id }));
+
   await prisma.$disconnect();
 })();
 NODE
@@ -54,6 +57,7 @@ NODE
 echo "   DB created: $BOOKING_JSON"
 
 BOOKING_ID="$(node -e 'const s=process.argv[1]; console.log(JSON.parse(s).bookingId);' "$BOOKING_JSON")"
+export BOOKING_ID
 
 # 2) Create addon confirmation via API
 echo
@@ -72,6 +76,7 @@ CREATE_RES="$(curl -s -X POST "$BASE_URL/api/v1/sms/create-addon" \
 echo "   API response: $CREATE_RES"
 
 CODE="$(node -e 'const s=process.argv[1]; const j=JSON.parse(s); if(!j.code) process.exit(2); console.log(j.code);' "$CREATE_RES")"
+export CODE
 echo "   Code = $CODE"
 
 # 3) Approve via inbound YES <code>
@@ -111,11 +116,14 @@ echo "   status = approved ✅"
 echo
 echo "5) Verify BookingAddon row exists in Postgres ..."
 VERIFY_JSON="$(node -r ts-node/register - <<'NODE'
-const { prisma } = require('./src/prisma');
+const { PrismaService } = require('./src/prisma');
 
 (async () => {
   const bookingId = process.env.BOOKING_ID;
   const smsCode = process.env.CODE;
+
+  const prisma = new PrismaService();
+  await prisma.$connect();
 
   const byCode = await prisma.bookingAddon.findUnique({ where: { smsCode } });
   const byBooking = await prisma.bookingAddon.findMany({

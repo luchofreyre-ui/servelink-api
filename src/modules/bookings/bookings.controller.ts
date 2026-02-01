@@ -1,17 +1,8 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Headers,
-  Param,
-  Post,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { TransitionBookingDto } from './dto/transition-booking.dto';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('/api/v1/bookings')
@@ -20,14 +11,13 @@ export class BookingsController {
 
   @Post()
   async create(
+    @Req() req: any,
     @Body() dto: CreateBookingDto,
     @Headers('idempotency-key') idempotencyKey?: string,
-    @Req() req?: any,
   ) {
-    const customerId = dto.customerId ?? req.user.userId;
-
+    // CustomerId comes from JWT (req.user.userId), NOT from request body
     return this.bookings.createBooking({
-      customerId,
+      customerId: String(req.user.userId),
       note: dto.note,
       idempotencyKey: idempotencyKey ?? null,
     });

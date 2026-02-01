@@ -6,3 +6,6 @@ node_modules
 
 # Jest / Node webstorage
 .jest-localstorage.json
+
+# local audits
+/audits/

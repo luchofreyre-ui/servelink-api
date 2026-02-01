@@ -1,16 +1,15 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { prisma, PrismaService } from '../../prisma';
-import { BookingEventType, BookingStatus } from '@prisma/client';
-import { BookingEventsService } from './booking-events.service';
-import { getTransition, Transition } from './booking-state.machine';
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+import { BookingEventType, BookingStatus } from "@prisma/client";
+import { BookingEventsService } from "./booking-events.service";
+import { getTransition, Transition } from "./booking-state.machine";
 
 @Injectable()
 export class BookingsService {
-  private readonly db: PrismaService;
-
-  constructor(private readonly events: BookingEventsService) {
-    this.db = prisma;
-  }
+  constructor(
+    private readonly db: PrismaService,
+    private readonly events: BookingEventsService,
+  ) {}
 
   async createBooking(input: { customerId: string; note?: string; idempotencyKey?: string | null }) {
     return this.db.$transaction(async (tx: any) => {
@@ -19,7 +18,7 @@ export class BookingsService {
           status: BookingStatus.pending_payment,
           hourlyRateCents: 0,
           estimatedHours: 0,
-          currency: 'usd',
+          currency: "usd",
           customer: { connect: { id: input.customerId } },
           notes: input.note ?? null,
         },
@@ -42,7 +41,7 @@ export class BookingsService {
 
   async getBooking(id: string) {
     const booking = await this.db.booking.findUnique({ where: { id } });
-    if (!booking) throw new NotFoundException('BOOKING_NOT_FOUND');
+    if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
     return booking;
   }
 
@@ -50,7 +49,7 @@ export class BookingsService {
     await this.getBooking(id);
     return this.db.bookingEvent.findMany({
       where: { bookingId: id },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "asc" },
     });
   }
 
@@ -71,8 +70,8 @@ export class BookingsService {
     try {
       to = getTransition(args.transition, booking.status).to;
     } catch (e: any) {
-      if (typeof e?.message === 'string' && e.message.startsWith('INVALID_TRANSITION:')) {
-        throw new ConflictException('INVALID_BOOKING_TRANSITION');
+      if (typeof e?.message === "string" && e.message.startsWith("INVALID_TRANSITION:")) {
+        throw new ConflictException("INVALID_BOOKING_TRANSITION");
       }
       throw e;
     }
