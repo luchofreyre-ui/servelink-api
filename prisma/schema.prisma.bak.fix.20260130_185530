@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  customer
+  fo
+  admin
+}
+
+enum BookingStatus {
+  pending_payment
+  pending_dispatch
+  offered
+  assigned
+  in_progress
+  completed
+  canceled
+}
+
+model User {
+  id           String  @id @default(cuid())
+  email        String  @unique
+  phone        String? @unique
+  passwordHash String
+  role         Role    @default(customer)
+
+  stripeCustomerId String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+  bookings      Booking[]
+}
+
+model RefreshToken {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // store ONLY a hash of the refresh token (never plaintext)
+  tokenHash String @unique
+
+  // optional JWT ID for rotation/audit
+  jti String? @unique
+
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  replacedById String?
+  replacedBy   RefreshToken?  @relation("RefreshRotation", fields: [replacedById], references: [id])
+  replaces     RefreshToken[] @relation("RefreshRotation")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Booking {
+  id         String @id @default(cuid())
+  customerId String
+  customer   User   @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  status BookingStatus @default(pending_payment)
+
+  // money in cents
+  hourlyRateCents Int
+  estimatedHours  Float
+  currency        String @default("usd")
+
+  // Stripe references (pending payment + capture later)
+  stripePaymentIntentId String? @unique
+  stripeClientSecret    String?
+
+  scheduledStart DateTime?
+  notes          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  addons BookingAddon[]
+
+  @@index([customerId])
+  @@index([status])
+}
+
+model SmsConfirmation {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  phone       String
+  kind        String
+  payloadJson String
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  respondedAt DateTime?
+  expiresAt   DateTime
+  rawReply    String?
+}
+
+model BookingAddon {
+  id String @id @default(cuid())
+
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  smsCode     String @unique
+  type        String
+  priceCents  Int
+  currency    String   ("usd")  stripePaymentIntentId String?
+  payloadJson String
+  status      String @default("approved")
+
+  createdAt DateTime @default(now())
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([type])
+}
