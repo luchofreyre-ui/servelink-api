@@ -1,11 +1,33 @@
-node_modules
-# Keep environment variables out of version control
-.env
+# macOS
+.DS_Store
+**/.DS_Store
 
+# deps / builds
+node_modules/
+dist/
+
+# env
+.env
+.env.*
+
+# prisma generated (if present)
 /src/generated/prisma
 
 # Jest / Node webstorage
 .jest-localstorage.json
+.jest-localstorage.json*
 
 # local audits
 /audits/
+
+# --- API local artifacts (do not commit) ---
+services/api/node_modules/
+services/api/dist/
+services/api/.env
+services/api/.env.*
+services/api/.jest-localstorage.json*
+services/api/npm-install.log
+services/api/*.js
+services/api/**/*.js
+services/api/prisma/schema.prisma.bak*
+services/api/scripts/*.bak

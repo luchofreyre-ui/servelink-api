@@ -1,0 +1,1661 @@
+openapi: 3.0.3
+info:
+  title: Servelink Clean v1 API
+  version: "1.0.0"
+  description: >
+    Servelink Clean v1 API contract. Servelink owns the customer relationship.
+    Fixed hourly pricing, billed in 15-minute increments based on GPS arrival/departure.
+servers:
+  - url: /api/v1
+
+tags:
+  - name: Auth
+  - name: Me
+  - name: Customers
+  - name: FieldOperators
+  - name: Properties
+  - name: Pricing
+  - name: Bookings
+  - name: Dispatch
+  - name: Offers
+  - name: Conversations
+  - name: Jobs
+  - name: Issues
+  - name: Admin
+  - name: Performance
+  - name: Payouts
+  - name: Ledger
+  - name: Notifications
+  - name: Webhooks
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+    CursorParam:
+      name: cursor
+      in: query
+      required: false
+      schema: { type: string }
+
+  schemas:
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string, example: "VALIDATION_ERROR" }
+        message: { type: string, example: "One or more fields are invalid." }
+        details:
+          type: object
+          additionalProperties: true
+
+    MoneyCents:
+      type: integer
+      description: Integer cents
+      example: 6500
+
+    ISODateTime:
+      type: string
+      format: date-time
+      example: "2026-02-10T15:00:00Z"
+
+    Location:
+      type: object
+      required: [lat, lon, accuracy_m]
+      properties:
+        lat: { type: number, format: double, example: 36.1540 }
+        lon: { type: number, format: double, example: -95.9928 }
+        accuracy_m: { type: number, format: double, example: 12 }
+
+    AuthRegisterRequest:
+      type: object
+      required: [email, phone, password]
+      properties:
+        email: { type: string, format: email }
+        phone: { type: string }
+        password: { type: string, format: password }
+        role:
+          type: string
+          description: Only customer self-register supported in v1
+          enum: [customer]
+          default: customer
+
+    AuthLoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+
+    AuthRefreshRequest:
+      type: object
+      required: [refresh_token]
+      properties:
+        refresh_token: { type: string }
+
+    AuthResponse:
+      type: object
+      required: [user_id, token, refresh_token]
+      properties:
+        user_id: { type: string, example: "usr_123" }
+        token: { type: string, example: "jwt..." }
+        refresh_token: { type: string, example: "rjwt..." }
+
+    MeResponse:
+      type: object
+      required: [user_id, role]
+      properties:
+        user_id: { type: string, example: "usr_123" }
+        role: { type: string, enum: [customer, fo, admin] }
+        permissions:
+          type: array
+          items: { type: string }
+          example: ["bookings:read", "bookings:write"]
+
+    CustomerProfile:
+      type: object
+      properties:
+        first_name: { type: string }
+        last_name: { type: string }
+        default_phone: { type: string }
+        preferences:
+          type: object
+          additionalProperties: true
+
+    CustomerProfileUpdate:
+      type: object
+      properties:
+        first_name: { type: string }
+        last_name: { type: string }
+        default_phone: { type: string }
+        preferences:
+          type: object
+          additionalProperties: true
+
+    FOProfile:
+      type: object
+      properties:
+        fo_id: { type: string, example: "fo_123" }
+        display_name: { type: string }
+        bio: { type: string }
+        service_radius_miles: { type: integer, example: 15 }
+        photo_url: { type: string }
+        rating_avg: { type: number, example: 4.8 }
+        jobs_completed: { type: integer, example: 312 }
+        status:
+          type: string
+          enum: [applied, pre_qualified, standards_certified, verified, active, paused, offboarded, cooling_off]
+
+    FOApplyRequest:
+      type: object
+      required: [legal_name, phone, city, services, experience_years, equipment, insurance_status]
+      properties:
+        legal_name: { type: string }
+        phone: { type: string }
+        city: { type: string }
+        services:
+          type: array
+          items: { type: string }
+          example: ["cleaning"]
+        experience_years: { type: integer, minimum: 0 }
+        equipment:
+          type: array
+          items: { type: string }
+          example: ["vacuum", "mop"]
+        insurance_status:
+          type: string
+          enum: [yes, no, in_progress]
+
+    FOApplyResponse:
+      type: object
+      required: [fo_id, status]
+      properties:
+        fo_id: { type: string, example: "fo_123" }
+        status: { type: string, example: "applied" }
+
+    DocumentCreateRequest:
+      type: object
+      required: [type, file_name, mime]
+      properties:
+        type:
+          type: string
+          enum: [id, insurance, other]
+        file_name: { type: string }
+        mime: { type: string }
+
+    DocumentCreateResponse:
+      type: object
+      required: [upload_url, document_id]
+      properties:
+        upload_url: { type: string }
+        document_id: { type: string, example: "doc_123" }
+
+    Property:
+      type: object
+      required: [property_id, label, address_line1, city, state, zip]
+      properties:
+        property_id: { type: string, example: "prop_123" }
+        label: { type: string, example: "Home" }
+        address_line1: { type: string }
+        address_line2: { type: string }
+        city: { type: string }
+        state: { type: string, example: "OK" }
+        zip: { type: string }
+        instructions: { type: string }
+        pets: { type: boolean }
+
+    PropertyCreateRequest:
+      type: object
+      required: [label, address_line1, city, state, zip]
+      properties:
+        label: { type: string }
+        address_line1: { type: string }
+        address_line2: { type: string }
+        city: { type: string }
+        state: { type: string }
+        zip: { type: string }
+        instructions: { type: string }
+        pets: { type: boolean }
+
+    PropertyUpdateRequest:
+      type: object
+      properties:
+        label: { type: string }
+        address_line1: { type: string }
+        address_line2: { type: string }
+        city: { type: string }
+        state: { type: string }
+        zip: { type: string }
+        instructions: { type: string }
+        pets: { type: boolean }
+
+    PricingCleaningResponse:
+      type: object
+      required: [hourly_rate_cents, billing_increment_minutes, late_grace_minutes, exclusions]
+      properties:
+        hourly_rate_cents: { $ref: "#/components/schemas/MoneyCents" }
+        billing_increment_minutes: { type: integer, example: 15 }
+        late_grace_minutes: { type: integer, example: 120 }
+        exclusions:
+          type: array
+          items: { type: string }
+          example: ["biohazards","mold","construction_debris","hoarding","exterior_windows","heavy_furniture"]
+
+    BookingCreateRequest:
+      type: object
+      required: [property_id, scheduled_start, estimated_hours]
+      properties:
+        property_id: { type: string }
+        scheduled_start: { $ref: "#/components/schemas/ISODateTime" }
+        estimated_hours: { type: number, example: 3 }
+        notes: { type: string }
+        access: { type: string }
+        pets: { type: boolean }
+
+    BookingResponse:
+      type: object
+      required: [booking_id, status]
+      properties:
+        booking_id: { type: string, example: "bok_123" }
+        status:
+          type: string
+          enum:
+            - pending_dispatch
+            - offered
+            - assigned
+            - in_progress
+            - completed
+            - canceled
+        scheduled_start: { $ref: "#/components/schemas/ISODateTime" }
+        property_id: { type: string }
+        assigned_fo:
+          allOf:
+            - $ref: "#/components/schemas/FOProfile"
+          nullable: true
+        payment_intent_id: { type: string, nullable: true }
+        client_secret: { type: string, nullable: true }
+
+    BookingCancelRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string }
+
+    BookingRescheduleRequest:
+      type: object
+      required: [new_start]
+      properties:
+        new_start: { $ref: "#/components/schemas/ISODateTime" }
+
+    DispatchRunResponse:
+      type: object
+      required: [offer_id, candidate_fo_ids, status]
+      properties:
+        offer_id: { type: string, example: "off_123" }
+        candidate_fo_ids:
+          type: array
+          items: { type: string }
+        status: { type: string, example: "offered" }
+
+    OfferViewResponse:
+      type: object
+      required: [offer_id, fo, expires_at, interview_enabled]
+      properties:
+        offer_id: { type: string, example: "off_123" }
+        fo: { $ref: "#/components/schemas/FOProfile" }
+        expires_at: { $ref: "#/components/schemas/ISODateTime" }
+        interview_enabled: { type: boolean, example: true }
+
+    CustomerOfferDecisionRequest:
+      type: object
+      required: [decision]
+      properties:
+        decision: { type: string, enum: [accept, deny] }
+        reason: { type: string }
+
+    FOOfferDecisionRequest:
+      type: object
+      required: [decision]
+      properties:
+        decision: { type: string, enum: [accept, decline] }
+
+    Conversation:
+      type: object
+      required: [conversation_id]
+      properties:
+        conversation_id: { type: string, example: "convo_123" }
+        booking_id: { type: string }
+
+    MessageCreateRequest:
+      type: object
+      required: [type]
+      properties:
+        type: { type: string, enum: [text] }
+        text: { type: string }
+
+    JobArriveRequest:
+      type: object
+      required: [location]
+      properties:
+        location: { $ref: "#/components/schemas/Location" }
+
+    JobHeartbeatRequest:
+      type: object
+      required: [location]
+      properties:
+        location: { $ref: "#/components/schemas/Location" }
+
+    JobDepartRequest:
+      type: object
+      required: [location]
+      properties:
+        location: { $ref: "#/components/schemas/Location" }
+
+    JobArriveResponse:
+      type: object
+      required: [job_id, status, arrived_at]
+      properties:
+        job_id: { type: string, example: "job_123" }
+        status: { type: string, enum: [in_progress] }
+        arrived_at: { $ref: "#/components/schemas/ISODateTime" }
+
+    JobDepartResponse:
+      type: object
+      required: [status, departed_at, billable_minutes, billable_minutes_rounded]
+      properties:
+        status: { type: string, enum: [completed_pending_review] }
+        departed_at: { $ref: "#/components/schemas/ISODateTime" }
+        billable_minutes: { type: integer, example: 119 }
+        billable_minutes_rounded: { type: integer, example: 120 }
+
+    RatingCreateRequest:
+      type: object
+      required: [stars]
+      properties:
+        stars: { type: integer, minimum: 1, maximum: 5 }
+        comment: { type: string }
+
+    IssueCreateRequest:
+      type: object
+      required: [category, areas]
+      properties:
+        category: { type: string, enum: [quality, billing, safety, other] }
+        areas:
+          type: array
+          items:
+            type: object
+            required: [name]
+            properties:
+              name: { type: string }
+              notes: { type: string }
+        requested_resolution:
+          type: string
+          enum: [touch_up, review]
+          default: touch_up
+
+    IssueCreateResponse:
+      type: object
+      required: [issue_id, status]
+      properties:
+        issue_id: { type: string, example: "iss_123" }
+        status: { type: string, example: "awaiting_photos" }
+
+    IssuePhotosRequest:
+      type: object
+      required: [area_name, photos]
+      properties:
+        area_name: { type: string }
+        photos:
+          type: array
+          minItems: 4
+          items:
+            type: object
+            required: [type, file_name, mime]
+            properties:
+              type: { type: string, enum: [close, wide] }
+              file_name: { type: string }
+              mime: { type: string }
+
+    IssueTouchupOfferRequest:
+      type: object
+      required: [fo_id, deadline]
+      properties:
+        fo_id: { type: string }
+        deadline: { $ref: "#/components/schemas/ISODateTime" }
+
+    IssueTouchupDecisionRequest:
+      type: object
+      required: [decision]
+      properties:
+        decision: { type: string, enum: [accept, decline] }
+
+    IssueRefundDecisionRequest:
+      type: object
+      required: [decision, reason_code]
+      properties:
+        decision: { type: string, enum: [rework_only, partial_refund, deny] }
+        refund_amount_cents: { $ref: "#/components/schemas/MoneyCents" }
+        reason_code: { type: string }
+        notes: { type: string }
+
+    EndEarlyRequest:
+      type: object
+      required: [ended_by, reason]
+      properties:
+        ended_by: { type: string, enum: [customer, fo, admin] }
+        reason: { type: string }
+
+    RefundAfterReplacementRequest:
+      type: object
+      required: [replacement_job_id, refund_amount_cents, deduct_from_fo_id]
+      properties:
+        replacement_job_id: { type: string }
+        refund_amount_cents: { $ref: "#/components/schemas/MoneyCents" }
+        deduct_from_fo_id: { type: string }
+
+    PauseFORequest:
+      type: object
+      required: [reason_code]
+      properties:
+        reason_code: { type: string }
+        notes: { type: string }
+
+    OffboardFORequest:
+      type: object
+      required: [reason_code]
+      properties:
+        reason_code: { type: string }
+        notes: { type: string }
+
+    ReassignBookingRequest:
+      type: object
+      required: [reason_code]
+      properties:
+        reason_code: { type: string }
+        force: { type: boolean, default: false }
+
+    VisibilityOverrideRequest:
+      type: object
+      required: [visibility_multiplier]
+      properties:
+        visibility_multiplier: { type: number, minimum: 0, maximum: 2, example: 0.5 }
+
+    PerformanceResponse:
+      type: object
+      required: [overall_score, tier, metrics, points]
+      properties:
+        overall_score: { type: integer, example: 87 }
+        tier: { type: string, enum: [elite, preferred, active, watch, at_risk] }
+        metrics:
+          type: object
+          additionalProperties: true
+          example:
+            rating_avg_last20: 4.7
+            rework_rate_last20: 0.05
+            on_time_pct_last20: 0.96
+            completion_pct_last20: 0.99
+        points:
+          type: object
+          additionalProperties: true
+          example:
+            rating: 35
+            rework: 30
+            on_time: 17
+            completion: 10
+
+    LedgerAdjustRequest:
+      type: object
+      required: [fo_id, amount_cents, type, reason_code]
+      properties:
+        fo_id: { type: string }
+        amount_cents: { type: integer, example: -6500 }
+        type: { type: string, enum: [deduction, credit] }
+        reason_code: { type: string }
+        reference_id: { type: string }
+        notes: { type: string }
+
+    OpsAlertAuditItem:
+      type: object
+      required: [fingerprint, action, createdAt]
+      properties:
+        fingerprint: { type: string }
+        eventId: { type: string, nullable: true }
+        sourceEventId: { type: string, nullable: true }
+        action: { type: string, example: "resolve" }
+
+        fromStatus: { type: string, nullable: true }
+        toStatus: { type: string, nullable: true }
+
+        fromSeverity: { type: string, nullable: true }
+        toSeverity: { type: string, nullable: true }
+
+        fromAssignedToAdminId: { type: string, nullable: true }
+        toAssignedToAdminId: { type: string, nullable: true }
+
+        actorAdminId: { type: string, nullable: true }
+        createdAt: { $ref: "#/components/schemas/ISODateTime" }
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AuthRegisterRequest" }
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResponse" }
+        "400":
+          description: Invalid
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AuthLoginRequest" }
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResponse" }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AuthRefreshRequest" }
+      responses:
+        "200":
+          description: Refreshed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResponse" }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout
+      security: [{ bearerAuth: [] }]
+      responses:
+        "204":
+          description: Logged out
+
+  /me:
+    get:
+      tags: [Me]
+      summary: Current user
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Me
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MeResponse" }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /customers/me:
+    get:
+      tags: [Customers]
+      summary: Get customer profile
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Customer profile
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerProfile" }
+    patch:
+      tags: [Customers]
+      summary: Update customer profile
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CustomerProfileUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerProfile" }
+
+  /fos/apply:
+    post:
+      tags: [FieldOperators]
+      summary: Apply as a Field Operator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FOApplyRequest" }
+      responses:
+        "201":
+          description: Applied
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FOApplyResponse" }
+
+  /fos/documents:
+    post:
+      tags: [FieldOperators]
+      summary: Create FO document upload (pre-signed URL)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DocumentCreateRequest" }
+      responses:
+        "200":
+          description: Upload URL created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DocumentCreateResponse" }
+
+  /properties:
+    get:
+      tags: [Properties]
+      summary: List customer properties
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/CursorParam"
+      responses:
+        "200":
+          description: List properties
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/Property" }
+                  next_cursor: { type: string, nullable: true }
+    post:
+      tags: [Properties]
+      summary: Create property
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PropertyCreateRequest" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Property" }
+
+  /properties/{property_id}:
+    patch:
+      tags: [Properties]
+      summary: Update property
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: property_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PropertyUpdateRequest" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Property" }
+
+  /pricing/cleaning:
+    get:
+      tags: [Pricing]
+      summary: Get cleaning pricing rules
+      responses:
+        "200":
+          description: Pricing
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PricingCleaningResponse" }
+
+  /bookings:
+    post:
+      tags: [Bookings]
+      summary: Create booking + payment authorization intent
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BookingCreateRequest" }
+      responses:
+        "201":
+          description: Booking created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BookingResponse" }
+
+  /bookings/{booking_id}:
+    get:
+      tags: [Bookings]
+      summary: Get booking
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Booking
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BookingResponse" }
+
+  /bookings/{booking_id}/cancel:
+    post:
+      tags: [Bookings]
+      summary: Cancel booking
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BookingCancelRequest" }
+      responses:
+        "200":
+          description: Canceled
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BookingResponse" }
+
+  /bookings/{booking_id}/reschedule:
+    post:
+      tags: [Bookings]
+      summary: Reschedule booking
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BookingRescheduleRequest" }
+      responses:
+        "200":
+          description: Rescheduled
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BookingResponse" }
+
+  /dispatch/{booking_id}/run:
+    post:
+      tags: [Dispatch]
+      summary: Run dispatch for booking (admin/system)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Dispatched
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DispatchRunResponse" }
+
+  /bookings/{booking_id}/offer:
+    get:
+      tags: [Offers]
+      summary: View current offer for booking (customer)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Offer
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OfferViewResponse" }
+
+  /offers/{offer_id}/customer-decision:
+    post:
+      tags: [Offers]
+      summary: Customer accept/deny FO offer
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CustomerOfferDecisionRequest" }
+      responses:
+        "200":
+          description: Decision applied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  booking_id: { type: string }
+                  status: { type: string }
+
+  /offers/{offer_id}/fo-decision:
+    post:
+      tags: [Offers]
+      summary: FO accept/decline offer
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FOOfferDecisionRequest" }
+      responses:
+        "200":
+          description: Decision applied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  booking_id: { type: string }
+                  status: { type: string }
+
+  /conversations:
+    get:
+      tags: [Conversations]
+      summary: Get conversation for a booking
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: booking_id
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Conversation
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Conversation" }
+
+  /conversations/{conversation_id}/messages:
+    post:
+      tags: [Conversations]
+      summary: Send message
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MessageCreateRequest" }
+      responses:
+        "201":
+          description: Message created
+
+  /jobs/{booking_id}/arrive:
+    post:
+      tags: [Jobs]
+      summary: FO arrive (GPS check-in)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/JobArriveRequest" }
+      responses:
+        "200":
+          description: Arrived
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/JobArriveResponse" }
+
+  /jobs/{job_id}/heartbeat:
+    post:
+      tags: [Jobs]
+      summary: FO heartbeat GPS ping (optional)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/JobHeartbeatRequest" }
+      responses:
+        "200":
+          description: Heartbeat recorded
+
+  /jobs/{job_id}/depart:
+    post:
+      tags: [Jobs]
+      summary: FO depart (GPS checkout)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/JobDepartRequest" }
+      responses:
+        "200":
+          description: Departed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/JobDepartResponse" }
+
+  /jobs/{job_id}:
+    get:
+      tags: [Jobs]
+      summary: Get job details
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Job details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id: { type: string }
+                  booking_id: { type: string }
+                  status: { type: string }
+                  arrived_at: { $ref: "#/components/schemas/ISODateTime" }
+                  departed_at: { $ref: "#/components/schemas/ISODateTime" }
+                  billable_minutes: { type: integer }
+
+  /jobs/{job_id}/rating:
+    post:
+      tags: [Jobs]
+      summary: Rate job
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RatingCreateRequest" }
+      responses:
+        "201":
+          description: Rating created
+
+  /jobs/{job_id}/issues:
+    post:
+      tags: [Issues]
+      summary: Create issue
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/IssueCreateRequest" }
+      responses:
+        "201":
+          description: Issue created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/IssueCreateResponse" }
+
+  /jobs/{job_id}/end-early:
+    post:
+      tags: [Jobs]
+      summary: End job early (admin/customer support)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EndEarlyRequest" }
+      responses:
+        "200":
+          description: Job ended early
+
+  /jobs/{job_id}/refund-after-replacement:
+    post:
+      tags: [Jobs]
+      summary: Refund after replacement (admin)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RefundAfterReplacementRequest" }
+      responses:
+        "200":
+          description: Refund processed
+
+  /fos/{fo_id}/public:
+    get:
+      tags: [FieldOperators]
+      summary: Get public FO profile
+      parameters:
+        - name: fo_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Public FO profile
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FOProfile" }
+
+  /fos/me:
+    get:
+      tags: [FieldOperators]
+      summary: Get FO profile (self)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: FO profile
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FOProfile" }
+    patch:
+      tags: [FieldOperators]
+      summary: Update FO profile
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                display_name: { type: string }
+                bio: { type: string }
+                service_radius_miles: { type: integer }
+                photo_url: { type: string }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FOProfile" }
+
+  /fos/me/performance:
+    get:
+      tags: [Performance]
+      summary: Get FO performance (self)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Performance metrics
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PerformanceResponse" }
+
+  /fos/me/payouts:
+    get:
+      tags: [Payouts]
+      summary: List FO payouts
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/CursorParam"
+      responses:
+        "200":
+          description: List of payouts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        payout_id: { type: string }
+                        amount_cents: { $ref: "#/components/schemas/MoneyCents" }
+                        status: { type: string }
+                        paid_at: { $ref: "#/components/schemas/ISODateTime" }
+                  next_cursor: { type: string, nullable: true }
+
+  /fos/me/ledger:
+    get:
+      tags: [Ledger]
+      summary: Get FO ledger
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/CursorParam"
+      responses:
+        "200":
+          description: Ledger entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        entry_id: { type: string }
+                        type: { type: string, enum: [earning, platform_fee, deduction, refund] }
+                        amount_cents: { $ref: "#/components/schemas/MoneyCents" }
+                        description: { type: string }
+                        reference_id: { type: string, nullable: true }
+                        created_at: { $ref: "#/components/schemas/ISODateTime" }
+                  next_cursor: { type: string, nullable: true }
+
+  /issues/{issue_id}/photos:
+    post:
+      tags: [Issues]
+      summary: "Upload issue photos (4 per area: 2 close, 2 wide)"
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: issue_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/IssuePhotosRequest" }
+      responses:
+        "200":
+          description: Upload URLs generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  upload_urls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        upload_url: { type: string }
+                        photo_id: { type: string }
+
+  /issues/{issue_id}/offer-touchup:
+    post:
+      tags: [Issues]
+      summary: Offer touch-up (admin)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: issue_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/IssueTouchupOfferRequest" }
+      responses:
+        "200":
+          description: Touch-up offered
+
+  /issues/{issue_id}/customer-touchup-decision:
+    post:
+      tags: [Issues]
+      summary: Customer touch-up decision
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: issue_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/IssueTouchupDecisionRequest" }
+      responses:
+        "200":
+          description: Decision processed
+
+  /issues/{issue_id}/refund-decision:
+    post:
+      tags: [Issues]
+      summary: Refund decision (admin)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: issue_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/IssueRefundDecisionRequest" }
+      responses:
+        "200":
+          description: Refund decision processed
+
+  /admin/jobs:
+    get:
+      tags: [Admin]
+      summary: List jobs (admin)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema: { type: string }
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/CursorParam"
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                  next_cursor: { type: string, nullable: true }
+
+  /admin/issues:
+    get:
+      tags: [Admin]
+      summary: List issues (admin)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema: { type: string }
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/CursorParam"
+      responses:
+        "200":
+          description: List of issues
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                  next_cursor: { type: string, nullable: true }
+
+  /admin/fos/{fo_id}/pause:
+    post:
+      tags: [Admin]
+      summary: Pause FO
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: fo_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PauseFORequest" }
+      responses:
+        "200":
+          description: FO paused
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FOProfile" }
+
+  /admin/fos/{fo_id}/offboard:
+    post:
+      tags: [Admin]
+      summary: Offboard FO
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: fo_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/OffboardFORequest" }
+      responses:
+        "200":
+          description: FO offboarded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FOProfile" }
+
+  /admin/fos/{fo_id}/visibility:
+    patch:
+      tags: [Admin]
+      summary: Update FO visibility override
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: fo_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/VisibilityOverrideRequest" }
+      responses:
+        "200":
+          description: Visibility updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FOProfile" }
+
+  /admin/fos/{fo_id}/performance:
+    get:
+      tags: [Admin, Performance]
+      summary: Get FO performance (admin)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: fo_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Performance metrics
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PerformanceResponse" }
+
+  /admin/bookings/{booking_id}/reassign:
+    post:
+      tags: [Admin]
+      summary: Reassign booking
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ReassignBookingRequest" }
+      responses:
+        "200":
+          description: Booking reassigned
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BookingResponse" }
+
+  /admin/payouts/run:
+    post:
+      tags: [Admin, Payouts]
+      summary: Run payout batch
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Payout batch executed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batch_id: { type: string }
+                  total_amount_cents: { $ref: "#/components/schemas/MoneyCents" }
+                  payout_count: { type: integer }
+                  status: { type: string }
+
+  /admin/ledger/adjust:
+    post:
+      tags: [Admin, Ledger]
+      summary: Manual ledger adjustment
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LedgerAdjustRequest" }
+      responses:
+        "200":
+          description: Adjustment recorded
+
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: List notifications
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/CursorParam"
+      responses:
+        "200":
+          description: List of notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        notification_id: { type: string }
+                        type: { type: string, enum: [email, sms, push] }
+                        title: { type: string }
+                        body: { type: string }
+                        read: { type: boolean }
+                        created_at: { $ref: "#/components/schemas/ISODateTime" }
+                  next_cursor: { type: string, nullable: true }
+
+  /admin/notifications/test:
+    post:
+      tags: [Admin, Notifications]
+      summary: Test notification
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type, template]
+              properties:
+                type: { type: string, enum: [email, sms, push] }
+                template: { type: string }
+                recipient: { type: string }
+      responses:
+        "200":
+          description: Test notification sent
+
+  /admin/ops/anomalies/audit:
+    get:
+      tags: [Admin]
+      summary: Ops anomalies audit history
+      description: >
+        Returns audit history for ops anomaly rollups. Provide at least one of:
+        fingerprint, sourceEventId, eventId. If multiple are provided, precedence is:
+        sourceEventId, then eventId, then fingerprint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: fingerprint
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Rollup fingerprint
+        - name: eventId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: OpsAlertAudit.eventId (usually equals the evidence/bookingEvent id used for the action)
+        - name: sourceEventId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: OpsAlertAudit.sourceEventId (evidence id that sourced the action; for eventId-based actions this equals eventId)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 100
+      responses:
+        "200":
+          description: Audit history
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, data]
+                properties:
+                  ok: { type: boolean, example: true }
+                  data:
+                    type: object
+                    required: [fingerprint, eventId, sourceEventId, items]
+                    properties:
+                      fingerprint: { type: string, nullable: true }
+                      eventId: { type: string, nullable: true }
+                      sourceEventId: { type: string, nullable: true }
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/OpsAlertAuditItem"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /webhooks/stripe:
+    post:
+      tags: [Webhooks]
+      summary: Stripe webhook
+      description: Stripe payment events (payment_intent.succeeded, charge.refunded, payout.paid)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Stripe webhook event payload
+      responses:
+        "200":
+          description: Webhook processed
