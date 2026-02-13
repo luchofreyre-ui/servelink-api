@@ -31,3 +31,6 @@ services/api/*.js
 services/api/**/*.js
 services/api/prisma/schema.prisma.bak*
 services/api/scripts/*.bak
+
+# Jest localstorage artifacts
+.jest-localstorage.json-*
