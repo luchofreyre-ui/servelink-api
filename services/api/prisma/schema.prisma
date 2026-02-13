@@ -1,0 +1,505 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String          @id @default(cuid())
+  email            String          @unique
+  phone            String?         @unique
+  passwordHash     String
+  role             Role            @default(customer)
+  stripeCustomerId String?         @unique
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  bookings         Booking[]
+  refreshTokens    RefreshToken[]
+  franchiseOwner   FranchiseOwner?
+}
+
+model RefreshToken {
+  id           String         @id @default(cuid())
+  userId       String
+  tokenHash    String         @unique
+  jti          String?        @unique
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  replacedById String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  replacedBy   RefreshToken?  @relation("RefreshRotation", fields: [replacedById], references: [id])
+  replaces     RefreshToken[] @relation("RefreshRotation")
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Booking {
+  id                    String        @id @default(cuid())
+  customerId            String
+  foId                  String?
+  status                BookingStatus @default(pending_payment)
+  hourlyRateCents       Int
+  estimatedHours        Float
+  currency              String        @default("usd")
+  stripePaymentIntentId String?       @unique
+  stripeClientSecret    String?
+  scheduledStart        DateTime?
+  notes                 String?
+
+  // --- Job site (GPS billing foundation) ---
+  siteLat              Float?
+  siteLng              Float?
+  geofenceRadiusMeters Int?      @default(100)
+  lastInsideAt         DateTime  @default(now())
+  outsideSinceAt       DateTime?
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  customer        User             @relation(fields: [customerId], references: [id])
+  fo              FranchiseOwner?  @relation(fields: [foId], references: [id], onDelete: SetNull)
+  addons          BookingAddon[]
+  BookingEvent    BookingEvent[]
+  locationPings   LocationPing[]
+  billingSessions BillingSession[]
+  stripePayment            BookingStripePayment?
+  refundIntents            RefundIntent[]
+  billingFinalization      BookingBillingFinalization?
+  disputeCases             DisputeCase[]
+  estimateSnapshot        BookingEstimateSnapshot?
+  opsAlerts               OpsAlert[]
+  opsAlertRollups         OpsAlertRollup[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([foId])
+}
+
+model BookingStripePayment {
+  id                   String   @id @default(cuid())
+  bookingId             String   @unique
+  stripePaymentIntentId String   @unique
+  amountCents           Int
+  currency              String   @default("usd")
+  status                String
+  clientSecret          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([status])
+}
+
+model DisputeCase {
+  id        String @id @default(cuid())
+  bookingId String
+
+  stripeDisputeId       String  @unique
+  stripeChargeId        String?
+  stripePaymentIntentId String?
+
+  // Stripe dispute status lifecycle (e.g., warning_needs_response, needs_response, under_review, won, lost)
+  status   String
+  reason   String?
+  amount   Int?
+  currency String?
+
+  // when dispute closes
+  closedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+  @@index([status, updatedAt])
+}
+
+model RefundIntent {
+  id                  String   @id @default(cuid())
+  bookingId           String
+  amountCents         Int?     // null => full refund
+  reason              String
+  note                String?
+  status              String   @default("pending_execution") // pending_execution | executing | executed | failed
+  idempotencyKey      String   @unique
+
+  stripeRefundId      String?
+  createdByAdminUserId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+  @@index([status, createdAt])
+}
+
+model BookingBillingFinalization {
+  id               String   @id @default(cuid())
+  bookingId        String   @unique
+
+  // derived totals
+  totalBillableMin   Int
+  totalBillableCents Int
+
+  // policy
+  minimumCents Int @default(10000)
+
+  // final amount to charge
+  finalBillableCents Int
+
+  // idempotency boundary for finalize calls
+  idempotencyKey String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+}
+
+model BookingEstimateSnapshot {
+  id String @id @default(cuid())
+
+  bookingId String @unique
+
+  estimatorVersion String
+  mode            String
+  confidence      Float
+
+  riskPercentUncapped       Int
+  riskPercentCappedForRange Int
+  riskCapped               Boolean
+
+  // Immutable record of what the customer answered + what we returned
+  inputJson  String
+  outputJson String
+
+  createdAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([createdAt])
+}
+
+model StripeWebhookReceipt {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique
+  type          String
+  livemode      Boolean  @default(false)
+
+  // optional linkage if we can derive it
+  bookingId             String?
+  stripePaymentIntentId String?
+
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([bookingId, createdAt])
+}
+
+model SystemSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model LocationPing {
+  id         String   @id @default(cuid())
+  bookingId  String
+  foId       String
+  lat        Float
+  lng        Float
+  accuracyM  Int
+  capturedAt DateTime
+  receivedAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, receivedAt])
+  @@index([foId, receivedAt])
+}
+
+model BillingSession {
+  id        String @id @default(cuid())
+  bookingId String
+  foId      String
+
+  startedAt DateTime
+  endedAt   DateTime?
+
+  // GRACE: first outside ping time; session ends at this time after grace elapsed
+  pendingExitAt DateTime?
+
+  // --- Grace logic persistence ---
+  firstExitAt     DateTime?
+  graceExpiresAt  DateTime?
+  graceNotifiedAt DateTime?
+  outsideSinceAt  DateTime?
+
+  durationSec   Int?
+  billableMin   Int?
+  billableCents Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, foId])
+  @@index([bookingId, startedAt])
+}
+
+model SmsConfirmation {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  phone       String
+  kind        String
+  payloadJson String
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  respondedAt DateTime?
+  expiresAt   DateTime
+  rawReply    String?
+}
+
+model BookingAddon {
+  id                    String   @id @default(cuid())
+  bookingId             String
+  smsCode               String   @unique
+  type                  String
+  payloadJson           String
+  status                String   @default("approved")
+  createdAt             DateTime @default(now())
+  currency              String   @default("usd")
+  priceCents            Int
+  stripePaymentIntentId String?
+  booking               Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([type])
+}
+
+model BookingEvent {
+  id             String           @id @default(cuid())
+  bookingId      String
+  type           BookingEventType @default(STATUS_CHANGED)
+  fromStatus     BookingStatus?
+  toStatus       BookingStatus?
+  note           String?
+  idempotencyKey String?
+  createdAt      DateTime         @default(now())
+  Booking        Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, idempotencyKey])
+  @@index([bookingId, createdAt])
+}
+
+enum OpsAlertStatus {
+  open
+  acked
+}
+
+enum OpsAnomalyType {
+  INTEGRITY_REFUND_WEBHOOK_MISSING
+  INTEGRITY_DISPUTE_STALE
+  INTEGRITY_BILLING_SESSION_STALE
+  UNKNOWN
+}
+
+enum OpsAlertSeverity {
+  info
+  warning
+  critical
+}
+
+model OpsAlert {
+  id            String         @id @default(cuid())
+  sourceEventId String?        @unique
+  bookingId     String
+  foId          String?
+  bookingStatus BookingStatus?
+  anomalyType   OpsAnomalyType
+  status        OpsAlertStatus @default(open)
+
+  severity       OpsAlertSeverity @default(warning)
+  // app-layer dedupe key (no DB partial unique needed)
+  fingerprint   String?
+  // rolling aggregation (lets us "refresh" an existing open alert)
+  firstSeenAt   DateTime @default(now())
+  lastSeenAt    DateTime @default(now())
+  // SLA (optional; computed at creation/materialization)
+  slaDueAt      DateTime?
+  slaBreachedAt DateTime?
+  occurrences   Int      @default(1)
+  // ownership (admin tooling later)
+  assignedToAdminId String?
+
+  payloadJson String?
+
+  ackedAt        DateTime?
+  ackedByAdminId String?
+  ackNote        String?
+
+  // resolution (we are NOT changing OpsAlertStatus yet)
+  resolvedAt        DateTime?
+  resolvedByAdminId String?
+  resolveNote       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+  @@index([status, createdAt])
+  @@index([anomalyType, createdAt])
+  @@index([foId, createdAt])
+  @@index([bookingStatus, createdAt])
+  @@index([severity, createdAt])
+  @@index([fingerprint])
+  @@index([assignedToAdminId, status, createdAt])
+  @@index([status, lastSeenAt])
+  @@index([status, slaDueAt])
+}
+
+model OpsAlertRollup {
+  id            String         @id @default(cuid())
+  fingerprint   String         @unique
+  anomalyType   OpsAnomalyType
+  bookingId     String
+  foId          String?
+  bookingStatus BookingStatus?
+  status        OpsAlertStatus @default(open)
+  severity      OpsAlertSeverity @default(warning)
+
+  // rollup stats
+  firstSeenAt  DateTime
+  lastSeenAt   DateTime
+  occurrences  Int            @default(1)
+
+  // routing / ownership
+  assignedToAdminId String?
+
+  // SLA (optional; computed at creation/materialization)
+  slaDueAt      DateTime?
+  slaBreachedAt DateTime?
+
+  // ack fields (optional)
+  ackedAt        DateTime?
+  ackedByAdminId String?
+  ackNote        String?
+
+  // resolution fields (optional)
+  resolvedAt        DateTime?
+  resolvedByAdminId String?
+  resolveNote       String?
+
+  // optional: latest payload snapshot for quick triage
+  payloadJson String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Booking         Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  opsAlertAudits  OpsAlertAudit[]
+
+  @@index([bookingId, createdAt])
+  @@index([status, createdAt])
+  @@index([status, lastSeenAt])
+  @@index([severity, createdAt])
+  @@index([anomalyType, createdAt])
+  @@index([foId, createdAt])
+  @@index([bookingStatus, createdAt])
+  @@index([assignedToAdminId, status, createdAt])
+  @@index([status, slaDueAt])
+}
+
+model FranchiseOwner {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  status     FoStatus @default(onboarding)
+  safetyHold Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+
+  @@index([status])
+}
+
+enum Role {
+  customer
+  fo
+  admin
+}
+
+enum BookingStatus {
+  pending_payment
+  pending_dispatch
+  offered
+  assigned
+  in_progress
+  completed
+  canceled
+}
+
+enum BookingEventType {
+  CREATED
+  STATUS_CHANGED
+  NOTE
+}
+
+enum FoStatus {
+  onboarding
+  active
+  paused
+  suspended
+  safety_hold
+  offboarded
+}
+
+model OpsAlertAudit {
+  id              String   @id @default(cuid())
+
+  fingerprint     String
+  opsAlertRollup  OpsAlertRollup @relation(fields: [fingerprint], references: [fingerprint], onDelete: Cascade)
+  eventId         String?
+  sourceEventId   String?
+
+  action          String   // ASSIGNED | ACKED | RESOLVED | AUTO_ESCALATED | AUTO_ASSIGNED
+  fromStatus      OpsAlertStatus?
+  toStatus        OpsAlertStatus?
+
+  fromSeverity    OpsAlertSeverity?
+  toSeverity      OpsAlertSeverity?
+
+  fromAssignedToAdminId String?
+  toAssignedToAdminId   String?
+
+  actorAdminId    String? // null if system
+
+  createdAt       DateTime @default(now())
+
+  @@index([fingerprint, createdAt])
+  @@index([eventId, createdAt])
+  @@index([sourceEventId, createdAt])
+  @@index([fingerprint, action, createdAt])
+  @@index([eventId, action, createdAt])
+  @@index([sourceEventId, action, createdAt])
+}
