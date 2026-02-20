@@ -11,6 +11,8 @@ import { AuthModule } from "./auth/auth.module";
 import { SmsModule } from "./sms/sms.module";
 import { BookingsModule } from "./modules/bookings/bookings.module";
 import { BillingModule } from "./modules/billing/billing.module";
+import { LedgerModule } from "./modules/ledger/ledger.module";
+import { PayoutsModule } from "./modules/payouts/payouts.module";
 import { TelemetryController } from "./modules/telemetry/telemetry.controller";
 
 const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
@@ -36,6 +38,8 @@ const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
     SmsModule,
     BookingsModule,
     BillingModule,
+    LedgerModule,
+    PayoutsModule,
   ],
   controllers: [PricingController, MeController, TelemetryController],
 })

@@ -477,6 +477,214 @@ describe("Ops anomalies ack/query (E2E)", () => {
     }
   });
 
+  it("GET alerts/:fingerprint/audit returns audit history with cursor pagination", async () => {
+    const customer = await prisma.user.create({
+      data: {
+        email: `cust_audit_fp_${Date.now()}@servelink.local`,
+        passwordHash: "x",
+        role: "customer",
+      },
+    });
+
+    const booking = await prisma.booking.create({
+      data: {
+        customerId: customer.id,
+        hourlyRateCents: 5000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: "completed",
+      },
+    });
+
+    const anomaly = await prisma.bookingEvent.create({
+      data: {
+        bookingId: booking.id,
+        type: BookingEventType.NOTE,
+        note: JSON.stringify({
+          type: "INTEGRITY_BILLING_SESSION_STALE",
+          bookingId: booking.id,
+          observedAt: new Date().toISOString(),
+          message: "Test anomaly (audit by fingerprint)",
+        }),
+      } as any,
+    });
+
+    const listRes = await request(app.getHttpServer())
+      .get("/api/v1/admin/ops/anomalies?groupBy=fingerprint&limit=50&acked=0&sinceHours=1")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+
+    const grouped = listRes.body.data?.anomalies ?? [];
+    const row = grouped.find((x: any) => x.bookingId === booking.id);
+    expect(row?.fingerprint).toBeTruthy();
+    const fingerprint = String(row.fingerprint);
+
+    await request(app.getHttpServer())
+      .post("/api/v1/admin/ops/anomalies/assign")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ eventId: anomaly.id, assignedToAdminId: adminUserId })
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .post("/api/v1/admin/ops/anomalies/ack")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ eventId: anomaly.id, note: "Acked in E2E" })
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .post("/api/v1/admin/ops/anomalies/resolve")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ eventId: anomaly.id, note: "Resolved in E2E" })
+      .expect(200);
+
+    const auditRes = await request(app.getHttpServer())
+      .get(`/api/v1/admin/ops/alerts/${encodeURIComponent(fingerprint)}/audit`)
+      .query({ limit: "10" })
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+
+    const items = auditRes.body?.data?.items ?? [];
+    expect(Array.isArray(items)).toBe(true);
+    expect(items.length).toBeGreaterThanOrEqual(1);
+
+    const allowedActions = ["resolve", "ack", "assign"];
+    expect(allowedActions).toContain(items[0].action);
+
+    if (items.length >= 2) {
+      const t0 = new Date(items[0].createdAt).getTime();
+      const t1 = new Date(items[1].createdAt).getTime();
+      expect(t0).toBeGreaterThanOrEqual(t1);
+    }
+
+    expect(items[0]).toHaveProperty("actorAdminId");
+  });
+
+  it("audit correctness and no-op resolve does not audit", async () => {
+    const customer = await prisma.user.create({
+      data: {
+        email: `cust_audit_noop_${Date.now()}@servelink.local`,
+        passwordHash: "x",
+        role: "customer",
+      },
+    });
+
+    const booking = await prisma.booking.create({
+      data: {
+        customerId: customer.id,
+        hourlyRateCents: 5000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: "completed",
+      },
+    });
+
+    const anomaly = await prisma.bookingEvent.create({
+      data: {
+        bookingId: booking.id,
+        type: BookingEventType.NOTE,
+        note: JSON.stringify({
+          type: "INTEGRITY_BILLING_SESSION_STALE",
+          bookingId: booking.id,
+          observedAt: new Date().toISOString(),
+          message: "Test anomaly (audit no-op)",
+        }),
+      } as any,
+    });
+
+    const listRes = await request(app.getHttpServer())
+      .get("/api/v1/admin/ops/anomalies?groupBy=fingerprint&limit=50&acked=0&sinceHours=1")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+
+    const grouped = listRes.body.data?.anomalies ?? [];
+    const row = grouped.find((x: any) => x.bookingId === booking.id);
+    expect(row?.fingerprint).toBeTruthy();
+    const fingerprint = String(row.fingerprint);
+
+    const getAuditCount = async () => {
+      const res = await request(app.getHttpServer())
+        .get(`/api/v1/admin/ops/alerts/${encodeURIComponent(fingerprint)}/audit`)
+        .query({ limit: "100" })
+        .set("Authorization", `Bearer ${adminToken}`)
+        .expect(200);
+      return (res.body?.data?.items ?? []).length;
+    };
+
+    const countAfterAssign = await getAuditCount();
+    await request(app.getHttpServer())
+      .post("/api/v1/admin/ops/anomalies/assign")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ eventId: anomaly.id, assignedToAdminId: adminUserId })
+      .expect(200);
+
+    const countAfterAssignDone = await getAuditCount();
+    expect(countAfterAssignDone).toBe(countAfterAssign + 1);
+
+    const auditAfterAssign = await request(app.getHttpServer())
+      .get(`/api/v1/admin/ops/alerts/${encodeURIComponent(fingerprint)}/audit`)
+      .query({ limit: "100" })
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+    const assignEntry = (auditAfterAssign.body?.data?.items ?? []).find((a: any) => a.action === "assign");
+    expect(assignEntry).toBeTruthy();
+    expect(assignEntry.from?.assignedToAdminId ?? null).toBeNull();
+    expect(assignEntry.to?.assignedToAdminId).toBe(adminUserId);
+
+    await request(app.getHttpServer())
+      .post("/api/v1/admin/ops/anomalies/ack")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ eventId: anomaly.id, note: "Acked in E2E" })
+      .expect(200);
+
+    const countAfterAck = await getAuditCount();
+    expect(countAfterAck).toBe(countAfterAssignDone + 1);
+    const auditAfterAck = await request(app.getHttpServer())
+      .get(`/api/v1/admin/ops/alerts/${encodeURIComponent(fingerprint)}/audit`)
+      .query({ limit: "100" })
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+    const ackEntry = (auditAfterAck.body?.data?.items ?? []).find((a: any) => a.action === "ack");
+    expect(ackEntry).toBeTruthy();
+
+    await request(app.getHttpServer())
+      .post("/api/v1/admin/ops/anomalies/resolve")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ eventId: anomaly.id, note: "Resolved in E2E" })
+      .expect(200);
+
+    const countAfterResolve = await getAuditCount();
+    expect(countAfterResolve).toBe(countAfterAck + 1);
+    const auditAfterResolve = await request(app.getHttpServer())
+      .get(`/api/v1/admin/ops/alerts/${encodeURIComponent(fingerprint)}/audit`)
+      .query({ limit: "100" })
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+    const resolveEntry = (auditAfterResolve.body?.data?.items ?? []).find((a: any) => a.action === "resolve");
+    expect(resolveEntry).toBeTruthy();
+
+    await request(app.getHttpServer())
+      .post("/api/v1/admin/ops/anomalies/resolve")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ eventId: anomaly.id, note: "Second resolve (no-op)" })
+      .expect(200);
+
+    const countAfterSecondResolve = await getAuditCount();
+    expect(countAfterSecondResolve).toBe(countAfterResolve);
+
+    const finalAudit = await request(app.getHttpServer())
+      .get(`/api/v1/admin/ops/alerts/${encodeURIComponent(fingerprint)}/audit`)
+      .query({ limit: "100" })
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+    const items = finalAudit.body?.data?.items ?? [];
+    expect(items.length).toBeGreaterThanOrEqual(2);
+    for (let i = 1; i < items.length; i++) {
+      const t0 = new Date(items[i - 1].createdAt).getTime();
+      const t1 = new Date(items[i].createdAt).getTime();
+      expect(t0).toBeGreaterThanOrEqual(t1);
+    }
+  });
+
   it("assigns and unassigns an anomaly", async () => {
     const customer = await prisma.user.create({
       data: {

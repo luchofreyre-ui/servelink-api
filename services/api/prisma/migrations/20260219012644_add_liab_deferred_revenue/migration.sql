@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "LedgerAccount" ADD VALUE 'LIAB_DEFERRED_REVENUE';

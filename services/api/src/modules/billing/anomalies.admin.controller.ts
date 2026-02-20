@@ -3,6 +3,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  Param,
   Post,
   Query,
   Req,
@@ -896,6 +897,63 @@ export class AnomaliesAdminController {
       sourceEventId: sourceEventId || null,
       eventId: eventId || null,
       items,
+    });
+  }
+
+  @Get("alerts/:fingerprint/audit")
+  async getAlertAuditByFingerprint(
+    @Req() req: AuthedRequest,
+    @Param("fingerprint") fingerprintParam: string,
+    @Query("limit") limitRaw?: string,
+    @Query("cursor") cursor?: string,
+  ) {
+    if (req.user?.role !== "admin") throw new ForbiddenException("FORBIDDEN");
+
+    const fingerprint = fingerprintParam ? String(fingerprintParam).trim() : "";
+    if (!fingerprint) {
+      return fail("INVALID_REQUEST", "fingerprint is required");
+    }
+
+    const limit = limitRaw ? Number(limitRaw) : 50;
+    if (!Number.isFinite(limit) || limit <= 0 || limit > 200) {
+      return fail("INVALID_REQUEST", "limit must be between 1 and 200");
+    }
+
+    const take = limit + 1;
+    const rows = await this.db.opsAlertAudit.findMany({
+      where: { fingerprint },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    });
+
+    const hasMore = rows.length > limit;
+    const items = hasMore ? rows.slice(0, limit) : rows;
+    const nextCursor = hasMore && items.length > 0 ? items[items.length - 1].id : null;
+
+    const mapped = items.map((r) => ({
+      id: r.id,
+      createdAt: r.createdAt.toISOString(),
+      action: r.action,
+      actorAdminId: r.actorAdminId ?? null,
+      eventId: r.eventId ?? null,
+      sourceEventId: r.sourceEventId ?? null,
+      from: {
+        status: r.fromStatus ?? null,
+        severity: r.fromSeverity ?? null,
+        assignedToAdminId: r.fromAssignedToAdminId ?? null,
+      },
+      to: {
+        status: r.toStatus ?? null,
+        severity: r.toSeverity ?? null,
+        assignedToAdminId: r.toAssignedToAdminId ?? null,
+      },
+    }));
+
+    return ok({
+      fingerprint,
+      items: mapped,
+      ...(nextCursor != null ? { nextCursor } : {}),
     });
   }
 
@@ -2288,23 +2346,6 @@ export class AnomaliesAdminController {
     if (!rollup) throw new Error("NOT_FOUND");
 
     if (rollup.resolvedAt) {
-      await this.auditRollupChange({
-        fingerprint: rollup.fingerprint,
-        ...this.auditMetaFromEventId(eventId),
-        action: "resolve",
-        from: {
-          status: String(rollup.status),
-          severity: String(rollup.severity),
-          assignedToAdminId: rollup.assignedToAdminId ?? null,
-        },
-        to: {
-          status: String(rollup.status),
-          severity: String(rollup.severity),
-          assignedToAdminId: rollup.assignedToAdminId ?? null,
-        },
-        actorAdminId,
-      });
-
       return ok({ resolved: true, alreadyResolved: true, eventId, fingerprint: rollup.fingerprint });
     }
 

@@ -1,8 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { BillingSession, BookingEventType } from "@prisma/client";
+import { JournalEntryType, LedgerAccount, LineDirection } from "@prisma/client";
 
 import { PrismaService } from "../../prisma";
+import { LedgerService } from "../ledger/ledger.service";
 import { isInsideGeofence } from "../../utils/geo";
+import {
+  type PricingPolicyV1,
+  splitCharge,
+} from "./pricing.policy";
 
 type PricingPolicy = {
   hourlyRateCents: number; // e.g. 6500
@@ -12,7 +18,10 @@ type PricingPolicy = {
 
 @Injectable()
 export class BillingService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(
+    private readonly db: PrismaService,
+    private readonly ledger: LedgerService,
+  ) {}
 
   /**
    * Reads current pricing policy. For now we hardcode from PricingController.
@@ -23,6 +32,14 @@ export class BillingService {
       hourlyRateCents: 6500,
       billingIncrementMinutes: 15,
       graceSeconds: 15 * 60, // ✅ LOCKED: 15 minutes
+    };
+  }
+
+  /** v1 financial split: platformFeeBps (e.g. 2000 = 20%), minPlatformFeeCents. */
+  getPricingPolicyV1(): PricingPolicyV1 {
+    return {
+      platformFeeBps: 2000,
+      minPlatformFeeCents: 0,
     };
   }
 
@@ -434,6 +451,53 @@ export class BillingService {
     const summary = await this.summarizeBooking({ bookingId: booking.id });
     const finalBillableMin = summary.totals.totalBillableMin;
     const finalBillableCents = summary.totals.totalBillableCents;
+
+    // Double-entry: DR AR_CUSTOMER = total; CR REV_PLATFORM = platformFee; CR LIAB_FO_PAYABLE = foEarnings
+    if (finalBillableCents > 0) {
+      const policy = this.getPricingPolicyV1();
+      const { platformFeeCents, foEarningsCents } = splitCharge(
+        finalBillableCents,
+        policy,
+      );
+      const ledgerKeyPart =
+        args.idempotencyKey && args.idempotencyKey.length > 0
+          ? args.idempotencyKey
+          : open
+            ? `session:${open.id}`
+            : endedAt.toISOString();
+      const ledgerKey = `ledger:charge:${booking.id}:${ledgerKeyPart}`;
+      await this.ledger.postEntry({
+        type: JournalEntryType.CHARGE,
+        bookingId: booking.id,
+        foId: booking.foId ?? undefined,
+        currency: booking.currency ?? "usd",
+        idempotencyKey: ledgerKey,
+        lines: [
+          {
+            account: LedgerAccount.AR_CUSTOMER,
+            direction: LineDirection.DEBIT,
+            amountCents: finalBillableCents,
+          },
+          {
+            account: LedgerAccount.LIAB_DEFERRED_REVENUE,
+            direction: LineDirection.CREDIT,
+            amountCents: platformFeeCents,
+          },
+          {
+            account: LedgerAccount.LIAB_FO_PAYABLE,
+            direction: LineDirection.CREDIT,
+            amountCents: foEarningsCents,
+          },
+        ],
+        metadata: {
+          finalBillableMin,
+          finalBillableCents,
+          platformFeeCents,
+          foEarningsCents,
+          bookingId: booking.id,
+        },
+      });
+    }
 
     return {
       ...summary,

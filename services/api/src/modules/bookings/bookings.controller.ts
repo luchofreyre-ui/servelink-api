@@ -12,6 +12,7 @@ import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
 import { AdminGuard } from "../../guards/admin.guard";
 import { BillingService } from "../billing/billing.service";
 import { BookingsService } from "./bookings.service";
+import { AssignBookingDto } from "./dto/assign-booking.dto";
 import { CreateBookingDto } from "./dto/create-booking.dto";
 import { TransitionBookingDto } from "./dto/transition-booking.dto";
 
@@ -85,6 +86,26 @@ export class BookingsController {
     });
   }
 
+  private normalizeIdempotencyKey(raw: string | undefined): string | null {
+    const s = raw != null ? String(raw).trim() : "";
+    return s || null;
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Post(":id/assign")
+  async assign(
+    @Param("id") id: string,
+    @Body() dto: AssignBookingDto,
+    @Headers("idempotency-key") idempotencyKey?: string,
+  ) {
+    return this.bookings.assignBooking({
+      bookingId: id,
+      foId: dto.foId,
+      note: dto.note,
+      idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
+    });
+  }
+
   @Post(":id/schedule")
   async schedule(
     @Param("id") id: string,
@@ -95,7 +116,7 @@ export class BookingsController {
       id,
       transition: "schedule",
       note: dto.note,
-      idempotencyKey: idempotencyKey ?? null,
+      idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
     });
   }
 
@@ -109,7 +130,7 @@ export class BookingsController {
       id,
       transition: "start",
       note: dto.note,
-      idempotencyKey: idempotencyKey ?? null,
+      idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
     });
   }
 
@@ -123,7 +144,7 @@ export class BookingsController {
       id,
       transition: "complete",
       note: dto.note,
-      idempotencyKey: idempotencyKey ?? null,
+      idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
     });
   }
 
@@ -137,7 +158,22 @@ export class BookingsController {
       id,
       transition: "cancel",
       note: dto.note,
-      idempotencyKey: idempotencyKey ?? null,
+      idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
+    });
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Post(":id/reopen")
+  async reopen(
+    @Param("id") id: string,
+    @Headers("idempotency-key") idempotencyKey: string | undefined,
+    @Body() body: { note?: string } = {},
+  ) {
+    return this.bookings.transitionBooking({
+      id,
+      transition: "reopen",
+      note: body?.note,
+      idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
     });
   }
 }

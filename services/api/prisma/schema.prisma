@@ -83,6 +83,7 @@ model BookingStripePayment {
   id                   String   @id @default(cuid())
   bookingId             String   @unique
   stripePaymentIntentId String   @unique
+  stripeChargeId        String?  @unique
   amountCents           Int
   currency              String   @default("usd")
   status                String
@@ -121,6 +122,8 @@ model DisputeCase {
 
   @@index([bookingId, createdAt])
   @@index([status, updatedAt])
+  @@index([stripePaymentIntentId])
+  @@index([stripeChargeId])
 }
 
 model RefundIntent {
@@ -169,6 +172,115 @@ model BookingBillingFinalization {
   @@index([createdAt])
 }
 
+// --- Double-entry ledger (append-only) ---
+enum JournalEntryType {
+  CHARGE
+  REFUND
+  PAYOUT
+  ADJUSTMENT
+  FEE
+  SETTLEMENT
+  REVENUE_RECOGNITION
+
+  // legacy/compat (existing)
+  DISPUTE
+
+  // dispute lifecycle (explicit)
+  DISPUTE_WITHDRAWAL
+  DISPUTE_REVERSAL
+  DISPUTE_LOSS
+  DISPUTE_WIN
+}
+
+enum DisputeOutcome {
+  created
+  won
+  lost
+  closed
+}
+
+enum LedgerAccount {
+  AR_CUSTOMER
+  CASH_STRIPE
+  REV_PLATFORM
+  LIAB_FO_PAYABLE
+  LIAB_DEFERRED_REVENUE
+}
+
+enum LineDirection {
+  DEBIT
+  CREDIT
+}
+
+model JournalEntry {
+  id             String           @id @default(cuid())
+  bookingId      String?
+  foId           String?
+  type           JournalEntryType
+  currency       String           @default("usd")
+  idempotencyKey String?          @unique
+  metadataJson   String?
+  disputeOutcome DisputeOutcome?
+  createdAt      DateTime         @default(now())
+
+  lines JournalLine[]
+
+  @@index([bookingId, createdAt])
+  @@index([foId, createdAt])
+  @@index([type, createdAt])
+  @@index([bookingId, type, createdAt])
+  @@index([foId, type, createdAt])
+}
+
+model JournalLine {
+  id          String        @id @default(cuid())
+  entryId     String
+  account     LedgerAccount
+  direction   LineDirection
+  amountCents Int           // positive integer
+  createdAt   DateTime      @default(now())
+
+  entry JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@index([entryId])
+  @@index([account, createdAt])
+  @@index([account, direction, createdAt])
+}
+
+enum PayoutBatchStatus {
+  draft
+  executed
+  void
+}
+
+model PayoutBatch {
+  id                      String            @id @default(cuid())
+  status                  PayoutBatchStatus @default(draft)
+  currency                String            @default("usd")
+  asOf                    DateTime
+  executedAt              DateTime?
+  executedByAdminId       String?
+  idempotencyKey          String            @unique
+  executedIdempotencyKey  String?           @unique
+  createdAt               DateTime          @default(now())
+
+  lines PayoutLine[]
+}
+
+model PayoutLine {
+  id           String      @id @default(cuid())
+  batchId      String
+  foId         String
+  amountCents  Int
+  currency     String      @default("usd")
+  createdAt    DateTime    @default(now())
+
+  batch PayoutBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@unique([batchId, foId])
+  @@index([batchId])
+}
+
 model BookingEstimateSnapshot {
   id String @id @default(cuid())
 
@@ -208,6 +320,7 @@ model StripeWebhookReceipt {
 
   @@index([type, createdAt])
   @@index([bookingId, createdAt])
+  @@index([stripePaymentIntentId, createdAt])
 }
 
 model SystemSetting {
@@ -372,8 +485,6 @@ model OpsAlert {
   @@index([severity, createdAt])
   @@index([fingerprint])
   @@index([assignedToAdminId, status, createdAt])
-  @@index([status, lastSeenAt])
-  @@index([status, slaDueAt])
 }
 
 model OpsAlertRollup {
@@ -419,13 +530,11 @@ model OpsAlertRollup {
 
   @@index([bookingId, createdAt])
   @@index([status, createdAt])
-  @@index([status, lastSeenAt])
   @@index([severity, createdAt])
   @@index([anomalyType, createdAt])
   @@index([foId, createdAt])
   @@index([bookingStatus, createdAt])
   @@index([assignedToAdminId, status, createdAt])
-  @@index([status, slaDueAt])
 }
 
 model FranchiseOwner {
