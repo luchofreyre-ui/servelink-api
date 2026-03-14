@@ -28,6 +28,71 @@ export class DispatchService {
     private readonly foService: FoService,
   ) {}
 
+  private async calculateDispatchPenalty(foId: string) {
+    const [foLoad, dispatchStats, reliabilityStats, fo] = await Promise.all([
+      this.db.booking.count({
+        where: {
+          foId,
+          status: {
+            in: [BookingStatus.assigned, BookingStatus.in_progress],
+          },
+        },
+      }),
+      this.db.franchiseOwnerDispatchStats.findUnique({
+        where: { foId },
+      }),
+      this.db.franchiseOwnerReliabilityStats.findUnique({
+        where: { foId },
+      }),
+      this.db.franchiseOwner.findUnique({
+        where: { id: foId },
+        select: { reliabilityScore: true },
+      }),
+    ]);
+
+    const offersSent = dispatchStats?.offersSent ?? 0;
+    const offersAccepted = dispatchStats?.offersAccepted ?? 0;
+    const assignments = reliabilityStats?.assignmentsCount ?? 0;
+    const completions = reliabilityStats?.completionsCount ?? 0;
+    const cancellations = reliabilityStats?.cancellationsCount ?? 0;
+    const reliabilityScore = Number(fo?.reliabilityScore ?? 0);
+
+    let acceptancePenalty = 0;
+    if (offersSent >= 5) {
+      const acceptRate = offersAccepted / offersSent;
+      if (acceptRate < 0.3) {
+        acceptancePenalty = 3;
+      } else if (acceptRate < 0.5) {
+        acceptancePenalty = 1;
+      }
+    }
+
+    let completionPenalty = 0;
+    let cancellationPenalty = 0;
+
+    if (assignments >= 5) {
+      const completionRate = completions / assignments;
+      const cancellationRate = cancellations / assignments;
+
+      if (completionRate < 0.7) {
+        completionPenalty += 3;
+      } else if (completionRate < 0.85) {
+        completionPenalty += 1;
+      }
+
+      if (cancellationRate > 0.3) {
+        cancellationPenalty += 4;
+      } else if (cancellationRate > 0.15) {
+        cancellationPenalty += 2;
+      }
+    }
+
+    const reliabilityBonus =
+      reliabilityScore >= 4 ? -1 : reliabilityScore <= -2 ? 2 : 0;
+
+    return foLoad + acceptancePenalty + completionPenalty + cancellationPenalty + reliabilityBonus;
+  }
+
   /**
    * Start a dispatch round for a booking.
    * Uses the immutable estimate snapshot as the source of truth for dispatch candidates.
@@ -121,36 +186,10 @@ export class DispatchService {
     for (let i = 0; i < batch.length; i++) {
       const fo = batch[i];
 
-      const foLoad = await this.db.booking.count({
-        where: {
-          foId: fo.id,
-          status: {
-            in: [BookingStatus.assigned, BookingStatus.in_progress],
-          },
-        },
-      });
-
-      const stats = await this.db.franchiseOwnerDispatchStats.findUnique({
-        where: { foId: fo.id },
-      });
-
-      const offersSent = stats?.offersSent ?? 0;
-      const offersAccepted = stats?.offersAccepted ?? 0;
-
-      let acceptancePenalty = 0;
-
-      if (offersSent >= 5) {
-        const acceptRate = offersAccepted / offersSent;
-
-        if (acceptRate < 0.3) {
-          acceptancePenalty = 3;
-        } else if (acceptRate < 0.5) {
-          acceptancePenalty = 1;
-        }
-      }
+      const dispatchPenalty = await this.calculateDispatchPenalty(fo.id);
 
       const rank = i + 1;
-      const effectiveRank = rank + foLoad + acceptancePenalty;
+      const effectiveRank = rank + dispatchPenalty;
 
       const offeredAt = new Date(
         roundStartedAt + i * DispatchService.OFFER_WINDOW_SECONDS * 1000,
