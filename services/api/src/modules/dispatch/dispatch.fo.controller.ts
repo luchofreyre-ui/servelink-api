@@ -1,0 +1,29 @@
+import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { PrismaService } from "../../prisma";
+
+@UseGuards(JwtAuthGuard)
+@Controller("/api/v1/fo")
+export class DispatchFoController {
+  constructor(private readonly db: PrismaService) {}
+
+  @Get("offers")
+  async getMyOffers(@Req() req: any) {
+    const foId = String(req.user.userId);
+
+    const offers = await this.db.bookingOffer.findMany({
+      where: {
+        foId,
+        status: "offered",
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        booking: true,
+      },
+    });
+
+    return offers;
+  }
+}
