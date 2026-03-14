@@ -7,9 +7,11 @@ import { PrismaService } from "../src/prisma";
 import {
   BookingEventType,
   BookingStatus,
+  FoStatus,
   JournalEntryType,
   LedgerAccount,
   LineDirection,
+  Role,
 } from "@prisma/client";
 
 jest.setTimeout(15000);
@@ -296,6 +298,169 @@ describe("Booking transitions (E2E)", () => {
       },
     });
     expect(assignEvents.length).toBe(1);
+  });
+
+  it("blocks rescheduling once a booking is in_progress", async () => {
+    const customer = await prisma.user.findFirst({
+      where: { email: { contains: "cust_trans_" } },
+    });
+    expect(customer).toBeTruthy();
+
+    const originalScheduledStart = new Date(
+      Date.now() + 12 * 24 * 60 * 60 * 1000,
+    ).toISOString();
+    const attemptedReschedule = new Date(
+      Date.now() + 13 * 24 * 60 * 60 * 1000,
+    ).toISOString();
+
+    const booking = await prisma.booking.create({
+      data: {
+        customerId: customer!.id,
+        hourlyRateCents: 5000,
+        estimatedHours: 2,
+        currency: "usd",
+        status: BookingStatus.pending_payment,
+      },
+    });
+
+    await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/schedule`)
+      .set("Authorization", `Bearer ${customerToken}`)
+      .set("idempotency-key", `sched-in-progress-${Date.now()}`)
+      .send({
+        note: "Initial schedule before start",
+        scheduledStart: originalScheduledStart,
+      })
+      .expect((res) => {
+        expect(res.status).toBeGreaterThanOrEqual(200);
+        expect(res.status).toBeLessThan(300);
+      });
+
+    await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/assign`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .set("idempotency-key", `assign-in-progress-${Date.now()}`)
+      .send({ foId: FO_ID, note: "Assign before start" })
+      .expect((res) => {
+        expect(res.status).toBeGreaterThanOrEqual(200);
+        expect(res.status).toBeLessThan(300);
+      });
+
+    await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/start`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .set("idempotency-key", `start-in-progress-${Date.now()}`)
+      .send({ note: "Start booking" })
+      .expect((res) => {
+        expect(res.status).toBeGreaterThanOrEqual(200);
+        expect(res.status).toBeLessThan(300);
+      });
+
+    const res = await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/schedule`)
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({
+        note: "Attempt reschedule after start",
+        scheduledStart: attemptedReschedule,
+      });
+
+    expect(res.status).toBe(409);
+    expect(String(res.body?.code ?? "")).toBe("INVALID_TRANSITION");
+
+    const refreshed = await prisma.booking.findUnique({
+      where: { id: booking.id },
+    });
+
+    expect(refreshed?.status).toBe(BookingStatus.in_progress);
+    expect(
+      Math.floor(new Date(String(refreshed?.scheduledStart)).getTime() / 1000),
+    ).toBe(Math.floor(new Date(originalScheduledStart).getTime() / 1000));
+  });
+
+  it("blocks reassigning once a booking is in_progress", async () => {
+    const customer = await prisma.user.findFirst({
+      where: { email: { contains: "cust_trans_" } },
+    });
+    expect(customer).toBeTruthy();
+
+    const scheduledStart = new Date(
+      Date.now() + 14 * 24 * 60 * 60 * 1000,
+    ).toISOString();
+
+    const booking = await prisma.booking.create({
+      data: {
+        customerId: customer!.id,
+        hourlyRateCents: 5000,
+        estimatedHours: 2,
+        currency: "usd",
+        status: BookingStatus.pending_payment,
+      },
+    });
+
+    await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/schedule`)
+      .set("Authorization", `Bearer ${customerToken}`)
+      .set("idempotency-key", `sched-reassign-in-progress-${Date.now()}`)
+      .send({
+        note: "Initial schedule before reassignment block test",
+        scheduledStart,
+      })
+      .expect((res) => {
+        expect(res.status).toBeGreaterThanOrEqual(200);
+        expect(res.status).toBeLessThan(300);
+      });
+
+    await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/assign`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .set("idempotency-key", `assign-fo1-in-progress-${Date.now()}`)
+      .send({ foId: FO_ID, note: "Assign FO before start" })
+      .expect((res) => {
+        expect(res.status).toBeGreaterThanOrEqual(200);
+        expect(res.status).toBeLessThan(300);
+      });
+
+    const fo2 = await prisma.franchiseOwner.create({
+      data: {
+        user: {
+          create: {
+            email: `fo_reassign_block_${Date.now()}@example.com`,
+            passwordHash: "hash",
+            role: Role.fo,
+          },
+        },
+        status: FoStatus.active,
+      },
+    });
+
+    await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/start`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .set("idempotency-key", `start-reassign-in-progress-${Date.now()}`)
+      .send({ note: "Start booking before reassignment attempt" })
+      .expect((res) => {
+        expect(res.status).toBeGreaterThanOrEqual(200);
+        expect(res.status).toBeLessThan(300);
+      });
+
+    const res = await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/assign`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        foId: fo2.id,
+        note: "Attempt reassignment after booking started",
+      });
+
+    expect(res.status).toBe(409);
+    expect(String(res.body?.code ?? "")).toBe("INVALID_TRANSITION");
+
+    const refreshed = await prisma.booking.findUnique({
+      where: { id: booking.id },
+    });
+
+    expect(refreshed).toBeTruthy();
+    expect(refreshed?.status).toBe(BookingStatus.in_progress);
+    expect(refreshed?.foId).toBe(FO_ID);
   });
 
   it("complete transition posts REVENUE_RECOGNITION and replay is idempotent", async () => {

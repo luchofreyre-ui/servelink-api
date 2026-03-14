@@ -5,15 +5,22 @@ import {
   Headers,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
 import { AdminGuard } from "../../guards/admin.guard";
 import { BillingService } from "../billing/billing.service";
+import { DispatchService } from "../dispatch/dispatch.service";
+import { SlotAvailabilityService } from "../slot-holds/slot-availability.service";
+import { SlotHoldsService } from "../slot-holds/slot-holds.service";
 import { BookingsService } from "./bookings.service";
 import { AssignBookingDto } from "./dto/assign-booking.dto";
+import { AvailabilityWindowsQueryDto } from "./dto/availability-windows-query.dto";
+import { ConfirmHoldParamsDto } from "./dto/confirm-hold-params.dto";
 import { CreateBookingDto } from "./dto/create-booking.dto";
+import { CreateSlotHoldDto } from "./dto/create-slot-hold.dto";
 import { TransitionBookingDto } from "./dto/transition-booking.dto";
 
 @UseGuards(JwtAuthGuard)
@@ -22,6 +29,9 @@ export class BookingsController {
   constructor(
     private readonly bookings: BookingsService,
     private readonly billing: BillingService,
+    private readonly dispatch: DispatchService,
+    private readonly slotAvailability: SlotAvailabilityService,
+    private readonly slotHolds: SlotHoldsService,
   ) {}
 
   @Post()
@@ -32,8 +42,42 @@ export class BookingsController {
   ) {
     return this.bookings.createBooking({
       customerId: String(req.user.userId),
+      estimateInput: dto.estimateInput as any,
       note: dto.note,
       idempotencyKey: idempotencyKey ?? null,
+    });
+  }
+
+  @Get("availability/windows")
+  async listAvailabilityWindows(@Query() query: AvailabilityWindowsQueryDto) {
+    return this.slotAvailability.listAvailableWindows(query);
+  }
+
+  @Post("availability/holds")
+  async createSlotHold(@Body() dto: CreateSlotHoldDto) {
+    return this.slotHolds.createHold({
+      bookingId: dto.bookingId,
+      foId: dto.foId,
+      startAt: dto.startAt,
+      endAt: dto.endAt,
+    });
+  }
+
+  @Post(":id/confirm-hold")
+  async confirmHold(
+    @Param() params: ConfirmHoldParamsDto,
+    @Body()
+    body: {
+      holdId: string;
+      note?: string;
+    },
+    @Headers("idempotency-key") idempotencyKey?: string,
+  ) {
+    return this.bookings.confirmBookingFromHold({
+      bookingId: params.id,
+      holdId: String(body?.holdId ?? "").trim(),
+      note: body?.note,
+      idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
     });
   }
 
@@ -64,9 +108,6 @@ export class BookingsController {
     });
   }
 
-  // -----------------------------
-  // Admin: set job site location
-  // -----------------------------
   @UseGuards(AdminGuard)
   @Post(":id/site")
   async setSite(
@@ -106,6 +147,18 @@ export class BookingsController {
     });
   }
 
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Post(":id/offers/:offerId/accept")
+  async acceptOffer(
+    @Param("id") id: string,
+    @Param("offerId") offerId: string,
+  ) {
+    return this.dispatch.acceptOfferForBooking({
+      bookingId: id,
+      offerId,
+    });
+  }
+
   @Post(":id/schedule")
   async schedule(
     @Param("id") id: string,
@@ -116,6 +169,7 @@ export class BookingsController {
       id,
       transition: "schedule",
       note: dto.note,
+      scheduledStart: dto.scheduledStart,
       idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
     });
   }

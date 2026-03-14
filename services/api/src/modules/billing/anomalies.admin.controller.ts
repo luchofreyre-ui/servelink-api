@@ -18,6 +18,10 @@ import {
   OpsAnomalyType,
 } from "@prisma/client";
 
+import {
+  opsAlertsOpenTotal,
+  opsAlertsResolvedTotal,
+} from "../../metrics.registry";
 import { PrismaService } from "../../prisma";
 import { ok, fail } from "../../utils/http";
 import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
@@ -30,7 +34,9 @@ type AuthedRequest = {
 type AnomalyType =
   | "INTEGRITY_REFUND_WEBHOOK_MISSING"
   | "INTEGRITY_DISPUTE_STALE"
-  | "INTEGRITY_BILLING_SESSION_STALE";
+  | "INTEGRITY_BILLING_SESSION_STALE"
+  | "LEDGER_INVARIANT_VIOLATION"
+  | "PAYOUT_EXECUTION_BLOCKED";
 
 type AckBody = {
   eventId?: string;
@@ -111,7 +117,7 @@ export class AnomaliesAdminController {
     @Query("foId") foIdRaw?: string,
     @Query("cursor") cursorRaw?: string,
     @Query("sort") sortRaw?: string,
-    @Query("sortBy") sortByRaw?: string, // createdAt|lastSeenAt (default lastSeenAt)
+    @Query("sortBy") sortByRaw?: string, // createdAt|lastSeenAt|severity|slaDueAt
     @Query("includePayload") includePayloadRaw?: string,
     @Query("acked") ackedRaw?: string, // 0|1, default 0 (hide acked)
     @Query("mine") mineRaw?: string, // 0|1, default 0
@@ -198,6 +204,8 @@ export class AnomaliesAdminController {
       "INTEGRITY_REFUND_WEBHOOK_MISSING",
       "INTEGRITY_DISPUTE_STALE",
       "INTEGRITY_BILLING_SESSION_STALE",
+      "LEDGER_INVARIANT_VIOLATION",
+      "PAYOUT_EXECUTION_BLOCKED",
     ];
 
     const type = typeRaw ? (String(typeRaw) as AnomalyType) : null;
@@ -270,8 +278,16 @@ export class AnomaliesAdminController {
           ? "lastSeenAt"
           : "createdAt";
 
-    if (sortBy !== "createdAt" && sortBy !== "lastSeenAt" && sortBy !== "severity") {
-      return fail("INVALID_REQUEST", "sortBy must be one of: createdAt, lastSeenAt, severity");
+    if (
+      sortBy !== "createdAt" &&
+      sortBy !== "lastSeenAt" &&
+      sortBy !== "severity" &&
+      sortBy !== "slaDueAt"
+    ) {
+      return fail(
+        "INVALID_REQUEST",
+        "sortBy must be one of: createdAt, lastSeenAt, severity, slaDueAt",
+      );
     }
 
     const since = new Date(Date.now() - sinceHours * 60 * 60 * 1000);
@@ -335,7 +351,13 @@ export class AnomaliesAdminController {
             { lastSeenAt: "desc" as const },
             { createdAt: "desc" as const },
           ]
-        : [{ [sortBy]: sort as "asc" | "desc" }];
+        : sortBy === "slaDueAt"
+          ? [
+              { slaDueAt: sort as "asc" | "desc" },
+              { lastSeenAt: "desc" as const },
+              { createdAt: "desc" as const },
+            ]
+          : [{ [sortBy]: sort as "asc" | "desc" }];
 
     const findArgs: any = {
       where: alertWhere,
@@ -752,6 +774,8 @@ export class AnomaliesAdminController {
       // ordering: respect existing sortBy/sort behavior
       if (sortBy === "severity") {
         rollupFindArgs.orderBy = [{ severity: sort }, { lastSeenAt: "desc" }, { createdAt: "desc" }];
+      } else if (sortBy === "slaDueAt") {
+        rollupFindArgs.orderBy = [{ slaDueAt: sort }, { lastSeenAt: "desc" }, { createdAt: "desc" }];
       } else {
         rollupFindArgs.orderBy = [{ [sortBy]: sort }];
       }
@@ -1044,6 +1068,8 @@ export class AnomaliesAdminController {
       "INTEGRITY_REFUND_WEBHOOK_MISSING",
       "INTEGRITY_DISPUTE_STALE",
       "INTEGRITY_BILLING_SESSION_STALE",
+      "LEDGER_INVARIANT_VIOLATION",
+      "PAYOUT_EXECUTION_BLOCKED",
     ];
 
     const type = typeRaw ? (String(typeRaw).trim() as AnomalyType) : null;
@@ -1270,6 +1296,16 @@ export class AnomaliesAdminController {
               }
             : workQueueAll;
 
+    const resolvedTotal = await (this.db as any)[model].count({
+      where: AND(baseWhere, { resolvedAt: { not: null } }),
+    });
+
+    opsAlertsOpenTotal.set({ mode: useRollup ? "rollup" : "evidence" }, openTotal);
+    opsAlertsResolvedTotal.set(
+      { mode: useRollup ? "rollup" : "evidence" },
+      resolvedTotal,
+    );
+
     return ok({
       since,
       windowField: "lastSeenAt",
@@ -1476,6 +1512,8 @@ export class AnomaliesAdminController {
       "INTEGRITY_REFUND_WEBHOOK_MISSING",
       "INTEGRITY_DISPUTE_STALE",
       "INTEGRITY_BILLING_SESSION_STALE",
+      "LEDGER_INVARIANT_VIOLATION",
+      "PAYOUT_EXECUTION_BLOCKED",
     ];
 
     const typeRaw = body?.type ? String(body.type).trim() : null;
@@ -1698,6 +1736,8 @@ export class AnomaliesAdminController {
       "INTEGRITY_REFUND_WEBHOOK_MISSING",
       "INTEGRITY_DISPUTE_STALE",
       "INTEGRITY_BILLING_SESSION_STALE",
+      "LEDGER_INVARIANT_VIOLATION",
+      "PAYOUT_EXECUTION_BLOCKED",
     ];
 
     const typeRaw = body?.type ? String(body.type).trim() : null;

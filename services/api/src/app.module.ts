@@ -13,7 +13,11 @@ import { BookingsModule } from "./modules/bookings/bookings.module";
 import { BillingModule } from "./modules/billing/billing.module";
 import { LedgerModule } from "./modules/ledger/ledger.module";
 import { PayoutsModule } from "./modules/payouts/payouts.module";
+import { DispatchModule } from "./modules/dispatch/dispatch.module";
 import { TelemetryController } from "./modules/telemetry/telemetry.controller";
+import { HealthController } from "./health.controller";
+import { ReadinessController } from "./readiness.controller";
+import { MetricsController } from "./metrics.controller";
 
 const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
 
@@ -40,7 +44,15 @@ const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
     BillingModule,
     LedgerModule,
     PayoutsModule,
+    DispatchModule,
   ],
-  controllers: [PricingController, MeController, TelemetryController],
+  controllers: [
+    PricingController,
+    MeController,
+    TelemetryController,
+    HealthController,
+    ReadinessController,
+    MetricsController,
+  ],
 })
 export class AppModule {}

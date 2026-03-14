@@ -10,6 +10,7 @@ import {
   JournalEntryType,
   LedgerAccount,
   LineDirection,
+  OpsAnomalyType,
 } from "@prisma/client";
 
 jest.setTimeout(15000);
@@ -193,6 +194,67 @@ describe("Ledger (E2E)", () => {
 
     expect({ charged, refunded }).toEqual({ charged: 6500, refunded: 6000 });
     expect(refunded).toBeLessThanOrEqual(charged);
+  });
+
+  it("runtime hard-fail: imbalanced entry emits CRITICAL OpsAlert + Rollup (ledger invariant violation)", async () => {
+    const ledger = app.get(LedgerService);
+
+    const customer = await prisma.user.findFirst({
+      where: { email: { contains: "cust_ledger_" } },
+    });
+    expect(customer).toBeTruthy();
+
+    // OpsAlert.bookingId is a FK → must be a real Booking id.
+    const booking = await prisma.booking.create({
+      data: {
+        customerId: customer!.id,
+        hourlyRateCents: 6500,
+        estimatedHours: 1,
+        currency: "usd",
+        status: BookingStatus.pending_payment,
+      },
+    });
+
+    const idem = `e2e-ledger-imbalanced-${Date.now()}`;
+    const sourceEventId = `ledger_guard:${idem}:ENTRY_IMBALANCED`;
+
+    // Intentionally imbalanced: debits=100, credits=90
+    await expect(
+      ledger.postEntry({
+        type: JournalEntryType.CHARGE,
+        bookingId: booking.id,
+        currency: "usd",
+        idempotencyKey: idem,
+        metadata: { test: true },
+        lines: [
+          { account: LedgerAccount.AR_CUSTOMER, direction: LineDirection.DEBIT, amountCents: 100 },
+          { account: LedgerAccount.REV_PLATFORM, direction: LineDirection.CREDIT, amountCents: 50 },
+          { account: LedgerAccount.LIAB_FO_PAYABLE, direction: LineDirection.CREDIT, amountCents: 40 },
+        ],
+      }),
+    ).rejects.toBeTruthy();
+
+    const alert = await prisma.opsAlert.findUnique({
+      where: { sourceEventId },
+    });
+
+    expect(alert).toBeTruthy();
+    expect(alert!.bookingId).toBe(booking.id);
+    expect(alert!.anomalyType).toBe(OpsAnomalyType.LEDGER_INVARIANT_VIOLATION);
+    expect(String(alert!.severity)).toBe("critical");
+    expect(String(alert!.status)).toBe("open");
+    expect(alert!.fingerprint).toBeTruthy();
+    expect(alert!.slaDueAt).toBeTruthy();
+
+    const rollup = await prisma.opsAlertRollup.findUnique({
+      where: { fingerprint: alert!.fingerprint! },
+    });
+
+    expect(rollup).toBeTruthy();
+    expect(rollup!.anomalyType).toBe(OpsAnomalyType.LEDGER_INVARIANT_VIOLATION);
+    expect(String(rollup!.severity)).toBe("critical");
+    expect(String(rollup!.status)).toBe("open");
+    expect(rollup!.occurrences).toBeGreaterThanOrEqual(1);
   });
 
   it("validator endpoint flags FO_PAYABLE_NEGATIVE (with evidence) when FO liability goes negative", async () => {

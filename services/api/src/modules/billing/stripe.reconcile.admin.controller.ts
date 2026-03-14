@@ -10,6 +10,7 @@ import {
 
 import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
 import { AdminGuard } from "../../guards/admin.guard";
+import { stripeReconcileMismatchesTotal } from "../../metrics.registry";
 import { StripeReconcileService } from "./stripe.reconcile.service";
 
 @Controller("/api/v1/admin/stripe/reconcile")
@@ -71,12 +72,20 @@ export class StripeReconcileAdminController {
       String(evidence ?? "").toLowerCase() === "1" ||
       String(evidence ?? "").toLowerCase() === "true";
 
-    return this.reconcile.mismatches({
+    const result = await this.reconcile.mismatches({
       currency: cur,
       since: sinceDate,
       until: untilDate,
       limit: limitNum,
       evidence: evidenceFlag,
     });
+
+    const mismatchCount = Array.isArray((result as any)?.mismatches)
+      ? (result as any).mismatches.length
+      : Number((result as any)?.mismatchCount ?? 0);
+
+    stripeReconcileMismatchesTotal.set({ currency: cur }, mismatchCount);
+
+    return result;
   }
 }

@@ -1,4 +1,9 @@
 import { EstimatorService, EstimateInput } from "../src/modules/estimate/estimator.service";
+import { FoService } from "../src/modules/fo/fo.service";
+
+const mockFoService = {
+  matchFOs: jest.fn().mockResolvedValue([]),
+} as unknown as FoService;
 
 function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
   return {
@@ -32,9 +37,9 @@ function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
 }
 
 describe("EstimatorService (unit)", () => {
-  const svc = new EstimatorService();
+  const svc = new EstimatorService(mockFoService);
 
-  it("STANDARD: returns real-time estimate with anchored asymmetric range (maintenance, low risk)", () => {
+  it("STANDARD: returns real-time estimate with anchored asymmetric range (maintenance, low risk)", async () => {
     const input = baseInput({
       service_type: "maintenance",
       first_time_with_servelink: "no",
@@ -46,7 +51,7 @@ describe("EstimatorService (unit)", () => {
       floor_visibility: "mostly_clear",
     });
 
-    const res = svc.estimate(input);
+    const res = await svc.estimate(input);
 
     expect(res.mode).toBe("STANDARD");
     expect(res.estimateMinutes).toBeGreaterThan(0);
@@ -70,7 +75,7 @@ describe("EstimatorService (unit)", () => {
     expect(res.confidence).toBeGreaterThanOrEqual(0.65);
   });
 
-  it("CAPPED: for risk 26–34%, mode is CAPPED; range uses service cap (deep clean cap=25%) and no staged plan", () => {
+  it("CAPPED: for risk 26–34%, mode is CAPPED; range uses service cap (deep clean cap=25%) and no staged plan", async () => {
     const input = baseInput({
       service_type: "deep_clean",
 
@@ -90,7 +95,7 @@ describe("EstimatorService (unit)", () => {
       // Total uncapped risk should be ~28 (15+10+3)
     });
 
-    const res = svc.estimate(input);
+    const res = await svc.estimate(input);
 
     expect(res.mode).toBe("CAPPED");
 
@@ -115,7 +120,7 @@ describe("EstimatorService (unit)", () => {
     );
   });
 
-  it("STAGED: for uncapped risk >= 35%, mode is STAGED; returns uncappedMinutes and a 4-visit plan that sums correctly", () => {
+  it("STAGED: for uncapped risk >= 35%, mode is STAGED; returns uncappedMinutes and a 4-visit plan that sums correctly", async () => {
     const input = baseInput({
       service_type: "deep_clean",
 
@@ -141,7 +146,7 @@ describe("EstimatorService (unit)", () => {
       // Now total risk = 15 + 20 + 5 + 5 = 45 (>=35)
     });
 
-    const res = svc.estimate(input);
+    const res = await svc.estimate(input);
 
     expect(res.mode).toBe("STAGED");
     expect(res.riskPercentUncapped).toBeGreaterThanOrEqual(35);
@@ -165,7 +170,7 @@ describe("EstimatorService (unit)", () => {
     );
   });
 
-  it("Category caps: unknowns should cap at 15%, occupancy/access at 5%", () => {
+  it("Category caps: unknowns should cap at 15%, occupancy/access at 5%", async () => {
     const input = baseInput({
       service_type: "maintenance",
 
@@ -181,7 +186,7 @@ describe("EstimatorService (unit)", () => {
       stairs_flights: "not_sure",
     });
 
-    const res = svc.estimate(input);
+    const res = await svc.estimate(input);
 
     // Find unknown signals
     const unknownSignals = res.breakdown.riskSignals.filter((s) => s.category === "unknowns");
@@ -195,7 +200,7 @@ describe("EstimatorService (unit)", () => {
     expect(occTotal).toBeLessThanOrEqual(5);
   });
 
-  it("Confidence floor: never below 0.30", () => {
+  it("Confidence floor: never below 0.30", async () => {
     const input = baseInput({
       service_type: "move_out",
 
@@ -218,7 +223,7 @@ describe("EstimatorService (unit)", () => {
       stairs_flights: "two_plus",
     });
 
-    const res = svc.estimate(input);
+    const res = await svc.estimate(input);
 
     expect(res.confidence).toBeGreaterThanOrEqual(0.30);
   });

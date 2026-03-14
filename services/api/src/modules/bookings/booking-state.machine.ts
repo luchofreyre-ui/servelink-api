@@ -8,7 +8,12 @@ export function getTransition(
 ): { to: BookingStatus } {
   switch (transition) {
     case "schedule":
-      if (current === BookingStatus.pending_dispatch) return { to: current };
+      if (
+        current === BookingStatus.pending_dispatch ||
+        current === BookingStatus.assigned
+      ) {
+        return { to: current };
+      }
       if (current !== BookingStatus.pending_payment) break;
       return { to: BookingStatus.pending_dispatch };
 

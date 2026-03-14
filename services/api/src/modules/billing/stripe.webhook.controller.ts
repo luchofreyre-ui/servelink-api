@@ -2,6 +2,10 @@ import { Controller, Headers, Post, Req } from "@nestjs/common";
 import { BookingEventType } from "@prisma/client";
 import type { Request } from "express";
 
+import {
+  stripeWebhookEventsTotal,
+  stripeWebhookFailuresTotal,
+} from "../../metrics.registry";
 import { PrismaService } from "../../prisma";
 import { fail, ok } from "../../utils/http";
 import { StripeService } from "./stripe.service";
@@ -18,8 +22,16 @@ export class StripeWebhookController {
   @Post("webhook")
   async handle(@Req() req: Request, @Headers("stripe-signature") sig?: string) {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    if (!webhookSecret) return fail("STRIPE_NOT_CONFIGURED", "Stripe webhook is not configured");
-    if (!sig) return fail("INVALID_REQUEST", "Missing Stripe signature");
+    if (!webhookSecret) {
+      stripeWebhookFailuresTotal.inc({ reason: "not_configured" });
+      stripeWebhookEventsTotal.inc({ type: "unknown", outcome: "rejected" });
+      return fail("STRIPE_NOT_CONFIGURED", "Stripe webhook is not configured");
+    }
+    if (!sig) {
+      stripeWebhookFailuresTotal.inc({ reason: "missing_signature" });
+      stripeWebhookEventsTotal.inc({ type: "unknown", outcome: "rejected" });
+      return fail("INVALID_REQUEST", "Missing Stripe signature");
+    }
 
     const stripe = this.stripeSvc.stripe;
 
@@ -34,10 +46,13 @@ export class StripeWebhookController {
 
       event = stripe.webhooks.constructEvent(raw, sig, webhookSecret);
     } catch (e: any) {
+      stripeWebhookFailuresTotal.inc({ reason: "invalid_signature" });
+      stripeWebhookEventsTotal.inc({ type: "unknown", outcome: "rejected" });
       return fail("WEBHOOK_INVALID_SIGNATURE", "Invalid Stripe webhook signature");
     }
 
     const type = String(event?.type ?? "");
+    stripeWebhookEventsTotal.inc({ type: type || "unknown", outcome: "received" });
 
     // ✅ Exactly-once processing gate (Stripe retries deliveries)
     try {
@@ -51,6 +66,7 @@ export class StripeWebhookController {
     } catch (err: any) {
       // Unique violation => already processed
       if (err?.code === "P2002") {
+        stripeWebhookEventsTotal.inc({ type: type || "unknown", outcome: "duplicate" });
         return ok({ duplicate: true, type });
       }
       throw err;
@@ -83,30 +99,35 @@ export class StripeWebhookController {
     // ✅ Event 1: payment_intent.succeeded (note + SETTLEMENT ledger entry)
     if (type === "payment_intent.succeeded") {
       await this.webhookHandler.handlePaymentIntentSucceeded(event);
+      stripeWebhookEventsTotal.inc({ type, outcome: "processed" });
       return ok({ processed: true });
     }
 
     // ✅ Event 2: charge.dispute.created (note + case status; no cash movement)
     if (type === "charge.dispute.created") {
       await this.webhookHandler.handleChargeDisputeCreated(event);
+      stripeWebhookEventsTotal.inc({ type, outcome: "processed" });
       return ok({ processed: true });
     }
 
     // ✅ Event 2b: charge.dispute.funds_withdrawn (cash leaves Stripe)
     if (type === "charge.dispute.funds_withdrawn") {
       await this.webhookHandler.handleChargeDisputeFundsWithdrawn(event);
+      stripeWebhookEventsTotal.inc({ type, outcome: "processed" });
       return ok({ processed: true });
     }
 
     // ✅ Event 2c: charge.dispute.funds_reinstated (cash returns to Stripe)
     if (type === "charge.dispute.funds_reinstated") {
       await this.webhookHandler.handleChargeDisputeFundsReinstated(event);
+      stripeWebhookEventsTotal.inc({ type, outcome: "processed" });
       return ok({ processed: true });
     }
 
     // ✅ Event 3: charge.refund.updated (note + REFUND ledger entry)
     if (type === "charge.refund.updated") {
       await this.webhookHandler.handleChargeRefundUpdated(event);
+      stripeWebhookEventsTotal.inc({ type, outcome: "processed" });
       return ok({ processed: true });
     }
 
@@ -114,7 +135,10 @@ export class StripeWebhookController {
     if (type === "payment_intent.payment_failed") {
       const pi = event.data?.object;
       const paymentIntentId = String(pi?.id ?? "");
-      if (!paymentIntentId) return ok({ processed: true });
+      if (!paymentIntentId) {
+        stripeWebhookEventsTotal.inc({ type, outcome: "processed" });
+        return ok({ processed: true });
+      }
 
       const pointer = await this.db.bookingStripePayment.findFirst({
         where: { stripePaymentIntentId: paymentIntentId },
@@ -137,6 +161,7 @@ export class StripeWebhookController {
             createdAt: new Date().toISOString(),
           },
         });
+        stripeWebhookEventsTotal.inc({ type, outcome: "processed" });
         return ok({ processed: true });
       }
 
@@ -158,16 +183,19 @@ export class StripeWebhookController {
         },
       });
 
+      stripeWebhookEventsTotal.inc({ type, outcome: "processed" });
       return ok({ processed: true });
     }
 
     // ✅ Event: charge.dispute.closed (note + loss write-off if lost; cash movement handled by funds_* events)
     if (type === "charge.dispute.closed") {
       await this.webhookHandler.handleChargeDisputeClosed(event);
+      stripeWebhookEventsTotal.inc({ type, outcome: "processed" });
       return ok({ processed: true });
     }
 
     // Ignore everything else for now (deterministic + safe)
+    stripeWebhookEventsTotal.inc({ type: type || "unknown", outcome: "ignored" });
     return ok({ ignored: true, type });
   }
 }

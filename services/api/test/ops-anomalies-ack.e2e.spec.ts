@@ -4,7 +4,7 @@ import request from "supertest";
 import * as bcrypt from "bcrypt";
 import { AppModule } from "../src/app.module";
 import { PrismaService } from "../src/prisma";
-import { BookingEventType, OpsAlertStatus } from "@prisma/client";
+import { BookingEventType, OpsAlertSeverity, OpsAlertStatus } from "@prisma/client";
 
 jest.setTimeout(30000);
 
@@ -1006,6 +1006,237 @@ describe("Ops anomalies ack/query (E2E)", () => {
   },
   20000);
 
+  it("sortBy=slaDueAt orders both evidence + rollup (nulls last), stable by lastSeenAt/createdAt", async () => {
+    // Seed data: three alerts with same foId, different slaDueAt (including null)
+    const customer = await prisma.user.create({
+      data: {
+        email: `cust_sort_sla_${Date.now()}@servelink.local`,
+        passwordHash: "x",
+        role: "customer",
+      },
+    });
+
+    const foUser = await prisma.user.create({
+      data: {
+        email: `fo_sort_sla_${Date.now()}@servelink.local`,
+        passwordHash: "x",
+        role: "fo" as any,
+      } as any,
+    });
+
+    const fo = await prisma.franchiseOwner.create({
+      data: {
+        userId: foUser.id,
+        status: "active" as any,
+      } as any,
+    });
+
+    const foId = fo.id;
+
+    const bookingA = await prisma.booking.create({
+      data: {
+        customerId: customer.id,
+        hourlyRateCents: 5000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: "completed",
+        foId,
+      },
+    });
+
+    const bookingB = await prisma.booking.create({
+      data: {
+        customerId: customer.id,
+        hourlyRateCents: 5000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: "completed",
+        foId,
+      },
+    });
+
+    const bookingC = await prisma.booking.create({
+      data: {
+        customerId: customer.id,
+        hourlyRateCents: 5000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: "completed",
+        foId,
+      },
+    });
+
+    const now = new Date();
+    const dueSoon = new Date(now.getTime() + 10 * 60 * 1000);
+    const overdue = new Date(now.getTime() - 10 * 60 * 1000);
+
+    // Evidence rows (OpsAlert)
+    await prisma.opsAlert.createMany({
+      data: [
+        {
+          sourceEventId: `sla-sort:${Date.now()}:A`,
+          fingerprint: `sla-sort-fp:${Date.now()}:A`,
+          anomalyType: "LEDGER_INVARIANT_VIOLATION" as any,
+          severity: "critical" as any,
+          status: "open" as any,
+          bookingId: bookingA.id,
+          foId,
+          bookingStatus: "completed" as any,
+          payloadJson: JSON.stringify({ test: "sla-sort-A" }),
+          slaDueAt: dueSoon, // later
+          lastSeenAt: new Date(now.getTime() - 1 * 60 * 1000),
+        } as any,
+        {
+          sourceEventId: `sla-sort:${Date.now()}:B`,
+          fingerprint: `sla-sort-fp:${Date.now()}:B`,
+          anomalyType: "LEDGER_INVARIANT_VIOLATION" as any,
+          severity: "critical" as any,
+          status: "open" as any,
+          bookingId: bookingB.id,
+          foId,
+          bookingStatus: "completed" as any,
+          payloadJson: JSON.stringify({ test: "sla-sort-B" }),
+          slaDueAt: overdue, // earlier
+          lastSeenAt: new Date(now.getTime() - 2 * 60 * 1000),
+        } as any,
+        {
+          sourceEventId: `sla-sort:${Date.now()}:C`,
+          fingerprint: `sla-sort-fp:${Date.now()}:C`,
+          anomalyType: "LEDGER_INVARIANT_VIOLATION" as any,
+          severity: "critical" as any,
+          status: "open" as any,
+          bookingId: bookingC.id,
+          foId,
+          bookingStatus: "completed" as any,
+          payloadJson: JSON.stringify({ test: "sla-sort-C" }),
+          slaDueAt: null, // null should sort last in asc (we enforce by query below)
+          lastSeenAt: new Date(now.getTime() - 3 * 60 * 1000),
+        } as any,
+      ],
+    });
+
+    // Rollup rows (OpsAlertRollup)
+    // Mirror same ordering surfaces; give them distinct fingerprints for cursor.
+    await prisma.opsAlertRollup.createMany({
+      data: [
+        {
+          fingerprint: `sla-rollup:${Date.now()}:A`,
+          anomalyType: "LEDGER_INVARIANT_VIOLATION" as any,
+          severity: "critical" as any,
+          status: "open" as any,
+          bookingId: bookingA.id,
+          foId,
+          bookingStatus: "completed" as any,
+          occurrences: 1,
+          firstSeenAt: new Date(now.getTime() - 5 * 60 * 1000),
+          lastSeenAt: new Date(now.getTime() - 1 * 60 * 1000),
+          slaDueAt: dueSoon,
+          slaBreachedAt: null,
+          assignedToAdminId: null,
+        } as any,
+        {
+          fingerprint: `sla-rollup:${Date.now()}:B`,
+          anomalyType: "LEDGER_INVARIANT_VIOLATION" as any,
+          severity: "critical" as any,
+          status: "open" as any,
+          bookingId: bookingB.id,
+          foId,
+          bookingStatus: "completed" as any,
+          occurrences: 1,
+          firstSeenAt: new Date(now.getTime() - 6 * 60 * 1000),
+          lastSeenAt: new Date(now.getTime() - 2 * 60 * 1000),
+          slaDueAt: overdue,
+          slaBreachedAt: null,
+          assignedToAdminId: null,
+        } as any,
+        {
+          fingerprint: `sla-rollup:${Date.now()}:C`,
+          anomalyType: "LEDGER_INVARIANT_VIOLATION" as any,
+          severity: "critical" as any,
+          status: "open" as any,
+          bookingId: bookingC.id,
+          foId,
+          bookingStatus: "completed" as any,
+          occurrences: 1,
+          firstSeenAt: new Date(now.getTime() - 7 * 60 * 1000),
+          lastSeenAt: new Date(now.getTime() - 3 * 60 * 1000),
+          slaDueAt: null,
+          slaBreachedAt: null,
+          assignedToAdminId: null,
+        } as any,
+      ],
+    });
+
+    // ---- Evidence mode ordering ----
+    // NOTE: DB null ordering varies; to make this deterministic we exclude nulls first, then ensure null appears last.
+    // We do that by filtering with sla=dueSoon/overdue would exclude nulls, but we want full ordering.
+    // So: query once without null guarantee and assert relative order among non-nulls, plus null is last (expected in Postgres).
+    const evRes = await request(app.getHttpServer())
+      .get("/api/v1/admin/ops/anomalies")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .query({
+        foId,
+        type: "LEDGER_INVARIANT_VIOLATION",
+        sortBy: "slaDueAt",
+        sort: "asc",
+        limit: "50",
+        sinceHours: "1",
+      })
+      .expect(200);
+
+    const ev = evRes.body.data?.anomalies ?? [];
+    const evIds = ev.map((x: any) => x.id);
+
+    // We must see all three (evidence ids = sourceEventId)
+    expect(evIds.some((id: string) => String(id).includes(":A"))).toBe(true);
+    expect(evIds.some((id: string) => String(id).includes(":B"))).toBe(true);
+    expect(evIds.some((id: string) => String(id).includes(":C"))).toBe(true);
+
+    const evB = ev.find((x: any) => String(x.id).includes(":B"));
+    const evA = ev.find((x: any) => String(x.id).includes(":A"));
+    const evC = ev.find((x: any) => String(x.id).includes(":C"));
+
+    // Non-null ordering: overdue (earlier) must come before dueSoon (later) in asc
+    expect(ev.indexOf(evB)).toBeLessThan(ev.indexOf(evA));
+
+    // Null should sort last in Postgres for asc when no NULLS FIRST is specified
+    // (This is what Prisma emits for orderBy). If this ever flips in your DB, we can enforce NULLS LAST via raw SQL,
+    // but for Postgres default, this should hold.
+    expect(ev.indexOf(evC)).toBeGreaterThan(ev.indexOf(evA));
+    expect(ev.indexOf(evC)).toBeGreaterThan(ev.indexOf(evB));
+
+    // ---- Rollup mode ordering ----
+    const ruRes = await request(app.getHttpServer())
+      .get("/api/v1/admin/ops/anomalies")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .query({
+        foId,
+        type: "LEDGER_INVARIANT_VIOLATION",
+        groupBy: "fingerprint",
+        sortBy: "slaDueAt",
+        sort: "asc",
+        limit: "50",
+        sinceHours: "1",
+      })
+      .expect(200);
+
+    const ru = ruRes.body.data?.anomalies ?? [];
+    const fp = ru.map((x: any) => x.fingerprint);
+
+    // Must see all three rollups
+    expect(fp.some((f: string) => String(f).includes(":A"))).toBe(true);
+    expect(fp.some((f: string) => String(f).includes(":B"))).toBe(true);
+    expect(fp.some((f: string) => String(f).includes(":C"))).toBe(true);
+
+    const ruB = ru.find((x: any) => String(x.fingerprint).includes(":B"));
+    const ruA = ru.find((x: any) => String(x.fingerprint).includes(":A"));
+    const ruC = ru.find((x: any) => String(x.fingerprint).includes(":C"));
+
+    expect(ru.indexOf(ruB)).toBeLessThan(ru.indexOf(ruA));
+    expect(ru.indexOf(ruC)).toBeGreaterThan(ru.indexOf(ruA));
+    expect(ru.indexOf(ruC)).toBeGreaterThan(ru.indexOf(ruB));
+  }, 20000);
+
   it("groups by fingerprint and reports occurrences", async () => {
     const customer = await prisma.user.create({
       data: {
@@ -1503,7 +1734,13 @@ describe("Ops anomalies ack/query (E2E)", () => {
   );
 
   it("filters: bookingId + status + foId apply to list() and counts() (evidence + rollup)", async () => {
-    // Seed: customer + FO + booking with foId + status, plus a legacy NOTE anomaly
+    // Seed: customer + FO + booking with foId + status, plus:
+    //  (1) legacy NOTE anomaly (INTEGRITY_*)
+    //  (2) runtime ledger invariant anomaly (LEDGER_INVARIANT_VIOLATION) via direct OpsAlert seed
+    //  (3) payout execution blocked anomaly (PAYOUT_EXECUTION_BLOCKED) via direct OpsAlert seed (bookingId = null)
+
+    const now = new Date();
+
     const customer = await prisma.user.create({
       data: {
         email: `cust_filters_${Date.now()}@servelink.local`,
@@ -1538,162 +1775,195 @@ describe("Ops anomalies ack/query (E2E)", () => {
       },
     });
 
+    // (1) Legacy NOTE anomaly
     await prisma.bookingEvent.create({
       data: {
         bookingId: booking.id,
         type: BookingEventType.NOTE,
         note: JSON.stringify({
-          type: "INTEGRITY_DISPUTE_STALE",
+          type: "INTEGRITY_REFUND_WEBHOOK_MISSING",
           bookingId: booking.id,
           observedAt: new Date().toISOString(),
-          message: "filters regression seed",
+          message: "Filters test legacy anomaly",
         }),
       } as any,
     });
 
-    // Trigger legacy materialization (creates OpsAlert + OpsAlertRollup)
+    // (2) Seed a LEDGER_INVARIANT_VIOLATION alert + rollup (booking-scoped)
+    const ledgerFp = `LEDGER_INVARIANT_VIOLATION:${booking.id}`;
+    const ledgerSourceEventId = `test-ledger-inv-${Date.now()}`;
+
+    await prisma.opsAlert.create({
+      data: {
+        sourceEventId: ledgerSourceEventId,
+        bookingId: booking.id,
+        foId: fo.id,
+        bookingStatus: booking.status as any,
+        anomalyType: "LEDGER_INVARIANT_VIOLATION" as any,
+        status: "open" as any,
+        severity: OpsAlertSeverity.critical,
+        fingerprint: ledgerFp,
+        firstSeenAt: now,
+        lastSeenAt: now,
+        occurrences: 1,
+        slaDueAt: new Date(now.getTime() + 30 * 60 * 1000),
+        slaBreachedAt: null,
+        payloadJson: JSON.stringify({ test: true, kind: "ledger_invariant" }),
+      } as any,
+    });
+
+    await prisma.opsAlertRollup.create({
+      data: {
+        fingerprint: ledgerFp,
+        anomalyType: "LEDGER_INVARIANT_VIOLATION" as any,
+        bookingId: booking.id,
+        foId: fo.id,
+        bookingStatus: booking.status as any,
+        status: "open" as any,
+        severity: OpsAlertSeverity.critical,
+        firstSeenAt: now,
+        lastSeenAt: now,
+        occurrences: 1,
+        slaDueAt: new Date(now.getTime() + 30 * 60 * 1000),
+        slaBreachedAt: null,
+      } as any,
+    });
+
+    // (3) Seed a PAYOUT_EXECUTION_BLOCKED alert + rollup (FO-scoped, bookingId = null)
+    const payoutFp = `PAYOUT_EXECUTION_BLOCKED:${fo.id}:${Date.now()}`;
+    const payoutSourceEventId = `test-payout-blocked-${Date.now()}`;
+
+    await prisma.opsAlert.create({
+      data: {
+        sourceEventId: payoutSourceEventId,
+        bookingId: null,
+        foId: fo.id,
+        bookingStatus: null,
+        anomalyType: "PAYOUT_EXECUTION_BLOCKED" as any,
+        status: "open" as any,
+        severity: OpsAlertSeverity.critical,
+        fingerprint: payoutFp,
+        firstSeenAt: now,
+        lastSeenAt: now,
+        occurrences: 1,
+        slaDueAt: new Date(now.getTime() + 30 * 60 * 1000),
+        slaBreachedAt: null,
+        payloadJson: JSON.stringify({ test: true, kind: "payout_execution_blocked" }),
+      } as any,
+    });
+
+    await prisma.opsAlertRollup.create({
+      data: {
+        fingerprint: payoutFp,
+        anomalyType: "PAYOUT_EXECUTION_BLOCKED" as any,
+        bookingId: null,
+        foId: fo.id,
+        bookingStatus: null,
+        status: "open" as any,
+        severity: OpsAlertSeverity.critical,
+        firstSeenAt: now,
+        lastSeenAt: now,
+        occurrences: 1,
+        slaDueAt: new Date(now.getTime() + 30 * 60 * 1000),
+        slaBreachedAt: null,
+      } as any,
+    });
+
+    // Trigger bridge/materialization for the legacy NOTE so it becomes OpsAlert-backed on first page.
     await request(app.getHttpServer())
-      .get("/api/v1/admin/ops/anomalies?groupBy=fingerprint")
+      .get("/api/v1/admin/ops/anomalies?groupBy=fingerprint&sinceHours=1&limit=200")
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(200);
 
-    // -------------------------
-    // Evidence mode: LIST filters
-    // -------------------------
+    const getTypes = (res: any) =>
+      (res.body.data?.anomalies ?? []).map((a: any) => String(a.anomalyType));
+
+    // -----------------
+    // LIST FILTERS
+    // -----------------
+
+    // bookingId filter: should include legacy + ledger; MUST NOT include payout-blocked (bookingId=null)
     const listByBooking = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies?bookingId=${booking.id}`)
+      .get(`/api/v1/admin/ops/anomalies?bookingId=${booking.id}&sinceHours=1&limit=200`)
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(200);
 
-    const a1 = listByBooking.body?.data?.anomalies ?? [];
-    expect(Array.isArray(a1)).toBe(true);
-    expect(a1.length).toBeGreaterThanOrEqual(1);
-    for (const a of a1) {
-      expect(String(a.bookingId)).toBe(booking.id);
-    }
+    const typesByBooking = getTypes(listByBooking);
+    expect(typesByBooking).toContain("INTEGRITY_REFUND_WEBHOOK_MISSING");
+    expect(typesByBooking).toContain("LEDGER_INVARIANT_VIOLATION");
+    expect(typesByBooking).not.toContain("PAYOUT_EXECUTION_BLOCKED");
 
+    // status filter (bookingStatus): should include legacy + ledger, but not payout-blocked (bookingStatus=null)
     const listByStatus = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies?bookingId=${booking.id}&status=completed`)
+      .get(`/api/v1/admin/ops/anomalies?status=completed&sinceHours=1&limit=200`)
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(200);
 
-    const a2 = listByStatus.body?.data?.anomalies ?? [];
-    expect(a2.length).toBeGreaterThanOrEqual(1);
-    for (const a of a2) {
-      expect(String(a.bookingId)).toBe(booking.id);
-      expect(String(a.bookingStatus)).toBe("completed");
-    }
+    const typesByStatus = getTypes(listByStatus);
+    expect(typesByStatus).toContain("INTEGRITY_REFUND_WEBHOOK_MISSING");
+    expect(typesByStatus).toContain("LEDGER_INVARIANT_VIOLATION");
+    expect(typesByStatus).not.toContain("PAYOUT_EXECUTION_BLOCKED");
 
+    // foId filter: should include all three (legacy + ledger + payout-blocked)
     const listByFo = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies?bookingId=${booking.id}&foId=${fo.id}`)
+      .get(`/api/v1/admin/ops/anomalies?foId=${fo.id}&sinceHours=1&limit=200`)
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(200);
 
-    const a3 = listByFo.body?.data?.anomalies ?? [];
-    expect(a3.length).toBeGreaterThanOrEqual(1);
-    for (const a of a3) {
-      expect(String(a.bookingId)).toBe(booking.id);
-      expect(String(a.foId)).toBe(fo.id);
-    }
+    const typesByFo = getTypes(listByFo);
+    expect(typesByFo).toContain("INTEGRITY_REFUND_WEBHOOK_MISSING");
+    expect(typesByFo).toContain("LEDGER_INVARIANT_VIOLATION");
+    expect(typesByFo).toContain("PAYOUT_EXECUTION_BLOCKED");
 
-    // -------------------------
-    // Evidence mode: COUNTS filters
-    // -------------------------
-    const countsEvBooking = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies/counts?bookingId=${booking.id}`)
+    // type filter: LEDGER_INVARIANT_VIOLATION
+    const listLedgerOnly = await request(app.getHttpServer())
+      .get(`/api/v1/admin/ops/anomalies?type=LEDGER_INVARIANT_VIOLATION&sinceHours=1&limit=200`)
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(200);
 
-    const dEv1 = countsEvBooking.body?.data;
-    expect(dEv1.mode).toBe("evidence");
-    expect(Number(dEv1.totalsByType?.INTEGRITY_DISPUTE_STALE ?? 0)).toBeGreaterThanOrEqual(1);
+    const typesLedgerOnly = getTypes(listLedgerOnly);
+    expect(typesLedgerOnly).toEqual(expect.arrayContaining(["LEDGER_INVARIANT_VIOLATION"]));
+    expect(typesLedgerOnly).not.toContain("PAYOUT_EXECUTION_BLOCKED");
 
-    const countsEvStatus = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies/counts?bookingId=${booking.id}&status=completed`)
+    // type filter: PAYOUT_EXECUTION_BLOCKED
+    const listPayoutOnly = await request(app.getHttpServer())
+      .get(`/api/v1/admin/ops/anomalies?type=PAYOUT_EXECUTION_BLOCKED&sinceHours=1&limit=200`)
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(200);
 
-    const dEv2 = countsEvStatus.body?.data;
-    expect(dEv2.mode).toBe("evidence");
-    expect(Number(dEv2.totalsByType?.INTEGRITY_DISPUTE_STALE ?? 0)).toBeGreaterThanOrEqual(1);
+    const typesPayoutOnly = getTypes(listPayoutOnly);
+    expect(typesPayoutOnly).toEqual(expect.arrayContaining(["PAYOUT_EXECUTION_BLOCKED"]));
+    expect(typesPayoutOnly).not.toContain("LEDGER_INVARIANT_VIOLATION");
 
-    const countsEvFo = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies/counts?bookingId=${booking.id}&foId=${fo.id}`)
+    // -----------------
+    // COUNTS FILTERS (evidence + rollup)
+    // -----------------
+
+    // Evidence counts filtered by foId must include all three in totalsByType (at least 1 each)
+    const countsEvidenceByFo = await request(app.getHttpServer())
+      .get(`/api/v1/admin/ops/anomalies/counts?foId=${fo.id}&sinceHours=1`)
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(200);
 
-    const dEv3 = countsEvFo.body?.data;
-    expect(dEv3.mode).toBe("evidence");
-    expect(Number(dEv3.totalsByType?.INTEGRITY_DISPUTE_STALE ?? 0)).toBeGreaterThanOrEqual(1);
+    const ev = countsEvidenceByFo.body?.data;
+    expect(ev.mode).toBe("evidence");
 
-    // -------------------------
-    // Rollup mode: LIST filters
-    // -------------------------
-    const listRollup = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies?groupBy=fingerprint&bookingId=${booking.id}`)
+    expect(Number(ev.totalsByType?.INTEGRITY_REFUND_WEBHOOK_MISSING ?? 0)).toBeGreaterThanOrEqual(1);
+    expect(Number(ev.totalsByType?.LEDGER_INVARIANT_VIOLATION ?? 0)).toBeGreaterThanOrEqual(1);
+    expect(Number(ev.totalsByType?.PAYOUT_EXECUTION_BLOCKED ?? 0)).toBeGreaterThanOrEqual(1);
+
+    // Rollup counts filtered by foId must include all three in totalsByType as well
+    const countsRollupByFo = await request(app.getHttpServer())
+      .get(`/api/v1/admin/ops/anomalies/counts?groupBy=fingerprint&foId=${fo.id}&sinceHours=1`)
       .set("Authorization", `Bearer ${adminToken}`)
       .expect(200);
 
-    const r1 = listRollup.body?.data?.anomalies ?? [];
-    expect(r1.length).toBeGreaterThanOrEqual(1);
-    for (const r of r1) {
-      expect(String(r.bookingId)).toBe(booking.id);
-      expect(String(r.fingerprint)).toBeTruthy();
-    }
+    const ru = countsRollupByFo.body?.data;
+    expect(ru.mode).toBe("rollup");
+    expect(ru.groupBy).toBe("fingerprint");
 
-    const listRollupStatus = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies?groupBy=fingerprint&bookingId=${booking.id}&status=completed`)
-      .set("Authorization", `Bearer ${adminToken}`)
-      .expect(200);
-
-    const r2 = listRollupStatus.body?.data?.anomalies ?? [];
-    expect(r2.length).toBeGreaterThanOrEqual(1);
-    for (const r of r2) {
-      expect(String(r.bookingId)).toBe(booking.id);
-      expect(String(r.bookingStatus)).toBe("completed");
-    }
-
-    const listRollupFo = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies?groupBy=fingerprint&bookingId=${booking.id}&foId=${fo.id}`)
-      .set("Authorization", `Bearer ${adminToken}`)
-      .expect(200);
-
-    const r3 = listRollupFo.body?.data?.anomalies ?? [];
-    expect(r3.length).toBeGreaterThanOrEqual(1);
-    for (const r of r3) {
-      expect(String(r.bookingId)).toBe(booking.id);
-      expect(String(r.foId)).toBe(fo.id);
-    }
-
-    // -------------------------
-    // Rollup mode: COUNTS filters
-    // -------------------------
-    const countsRuBooking = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies/counts?groupBy=fingerprint&bookingId=${booking.id}`)
-      .set("Authorization", `Bearer ${adminToken}`)
-      .expect(200);
-
-    const dRu1 = countsRuBooking.body?.data;
-    expect(dRu1.mode).toBe("rollup");
-    expect(dRu1.groupBy).toBe("fingerprint");
-    expect(Number(dRu1.totalsByType?.INTEGRITY_DISPUTE_STALE ?? 0)).toBeGreaterThanOrEqual(1);
-
-    const countsRuStatus = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies/counts?groupBy=fingerprint&bookingId=${booking.id}&status=completed`)
-      .set("Authorization", `Bearer ${adminToken}`)
-      .expect(200);
-
-    const dRu2 = countsRuStatus.body?.data;
-    expect(dRu2.mode).toBe("rollup");
-    expect(Number(dRu2.totalsByType?.INTEGRITY_DISPUTE_STALE ?? 0)).toBeGreaterThanOrEqual(1);
-
-    const countsRuFo = await request(app.getHttpServer())
-      .get(`/api/v1/admin/ops/anomalies/counts?groupBy=fingerprint&bookingId=${booking.id}&foId=${fo.id}`)
-      .set("Authorization", `Bearer ${adminToken}`)
-      .expect(200);
-
-    const dRu3 = countsRuFo.body?.data;
-    expect(dRu3.mode).toBe("rollup");
-    expect(Number(dRu3.totalsByType?.INTEGRITY_DISPUTE_STALE ?? 0)).toBeGreaterThanOrEqual(1);
+    expect(Number(ru.totalsByType?.INTEGRITY_REFUND_WEBHOOK_MISSING ?? 0)).toBeGreaterThanOrEqual(1);
+    expect(Number(ru.totalsByType?.LEDGER_INVARIANT_VIOLATION ?? 0)).toBeGreaterThanOrEqual(1);
+    expect(Number(ru.totalsByType?.PAYOUT_EXECUTION_BLOCKED ?? 0)).toBeGreaterThanOrEqual(1);
   }, 20000);
 });

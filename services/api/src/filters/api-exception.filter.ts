@@ -5,7 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from "@nestjs/common";
-import type { Response } from "express";
+import type { Request, Response } from "express";
 
 import { fail } from "../utils/http";
 
@@ -14,6 +14,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
+    const req = ctx.getRequest<Request & { requestId?: string }>();
 
     // Default
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -73,14 +74,20 @@ export class ApiExceptionFilter implements ExceptionFilter {
 
     if (shouldLog) {
       // eslint-disable-next-line no-console
-      console.error("[ApiExceptionFilter] 5xx exception:", {
-        status,
-        code,
-        message,
-        name: exception?.name,
-        stack: exception?.stack,
-        raw: exception,
-      });
+      console.error(
+        JSON.stringify({
+          level: "error",
+          msg: "request_failed",
+          requestId: req?.requestId ?? null,
+          method: req?.method ?? null,
+          path: req?.originalUrl ?? req?.url ?? null,
+          status,
+          code,
+          message,
+          errorName: exception?.name ?? null,
+          stack: exception?.stack ?? null,
+        }),
+      );
     }
 
     res.status(status).json(fail(code as any, message));

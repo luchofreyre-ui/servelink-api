@@ -5,7 +5,14 @@ import * as bcrypt from "bcrypt";
 import { AppModule } from "../src/app.module";
 import { PrismaService } from "../src/prisma";
 import { LedgerService } from "../src/modules/ledger/ledger.service";
-import { JournalEntryType, LedgerAccount, LineDirection } from "@prisma/client";
+import {
+  JournalEntryType,
+  LedgerAccount,
+  LineDirection,
+  OpsAnomalyType,
+  OpsAlertSeverity,
+  OpsAlertStatus,
+} from "@prisma/client";
 
 import { resetPayoutTables } from "./helpers/resetPayoutTables";
 
@@ -160,6 +167,17 @@ describe("Payouts (E2E)", () => {
     });
     expect(payoutsAfterReplayExec.length).toBe(2);
 
+    // Success path must NOT emit PAYOUT_EXECUTION_BLOCKED
+    const blocked = await prisma.opsAlert.findFirst({
+      where: {
+        anomalyType: OpsAnomalyType.PAYOUT_EXECUTION_BLOCKED as any,
+        foId: { in: [fo1, fo2] },
+        bookingId: null,
+      },
+    });
+
+    expect(blocked).toBeNull();
+
     const resReplayLock = await request(app.getHttpServer())
       .post("/api/v1/admin/payouts/lock")
       .set("Authorization", `Bearer ${adminToken}`)
@@ -168,6 +186,176 @@ describe("Payouts (E2E)", () => {
     expect(resReplayLock.body.alreadyApplied).toBe(true);
     expect(resReplayLock.body.batch.id).toBe(lockBody.batch.id);
   });
+
+  it("mark-executed is race-safe: concurrent calls create exactly one payout set", async () => {
+    const ts = Date.now();
+    const fo1 = `fo-race-${ts}`;
+    const booking1 = `e2e-race-booking-${ts}`;
+
+    // Seed payable 5000
+    await ledger.postEntry({
+      type: JournalEntryType.CHARGE,
+      bookingId: booking1,
+      foId: fo1,
+      idempotencyKey: `ledger:charge:${booking1}:${ts}`,
+      lines: [
+        { account: LedgerAccount.AR_CUSTOMER, direction: LineDirection.DEBIT, amountCents: 5000 },
+        { account: LedgerAccount.LIAB_FO_PAYABLE, direction: LineDirection.CREDIT, amountCents: 5000 },
+      ],
+    });
+
+    await ledger.postEntry({
+      type: JournalEntryType.SETTLEMENT,
+      bookingId: booking1,
+      idempotencyKey: `ledger:settlement:${booking1}:${ts}`,
+      lines: [
+        { account: LedgerAccount.CASH_STRIPE, direction: LineDirection.DEBIT, amountCents: 5000 },
+        { account: LedgerAccount.AR_CUSTOMER, direction: LineDirection.CREDIT, amountCents: 5000 },
+      ],
+    });
+
+    // Lock batch
+    const asOf = new Date(Date.now() + 60_000).toISOString();
+    const lockRes = await request(app.getHttpServer())
+      .post("/api/v1/admin/payouts/lock")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ idempotencyKey: `payout-race-lock-${ts}`, asOf })
+      .expect(201);
+
+    const batchId = lockRes.body.batch.id as string;
+    const execIdem = `payout-race-exec-${ts}`;
+
+    // Fire two concurrent mark-executed calls
+    const [r1, r2] = await Promise.all([
+      request(app.getHttpServer())
+        .post("/api/v1/admin/payouts/mark-executed")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ batchId, idempotencyKey: execIdem }),
+
+      request(app.getHttpServer())
+        .post("/api/v1/admin/payouts/mark-executed")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ batchId, idempotencyKey: execIdem }),
+    ]);
+
+    expect([r1.status, r2.status]).toEqual([201, 201]);
+
+    const alreadyFlags = [r1.body?.alreadyApplied, r2.body?.alreadyApplied];
+    expect(alreadyFlags.filter(Boolean).length).toBeGreaterThanOrEqual(1);
+
+    // Exactly one payout journal entry should exist for this FO
+    const payouts = await prisma.journalEntry.findMany({
+      where: {
+        type: JournalEntryType.PAYOUT,
+        foId: fo1,
+        idempotencyKey: { startsWith: `ledger:payout:${batchId}:` },
+      },
+    });
+
+    expect(payouts.length).toBe(1);
+
+    // Batch must be executed
+    const batch = await prisma.payoutBatch.findUnique({ where: { id: batchId } });
+    expect(batch?.status).toBe("executed");
+  }, 20000);
+
+  it(
+    "mark-executed is advisory-lock safe: concurrent calls with different idempotency keys still create exactly one payout set",
+    async () => {
+      const ts = Date.now();
+
+      // Use a real FO id (matches schema)
+      const foUser = await prisma.user.create({
+        data: {
+          email: `fo_payout_lock_${ts}@servelink.local`,
+          passwordHash: "x",
+          role: "fo" as any,
+        } as any,
+      });
+
+      const fo = await prisma.franchiseOwner.create({
+        data: { userId: foUser.id, status: "active" as any } as any,
+      });
+
+      const foId = fo.id;
+      const bookingId = `e2e-lock-proof-booking-${ts}`;
+
+      // Seed: payable 5000, eligible (settled)
+      await ledger.postEntry({
+        type: JournalEntryType.CHARGE,
+        bookingId,
+        foId,
+        currency: "usd",
+        idempotencyKey: `ledger:charge:${bookingId}:${ts}`,
+        lines: [
+          { account: LedgerAccount.AR_CUSTOMER, direction: LineDirection.DEBIT, amountCents: 5000 },
+          { account: LedgerAccount.LIAB_FO_PAYABLE, direction: LineDirection.CREDIT, amountCents: 5000 },
+        ],
+      });
+
+      await ledger.postEntry({
+        type: JournalEntryType.SETTLEMENT,
+        bookingId,
+        currency: "usd",
+        idempotencyKey: `ledger:settlement:${bookingId}:${ts}`,
+        lines: [
+          { account: LedgerAccount.CASH_STRIPE, direction: LineDirection.DEBIT, amountCents: 5000 },
+          { account: LedgerAccount.AR_CUSTOMER, direction: LineDirection.CREDIT, amountCents: 5000 },
+        ],
+      });
+
+      // Lock a batch
+      const asOf = new Date(Date.now() + 60_000).toISOString();
+      const lockIdem = `payout-e2e-lock-proof-lock-${ts}`;
+      const resLock = await request(app.getHttpServer())
+        .post("/api/v1/admin/payouts/lock")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({ idempotencyKey: lockIdem, asOf })
+        .expect(201);
+
+      const batchId = String(resLock.body?.batch?.id);
+      expect(batchId).toBeTruthy();
+
+      // Two concurrent executions with DIFFERENT idempotency keys.
+      // Advisory lock should ensure only one transaction commits PAYOUT + batch executed.
+      const execIdem1 = `payout-e2e-lock-proof-exec-1-${ts}`;
+      const execIdem2 = `payout-e2e-lock-proof-exec-2-${ts}`;
+
+      const [r1, r2] = await Promise.all([
+        request(app.getHttpServer())
+          .post("/api/v1/admin/payouts/mark-executed")
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send({ batchId, idempotencyKey: execIdem1 }),
+        request(app.getHttpServer())
+          .post("/api/v1/admin/payouts/mark-executed")
+          .set("Authorization", `Bearer ${adminToken}`)
+          .send({ batchId, idempotencyKey: execIdem2 }),
+      ]);
+
+      // Exactly one should succeed, the other must conflict (cannot claim / already executed/claimed)
+      const codes = [r1.status, r2.status].sort();
+      expect(codes).toEqual([201, 409]);
+
+      // Must have exactly one payout entry for this batch+fo
+      const payouts = await prisma.journalEntry.findMany({
+        where: {
+          type: JournalEntryType.PAYOUT,
+          foId,
+          idempotencyKey: { startsWith: `ledger:payout:${batchId}:` },
+        },
+        include: { lines: true },
+      });
+
+      expect(payouts.length).toBe(1);
+      expect(payouts[0].lines.length).toBe(2);
+
+      // Batch must be executed
+      const batch = await prisma.payoutBatch.findUnique({ where: { id: batchId } });
+      expect(batch).toBeTruthy();
+      expect(batch!.status).toBe("executed");
+    },
+    20000,
+  );
 
   it("mark-executed rejects if a payout line would overdraw FO payable; no PAYOUT entries are created", async () => {
     const ts = Date.now();
@@ -223,6 +411,34 @@ describe("Payouts (E2E)", () => {
       .set("Authorization", `Bearer ${adminToken}`)
       .send({ batchId, idempotencyKey: execIdem })
       .expect(409);
+
+    // Must emit a critical OpsAlert + Rollup for PAYOUT_EXECUTION_BLOCKED (bookingId null)
+    const alert = await prisma.opsAlert.findFirst({
+      where: {
+        anomalyType: OpsAnomalyType.PAYOUT_EXECUTION_BLOCKED as any,
+        foId: fo1,
+        bookingId: null,
+        status: OpsAlertStatus.open,
+        severity: OpsAlertSeverity.critical,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    expect(alert).toBeTruthy();
+
+    const rollup = await prisma.opsAlertRollup.findFirst({
+      where: {
+        anomalyType: OpsAnomalyType.PAYOUT_EXECUTION_BLOCKED as any,
+        foId: fo1,
+        bookingId: null,
+        status: OpsAlertStatus.open,
+        severity: OpsAlertSeverity.critical,
+      },
+      orderBy: { lastSeenAt: "desc" },
+    });
+
+    expect(rollup).toBeTruthy();
+    expect(Number(rollup!.occurrences ?? 0)).toBeGreaterThanOrEqual(1);
 
     // Ensure no PAYOUT journal entries were created for this batch.
     const payouts = await prisma.journalEntry.findMany({

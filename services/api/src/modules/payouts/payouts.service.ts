@@ -5,6 +5,7 @@ import {
   LineDirection,
   PayoutBatchStatus,
 } from "@prisma/client";
+import { createHash } from "crypto";
 
 import { PrismaService } from "../../prisma";
 import { LedgerService } from "../ledger/ledger.service";
@@ -64,6 +65,117 @@ export class PayoutsService {
     private readonly db: PrismaService,
     private readonly ledger: LedgerService,
   ) {}
+
+  private payoutBlockedFingerprint(input: {
+    batchId: string;
+    foId: string;
+    currency: string;
+    reason: "FO_PAYABLE_NEGATIVE" | "BATCH_OVERDRAWS_PAYABLE";
+  }) {
+    const base = {
+      kind: "payout_execution_blocked",
+      batchId: input.batchId,
+      foId: input.foId,
+      currency: input.currency,
+      reason: input.reason,
+    };
+    return createHash("sha256").update(JSON.stringify(base)).digest("hex");
+  }
+
+  private async emitPayoutExecutionBlockedOpsAlert(input: {
+    batchId: string;
+    foId: string;
+    currency: string;
+    reason: "FO_PAYABLE_NEGATIVE" | "BATCH_OVERDRAWS_PAYABLE";
+    details: Record<string, unknown>;
+    sourceEventId?: string;
+  }) {
+    const now = new Date();
+    const fingerprint = this.payoutBlockedFingerprint({
+      batchId: input.batchId,
+      foId: input.foId,
+      currency: input.currency,
+      reason: input.reason,
+    });
+
+    const sourceEventId =
+      input.sourceEventId ??
+      `payout_gate:${input.batchId}:${input.foId}:${input.currency}:${input.reason}`;
+
+    const payload = {
+      type: "PAYOUT_EXECUTION_BLOCKED",
+      batchId: input.batchId,
+      foId: input.foId,
+      currency: input.currency,
+      reason: input.reason,
+      ...input.details,
+    };
+
+    // Per-event alert (dedupe by sourceEventId)
+    await this.db.opsAlert.upsert({
+      where: { sourceEventId },
+      create: {
+        sourceEventId,
+        bookingId: null,
+        foId: input.foId,
+        bookingStatus: null,
+        anomalyType: "PAYOUT_EXECUTION_BLOCKED" as any,
+        status: "open",
+        severity: "critical" as any,
+        fingerprint,
+        firstSeenAt: now,
+        lastSeenAt: now,
+        occurrences: 1,
+        payloadJson: JSON.stringify(payload),
+        slaDueAt: new Date(now.getTime() + 30 * 60 * 1000),
+      } as any,
+      update: {
+        foId: input.foId,
+        lastSeenAt: now,
+        occurrences: { increment: 1 },
+        payloadJson: JSON.stringify(payload),
+        severity: "critical" as any,
+        slaDueAt: new Date(now.getTime() + 30 * 60 * 1000),
+      } as any,
+    });
+
+    // Rollup (fast inbox)
+    const existing = await this.db.opsAlertRollup.findUnique({
+      where: { fingerprint },
+      select: { id: true, severity: true, status: true },
+    });
+
+    if (!existing) {
+      await this.db.opsAlertRollup.create({
+        data: {
+          fingerprint,
+          anomalyType: "PAYOUT_EXECUTION_BLOCKED" as any,
+          bookingId: null,
+          foId: input.foId,
+          bookingStatus: null,
+          status: "open",
+          severity: "critical" as any,
+          firstSeenAt: now,
+          lastSeenAt: now,
+          occurrences: 1,
+          slaDueAt: new Date(now.getTime() + 30 * 60 * 1000),
+          payloadJson: JSON.stringify(payload),
+        } as any,
+      });
+    } else {
+      // Respect human actions (don't reopen), just refresh + escalate
+      await this.db.opsAlertRollup.updateMany({
+        where: { fingerprint, status: "open" },
+        data: {
+          lastSeenAt: now,
+          occurrences: { increment: 1 },
+          payloadJson: JSON.stringify(payload),
+          severity: "critical" as any,
+          slaDueAt: new Date(now.getTime() + 30 * 60 * 1000),
+        } as any,
+      });
+    }
+  }
 
   /**
    * Computes per-FO net LIAB_FO_PAYABLE as of cutoff, scoped to currency.
@@ -361,6 +473,15 @@ export class PayoutsService {
       throw new ConflictException("Cannot mark void batch as executed");
     }
     if (batch.status === "executed") {
+      // If caller uses a different idempotencyKey than the one that executed the batch,
+      // this is NOT a replay — it's a conflicting attempt.
+      if (
+        batch.executedIdempotencyKey &&
+        batch.executedIdempotencyKey !== args.idempotencyKey
+      ) {
+        throw new ConflictException("Batch already executed");
+      }
+
       return {
         batch: {
           id: batch.id,
@@ -383,6 +504,75 @@ export class PayoutsService {
         alreadyApplied: true,
       };
     }
+
+    // --- Ledger integrity gate (hard-block) ---
+    // We must NOT start posting PAYOUT entries unless we know:
+    // 1) No FO payable is already negative (corrupted state)
+    // 2) This batch will not overdraw payable for any FO (preflight)
+    //
+    // NOTE: LedgerService.postEntry will still enforce at write-time (race-safe),
+    // but this gate prevents "partial batch execution" due to our own batch math.
+    const foIds = Array.from(
+      new Set(
+        (batch.lines ?? [])
+          .filter((l) => l.amountCents > 0)
+          .map((l) => String(l.foId)),
+      ),
+    );
+
+    for (const foId of foIds) {
+      const liabCreditsAgg = await this.db.journalLine.aggregate({
+        where: {
+          account: LedgerAccount.LIAB_FO_PAYABLE,
+          direction: LineDirection.CREDIT,
+          entry: { foId, currency: batch.currency },
+        },
+        _sum: { amountCents: true },
+      });
+      const liabDebitsAgg = await this.db.journalLine.aggregate({
+        where: {
+          account: LedgerAccount.LIAB_FO_PAYABLE,
+          direction: LineDirection.DEBIT,
+          entry: { foId, currency: batch.currency },
+        },
+        _sum: { amountCents: true },
+      });
+
+      const credits = liabCreditsAgg._sum.amountCents ?? 0;
+      const debits = liabDebitsAgg._sum.amountCents ?? 0;
+      const availablePayableCents = credits - debits;
+
+      if (availablePayableCents < 0) {
+        await this.emitPayoutExecutionBlockedOpsAlert({
+          batchId: batch.id,
+          foId,
+          currency: batch.currency,
+          reason: "FO_PAYABLE_NEGATIVE",
+          details: { availablePayableCents },
+        });
+        throw new ConflictException(
+          `LEDGER_INTEGRITY_BLOCK_PAYOUT: FO payable negative (foId=${foId}, currency=${batch.currency}, available=${availablePayableCents})`,
+        );
+      }
+
+      const requestedForFo = (batch.lines ?? [])
+        .filter((l) => l.foId === foId && l.amountCents > 0)
+        .reduce((s, l) => s + l.amountCents, 0);
+
+      if (requestedForFo > availablePayableCents) {
+        await this.emitPayoutExecutionBlockedOpsAlert({
+          batchId: batch.id,
+          foId,
+          currency: batch.currency,
+          reason: "BATCH_OVERDRAWS_PAYABLE",
+          details: { availablePayableCents, requestedForFo },
+        });
+        throw new ConflictException(
+          `LEDGER_INTEGRITY_BLOCK_PAYOUT: batch would overdraw payable (foId=${foId}, currency=${batch.currency}, available=${availablePayableCents}, requested=${requestedForFo})`,
+        );
+      }
+    }
+    // --- end Ledger integrity gate ---
 
     const claimed = await this.db.payoutBatch.updateMany({
       where: { id: args.batchId, status: PayoutBatchStatus.draft, executedIdempotencyKey: null },
@@ -420,7 +610,19 @@ export class PayoutsService {
         where: { id: args.batchId },
         include: { lines: true },
       });
-      if (batchAgain && (batchAgain.status === "executed" || batchAgain.executedIdempotencyKey != null)) {
+
+      if (
+        batchAgain &&
+        (batchAgain.status === "executed" || batchAgain.executedIdempotencyKey != null)
+      ) {
+        // If someone else claimed/executed with a different key, this is a conflict.
+        if (
+          batchAgain.executedIdempotencyKey &&
+          batchAgain.executedIdempotencyKey !== args.idempotencyKey
+        ) {
+          throw new ConflictException("Batch could not be claimed (already executed or claimed)");
+        }
+
         return {
           batch: {
             id: batchAgain.id,
@@ -446,59 +648,103 @@ export class PayoutsService {
       throw new ConflictException("Batch could not be claimed (already executed or claimed)");
     }
 
-    const batchWithLines = await this.db.payoutBatch.findUnique({
-      where: { id: args.batchId },
-      include: { lines: true },
-    });
-    if (!batchWithLines) throw new NotFoundException("PayoutBatch not found");
+    const result = await this.db.$transaction(async (tx) => {
+      await tx.$executeRaw`
+        SELECT pg_advisory_xact_lock(
+          ('x' || substr(md5(${args.batchId}), 1, 16))::bit(64)::bigint
+        )
+      `;
 
-    const asOf = batchWithLines.asOf;
-    const currency = batchWithLines.currency;
-    for (const line of batchWithLines.lines) {
-      if (line.amountCents <= 0) continue;
-      await this.ledger.postEntry({
-        type: JournalEntryType.PAYOUT,
-        foId: line.foId,
-        currency,
-        idempotencyKey: `ledger:payout:${args.batchId}:${line.foId}`,
-        metadata: { batchId: args.batchId, asOf: asOf.toISOString() },
-        lines: [
-          {
+      const batchWithLines = await tx.payoutBatch.findUnique({
+        where: { id: args.batchId },
+        include: { lines: true },
+      });
+      if (!batchWithLines) {
+        throw new NotFoundException("PayoutBatch not found");
+      }
+
+      const asOf = batchWithLines.asOf;
+      const currency = batchWithLines.currency;
+
+      // Re-verify inside transaction (race safety)
+      for (const line of batchWithLines.lines) {
+        if (line.amountCents <= 0) continue;
+
+        const liabCreditsAgg = await tx.journalLine.aggregate({
+          where: {
+            account: LedgerAccount.LIAB_FO_PAYABLE,
+            direction: LineDirection.CREDIT,
+            entry: { foId: line.foId, currency },
+          },
+          _sum: { amountCents: true },
+        });
+        const liabDebitsAgg = await tx.journalLine.aggregate({
+          where: {
             account: LedgerAccount.LIAB_FO_PAYABLE,
             direction: LineDirection.DEBIT,
-            amountCents: line.amountCents,
+            entry: { foId: line.foId, currency },
           },
-          {
-            account: LedgerAccount.CASH_STRIPE,
-            direction: LineDirection.CREDIT,
-            amountCents: line.amountCents,
-          },
-        ],
-      });
-    }
+          _sum: { amountCents: true },
+        });
 
-    const updated = await this.db.payoutBatch.update({
-      where: { id: args.batchId },
-      data: {
-        status: PayoutBatchStatus.executed,
-        executedAt: new Date(),
-        executedByAdminId: args.actorAdminId ?? null,
-      },
+        const available = (liabCreditsAgg._sum.amountCents ?? 0) -
+                          (liabDebitsAgg._sum.amountCents ?? 0);
+
+        if (line.amountCents > available) {
+          throw new ConflictException(
+            `LEDGER_INTEGRITY_BLOCK_PAYOUT_TX: race detected (foId=${line.foId}, available=${available}, requested=${line.amountCents})`
+          );
+        }
+
+        await this.ledger.postEntry(
+          {
+            type: JournalEntryType.PAYOUT,
+            foId: line.foId,
+            currency,
+            idempotencyKey: `ledger:payout:${args.batchId}:${line.foId}`,
+            metadata: { batchId: args.batchId, asOf: asOf.toISOString() },
+            lines: [
+              {
+                account: LedgerAccount.LIAB_FO_PAYABLE,
+                direction: LineDirection.DEBIT,
+                amountCents: line.amountCents,
+              },
+              {
+                account: LedgerAccount.CASH_STRIPE,
+                direction: LineDirection.CREDIT,
+                amountCents: line.amountCents,
+              },
+            ],
+          },
+          tx as any,
+        );
+      }
+
+      const updated = await tx.payoutBatch.update({
+        where: { id: args.batchId },
+        data: {
+          status: PayoutBatchStatus.executed,
+          executedAt: new Date(),
+          executedByAdminId: args.actorAdminId ?? null,
+        },
+      });
+
+      return { batchWithLines, updated };
     });
 
     return {
       batch: {
-        id: updated.id,
-        status: updated.status,
-        currency: updated.currency,
-        asOf: updated.asOf,
-        executedAt: updated.executedAt,
-        executedByAdminId: updated.executedByAdminId,
-        idempotencyKey: updated.idempotencyKey,
-        executedIdempotencyKey: updated.executedIdempotencyKey,
-        createdAt: updated.createdAt,
+        id: result.updated.id,
+        status: result.updated.status,
+        currency: result.updated.currency,
+        asOf: result.updated.asOf,
+        executedAt: result.updated.executedAt,
+        executedByAdminId: result.updated.executedByAdminId,
+        idempotencyKey: result.updated.idempotencyKey,
+        executedIdempotencyKey: result.updated.executedIdempotencyKey,
+        createdAt: result.updated.createdAt,
       },
-      lines: batchWithLines.lines.map((l) => ({
+      lines: result.batchWithLines.lines.map((l) => ({
         id: l.id,
         batchId: l.batchId,
         foId: l.foId,

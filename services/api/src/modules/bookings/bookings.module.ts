@@ -6,9 +6,18 @@ import { BillingModule } from "../billing/billing.module";
 import { EstimateModule } from "../estimate/estimate.module";
 import { FoModule } from "../fo/fo.module";
 import { LedgerModule } from "../ledger/ledger.module";
+import { DispatchModule } from "../dispatch/dispatch.module";
+import { SlotHoldsModule } from "../slot-holds/slot-holds.module";
 
 @Module({
-  imports: [BillingModule, EstimateModule, FoModule, LedgerModule],
+  imports: [
+    BillingModule,
+    EstimateModule,
+    FoModule,
+    LedgerModule,
+    DispatchModule,
+    SlotHoldsModule,
+  ],
   controllers: [BookingsController],
   providers: [BookingsService, BookingEventsService],
   exports: [BookingsService],

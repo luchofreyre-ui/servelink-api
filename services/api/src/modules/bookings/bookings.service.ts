@@ -15,6 +15,8 @@ import {
   EstimateResult,
 } from "../estimate/estimator.service";
 import { LedgerService } from "../ledger/ledger.service";
+import { DispatchService } from "../dispatch/dispatch.service";
+import { SlotHoldMetrics } from "../slot-holds/slot-holds.metrics";
 
 @Injectable()
 export class BookingsService {
@@ -24,29 +26,31 @@ export class BookingsService {
     private readonly fo: FoService,
     private readonly estimator: EstimatorService,
     private readonly ledger: LedgerService,
+    private readonly dispatch: DispatchService,
   ) {}
 
-  /**
-   * Create a booking shell (pending_payment).
-   *
-   * NOTE: Estimation is required infrastructure. We ALWAYS compute and store an immutable
-   * BookingEstimateSnapshot at create-time when estimateInput is provided.
-   *
-   * Ops visibility flags do NOT block booking or estimation. They only affect post-booking review.
-   */
   async createBooking(input: {
     customerId: string;
     note?: string;
     idempotencyKey?: string | null;
-
-    // When provided, we compute and store estimator snapshot immutably.
     estimateInput?: EstimateInput;
   }): Promise<{
     booking: any;
     estimate?: EstimateResult;
   }> {
     return this.db.$transaction(async (tx: any) => {
-      // Create shell booking first (id needed for snapshot linkage)
+      const siteLat =
+        typeof input.estimateInput?.siteLat === "number" &&
+        Number.isFinite(input.estimateInput.siteLat)
+          ? input.estimateInput.siteLat
+          : null;
+
+      const siteLng =
+        typeof input.estimateInput?.siteLng === "number" &&
+        Number.isFinite(input.estimateInput.siteLng)
+          ? input.estimateInput.siteLng
+          : null;
+
       const booking = await tx.booking.create({
         data: {
           status: BookingStatus.pending_payment,
@@ -55,6 +59,8 @@ export class BookingsService {
           currency: "usd",
           customer: { connect: { id: input.customerId } },
           notes: input.note ?? null,
+          siteLat,
+          siteLng,
         },
       });
 
@@ -72,29 +78,24 @@ export class BookingsService {
       let estimate: EstimateResult | undefined;
 
       if (input.estimateInput) {
-        // Always compute estimate in real-time (non-blocking).
-        estimate = this.estimator.estimate(input.estimateInput);
+        estimate = await this.estimator.estimate(input.estimateInput);
 
-        // Store immutable snapshot (input + output) for auditability and consistency over time.
         await tx.bookingEstimateSnapshot.create({
           data: {
             bookingId: booking.id,
             estimatorVersion: estimate.estimatorVersion,
             mode: estimate.mode,
             confidence: estimate.confidence,
-
             riskPercentUncapped: estimate.riskPercentUncapped,
             riskPercentCappedForRange: estimate.riskPercentCappedForRange,
             riskCapped: estimate.riskCapped,
-
             inputJson: JSON.stringify(input.estimateInput),
             outputJson: JSON.stringify(estimate),
           },
         });
 
-        // Optionally, set booking.estimatedHours if you want a convenient aggregate for downstream billing UI.
-        // We keep it aligned to the single-point estimate (not upper bound, not uncapped scope).
-        const estimatedHours = Math.round((estimate.estimateMinutes / 60) * 100) / 100;
+        const estimatedHours =
+          Math.round((estimate.estimateMinutes / 60) * 100) / 100;
 
         await tx.booking.update({
           where: { id: booking.id },
@@ -104,7 +105,11 @@ export class BookingsService {
         });
       }
 
-      return { booking, estimate };
+      const refreshed = await tx.booking.findUnique({
+        where: { id: booking.id },
+      });
+
+      return { booking: refreshed, estimate };
     });
   }
 
@@ -122,9 +127,6 @@ export class BookingsService {
     });
   }
 
-  /**
-   * Admin: set job site location (GPS billing foundation).
-   */
   async setSiteLocation(args: {
     id: string;
     siteLat: number;
@@ -150,10 +152,309 @@ export class BookingsService {
     });
   }
 
+  private async assertFoAvailableForWindow(args: {
+    bookingId: string;
+    foId: string;
+    scheduledStart: Date | string;
+    estimatedHours: number | null | undefined;
+  }) {
+    const requestedStart = new Date(args.scheduledStart);
+    const requestedEstimatedHours = Number(args.estimatedHours ?? 0);
+
+    if (!Number.isFinite(requestedStart.getTime())) {
+      throw new BadRequestException("BOOKING_SCHEDULED_START_INVALID");
+    }
+
+    if (!(requestedEstimatedHours > 0)) {
+      throw new ConflictException(
+        "BOOKING_ESTIMATED_HOURS_REQUIRED_FOR_AVAILABILITY_CHECK",
+      );
+    }
+
+    const requestedEnd = new Date(
+      requestedStart.getTime() + requestedEstimatedHours * 60 * 60 * 1000,
+    );
+
+    const existingBookings = await this.db.booking.findMany({
+      where: {
+        id: { not: args.bookingId },
+        foId: args.foId,
+        scheduledStart: { not: null },
+        status: {
+          in: [
+            BookingStatus.pending_dispatch,
+            BookingStatus.offered,
+            BookingStatus.assigned,
+            BookingStatus.in_progress,
+          ],
+        },
+      },
+      select: {
+        id: true,
+        scheduledStart: true,
+        estimatedHours: true,
+      },
+    });
+
+    const conflicting = existingBookings.find((existing) => {
+      if (!existing.scheduledStart) return false;
+
+      const existingStart = new Date(existing.scheduledStart);
+      const existingEstimatedHours = Number(existing.estimatedHours ?? 0);
+
+      if (!Number.isFinite(existingStart.getTime())) return false;
+      if (!(existingEstimatedHours > 0)) return false;
+
+      const existingEnd = new Date(
+        existingStart.getTime() + existingEstimatedHours * 60 * 60 * 1000,
+      );
+
+      return requestedStart < existingEnd && existingStart < requestedEnd;
+    });
+
+    if (conflicting) {
+      throw new ConflictException("FO_NOT_AVAILABLE_AT_SCHEDULED_TIME");
+    }
+  }
+
+  async confirmBookingFromHold(args: {
+    bookingId: string;
+    holdId: string;
+    note?: string;
+    idempotencyKey?: string | null;
+  }) {
+    try {
+      return await this.db.$transaction(async (tx: any) => {
+        const current = await tx.booking.findUnique({
+          where: { id: args.bookingId },
+        });
+
+        if (!current) {
+          throw new NotFoundException("BOOKING_NOT_FOUND");
+        }
+
+        const idem = args.idempotencyKey ?? null;
+
+        if (idem) {
+          const existingEvent = await tx.bookingEvent.findFirst({
+            where: {
+              bookingId: current.id,
+              idempotencyKey: idem,
+              type: BookingEventType.STATUS_CHANGED,
+              fromStatus: BookingStatus.pending_payment,
+              toStatus: BookingStatus.assigned,
+            },
+            select: { id: true },
+          });
+
+          if (existingEvent) {
+            return { ...current, alreadyApplied: true };
+          }
+        }
+
+        const hold = await tx.bookingSlotHold.findUnique({
+          where: { id: args.holdId },
+        });
+
+        if (!hold) {
+          throw new NotFoundException("BOOKING_SLOT_HOLD_NOT_FOUND");
+        }
+
+        if (hold.expiresAt.getTime() <= Date.now()) {
+          throw new ConflictException("BOOKING_SLOT_HOLD_EXPIRED");
+        }
+
+        const estimatedHours = Number(current.estimatedHours ?? 0);
+        if (!(estimatedHours > 0)) {
+          throw new ConflictException(
+            "BOOKING_ESTIMATED_HOURS_REQUIRED_FOR_CONFIRMATION",
+          );
+        }
+
+        if (current.status !== BookingStatus.pending_payment) {
+          if (
+            current.status === BookingStatus.assigned &&
+            current.foId === hold.foId &&
+            current.scheduledStart &&
+            new Date(current.scheduledStart).getTime() === hold.startAt.getTime()
+          ) {
+            return { ...current, alreadyApplied: true };
+          }
+
+          throw new ConflictException("BOOKING_CONFIRMATION_STATE_INVALID");
+        }
+
+        const holdDurationMinutes = Math.round(
+          (hold.endAt.getTime() - hold.startAt.getTime()) / (60 * 1000),
+        );
+        const bookingDurationMinutes = Math.round(estimatedHours * 60);
+
+        if (holdDurationMinutes !== bookingDurationMinutes) {
+          throw new ConflictException("BOOKING_SLOT_HOLD_DURATION_MISMATCH");
+        }
+
+        const foEligibility = await this.fo.getEligibility(hold.foId);
+        if (!foEligibility.canAcceptBooking) {
+          throw new ConflictException("FO_NOT_ELIGIBLE");
+        }
+
+        const requestedStart = new Date(hold.startAt);
+        const requestedEnd = new Date(hold.endAt);
+
+        const existingBookings = await tx.booking.findMany({
+          where: {
+            id: { not: current.id },
+            foId: hold.foId,
+            scheduledStart: { not: null },
+            status: {
+              in: [
+                BookingStatus.pending_dispatch,
+                BookingStatus.offered,
+                BookingStatus.assigned,
+                BookingStatus.in_progress,
+              ],
+            },
+          },
+          select: {
+            id: true,
+            scheduledStart: true,
+            estimatedHours: true,
+          },
+        });
+
+        const conflicting = existingBookings.find((existing: any) => {
+          if (!existing.scheduledStart) return false;
+
+          const existingStart = new Date(existing.scheduledStart);
+          const existingEstimatedHours = Number(existing.estimatedHours ?? 0);
+
+          if (!Number.isFinite(existingStart.getTime())) return false;
+          if (!(existingEstimatedHours > 0)) return false;
+
+          const existingEnd = new Date(
+            existingStart.getTime() + existingEstimatedHours * 60 * 60 * 1000,
+          );
+
+          return requestedStart < existingEnd && existingStart < requestedEnd;
+        });
+
+        if (conflicting) {
+          throw new ConflictException("FO_NOT_AVAILABLE_AT_SCHEDULED_TIME");
+        }
+
+        const otherBookings = await tx.booking.findMany({
+          where: {
+            id: { not: current.id },
+            foId: hold.foId,
+            status: {
+              in: [BookingStatus.assigned, BookingStatus.in_progress],
+            },
+            scheduledStart: {
+              not: null,
+              lt: hold.endAt,
+            },
+          },
+          select: {
+            id: true,
+            scheduledStart: true,
+            estimatedHours: true,
+          },
+        });
+
+        const conflict = otherBookings.find((b: { scheduledStart: Date | null; estimatedHours: number | null }) => {
+          if (b.scheduledStart == null || b.estimatedHours == null) return false;
+          const end = new Date(
+            new Date(b.scheduledStart).getTime() +
+              Number(b.estimatedHours) * 60 * 60 * 1000,
+          );
+          return end > hold.startAt;
+        });
+
+        if (conflict) {
+          throw new ConflictException("FO_SLOT_ALREADY_BOOKED");
+        }
+
+        const { count } = await tx.booking.updateMany({
+          where: {
+            id: current.id,
+            status: BookingStatus.pending_payment,
+          },
+          data: {
+            status: BookingStatus.assigned,
+            foId: hold.foId,
+            scheduledStart: hold.startAt,
+          },
+        });
+
+        if (count !== 1) {
+          const refetched = await tx.booking.findUnique({
+            where: { id: current.id },
+          });
+
+          if (
+            refetched &&
+            refetched.status === BookingStatus.assigned &&
+            refetched.foId === hold.foId &&
+            refetched.scheduledStart &&
+            new Date(refetched.scheduledStart).getTime() === hold.startAt.getTime()
+          ) {
+            return { ...refetched, alreadyApplied: true };
+          }
+
+          throw new ConflictException({
+            code: "CONFLICT",
+            message: "Booking was modified by another request",
+          });
+        }
+
+        try {
+          await tx.bookingEvent.create({
+            data: {
+              bookingId: current.id,
+              type: BookingEventType.STATUS_CHANGED,
+              fromStatus: BookingStatus.pending_payment,
+              toStatus: BookingStatus.assigned,
+              note: args.note ?? null,
+              idempotencyKey: idem,
+            },
+          });
+        } catch (e: any) {
+          if (e?.code === "P2002") {
+            throw new IdempotencyReplayError(current.id);
+          }
+          throw e;
+        }
+
+        await tx.bookingSlotHold.delete({
+          where: { id: hold.id },
+        });
+
+        const updated = await tx.booking.findUnique({
+          where: { id: current.id },
+        });
+
+        SlotHoldMetrics.confirmed++;
+        return updated;
+      });
+    } catch (e: any) {
+      if (e instanceof IdempotencyReplayError) {
+        const refetched = await this.db.booking.findUnique({
+          where: { id: e.bookingId },
+        });
+        if (refetched) {
+          SlotHoldMetrics.confirmed++;
+          return { ...refetched, alreadyApplied: true };
+        }
+      }
+      throw e;
+    }
+  }
+
   async transitionBooking(args: {
     id: string;
     transition: Transition;
     note?: string;
+    scheduledStart?: string;
     idempotencyKey?: string | null;
   }) {
     const revRecEnabled = process.env.LEDGER_REVREC_ENABLED !== "0";
@@ -177,12 +478,26 @@ export class BookingsService {
       throw e;
     }
 
+    if (booking.foId && args.scheduledStart) {
+      await this.assertFoAvailableForWindow({
+        bookingId: booking.id,
+        foId: booking.foId,
+        scheduledStart: args.scheduledStart,
+        estimatedHours: booking.estimatedHours,
+      });
+    }
+
     try {
       const { result, prevStatus } = await this.db.$transaction(async (tx: any) => {
         const prevStatus = booking.status;
         const { count } = await tx.booking.updateMany({
           where: { id: booking.id, status: expectedCurrentStatus },
-          data: { status: to },
+          data: {
+            status: to,
+            ...(args.scheduledStart
+              ? { scheduledStart: new Date(args.scheduledStart) }
+              : {}),
+          },
         });
 
         if (count === 1) {
@@ -240,7 +555,10 @@ export class BookingsService {
             currency: result.currency,
             idempotencyKey: idem,
           });
-        } else if (prevStatus === BookingStatus.completed && result.status !== BookingStatus.completed) {
+        } else if (
+          prevStatus === BookingStatus.completed &&
+          result.status !== BookingStatus.completed
+        ) {
           await this.ledger.reverseRevenueRecognitionForBooking({
             bookingId: result.id,
             currency: result.currency,
@@ -248,6 +566,21 @@ export class BookingsService {
           });
         }
       }
+
+      if (
+        result.status === BookingStatus.pending_dispatch &&
+        prevStatus !== BookingStatus.pending_dispatch
+      ) {
+        try {
+          await this.dispatch.startDispatch(result.id);
+        } catch (err) {
+          console.error("DISPATCH_START_FAILED", {
+            bookingId: result.id,
+            error: err,
+          });
+        }
+      }
+
       return result;
     } catch (e: any) {
       if (e instanceof IdempotencyReplayError) {
@@ -270,6 +603,7 @@ export class BookingsService {
     if (!foId) {
       throw new BadRequestException("foId is required");
     }
+
     const booking = await this.getBooking(params.bookingId);
 
     const expectedCurrentStatus = booking.status;
@@ -289,14 +623,40 @@ export class BookingsService {
       throw e;
     }
 
-    // Eligibility gate (active + no safety hold)
+    const isAssigned = booking.status === BookingStatus.assigned;
+    const currentFoId = booking.foId ?? null;
+
+    if (isAssigned && currentFoId === foId) {
+      return { ...booking, alreadyApplied: true };
+    }
+
     const ok = await this.fo.getEligibility(foId);
-    if (!(ok as any).canAcceptBooking) throw new ConflictException("FO_NOT_ELIGIBLE");
+    if (!(ok as any).canAcceptBooking) {
+      throw new ConflictException("FO_NOT_ELIGIBLE");
+    }
+
+    if (booking.scheduledStart) {
+      await this.assertFoAvailableForWindow({
+        bookingId: booking.id,
+        foId,
+        scheduledStart: booking.scheduledStart,
+        estimatedHours: booking.estimatedHours,
+      });
+    }
 
     try {
       return await this.db.$transaction(async (tx: any) => {
+        const where: any = {
+          id: booking.id,
+          status: expectedCurrentStatus,
+        };
+
+        if (expectedCurrentStatus === BookingStatus.assigned) {
+          where.foId = currentFoId;
+        }
+
         const { count } = await tx.booking.updateMany({
-          where: { id: booking.id, status: expectedCurrentStatus },
+          where,
           data: { status: to, foId },
         });
 
@@ -328,9 +688,11 @@ export class BookingsService {
         const refetched = await tx.booking.findUnique({
           where: { id: booking.id },
         });
-        if (!refetched) throw new NotFoundException("BOOKING_NOT_FOUND");
+        if (!refetched) {
+          throw new NotFoundException("BOOKING_NOT_FOUND");
+        }
 
-        if (refetched.status === to) {
+        if (refetched.status === to && refetched.foId === foId) {
           return { ...refetched, alreadyApplied: true };
         }
 
@@ -344,7 +706,9 @@ export class BookingsService {
         const refetched = await this.db.booking.findUnique({
           where: { id: e.bookingId },
         });
-        if (refetched) return { ...refetched, alreadyApplied: true };
+        if (refetched) {
+          return { ...refetched, alreadyApplied: true };
+        }
       }
       throw e;
     }

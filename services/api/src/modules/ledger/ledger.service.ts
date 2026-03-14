@@ -9,8 +9,11 @@ import {
   JournalEntryType,
   LedgerAccount,
   LineDirection,
+  OpsAnomalyType,
 } from "@prisma/client";
+import { createHash } from "crypto";
 
+import { ledgerValidationViolationsTotal } from "../../metrics.registry";
 import { PrismaService } from "../../prisma";
 
 export type PostLineInput = {
@@ -62,11 +65,153 @@ const VALID_ACCOUNTS = new Set<string>(Object.values(LedgerAccount));
 export class LedgerService {
   constructor(private readonly db: PrismaService) {}
 
+  private ledgerInvariantFingerprint(params: {
+    bookingId: string;
+    foId?: string | null;
+    currency: string;
+    code: string;
+  }) {
+    const fo = params.foId ? String(params.foId) : "none";
+    return `${OpsAnomalyType.LEDGER_INVARIANT_VIOLATION}:${params.code}:${params.bookingId}:${fo}:${params.currency}`;
+  }
+
+  private async emitLedgerInvariantOpsAlert(params: {
+    bookingId: string;
+    foId?: string | null;
+    currency: string;
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+    idempotencyKey?: string | null;
+  }) {
+    const nowDate = new Date();
+
+    const fingerprint = this.ledgerInvariantFingerprint({
+      bookingId: params.bookingId,
+      foId: params.foId ?? null,
+      currency: params.currency,
+      code: params.code,
+    });
+
+    // Source event id must be unique; tie to idempotencyKey when present, else hash stable payload.
+    const sourceEventId =
+      params.idempotencyKey && String(params.idempotencyKey).length
+        ? `ledger_guard:${String(params.idempotencyKey)}:${params.code}`
+        : `ledger_guard:${createHash("sha256")
+            .update(
+              JSON.stringify({
+                fingerprint,
+                bookingId: params.bookingId,
+                foId: params.foId ?? null,
+                currency: params.currency,
+                code: params.code,
+              }),
+            )
+            .digest("hex")}`;
+
+    const payload = {
+      type: "LEDGER_INVARIANT_VIOLATION",
+      code: params.code,
+      message: params.message,
+      bookingId: params.bookingId,
+      foId: params.foId ?? null,
+      currency: params.currency,
+      details: params.details ?? {},
+      at: nowDate.toISOString(),
+    };
+
+    // Always CRITICAL + 30 min SLA for ledger invariant violations.
+    await this.db.opsAlert.upsert({
+      where: { sourceEventId },
+      create: {
+        sourceEventId,
+        bookingId: params.bookingId,
+        foId: params.foId ?? null,
+        anomalyType: OpsAnomalyType.LEDGER_INVARIANT_VIOLATION,
+        status: "open",
+        severity: "critical" as any,
+        fingerprint,
+        firstSeenAt: nowDate,
+        lastSeenAt: nowDate,
+        occurrences: 1,
+        payloadJson: JSON.stringify(payload),
+        slaDueAt: new Date(nowDate.getTime() + 30 * 60 * 1000),
+      },
+      update: {
+        foId: params.foId ?? undefined,
+        lastSeenAt: nowDate,
+        severity: "critical" as any,
+        occurrences: { increment: 1 },
+        payloadJson: JSON.stringify(payload),
+        slaDueAt: new Date(nowDate.getTime() + 30 * 60 * 1000),
+      },
+    });
+
+    // Rollup (fast inbox) — respect unique fingerprint.
+    await this.db.opsAlertRollup.upsert({
+      where: { fingerprint },
+      create: {
+        fingerprint,
+        anomalyType: OpsAnomalyType.LEDGER_INVARIANT_VIOLATION,
+        bookingId: params.bookingId,
+        foId: params.foId ?? null,
+        status: "open",
+        severity: "critical" as any,
+        firstSeenAt: nowDate,
+        lastSeenAt: nowDate,
+        occurrences: 1,
+        payloadJson: JSON.stringify(payload),
+        slaDueAt: new Date(nowDate.getTime() + 30 * 60 * 1000),
+      } as any,
+      update: {
+        bookingId: params.bookingId,
+        foId: params.foId ?? undefined,
+        lastSeenAt: nowDate,
+        severity: "critical" as any,
+        occurrences: { increment: 1 },
+        payloadJson: JSON.stringify(payload),
+        slaDueAt: new Date(nowDate.getTime() + 30 * 60 * 1000),
+      } as any,
+    });
+  }
+
+  private async raiseLedgerInvariant(params: {
+    bookingId?: string | null;
+    foId?: string | null;
+    currency: string;
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+    idempotencyKey?: string | null;
+    exception: any;
+  }): Promise<never> {
+    // OpsAlert schema requires bookingId with FK. If we don't have one, we still hard-fail.
+    if (params.bookingId) {
+      try {
+        await this.emitLedgerInvariantOpsAlert({
+          bookingId: params.bookingId,
+          foId: params.foId ?? null,
+          currency: params.currency,
+          code: params.code,
+          message: params.message,
+          details: params.details,
+          idempotencyKey: params.idempotencyKey ?? null,
+        });
+      } catch {
+        // Never allow alerting failure to "unblock" a bad ledger write.
+      }
+    }
+    throw params.exception;
+  }
+
   /**
    * Write-first idempotent post: attempt create; on P2002 (unique violation) fetch existing and return.
    * Concurrency-safe; no read-before-write.
    */
-  async postEntry(input: PostEntryInput): Promise<{
+  async postEntry(
+    input: PostEntryInput,
+    tx?: PrismaService,
+  ): Promise<{
     id: string;
     type: JournalEntryType;
     bookingId: string | null;
@@ -84,16 +229,46 @@ export class LedgerService {
     }>;
     alreadyApplied?: boolean;
   }> {
+    const db = tx ?? this.db;
     const lines = input.lines ?? [];
+    const currency = (input.currency ?? "usd").toLowerCase();
+
     if (lines.length < 2) {
-      throw new BadRequestException("LEDGER_ENTRY_NEEDS_AT_LEAST_TWO_LINES");
+      await this.raiseLedgerInvariant({
+        bookingId: input.bookingId ?? null,
+        foId: input.foId ?? null,
+        currency,
+        code: "ENTRY_MISSING_LINES",
+        message: "LEDGER_ENTRY_NEEDS_AT_LEAST_TWO_LINES",
+        details: { lineCount: lines.length, type: input.type },
+        idempotencyKey: input.idempotencyKey ?? null,
+        exception: new BadRequestException("LEDGER_ENTRY_NEEDS_AT_LEAST_TWO_LINES"),
+      });
     }
     for (const line of lines) {
       if (!VALID_ACCOUNTS.has(line.account)) {
-        throw new BadRequestException(`LEDGER_INVALID_ACCOUNT: ${line.account}`);
+        await this.raiseLedgerInvariant({
+          bookingId: input.bookingId ?? null,
+          foId: input.foId ?? null,
+          currency,
+          code: "INVALID_ACCOUNT",
+          message: `LEDGER_INVALID_ACCOUNT: ${line.account}`,
+          details: { account: line.account, direction: line.direction, amountCents: line.amountCents, type: input.type },
+          idempotencyKey: input.idempotencyKey ?? null,
+          exception: new BadRequestException(`LEDGER_INVALID_ACCOUNT: ${line.account}`),
+        });
       }
       if (line.amountCents <= 0 || !Number.isInteger(line.amountCents)) {
-        throw new BadRequestException("LEDGER_AMOUNT_MUST_BE_POSITIVE_INTEGER");
+        await this.raiseLedgerInvariant({
+          bookingId: input.bookingId ?? null,
+          foId: input.foId ?? null,
+          currency,
+          code: "ENTRY_NEGATIVE_OR_ZERO_AMOUNT",
+          message: "LEDGER_AMOUNT_MUST_BE_POSITIVE_INTEGER",
+          details: { account: line.account, direction: line.direction, amountCents: line.amountCents, type: input.type },
+          idempotencyKey: input.idempotencyKey ?? null,
+          exception: new BadRequestException("LEDGER_AMOUNT_MUST_BE_POSITIVE_INTEGER"),
+        });
       }
     }
     const debits = lines
@@ -103,10 +278,18 @@ export class LedgerService {
       .filter((l) => l.direction === LineDirection.CREDIT)
       .reduce((s, l) => s + l.amountCents, 0);
     if (debits !== credits) {
-      throw new BadRequestException("LEDGER_IMBALANCED");
+      await this.raiseLedgerInvariant({
+        bookingId: input.bookingId ?? null,
+        foId: input.foId ?? null,
+        currency,
+        code: "ENTRY_IMBALANCED",
+        message: "LEDGER_IMBALANCED",
+        details: { debits, credits, type: input.type, lineCount: lines.length },
+        idempotencyKey: input.idempotencyKey ?? null,
+        exception: new BadRequestException("LEDGER_IMBALANCED"),
+      });
     }
 
-    const currency = (input.currency ?? "usd").toLowerCase();
     const metadataJson = input.metadata ? JSON.stringify(input.metadata) : null;
 
     // --- REFUND invariant guard (ledger-level) ---
@@ -115,7 +298,15 @@ export class LedgerService {
       const bookingId = input.bookingId ?? null;
 
       if (!bookingId) {
-        throw new ConflictException("REFUND requires bookingId");
+        await this.raiseLedgerInvariant({
+          bookingId: input.bookingId ?? null,
+          foId: input.foId ?? null,
+          currency,
+          code: "REFUND_EXCEEDS_CHARGE",
+          message: "REFUND requires bookingId",
+          idempotencyKey: input.idempotencyKey ?? null,
+          exception: new ConflictException("REFUND requires bookingId"),
+        });
       }
 
       // How much cash this REFUND is crediting back out of Stripe
@@ -128,11 +319,19 @@ export class LedgerService {
         .reduce((s, l) => s + l.amountCents, 0);
 
       if (requestedRefundCashCents <= 0) {
-        throw new ConflictException("REFUND must credit CASH_STRIPE > 0");
+        await this.raiseLedgerInvariant({
+          bookingId: input.bookingId ?? null,
+          foId: input.foId ?? null,
+          currency,
+          code: "REFUND_EXCEEDS_CHARGE",
+          message: "REFUND must credit CASH_STRIPE > 0",
+          idempotencyKey: input.idempotencyKey ?? null,
+          exception: new ConflictException("REFUND must credit CASH_STRIPE > 0"),
+        });
       }
 
       // Total charged (AR debit) for this booking/currency
-      const chargedAgg = await this.db.journalLine.aggregate({
+      const chargedAgg = await db.journalLine.aggregate({
         where: {
           account: LedgerAccount.AR_CUSTOMER,
           direction: LineDirection.DEBIT,
@@ -147,11 +346,19 @@ export class LedgerService {
       const chargedCents = chargedAgg._sum.amountCents ?? 0;
 
       if (chargedCents <= 0) {
-        throw new ConflictException("Cannot post REFUND without CHARGE");
+        await this.raiseLedgerInvariant({
+          bookingId: input.bookingId ?? null,
+          foId: input.foId ?? null,
+          currency,
+          code: "REFUND_EXCEEDS_CHARGE",
+          message: "Cannot post REFUND without CHARGE",
+          idempotencyKey: input.idempotencyKey ?? null,
+          exception: new ConflictException("Cannot post REFUND without CHARGE"),
+        });
       }
 
       // Total already-refunded cash (CASH credit) for this booking/currency
-      const refundedAgg = await this.db.journalLine.aggregate({
+      const refundedAgg = await db.journalLine.aggregate({
         where: {
           account: LedgerAccount.CASH_STRIPE,
           direction: LineDirection.CREDIT,
@@ -166,9 +373,17 @@ export class LedgerService {
       const alreadyRefundedCents = refundedAgg._sum.amountCents ?? 0;
 
       if (alreadyRefundedCents + requestedRefundCashCents > chargedCents) {
-        throw new ConflictException(
-          `Refund exceeds charged amount (charged=${chargedCents}, alreadyRefunded=${alreadyRefundedCents}, requested=${requestedRefundCashCents})`,
-        );
+        const message = `Refund exceeds charged amount (charged=${chargedCents}, alreadyRefunded=${alreadyRefundedCents}, requested=${requestedRefundCashCents})`;
+        await this.raiseLedgerInvariant({
+          bookingId: input.bookingId ?? null,
+          foId: input.foId ?? null,
+          currency,
+          code: "REFUND_EXCEEDS_CHARGE",
+          message,
+          details: { chargedCents, alreadyRefundedCents, requestedRefundCashCents },
+          idempotencyKey: input.idempotencyKey ?? null,
+          exception: new ConflictException(message),
+        });
       }
     }
     // --- end REFUND invariant guard ---
@@ -179,7 +394,15 @@ export class LedgerService {
     if (input.type === JournalEntryType.PAYOUT) {
       const foId = input.foId ?? null;
       if (!foId) {
-        throw new ConflictException("PAYOUT requires foId");
+        await this.raiseLedgerInvariant({
+          bookingId: input.bookingId ?? null,
+          foId: input.foId ?? null,
+          currency,
+          code: "FO_PAYABLE_NEGATIVE",
+          message: "PAYOUT requires foId",
+          idempotencyKey: input.idempotencyKey ?? null,
+          exception: new ConflictException("PAYOUT requires foId"),
+        });
       }
 
       const requestedPayoutCents = input.lines
@@ -191,10 +414,18 @@ export class LedgerService {
         .reduce((s, l) => s + l.amountCents, 0);
 
       if (requestedPayoutCents <= 0) {
-        throw new ConflictException("PAYOUT must debit LIAB_FO_PAYABLE > 0");
+        await this.raiseLedgerInvariant({
+          bookingId: input.bookingId ?? null,
+          foId: input.foId ?? null,
+          currency,
+          code: "FO_PAYABLE_NEGATIVE",
+          message: "PAYOUT must debit LIAB_FO_PAYABLE > 0",
+          idempotencyKey: input.idempotencyKey ?? null,
+          exception: new ConflictException("PAYOUT must debit LIAB_FO_PAYABLE > 0"),
+        });
       }
 
-      const liabCreditsAgg = await this.db.journalLine.aggregate({
+      const liabCreditsAgg = await db.journalLine.aggregate({
         where: {
           account: LedgerAccount.LIAB_FO_PAYABLE,
           direction: LineDirection.CREDIT,
@@ -205,7 +436,7 @@ export class LedgerService {
         },
         _sum: { amountCents: true },
       });
-      const liabDebitsAgg = await this.db.journalLine.aggregate({
+      const liabDebitsAgg = await db.journalLine.aggregate({
         where: {
           account: LedgerAccount.LIAB_FO_PAYABLE,
           direction: LineDirection.DEBIT,
@@ -222,41 +453,81 @@ export class LedgerService {
         (liabDebitsAgg._sum.amountCents ?? 0);
 
       if (requestedPayoutCents > availablePayableCents) {
-        throw new ConflictException(
-          `Payout exceeds payable (available=${availablePayableCents}, requested=${requestedPayoutCents})`,
-        );
+        const message = `Payout exceeds payable (available=${availablePayableCents}, requested=${requestedPayoutCents})`;
+        await this.raiseLedgerInvariant({
+          bookingId: input.bookingId ?? null,
+          foId: input.foId ?? null,
+          currency,
+          code: "PAYOUT_EXCEEDS_PAYABLE",
+          message,
+          details: { availablePayableCents, requestedPayoutCents },
+          idempotencyKey: input.idempotencyKey ?? null,
+          exception: new ConflictException(message),
+        });
       }
     }
     // --- end PAYOUT invariant guard ---
 
     try {
-      const entry = await this.db.$transaction(async (tx) => {
-        const created = await tx.journalEntry.create({
-          data: {
-            bookingId: input.bookingId ?? null,
-            foId: input.foId ?? null,
-            type: input.type,
-            currency,
-            idempotencyKey: input.idempotencyKey ?? null,
-            metadataJson,
-            disputeOutcome: input.disputeOutcome ?? null,
-          },
-        });
-        await tx.journalLine.createMany({
-          data: lines.map((l) => ({
-            entryId: created.id,
-            account: l.account,
-            direction: l.direction,
-            amountCents: l.amountCents,
-          })),
-        });
-        const withLines = await tx.journalEntry.findUnique({
-          where: { id: created.id },
-          include: { lines: true },
-        });
-        if (!withLines) throw new Error("Journal entry not found after create");
-        return withLines;
-      });
+      const entry = tx
+        ? await (async () => {
+            const created = await db.journalEntry.create({
+              data: {
+                bookingId: input.bookingId ?? null,
+                foId: input.foId ?? null,
+                type: input.type,
+                currency,
+                idempotencyKey: input.idempotencyKey ?? null,
+                metadataJson,
+                disputeOutcome: input.disputeOutcome ?? null,
+              },
+            });
+
+            await db.journalLine.createMany({
+              data: lines.map((l) => ({
+                entryId: created.id,
+                account: l.account,
+                direction: l.direction,
+                amountCents: l.amountCents,
+              })),
+            });
+
+            const withLines = await db.journalEntry.findUnique({
+              where: { id: created.id },
+              include: { lines: true },
+            });
+
+            if (!withLines) throw new Error("Journal entry not found after create");
+            return withLines;
+          })()
+        : await db.$transaction(async (tx2) => {
+            const created = await tx2.journalEntry.create({
+              data: {
+                bookingId: input.bookingId ?? null,
+                foId: input.foId ?? null,
+                type: input.type,
+                currency,
+                idempotencyKey: input.idempotencyKey ?? null,
+                metadataJson,
+                disputeOutcome: input.disputeOutcome ?? null,
+              },
+            });
+            await tx2.journalLine.createMany({
+              data: lines.map((l) => ({
+                entryId: created.id,
+                account: l.account,
+                direction: l.direction,
+                amountCents: l.amountCents,
+              })),
+            });
+            const withLines = await tx2.journalEntry.findUnique({
+              where: { id: created.id },
+              include: { lines: true },
+            });
+            if (!withLines) throw new Error("Journal entry not found after create");
+            return withLines;
+          });
+
       return {
         id: entry.id,
         type: entry.type,
@@ -276,7 +547,7 @@ export class LedgerService {
       };
     } catch (e: any) {
       if (e?.code === "P2002" && input.idempotencyKey) {
-        const existing = await this.db.journalEntry.findUnique({
+        const existing = await db.journalEntry.findUnique({
           where: { idempotencyKey: input.idempotencyKey },
           include: { lines: true },
         });
@@ -953,6 +1224,13 @@ export class LedgerService {
           details,
         });
       }
+    }
+
+    for (const violation of violations) {
+      ledgerValidationViolationsTotal.inc({
+        code: violation.code,
+        currency: violation.currency || "unknown",
+      });
     }
 
     return {

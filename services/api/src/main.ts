@@ -4,6 +4,9 @@ import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ApiExceptionFilter } from "./filters/api-exception.filter";
+import { requestIdMiddleware } from "./middleware/request-id.middleware";
+import { requestLoggingMiddleware } from "./middleware/request-logging.middleware";
+import { rateLimitMiddleware } from "./middleware/rate-limit.middleware";
 
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -22,15 +25,25 @@ async function bootstrap() {
   const port = process.env.PORT ? Number(process.env.PORT) : 3001;
 
   const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.set("trust proxy", 1);
+  expressApp.use(requestIdMiddleware);
+  expressApp.use(requestLoggingMiddleware);
+  expressApp.use(rateLimitMiddleware);
 
   // Stripe requires raw body for webhook signature verification.
   // Limit raw parsing to these exact routes to avoid impacting the rest of the API.
-  expressApp.use("/api/v1/webhooks/stripe", express.raw({ type: "application/json" }));
-  expressApp.use("/api/v1/stripe/webhook", express.raw({ type: "application/json" }));
+  expressApp.use(
+    "/api/v1/webhooks/stripe",
+    express.raw({ type: "application/json", limit: "1mb" }),
+  );
+  expressApp.use(
+    "/api/v1/stripe/webhook",
+    express.raw({ type: "application/json", limit: "1mb" }),
+  );
 
   // For everything else, keep normal JSON parsing.
-  expressApp.use(express.json({ limit: "2mb" }));
-  expressApp.use(express.urlencoded({ extended: true }));
+  expressApp.use(express.json({ limit: "1mb" }));
+  expressApp.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
   // Swagger (OpenAPI YAML)
   const openapiPath = join(__dirname, "../../../docs/api/openapi.yaml");

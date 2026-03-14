@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { FoService } from "../fo/fo.service";
 
 /**
  * EstimatorService (deterministic, explainable, versioned-ready)
@@ -110,6 +111,19 @@ export type EstimateResult = {
 
   mode: EstimatorMode;
 
+  serviceLaborModelVersion: string;
+
+  baseLaborMinutes: number;
+  adjustedLaborMinutes: number;
+
+  jobComplexityIndex: number;
+
+  recommendedTeamSize: number;
+  effectiveTeamSize: number;
+
+  estimatedDurationMinutes: number;
+  estimatedPriceCents: number;
+
   estimateMinutes: number;
   lowerBoundMinutes: number;
   upperBoundMinutes: number;
@@ -131,6 +145,30 @@ export type EstimateResult = {
   };
 
   flags: EstimatorFlag[];
+
+  matchedCleaners?: Array<{
+    id: string;
+    displayName: string | null;
+    photoUrl: string | null;
+    bio: string | null;
+    yearsExperience: number | null;
+    completedJobsCount: number | null;
+    teamSize: number | null;
+    reliabilityScore: number | null;
+    travelMinutes: number;
+  }>;
+
+  dispatchCandidatePool?: Array<{
+    id: string;
+    displayName: string | null;
+    photoUrl: string | null;
+    bio: string | null;
+    yearsExperience: number | null;
+    completedJobsCount: number | null;
+    teamSize: number | null;
+    reliabilityScore: number | null;
+    travelMinutes: number;
+  }>;
 };
 
 export type EstimateInput = {
@@ -169,6 +207,9 @@ export type EstimateInput = {
   stairs_flights?: StairsFlights;
 
   addons?: Addon[];
+
+  siteLat?: number;
+  siteLng?: number;
 };
 
 type RangeCaps = { upsideCapPct: number; downsideCapPct: number };
@@ -263,6 +304,191 @@ const ADDON_MINUTES: Record<Addon, number> = {
   dish_wash_load: 15,
   vacuum_sofa: 15,
 };
+
+const SERVICE_LABOR_MODEL_VERSION = "labor_v1.0.0";
+
+const SERVICE_TYPE_LABOR_MULTIPLIER: Record<ServiceType, number> = {
+  maintenance: 1.0,
+  deep_clean: 1.35,
+  move_in: 1.3,
+  move_out: 1.3,
+};
+
+const LAST_PRO_CLEAN_MULTIPLIER: Record<
+  NonNullable<EstimateInput["last_professional_clean"]>,
+  number
+> = {
+  under_2_weeks: 0.92,
+  "2_4_weeks": 0.97,
+  "1_3_months": 1.0,
+  "3_6_months": 1.16,
+  "6_plus_months": 1.28,
+  not_sure: 1.08,
+};
+
+const CLUTTER_LABOR_MULTIPLIER: Record<ClutterLevel, number> = {
+  minimal: 1.0,
+  light: 1.03,
+  moderate: 1.08,
+  heavy: 1.18,
+  not_sure: 1.1,
+};
+
+const PET_HAIR_LABOR_MULTIPLIER: Record<SheddingLevel | "none", number> = {
+  none: 1.0,
+  low: 1.02,
+  medium: 1.06,
+  high: 1.15,
+  not_sure: 1.08,
+};
+
+const CONDITION_LABOR_MULTIPLIER = {
+  light: 0.95,
+  normal: 1.0,
+  heavy_grease: 1.18,
+  heavy_scale: 1.18,
+  not_sure: 1.08,
+} as const;
+
+const TEAM_EFFICIENCY: Record<number, number> = {
+  1: 1.0,
+  2: 1.8,
+  3: 2.5,
+  4: 3.1,
+  5: 3.6,
+  6: 4.0,
+};
+
+const HOURLY_RATE_CENTS = 6500;
+
+function sqftBandMidpoint(band: SqftBand): number {
+  switch (band) {
+    case "0_799":
+      return 700;
+    case "800_1199":
+      return 1000;
+    case "1200_1599":
+      return 1400;
+    case "1600_1999":
+      return 1800;
+    case "2000_2499":
+      return 2250;
+    case "2500_2999":
+      return 2750;
+    case "3000_3499":
+      return 3250;
+    case "3500_plus":
+      return 3800;
+  }
+}
+
+function bedroomCount(value: Bedrooms): number {
+  switch (value) {
+    case "0":
+      return 0;
+    case "1":
+      return 1;
+    case "2":
+      return 2;
+    case "3":
+      return 3;
+    case "4":
+      return 4;
+    case "5_plus":
+      return 5;
+  }
+}
+
+function bathroomCount(value: Bathrooms): number {
+  switch (value) {
+    case "1":
+      return 1;
+    case "1_5":
+      return 1.5;
+    case "2":
+      return 2;
+    case "2_5":
+      return 2.5;
+    case "3":
+      return 3;
+    case "3_5":
+      return 3.5;
+    case "4_plus":
+      return 4;
+  }
+}
+
+function floorCount(value: Floors): number {
+  switch (value) {
+    case "1":
+      return 1;
+    case "2":
+      return 2;
+    case "3_plus":
+      return 3;
+  }
+}
+
+function addOnLaborMinutes(addons?: Addon[]): number {
+  return (addons ?? []).reduce((sum, addon) => sum + (ADDON_MINUTES[addon] ?? 0), 0);
+}
+
+function recommendedTeamSizeForLabor(adjustedLaborMinutes: number): number {
+  if (adjustedLaborMinutes <= 180) return 1;
+  if (adjustedLaborMinutes <= 300) return 2;
+  if (adjustedLaborMinutes <= 480) return 3;
+  if (adjustedLaborMinutes <= 660) return 4;
+  if (adjustedLaborMinutes <= 840) return 5;
+  return 6;
+}
+
+function computeJobComplexityIndex(args: {
+  squareFeet: number;
+  bathrooms: number;
+  adjustedLaborMinutes: number;
+  addOnCount: number;
+  clutterLevel: ClutterLevel;
+  petPresence: PetPresence;
+  serviceType: ServiceType;
+}): number {
+  const sqftScore = Math.min(30, Math.round(args.squareFeet / 140));
+  const bathScore = Math.min(10, Math.round(args.bathrooms * 2.5));
+  const laborScore = Math.min(30, Math.round(args.adjustedLaborMinutes / 24));
+  const addOnScore = Math.min(15, args.addOnCount * 3);
+
+  const clutterScore =
+    args.clutterLevel === "heavy"
+      ? 10
+      : args.clutterLevel === "moderate"
+        ? 6
+        : args.clutterLevel === "not_sure"
+          ? 5
+          : args.clutterLevel === "light"
+            ? 2
+            : 0;
+
+  const petScore =
+    args.petPresence === "multiple"
+      ? 5
+      : args.petPresence === "one"
+        ? 2
+        : args.petPresence === "not_sure"
+          ? 2
+          : 0;
+
+  const serviceScore =
+    args.serviceType === "deep_clean" || args.serviceType === "move_in" || args.serviceType === "move_out"
+      ? 5
+      : 0;
+
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      sqftScore + bathScore + laborScore + addOnScore + clutterScore + petScore + serviceScore,
+    ),
+  );
+}
 
 // ----------------------------
 // Adjustments (condition + occupancy etc.) (locked v1)
@@ -618,7 +844,9 @@ function clamp(n: number, min: number, max: number): number {
 
 @Injectable()
 export class EstimatorService {
-  estimate(input: EstimateInput): EstimateResult {
+  constructor(private readonly foService: FoService) {}
+
+  async estimate(input: EstimateInput): Promise<EstimateResult> {
     // ---- Baseline
     const baseline: EstimateLineItem[] = [];
     baseline.push({ label: "Base size (sqft band)", minutes: BASE_MIN_BY_SQFT[input.sqft_band] });
@@ -789,10 +1017,82 @@ export class EstimatorService {
     if (confidence < 0.65) flags.push("LOW_CONFIDENCE");
     if (mode === "STAGED") flags.push("STAGED_PLAN_PRESENTED");
 
+    const squareFeet = sqftBandMidpoint(input.sqft_band);
+    const bedroomsCount = bedroomCount(input.bedrooms);
+    const bathroomsCount = bathroomCount(input.bathrooms);
+    const floorsCount = floorCount(input.floors);
+    const addOnCount = input.addons?.length ?? 0;
+
+    const baseLaborMinutes =
+      Math.ceil(squareFeet / 100) * 8 +
+      bedroomsCount * 10 +
+      bathroomsCount * 24 +
+      Math.max(0, floorsCount - 1) * 12 +
+      addOnLaborMinutes(input.addons);
+
+    const kitchenLaborMultiplier = CONDITION_LABOR_MULTIPLIER[input.kitchen_condition];
+    const bathroomLaborMultiplier = CONDITION_LABOR_MULTIPLIER[input.bathroom_condition];
+    const conditionLaborMultiplier = Math.max(kitchenLaborMultiplier, bathroomLaborMultiplier);
+
+    const petHairMultiplier =
+      input.pet_presence === "none"
+        ? PET_HAIR_LABOR_MULTIPLIER.none
+        : PET_HAIR_LABOR_MULTIPLIER[input.pet_shedding ?? "not_sure"];
+
+    const adjustedLaborMinutes = Math.round(
+      baseLaborMinutes *
+        SERVICE_TYPE_LABOR_MULTIPLIER[input.service_type] *
+        LAST_PRO_CLEAN_MULTIPLIER[input.last_professional_clean ?? "1_3_months"] *
+        CLUTTER_LABOR_MULTIPLIER[input.clutter_level] *
+        conditionLaborMultiplier *
+        petHairMultiplier,
+    );
+
+    const recommendedTeamSize = recommendedTeamSizeForLabor(adjustedLaborMinutes);
+    const effectiveTeamSize = TEAM_EFFICIENCY[recommendedTeamSize] ?? recommendedTeamSize;
+
+    const estimatedDurationMinutes = Math.ceil(adjustedLaborMinutes / effectiveTeamSize);
+    const estimatedPriceCents = Math.ceil((adjustedLaborMinutes / 60) * HOURLY_RATE_CENTS);
+
+    const jobComplexityIndex = computeJobComplexityIndex({
+      squareFeet,
+      bathrooms: bathroomsCount,
+      adjustedLaborMinutes,
+      addOnCount,
+      clutterLevel: input.clutter_level,
+      petPresence: input.pet_presence,
+      serviceType: input.service_type,
+    });
+
+    let matchedCleaners: EstimateResult["matchedCleaners"] | undefined;
+    let dispatchCandidatePool: EstimateResult["dispatchCandidatePool"] | undefined;
+
+    if (input.siteLat != null && input.siteLng != null) {
+      dispatchCandidatePool = await this.foService.matchFOs({
+        lat: input.siteLat,
+        lng: input.siteLng,
+        squareFootage: squareFeet,
+        estimatedLaborMinutes: adjustedLaborMinutes,
+        recommendedTeamSize,
+        limit: 20,
+      });
+
+      matchedCleaners = dispatchCandidatePool.slice(0, 2);
+    }
+
     return {
       estimatorVersion: ESTIMATOR_VERSION,
 
       mode,
+
+      serviceLaborModelVersion: SERVICE_LABOR_MODEL_VERSION,
+      baseLaborMinutes,
+      adjustedLaborMinutes,
+      jobComplexityIndex,
+      recommendedTeamSize,
+      effectiveTeamSize,
+      estimatedDurationMinutes,
+      estimatedPriceCents,
 
       estimateMinutes: estimateMinutes,
       lowerBoundMinutes: lower,
@@ -814,6 +1114,8 @@ export class EstimatorService {
       },
 
       flags,
+      matchedCleaners,
+      dispatchCandidatePool,
     };
   }
 }
