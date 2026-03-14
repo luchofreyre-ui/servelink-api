@@ -206,17 +206,41 @@ export class DispatchService {
         throw new ConflictException("OFFER_NOT_ACTIVE");
       }
 
-      await tx.bookingOffer.update({
-        where: { id: args.offerId },
+      const claimedBooking = await tx.booking.updateMany({
+        where: {
+          id: currentOffer.bookingId,
+          status: BookingStatus.offered,
+          foId: null,
+        },
+        data: {
+          status: BookingStatus.assigned,
+          foId: currentOffer.foId,
+        },
+      });
+
+      if (claimedBooking.count !== 1) {
+        throw new ConflictException("BOOKING_NOT_OFFERED");
+      }
+
+      const accepted = await tx.bookingOffer.updateMany({
+        where: {
+          id: args.offerId,
+          bookingId: currentOffer.bookingId,
+          status: BookingOfferStatus.offered,
+        },
         data: {
           status: BookingOfferStatus.accepted,
           respondedAt: now,
         },
       });
 
+      if (accepted.count !== 1) {
+        throw new ConflictException("OFFER_NOT_ACTIVE");
+      }
+
       await tx.bookingOffer.updateMany({
         where: {
-          bookingId: offer.bookingId,
+          bookingId: currentOffer.bookingId,
           id: { not: args.offerId },
           status: BookingOfferStatus.offered,
         },
@@ -226,19 +250,11 @@ export class DispatchService {
         },
       });
 
-      await tx.booking.update({
-        where: { id: offer.bookingId },
-        data: {
-          status: BookingStatus.assigned,
-          foId: offer.foId,
-        },
-      });
-
       await tx.bookingEvent.create({
         data: {
-          bookingId: offer.bookingId,
+          bookingId: currentOffer.bookingId,
           type: BookingEventType.OFFER_ACCEPTED,
-          note: `Offer accepted by FO ${offer.foId}`,
+          note: `Offer accepted by FO ${currentOffer.foId}`,
         },
       });
     });

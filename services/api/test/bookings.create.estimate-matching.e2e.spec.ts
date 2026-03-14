@@ -843,4 +843,92 @@ describe("Booking create + estimate + FO matching (E2E)", () => {
 
     expect(updatedOffer?.status).toBe("accepted");
   });
+
+  it("allows only one dispatch offer acceptance when two accepts race", async () => {
+    const createRes = await request(app.getHttpServer())
+      .post("/api/v1/bookings")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({
+        note: "E2E dispatch accept race",
+        estimateInput: {
+          property_type: "house",
+          sqft_band: "1200_1599",
+          bedrooms: "3",
+          bathrooms: "2",
+          floors: "1",
+          service_type: "maintenance",
+          first_time_with_servelink: "yes",
+          last_professional_clean: "1_3_months",
+          clutter_level: "light",
+          kitchen_condition: "normal",
+          bathroom_condition: "normal",
+          pet_presence: "none",
+          addons: [],
+          siteLat: 36.1540,
+          siteLng: -95.9920,
+        },
+      })
+      .expect(201);
+
+    const bookingId = createRes.body.booking.id;
+
+    const scheduledStart = new Date(
+      Date.now() + 12 * 24 * 60 * 60 * 1000,
+    ).toISOString();
+
+    await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${bookingId}/schedule`)
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({
+        note: "schedule for dispatch accept race",
+        scheduledStart,
+      })
+      .expect((res) => {
+        expect(res.status).toBeLessThan(300);
+      });
+
+    const offers = await prisma.bookingOffer.findMany({
+      where: { bookingId, status: "offered" as any },
+      orderBy: { rank: "asc" },
+    });
+
+    expect(offers.length).toBeGreaterThanOrEqual(2);
+
+    const [offerA, offerB] = offers;
+
+    const [resA, resB] = await Promise.all([
+      request(app.getHttpServer())
+        .post(`/api/v1/bookings/${bookingId}/offers/${offerA.id}/accept`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({}),
+      request(app.getHttpServer())
+        .post(`/api/v1/bookings/${bookingId}/offers/${offerB.id}/accept`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({}),
+    ]);
+
+    const statuses = [resA.status, resB.status].sort((a, b) => a - b);
+    expect(statuses[0]).toBeGreaterThanOrEqual(200);
+    expect(statuses[0]).toBeLessThan(300);
+    expect(statuses[1]).toBe(409);
+
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    expect(booking).toBeTruthy();
+    expect(booking?.status).toBe("assigned");
+    expect([offerA.foId, offerB.foId]).toContain(String(booking?.foId));
+
+    const refreshedOffers = await prisma.bookingOffer.findMany({
+      where: { bookingId },
+      orderBy: { rank: "asc" },
+    });
+
+    const accepted = refreshedOffers.filter((o) => o.status === "accepted");
+    const canceled = refreshedOffers.filter((o) => o.status === "canceled");
+
+    expect(accepted).toHaveLength(1);
+    expect(canceled.length).toBeGreaterThanOrEqual(1);
+  });
 });
