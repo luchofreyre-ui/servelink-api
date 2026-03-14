@@ -814,6 +814,8 @@ describe("Booking create + estimate + FO matching (E2E)", () => {
         expect(res.status).toBeLessThan(300);
       });
 
+    const now = new Date();
+
     const offers = await prisma.bookingOffer.findMany({
       where: { bookingId },
       orderBy: { rank: "asc" },
@@ -821,7 +823,12 @@ describe("Booking create + estimate + FO matching (E2E)", () => {
 
     expect(offers.length).toBeGreaterThan(0);
 
-    const offerId = offers[0].id;
+    const activeOffer =
+      offers.find(
+        (o) => o.offeredAt.getTime() <= now.getTime() && o.expiresAt.getTime() > now.getTime(),
+      ) ?? offers[0];
+
+    const offerId = activeOffer.id;
 
     const acceptRes = await request(app.getHttpServer())
       .post(`/api/v1/bookings/${bookingId}/offers/${offerId}/accept`)
@@ -836,7 +843,7 @@ describe("Booking create + estimate + FO matching (E2E)", () => {
     });
 
     expect(updatedBooking?.status).toBe("assigned");
-    expect(updatedBooking?.foId).toBe(offers[0].foId);
+    expect(updatedBooking?.foId).toBe(activeOffer.foId);
 
     const updatedOffer = await prisma.bookingOffer.findUnique({
       where: { id: offerId },

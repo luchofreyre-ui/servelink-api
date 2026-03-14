@@ -100,6 +100,7 @@ export class DispatchWorker {
         where: {
           bookingId,
           status: BookingOfferStatus.offered,
+          expiresAt: { gt: now },
         },
       });
 

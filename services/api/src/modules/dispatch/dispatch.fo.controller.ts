@@ -15,6 +15,8 @@ export class DispatchFoController {
       where: {
         foId,
         status: "offered",
+        offeredAt: { lte: new Date() },
+        expiresAt: { gt: new Date() },
       },
       orderBy: {
         createdAt: "desc",

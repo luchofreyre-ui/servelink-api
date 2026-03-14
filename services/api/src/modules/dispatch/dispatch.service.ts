@@ -20,6 +20,9 @@ import {
 
 @Injectable()
 export class DispatchService {
+  private static readonly OFFER_WINDOW_SECONDS = 30;
+  private static readonly BATCH_SIZE = 2;
+
   constructor(
     private readonly db: PrismaService,
     private readonly foService: FoService,
@@ -110,8 +113,8 @@ export class DispatchService {
 
     const round = lastOffer ? lastOffer.dispatchRound + 1 : 1;
     dispatchRoundsTotal.labels("started").inc();
-    const batchSize = 2;
-    const batch = remainingMatches.slice(0, batchSize);
+    const batch = remainingMatches.slice(0, DispatchService.BATCH_SIZE);
+    const roundStartedAt = Date.now();
 
     const offers = [];
 
@@ -149,13 +152,22 @@ export class DispatchService {
       const rank = i + 1;
       const effectiveRank = rank + foLoad + acceptancePenalty;
 
+      const offeredAt = new Date(
+        roundStartedAt + i * DispatchService.OFFER_WINDOW_SECONDS * 1000,
+      );
+
+      const expiresAt = new Date(
+        roundStartedAt + (i + 1) * DispatchService.OFFER_WINDOW_SECONDS * 1000,
+      );
+
       const offer = await this.db.bookingOffer.create({
         data: {
           bookingId,
           foId: fo.id,
           rank: effectiveRank,
           dispatchRound: round,
-          expiresAt: new Date(Date.now() + 90 * 1000),
+          offeredAt,
+          expiresAt,
         },
       });
 
@@ -222,6 +234,10 @@ export class DispatchService {
     }
 
     const now = new Date();
+
+    if (offer.offeredAt > now) {
+      throw new ConflictException("OFFER_NOT_ACTIVE_YET");
+    }
 
     if (offer.expiresAt < now) {
       await this.db.bookingOffer.update({
