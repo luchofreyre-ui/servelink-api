@@ -118,11 +118,23 @@ export class DispatchService {
     for (let i = 0; i < batch.length; i++) {
       const fo = batch[i];
 
+      const foLoad = await this.db.booking.count({
+        where: {
+          foId: fo.id,
+          status: {
+            in: [BookingStatus.assigned, BookingStatus.in_progress],
+          },
+        },
+      });
+
+      const rank = i + 1;
+      const effectiveRank = rank + foLoad;
+
       const offer = await this.db.bookingOffer.create({
         data: {
           bookingId,
           foId: fo.id,
-          rank: i + 1,
+          rank: effectiveRank,
           dispatchRound: round,
           expiresAt: new Date(Date.now() + 90 * 1000),
         },
