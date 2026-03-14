@@ -68,6 +68,17 @@ export class DispatchWorker {
           note: `Offer expired for FO ${offer.foId}`,
         },
       });
+
+      await this.db.franchiseOwnerDispatchStats.upsert({
+        where: { foId: offer.foId },
+        create: {
+          foId: offer.foId,
+          offersExpired: 1,
+        },
+        update: {
+          offersExpired: { increment: 1 },
+        },
+      });
     }
 
     let redispatchedCount = 0;

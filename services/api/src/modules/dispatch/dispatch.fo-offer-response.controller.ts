@@ -41,6 +41,17 @@ export class DispatchFoOfferResponseController {
       },
     });
 
+    await this.db.franchiseOwnerDispatchStats.upsert({
+      where: { foId: offer.foId },
+      create: {
+        foId: offer.foId,
+        offersRejected: 1,
+      },
+      update: {
+        offersRejected: { increment: 1 },
+      },
+    });
+
     const remainingOffers = await this.db.bookingOffer.count({
       where: {
         bookingId: offer.bookingId,

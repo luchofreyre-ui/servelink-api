@@ -476,6 +476,7 @@ model FranchiseOwner {
   bookings             Booking[]
   bookingOffers        BookingOffer[]
   slotHolds            BookingSlotHold[]
+  dispatchStats        FranchiseOwnerDispatchStats?
   user                 User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([status])
@@ -483,6 +484,18 @@ model FranchiseOwner {
   @@index([homeLat, homeLng])
   @@index([teamSize])
   @@index([maxTravelMinutes])
+}
+
+model FranchiseOwnerDispatchStats {
+  foId           String   @id
+  offersSent     Int      @default(0)
+  offersAccepted Int      @default(0)
+  offersRejected Int      @default(0)
+  offersExpired  Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  fo             FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
 }
 
 model OpsAlertAudit {

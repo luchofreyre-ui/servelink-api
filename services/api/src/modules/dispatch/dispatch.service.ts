@@ -127,8 +127,27 @@ export class DispatchService {
         },
       });
 
+      const stats = await this.db.franchiseOwnerDispatchStats.findUnique({
+        where: { foId: fo.id },
+      });
+
+      const offersSent = stats?.offersSent ?? 0;
+      const offersAccepted = stats?.offersAccepted ?? 0;
+
+      let acceptancePenalty = 0;
+
+      if (offersSent >= 5) {
+        const acceptRate = offersAccepted / offersSent;
+
+        if (acceptRate < 0.3) {
+          acceptancePenalty = 3;
+        } else if (acceptRate < 0.5) {
+          acceptancePenalty = 1;
+        }
+      }
+
       const rank = i + 1;
-      const effectiveRank = rank + foLoad;
+      const effectiveRank = rank + foLoad + acceptancePenalty;
 
       const offer = await this.db.bookingOffer.create({
         data: {
@@ -137,6 +156,17 @@ export class DispatchService {
           rank: effectiveRank,
           dispatchRound: round,
           expiresAt: new Date(Date.now() + 90 * 1000),
+        },
+      });
+
+      await this.db.franchiseOwnerDispatchStats.upsert({
+        where: { foId: fo.id },
+        create: {
+          foId: fo.id,
+          offersSent: 1,
+        },
+        update: {
+          offersSent: { increment: 1 },
         },
       });
 
@@ -272,6 +302,17 @@ export class DispatchService {
           note: `Offer accepted by FO ${currentOffer.foId}`,
         },
       });
+    });
+
+    await this.db.franchiseOwnerDispatchStats.upsert({
+      where: { foId: offer.foId },
+      create: {
+        foId: offer.foId,
+        offersAccepted: 1,
+      },
+      update: {
+        offersAccepted: { increment: 1 },
+      },
     });
 
     dispatchAcceptTotal.inc();
