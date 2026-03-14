@@ -331,6 +331,17 @@ export class DispatchService {
       },
     });
 
+    await this.db.franchiseOwnerReliabilityStats.upsert({
+      where: { foId: offer.foId },
+      create: {
+        foId: offer.foId,
+        assignmentsCount: 1,
+      },
+      update: {
+        assignmentsCount: { increment: 1 },
+      },
+    });
+
     dispatchAcceptTotal.inc();
     return { ok: true };
   }

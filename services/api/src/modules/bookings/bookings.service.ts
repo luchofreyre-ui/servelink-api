@@ -581,6 +581,63 @@ export class BookingsService {
         }
       }
 
+      if (
+        result.status === BookingStatus.in_progress &&
+        prevStatus !== BookingStatus.in_progress &&
+        result.foId
+      ) {
+        await this.db.franchiseOwnerReliabilityStats.upsert({
+          where: { foId: result.foId },
+          create: {
+            foId: result.foId,
+            inProgressCount: 1,
+          },
+          update: {
+            inProgressCount: { increment: 1 },
+          },
+        });
+      }
+
+      if (
+        result.status === BookingStatus.completed &&
+        prevStatus !== BookingStatus.completed &&
+        result.foId
+      ) {
+        await this.db.franchiseOwnerReliabilityStats.upsert({
+          where: { foId: result.foId },
+          create: {
+            foId: result.foId,
+            completionsCount: 1,
+          },
+          update: {
+            completionsCount: { increment: 1 },
+          },
+        });
+        await this.db.franchiseOwner.update({
+          where: { id: result.foId },
+          data: {
+            completedJobsCount: { increment: 1 },
+          },
+        });
+      }
+
+      if (
+        result.status === BookingStatus.canceled &&
+        prevStatus !== BookingStatus.canceled &&
+        result.foId
+      ) {
+        await this.db.franchiseOwnerReliabilityStats.upsert({
+          where: { foId: result.foId },
+          create: {
+            foId: result.foId,
+            cancellationsCount: 1,
+          },
+          update: {
+            cancellationsCount: { increment: 1 },
+          },
+        });
+      }
+
       return result;
     } catch (e: any) {
       if (e instanceof IdempotencyReplayError) {

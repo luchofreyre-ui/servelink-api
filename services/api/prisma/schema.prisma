@@ -477,6 +477,7 @@ model FranchiseOwner {
   bookingOffers        BookingOffer[]
   slotHolds            BookingSlotHold[]
   dispatchStats        FranchiseOwnerDispatchStats?
+  reliabilityStats     FranchiseOwnerReliabilityStats?
   user                 User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([status])
@@ -496,6 +497,18 @@ model FranchiseOwnerDispatchStats {
   updatedAt      DateTime @updatedAt
 
   fo             FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
+}
+
+model FranchiseOwnerReliabilityStats {
+  foId               String   @id
+  assignmentsCount   Int      @default(0)
+  completionsCount   Int      @default(0)
+  cancellationsCount Int      @default(0)
+  inProgressCount    Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  fo                 FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
 }
 
 model OpsAlertAudit {
