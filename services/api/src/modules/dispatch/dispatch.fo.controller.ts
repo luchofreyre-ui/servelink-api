@@ -24,6 +24,14 @@ export class DispatchFoController {
       },
     });
 
-    return offers;
+    const now = Date.now();
+
+    return offers.map((offer) => ({
+      ...offer,
+      expiresInSeconds: Math.max(
+        0,
+        Math.floor((new Date(offer.expiresAt).getTime() - now) / 1000),
+      ),
+    }));
   }
 }
