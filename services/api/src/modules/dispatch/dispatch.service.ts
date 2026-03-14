@@ -14,6 +14,8 @@ import {
   dispatchRoundsTotal,
   dispatchOffersCreatedTotal,
   dispatchExhaustedTotal,
+  dispatchAcceptTotal,
+  dispatchAcceptRaceLostTotal,
 } from "../../metrics.registry";
 
 @Injectable()
@@ -219,6 +221,7 @@ export class DispatchService {
       });
 
       if (claimedBooking.count !== 1) {
+        dispatchAcceptRaceLostTotal.inc();
         throw new ConflictException("BOOKING_NOT_OFFERED");
       }
 
@@ -259,6 +262,7 @@ export class DispatchService {
       });
     });
 
+    dispatchAcceptTotal.inc();
     return { ok: true };
   }
 }

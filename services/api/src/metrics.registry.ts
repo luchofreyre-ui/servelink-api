@@ -80,4 +80,16 @@ export const dispatchExhaustedTotal = new Counter({
   registers: [register],
 });
 
+export const dispatchAcceptTotal = new Counter({
+  name: "dispatch_accept_total",
+  help: "Total successful dispatch offer acceptances",
+  registers: [register],
+});
+
+export const dispatchAcceptRaceLostTotal = new Counter({
+  name: "dispatch_accept_race_lost_total",
+  help: "Total accept attempts that lost the race (booking already claimed)",
+  registers: [register],
+});
+
 export { register };
