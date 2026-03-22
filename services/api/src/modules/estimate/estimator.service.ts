@@ -1067,6 +1067,9 @@ export class EstimatorService {
     let matchedCleaners: EstimateResult["matchedCleaners"] | undefined;
     let dispatchCandidatePool: EstimateResult["dispatchCandidatePool"] | undefined;
 
+    // NOTE:
+    // matchedCleaners remains FO-shaped for API compatibility.
+    // Dispatch candidate generation is now provider-aware in dispatch layer.
     if (input.siteLat != null && input.siteLng != null) {
       dispatchCandidatePool = await this.foService.matchFOs({
         lat: input.siteLat,

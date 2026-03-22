@@ -1,5 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma";
+import {
+  backfillFranchiseOwnerProviders,
+  ensureProviderForFranchiseOwner,
+} from "./fo-provider-sync";
 
 export enum FoStatus {
   onboarding = "onboarding",
@@ -32,6 +36,22 @@ export class FoService {
     const fo = await this.db.franchiseOwner.findUnique({ where: { id } });
     if (!fo) throw new NotFoundException("FO_NOT_FOUND");
     return fo;
+  }
+
+  async ensureProviderLinked(foId: string) {
+    await ensureProviderForFranchiseOwner(this.db, foId);
+
+    const fo = await this.db.franchiseOwner.findUnique({
+      where: { id: foId },
+      include: { provider: true },
+    });
+
+    if (!fo) throw new NotFoundException("FO_NOT_FOUND");
+    return fo;
+  }
+
+  async backfillMissingProviders(batchSize = 100) {
+    return backfillFranchiseOwnerProviders(this.db, batchSize);
   }
 
   async getEligibility(foId: string): Promise<FoEligibility> {

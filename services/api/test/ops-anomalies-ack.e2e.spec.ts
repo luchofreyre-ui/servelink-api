@@ -13,6 +13,18 @@ describe("Ops anomalies ack/query (E2E)", () => {
   let prisma: PrismaService;
   let adminToken: string;
   let adminUserId: string;
+  let adminEmail: string;
+  const adminPassword = "test-password";
+
+  const loginAdmin = async (): Promise<string> => {
+    const res = await request(app.getHttpServer())
+      .post("/api/v1/auth/login")
+      .send({ email: adminEmail, password: adminPassword })
+      .expect(201);
+    const token = res.body?.accessToken;
+    if (!token) throw new Error("admin login missing accessToken");
+    return token;
+  };
 
   beforeAll(async () => {
     const modRef = await Test.createTestingModule({
@@ -24,13 +36,12 @@ describe("Ops anomalies ack/query (E2E)", () => {
 
     prisma = app.get(PrismaService);
 
-    const email = `admin_${Date.now()}@servelink.local`;
-    const password = "test-password";
-    const passwordHash = await bcrypt.hash(password, 10);
+    adminEmail = `admin_${Date.now()}@servelink.local`;
+    const passwordHash = await bcrypt.hash(adminPassword, 10);
 
     const adminUser = await prisma.user.create({
       data: {
-        email,
+        email: adminEmail,
         passwordHash,
         role: "admin",
       },
@@ -38,13 +49,8 @@ describe("Ops anomalies ack/query (E2E)", () => {
 
     adminUserId = adminUser.id;
 
-    const loginRes = await request(app.getHttpServer())
-      .post("/api/v1/auth/login")
-      .send({ email, password })
-      .expect(201);
-
-    expect(loginRes.body?.accessToken).toBeTruthy();
-    adminToken = loginRes.body.accessToken;
+    adminToken = await loginAdmin();
+    expect(adminToken).toBeTruthy();
   });
 
   afterAll(async () => {
@@ -270,6 +276,10 @@ describe("Ops anomalies ack/query (E2E)", () => {
     const grouped = listRes.body.data?.anomalies ?? [];
     const row = grouped.find((x: any) => x.bookingId === booking.id);
     expect(row?.fingerprint).toBeTruthy();
+    expect(row?.detailPath).toBe(`/admin/bookings/${booking.id}`);
+    expect(row).toHaveProperty("slaState");
+    expect(row).toHaveProperty("reviewState");
+    expect(row).toHaveProperty("bookingWorkflowState");
     const fingerprint = String(row.fingerprint);
 
     await request(app.getHttpServer())
@@ -1031,6 +1041,15 @@ describe("Ops anomalies ack/query (E2E)", () => {
       } as any,
     });
 
+    const foWithProvider = await prisma.franchiseOwner.findUnique({
+      where: { id: fo.id },
+      include: { provider: true },
+    });
+    expect(foWithProvider).toBeTruthy();
+    expect(foWithProvider?.providerId).toBeTruthy();
+    expect(foWithProvider?.provider).toBeTruthy();
+    expect(foWithProvider?.provider?.userId).toBe(fo.userId);
+
     const foId = fo.id;
 
     const bookingA = await prisma.booking.create({
@@ -1395,6 +1414,7 @@ describe("Ops anomalies ack/query (E2E)", () => {
   20000);
 
   it("assigns by fingerprint (rollup) and mine/unassigned reflect it", async () => {
+    const token = await loginAdmin();
     const customer = await prisma.user.create({
       data: {
         email: `cust_${Date.now()}@servelink.local`,
@@ -1429,7 +1449,7 @@ describe("Ops anomalies ack/query (E2E)", () => {
     // Trigger bridge + rollup
     await request(app.getHttpServer())
       .get("/api/v1/admin/ops/anomalies?groupBy=fingerprint")
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(200);
 
     const rollup = await prisma.opsAlertRollup.findFirst({
@@ -1441,7 +1461,7 @@ describe("Ops anomalies ack/query (E2E)", () => {
     // Should show as unassigned
     const unassignedBefore = await request(app.getHttpServer())
       .get("/api/v1/admin/ops/anomalies?groupBy=fingerprint&unassigned=1")
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(200);
 
     const fpUnassignedBefore =
@@ -1451,14 +1471,14 @@ describe("Ops anomalies ack/query (E2E)", () => {
     // Assign via fingerprint
     await request(app.getHttpServer())
       .post("/api/v1/admin/ops/anomalies/assign")
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${token}`)
       .send({ fingerprint: rollup!.fingerprint, adminId: adminUserId })
       .expect(200);
 
     // Now it should NOT show as unassigned
     const unassignedAfter = await request(app.getHttpServer())
       .get("/api/v1/admin/ops/anomalies?groupBy=fingerprint&unassigned=1")
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(200);
 
     const fpUnassignedAfter =
@@ -1468,7 +1488,7 @@ describe("Ops anomalies ack/query (E2E)", () => {
     // And should show in mine=1
     const mine = await request(app.getHttpServer())
       .get("/api/v1/admin/ops/anomalies?groupBy=fingerprint&mine=1")
-      .set("Authorization", `Bearer ${adminToken}`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(200);
 
     const fpMine =
@@ -1763,6 +1783,15 @@ describe("Ops anomalies ack/query (E2E)", () => {
         status: "active" as any,
       } as any,
     });
+
+    const foWithProvider = await prisma.franchiseOwner.findUnique({
+      where: { id: fo.id },
+      include: { provider: true },
+    });
+    expect(foWithProvider).toBeTruthy();
+    expect(foWithProvider?.providerId).toBeTruthy();
+    expect(foWithProvider?.provider).toBeTruthy();
+    expect(foWithProvider?.provider?.userId).toBe(fo.userId);
 
     const booking = await prisma.booking.create({
       data: {

@@ -14,12 +14,24 @@ import { BillingModule } from "./modules/billing/billing.module";
 import { LedgerModule } from "./modules/ledger/ledger.module";
 import { PayoutsModule } from "./modules/payouts/payouts.module";
 import { DispatchModule } from "./modules/dispatch/dispatch.module";
+import { FoModule } from "./modules/fo/fo.module";
+import { AdminModule } from "./modules/admin/admin.module";
+import { AdminBookingsModule } from "./modules/admin/bookings/admin-bookings.module";
+import { AdminDispatchDecisionsModule } from "./modules/admin-dispatch-decisions/admin-dispatch-decisions.module";
 import { TelemetryController } from "./modules/telemetry/telemetry.controller";
 import { HealthController } from "./health.controller";
 import { ReadinessController } from "./readiness.controller";
 import { MetricsController } from "./metrics.controller";
+import { DevModule } from "./dev/dev.module";
+import { FinancialModule } from "./modules/financial/financial.module";
+import { PaymentsModule } from "./modules/payments/payments.module";
+import { SystemModule } from "./modules/system/system.module";
 
 const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
+
+const enableDevScenarioApi =
+  process.env.NODE_ENV !== "production" &&
+  process.env.DISABLE_DEV_SCENARIO_API !== "1";
 
 @Module({
   imports: [
@@ -45,6 +57,14 @@ const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
     LedgerModule,
     PayoutsModule,
     DispatchModule,
+    FoModule,
+    AdminModule,
+    AdminBookingsModule,
+    AdminDispatchDecisionsModule,
+    FinancialModule,
+    PaymentsModule,
+    SystemModule,
+    ...(enableDevScenarioApi ? [DevModule] : []),
   ],
   controllers: [
     PricingController,

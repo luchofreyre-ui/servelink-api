@@ -11,10 +11,14 @@ import {
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
 import { AdminGuard } from "../../guards/admin.guard";
+import { AdminPermissions } from "../../common/admin/admin-permissions.decorator";
+import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
 import { BillingService } from "../billing/billing.service";
 import { DispatchService } from "../dispatch/dispatch.service";
 import { SlotAvailabilityService } from "../slot-holds/slot-availability.service";
 import { SlotHoldsService } from "../slot-holds/slot-holds.service";
+import { DispatchDecisionService } from "./dispatch-decision.service";
+import { PrismaService } from "../../prisma";
 import { BookingsService } from "./bookings.service";
 import { AssignBookingDto } from "./dto/assign-booking.dto";
 import { AvailabilityWindowsQueryDto } from "./dto/availability-windows-query.dto";
@@ -30,8 +34,10 @@ export class BookingsController {
     private readonly bookings: BookingsService,
     private readonly billing: BillingService,
     private readonly dispatch: DispatchService,
+    private readonly dispatchDecisionService: DispatchDecisionService,
     private readonly slotAvailability: SlotAvailabilityService,
     private readonly slotHolds: SlotHoldsService,
+    private readonly prisma: PrismaService,
   ) {}
 
   @Post()
@@ -81,6 +87,25 @@ export class BookingsController {
     });
   }
 
+  @Get(":id/status")
+  async getStatus(@Param("id") id: string) {
+    return this.prisma.booking.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        scheduledStart: true,
+        startedAt: true,
+        completedAt: true,
+        paymentStatus: true,
+        paymentIntentId: true,
+        quotedSubtotal: true,
+        quotedMargin: true,
+        quotedTotal: true,
+      },
+    });
+  }
+
   @Get(":id")
   async get(@Param("id") id: string) {
     return this.bookings.getBooking(id);
@@ -89,6 +114,41 @@ export class BookingsController {
   @Get(":id/events")
   async events(@Param("id") id: string) {
     return this.bookings.getEvents(id);
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+  @AdminPermissions("exceptions.read")
+  @Get(":id/dispatch-timeline")
+  async getDispatchTimeline(@Param("id") id: string) {
+    return this.dispatchDecisionService.getBookingDispatchTimeline(id);
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+  @AdminPermissions("exceptions.read")
+  @Get(":id/dispatch-exception-detail")
+  async getDispatchExceptionDetail(@Param("id") id: string) {
+    return this.dispatchDecisionService.getDispatchExceptionDetail(id);
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+  @AdminPermissions("dispatch.read")
+  @Get(":id/dispatch-explainer")
+  async getDispatchExplainer(@Param("id") id: string) {
+    return this.dispatchDecisionService.getDispatchExplainer(id);
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+  @AdminPermissions("exceptions.write")
+  @Post(":id/dispatch-operator-notes")
+  async addDispatchOperatorNote(
+    @Param("id") id: string,
+    @Body() body: { adminUserId?: string | null; note?: string | null },
+  ) {
+    return this.dispatchDecisionService.addOperatorNote({
+      bookingId: id,
+      adminUserId: body.adminUserId ?? null,
+      note: body.note ?? "",
+    });
   }
 
   @UseGuards(JwtAuthGuard, AdminGuard)

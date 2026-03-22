@@ -4,7 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { BookingEventType, BookingStatus } from "@prisma/client";
+import {
+  BookingEventType,
+  BookingPaymentStatus,
+  BookingStatus,
+  Prisma,
+} from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { BookingEventsService } from "./booking-events.service";
 import { getTransition, Transition } from "./booking-state.machine";
@@ -16,7 +21,9 @@ import {
 } from "../estimate/estimator.service";
 import { LedgerService } from "../ledger/ledger.service";
 import { DispatchService } from "../dispatch/dispatch.service";
+import { ReputationService } from "../dispatch/reputation.service";
 import { SlotHoldMetrics } from "../slot-holds/slot-holds.metrics";
+import { PricingService } from "../pricing/pricing.service";
 
 @Injectable()
 export class BookingsService {
@@ -27,6 +34,8 @@ export class BookingsService {
     private readonly estimator: EstimatorService,
     private readonly ledger: LedgerService,
     private readonly dispatch: DispatchService,
+    private readonly reputationService: ReputationService,
+    private readonly pricingService: PricingService,
   ) {}
 
   async createBooking(input: {
@@ -38,7 +47,7 @@ export class BookingsService {
     booking: any;
     estimate?: EstimateResult;
   }> {
-    return this.db.$transaction(async (tx: any) => {
+    const { bookingId, estimate } = await this.db.$transaction(async (tx: any) => {
       const siteLat =
         typeof input.estimateInput?.siteLat === "number" &&
         Number.isFinite(input.estimateInput.siteLat)
@@ -75,27 +84,27 @@ export class BookingsService {
         },
       });
 
-      let estimate: EstimateResult | undefined;
+      let est: EstimateResult | undefined;
 
       if (input.estimateInput) {
-        estimate = await this.estimator.estimate(input.estimateInput);
+        est = await this.estimator.estimate(input.estimateInput);
 
         await tx.bookingEstimateSnapshot.create({
           data: {
             bookingId: booking.id,
-            estimatorVersion: estimate.estimatorVersion,
-            mode: estimate.mode,
-            confidence: estimate.confidence,
-            riskPercentUncapped: estimate.riskPercentUncapped,
-            riskPercentCappedForRange: estimate.riskPercentCappedForRange,
-            riskCapped: estimate.riskCapped,
+            estimatorVersion: est.estimatorVersion,
+            mode: est.mode,
+            confidence: est.confidence,
+            riskPercentUncapped: est.riskPercentUncapped,
+            riskPercentCappedForRange: est.riskPercentCappedForRange,
+            riskCapped: est.riskCapped,
             inputJson: JSON.stringify(input.estimateInput),
-            outputJson: JSON.stringify(estimate),
+            outputJson: JSON.stringify(est),
           },
         });
 
         const estimatedHours =
-          Math.round((estimate.estimateMinutes / 60) * 100) / 100;
+          Math.round((est.estimateMinutes / 60) * 100) / 100;
 
         await tx.booking.update({
           where: { id: booking.id },
@@ -105,12 +114,33 @@ export class BookingsService {
         });
       }
 
-      const refreshed = await tx.booking.findUnique({
-        where: { id: booking.id },
-      });
-
-      return { booking: refreshed, estimate };
+      return { bookingId: booking.id, estimate: est };
     });
+
+    if (input.estimateInput && estimate) {
+      const quote = this.pricingService.calculateQuote({
+        basePrice: 100,
+        estimatedDurationMinutes: estimate.estimateMinutes,
+      });
+      await this.db.booking.update({
+        where: { id: bookingId },
+        data: {
+          priceSubtotal: quote.subtotal,
+          priceTotal: quote.total,
+          margin: quote.margin,
+          paymentStatus: BookingPaymentStatus.quote_ready,
+          quotedSubtotal: new Prisma.Decimal(quote.subtotal.toFixed(2)),
+          quotedMargin: new Prisma.Decimal(quote.margin.toFixed(2)),
+          quotedTotal: new Prisma.Decimal(quote.total.toFixed(2)),
+        },
+      });
+    }
+
+    const refreshed = await this.db.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    return { booking: refreshed, estimate };
   }
 
   async getBooking(id: string) {
@@ -591,9 +621,13 @@ export class BookingsService {
           create: {
             foId: result.foId,
             inProgressCount: 1,
+            activeAssignedCount: 0,
+            activeInProgressCount: 1,
           },
           update: {
             inProgressCount: { increment: 1 },
+            activeAssignedCount: { decrement: 1 },
+            activeInProgressCount: { increment: 1 },
           },
         });
       }
@@ -608,9 +642,11 @@ export class BookingsService {
           create: {
             foId: result.foId,
             completionsCount: 1,
+            activeInProgressCount: 0,
           },
           update: {
             completionsCount: { increment: 1 },
+            activeInProgressCount: { decrement: 1 },
           },
         });
         await this.db.franchiseOwner.update({
@@ -619,6 +655,9 @@ export class BookingsService {
             completedJobsCount: { increment: 1 },
           },
         });
+        if (result.foId) {
+          void this.reputationService.recomputeForFoSafe(result.foId);
+        }
       }
 
       if (
@@ -626,6 +665,8 @@ export class BookingsService {
         prevStatus !== BookingStatus.canceled &&
         result.foId
       ) {
+        const cancelFromAssigned = prevStatus === BookingStatus.assigned;
+        const cancelFromInProgress = prevStatus === BookingStatus.in_progress;
         await this.db.franchiseOwnerReliabilityStats.upsert({
           where: { foId: result.foId },
           create: {
@@ -634,8 +675,13 @@ export class BookingsService {
           },
           update: {
             cancellationsCount: { increment: 1 },
+            ...(cancelFromAssigned && { activeAssignedCount: { decrement: 1 } }),
+            ...(cancelFromInProgress && { activeInProgressCount: { decrement: 1 } }),
           },
         });
+        if (result.foId) {
+          void this.reputationService.recomputeForFoSafe(result.foId);
+        }
       }
 
       return result;
@@ -734,6 +780,35 @@ export class BookingsService {
               throw new IdempotencyReplayError(booking.id);
             }
             throw e;
+          }
+
+          if (
+            expectedCurrentStatus === BookingStatus.assigned &&
+            currentFoId != null &&
+            currentFoId !== foId
+          ) {
+            await tx.franchiseOwnerReliabilityStats.upsert({
+              where: { foId: currentFoId },
+              create: {
+                foId: currentFoId,
+                activeAssignedCount: 0,
+              },
+              update: {
+                activeAssignedCount: { decrement: 1 },
+              },
+            });
+            await tx.franchiseOwnerReliabilityStats.upsert({
+              where: { foId },
+              create: {
+                foId,
+                assignmentsCount: 1,
+                activeAssignedCount: 1,
+              },
+              update: {
+                assignmentsCount: { increment: 1 },
+                activeAssignedCount: { increment: 1 },
+              },
+            });
           }
 
           const updated = await tx.booking.findUnique({

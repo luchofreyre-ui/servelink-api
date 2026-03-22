@@ -59,8 +59,11 @@ describe("StripeWebhookHandlerService", () => {
       disputeCase: {
         upsert: jest.fn().mockResolvedValue({}),
       },
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({ foId: "fo_1" }),
+      },
       journalEntry: {
-        findFirst: jest.fn().mockResolvedValue(null),
+        findFirst: jest.fn().mockResolvedValue({ id: "existing_charge" }),
       },
       journalLine: {
         aggregate: jest.fn().mockImplementation((args: any) => {
@@ -116,7 +119,7 @@ describe("StripeWebhookHandlerService", () => {
     expect(call.bookingId).toBe("booking_1");
     expect(call.currency).toBe("usd");
     expect(call.idempotencyKey).toBe(
-      "ledger:settlement:booking_1:pi_123:ev_1",
+      "ledger:settlement:stripe_pi:booking_1:pi_123",
     );
     expect(call.lines).toHaveLength(2);
     const debit = call.lines.find(
@@ -156,7 +159,7 @@ describe("StripeWebhookHandlerService", () => {
       ledgerPostEntry.mock.calls[1][0].idempotencyKey,
     );
     expect(ledgerPostEntry.mock.calls[1][0].idempotencyKey).toBe(
-      "ledger:settlement:booking_1:pi_123:ev_1",
+      "ledger:settlement:stripe_pi:booking_1:pi_123",
     );
   });
 
@@ -191,8 +194,23 @@ describe("StripeWebhookHandlerService", () => {
     const call = ledgerPostEntry.mock.calls[0][0];
     expect(call.lines[0].amountCents).toBe(9999);
     expect(call.lines[1].amountCents).toBe(9999);
-    expect(call.idempotencyKey).toContain("pi_456");
-    expect(call.idempotencyKey).toContain("b2");
+    expect(call.idempotencyKey).toBe("ledger:settlement:stripe_pi:b2:pi_456");
+  });
+
+  it("posts CHARGE then SETTLEMENT when no prior CHARGE exists (quote / upfront path)", async () => {
+    mockDb.journalEntry.findFirst = jest.fn().mockResolvedValue(null);
+    const event = mockEvent();
+    await handler.handlePaymentIntentSucceeded(event);
+
+    expect(ledgerPostEntry).toHaveBeenCalledTimes(2);
+    expect(ledgerPostEntry.mock.calls[0][0].type).toBe(JournalEntryType.CHARGE);
+    expect(ledgerPostEntry.mock.calls[0][0].idempotencyKey).toBe(
+      "ledger:charge:stripe_pi:booking_1:pi_123",
+    );
+    expect(ledgerPostEntry.mock.calls[1][0].type).toBe(JournalEntryType.SETTLEMENT);
+    expect(ledgerPostEntry.mock.calls[1][0].idempotencyKey).toBe(
+      "ledger:settlement:stripe_pi:booking_1:pi_123",
+    );
   });
 
   describe("handleChargeRefundUpdated", () => {

@@ -1,5 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { BookingEventType, JournalEntryType, LedgerAccount, LineDirection } from "@prisma/client";
+import {
+  BookingEventType,
+  JournalEntryType,
+  LedgerAccount,
+  LineDirection,
+} from "@prisma/client";
 
 import { PrismaService } from "../../prisma";
 import { LedgerService } from "../ledger/ledger.service";
@@ -23,8 +28,9 @@ export type StripePaymentIntentSucceededEvent = {
 };
 
 /**
- * Handles payment_intent.succeeded: updates pointer, emits note, posts SETTLEMENT ledger entry.
- * Idempotency via ledger key ledger:settlement:${bookingId}:${paymentIntentId}:${event.id}.
+ * Handles payment_intent.succeeded: updates pointer, emits note, posts CHARGE (when none exists
+ * for quote/upfront flows) + SETTLEMENT. Idempotency: `ledger:charge:stripe_pi:…` and
+ * `ledger:settlement:stripe_pi:…` (shared with FinancialService.recordPayment).
  */
 @Injectable()
 export class StripeWebhookHandlerService {
@@ -101,11 +107,64 @@ export class StripeWebhookHandlerService {
     const currency = (pi?.currency ?? "usd").toString().toLowerCase();
 
     if (amountCents > 0) {
+      const bookingRow = await this.db.booking.findUnique({
+        where: { id: pointer.bookingId },
+        select: { foId: true },
+      });
+
+      const existingCharge = await this.db.journalEntry.findFirst({
+        where: {
+          bookingId: pointer.bookingId,
+          type: JournalEntryType.CHARGE,
+          currency,
+        },
+        orderBy: { createdAt: "desc" },
+        select: { id: true },
+      });
+
+      if (!existingCharge) {
+        const { platformFeeCents, foEarningsCents } = splitCharge(
+          amountCents,
+          PRICING_POLICY_V1,
+        );
+        await this.ledger.postEntry({
+          type: JournalEntryType.CHARGE,
+          bookingId: pointer.bookingId,
+          foId: bookingRow?.foId ?? undefined,
+          currency,
+          idempotencyKey: `ledger:charge:stripe_pi:${pointer.bookingId}:${paymentIntentId}`,
+          metadata: {
+            stripeEventId: event.id,
+            paymentIntentId,
+            amountCents,
+            currency,
+            source: "stripe_webhook_pi_succeeded",
+          },
+          lines: [
+            {
+              account: LedgerAccount.AR_CUSTOMER,
+              direction: LineDirection.DEBIT,
+              amountCents,
+            },
+            {
+              account: LedgerAccount.LIAB_DEFERRED_REVENUE,
+              direction: LineDirection.CREDIT,
+              amountCents: platformFeeCents,
+            },
+            {
+              account: LedgerAccount.LIAB_FO_PAYABLE,
+              direction: LineDirection.CREDIT,
+              amountCents: foEarningsCents,
+            },
+          ],
+        });
+      }
+
       await this.ledger.postEntry({
         type: JournalEntryType.SETTLEMENT,
         bookingId: pointer.bookingId,
         currency,
-        idempotencyKey: `ledger:settlement:${pointer.bookingId}:${paymentIntentId}:${event.id}`,
+        idempotencyKey: `ledger:settlement:stripe_pi:${pointer.bookingId}:${paymentIntentId}`,
         metadata: {
           stripeEventId: event.id,
           paymentIntentId,
@@ -200,13 +259,13 @@ export class StripeWebhookHandlerService {
         include: { lines: true },
       });
 
-      const arDebit = chargeEntry?.lines.find(
+      const arDebit = chargeEntry?.lines?.find(
         (l) => l.account === LedgerAccount.AR_CUSTOMER && l.direction === LineDirection.DEBIT,
       );
-      const revCredit = chargeEntry?.lines.find(
+      const revCredit = chargeEntry?.lines?.find(
         (l) => l.account === LedgerAccount.REV_PLATFORM && l.direction === LineDirection.CREDIT,
       );
-      const liabCredit = chargeEntry?.lines.find(
+      const liabCredit = chargeEntry?.lines?.find(
         (l) => l.account === LedgerAccount.LIAB_FO_PAYABLE && l.direction === LineDirection.CREDIT,
       );
 

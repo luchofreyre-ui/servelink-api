@@ -277,6 +277,15 @@ describe("Payouts (E2E)", () => {
         data: { userId: foUser.id, status: "active" as any } as any,
       });
 
+      const foWithProvider = await prisma.franchiseOwner.findUnique({
+        where: { id: fo.id },
+        include: { provider: true },
+      });
+      expect(foWithProvider).toBeTruthy();
+      expect(foWithProvider?.providerId).toBeTruthy();
+      expect(foWithProvider?.provider).toBeTruthy();
+      expect(foWithProvider?.provider?.userId).toBe(fo.userId);
+
       const foId = fo.id;
       const bookingId = `e2e-lock-proof-booking-${ts}`;
 

@@ -80,6 +80,15 @@ describe("Booking slot holds + confirm from hold (E2E)", () => {
       },
     });
 
+    const fo1WithProvider = await prisma.franchiseOwner.findUnique({
+      where: { id: fo1.id },
+      include: { provider: true },
+    });
+    expect(fo1WithProvider).toBeTruthy();
+    expect(fo1WithProvider?.providerId).toBeTruthy();
+    expect(fo1WithProvider?.provider).toBeTruthy();
+    expect(fo1WithProvider?.provider?.userId).toBe(foUser1.id);
+
     const fo2 = await prisma.franchiseOwner.create({
       data: {
         userId: foUser2.id,
@@ -100,6 +109,15 @@ describe("Booking slot holds + confirm from hold (E2E)", () => {
         completedJobsCount: 240,
       },
     });
+
+    const fo2WithProvider = await prisma.franchiseOwner.findUnique({
+      where: { id: fo2.id },
+      include: { provider: true },
+    });
+    expect(fo2WithProvider).toBeTruthy();
+    expect(fo2WithProvider?.providerId).toBeTruthy();
+    expect(fo2WithProvider?.provider).toBeTruthy();
+    expect(fo2WithProvider?.provider?.userId).toBe(foUser2.id);
 
     fo1Id = fo1.id;
     fo2Id = fo2.id;

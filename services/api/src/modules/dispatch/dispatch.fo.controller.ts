@@ -30,10 +30,9 @@ export class DispatchFoController {
 
     return offers.map((offer) => ({
       ...offer,
-      expiresInSeconds: Math.max(
-        0,
-        Math.floor((new Date(offer.expiresAt).getTime() - now) / 1000),
-      ),
+      expiresInSeconds: offer.expiresAt
+        ? Math.max(0, Math.floor((offer.expiresAt.getTime() - now) / 1000))
+        : 0,
     }));
   }
 }

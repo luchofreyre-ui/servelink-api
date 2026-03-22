@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "BookingOffer" ALTER COLUMN "offeredAt" DROP NOT NULL,
+ALTER COLUMN "offeredAt" DROP DEFAULT,
+ALTER COLUMN "expiresAt" DROP NOT NULL;

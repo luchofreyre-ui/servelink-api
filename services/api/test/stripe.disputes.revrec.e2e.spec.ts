@@ -21,6 +21,18 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
   let stripeSvc: StripeService;
   let customerToken: string;
   let adminToken: string;
+  let adminEmail: string;
+  const adminPassword = "test-password";
+
+  const loginAdmin = async (): Promise<string> => {
+    const res = await request(app.getHttpServer())
+      .post("/api/v1/auth/login")
+      .send({ email: adminEmail, password: adminPassword })
+      .expect(201);
+    const token = res.body?.accessToken;
+    if (!token) throw new Error("admin login missing accessToken");
+    return token;
+  };
 
   beforeAll(async () => {
     process.env.STRIPE_WEBHOOK_SECRET = WEBHOOK_SECRET;
@@ -51,15 +63,11 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
     customerToken = customerLoginRes.body?.accessToken;
     expect(customerToken).toBeTruthy();
 
-    const adminEmail = `admin_disputes_revrec_${Date.now()}@servelink.local`;
+    adminEmail = `admin_disputes_revrec_${Date.now()}@servelink.local`;
     await prisma.user.create({
       data: { email: adminEmail, passwordHash, role: "admin" },
     });
-    const adminLoginRes = await request(app.getHttpServer())
-      .post("/api/v1/auth/login")
-      .send({ email: adminEmail, password })
-      .expect(201);
-    adminToken = adminLoginRes.body?.accessToken;
+    adminToken = await loginAdmin();
     expect(adminToken).toBeTruthy();
 
     const foUser = await prisma.user.create({
@@ -70,6 +78,15 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       update: { status: "active", userId: foUser.id },
       create: { id: FO_ID, userId: foUser.id, status: "active" },
     });
+
+    const foWithProvider = await prisma.franchiseOwner.findUnique({
+      where: { id: FO_ID },
+      include: { provider: true },
+    });
+    expect(foWithProvider).toBeTruthy();
+    expect(foWithProvider?.providerId).toBeTruthy();
+    expect(foWithProvider?.provider).toBeTruthy();
+    expect(foWithProvider?.provider?.userId).toBe(foUser.id);
   });
 
   afterAll(async () => {
@@ -307,6 +324,7 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       .expect(201);
 
     const postDisputeClosedLost = async (eventId: string, disputeAmountCents: number) => {
+      const freshAdminToken = await loginAdmin();
       process.env.STRIPE_WEBHOOK_SECRET = WEBHOOK_SECRET;
       const evt = {
         id: eventId,
@@ -328,6 +346,7 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       });
       return request(app.getHttpServer())
         .post("/api/v1/stripe/webhook")
+        .set("Authorization", `Bearer ${freshAdminToken}`)
         .set("Content-Type", "application/json")
         .set("stripe-signature", sig)
         .send(payload);
@@ -467,6 +486,7 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       });
 
     const postDisputeClosedLost = async (eventId: string, disputeAmountCents: number) => {
+      const freshAdminToken = await loginAdmin();
       process.env.STRIPE_WEBHOOK_SECRET = WEBHOOK_SECRET;
       const evt = {
         id: eventId,
@@ -488,6 +508,7 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       });
       return request(app.getHttpServer())
         .post("/api/v1/stripe/webhook")
+        .set("Authorization", `Bearer ${freshAdminToken}`)
         .set("Content-Type", "application/json")
         .set("stripe-signature", sig)
         .send(payload);
@@ -598,7 +619,8 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       .send({ idempotencyKey: `e2e-idem-finalize-${uniq("f")}` })
       .expect(201);
 
-    const postDisputeClosedLost = (evId: string, amt: number) => {
+    const postDisputeClosedLost = async (evId: string, amt: number) => {
+      const freshAdminToken = await loginAdmin();
       process.env.STRIPE_WEBHOOK_SECRET = WEBHOOK_SECRET;
       const evt = {
         id: evId,
@@ -620,6 +642,7 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       });
       return request(app.getHttpServer())
         .post("/api/v1/stripe/webhook")
+        .set("Authorization", `Bearer ${freshAdminToken}`)
         .set("Content-Type", "application/json")
         .set("stripe-signature", sig)
         .send(payload);

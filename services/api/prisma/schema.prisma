@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id               String          @id @default(cuid())
-  email            String          @unique
-  phone            String?         @unique
+  id               String           @id @default(cuid())
+  email            String           @unique
+  phone            String?          @unique
   passwordHash     String
-  role             Role            @default(customer)
-  stripeCustomerId String?         @unique
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  role             Role             @default(customer)
+  stripeCustomerId String?          @unique
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
   bookings         Booking[]
   franchiseOwner   FranchiseOwner?
+  serviceProvider  ServiceProvider?
   refreshTokens    RefreshToken[]
 }
 
@@ -36,6 +37,21 @@ model RefreshToken {
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+enum BookingPaymentStatus {
+  none
+  authorized_initial
+  additional_authorization_required
+  additional_authorization_pending
+  additional_authorization_approved
+  additional_authorization_declined
+  ready_for_capture
+  captured
+  quote_ready
+  requires_payment
+  paid
+  failed
 }
 
 model Booking {
@@ -57,6 +73,18 @@ model Booking {
   siteLng               Float?
   lastInsideAt          DateTime                    @default(now())
   outsideSinceAt        DateTime?
+  startedAt             DateTime?
+  completedAt           DateTime?
+  priceSubtotal         Float?
+  priceTotal            Float?
+  margin                Float?
+  quotedSubtotal        Decimal?                    @db.Decimal(10, 2)
+  quotedMargin          Decimal?                    @db.Decimal(10, 2)
+  quotedTotal           Decimal?                    @db.Decimal(10, 2)
+  paymentStatus         BookingPaymentStatus        @default(none)
+  paymentIntentId       String?
+  acceptedAt            DateTime?
+  enRouteAt             DateTime?
   billingSessions       BillingSession[]
   customer              User                        @relation(fields: [customerId], references: [id])
   fo                    FranchiseOwner?             @relation(fields: [foId], references: [id])
@@ -72,6 +100,13 @@ model Booking {
   opsAlertRollups       OpsAlertRollup[]
   refundIntents         RefundIntent[]
   bookingSlotHolds      BookingSlotHold[]
+  dispatchDecisions              DispatchDecision[]
+  dispatchOperatorNotes          DispatchOperatorNote[]
+  bookingDispatchControl         BookingDispatchControl?
+  adminCommandCenterActivities   AdminCommandCenterActivity[]
+  trustEvents                    TrustEvent[]
+  payments                       Payment[]
+  opsAnomalies                   OpsAnomaly[]
 
   @@index([customerId])
   @@index([status])
@@ -79,6 +114,55 @@ model Booking {
   @@index([status, scheduledStart])
   @@index([foId, status, scheduledStart])
   @@index([foId, scheduledStart])
+}
+
+model BookingDispatchControl {
+  id               String    @id @default(cuid())
+  bookingId        String    @unique
+  holdActive       Boolean   @default(false)
+  holdReason       String?
+  holdSource       String?
+  holdSetByAdminId String?
+  holdSetAt        DateTime?
+  holdReleasedAt           DateTime?
+  reviewRequired           Boolean   @default(false)
+  reviewReason             String?
+  reviewSource             String?
+  reviewRequestedByAdminId String?
+  reviewRequestedAt        DateTime?
+  reviewCompletedAt        DateTime?
+  workflowState            AdminBookingWorkflowState @default(open)
+  commandCenterOperatorNote String?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([holdActive, createdAt])
+  @@index([reviewRequired, createdAt])
+}
+
+model AdminCommandCenterActivity {
+  id          String   @id @default(cuid())
+  bookingId   String
+  actorUserId String
+  actorRole   String   @default("admin")
+  type        String
+  summary     String
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+}
+
+enum AdminBookingWorkflowState {
+  open
+  held
+  in_review
+  approved
+  reassign_requested
 }
 
 model BookingStripePayment {
@@ -327,6 +411,7 @@ model BookingEvent {
   idempotencyKey String?
   createdAt      DateTime         @default(now())
   Booking        Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  dispatchDecisions DispatchDecision[]
 
   @@unique([bookingId, idempotencyKey])
   @@index([bookingId, createdAt])
@@ -338,35 +423,115 @@ model BookingOffer {
   foId          String
   status        BookingOfferStatus @default(offered)
   rank          Int
-  offeredAt     DateTime           @default(now())
-  expiresAt     DateTime
+  offeredAt     DateTime?
+  activateAt    DateTime?
+  expiresAt     DateTime?
   respondedAt   DateTime?
   responseNote  String?
   dispatchRound Int                @default(1)
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
   booking       Booking            @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   fo            FranchiseOwner     @relation(fields: [foId], references: [id], onDelete: Cascade)
 
+  @@unique([bookingId, foId, dispatchRound])
   @@index([bookingId, createdAt])
   @@index([bookingId, status, createdAt])
   @@index([foId, status, createdAt])
   @@index([status, expiresAt])
   @@index([bookingId, dispatchRound, rank])
-  @@unique([bookingId, foId, dispatchRound])
+}
+
+model DispatchDecision {
+  id                       String                 @id @default(cuid())
+  bookingId                String
+  bookingEventId           String?
+  trigger                  String
+  triggerDetail            String?
+  dispatchSequence         Int
+  redispatchSequence       Int                    @default(0)
+  decisionStatus           DispatchDecisionStatus
+  selectedFranchiseOwnerId String?
+  selectedRank             Int?
+  selectedScore            Decimal?               @db.Decimal(10, 4)
+  scoringVersion           String
+  idempotencyKey           String?
+  correlationKey           String?
+  bookingStatusAtDecision  BookingStatus?
+  scheduledStart           DateTime?
+  estimatedDurationMin     Int?
+  bookingSnapshot          Json
+  decisionMeta             Json?
+  createdAt                DateTime               @default(now())
+
+  booking                  Booking                @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingEvent             BookingEvent?          @relation(fields: [bookingEventId], references: [id], onDelete: SetNull)
+  candidates               DispatchDecisionCandidate[]
+
+  @@index([bookingId, createdAt])
+  @@index([bookingId, dispatchSequence])
+  @@index([selectedFranchiseOwnerId])
+  @@index([decisionStatus, createdAt])
+}
+
+model DispatchDecisionCandidate {
+  id                  String                      @id @default(cuid())
+  dispatchDecisionId  String
+  franchiseOwnerId   String
+  candidateStatus     DispatchCandidateStatus
+  baseRank            Int?
+  finalRank           Int?
+  baseScore           Decimal?                    @db.Decimal(10, 4)
+  finalScore          Decimal?                    @db.Decimal(10, 4)
+  distanceMiles       Decimal?                    @db.Decimal(10, 2)
+  foLoad              Int?
+  acceptanceRate      Decimal?                    @db.Decimal(6, 4)
+  completionRate      Decimal?                    @db.Decimal(6, 4)
+  cancellationRate    Decimal?                    @db.Decimal(6, 4)
+  acceptancePenalty   Decimal?                    @db.Decimal(10, 4)
+  completionPenalty   Decimal?                    @db.Decimal(10, 4)
+  cancellationPenalty Decimal?                    @db.Decimal(10, 4)
+  loadPenalty         Decimal?                    @db.Decimal(10, 4)
+  reliabilityBonus    Decimal?                    @db.Decimal(10, 4)
+  finalPenalty        Decimal?                    @db.Decimal(10, 4)
+  reasonCode          DispatchCandidateReasonCode?
+  reasonDetail        String?
+  eligibilitySnapshot Json?
+  scoreBreakdown      Json?
+  createdAt           DateTime                    @default(now())
+
+  dispatchDecision    DispatchDecision            @relation(fields: [dispatchDecisionId], references: [id], onDelete: Cascade)
+  franchiseOwner      FranchiseOwner              @relation(fields: [franchiseOwnerId], references: [id], onDelete: Cascade)
+
+  @@index([dispatchDecisionId, candidateStatus])
+  @@index([franchiseOwnerId, createdAt])
+  @@index([reasonCode, createdAt])
+}
+
+model DispatchOperatorNote {
+  id          String   @id @default(cuid())
+  bookingId   String
+  adminUserId String?
+  note        String
+  createdAt   DateTime @default(now())
+
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+  @@index([adminUserId, createdAt])
 }
 
 model BookingSlotHold {
-  id        String         @id @default(cuid())
+  id        String   @id @default(cuid())
   bookingId String
   foId      String
   startAt   DateTime
   endAt     DateTime
   expiresAt DateTime
-  createdAt DateTime       @default(now())
+  createdAt DateTime @default(now())
 
-  booking   Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  fo        FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
+  booking Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  fo      FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
 
   @@index([bookingId])
   @@index([foId, startAt, endAt])
@@ -448,11 +613,33 @@ model OpsAlertRollup {
   @@index([assignedToAdminId, status, createdAt])
 }
 
+model ServiceProvider {
+  id     String                @id @default(cuid())
+  userId String                @unique
+  type   ServiceProviderType
+  status ServiceProviderStatus @default(onboarding)
+
+  displayName String?
+  phone       String?
+  email       String?
+
+  reliabilityScore Float @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  franchiseOwner FranchiseOwner?
+
+  @@index([status])
+  @@index([type])
+}
+
 model FranchiseOwner {
-  id                   String            @id @default(cuid())
-  userId               String            @unique
-  status               FoStatus          @default(onboarding)
-  safetyHold           Boolean           @default(false)
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  status     FoStatus @default(onboarding)
+  safetyHold Boolean  @default(false)
 
   // Capability / matching
   teamSize             Int?
@@ -461,54 +648,110 @@ model FranchiseOwner {
   maxDailyLaborMinutes Int?
   homeLat              Float?
   homeLng              Float?
-  maxTravelMinutes     Int?              @default(60)
-  reliabilityScore     Float?            @default(0)
+  maxTravelMinutes     Int?   @default(60)
+  reliabilityScore     Float? @default(0)
 
   // Customer-facing profile
-  displayName          String?
-  photoUrl             String?
-  bio                  String?
-  yearsExperience      Int?
-  completedJobsCount   Int?              @default(0)
+  displayName        String?
+  photoUrl           String?
+  bio                String?
+  yearsExperience    Int?
+  completedJobsCount Int?    @default(0)
 
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
-  bookings             Booking[]
-  bookingOffers        BookingOffer[]
-  slotHolds            BookingSlotHold[]
-  dispatchStats        FranchiseOwnerDispatchStats?
-  reliabilityStats     FranchiseOwnerReliabilityStats?
-  user                 User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  providerId String?          @unique
+  provider   ServiceProvider? @relation(fields: [providerId], references: [id], onDelete: SetNull)
+
+  bookings         Booking[]
+  bookingOffers    BookingOffer[]
+  slotHolds        BookingSlotHold[]
+  dispatchStats    FranchiseOwnerDispatchStats?
+  reliabilityStats FranchiseOwnerReliabilityStats?
+  reputation       FranchiseOwnerReputation?
+  jobTypeStats     FranchiseOwnerJobTypeStats[]
+  user             User                            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dispatchDecisionCandidates DispatchDecisionCandidate[]
+  foSchedules              FoSchedule[]
+  foBlockouts              FoBlockout[]
+  payouts                  Payout[]
+  trustEvents              TrustEvent[]
+  opsAnomalies             OpsAnomaly[]
 
   @@index([status])
   @@index([status, safetyHold])
+  @@index([providerId])
   @@index([homeLat, homeLng])
   @@index([teamSize])
   @@index([maxTravelMinutes])
 }
 
-model FranchiseOwnerDispatchStats {
-  foId           String   @id
-  offersSent     Int      @default(0)
-  offersAccepted Int      @default(0)
-  offersRejected Int      @default(0)
-  offersExpired  Int      @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+model FranchiseOwnerReputation {
+  id String @id @default(cuid())
 
-  fo             FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
+  foId String         @unique
+  fo   FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
+
+  reputationScore  Float            @default(0)
+  reputationTier   ReputationTier   @default(B)
+  reliabilityScore Float            @default(0)
+  reliabilityLabel ReliabilityLabel @default(STANDARD)
+  lastCalculatedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([reputationTier])
+}
+
+model FranchiseOwnerDispatchStats {
+  foId                   String   @id
+  offersSent             Int      @default(0)
+  offersAccepted         Int      @default(0)
+  offersRejected         Int      @default(0)
+  offersExpired          Int      @default(0)
+  averageResponseSeconds Float    @default(0)
+  responseCount          Int      @default(0)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  fo FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
 }
 
 model FranchiseOwnerReliabilityStats {
-  foId               String   @id
-  assignmentsCount   Int      @default(0)
-  completionsCount   Int      @default(0)
-  cancellationsCount Int      @default(0)
-  inProgressCount    Int      @default(0)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  foId                  String   @id
+  assignmentsCount      Int      @default(0)
+  completionsCount      Int      @default(0)
+  cancellationsCount    Int      @default(0)
+  inProgressCount       Int      @default(0)
+  activeAssignedCount   Int      @default(0)
+  activeInProgressCount Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
-  fo                 FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
+  fo FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
+}
+
+model FranchiseOwnerJobTypeStats {
+  id String @id @default(cuid())
+
+  foId String
+  fo   FranchiseOwner @relation(fields: [foId], references: [id], onDelete: Cascade)
+
+  serviceType String
+  jobSizeBand String?
+
+  assignmentsCount   Int @default(0)
+  completionsCount   Int @default(0)
+  cancellationsCount Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([foId, serviceType, jobSizeBand])
+  @@index([foId])
+  @@index([serviceType, jobSizeBand])
 }
 
 model OpsAlertAudit {
@@ -588,6 +831,29 @@ enum OpsAnomalyType {
   UNKNOWN
   LEDGER_INVARIANT_VIOLATION
   PAYOUT_EXECUTION_BLOCKED
+  payment_missing
+  payment_mismatch
+  dispatch_failed
+  fo_unavailable_accept
+  execution_missing_start
+  execution_missing_complete
+  trust_incident_spike
+}
+
+enum OpsAnomalyStatus {
+  open
+  acknowledged
+  resolved
+}
+
+enum TrustEventType {
+  start
+  complete
+  incident
+  qc_pass
+  qc_fail
+  evidence_uploaded
+  customer_review
 }
 
 enum OpsAlertSeverity {
@@ -605,11 +871,108 @@ enum Role {
 enum BookingStatus {
   pending_payment
   pending_dispatch
+  hold
+  review
   offered
   assigned
+  accepted
+  en_route
+  active
   in_progress
   completed
   canceled
+  cancelled
+  exception
+}
+
+model FoSchedule {
+  id               String         @id @default(cuid())
+  franchiseOwnerId String
+  dayOfWeek        Int
+  startTime        String
+  endTime          String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  franchiseOwner   FranchiseOwner @relation(fields: [franchiseOwnerId], references: [id], onDelete: Cascade)
+
+  @@index([franchiseOwnerId])
+}
+
+model FoBlockout {
+  id               String         @id @default(cuid())
+  franchiseOwnerId String
+  start            DateTime
+  end              DateTime
+  reason           String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  franchiseOwner   FranchiseOwner @relation(fields: [franchiseOwnerId], references: [id], onDelete: Cascade)
+
+  @@index([franchiseOwnerId, start, end])
+}
+
+model TrustEvent {
+  id        String           @id @default(cuid())
+  bookingId String
+  foId      String?
+  type      TrustEventType
+  payload   Json?
+  createdAt DateTime         @default(now())
+
+  booking Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  fo      FranchiseOwner?  @relation(fields: [foId], references: [id], onDelete: SetNull)
+
+  @@index([bookingId, createdAt])
+  @@index([foId, createdAt])
+  @@index([type, createdAt])
+}
+
+model OpsAnomaly {
+  id          String           @id @default(cuid())
+  bookingId   String?
+  foId        String?
+  type        OpsAnomalyType
+  status      OpsAnomalyStatus @default(open)
+  title       String
+  detail      String?
+  fingerprint String?
+  metadata    Json?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  resolvedAt  DateTime?
+
+  booking Booking?         @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  fo      FranchiseOwner?  @relation(fields: [foId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([type, createdAt])
+  @@index([bookingId, status])
+  @@index([foId, status])
+  @@index([fingerprint])
+}
+
+model Payment {
+  id           String   @id @default(cuid())
+  bookingId    String
+  amount       Float
+  status       String
+  externalRef  String?
+  createdAt    DateTime @default(now())
+  booking      Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([externalRef])
+}
+
+model Payout {
+  id               String         @id @default(cuid())
+  franchiseOwnerId String
+  amount           Float
+  status           String
+  createdAt        DateTime       @default(now())
+  franchiseOwner   FranchiseOwner @relation(fields: [franchiseOwnerId], references: [id], onDelete: Cascade)
+
+  @@index([franchiseOwnerId])
 }
 
 enum BookingEventType {
@@ -639,4 +1002,171 @@ enum FoStatus {
   suspended
   safety_hold
   offboarded
+}
+
+enum ReputationTier {
+  A
+  B
+  C
+  PROBATION
+}
+
+enum ReliabilityLabel {
+  ELITE
+  STRONG
+  STANDARD
+  RISK
+}
+
+enum ServiceProviderType {
+  franchise_owner
+  independent
+  company
+}
+
+enum ServiceProviderStatus {
+  onboarding
+  active
+  suspended
+  deactivated
+}
+
+enum DispatchDecisionStatus {
+  selected
+  no_candidates
+  all_excluded
+  deferred
+  already_applied
+  manual_assigned
+}
+
+enum DispatchCandidateStatus {
+  considered
+  excluded
+  ranked
+  selected
+  rejected
+}
+
+enum DispatchCandidateReasonCode {
+  selected_best_score
+  not_selected_lower_rank
+  not_selected_after_competition
+  excluded_inactive
+  excluded_safety_hold
+  excluded_capacity
+  excluded_conflict
+  excluded_outside_service_area
+  excluded_no_matching_slot
+  excluded_job_type_mismatch
+  excluded_requirement_mismatch
+  excluded_provider_unavailable
+  excluded_duplicate_assignment
+  excluded_manual_block
+  excluded_unknown
+  redispatch_offer_expired
+  redispatch_assigned_start_sla
+  redispatch_manual
+  redispatch_system
+}
+
+enum AdminDispatchDecisionAction {
+  approve_assignment
+  reassign
+  hold
+  escalate
+  request_review
+}
+
+enum AdminDispatchDecisionExecutionStatus {
+  pending
+  executing
+  applied
+  rejected
+  failed
+}
+
+enum DispatchConfigStatus {
+  draft
+  active
+  archived
+}
+
+model DispatchConfig {
+  id                           String               @id @default(cuid())
+  version                      Int
+  status                       DispatchConfigStatus
+  label                        String?
+
+  acceptancePenaltyWeight      Decimal              @db.Decimal(10, 4)
+  completionPenaltyWeight      Decimal              @db.Decimal(10, 4)
+  cancellationPenaltyWeight   Decimal              @db.Decimal(10, 4)
+  loadPenaltyWeight            Decimal              @db.Decimal(10, 4)
+  reliabilityBonusWeight       Decimal              @db.Decimal(10, 4)
+  responseSpeedWeight          Decimal              @db.Decimal(10, 4)
+
+  offerExpiryMinutes           Int
+  assignedStartGraceMinutes    Int
+  multiPassPenaltyStep         Decimal              @db.Decimal(10, 4)
+
+  enableResponseSpeedWeighting Boolean              @default(true)
+  enableReliabilityWeighting   Boolean              @default(true)
+  allowReofferAfterExpiry      Boolean              @default(true)
+
+  configJson                   Json
+  createdByAdminUserId         String?
+  publishedByAdminUserId       String?
+  publishedAt                  DateTime?
+  createdAt                    DateTime             @default(now())
+  updatedAt                    DateTime             @updatedAt
+
+  publishAudits                DispatchConfigPublishAudit[]
+
+  @@index([status, version])
+}
+
+model DispatchConfigPublishAudit {
+  id                     String   @id @default(cuid())
+  dispatchConfigId       String
+  fromVersion            Int?
+  toVersion              Int
+  publishedByAdminUserId String?
+  publishedAt            DateTime @default(now())
+
+  diffSnapshot       Json
+  warningsSnapshot   Json
+  highlightsSnapshot Json
+  publishSummary     String
+
+  dispatchConfig DispatchConfig @relation(fields: [dispatchConfigId], references: [id], onDelete: Cascade)
+
+  @@index([dispatchConfigId])
+  @@index([publishedAt, toVersion])
+}
+
+model AdminDispatchDecision {
+  id                      String                               @id @default(cuid())
+  bookingId               String
+  action                  AdminDispatchDecisionAction
+  rationale               String
+  targetFoId              String?
+  submittedByUserId       String
+  submittedByRole         String
+  source                  String
+  submittedAt             DateTime
+  status                  String                               @default("accepted")
+  executionStatus         AdminDispatchDecisionExecutionStatus @default(pending)
+  executionMessage        String?
+  executionErrorCode      String?
+  executionAttemptCount   Int                                  @default(0)
+  executionStartedAt      DateTime?
+  executedAt              DateTime?
+  executionIdempotencyKey String?
+  createdAt               DateTime                             @default(now())
+  updatedAt               DateTime                             @updatedAt
+
+  @@index([bookingId, createdAt])
+  @@index([submittedByUserId, createdAt])
+  @@index([action, createdAt])
+  @@index([executionStatus, createdAt])
 }

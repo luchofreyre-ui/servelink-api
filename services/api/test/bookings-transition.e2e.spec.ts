@@ -68,10 +68,71 @@ describe("Booking transitions (E2E)", () => {
       update: { status: "active", userId: foUser.id },
       create: { id: FO_ID, userId: foUser.id, status: "active" },
     });
+
+    const foWithProvider = await prisma.franchiseOwner.findUnique({
+      where: { id: FO_ID },
+      include: { provider: true },
+    });
+    expect(foWithProvider).toBeTruthy();
+    expect(foWithProvider?.providerId).toBeTruthy();
+    expect(foWithProvider?.provider).toBeTruthy();
+    expect(foWithProvider?.provider?.userId).toBe(foUser.id);
   });
 
   afterAll(async () => {
     await app.close();
+  });
+
+  it("repairs FO provider link idempotently when providerId is nulled", async () => {
+    const repairUser = await prisma.user.create({
+      data: {
+        email: `fo_repair_${Date.now()}@servelink.local`,
+        passwordHash: "hash",
+        role: "fo",
+      },
+    });
+    const fo = await prisma.franchiseOwner.create({
+      data: {
+        userId: repairUser.id,
+        status: "active",
+        displayName: "Repair Target",
+      },
+    });
+
+    const initial = await prisma.franchiseOwner.findUnique({
+      where: { id: fo.id },
+      include: { provider: true },
+    });
+    expect(initial?.providerId).toBeTruthy();
+    expect(initial?.provider).toBeTruthy();
+
+    await prisma.franchiseOwner.update({
+      where: { id: fo.id },
+      data: { providerId: null },
+    });
+
+    const repaired = await prisma.franchiseOwner.findUnique({
+      where: { id: fo.id },
+      include: { provider: true },
+    });
+    expect(repaired?.providerId).toBeTruthy();
+    expect(repaired?.provider).toBeTruthy();
+    expect(repaired?.provider?.userId).toBe(fo.userId);
+
+    const providerIdAfterFirstRepair = repaired?.providerId;
+
+    await prisma.franchiseOwner.update({
+      where: { id: fo.id },
+      data: { providerId: null },
+    });
+
+    const repairedAgain = await prisma.franchiseOwner.findUnique({
+      where: { id: fo.id },
+      include: { provider: true },
+    });
+    expect(repairedAgain?.providerId).toBeTruthy();
+    expect(repairedAgain?.providerId).toBe(providerIdAfterFirstRepair);
+    expect(repairedAgain?.provider?.userId).toBe(fo.userId);
   });
 
   it("replay schedule with same idempotency-key does not create duplicate event", async () => {
@@ -432,6 +493,15 @@ describe("Booking transitions (E2E)", () => {
         status: FoStatus.active,
       },
     });
+
+    const fo2WithProvider = await prisma.franchiseOwner.findUnique({
+      where: { id: fo2.id },
+      include: { provider: true },
+    });
+    expect(fo2WithProvider).toBeTruthy();
+    expect(fo2WithProvider?.providerId).toBeTruthy();
+    expect(fo2WithProvider?.provider).toBeTruthy();
+    expect(fo2WithProvider?.provider?.userId).toBe(fo2.userId);
 
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${booking.id}/start`)

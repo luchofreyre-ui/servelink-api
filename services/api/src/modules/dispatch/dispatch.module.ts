@@ -1,17 +1,43 @@
 import { Module } from "@nestjs/common";
+import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
 import { FoModule } from "../fo/fo.module";
+import { DispatchAdminController } from "./dispatch.admin.controller";
+import { DispatchConfigAdminController } from "./dispatch-config.admin.controller";
 import { DispatchFoController } from "./dispatch.fo.controller";
 import { DispatchFoOfferResponseController } from "./dispatch.fo-offer-response.controller";
 import { DispatchService } from "./dispatch.service";
 import { DispatchWorker } from "./dispatch.worker";
+import { ReputationService } from "./reputation.service";
+import { DispatchCandidateService } from "./dispatch-candidate.service";
+import { DispatchConfigService } from "./dispatch-config.service";
+import { DispatchRankingService } from "./dispatch-ranking.service";
+import { ProviderDispatchResolverService } from "./provider-dispatch-resolver.service";
+import { DispatchDecisionService } from "../bookings/dispatch-decision.service";
+import { BookingTransitionService } from "../bookings/booking-transition.service";
+import { DispatchScoringService } from "./dispatch-scoring.service";
+import { TrustModule } from "../trust/trust.module";
 
 @Module({
-  imports: [FoModule],
+  imports: [FoModule, TrustModule],
   controllers: [
+    DispatchAdminController,
+    DispatchConfigAdminController,
     DispatchFoController,
     DispatchFoOfferResponseController,
   ],
-  providers: [DispatchService, DispatchWorker],
-  exports: [DispatchService],
+  providers: [
+    AdminPermissionsGuard,
+    DispatchService,
+    DispatchWorker,
+    ReputationService,
+    DispatchCandidateService,
+    DispatchConfigService,
+    DispatchRankingService,
+    ProviderDispatchResolverService,
+    DispatchDecisionService,
+    BookingTransitionService,
+    DispatchScoringService,
+  ],
+  exports: [DispatchService, ReputationService, DispatchConfigService],
 })
 export class DispatchModule {}

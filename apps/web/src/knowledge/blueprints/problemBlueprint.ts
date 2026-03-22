@@ -1,0 +1,40 @@
+import type { KnowledgePageBlueprint } from "./types";
+
+export const PROBLEM_PAGE_BLUEPRINT: KnowledgePageBlueprint = {
+  type: "problem",
+  label: "Problem Page",
+  description:
+    "Used for soil/problem encyclopedia pages focused on what the contamination is, why it forms, and how it should be treated safely.",
+  sections: [
+    { key: "hero", title: "Hero", description: "Top-of-page title and positioning.", required: true },
+    { key: "summary", title: "Summary", description: "Brief plain-language overview.", required: true },
+    { key: "definition", title: "What It Is", description: "Defines the problem clearly.", required: true },
+    { key: "why-it-forms", title: "Why It Forms", description: "Explains root cause and mechanism.", required: true },
+    { key: "where-it-appears", title: "Where It Appears", description: "Lists common locations and contexts.", required: true },
+    { key: "identification", title: "How to Identify It", description: "Visual and practical identification guidance.", required: true },
+    { key: "surface-compatibility", title: "Affected Surfaces", description: "Surfaces commonly impacted by this problem.", required: true },
+    { key: "safe-methods", title: "Best Cleaning Methods", description: "Methods that are appropriate and why.", required: true },
+    { key: "unsafe-methods", title: "Methods to Avoid", description: "Unsafe methods and why they are risky.", required: true },
+    { key: "safe-tools", title: "Recommended Tools", description: "Preferred tools and why.", required: true },
+    { key: "step-by-step", title: "Step-by-Step Removal", description: "Practical removal process.", required: true },
+    { key: "common-mistakes", title: "Common Mistakes", description: "Avoidable user errors.", required: true },
+    { key: "safety-notes", title: "Safety Notes", description: "Safety and compatibility cautions.", required: true },
+    { key: "when-to-call-a-professional", title: "When to Call a Professional", description: "Escalation guidance.", required: true },
+    { key: "faq", title: "FAQ", description: "Problem-specific questions and answers.", required: true },
+    { key: "related-surfaces", title: "Related Surfaces", description: "Links to affected surfaces.", required: true },
+    { key: "related-methods", title: "Related Methods", description: "Links to compatible methods.", required: true },
+    { key: "related-tools", title: "Related Tools", description: "Links to useful tools.", required: true },
+    { key: "related-guides", title: "Related Guides", description: "Links to how-to articles.", required: true },
+    { key: "related-services", title: "Related Services", description: "Service conversion path.", required: true },
+  ],
+  requirements: {
+    minimumFaqCount: 3,
+    minimumMistakeCount: 3,
+    minimumStepCount: 4,
+    requireProfessionalCallout: true,
+    requireSafetySection: true,
+    requireRelatedServices: true,
+    requireRelatedGuides: true,
+    requireEvidenceExplanation: true,
+  },
+};

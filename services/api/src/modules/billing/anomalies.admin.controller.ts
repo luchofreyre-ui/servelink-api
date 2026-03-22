@@ -103,6 +103,111 @@ const ACK_TYPE = "OPS_ANOMALY_ACK";
 export class AnomaliesAdminController {
   constructor(private readonly db: PrismaService) {}
 
+  private parseReviewStateFromPayload(payload: unknown): string | null {
+    if (!payload || typeof payload !== "object") return null;
+    const v = (payload as Record<string, unknown>).adminReviewState;
+    return typeof v === "string" ? v : null;
+  }
+
+  private parseReviewStateFromPayloadJson(payloadJson: string | null | undefined): string | null {
+    if (!payloadJson) return null;
+    try {
+      const p = JSON.parse(String(payloadJson)) as Record<string, unknown>;
+      const v = p.adminReviewState;
+      return typeof v === "string" ? v : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private effectiveBookingWorkflowState(control: {
+    holdActive: boolean;
+    reviewRequired: boolean;
+    reviewCompletedAt: Date | null;
+    workflowState: string;
+  }): string {
+    if (control.holdActive) return "held";
+    if (control.reviewRequired && !control.reviewCompletedAt) return "in_review";
+    return control.workflowState;
+  }
+
+  private computeSlaState(params: {
+    now: Date;
+    slaDueAt?: Date | string | null;
+    slaBreachedAt?: Date | string | null;
+    dueSoonUntil: Date;
+  }): "dueSoon" | "overdue" | "breached" | null {
+    const { now, slaDueAt, slaBreachedAt, dueSoonUntil } = params;
+    if (slaBreachedAt) return "breached";
+    if (!slaDueAt) return null;
+    const due = slaDueAt instanceof Date ? slaDueAt : new Date(slaDueAt);
+    if (Number.isNaN(due.getTime())) return null;
+    if (due.getTime() < now.getTime()) return "overdue";
+    if (due.getTime() < dueSoonUntil.getTime()) return "dueSoon";
+    return null;
+  }
+
+  private async enrichAnomalyListItems(params: {
+    items: Array<Record<string, unknown>>;
+    now: Date;
+    dueSoonUntil: Date;
+  }): Promise<Array<Record<string, unknown>>> {
+    const { items, now, dueSoonUntil } = params;
+    const bookingIds = [
+      ...new Set(
+        items
+          .map((r) => r.bookingId)
+          .filter((id): id is string => typeof id === "string" && id.length > 0),
+      ),
+    ];
+    const controls =
+      bookingIds.length > 0
+        ? await this.db.bookingDispatchControl.findMany({
+            where: { bookingId: { in: bookingIds } },
+          })
+        : [];
+    const byBooking = new Map(controls.map((c) => [c.bookingId, c]));
+
+    return items.map((r) => {
+      const payloadJson = r.payloadJson as string | null | undefined;
+      const payload = r.payload as unknown;
+      const bookingId = r.bookingId as string | null | undefined;
+
+      let reviewState = this.parseReviewStateFromPayload(payload);
+      if (reviewState == null) {
+        reviewState = this.parseReviewStateFromPayloadJson(payloadJson ?? null);
+      }
+
+      const ctrl = bookingId ? byBooking.get(bookingId) : undefined;
+      const bookingWorkflowState = ctrl
+        ? this.effectiveBookingWorkflowState({
+            holdActive: ctrl.holdActive,
+            reviewRequired: ctrl.reviewRequired,
+            reviewCompletedAt: ctrl.reviewCompletedAt,
+            workflowState: String(ctrl.workflowState),
+          })
+        : null;
+
+      const detailPath = bookingId ? `/admin/bookings/${bookingId}` : null;
+
+      const slaState = this.computeSlaState({
+        now,
+        slaDueAt: r.slaDueAt as Date | string | null | undefined,
+        slaBreachedAt: r.slaBreachedAt as Date | string | null | undefined,
+        dueSoonUntil,
+      });
+
+      const { payloadJson: _stripPayloadJson, ...rest } = r;
+      return {
+        ...rest,
+        reviewState,
+        bookingWorkflowState,
+        detailPath,
+        slaState,
+      };
+    });
+  }
+
   @Get("anomalies")
   async list(
     @Req() req: AuthedRequest,
@@ -664,7 +769,7 @@ export class AnomaliesAdminController {
 
       const rows = await this.db.opsAlertRollup.findMany(rollupArgs);
 
-      const anomalies = rows.map((r: any) => ({
+      const anomaliesRaw = rows.map((r: any) => ({
         id: r.id, // cuid from OpsAlertRollup
         fingerprint: r.fingerprint,
         anomalyType: String(r.anomalyType),
@@ -682,7 +787,14 @@ export class AnomaliesAdminController {
         bookingId: r.bookingId,
         foId: r.foId,
         bookingStatus: r.bookingStatus,
+        payloadJson: r.payloadJson ?? null,
       }));
+
+      const anomalies = await this.enrichAnomalyListItems({
+        items: anomaliesRaw,
+        now: nowDate,
+        dueSoonUntil,
+      });
 
       const nextCursor = rows.length > 0 ? rows[rows.length - 1].fingerprint : null;
 
@@ -800,7 +912,7 @@ export class AnomaliesAdminController {
       rows = await this.db.opsAlertRollup.findMany(rollupFindArgs);
     }
 
-    const anomalies = rows
+    const anomaliesMapped = rows
       .map((r: any) => {
         // keep API contract: anomaly "id" = source event id when present (OpsAlert), else row id (rollup)
         const base = {
@@ -822,6 +934,7 @@ export class AnomaliesAdminController {
           assignedToAdminId: r.assignedToAdminId ?? null,
           slaDueAt: r.slaDueAt ?? null,
           slaBreachedAt: r.slaBreachedAt ?? null,
+          payloadJson: r.payloadJson ?? null,
         };
 
         if (!includePayload) return base;
@@ -834,6 +947,12 @@ export class AnomaliesAdminController {
         }
       })
       .filter(Boolean);
+
+    const anomalies = await this.enrichAnomalyListItems({
+      items: anomaliesMapped,
+      now: nowDate,
+      dueSoonUntil,
+    });
 
     const nextCursor =
       rows.length > 0
