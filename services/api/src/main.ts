@@ -97,19 +97,23 @@ async function bootstrap() {
   expressApp.use(express.json({ limit: "1mb" }));
   expressApp.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
-  // Swagger (OpenAPI YAML)
-  const openapiPath = join(__dirname, "../../docs/api/openapi.yaml");
-  console.log("OpenAPI path:", openapiPath);
+  // Swagger (OpenAPI YAML) - optional
+  try {
+    const openapiPath = join(__dirname, "../../docs/api/openapi.yaml");
+    console.log("OpenAPI path:", openapiPath);
 
-  const openapiRaw = readFileSync(openapiPath, "utf8");
-  const openapiDoc = yaml.load(openapiRaw) as any;
+    const openapiRaw = readFileSync(openapiPath, "utf8");
+    const openapiDoc = yaml.load(openapiRaw) as any;
 
-  expressApp.use("/docs", swaggerUi.serve, swaggerUi.setup(openapiDoc));
+    expressApp.use("/docs", swaggerUi.serve, swaggerUi.setup(openapiDoc));
+    console.log("Swagger UI enabled at /docs");
+  } catch (err) {
+    console.warn("OpenAPI spec not found, Swagger UI disabled:", (err as Error).message);
+  }
 
   await app.listen(port);
 
   console.log(`Servelink API running on http://localhost:${port}`);
-  console.log(`Swagger UI at http://localhost:${port}/docs`);
   console.log("Allowed CORS origins:", allowedOrigins.join(", "));
 }
 
