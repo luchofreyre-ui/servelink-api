@@ -98,7 +98,7 @@ async function bootstrap() {
   expressApp.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
   // Swagger (OpenAPI YAML)
-  const openapiPath = join(__dirname, "../../../docs/api/openapi.yaml");
+  const openapiPath = join(__dirname, "../../docs/api/openapi.yaml");
   console.log("OpenAPI path:", openapiPath);
 
   const openapiRaw = readFileSync(openapiPath, "utf8");
