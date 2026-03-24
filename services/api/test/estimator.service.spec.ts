@@ -1,9 +1,14 @@
 import { EstimatorService, EstimateInput } from "../src/modules/estimate/estimator.service";
 import { FoService } from "../src/modules/fo/fo.service";
+import type { DeepCleanEstimatorConfigService } from "../src/modules/bookings/deep-clean-estimator-config.service";
 
 const mockFoService = {
   matchFOs: jest.fn().mockResolvedValue([]),
 } as unknown as FoService;
+
+const mockDeepCleanEstimatorConfig = {
+  getActiveForEstimate: jest.fn().mockResolvedValue(null),
+} as unknown as DeepCleanEstimatorConfigService;
 
 function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
   return {
@@ -37,7 +42,7 @@ function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
 }
 
 describe("EstimatorService (unit)", () => {
-  const svc = new EstimatorService(mockFoService);
+  const svc = new EstimatorService(mockFoService, mockDeepCleanEstimatorConfig);
 
   it("STANDARD: returns real-time estimate with anchored asymmetric range (maintenance, low risk)", async () => {
     const input = baseInput({
@@ -168,6 +173,46 @@ describe("EstimatorService (unit)", () => {
     expect(res.flags).toEqual(
       expect.arrayContaining(["STAGED_PLAN_PRESENTED", "OPS_VISIBILITY_HIGH", "POST_BOOKING_REVIEW_ELIGIBLE"]),
     );
+  });
+
+  it("deep clean: includes single_visit_deep_clean program by default", async () => {
+    const input = baseInput({ service_type: "deep_clean" });
+    const res = await svc.estimate(input);
+
+    expect(res.deepCleanProgram).toBeDefined();
+    expect(res.deepCleanProgram?.programType).toBe("single_visit_deep_clean");
+    expect(res.deepCleanProgram?.visitCount).toBe(1);
+    expect(res.deepCleanProgram?.visits).toHaveLength(1);
+    expect(res.deepCleanProgram?.visits[0].estimatedLaborMinutes).toBe(res.adjustedLaborMinutes);
+  });
+
+  it("deep clean: phased_3_visit splits labor across 3 visits; visit prices sum to aggregate quote", async () => {
+    const input = baseInput({
+      service_type: "deep_clean",
+      deep_clean_program: "phased_3_visit",
+    });
+    const res = await svc.estimate(input);
+
+    expect(res.deepCleanProgram?.programType).toBe("phased_deep_clean_program");
+    expect(res.deepCleanProgram?.visitCount).toBe(3);
+    expect(res.deepCleanProgram?.visits).toHaveLength(3);
+
+    const sumLabor = res.deepCleanProgram!.visits.reduce(
+      (s, v) => s + v.estimatedLaborMinutes,
+      0,
+    );
+    expect(sumLabor).toBe(res.adjustedLaborMinutes);
+
+    const sumPrice = res.deepCleanProgram!.visits.reduce(
+      (s, v) => s + v.estimatedPriceCents,
+      0,
+    );
+    expect(sumPrice).toBe(res.estimatedPriceCents);
+  });
+
+  it("maintenance: omits deepCleanProgram", async () => {
+    const res = await svc.estimate(baseInput({ service_type: "maintenance" }));
+    expect(res.deepCleanProgram).toBeUndefined();
   });
 
   it("Category caps: unknowns should cap at 15%, occupancy/access at 5%", async () => {

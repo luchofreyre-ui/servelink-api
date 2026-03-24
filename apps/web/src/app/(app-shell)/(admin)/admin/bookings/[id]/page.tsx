@@ -3,12 +3,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { getStoredAccessToken } from "@/lib/auth";
+import { WEB_ENV } from "@/lib/env";
 import type { AdminBookingCommandCenterPayload } from "@/lib/api/adminBookingCommandCenter";
 import { useAdminBookingCommandCenterMutations } from "@/hooks/admin/useAdminBookingCommandCenterMutations";
 import { AdminBookingOperationalDetailCard } from "@/components/admin/AdminBookingOperationalDetailCard";
+import { AdminBookingAuthorityActionSurface } from "@/components/admin/AdminBookingAuthorityActionSurface";
+import { AdminDeepCleanBookingSection } from "@/components/booking-detail/admin/AdminDeepCleanBookingSection";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:3001";
+const API_BASE_URL = WEB_ENV.apiBaseUrl;
 
 type BookingRecord = {
   id: string;
@@ -47,6 +49,11 @@ type DispatchExceptionDetailResponse = {
   requiresFollowUp?: boolean | null;
   priorityBucket?: string | null;
   [key: string]: unknown;
+};
+
+type BookingScreenEnvelope = {
+  kind?: string;
+  screen?: unknown;
 };
 
 type Loadable<T> = {
@@ -190,6 +197,12 @@ export default function AdminBookingDetailPage() {
 
   const [ccActionError, setCcActionError] = useState<string | null>(null);
 
+  const [bookingScreen, setBookingScreen] = useState<Loadable<unknown>>({
+    loading: true,
+    error: null,
+    data: null,
+  });
+
   useEffect(() => {
     setToken(getStoredAccessToken());
   }, []);
@@ -236,6 +249,7 @@ export default function AdminBookingDetailPage() {
       setTimeline({ loading: true, error: null, data: null });
       setExplainer({ loading: true, error: null, data: null });
       setCommandCenter((prev) => ({ ...prev, loading: true, error: null }));
+      setBookingScreen({ loading: true, error: null, data: null });
 
       const commandCenterPromise = fetchJson<AdminBookingCommandCenterPayload>(
         `${API_BASE_URL}/api/v1/admin/bookings/${bookingId}/command-center`,
@@ -252,6 +266,32 @@ export default function AdminBookingDetailPage() {
               loading: false,
               error:
                 error instanceof Error ? error.message : "Failed to load command center.",
+              data: null,
+            });
+          }
+        });
+
+      const screenPromise = fetchJson<BookingScreenEnvelope>(
+        `${API_BASE_URL}/api/v1/bookings/${bookingId}/screen`,
+        authToken,
+      )
+        .then((payload) => {
+          if (!cancelled) {
+            setBookingScreen({
+              loading: false,
+              error: null,
+              data: payload?.screen ?? null,
+            });
+          }
+        })
+        .catch((error) => {
+          if (!cancelled) {
+            setBookingScreen({
+              loading: false,
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Failed to load booking screen.",
               data: null,
             });
           }
@@ -349,6 +389,7 @@ export default function AdminBookingDetailPage() {
         timelinePromise,
         explainerPromise,
         commandCenterPromise,
+        screenPromise,
       ]);
     }
 
@@ -365,29 +406,39 @@ export default function AdminBookingDetailPage() {
     }
 
     try {
-      const [bookingData, exceptionData, timelineData, explainerData, ccData] =
-        await Promise.allSettled([
-          fetchJson<BookingRecord>(
-            `${API_BASE_URL}/api/v1/bookings/${bookingId}`,
-            token,
-          ),
-          fetchJson<DispatchExceptionDetailResponse>(
-            `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-exception-detail`,
-            token,
-          ),
-          fetchJson<DispatchTimelineResponse>(
-            `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-timeline`,
-            token,
-          ),
-          fetchJson<DispatchExplainerResponse>(
-            `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-explainer`,
-            token,
-          ),
-          fetchJson<AdminBookingCommandCenterPayload>(
-            `${API_BASE_URL}/api/v1/admin/bookings/${bookingId}/command-center`,
-            token,
-          ),
-        ]);
+      const [
+        bookingData,
+        exceptionData,
+        timelineData,
+        explainerData,
+        ccData,
+        screenData,
+      ] = await Promise.allSettled([
+        fetchJson<BookingRecord>(
+          `${API_BASE_URL}/api/v1/bookings/${bookingId}`,
+          token,
+        ),
+        fetchJson<DispatchExceptionDetailResponse>(
+          `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-exception-detail`,
+          token,
+        ),
+        fetchJson<DispatchTimelineResponse>(
+          `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-timeline`,
+          token,
+        ),
+        fetchJson<DispatchExplainerResponse>(
+          `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-explainer`,
+          token,
+        ),
+        fetchJson<AdminBookingCommandCenterPayload>(
+          `${API_BASE_URL}/api/v1/admin/bookings/${bookingId}/command-center`,
+          token,
+        ),
+        fetchJson<BookingScreenEnvelope>(
+          `${API_BASE_URL}/api/v1/bookings/${bookingId}/screen`,
+          token,
+        ),
+      ]);
 
       if (bookingData.status === "fulfilled") {
         setBooking({ loading: false, error: null, data: bookingData.value });
@@ -407,6 +458,13 @@ export default function AdminBookingDetailPage() {
       }
       if (ccData.status === "fulfilled") {
         applyCommandCenterPayload(ccData.value);
+      }
+      if (screenData.status === "fulfilled") {
+        setBookingScreen({
+          loading: false,
+          error: null,
+          data: screenData.value?.screen ?? null,
+        });
       }
     } catch {
       // no-op
@@ -598,6 +656,15 @@ export default function AdminBookingDetailPage() {
 
         <AdminBookingOperationalDetailCard bookingId={bookingId} />
 
+        {bookingScreen.loading ? (
+          <p className="text-sm text-white/50">Loading booking screen…</p>
+        ) : (
+          <AdminDeepCleanBookingSection
+            screen={bookingScreen.data}
+            screenError={bookingScreen.error}
+          />
+        )}
+
         <section
           role="region"
           aria-label="Admin command center"
@@ -609,6 +676,15 @@ export default function AdminBookingDetailPage() {
               Server-driven workflow via /api/v1/admin/bookings/:id/* mutations
             </p>
           </div>
+          <AdminBookingAuthorityActionSurface
+            loading={commandCenter.loading && !commandCenter.data}
+            error={commandCenter.data ? null : commandCenter.error}
+            authority={commandCenter.data?.authority}
+            apiBase={API_BASE_URL}
+            token={token}
+            bookingId={bookingId}
+            onRecomputeComplete={() => void reloadReadModels()}
+          />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <button
               type="button"

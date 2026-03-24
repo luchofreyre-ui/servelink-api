@@ -1,9 +1,48 @@
+export type BookingAuthorityReviewStatus = "auto" | "reviewed" | "overridden";
+
+export type AdminBookingAuthorityPersistedSnapshot = {
+  surfaces: string[];
+  problems: string[];
+  methods: string[];
+  status: BookingAuthorityReviewStatus;
+  reviewedByUserId: string | null;
+  reviewedAt: string | null;
+  /** ISO timestamps when API includes row audit fields (optional for older payloads). */
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type AdminBookingAuthorityDerivedSnapshot = {
+  surfaces: string[];
+  problems: string[];
+  methods: string[];
+};
+
+export type AdminBookingAuthorityOperatorHints = {
+  hasPersistedRow: boolean;
+  persistedStatus: BookingAuthorityReviewStatus | null;
+  recomputeSkipsOverwrite: boolean;
+  recomputeMayRefreshPersistedRow: boolean;
+  recomputePreviewOnly: boolean;
+};
+
+export type AdminBookingAuthorityBlock = {
+  persisted: AdminBookingAuthorityPersistedSnapshot | null;
+  derived: AdminBookingAuthorityDerivedSnapshot | null;
+  operatorHints?: AdminBookingAuthorityOperatorHints;
+};
+
 export type AdminBookingCommandCenterPayload = {
   success: true;
   bookingId: string;
   status: string;
   workflowState: "open" | "held" | "in_review" | "approved" | "reassign_requested";
   operatorNote: string | null;
+  /**
+   * Persisted vs runtime-derived cleaning authority tags (API 14G+).
+   * Older responses may omit this; clients should treat as empty.
+   */
+  authority?: AdminBookingAuthorityBlock;
   anomaly: {
     id: string;
     status: string;

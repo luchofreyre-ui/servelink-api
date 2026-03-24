@@ -23,7 +23,11 @@ import { LedgerService } from "../ledger/ledger.service";
 import { DispatchService } from "../dispatch/dispatch.service";
 import { ReputationService } from "../dispatch/reputation.service";
 import { SlotHoldMetrics } from "../slot-holds/slot-holds.metrics";
-import { PricingService } from "../pricing/pricing.service";
+import {
+  CLEANING_PRICING_POLICY_V1,
+  PLATFORM_FEE_POLICY_V1,
+} from "../pricing/pricing-policy";
+import { splitCharge } from "../billing/pricing.policy";
 
 @Injectable()
 export class BookingsService {
@@ -35,7 +39,6 @@ export class BookingsService {
     private readonly ledger: LedgerService,
     private readonly dispatch: DispatchService,
     private readonly reputationService: ReputationService,
-    private readonly pricingService: PricingService,
   ) {}
 
   async createBooking(input: {
@@ -100,8 +103,22 @@ export class BookingsService {
             riskCapped: est.riskCapped,
             inputJson: JSON.stringify(input.estimateInput),
             outputJson: JSON.stringify(est),
+            deepCleanEstimatorConfigId: est.deepCleanEstimatorConfigId ?? null,
+            deepCleanEstimatorConfigVersion: est.deepCleanEstimatorConfigVersion ?? null,
+            deepCleanEstimatorConfigLabel: est.deepCleanEstimatorConfigLabel ?? null,
           },
         });
+
+        if (est.deepCleanProgram) {
+          await tx.bookingDeepCleanProgram.create({
+            data: {
+              bookingId: booking.id,
+              programType: est.deepCleanProgram.programType,
+              visitCount: est.deepCleanProgram.visitCount,
+              visitsJson: JSON.stringify(est.deepCleanProgram.visits),
+            },
+          });
+        }
 
         const estimatedHours =
           Math.round((est.estimateMinutes / 60) * 100) / 100;
@@ -118,20 +135,25 @@ export class BookingsService {
     });
 
     if (input.estimateInput && estimate) {
-      const quote = this.pricingService.calculateQuote({
-        basePrice: 100,
-        estimatedDurationMinutes: estimate.estimateMinutes,
-      });
+      // Customer quote = estimator labor total at canonical hourly rate (estimatedPriceCents).
+      // Platform fee (margin) is the platform share of that same total via splitCharge — not an add-on tax line.
+      const quoteCents = Math.max(0, Math.floor(estimate.estimatedPriceCents));
+      const { platformFeeCents } = splitCharge(quoteCents, PLATFORM_FEE_POLICY_V1);
+      const subtotalDollars = quoteCents / 100;
+      const marginDollars = platformFeeCents / 100;
+      const totalDollars = subtotalDollars;
+
       await this.db.booking.update({
         where: { id: bookingId },
         data: {
-          priceSubtotal: quote.subtotal,
-          priceTotal: quote.total,
-          margin: quote.margin,
+          hourlyRateCents: CLEANING_PRICING_POLICY_V1.hourlyRateCents,
+          priceSubtotal: subtotalDollars,
+          priceTotal: totalDollars,
+          margin: marginDollars,
           paymentStatus: BookingPaymentStatus.quote_ready,
-          quotedSubtotal: new Prisma.Decimal(quote.subtotal.toFixed(2)),
-          quotedMargin: new Prisma.Decimal(quote.margin.toFixed(2)),
-          quotedTotal: new Prisma.Decimal(quote.total.toFixed(2)),
+          quotedSubtotal: new Prisma.Decimal(subtotalDollars.toFixed(2)),
+          quotedMargin: new Prisma.Decimal(marginDollars.toFixed(2)),
+          quotedTotal: new Prisma.Decimal(totalDollars.toFixed(2)),
         },
       });
     }

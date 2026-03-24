@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { DispatchException } from "@/operations/dispatchExceptions/dispatchExceptionTypes";
 import { findStandardForDispatchException } from "@/operations/dispatchExceptions/dispatchExceptionSelectors";
 
@@ -39,6 +40,35 @@ export default function DispatchExceptionDetailDrawer({
         </div>
         <div>
           <strong>Summary:</strong> {exception.summary}
+        </div>
+        {exception.apiDetail ? (
+          <div className="mt-3 space-y-1 border-t border-slate-200 pt-3 text-xs">
+            <div>
+              <strong>Booking status:</strong>{" "}
+              {exception.apiDetail.bookingStatus ?? "—"}
+            </div>
+            <div>
+              <strong>Recommended action:</strong> {exception.apiDetail.recommendedAction}
+            </div>
+            <div>
+              <strong>Dispatch passes:</strong> {exception.apiDetail.totalDispatchPasses}
+            </div>
+            <div>
+              <strong>Priority:</strong> {exception.apiDetail.priorityBucket}
+            </div>
+            <div>
+              <strong>Follow-up:</strong>{" "}
+              {exception.apiDetail.requiresFollowUp ? "Yes" : "No"}
+            </div>
+          </div>
+        ) : null}
+        <div className="mt-4">
+          <Link
+            href={`/admin/bookings/${exception.bookingId}`}
+            className="text-sm font-medium text-teal-700 underline"
+          >
+            Open booking command center →
+          </Link>
         </div>
       </div>
 

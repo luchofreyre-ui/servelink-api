@@ -58,6 +58,9 @@ describe("Admin booking command center mutations (E2E)", () => {
     expect(patch.body.activityPreview.some((r: { type: string }) => r.type === "admin_operator_note_saved")).toBe(
       true,
     );
+    expect(patch.body.authority).toBeDefined();
+    expect(patch.body.authority).toHaveProperty("persisted");
+    expect(patch.body.authority).toHaveProperty("derived");
 
     const detail = await request(app.getHttpServer())
       .get(`/api/v1/admin/bookings/${bookingId}/command-center`)
@@ -65,6 +68,9 @@ describe("Admin booking command center mutations (E2E)", () => {
       .expect(200);
 
     expect(detail.body.operatorNote).toBe("e2e_operator_note_mutation");
+    expect(detail.body.authority).toBeDefined();
+    expect(detail.body.authority).toHaveProperty("persisted");
+    expect(detail.body.authority).toHaveProperty("derived");
 
     const row = await prisma.adminCommandCenterActivity.findFirst({
       where: { bookingId, type: "admin_operator_note_saved" },

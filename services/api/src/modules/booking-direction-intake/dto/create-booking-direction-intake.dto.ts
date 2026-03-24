@@ -1,0 +1,81 @@
+import { Type } from "class-transformer";
+import {
+  IsIn,
+  IsOptional,
+  IsString,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
+
+export class BookingDirectionUtmDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  source?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  medium?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  campaign?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  content?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  term?: string;
+}
+
+export class CreateBookingDirectionIntakeDto {
+  @IsString()
+  @MaxLength(120)
+  serviceId!: string;
+
+  @IsString()
+  @MaxLength(500)
+  homeSize!: string;
+
+  @IsString()
+  @MaxLength(80)
+  bedrooms!: string;
+
+  @IsString()
+  @MaxLength(80)
+  bathrooms!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  pets?: string;
+
+  @IsString()
+  @MaxLength(80)
+  frequency!: string;
+
+  @IsString()
+  @MaxLength(120)
+  preferredTime!: string;
+
+  /** Only stored when service is deep clean; otherwise ignored. */
+  @IsOptional()
+  @IsIn(["single_visit", "phased_3_visit"])
+  deepCleanProgram?: "single_visit" | "phased_3_visit";
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  source?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => BookingDirectionUtmDto)
+  utm?: BookingDirectionUtmDto;
+}

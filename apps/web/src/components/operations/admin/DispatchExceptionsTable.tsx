@@ -5,9 +5,15 @@ import type { DispatchException } from "@/operations/dispatchExceptions/dispatch
 interface Props {
   data: DispatchException[];
   onSelect: (exception: DispatchException) => void;
+  /** Override default empty-state copy */
+  emptyMessage?: string;
 }
 
-export default function DispatchExceptionsTable({ data, onSelect }: Props) {
+export default function DispatchExceptionsTable({
+  data,
+  onSelect,
+  emptyMessage,
+}: Props) {
   return (
     <div className="overflow-hidden rounded-xl border">
       <table className="w-full text-sm">
@@ -24,8 +30,8 @@ export default function DispatchExceptionsTable({ data, onSelect }: Props) {
           {data.length === 0 ? (
             <tr>
               <td className="p-4 text-neutral-500" colSpan={5}>
-                No dispatch exceptions in the current snapshot. Connect live booking screens to populate
-                this view.
+                {emptyMessage ??
+                  "No dispatch exceptions in the current snapshot. Connect live booking screens to populate this view."}
               </td>
             </tr>
           ) : null}

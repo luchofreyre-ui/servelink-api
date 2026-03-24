@@ -271,6 +271,13 @@ export default function AdminPage() {
 
           <div className="flex flex-wrap gap-3">
             <Link
+              href="/admin/knowledge-review"
+              title="Review weak scenarios, SOPs, and timing signals."
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Knowledge Review
+            </Link>
+            <Link
               href="/admin/anomalies"
               className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
             >
@@ -283,10 +290,53 @@ export default function AdminPage() {
               View activity
             </Link>
             <Link
+              href="/admin/booking-direction-intakes"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Booking intakes
+            </Link>
+            <Link
               href="/admin/exceptions"
               className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
             >
               Dispatch exceptions
+            </Link>
+            <Link
+              href="/admin/authority"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+              data-testid="admin-dashboard-authority-intel"
+            >
+              Authority intelligence
+            </Link>
+            <Link
+              href="/admin/deep-clean/analytics"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Deep Clean Analytics
+            </Link>
+            <Link
+              href="/admin/deep-clean/insights"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Deep Clean Insights
+            </Link>
+            <Link
+              href="/admin/deep-clean/estimator"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Deep Clean Estimator
+            </Link>
+            <Link
+              href="/admin/deep-clean/estimator-impact"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Estimator impact
+            </Link>
+            <Link
+              href="/admin/deep-clean/estimator-governance"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Estimator governance
             </Link>
             <button
               type="button"
@@ -425,7 +475,7 @@ export default function AdminPage() {
       </div>
 
       <DashboardCard eyebrow="Navigation" title="Admin surfaces">
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
           <Link
             href="/admin/anomalies"
             className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
@@ -443,6 +493,68 @@ export default function AdminPage() {
             <p className="text-sm font-semibold text-slate-100">Exceptions</p>
             <p className="mt-1 text-sm text-slate-400">
               Dispatch exception review and operational follow-up.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/deep-clean/analytics"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Deep Clean Analytics</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Calibration variance, operator notes, and booking drill-down.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/deep-clean/insights"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Deep Clean Insights</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Reviewed reason tags, feedback buckets, and program-type variance patterns.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/deep-clean/estimator"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Deep Clean Estimator</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Versioned draft/active tuning, preview, and publish (future estimates only).
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/deep-clean/estimator-impact"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Estimator impact</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Compare calibration outcomes by estimator version with impact analysis and cross-links to governance
+              decision intelligence.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/deep-clean/estimator-governance"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Estimator governance</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Version history, restore prior configs to draft, rollback readiness, and decision intelligence vs
+              impact.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/deep-clean/estimator-monitoring"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Estimator monitoring</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Open alerts, trend buckets, and recommendations alongside governance rollback context.
             </p>
           </Link>
 

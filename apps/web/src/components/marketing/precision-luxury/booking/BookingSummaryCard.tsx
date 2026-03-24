@@ -1,3 +1,4 @@
+import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
 import type { BookingFlowState } from "./bookingFlowTypes";
 
@@ -5,8 +6,21 @@ type BookingSummaryCardProps = {
   state: BookingFlowState;
 };
 
+function buildHomeProfile(state: BookingFlowState) {
+  if (!state.bedrooms || !state.bathrooms || !state.homeSize) {
+    return "Complete home details";
+  }
+
+  return `${state.bedrooms} · ${state.bathrooms} · ${state.homeSize}`;
+}
+
 export function BookingSummaryCard({ state }: BookingSummaryCardProps) {
   const selectedService = getBookingServiceCatalogItem(state.serviceId);
+  const deep = isDeepCleaningBookingServiceId(state.serviceId);
+  const deepProgramLabel =
+    state.deepCleanProgram === "phased_3_visit"
+      ? "3-visit program"
+      : "One visit";
 
   return (
     <section className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
@@ -25,13 +39,30 @@ export function BookingSummaryCard({ state }: BookingSummaryCardProps) {
 
       <div className="mt-6 space-y-4">
         {[
-          { label: "Frequency", value: state.frequency },
+          ...(deep
+            ? [
+                {
+                  label: "Deep clean structure",
+                  value: deepProgramLabel,
+                },
+              ]
+            : []),
+          {
+            label: "Frequency",
+            value: state.frequency || "Not selected yet",
+          },
           {
             label: "Home Profile",
-            value: `${state.bedrooms} · ${state.bathrooms} · ${state.homeSize}`,
+            value: buildHomeProfile(state),
           },
-          { label: "Preferred Timing", value: state.preferredTime },
-          { label: "Pets", value: state.pets },
+          {
+            label: "Preferred Timing",
+            value: state.preferredTime || "Not selected yet",
+          },
+          {
+            label: "Pets",
+            value: state.pets || "Not specified",
+          },
         ].map((item) => (
           <div
             key={item.label}
@@ -52,8 +83,7 @@ export function BookingSummaryCard({ state }: BookingSummaryCardProps) {
           Premium booking standard
         </p>
         <p className="mt-3 font-[var(--font-manrope)] text-sm leading-7 text-white">
-          The booking flow should feel as polished as the service itself. This summary keeps
-          decisions visible and increases completion confidence.
+          This summary keeps your selections visible and helps you complete booking with confidence.
         </p>
       </div>
     </section>

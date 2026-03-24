@@ -8,6 +8,9 @@ export default function robots(): MetadataRoute.Robots {
       allow: ["/", "/services", "/book", "/questions", "/guides"],
       disallow: ["/admin", "/customer", "/fo", "/notifications"],
     },
-    sitemap: `${PUBLIC_SITE_URL}/sitemap.xml`,
+    sitemap: [
+      `${PUBLIC_SITE_URL}/sitemap.xml`,
+      "https://www.nustandardcleaning.com/sitemaps/authority.xml",
+    ],
   };
 }

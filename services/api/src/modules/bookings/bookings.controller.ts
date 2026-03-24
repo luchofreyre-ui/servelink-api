@@ -4,10 +4,13 @@ import {
   Get,
   Headers,
   Param,
+  ParseIntPipe,
   Post,
   Query,
   Req,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
 import { AdminGuard } from "../../guards/admin.guard";
@@ -20,6 +23,9 @@ import { SlotHoldsService } from "../slot-holds/slot-holds.service";
 import { DispatchDecisionService } from "./dispatch-decision.service";
 import { PrismaService } from "../../prisma";
 import { BookingsService } from "./bookings.service";
+import { DeepCleanVisitExecutionService } from "./deep-clean-visit-execution.service";
+import { CompleteDeepCleanVisitDto } from "./dto/deep-clean-visit-execution.dto";
+import { BookingScreenService } from "./booking-screen.service";
 import { AssignBookingDto } from "./dto/assign-booking.dto";
 import { AvailabilityWindowsQueryDto } from "./dto/availability-windows-query.dto";
 import { ConfirmHoldParamsDto } from "./dto/confirm-hold-params.dto";
@@ -38,6 +44,8 @@ export class BookingsController {
     private readonly slotAvailability: SlotAvailabilityService,
     private readonly slotHolds: SlotHoldsService,
     private readonly prisma: PrismaService,
+    private readonly bookingScreens: BookingScreenService,
+    private readonly deepCleanVisitExecution: DeepCleanVisitExecutionService,
   ) {}
 
   @Post()
@@ -104,6 +112,85 @@ export class BookingsController {
         quotedTotal: true,
       },
     });
+  }
+
+  @Get(":id/screen")
+  async getScreen(@Param("id") id: string, @Req() req: any) {
+    await this.bookingScreens.assertCanViewBooking(
+      {
+        userId: String(req.user?.userId ?? ""),
+        role: String(req.user?.role ?? ""),
+      },
+      id,
+    );
+    const role = String(req.user?.role ?? "");
+    const screen = await this.bookingScreens.buildBookingScreen(id, {
+      includeFoKnowledgeLinks: role === "fo",
+      includeCustomerAuthorityEducation: role === "customer",
+    });
+    return { kind: "booking_screen" as const, screen };
+  }
+
+  @Post(":id/deep-clean/visits/:visitNumber/start")
+  async startDeepCleanVisit(
+    @Param("id") id: string,
+    @Param("visitNumber", ParseIntPipe) visitNumber: number,
+    @Req() req: { user?: { userId?: string; role?: string } },
+  ) {
+    await this.bookingScreens.assertCanViewBooking(
+      {
+        userId: String(req.user?.userId ?? ""),
+        role: String(req.user?.role ?? ""),
+      },
+      id,
+    );
+    const execution = await this.deepCleanVisitExecution.startVisit({
+      bookingId: id,
+      visitNumber,
+      actorUserId: String(req.user?.userId ?? "").trim() || null,
+    });
+    return {
+      kind: "deep_clean_visit_started" as const,
+      execution,
+    };
+  }
+
+  @Post(":id/deep-clean/visits/:visitNumber/complete")
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  )
+  async completeDeepCleanVisit(
+    @Param("id") id: string,
+    @Param("visitNumber", ParseIntPipe) visitNumber: number,
+    @Body() body: CompleteDeepCleanVisitDto,
+    @Req() req: { user?: { userId?: string; role?: string } },
+  ) {
+    await this.bookingScreens.assertCanViewBooking(
+      {
+        userId: String(req.user?.userId ?? ""),
+        role: String(req.user?.role ?? ""),
+      },
+      id,
+    );
+    const execution = await this.deepCleanVisitExecution.completeVisit({
+      bookingId: id,
+      visitNumber,
+      actualDurationMinutes:
+        body.actualDurationMinutes === undefined
+          ? null
+          : body.actualDurationMinutes,
+      operatorNote:
+        body.operatorNote === undefined ? null : body.operatorNote,
+      actorUserId: String(req.user?.userId ?? "").trim() || null,
+    });
+    return {
+      kind: "deep_clean_visit_completed" as const,
+      execution,
+    };
   }
 
   @Get(":id")

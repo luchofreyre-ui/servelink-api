@@ -11,6 +11,11 @@ type PublicMetadataInput = {
   pathname: string;
   type?: "website" | "article";
   noIndex?: boolean;
+  /**
+   * Explicit search indexing for authority SEO. When true: index, follow. When false: noindex, follow.
+   * Omit to keep default (no robots field unless noIndex).
+   */
+  allowSearchIndexing?: boolean;
 };
 
 export function buildPublicMetadata({
@@ -19,8 +24,20 @@ export function buildPublicMetadata({
   pathname,
   type = "website",
   noIndex = false,
+  allowSearchIndexing,
 }: PublicMetadataInput): Metadata {
   const absoluteUrl = `${PUBLIC_SITE_URL}${pathname}`;
+
+  let robots: Metadata["robots"];
+  if (noIndex) {
+    robots = { index: false, follow: false };
+  } else if (allowSearchIndexing === true) {
+    robots = { index: true, follow: true };
+  } else if (allowSearchIndexing === false) {
+    robots = { index: false, follow: true };
+  } else {
+    robots = undefined;
+  }
 
   return {
     title: `${title} | ${PUBLIC_SITE_NAME}`,
@@ -28,12 +45,7 @@ export function buildPublicMetadata({
     alternates: {
       canonical: absoluteUrl,
     },
-    robots: noIndex
-      ? {
-          index: false,
-          follow: false,
-        }
-      : undefined,
+    robots,
     openGraph: {
       title: `${title} | ${PUBLIC_SITE_NAME}`,
       description,

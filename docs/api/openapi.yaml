@@ -27,6 +27,7 @@ tags:
   - name: Ledger
   - name: Notifications
   - name: Webhooks
+  - name: Leads
 
 components:
   securitySchemes:
@@ -249,6 +250,69 @@ components:
           type: array
           items: { type: string }
           example: ["biohazards","mold","construction_debris","hoarding","exterior_windows","heavy_furniture"]
+
+    BookingDirectionUtm:
+      type: object
+      properties:
+        source: { type: string, nullable: true }
+        medium: { type: string, nullable: true }
+        campaign: { type: string, nullable: true }
+        content: { type: string, nullable: true }
+        term: { type: string, nullable: true }
+
+    BookingDirectionIntakeCreateRequest:
+      type: object
+      required: [serviceId, homeSize, bedrooms, bathrooms, frequency, preferredTime]
+      description: >
+        Public marketing-site capture of booking *direction* (intent).
+        Not a committed Booking, payment, or slot reservation.
+      properties:
+        serviceId: { type: string }
+        homeSize: { type: string }
+        bedrooms: { type: string }
+        bathrooms: { type: string }
+        pets: { type: string }
+        frequency: { type: string }
+        preferredTime: { type: string }
+        source: { type: string, description: Optional traffic/source label (e.g. query param) }
+        utm: { $ref: "#/components/schemas/BookingDirectionUtm" }
+
+    BookingDirectionIntakeCreateResponse:
+      type: object
+      required: [kind, intakeId, createdAt]
+      properties:
+        kind: { type: string, enum: [booking_direction_intake] }
+        intakeId: { type: string }
+        createdAt: { $ref: "#/components/schemas/ISODateTime" }
+
+    BookingDirectionIntakeAdminItem:
+      type: object
+      required:
+        [intakeId, serviceId, homeSize, bedrooms, bathrooms, pets, frequency, preferredTime, utm, createdAt]
+      properties:
+        intakeId: { type: string }
+        serviceId: { type: string }
+        homeSize: { type: string }
+        bedrooms: { type: string }
+        bathrooms: { type: string }
+        pets: { type: string }
+        frequency: { type: string }
+        preferredTime: { type: string }
+        source: { type: string, nullable: true }
+        utm: { $ref: "#/components/schemas/BookingDirectionUtm" }
+        createdAt: { $ref: "#/components/schemas/ISODateTime" }
+
+    BookingDirectionIntakeListResponse:
+      type: object
+      required: [kind, items, total, limit, offset]
+      properties:
+        kind: { type: string, enum: [booking_direction_intake_list] }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/BookingDirectionIntakeAdminItem" }
+        total: { type: integer }
+        limit: { type: integer }
+        offset: { type: integer }
 
     BookingCreateRequest:
       type: object
@@ -762,6 +826,51 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/PricingCleaningResponse" }
+
+  /booking-direction/intakes:
+    post:
+      tags: [Leads]
+      summary: Create booking direction intake (lead — not a booking)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BookingDirectionIntakeCreateRequest" }
+      responses:
+        "201":
+          description: Intake stored
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BookingDirectionIntakeCreateResponse" }
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /admin/booking-direction-intakes:
+    get:
+      tags: [Leads, Admin]
+      summary: List booking direction intakes (newest first)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+        - name: offset
+          in: query
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        "200":
+          description: Intake list
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BookingDirectionIntakeListResponse" }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
 
   /bookings:
     post:

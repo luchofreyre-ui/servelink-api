@@ -1,21 +1,16 @@
 import { Controller, Get } from "@nestjs/common";
+import { CLEANING_PRICING_POLICY_V1 } from "../modules/pricing/pricing-policy";
 
 @Controller("/api/v1/pricing")
 export class PricingController {
   @Get("/cleaning")
   getCleaningPricing() {
+    const p = CLEANING_PRICING_POLICY_V1;
     return {
-      hourly_rate_cents: 6500,
-      billing_increment_minutes: 15,
-      late_grace_minutes: 120,
-      exclusions: [
-        "biohazards",
-        "mold",
-        "construction_debris",
-        "hoarding",
-        "exterior_windows",
-        "heavy_furniture"
-      ]
+      hourly_rate_cents: p.hourlyRateCents,
+      billing_increment_minutes: p.billingIncrementMinutes,
+      late_grace_minutes: p.lateGraceMinutes,
+      exclusions: [...p.exclusions],
     };
   }
 }

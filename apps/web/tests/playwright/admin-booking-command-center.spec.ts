@@ -37,6 +37,11 @@ test.describe("admin booking command center", () => {
     ).toBeVisible();
 
     await expect(adminCommandCenterRegion(page)).toBeVisible();
+    await expect(
+      adminCommandCenterRegion(page).getByRole("region", {
+        name: /command center authority/i,
+      }),
+    ).toBeVisible();
     await expect(legacyDispatchDecisionsRegion(page)).toBeVisible();
   });
 

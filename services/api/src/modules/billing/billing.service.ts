@@ -5,15 +5,16 @@ import { JournalEntryType, LedgerAccount, LineDirection } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { LedgerService } from "../ledger/ledger.service";
 import { isInsideGeofence } from "../../utils/geo";
+import { CLEANING_PRICING_POLICY_V1, PLATFORM_FEE_POLICY_V1 } from "../pricing/pricing-policy";
 import {
   type PricingPolicyV1,
   splitCharge,
 } from "./pricing.policy";
 
 type PricingPolicy = {
-  hourlyRateCents: number; // e.g. 6500
-  billingIncrementMinutes: number; // e.g. 15
-  graceSeconds: number; // locked: 15 minutes
+  hourlyRateCents: number;
+  billingIncrementMinutes: number;
+  graceSeconds: number;
 };
 
 @Injectable()
@@ -24,23 +25,20 @@ export class BillingService {
   ) {}
 
   /**
-   * Reads current pricing policy. For now we hardcode from PricingController.
-   * Later: replace with Config/pricing table.
+   * Reads canonical cleaning pricing (shared with estimator + public pricing API).
    */
   getPricingPolicy(): PricingPolicy {
+    const p = CLEANING_PRICING_POLICY_V1;
     return {
-      hourlyRateCents: 6500,
-      billingIncrementMinutes: 15,
-      graceSeconds: 15 * 60, // ✅ LOCKED: 15 minutes
+      hourlyRateCents: p.hourlyRateCents,
+      billingIncrementMinutes: p.billingIncrementMinutes,
+      graceSeconds: p.billingSessionGraceSeconds,
     };
   }
 
   /** v1 financial split: platformFeeBps (e.g. 2000 = 20%), minPlatformFeeCents. */
   getPricingPolicyV1(): PricingPolicyV1 {
-    return {
-      platformFeeBps: 2000,
-      minPlatformFeeCents: 0,
-    };
+    return PLATFORM_FEE_POLICY_V1;
   }
 
   /**

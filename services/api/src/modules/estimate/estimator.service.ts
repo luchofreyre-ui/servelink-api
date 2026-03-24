@@ -1,5 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { FoService } from "../fo/fo.service";
+import { CLEANING_PRICING_POLICY_V1 } from "../pricing/pricing-policy";
+import { DeepCleanEstimatorConfigService } from "../bookings/deep-clean-estimator-config.service";
+import {
+  DEFAULT_DEEP_CLEAN_ESTIMATOR_CONFIG,
+  type DeepCleanEstimatorConfigPayload,
+} from "../bookings/deep-clean-estimator-config.types";
+import { applyDeepCleanEstimatorTuningToLabor } from "../bookings/deep-clean-estimator-tuning.apply";
+import { buildDeepCleanProgramEstimate } from "./deep-clean-program";
+import type { DeepCleanProgramEstimate } from "./deep-clean-program";
+
+export type {
+  DeepCleanProgramEstimate,
+  DeepCleanProgramVisitEstimate,
+  DeepCleanProgramType,
+} from "./deep-clean-program";
 
 /**
  * EstimatorService (deterministic, explainable, versioned-ready)
@@ -169,6 +184,22 @@ export type EstimateResult = {
     reliabilityScore: number | null;
     travelMinutes: number;
   }>;
+
+  /** Deep clean product shape (single visit or 3-visit phased). Omitted for non–deep-clean services. */
+  deepCleanProgram?: DeepCleanProgramEstimate;
+
+  /** Active tuning row used for this estimate (deep clean only; omitted if neutral bootstrap missing). */
+  deepCleanEstimatorConfigId?: string;
+  deepCleanEstimatorConfigVersion?: number;
+  deepCleanEstimatorConfigLabel?: string;
+};
+
+/** Optional overrides for admin preview / tests. Production booking flow omits this. */
+export type EstimateOptions = {
+  deepCleanTuningOverride?: {
+    config: DeepCleanEstimatorConfigPayload;
+    meta?: { id: string; version: number; label: string };
+  };
 };
 
 export type EstimateInput = {
@@ -210,6 +241,12 @@ export type EstimateInput = {
 
   siteLat?: number;
   siteLng?: number;
+
+  /**
+   * Deep clean only. `single_visit` (default) = one session; `phased_3_visit` = productized 3-visit program
+   * with split labor (orthogonal to STAGED risk mode / stagedPlan).
+   */
+  deep_clean_program?: "single_visit" | "phased_3_visit";
 };
 
 type RangeCaps = { upsideCapPct: number; downsideCapPct: number };
@@ -358,8 +395,6 @@ const TEAM_EFFICIENCY: Record<number, number> = {
   5: 3.6,
   6: 4.0,
 };
-
-const HOURLY_RATE_CENTS = 6500;
 
 function sqftBandMidpoint(band: SqftBand): number {
   switch (band) {
@@ -844,9 +879,12 @@ function clamp(n: number, min: number, max: number): number {
 
 @Injectable()
 export class EstimatorService {
-  constructor(private readonly foService: FoService) {}
+  constructor(
+    private readonly foService: FoService,
+    private readonly deepCleanEstimatorConfig: DeepCleanEstimatorConfigService,
+  ) {}
 
-  async estimate(input: EstimateInput): Promise<EstimateResult> {
+  async estimate(input: EstimateInput, options?: EstimateOptions): Promise<EstimateResult> {
     // ---- Baseline
     const baseline: EstimateLineItem[] = [];
     baseline.push({ label: "Base size (sqft band)", minutes: BASE_MIN_BY_SQFT[input.sqft_band] });
@@ -909,7 +947,7 @@ export class EstimatorService {
     }
 
     const baseEstimateMinutes = baselineMinutes + adjustments.reduce((sum, li) => sum + li.minutes, 0);
-    const estimateMinutes = roundInt(baseEstimateMinutes);
+    let estimateMinutes = roundInt(baseEstimateMinutes);
 
     // ---- Risk (uncapped) + determine mode
     const riskAcc = buildRiskSignals(input);
@@ -932,8 +970,8 @@ export class EstimatorService {
     const confidence = computeConfidence(input);
 
     // ---- Range math (anchored asymmetric)
-    const lower = roundInt(estimateMinutes * (1 - caps.downsideCapPct / 100));
-    const upper = roundInt(estimateMinutes * (1 + riskPercentCappedForRange / 100));
+    let lower = roundInt(estimateMinutes * (1 - caps.downsideCapPct / 100));
+    let upper = roundInt(estimateMinutes * (1 + riskPercentCappedForRange / 100));
 
     // ---- Staged plan (only if STAGED)
     let uncappedMinutes: number | undefined;
@@ -1039,7 +1077,7 @@ export class EstimatorService {
         ? PET_HAIR_LABOR_MULTIPLIER.none
         : PET_HAIR_LABOR_MULTIPLIER[input.pet_shedding ?? "not_sure"];
 
-    const adjustedLaborMinutes = Math.round(
+    const baseAdjustedLaborMinutes = Math.round(
       baseLaborMinutes *
         SERVICE_TYPE_LABOR_MULTIPLIER[input.service_type] *
         LAST_PRO_CLEAN_MULTIPLIER[input.last_professional_clean ?? "1_3_months"] *
@@ -1048,11 +1086,105 @@ export class EstimatorService {
         petHairMultiplier,
     );
 
+    let adjustedLaborMinutes = baseAdjustedLaborMinutes;
+    let deepCleanEstimatorConfigId: string | undefined;
+    let deepCleanEstimatorConfigVersion: number | undefined;
+    let deepCleanEstimatorConfigLabel: string | undefined;
+
+    if (input.service_type === "deep_clean") {
+      const progMode =
+        input.deep_clean_program === "phased_3_visit" ? "phased_3_visit" : "single_visit";
+
+      const rsPre = recommendedTeamSizeForLabor(baseAdjustedLaborMinutes);
+      const teamPre = TEAM_EFFICIENCY[rsPre] ?? rsPre;
+
+      let tuning:
+        | { config: DeepCleanEstimatorConfigPayload; meta?: { id: string; version: number; label: string } }
+        | undefined;
+
+      if (options?.deepCleanTuningOverride) {
+        tuning = options.deepCleanTuningOverride;
+      } else {
+        const active = await this.deepCleanEstimatorConfig.getActiveForEstimate();
+        if (active) {
+          tuning = {
+            config: active.config,
+            meta: { id: active.id, version: active.version, label: active.label },
+          };
+        }
+      }
+
+      if (tuning?.meta) {
+        deepCleanEstimatorConfigId = tuning.meta.id;
+        deepCleanEstimatorConfigVersion = tuning.meta.version;
+        deepCleanEstimatorConfigLabel = tuning.meta.label;
+      }
+
+      const cfg = tuning?.config ?? DEFAULT_DEEP_CLEAN_ESTIMATOR_CONFIG;
+
+      adjustedLaborMinutes = applyDeepCleanEstimatorTuningToLabor({
+        baseAdjustedLaborMinutes,
+        effectiveTeamSize: teamPre,
+        programMode: progMode,
+        bedroomsCount,
+        bathroomsCount,
+        hasPets: input.pet_presence !== "none",
+        kitchenHeavyGrease: input.kitchen_condition === "heavy_grease",
+        config: cfg,
+      });
+
+      const ratio =
+        baseAdjustedLaborMinutes > 0
+          ? adjustedLaborMinutes / baseAdjustedLaborMinutes
+          : 1;
+      if (Math.abs(ratio - 1) > 1e-9) {
+        estimateMinutes = roundInt(estimateMinutes * ratio);
+        lower = roundInt(estimateMinutes * (1 - caps.downsideCapPct / 100));
+        upper = roundInt(estimateMinutes * (1 + riskPercentCappedForRange / 100));
+        if (mode === "STAGED" && stagedPlan && uncappedMinutes != null) {
+          uncappedMinutes = roundInt(uncappedMinutes * ratio);
+          const scaledVisits = stagedPlan.visits.map((v) => ({
+            ...v,
+            minutes: roundInt(v.minutes * ratio),
+          }));
+          const sumV = scaledVisits.reduce((s, v) => s + v.minutes, 0);
+          const drift = uncappedMinutes - sumV;
+          if (drift !== 0 && scaledVisits.length > 0) {
+            const li = scaledVisits.length - 1;
+            scaledVisits[li] = {
+              ...scaledVisits[li],
+              minutes: Math.max(0, scaledVisits[li].minutes + drift),
+            };
+          }
+          stagedPlan = {
+            totalMinutes: uncappedMinutes,
+            visits: scaledVisits,
+          };
+        }
+      }
+    }
+
     const recommendedTeamSize = recommendedTeamSizeForLabor(adjustedLaborMinutes);
     const effectiveTeamSize = TEAM_EFFICIENCY[recommendedTeamSize] ?? recommendedTeamSize;
 
     const estimatedDurationMinutes = Math.ceil(adjustedLaborMinutes / effectiveTeamSize);
-    const estimatedPriceCents = Math.ceil((adjustedLaborMinutes / 60) * HOURLY_RATE_CENTS);
+    const estimatedPriceCents = Math.ceil(
+      (adjustedLaborMinutes / 60) * CLEANING_PRICING_POLICY_V1.hourlyRateCents,
+    );
+
+    let deepCleanProgram: DeepCleanProgramEstimate | undefined;
+    if (input.service_type === "deep_clean") {
+      const progMode =
+        input.deep_clean_program === "phased_3_visit"
+          ? "phased_3_visit"
+          : "single_visit";
+      deepCleanProgram = buildDeepCleanProgramEstimate({
+        mode: progMode,
+        adjustedLaborMinutes,
+        effectiveTeamSize,
+        hourlyRateCents: CLEANING_PRICING_POLICY_V1.hourlyRateCents,
+      });
+    }
 
     const jobComplexityIndex = computeJobComplexityIndex({
       squareFeet,
@@ -1119,6 +1251,16 @@ export class EstimatorService {
       flags,
       matchedCleaners,
       dispatchCandidatePool,
+
+      deepCleanProgram,
+
+      ...(deepCleanEstimatorConfigId != null
+        ? {
+            deepCleanEstimatorConfigId,
+            deepCleanEstimatorConfigVersion,
+            deepCleanEstimatorConfigLabel,
+          }
+        : {}),
     };
   }
 }

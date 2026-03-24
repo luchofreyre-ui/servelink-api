@@ -6,11 +6,12 @@ import type {
 } from "@prisma/client";
 import type {
   AdminBookingCommandCenterActivityPreview,
+  AdminBookingCommandCenterCorePayload,
   AdminBookingCommandCenterPayload,
 } from "./admin-booking-command-center.types";
 
 export type CommandCenterRow = {
-  booking: Pick<Booking, "id" | "status" | "foId">;
+  booking: Pick<Booking, "id" | "status" | "foId" | "notes">;
   control: BookingDispatchControl | null;
   anomaly: OpsAlert | null;
   activityPreview: AdminBookingCommandCenterActivityPreview[];
@@ -73,7 +74,9 @@ export function buildAvailableActions(args: {
   };
 }
 
-export function toCommandCenterPayload(row: CommandCenterRow): AdminBookingCommandCenterPayload {
+export function toCommandCenterPayload(
+  row: CommandCenterRow,
+): AdminBookingCommandCenterCorePayload {
   const { booking, control, anomaly, activityPreview } = row;
   const workflow = effectiveWorkflowState(control);
   const payload = anomaly ? parsePayloadJson(anomaly.payloadJson) : {};

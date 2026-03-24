@@ -95,7 +95,9 @@ export function AdminOpsAnomaliesPanel() {
           <code className="rounded bg-black/40 px-1 py-0.5 text-xs text-white/80">
             GET /api/v1/admin/anomalies
           </code>{" "}
-          (e.g. payment failures, intent mismatches). Acknowledge or resolve to clear the queue.
+          (e.g. payment failures, intent mismatches). Separate from the fingerprinted ops queue
+          at <code className="text-xs text-white/70">/api/v1/admin/ops/anomalies</code>.
+          Acknowledge or resolve to clear this list.
         </p>
       </div>
 

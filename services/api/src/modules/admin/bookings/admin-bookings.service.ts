@@ -3,14 +3,20 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { BookingStatus, Prisma } from "@prisma/client";
+import { BookingAuthorityReviewStatus, BookingStatus, Prisma } from "@prisma/client";
 import { PrismaService } from "../../../prisma";
 import {
   mergePayloadJson,
   toCommandCenterPayload,
   type CommandCenterRow,
 } from "./admin-booking-command-center.mapper";
-import type { AdminBookingCommandCenterPayload } from "./admin-booking-command-center.types";
+import type {
+  AdminBookingAuthorityBlock,
+  AdminBookingCommandCenterPayload,
+} from "./admin-booking-command-center.types";
+import { BookingAuthorityPersistenceService } from "../../authority/booking-authority-persistence.service";
+import { BookingIntelligenceService } from "../../authority/booking-intelligence.service";
+import { toBookingAuthorityListItem } from "../../authority/dto/booking-authority-admin.dto";
 
 export const ADMIN_CC_ACTIVITY = {
   NOTE_SAVED: "admin_operator_note_saved",
@@ -29,14 +35,22 @@ const NON_REASSIGN_STATUSES: BookingStatus[] = [
 
 @Injectable()
 export class AdminBookingsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly bookingAuthorityPersistence: BookingAuthorityPersistenceService,
+    private readonly bookingIntelligence: BookingIntelligenceService,
+  ) {}
 
   async getCommandCenter(bookingId: string): Promise<AdminBookingCommandCenterPayload> {
     const row = await this.loadRow(bookingId);
     if (!row) {
       throw new NotFoundException("Booking not found");
     }
-    return toCommandCenterPayload(row);
+    const authority = await this.buildAdminBookingAuthorityBlock(
+      bookingId,
+      row.booking.notes ?? null,
+    );
+    return { ...toCommandCenterPayload(row), authority };
   }
 
   async updateOperatorNote(
@@ -364,10 +378,66 @@ export class AdminBookingsService {
     return this.getCommandCenter(bookingId);
   }
 
+  private async buildAdminBookingAuthorityBlock(
+    bookingId: string,
+    notes: string | null,
+  ): Promise<AdminBookingAuthorityBlock> {
+    const persistedRow =
+      await this.bookingAuthorityPersistence.findLatestByBookingId(bookingId);
+    if (persistedRow) {
+      const item = toBookingAuthorityListItem(persistedRow);
+      const isOverridden = item.status === BookingAuthorityReviewStatus.overridden;
+      return {
+        persisted: {
+          surfaces: item.surfaces,
+          problems: item.problems,
+          methods: item.methods,
+          status: item.status,
+          reviewedByUserId: item.reviewedByUserId,
+          reviewedAt: item.reviewedAt,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+        },
+        derived: null,
+        operatorHints: {
+          hasPersistedRow: true,
+          persistedStatus: item.status,
+          recomputeSkipsOverwrite: isOverridden,
+          recomputeMayRefreshPersistedRow: !isOverridden,
+          recomputePreviewOnly: false,
+        },
+      };
+    }
+    const resolved = this.bookingIntelligence.resolveTags({
+      notes: notes ?? "",
+    });
+    const hasDerived =
+      resolved.surfaces.length > 0 ||
+      resolved.problems.length > 0 ||
+      resolved.methods.length > 0;
+    return {
+      persisted: null,
+      derived: hasDerived
+        ? {
+            surfaces: resolved.surfaces,
+            problems: resolved.problems,
+            methods: resolved.methods,
+          }
+        : null,
+      operatorHints: {
+        hasPersistedRow: false,
+        persistedStatus: null,
+        recomputeSkipsOverwrite: false,
+        recomputeMayRefreshPersistedRow: false,
+        recomputePreviewOnly: true,
+      },
+    };
+  }
+
   private async loadRow(bookingId: string): Promise<CommandCenterRow | null> {
     const booking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
-      select: { id: true, status: true, foId: true },
+      select: { id: true, status: true, foId: true, notes: true },
     });
     if (!booking) {
       return null;
@@ -489,7 +559,7 @@ export class AdminBookingsService {
   }
 
   async getBookingOperationalDetail(bookingId: string) {
-    return this.prisma.booking.findUnique({
+    const booking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
       include: {
         payments: {
@@ -503,5 +573,13 @@ export class AdminBookingsService {
         },
       },
     });
+    if (!booking) {
+      return null;
+    }
+    const authority = await this.buildAdminBookingAuthorityBlock(
+      bookingId,
+      booking.notes ?? null,
+    );
+    return { ...booking, authority };
   }
 }

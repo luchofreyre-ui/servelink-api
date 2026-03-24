@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { DevRoleSwitcher } from "@/components/dev/DevRoleSwitcher";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { SessionSignOutButton } from "@/components/auth/SessionSignOutButton";
 
 export default function AppShellLayout({
   children,
@@ -31,6 +32,7 @@ export default function AppShellLayout({
           </nav>
 
           <div className="flex shrink-0 items-center gap-3 md:gap-4">
+            <SessionSignOutButton />
             <NotificationBell />
             <DevRoleSwitcher compact />
           </div>

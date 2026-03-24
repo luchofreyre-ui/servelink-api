@@ -19,7 +19,9 @@ model User {
   bookings         Booking[]
   franchiseOwner   FranchiseOwner?
   serviceProvider  ServiceProvider?
-  refreshTokens    RefreshToken[]
+  refreshTokens                   RefreshToken[]
+  bookingAuthorityResultsReviewed BookingAuthorityResult[] @relation("BookingAuthorityResultReviewedBy")
+  bookingAuthorityMismatchesAsActor BookingAuthorityMismatch[] @relation("BookingAuthorityMismatchActor")
 }
 
 model RefreshToken {
@@ -37,6 +39,24 @@ model RefreshToken {
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+enum BookingAuthorityReviewStatus {
+  auto
+  reviewed
+  overridden
+}
+
+enum BookingAuthorityMismatchType {
+  missing_surface
+  missing_problem
+  missing_method
+  incorrect_surface
+  incorrect_problem
+  incorrect_method
+  over_tagging
+  under_tagging
+  other
 }
 
 enum BookingPaymentStatus {
@@ -91,6 +111,10 @@ model Booking {
   addons                BookingAddon[]
   billingFinalization   BookingBillingFinalization?
   estimateSnapshot      BookingEstimateSnapshot?
+  deepCleanProgram      BookingDeepCleanProgram?
+  deepCleanVisitExecutions BookingDeepCleanVisitExecution[]
+  deepCleanVisitCalibrations BookingDeepCleanVisitCalibration[]
+  deepCleanProgramCalibration  BookingDeepCleanProgramCalibration?
   BookingEvent          BookingEvent[]
   bookingOffers         BookingOffer[]
   stripePayment         BookingStripePayment?
@@ -107,6 +131,10 @@ model Booking {
   trustEvents                    TrustEvent[]
   payments                       Payment[]
   opsAnomalies                   OpsAnomaly[]
+  knowledgeFeedback              KnowledgeFeedback[]
+  bookingAuthorityResult         BookingAuthorityResult?
+  bookingAuthorityMismatches     BookingAuthorityMismatch[]
+  foAuthorityKnowledgeFeedbacks  FoAuthorityKnowledgeFeedback[]
 
   @@index([customerId])
   @@index([status])
@@ -114,6 +142,63 @@ model Booking {
   @@index([status, scheduledStart])
   @@index([foId, status, scheduledStart])
   @@index([foId, scheduledStart])
+}
+
+model BookingAuthorityResult {
+  id                  String                      @id @default(cuid())
+  bookingId           String                      @unique
+  surfacesJson        String                      @db.Text
+  problemsJson        String                      @db.Text
+  methodsJson         String                      @db.Text
+  reasonsJson         String                      @db.Text
+  overrideReasonsJson String?                     @db.Text
+  resolutionVersion   Int
+  status              BookingAuthorityReviewStatus @default(auto)
+  reviewedByUserId    String?
+  reviewedAt          DateTime?
+  createdAt           DateTime                    @default(now())
+  updatedAt           DateTime                    @updatedAt
+  booking             Booking                     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  reviewedBy          User?                       @relation("BookingAuthorityResultReviewedBy", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+  bookingAuthorityMismatches BookingAuthorityMismatch[]
+
+  @@index([status])
+}
+
+model BookingAuthorityMismatch {
+  id                String                       @id @default(cuid())
+  bookingId         String
+  authorityResultId String
+  mismatchType      BookingAuthorityMismatchType
+  notes             String?
+  actorUserId       String?
+  createdAt         DateTime                     @default(now())
+
+  booking           Booking                      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  authorityResult   BookingAuthorityResult       @relation(fields: [authorityResultId], references: [id], onDelete: Cascade)
+  actor             User?                        @relation("BookingAuthorityMismatchActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([bookingId])
+  @@index([authorityResultId])
+  @@index([createdAt])
+}
+
+/// FO-only feedback on authority-driven recommended knowledge links for a booking.
+model FoAuthorityKnowledgeFeedback {
+  id                    String   @id @default(cuid())
+  createdAt             DateTime @default(now())
+  bookingId             String
+  franchiseOwnerId      String
+  helpful               Boolean?
+  selectedKnowledgePath String?
+  notes                 String?
+
+  booking        Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  franchiseOwner FranchiseOwner @relation(fields: [franchiseOwnerId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([franchiseOwnerId])
+  @@index([createdAt])
 }
 
 model BookingDispatchControl {
@@ -295,6 +380,296 @@ model PayoutLine {
   @@index([batchId])
 }
 
+enum DeepCleanEstimatorConfigStatus {
+  draft
+  active
+  archived
+}
+
+/// Versioned admin tuning for deep clean labor/duration (future estimates only; snapshots store version used).
+model DeepCleanEstimatorConfig {
+  id                String                         @id @default(cuid())
+  version           Int                            @unique
+  status            DeepCleanEstimatorConfigStatus
+  label             String
+  configJson        String                         @db.Text
+  publishedAt       DateTime?
+  createdByUserId   String?
+  publishedByUserId String?
+  createdAt         DateTime                       @default(now())
+  updatedAt         DateTime                       @updatedAt
+
+  @@index([status, version])
+}
+
+/// Operator workflow + lifecycle for deep clean estimator monitoring alerts (synced from computed signals).
+model DeepCleanEstimatorMonitoringAlert {
+  id               String   @id @default(cuid())
+  code             String
+  fingerprint      String   @unique
+  version          Int?
+  label            String
+  reason           String?
+  severity         String
+  state            String
+  assignedToUserId String?
+  operatorNote     String?
+  firstSeenAt      DateTime
+  lastSeenAt       DateTime
+  acknowledgedAt   DateTime?
+  resolvedAt       DateTime?
+  reopenCount      Int      @default(0)
+  impactScore      Float?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  executions           DeepCleanEstimatorMonitoringAlertExecution[]
+  suppression          DeepCleanEstimatorMonitoringAlertSuppression?
+  orchestrationAudits  DeepCleanEstimatorMonitoringAlertOrchestrationAudit[]
+  notificationSends    DeepCleanEstimatorMonitoringNotificationSend[]
+  incidentMemberships  DeepCleanEstimatorIncidentAlert[]
+
+  @@index([state, updatedAt])
+  @@index([code, version])
+  @@index([assignedToUserId])
+}
+
+model DeepCleanEstimatorMonitoringAlertExecution {
+  id                String   @id @default(cuid())
+  alertId           String
+  action            String
+  status            String
+  requestedByUserId String
+  reason            String?
+  payloadJson       Json?
+  message           String?
+  createdAt         DateTime @default(now())
+
+  alert DeepCleanEstimatorMonitoringAlert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@index([alertId, createdAt])
+  @@index([action, createdAt])
+}
+
+model DeepCleanEstimatorMonitoringAlertSuppression {
+  id              String    @id @default(cuid())
+  alertId         String    @unique
+  suppressedUntil DateTime?
+  reason          String?
+  createdByUserId String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  alert DeepCleanEstimatorMonitoringAlert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+}
+
+model DeepCleanEstimatorMonitoringAlertOrchestrationPolicy {
+  id                       String   @id @default(cuid())
+  isEnabled                Boolean  @default(true)
+  name                     String
+  severity                 String?
+  escalationLevel          String?
+  recommendedAction        String?
+  maxAlertAgeHours         Int?
+  minPriorityScore         Int?
+  routeToUserId            String?
+  routeToRole              String?
+  allowAutoResolve         Boolean  @default(false)
+  allowAutoAssign          Boolean  @default(false)
+  suppressRepeatedFailures Boolean  @default(true)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  @@index([isEnabled, severity, escalationLevel])
+}
+
+model DeepCleanEstimatorMonitoringAlertOrchestrationAudit {
+  id                String   @id @default(cuid())
+  alertId           String
+  action            String
+  reasonCode        String
+  message           String
+  dryRun            Boolean  @default(false)
+  executed          Boolean  @default(false)
+  requestedByUserId String?
+  payloadJson       Json?
+  createdAt         DateTime @default(now())
+
+  alert DeepCleanEstimatorMonitoringAlert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@index([alertId, createdAt])
+  @@index([action, createdAt])
+}
+
+model DeepCleanEstimatorMonitoringNotificationRoute {
+  id                String   @id @default(cuid())
+  isEnabled         Boolean  @default(true)
+  name              String
+  severity          String?
+  escalationLevel   String?
+  recommendedAction String?
+  channel           String
+  destination       String
+  destinationLabel  String?
+  cooldownMinutes   Int      @default(60)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([isEnabled, severity, escalationLevel])
+}
+
+model DeepCleanEstimatorMonitoringNotificationSend {
+  id            String   @id @default(cuid())
+  alertId       String
+  channel       String
+  destination   String
+  reasonCode    String
+  dedupeKey     String   @unique
+  status        String
+  dryRun        Boolean  @default(false)
+  payloadJson   Json?
+  errorMessage  String?
+  createdAt     DateTime @default(now())
+
+  alert DeepCleanEstimatorMonitoringAlert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@index([alertId, createdAt])
+  @@index([status, createdAt])
+}
+
+model DeepCleanEstimatorMonitoringNotificationDigestCursor {
+  id         String    @id @default(cuid())
+  digestKey  String    @unique
+  lastSentAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+/// Operator-facing incident grouping for deep clean estimator monitoring alerts.
+model DeepCleanEstimatorIncident {
+  id               String    @id @default(cuid())
+  title            String
+  fingerprint      String    @unique
+  state            String
+  severity         String
+  summary          String?
+  firstSeenAt      DateTime
+  lastSeenAt       DateTime
+  openedAt         DateTime  @default(now())
+  acknowledgedAt   DateTime?
+  resolvedAt       DateTime?
+  resolutionMode   String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  alerts   DeepCleanEstimatorIncidentAlert[]
+  activity DeepCleanEstimatorIncidentActivity[]
+
+  @@index([state, severity, lastSeenAt])
+  @@index([fingerprint])
+  @@index([openedAt])
+}
+
+model DeepCleanEstimatorIncidentAlert {
+  id          String   @id @default(cuid())
+  incidentId  String
+  alertId     String
+  createdAt   DateTime @default(now())
+
+  incident DeepCleanEstimatorIncident         @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  alert    DeepCleanEstimatorMonitoringAlert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@unique([incidentId, alertId])
+  @@index([alertId])
+}
+
+model DeepCleanEstimatorIncidentActivity {
+  id            String   @id @default(cuid())
+  incidentId    String
+  type          String
+  actorUserId   String?
+  message       String
+  payloadJson   Json?
+  createdAt     DateTime @default(now())
+
+  incident DeepCleanEstimatorIncident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+
+  @@index([incidentId, createdAt])
+}
+
+/// Aggregated incident grouping for reliability / recurrence tracking.
+model DeepCleanEstimatorIncidentFamily {
+  id             String   @id @default(cuid())
+  fingerprint    String   @unique
+  title          String
+  totalIncidents Int      @default(0)
+  lastSeenAt     DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  stats DeepCleanEstimatorIncidentFamilyStats[]
+
+  @@index([lastSeenAt])
+}
+
+model DeepCleanEstimatorIncidentFamilyStats {
+  id               String   @id @default(cuid())
+  familyId         String
+  windowStart      DateTime
+  windowEnd        DateTime
+  incidentCount    Int
+  reopenRate       Float
+  meanResolveHours Float?
+  createdAt        DateTime @default(now())
+
+  family DeepCleanEstimatorIncidentFamily @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  @@index([familyId, windowStart])
+}
+
+/// Tracks whether a config rollback correlated with reduced alert pressure for the incident fingerprint.
+model DeepCleanEstimatorRollbackOutcome {
+  id                String    @id @default(cuid())
+  incidentId        String
+  alertId           String
+  rollbackVersionId String
+  wasEffective      Boolean?
+  evaluatedAt       DateTime?
+  createdAt         DateTime  @default(now())
+
+  @@unique([incidentId, alertId, rollbackVersionId])
+  @@index([incidentId])
+}
+
+/// Snapshot of orchestration policy effectiveness over a window.
+model DeepCleanEstimatorPolicyHealth {
+  id                    String   @id @default(cuid())
+  policyId              String
+  evaluationWindowStart DateTime
+  evaluationWindowEnd   DateTime
+  triggerCount          Int
+  successCount          Int
+  failureCount          Int
+  staleCount            Int
+  createdAt             DateTime @default(now())
+
+  @@index([policyId, evaluationWindowStart])
+}
+
+/// Advisory reliability signals for operator review (no auto-execution).
+model DeepCleanEstimatorReliabilityRecommendation {
+  id             String    @id @default(cuid())
+  type           String
+  severity       String
+  message        String
+  metadataJson   Json?
+  createdAt      DateTime  @default(now())
+  acknowledgedAt DateTime?
+  resolvedAt     DateTime?
+
+  @@index([type, createdAt])
+}
+
 model BookingEstimateSnapshot {
   id                        String   @id @default(cuid())
   bookingId                 String   @unique
@@ -306,11 +681,128 @@ model BookingEstimateSnapshot {
   riskCapped                Boolean
   inputJson                 String
   outputJson                String
+  deepCleanEstimatorConfigId      String?
+  deepCleanEstimatorConfigVersion Int?
+  deepCleanEstimatorConfigLabel   String?
   createdAt                 DateTime @default(now())
   booking                   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   @@index([bookingId])
   @@index([createdAt])
+}
+
+/// Normalized snapshot of deep clean program (single or 3-visit phased) at quote time.
+/// Full detail also lives in BookingEstimateSnapshot.outputJson; this row enables queries without JSON parsing.
+model BookingDeepCleanProgram {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique
+  programType String
+  visitCount  Int
+  visitsJson  String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  booking         Booking                         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  visitExecutions BookingDeepCleanVisitExecution[]
+  visitCalibrations BookingDeepCleanVisitCalibration[]
+  programCalibrations BookingDeepCleanProgramCalibration[]
+
+  @@index([programType])
+}
+
+enum DeepCleanVisitExecutionStatus {
+  not_started
+  in_progress
+  completed
+}
+
+/// FO / ops execution state per deep clean visit (separate from program definition).
+model BookingDeepCleanVisitExecution {
+  id                    String                         @id @default(cuid())
+  bookingId             String
+  programId             String
+  visitNumber           Int
+  status                DeepCleanVisitExecutionStatus  @default(not_started)
+  startedAt             DateTime?
+  completedAt           DateTime?
+  actualDurationMinutes Int?
+  operatorNote          String?                        @db.Text
+  createdAt             DateTime                       @default(now())
+  updatedAt             DateTime                       @updatedAt
+
+  booking Booking               @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  program BookingDeepCleanProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, visitNumber])
+  @@index([bookingId, status])
+  @@index([programId])
+}
+
+/// Normalized visit-level calibration facts (estimated vs actual duration, note signal).
+model BookingDeepCleanVisitCalibration {
+  id                       String                        @id @default(cuid())
+  bookingId                String
+  programId                String
+  visitNumber              Int
+  estimatedDurationMinutes Int
+  actualDurationMinutes    Int?
+  durationVarianceMinutes  Int?
+  durationVariancePercent  Decimal?                      @db.Decimal(10, 2)
+  executionStatus          DeepCleanVisitExecutionStatus
+  hasOperatorNote          Boolean                       @default(false)
+  completedAt              DateTime?
+  createdAt                DateTime                      @default(now())
+  updatedAt                DateTime                      @updatedAt
+
+  booking Booking               @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  program BookingDeepCleanProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, visitNumber])
+  @@index([programId])
+  @@index([bookingId, executionStatus])
+}
+
+enum DeepCleanCalibrationReviewStatus {
+  unreviewed
+  reviewed
+}
+
+/// Program-level calibration summary for reporting / filters.
+model BookingDeepCleanProgramCalibration {
+  id                            String   @id @default(cuid())
+  bookingId                     String   @unique
+  programId                     String
+  programType                   String
+  estimatedTotalDurationMinutes Int
+  actualTotalDurationMinutes    Int?
+  durationVarianceMinutes       Int?
+  durationVariancePercent       Decimal? @db.Decimal(10, 2)
+  totalVisits                   Int
+  completedVisits             Int
+  isFullyCompleted            Boolean
+  hasAnyOperatorNotes         Boolean  @default(false)
+  usableForCalibrationAnalysis Boolean @default(false)
+  reviewStatus                DeepCleanCalibrationReviewStatus @default(unreviewed)
+  reviewedAt                  DateTime?
+  reviewedByUserId            String?
+  reviewNote                  String?  @db.Text
+  /// JSON array of string tags from the allowed deep-clean review tag list.
+  reviewReasonTagsJson        Json?
+  /// Copied from BookingEstimateSnapshot at sync time (estimate-time tuning version).
+  deepCleanEstimatorConfigId      String?
+  deepCleanEstimatorConfigVersion Int?
+  deepCleanEstimatorConfigLabel   String?
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  booking Booking               @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  program BookingDeepCleanProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([programId])
+  @@index([isFullyCompleted])
+  @@index([reviewStatus])
+  @@index([deepCleanEstimatorConfigVersion], map: "DCP_calibration_estimator_version_idx")
+  @@index([deepCleanEstimatorConfigVersion, usableForCalibrationAnalysis], map: "DCP_calibration_estimator_version_usable_idx")
 }
 
 model StripeWebhookReceipt {
@@ -678,6 +1170,8 @@ model FranchiseOwner {
   payouts                  Payout[]
   trustEvents              TrustEvent[]
   opsAnomalies             OpsAnomaly[]
+  knowledgeFeedback        KnowledgeFeedback[]
+  foAuthorityKnowledgeFeedbacks FoAuthorityKnowledgeFeedback[]
 
   @@index([status])
   @@index([status, safetyHold])
@@ -1169,4 +1663,99 @@ model AdminDispatchDecision {
   @@index([submittedByUserId, createdAt])
   @@index([action, createdAt])
   @@index([executionStatus, createdAt])
+}
+
+/// Public marketing flow capture of booking *direction* (service request / lead intent).
+/// This is not a `Booking`, not payment-authorized, and not a slot reservation.
+model BookingDirectionIntake {
+  id            String   @id @default(cuid())
+  serviceId     String
+  homeSize      String
+  bedrooms      String
+  bathrooms     String
+  pets          String   @default("")
+  frequency     String
+  preferredTime String
+  /// Public deep-clean product choice: single_visit | phased_3_visit. Null when not deep clean or legacy rows.
+  deepCleanProgram String?
+
+  source      String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([serviceId, createdAt])
+}
+
+/// Append-only FO knowledge outcome feedback tied to a booking.
+model KnowledgeFeedback {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  bookingId        String
+  franchiseOwnerId String
+
+  scenarioId  String?
+  sopKey      String?
+  playbookKey String?
+
+  outcome   String // worked | partial | failed
+  effortActual String? // light | moderate | heavy
+
+  timeTakenMinutes    Int?
+  timeExpectedMinutes Int?
+
+  notes String?
+
+  booking        Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  franchiseOwner FranchiseOwner @relation(fields: [franchiseOwnerId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([franchiseOwnerId])
+  @@index([scenarioId])
+  @@index([sopKey])
+}
+
+/// Review-queue signal derived from knowledge feedback aggregates (threshold-based).
+model KnowledgeReviewSignal {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /// scenario_failure_rate | sop_failure_rate | playbook_failure_rate | time_variance
+  signalType String
+  /// scenario | sop | playbook
+  entityType String
+  entityKey  String
+
+  sampleCount            Int
+  workedRate             Float?
+  partialRate            Float?
+  failedRate             Float?
+  avgTimeVarianceMinutes Float?
+
+  /// low | medium | high (detection uses medium/high only)
+  severity String
+  /// open | acknowledged | resolved
+  status   String
+
+  reason       String
+  metadataJson Json?
+
+  firstDetectedAt DateTime
+  lastDetectedAt  DateTime
+
+  acknowledgedAt       DateTime?
+  resolvedAt           DateTime?
+  acknowledgedByUserId String?
+  resolvedByUserId     String?
+
+  @@index([entityType, entityKey])
+  @@index([status])
+  @@index([signalType])
 }

@@ -25,12 +25,13 @@ export const bookingServiceOptions = bookingServiceCatalog.map((service) => ({
 export const defaultBookingFlowState: BookingFlowState = {
   step: "service",
   serviceId: getBookingDefaultServiceId(),
-  homeSize: "2,200 sq ft",
-  bedrooms: "3 bedrooms",
-  bathrooms: "2 bathrooms",
-  pets: "One dog",
-  frequency: "Bi-Weekly",
-  preferredTime: "Weekday Morning",
+  homeSize: "",
+  bedrooms: "",
+  bathrooms: "",
+  pets: "",
+  frequency: "",
+  preferredTime: "",
+  deepCleanProgram: "single_visit",
 };
 
 export function getSelectedService(serviceId: string) {

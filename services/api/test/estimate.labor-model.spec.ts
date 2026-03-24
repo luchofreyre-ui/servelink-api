@@ -1,9 +1,14 @@
 import { EstimatorService, EstimateInput } from "../src/modules/estimate/estimator.service";
 import { FoService } from "../src/modules/fo/fo.service";
+import type { DeepCleanEstimatorConfigService } from "../src/modules/bookings/deep-clean-estimator-config.service";
 
 const mockFoService = {
   matchFOs: jest.fn().mockResolvedValue([]),
 } as unknown as FoService;
+
+const mockDeepCleanEstimatorConfig = {
+  getActiveForEstimate: jest.fn().mockResolvedValue(null),
+} as unknown as DeepCleanEstimatorConfigService;
 
 function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
   return {
@@ -31,7 +36,7 @@ function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
 }
 
 describe("EstimatorService labor model (unit)", () => {
-  const svc = new EstimatorService(mockFoService);
+  const svc = new EstimatorService(mockFoService, mockDeepCleanEstimatorConfig);
 
   it("returns labor model fields", async () => {
     const res = await svc.estimate(baseInput());

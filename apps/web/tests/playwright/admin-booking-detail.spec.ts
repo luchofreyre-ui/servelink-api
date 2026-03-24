@@ -7,6 +7,9 @@ test.describe("admin booking detail", () => {
     await expectCommonAdminShell(page);
 
     await expect(page.locator("body")).toContainText(/booking|status|customer|service/i);
+    await expect(
+      page.getByRole("region", { name: /command center authority/i }),
+    ).toBeVisible();
   });
 
   test("opens hold booking detail", async ({ page, adminToken, scenario }) => {

@@ -15,6 +15,9 @@ export type BookingTimeOption =
   | "Friday"
   | "Saturday";
 
+/** Public deep clean product; empty when service is not deep clean. */
+export type BookingDeepCleanProgramChoice = "single_visit" | "phased_3_visit";
+
 export type BookingFlowState = {
   step: BookingStepId;
   serviceId: string;
@@ -22,8 +25,12 @@ export type BookingFlowState = {
   bedrooms: string;
   bathrooms: string;
   pets: string;
-  frequency: BookingFrequencyOption;
-  preferredTime: BookingTimeOption;
+  /** Empty until user selects a valid option (URL/parser may omit). */
+  frequency: BookingFrequencyOption | "";
+  /** Empty until user selects a valid option (URL/parser may omit). */
+  preferredTime: BookingTimeOption | "";
+  /** Set when `serviceId` is deep clean; otherwise "". */
+  deepCleanProgram: BookingDeepCleanProgramChoice | "";
 };
 
 export type BookingStepDefinition = {

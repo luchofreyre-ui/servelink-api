@@ -9,7 +9,14 @@ export class DispatchFoController {
 
   @Get("offers")
   async getMyOffers(@Req() req: any) {
-    const foId = String(req.user.userId);
+    const foProfile = await this.db.franchiseOwner.findUnique({
+      where: { userId: String(req.user.userId) },
+      select: { id: true },
+    });
+    if (!foProfile) {
+      return [];
+    }
+    const foId = foProfile.id;
 
     const offers = await this.db.bookingOffer.findMany({
       where: {

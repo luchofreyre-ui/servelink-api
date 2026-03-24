@@ -1,0 +1,82 @@
+import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+import { serializeDeepCleanProgramForScreen } from "./serializers/deep-clean-program-screen.serializer";
+
+function parsePublicEstimateSnapshot(
+  outputJson: string | null | undefined,
+  inputJson: string | null | undefined,
+): {
+  estimatedPriceCents: number;
+  estimatedDurationMinutes: number;
+  confidence: number;
+  serviceType: string | null;
+} | null {
+  if (!outputJson?.trim()) return null;
+  try {
+    const out = JSON.parse(outputJson) as Record<string, unknown>;
+    const inp = inputJson?.trim()
+      ? (JSON.parse(inputJson) as Record<string, unknown>)
+      : {};
+    const estimatedPriceCents =
+      typeof out.estimatedPriceCents === "number" &&
+      Number.isFinite(out.estimatedPriceCents)
+        ? Math.max(0, Math.floor(out.estimatedPriceCents))
+        : 0;
+    const estimatedDurationMinutes =
+      typeof out.estimatedDurationMinutes === "number" &&
+      Number.isFinite(out.estimatedDurationMinutes)
+        ? Math.max(0, Math.floor(out.estimatedDurationMinutes))
+        : 0;
+    const confidence =
+      typeof out.confidence === "number" && Number.isFinite(out.confidence)
+        ? out.confidence
+        : 0;
+    const serviceType =
+      typeof inp.service_type === "string" ? inp.service_type : null;
+    return {
+      estimatedPriceCents,
+      estimatedDurationMinutes,
+      confidence,
+      serviceType,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Unauthenticated read for marketing confirmation + cold deep-links.
+ * Exposes only booking id, headline estimate figures, and deep clean program (when persisted).
+ */
+@Controller("/api/v1/public/bookings")
+export class PublicBookingConfirmationController {
+  constructor(private readonly db: PrismaService) {}
+
+  @Get(":id/confirmation")
+  async confirmation(@Param("id") id: string) {
+    const booking = await this.db.booking.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        estimateSnapshot: { select: { outputJson: true, inputJson: true } },
+        deepCleanProgram: true,
+      },
+    });
+
+    if (!booking) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+
+    return {
+      kind: "public_booking_confirmation" as const,
+      bookingId: booking.id,
+      estimateSnapshot: parsePublicEstimateSnapshot(
+        booking.estimateSnapshot?.outputJson,
+        booking.estimateSnapshot?.inputJson,
+      ),
+      deepCleanProgram: serializeDeepCleanProgramForScreen({
+        bookingDeepCleanProgram: booking.deepCleanProgram,
+      }),
+    };
+  }
+}
