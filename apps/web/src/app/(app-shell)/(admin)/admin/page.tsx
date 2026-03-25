@@ -290,6 +290,12 @@ export default function AdminPage() {
               View activity
             </Link>
             <Link
+              href="/admin/system-tests"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              System tests
+            </Link>
+            <Link
               href="/admin/booking-direction-intakes"
               className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
             >
@@ -565,6 +571,16 @@ export default function AdminPage() {
             <p className="text-sm font-semibold text-slate-100">Activity</p>
             <p className="mt-1 text-sm text-slate-400">
               Review recent operator and admin system activity.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/system-tests"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">System tests</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Playwright run ingest, pass rate, failures, and per-run diagnostics.
             </p>
           </Link>
 
