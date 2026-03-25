@@ -7,6 +7,7 @@ import {
   fetchAdminActivityPage,
   type AdminActivityApiItem,
 } from "@/lib/api/adminActivity";
+import { ADMIN_ACTIVITY_REFRESH_EVENT } from "@/lib/adminActivityRefresh";
 import { workflowStateFromActivityType } from "@/components/admin/operations/adminOperationsLabels";
 
 export type AdminActivityRowModel = {
@@ -91,6 +92,14 @@ export function useAdminActivityFeed() {
     }
     void loadPage(false, null);
   }, [pathname, loadPage]);
+
+  useEffect(() => {
+    const handler = () => {
+      void loadPage(false, null);
+    };
+    window.addEventListener(ADMIN_ACTIVITY_REFRESH_EVENT, handler);
+    return () => window.removeEventListener(ADMIN_ACTIVITY_REFRESH_EVENT, handler);
+  }, [loadPage]);
 
   const fetchNextPage = useCallback(() => {
     if (!nextCursor || isFetchingNextPage || isLoading) return;

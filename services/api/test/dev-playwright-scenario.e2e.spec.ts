@@ -36,6 +36,10 @@ describe("Dev Playwright admin scenario (E2E)", () => {
     expect(s.adminPassword.length).toBeGreaterThan(3);
     expect(typeof s.customerEmail).toBe("string");
     expect(s.customerEmail.length).toBeGreaterThan(3);
+    expect(s.customerPassword).toBe(s.adminPassword);
+    expect(typeof s.foEmail).toBe("string");
+    expect(s.foEmail.length).toBeGreaterThan(3);
+    expect(s.foPassword).toBe(s.adminPassword);
 
     expect(Array.isArray(s.foIds)).toBe(true);
     expect(s.foIds.length).toBeGreaterThanOrEqual(2);

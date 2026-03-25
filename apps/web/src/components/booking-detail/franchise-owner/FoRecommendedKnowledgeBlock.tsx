@@ -102,8 +102,10 @@ export function FoRecommendedKnowledgeBlock({
     >
       <p className="font-semibold text-slate-900">Recommended knowledge</p>
       <p className="mt-1 text-xs text-slate-600">
-        Execution-oriented topics from booking intelligence. Confirm what you see on site before
-        following any playbook.
+        Execution-oriented topics from booking intelligence. For a guided surface + problem flow use{" "}
+        <span className="font-medium text-slate-800">Open Quick Solve</span> above; to search the full
+        encyclopedia use <span className="font-medium text-slate-800">Search Knowledge</span>. Always confirm
+        what you see on site before following any playbook.
       </p>
 
       {links.length > 0 ? (

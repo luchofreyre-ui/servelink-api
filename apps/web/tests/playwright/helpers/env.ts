@@ -14,6 +14,18 @@ export const PLAYWRIGHT_ADMIN_EMAIL =
 export const PLAYWRIGHT_ADMIN_PASSWORD =
   process.env.PLAYWRIGHT_ADMIN_PASSWORD || "";
 
+export const PLAYWRIGHT_CUSTOMER_EMAIL =
+  process.env.PLAYWRIGHT_CUSTOMER_EMAIL || "";
+
+export const PLAYWRIGHT_CUSTOMER_PASSWORD =
+  process.env.PLAYWRIGHT_CUSTOMER_PASSWORD || "";
+
+export const PLAYWRIGHT_FO_EMAIL =
+  process.env.PLAYWRIGHT_FO_EMAIL || "";
+
+export const PLAYWRIGHT_FO_PASSWORD =
+  process.env.PLAYWRIGHT_FO_PASSWORD || "";
+
 export const PLAYWRIGHT_TARGET_FO_ID =
   process.env.TARGET_FO_ID || "";
 

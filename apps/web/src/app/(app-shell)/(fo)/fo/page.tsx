@@ -56,6 +56,7 @@ export default async function FoDashboard() {
         theme={theme}
         nav={[
           { href: "/fo", label: "My work" },
+          { href: "/fo/knowledge", label: "Knowledge" },
           { href: "/notifications", label: "Alerts" },
           { href: "/", label: "Home" },
         ]}

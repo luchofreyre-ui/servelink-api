@@ -1,102 +1,85 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="${ROOT_DIR:-$HOME/Desktop/servelink}"
-API_DIR="$ROOT_DIR/services/api"
-WEB_DIR="$ROOT_DIR/apps/web"
+ROOT_DIR="${HOME}/Desktop/servelink"
+API_DIR="${ROOT_DIR}/services/api"
+WEB_DIR="${ROOT_DIR}/apps/web"
 
-API_PORT="${API_PORT:-3001}"
-WEB_PORT="${WEB_PORT:-3000}"
+API_PORT=3001
+WEB_PORT=3000
 
-cleanup() {
-  if [[ -n "${API_PID:-}" ]]; then
-    kill "$API_PID" >/dev/null 2>&1 || true
-  fi
-  if [[ -n "${WEB_PID:-}" ]]; then
-    kill "$WEB_PID" >/dev/null 2>&1 || true
+kill_port() {
+  local port="$1"
+  local pids
+  pids="$(lsof -ti tcp:${port} || true)"
+  if [[ -n "${pids}" ]]; then
+    echo "Killing processes on port ${port}: ${pids}"
+    kill -9 ${pids} || true
+    sleep 1
   fi
 }
 
-trap cleanup EXIT INT TERM
-
-echo ""
-echo "============================================================"
-echo "Servelink local boot"
-echo "============================================================"
-echo "Root: $ROOT_DIR"
-echo "API:  $API_DIR"
-echo "Web:  $WEB_DIR"
-echo "API Port: $API_PORT"
-echo "Web Port: $WEB_PORT"
-echo ""
-
-if [[ ! -d "$API_DIR" ]]; then
-  echo "Missing API directory: $API_DIR"
-  exit 1
-fi
-
-if [[ ! -d "$WEB_DIR" ]]; then
-  echo "Missing web directory: $WEB_DIR"
-  exit 1
-fi
-
-echo "Stopping any existing listeners on $API_PORT and $WEB_PORT ..."
-for port in "$API_PORT" "$WEB_PORT"; do
-  if lsof -ti ":$port" >/dev/null 2>&1; then
-    lsof -ti ":$port" | xargs kill -9 >/dev/null 2>&1 || true
-  fi
-done
-
-echo ""
-echo "Starting API on port $API_PORT ..."
-(
-  cd "$API_DIR"
-  PORT="$API_PORT" npm run dev
-) &
-API_PID=$!
-
-echo "Starting web on port $WEB_PORT ..."
-(
-  cd "$WEB_DIR"
-  npm run dev -- -p "$WEB_PORT"
-) &
-WEB_PID=$!
-
-echo ""
-echo "API PID: $API_PID"
-echo "WEB PID: $WEB_PID"
-echo ""
-echo "Waiting for services to come up ..."
-echo ""
+open_terminal_tab() {
+  local cmd="$1"
+  osascript <<OSA
+tell application "Terminal"
+  activate
+  tell application "System Events" to keystroke "t" using command down
+  do script "$cmd" in selected tab of the front window
+end tell
+OSA
+}
 
 wait_for_url() {
-  local name="$1"
-  local url="$2"
-  local attempts=60
-  local i=1
+  local url="$1"
+  local label="$2"
+  local attempts="${3:-60}"
 
-  until curl -sSfL "$url" >/dev/null 2>&1; do
-    if [[ $i -ge $attempts ]]; then
-      echo "$name did not become ready in time: $url"
-      exit 1
+  echo "Waiting for ${label} at ${url} ..."
+  for ((i=1; i<=attempts; i++)); do
+    if curl -sSfL "$url" >/dev/null 2>&1; then
+      echo "${label} is ready."
+      return 0
     fi
     sleep 1
-    i=$((i + 1))
   done
 
-  echo "$name ready: $url"
+  echo "Timed out waiting for ${label} at ${url}"
+  return 1
 }
 
-wait_for_url "API" "http://localhost:$API_PORT/docs"
-wait_for_url "Web" "http://localhost:$WEB_PORT/admin/auth"
+echo "Root: ${ROOT_DIR}"
+echo "API:  ${API_DIR}"
+echo "WEB:  ${WEB_DIR}"
 
-echo ""
-echo "============================================================"
-echo "Servelink is up"
-echo "============================================================"
-echo "API docs:    http://localhost:$API_PORT/docs"
-echo "Admin auth:  http://localhost:$WEB_PORT/admin/auth"
-echo "Admin:       http://localhost:$WEB_PORT/admin"
-echo ""
+if [[ ! -d "${API_DIR}" ]]; then
+  echo "Missing API dir: ${API_DIR}"
+  exit 1
+fi
 
-wait
+if [[ ! -d "${WEB_DIR}" ]]; then
+  echo "Missing web dir: ${WEB_DIR}"
+  exit 1
+fi
+
+kill_port "${API_PORT}"
+kill_port "${WEB_PORT}"
+
+API_CMD="cd '${API_DIR}' && npm run dev"
+WEB_CMD="cd '${WEB_DIR}' && npm run dev"
+
+echo "Starting API in a new Terminal tab..."
+open_terminal_tab "${API_CMD}"
+
+wait_for_url "http://localhost:${API_PORT}/api/v1/health" "API" 90
+
+echo "Starting web in a new Terminal tab..."
+open_terminal_tab "${WEB_CMD}"
+
+wait_for_url "http://localhost:${WEB_PORT}" "web app" 90
+
+echo
+echo "Servelink is up:"
+echo "  API: http://localhost:${API_PORT}"
+echo "  WEB: http://localhost:${WEB_PORT}"
+echo "  Admin: http://localhost:${WEB_PORT}/admin/auth"

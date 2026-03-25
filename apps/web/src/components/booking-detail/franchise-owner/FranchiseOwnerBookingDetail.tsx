@@ -4,11 +4,14 @@ import {
   isDeepCleanServiceType,
   selectDeepCleanFieldsFromScreen,
 } from "@/booking-screen/deepCleanScreenSelectors";
+import { selectFoScenarioShortcuts } from "@/booking-screen/foKnowledgeScenarioShortcuts";
+import {
+  selectFoKnowledgeHubActionLinksFromScreen,
+} from "@/booking-screen/foKnowledgeScreenSelectors";
 import {
   mapBookingScreenExecutionToDisplay,
   mapBookingScreenProgramToDisplay,
 } from "@/mappers/deepCleanProgramMappers";
-import { buildFoKnowledgeHref } from "@/components/knowledge/fo/buildFoKnowledgeHref";
 import { FoRecommendedKnowledgeBlock } from "./FoRecommendedKnowledgeBlock";
 import { DeepCleanExecutionPanel } from "./DeepCleanExecutionPanel";
 
@@ -29,22 +32,42 @@ export function FranchiseOwnerBookingDetail({
   const fields = selectDeepCleanFieldsFromScreen(screen);
   const program = mapBookingScreenProgramToDisplay(fields.rawProgram);
   const isDeepClean = isDeepCleanServiceType(fields.serviceType);
-  const bookingId = fields.bookingId;
+  const bookingId =
+    fields.bookingId ||
+    (booking && typeof booking.id === "string" ? booking.id : "");
 
   const executionDisplay = mapBookingScreenExecutionToDisplay(
     fields.rawExecution ?? null,
     program,
   );
 
-  const knowledgeHubHref = bookingId
-    ? buildFoKnowledgeHref({ bookingId })
-    : buildFoKnowledgeHref({});
-  const knowledgeQuickHref = bookingId
-    ? buildFoKnowledgeHref({ bookingId }, { focusQuickSolve: true })
-    : buildFoKnowledgeHref({}, { focusQuickSolve: true });
+  const knowledgeActions =
+    bookingId ? selectFoKnowledgeHubActionLinksFromScreen(screen, bookingId) : [];
+
+  const shortcuts = selectFoScenarioShortcuts(screen);
 
   return (
     <div className="space-y-6">
+      {bookingId && shortcuts.length > 0 ? (
+        <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-4" data-testid="fo-booking-scenario-shortcuts">
+          <h3 className="mb-2 text-sm font-semibold text-indigo-900">
+            Recommended Quick Solve scenarios
+          </h3>
+
+          <div className="space-y-2">
+            {shortcuts.map((s) => (
+              <Link
+                key={s.href}
+                href={s.href}
+                className="block rounded-xl border border-indigo-200 bg-white px-3 py-2 text-sm font-medium text-indigo-900 hover:bg-indigo-100"
+              >
+                {s.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       {bookingId ? (
         <section
           className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 text-sm"
@@ -52,23 +75,31 @@ export function FranchiseOwnerBookingDetail({
         >
           <p className="font-semibold text-slate-900">Knowledge guidance</p>
           <p className="mt-2 text-slate-700">
-            Open the Knowledge Hub for <span className="font-medium">advisory</span> cleaning guidance tied to
-            this booking (surfaces, problems, playbooks). This is not a guarantee of onsite conditions — your
-            final judgment should always reflect what you actually see at the property.
+            Use <span className="font-medium">Quick Solve</span> when you want a structured surface + problem
+            recommendation, or <span className="font-medium">Search Knowledge</span> to explore the encyclopedia
+            with optional context from this booking. Advisory only — always confirm what you see on site.
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Link
-              href={knowledgeHubHref}
-              className="inline-flex items-center rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800"
-            >
-              Open Knowledge Hub
-            </Link>
-            <Link
-              href={knowledgeQuickHref}
-              className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-50"
-            >
-              Quick Solve for this job
-            </Link>
+          <div className="mt-3 flex flex-wrap gap-2" data-testid="fo-booking-knowledge-actions">
+            {knowledgeActions.map((action) => (
+              <Link
+                key={action.label}
+                href={action.href}
+                data-testid={
+                  action.label === "Open Quick Solve"
+                    ? "fo-booking-open-quick-solve"
+                    : action.label === "Search Knowledge"
+                      ? "fo-booking-search-knowledge"
+                      : undefined
+                }
+                className={
+                  action.emphasis === "primary"
+                    ? "inline-flex items-center rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800"
+                    : "inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-50"
+                }
+              >
+                {action.label}
+              </Link>
+            ))}
           </div>
         </section>
       ) : null}

@@ -1,12 +1,15 @@
-import { test, expect } from "./helpers/admin-fixture";
-import { openAdminPage, expectCommonAdminShell } from "./helpers/admin-page";
+import { test, expect } from "../../fixtures/admin.fixture";
+import { openAdminPage } from "../../helpers/admin-page";
+import { expectCommonAdminShell } from "../../assertions/admin";
 
 test.describe("admin anomalies operations", () => {
   test("anomalies page renders real queue", async ({ page, adminToken }) => {
     await openAdminPage(page, adminToken, "/anomalies");
     await expectCommonAdminShell(page);
 
-    await expect(page.getByRole("heading", { name: "Admin anomalies", exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: /admin anomalies.*ops queues/i }),
+    ).toBeVisible();
 
     await expect(page.getByText("Loading anomalies…")).toBeHidden({ timeout: 45_000 });
 

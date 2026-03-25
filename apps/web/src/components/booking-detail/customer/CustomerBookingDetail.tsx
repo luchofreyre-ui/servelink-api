@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { DeepCleanProgramCard } from "@/components/booking/deep-clean/DeepCleanProgramCard";
 import { selectCustomerAuthorityEducationalContext } from "@/booking-screen/customerAuthorityEducationSelectors";
 import {
@@ -55,6 +56,31 @@ export function CustomerBookingDetail({ screen }: { screen: unknown }) {
       {authorityEducation ? (
         <CustomerBookingEducationBlock context={authorityEducation} />
       ) : null}
+
+      <section
+        className="rounded-xl border border-slate-200 bg-slate-50/80 p-4 text-sm"
+        data-testid="customer-booking-knowledge-card"
+      >
+        <h2 className="font-semibold text-slate-900">Need cleaning guidance?</h2>
+        <p className="mt-2 leading-6 text-slate-600">
+          Explore how we think about surfaces, stains, and safe cleaning — search topics or browse the
+          encyclopedia anytime.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link
+            href="/search"
+            className="inline-flex items-center rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800"
+          >
+            Search
+          </Link>
+          <Link
+            href="/encyclopedia"
+            className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-50"
+          >
+            Encyclopedia
+          </Link>
+        </div>
+      </section>
 
       {isDeepClean && program ? (
         <section className="rounded-xl border border-slate-200 bg-white p-4">

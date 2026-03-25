@@ -1,5 +1,6 @@
 export const publicPrimaryNavItems = [
   { label: "Home", href: "/" },
+  { label: "Encyclopedia", href: "/encyclopedia" },
   { label: "Services", href: "/services" },
   { label: "Questions", href: "/questions/how-often-should-a-house-be-cleaned" },
   { label: "Guides", href: "/guides/deep-cleaning-vs-recurring-cleaning" },

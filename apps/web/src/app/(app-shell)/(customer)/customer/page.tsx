@@ -5,6 +5,7 @@ import { roleThemes } from "@/lib/role-theme";
 import { emptyCopy } from "@/lib/empty-copy";
 import { RoleShell } from "@/components/shared/RoleShell";
 import { AutoRefresh } from "@/components/shared/AutoRefresh";
+import { buildCustomerKnowledgeContextFromSummary } from "@/customer/customerKnowledgeRecommendations";
 import { CustomerDashboard } from "@/components/dashboard/customer/CustomerDashboard";
 import { buildCustomerDashboardViewModel } from "@/dashboard/customer/customerDashboardViewModel";
 import { DashboardEscalationSeed } from "@/components/notifications/DashboardEscalationSeed";
@@ -21,6 +22,7 @@ export default async function CustomerDashboardPage() {
     const vm = buildCustomerDashboardViewModel(summary, {
       emptyMessage: emptyCopy.customer.dashboard,
     });
+    const knowledgeContext = buildCustomerKnowledgeContextFromSummary(summary);
     const counts = summary?.counts ?? {};
     const actionRequired = Number(counts.actionRequired ?? 0);
     const completionReady = Number(counts.completionReady ?? 0);
@@ -80,7 +82,7 @@ export default async function CustomerDashboardPage() {
         />
         {nextActive ? <CustomerActiveBookingCard screen={nextActive} /> : null}
         {nextActive ? <CustomerBookingUpdatesPanel screen={nextActive} /> : null}
-        <CustomerDashboard theme={theme} vm={vm} />
+        <CustomerDashboard theme={theme} vm={vm} knowledgeContext={knowledgeContext} />
       </RoleShell>
     );
   } catch (e: unknown) {

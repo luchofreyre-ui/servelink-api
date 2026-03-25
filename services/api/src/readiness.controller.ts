@@ -14,32 +14,20 @@ export class ReadinessController {
   async ready() {
     try {
       await this.prisma.$queryRaw`SELECT 1`;
-
-      const providerIntegrity =
-        await this.providerResolver.getFoProviderIntegritySummary();
-
-      if (!providerIntegrity.healthy) {
-        throw new ServiceUnavailableException({
-          status: "not_ready",
-          db: "ok",
-          providerIntegrity,
-        });
-      }
-
-      return {
-        status: "ready",
-        db: "ok",
-        providerIntegrity,
-      };
-    } catch (error) {
-      if (error instanceof ServiceUnavailableException) {
-        throw error;
-      }
-
+    } catch {
       throw new ServiceUnavailableException({
         status: "not_ready",
         db: "down",
       });
     }
+
+    const providerIntegrity =
+      await this.providerResolver.getFoProviderIntegritySummary();
+
+    return {
+      status: providerIntegrity.healthy ? "ready" : "degraded",
+      db: "ok",
+      providerIntegrity,
+    };
   }
 }

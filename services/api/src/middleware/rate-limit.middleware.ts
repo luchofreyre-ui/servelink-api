@@ -18,11 +18,29 @@ function getClientKey(req: Request) {
   return req.ip || "unknown";
 }
 
+const PLAYWRIGHT_ADMIN_SCENARIO_PATH = "/api/v1/dev/playwright/admin-scenario";
+
+function isPlaywrightAdminScenarioGet(req: Request): boolean {
+  if (req.method !== "GET") {
+    return false;
+  }
+  const path = (req.originalUrl ?? req.url ?? "").split("?")[0] ?? "";
+  const normalized = path.endsWith("/") ? path.slice(0, -1) : path;
+  return (
+    normalized === PLAYWRIGHT_ADMIN_SCENARIO_PATH ||
+    normalized.endsWith("/dev/playwright/admin-scenario")
+  );
+}
+
 export function rateLimitMiddleware(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
+  if (isPlaywrightAdminScenarioGet(req)) {
+    return next();
+  }
+
   const now = Date.now();
   const key = getClientKey(req);
   let bucket = buckets.get(key);

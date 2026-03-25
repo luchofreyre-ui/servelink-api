@@ -37,6 +37,9 @@ export type PlaywrightAdminScenarioPayload = {
     adminEmail: string;
     adminPassword: string;
     customerEmail: string;
+    customerPassword: string;
+    foEmail: string;
+    foPassword: string;
     foIds: string[];
     bookingIds: {
       pendingDispatch: string;
@@ -204,7 +207,8 @@ export class DevService {
       customerId: customer.id,
       notes: NOTE_ACTIVE,
       status: "in_progress",
-      foId: fo2.id,
+      // FO Playwright scenario logs in as FO1 (`foEmail`); active booking must be theirs.
+      foId: fo1.id,
     });
 
     const bookingException = await this.ensureBooking({
@@ -250,17 +254,26 @@ export class DevService {
       scenario: {
         adminEmail: ADMIN_EMAIL,
         adminPassword: ADMIN_PASSWORD,
+
         customerEmail: CUSTOMER_EMAIL,
+        customerPassword: ADMIN_PASSWORD,
+
+        foEmail: FO1_EMAIL,
+        foPassword: ADMIN_PASSWORD,
         foIds,
+
         bookingIds: {
           pendingDispatch: bookingPending.id,
           hold: bookingHold.id,
           review: bookingReview.id,
           active: bookingActive.id,
         },
+
         exceptionId: bookingException.id,
         anomalyId: anomaly?.id ?? null,
+
         commandCenterMutationBookingIds,
+
         dispatchConfig: {
           activeId: activeConfig?.id ?? null,
           draftId: draftConfig?.id ?? null,

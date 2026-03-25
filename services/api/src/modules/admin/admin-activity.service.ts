@@ -2,8 +2,25 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma";
 import type { AdminActivityItem, AdminActivityResponse } from "./admin-activity.types";
 
-const PER_SOURCE_LIMIT = 25;
+/** Raised so merged newest-first feed still includes fresh command-center rows on page 1. */
+const PER_SOURCE_LIMIT = 80;
 const DEFAULT_PAGE_LIMIT = 25;
+
+/**
+ * Newest-first feeds must not rank bogus far-future `createdAt` values (bad imports / seeds) above
+ * real operations. Those rows sink to the end so the first page stays actionable.
+ */
+function activityFeedSortTime(createdAtIso: string, nowMs: number): number {
+  const t = new Date(createdAtIso).getTime();
+  if (!Number.isFinite(t)) {
+    return 0;
+  }
+  const maxPlausibleFutureMs = nowMs + 24 * 60 * 60 * 1000;
+  if (t > maxPlausibleFutureMs) {
+    return 0;
+  }
+  return t;
+}
 
 @Injectable()
 export class AdminActivityService {
@@ -12,10 +29,13 @@ export class AdminActivityService {
   async getActivity(args?: { limit?: number; offset?: number }): Promise<AdminActivityResponse> {
     const limit = Math.min(Math.max(args?.limit ?? DEFAULT_PAGE_LIMIT, 1), 100);
     const offset = Math.min(Math.max(args?.offset ?? 0, 0), 200);
-    const windowNeed = offset + limit + 10;
-    const perSourceTake = Math.min(200, Math.max(PER_SOURCE_LIMIT, windowNeed));
+    const windowNeed = offset + limit + 50;
+    const perSourceTake = Math.min(500, Math.max(PER_SOURCE_LIMIT, windowNeed));
 
-    const commandCenterTake = Math.min(200, perSourceTake + limit);
+    const commandCenterTake = Math.min(
+      500,
+      Math.max(perSourceTake, offset + limit + 120),
+    );
 
     const [
       publishAudits,
@@ -33,6 +53,7 @@ export class AdminActivityService {
       this.fetchCommandCenterActivityItems(commandCenterTake),
     ]);
 
+    const nowMs = Date.now();
     const merged: AdminActivityItem[] = [
       ...publishAudits,
       ...operatorNotes,
@@ -41,8 +62,18 @@ export class AdminActivityService {
       ...anomalyAudits,
       ...commandCenter,
     ].sort((a, b) => {
-      const tb = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      const tb =
+        activityFeedSortTime(b.createdAt, nowMs) - activityFeedSortTime(a.createdAt, nowMs);
       if (tb !== 0) return tb;
+      // Same-ms ties: prefer command-center / admin dispatch rows so fresh mutations surface on page 1.
+      const pri = (t: string) =>
+        t.startsWith("admin_booking_") ||
+        t === "admin_operator_note_saved" ||
+        t.startsWith("dispatch_admin_")
+          ? 1
+          : 0;
+      const tie = pri(b.type) - pri(a.type);
+      if (tie !== 0) return tie;
       return b.id.localeCompare(a.id);
     });
 

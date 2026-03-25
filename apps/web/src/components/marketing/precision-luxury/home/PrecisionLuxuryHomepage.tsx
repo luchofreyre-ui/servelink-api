@@ -12,6 +12,7 @@ import {
   buildOrganizationSchema,
   buildWebsiteSchema,
 } from "../content/publicContentSchemas";
+import { GlobalSearchForm } from "@/components/search/GlobalSearchForm";
 import { MarketingLinkButton } from "../shared/MarketingLinkButton";
 import { MarketingSectionIntro } from "../shared/MarketingSectionIntro";
 
@@ -56,6 +57,16 @@ export function PrecisionLuxuryHomepage() {
               <p className="mt-6 max-w-2xl font-[var(--font-manrope)] text-lg leading-8 text-[#475569] md:text-xl">
                 Nu Standard Cleaning brings together refined service, consistent standards, and a polished residential experience that feels as good as it looks.
               </p>
+
+              <div className="mt-8 max-w-xl space-y-2">
+                <p className="font-[var(--font-manrope)] text-sm font-medium text-[#475569]">
+                  Search the encyclopedia for instant cleaning guidance.
+                </p>
+                <GlobalSearchForm
+                  placeholder="Search surfaces, stains, methods, and guides"
+                  className="w-full"
+                />
+              </div>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <MarketingLinkButton href="/book" variant="primary">

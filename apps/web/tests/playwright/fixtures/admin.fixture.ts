@@ -1,15 +1,19 @@
 import { test as base, expect } from "@playwright/test";
-import { loginViaApi } from "./auth";
-import { fetchPlaywrightAdminScenario, resolveAdminCredentialsFromScenario, PlaywrightAdminScenario } from "./scenario";
+import { loginViaApi } from "../helpers/auth";
+import {
+  fetchPlaywrightScenario,
+  resolveAdminCredentialsFromScenario,
+  type PlaywrightScenario,
+} from "../helpers/scenario";
 
 type AdminFixture = {
-  scenario: PlaywrightAdminScenario["scenario"];
+  scenario: PlaywrightScenario["scenario"];
   adminToken: string;
 };
 
 export const test = base.extend<AdminFixture>({
   scenario: async ({}, use) => {
-    const payload = await fetchPlaywrightAdminScenario();
+    const payload = await fetchPlaywrightScenario();
     await use(payload.scenario);
   },
 

@@ -28,6 +28,7 @@ import { PaymentsModule } from "./modules/payments/payments.module";
 import { SystemModule } from "./modules/system/system.module";
 import { BookingDirectionIntakeModule } from "./modules/booking-direction-intake/booking-direction-intake.module";
 import { AuthorityModule } from "./modules/authority/authority.module";
+import { KnowledgeModule } from "./modules/knowledge/knowledge.module";
 
 const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
 
@@ -60,6 +61,7 @@ const enableDevScenarioApi =
     PayoutsModule,
     DispatchModule,
     FoModule,
+    KnowledgeModule,
     AdminModule,
     AdminBookingsModule,
     AdminDispatchDecisionsModule,

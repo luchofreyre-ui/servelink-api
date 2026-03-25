@@ -31,6 +31,7 @@ export default async function FoBookingPage({
         theme={theme}
         nav={[
           { href: "/fo", label: "My work" },
+          { href: "/fo/knowledge", label: "Knowledge" },
           { href: "/notifications", label: "Alerts" },
           { href: "/", label: "Home" },
         ]}

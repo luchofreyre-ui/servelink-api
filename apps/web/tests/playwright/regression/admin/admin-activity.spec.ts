@@ -1,6 +1,7 @@
 import type { Page } from "@playwright/test";
-import { test, expect } from "./helpers/admin-fixture";
-import { openAdminPage, expectCommonAdminShell } from "./helpers/admin-page";
+import { test, expect } from "../../fixtures/admin.fixture";
+import { openAdminPage } from "../../helpers/admin-page";
+import { expectCommonAdminShell } from "../../assertions/admin";
 
 function adminCommandCenterRegion(page: Page) {
   return page.getByRole("region", { name: /admin command center/i });
@@ -49,7 +50,14 @@ test.describe("admin activity operations", () => {
 
     await expect(adminCommandCenterRegion(page)).toBeVisible({ timeout: 30_000 });
 
+    const reviewPosted = page.waitForResponse(
+      (res) =>
+        res.request().method() === "POST" &&
+        res.url().includes(`/bookings/${bookingId}/review`) &&
+        res.ok(),
+    );
     await adminCommandCenterRegion(page).getByRole("button", { name: "Mark review" }).click();
+    await reviewPosted;
     await expect(page.getByText(/Workflow: In review/i)).toBeVisible();
 
     await openAdminPage(page, adminToken, "/activity");
@@ -57,9 +65,11 @@ test.describe("admin activity operations", () => {
 
     await expect(page.getByText("Loading activity…")).toBeHidden({ timeout: 45_000 });
 
-    const reviewRow = page.locator(
-      `[data-testid="admin-activity-row"][data-activity-type="admin_booking_marked_in_review"][data-booking-id="${bookingId}"]`,
-    );
+    const reviewRow = page
+      .locator(
+        `[data-testid="admin-activity-row"][data-activity-type="admin_booking_marked_in_review"][data-booking-id="${bookingId}"]`,
+      )
+      .first();
     await expect(reviewRow).toBeVisible({ timeout: 30_000 });
 
     await expect(reviewRow.getByText("Command center review", { exact: true })).toBeVisible();

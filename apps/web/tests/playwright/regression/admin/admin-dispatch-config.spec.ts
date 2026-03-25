@@ -1,5 +1,6 @@
-import { test, expect } from "./helpers/admin-fixture";
-import { openAdminPage, expectCommonAdminShell } from "./helpers/admin-page";
+import { test, expect } from "../../fixtures/admin.fixture";
+import { openAdminPage } from "../../helpers/admin-page";
+import { expectCommonAdminShell } from "../../assertions/admin";
 
 test.describe("admin dispatch config", () => {
   test("loads dispatch config page", async ({ page, adminToken }) => {

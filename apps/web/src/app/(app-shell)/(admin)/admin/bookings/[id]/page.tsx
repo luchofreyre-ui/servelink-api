@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { getStoredAccessToken } from "@/lib/auth";
 import { WEB_ENV } from "@/lib/env";
 import type { AdminBookingCommandCenterPayload } from "@/lib/api/adminBookingCommandCenter";
@@ -9,6 +9,7 @@ import { useAdminBookingCommandCenterMutations } from "@/hooks/admin/useAdminBoo
 import { AdminBookingOperationalDetailCard } from "@/components/admin/AdminBookingOperationalDetailCard";
 import { AdminBookingAuthorityActionSurface } from "@/components/admin/AdminBookingAuthorityActionSurface";
 import { AdminDeepCleanBookingSection } from "@/components/booking-detail/admin/AdminDeepCleanBookingSection";
+import { dispatchAdminActivityRefresh } from "@/lib/adminActivityRefresh";
 
 const API_BASE_URL = WEB_ENV.apiBaseUrl;
 
@@ -146,6 +147,7 @@ async function fetchJson<T>(url: string, token: string): Promise<T> {
 
 export default function AdminBookingDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const bookingId = String(params?.id ?? "");
 
   const [token, setToken] = useState<string | null>(null);
@@ -600,6 +602,8 @@ export default function AdminBookingDetailPage() {
     try {
       await fn();
       await reloadReadModels();
+      dispatchAdminActivityRefresh();
+      router.refresh();
     } catch (error) {
       setCcActionError(
         error instanceof Error ? error.message : `${label} failed.`,
