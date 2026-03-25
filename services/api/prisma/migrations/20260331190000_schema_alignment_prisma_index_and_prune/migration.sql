@@ -1,38 +1,8 @@
 /*
-  Warnings:
-
-  - You are about to drop the column `completionReadyAt` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `estimatedChargeCents` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `geoExitTriggeredAt` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `geoStartTriggeredAt` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `isCompletionReady` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `lastGeoEventAt` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `paymentAuthorizedCents` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `paymentCapturedCents` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `paymentShortfallCents` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `paymentStatusUpdatedAt` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `requiredTeamSize` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `requiresBodyCam` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the column `workStatus` on the `Booking` table. All the data in the column will be lost.
-  - You are about to drop the `BookingDocument` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `BookingGeoState` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `BookingOpsException` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `BookingOpsNotification` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `BookingOpsNotificationDelivery` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `BookingPaymentOverageRequest` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `BookingPaymentResolution` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `ConversionAlertHistory` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `ConversionIncident` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `ConversionIncidentEvent` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `ConversionMonitoringConfig` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `ConversionScheduledRunHistory` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `FranchiseOwnerAvailabilityBlackout` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `FranchiseOwnerAvailabilityOverride` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `FranchiseOwnerBodyCamAssignment` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `FranchiseOwnerSchedulingSettings` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `FranchiseOwnerWeeklyAvailability` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `UserNotificationPreference` table. If the table is not empty, all the data it contains will be lost.
-
+  Aligns replayed migration state with current schema.prisma:
+  - Prune tables/columns/enums removed from schema but still created by older migrations
+  - Rename truncated PostgreSQL index names to Prisma-expected names for monitoring tables
+  Must run after 20260331183000_system_test_runs so shadow replay order is valid.
 */
 -- DropForeignKey
 ALTER TABLE "BookingDocument" DROP CONSTRAINT "BookingDocument_bookingId_fkey";
