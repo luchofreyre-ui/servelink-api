@@ -59,6 +59,7 @@ jobs:
       NODE_ENV: development
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/servelink
       JWT_SECRET: ci-system-tests-jwt-secret-not-for-production-use
+      JWT_ACCESS_SECRET: ci-system-tests-jwt-access-secret-not-for-production-use
       APP_BASE_URL: http://127.0.0.1:3001
       WEB_BASE_URL: http://127.0.0.1:3000
       DISABLE_DEV_SCENARIO_API: "0"
