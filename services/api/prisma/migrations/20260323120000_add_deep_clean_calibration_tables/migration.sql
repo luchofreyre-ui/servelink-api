@@ -67,3 +67,15 @@ ALTER TABLE "BookingDeepCleanProgramCalibration" ADD CONSTRAINT "BookingDeepClea
 
 -- AddForeignKey
 ALTER TABLE "BookingDeepCleanProgramCalibration" ADD CONSTRAINT "BookingDeepCleanProgramCalibration_programId_fkey" FOREIGN KEY ("programId") REFERENCES "BookingDeepCleanProgram"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add estimator config fields (moved from earlier broken migration)
+ALTER TABLE "BookingDeepCleanProgramCalibration"
+ADD COLUMN "deepCleanEstimatorConfigId" TEXT,
+ADD COLUMN "deepCleanEstimatorConfigVersion" INTEGER,
+ADD COLUMN "deepCleanEstimatorConfigLabel" TEXT;
+
+CREATE INDEX "DCP_calibration_estimator_version_idx"
+ON "BookingDeepCleanProgramCalibration"("deepCleanEstimatorConfigVersion");
+
+CREATE INDEX "DCP_calibration_estimator_version_usable_idx"
+ON "BookingDeepCleanProgramCalibration"("deepCleanEstimatorConfigVersion", "usableForCalibrationAnalysis");

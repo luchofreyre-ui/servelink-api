@@ -825,6 +825,60 @@ model SystemSetting {
   updatedAt DateTime @updatedAt
 }
 
+model SystemTestRun {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  source       String
+  branch       String?
+  commitSha    String?
+  status       String
+  totalCount   Int
+  passedCount  Int
+  failedCount  Int
+  skippedCount Int
+  flakyCount   Int      @default(0)
+  durationMs   Int?
+  rawReportJson Json
+  summaryJson  Json?
+  ingestVersion Int     @default(1)
+
+  cases SystemTestCaseResult[]
+
+  @@index([createdAt])
+  @@index([status, createdAt])
+}
+
+model SystemTestCaseResult {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  runId          String
+  suite          String
+  filePath       String
+  title          String
+  fullName       String
+  status         String
+  retryCount     Int      @default(0)
+  durationMs     Int?
+  errorMessage   String?
+  errorStack     String?
+  expectedStatus String?
+  line           Int?
+  column         Int?
+  route          String?
+  selector       String?
+  artifactJson   Json?
+  rawCaseJson    Json
+
+  run SystemTestRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@index([runId, status])
+  @@index([runId, suite])
+  @@index([filePath])
+  @@index([status])
+}
+
 model LocationPing {
   id         String   @id @default(cuid())
   bookingId  String
