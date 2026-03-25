@@ -1,0 +1,228 @@
+# System tests: API + web, Playwright (JSON reporter), upload to system-tests API, artifacts.
+#
+# Secrets (optional):
+#   SYSTEM_TESTS_ADMIN_TOKEN — if set, used for upload; otherwise a token is obtained by
+#   logging in as the dev Playwright scenario admin (same credentials as dev.service seed).
+#
+# Do not echo tokens or passwords. Login response bodies are not printed.
+
+name: System tests (Playwright)
+
+on:
+  schedule:
+    # Daily 06:00 UTC — adjust as needed
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      playwright_paths:
+        description: "Arguments to `playwright test` (paths/grep), e.g. tests/playwright/smoke"
+        required: false
+        default: "tests/playwright/smoke"
+        type: string
+      skip_upload:
+        description: "Skip POST to /api/v1/admin/system-tests/report"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: system-tests-playwright-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  playwright-system-tests:
+    name: Stack + Playwright + upload
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: servelink
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d servelink"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+
+    env:
+      CI: "true"
+      # API env.validation + dev Playwright scenario (non-production only)
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/servelink
+      JWT_SECRET: ci-system-tests-jwt-secret-not-for-production-use
+      APP_BASE_URL: http://127.0.0.1:3001
+      WEB_BASE_URL: http://127.0.0.1:3000
+      DISABLE_DEV_SCENARIO_API: "0"
+      # Playwright + web client
+      PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+      PLAYWRIGHT_API_BASE_URL: http://127.0.0.1:3001/api/v1
+      NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:3001
+      # Uploader + stable JSON path (outside apps/web/test-results — Playwright wipes that dir)
+      PLAYWRIGHT_UPLOAD_SOURCE: github-actions
+      PLAYWRIGHT_JSON_REPORT: ${{ runner.temp }}/playwright-report.json
+      # Deterministic scenario admin (matches services/api dev.service seed)
+      SYSTEM_TESTS_LOGIN_EMAIL: playwright_admin_scenario_admin@servelink.local
+      SYSTEM_TESTS_LOGIN_PASSWORD: Passw0rd!
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            services/api/package-lock.json
+            apps/web/package-lock.json
+
+      - name: Install API dependencies
+        working-directory: services/api
+        run: npm ci
+
+      - name: Prisma generate + migrate
+        working-directory: services/api
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+
+      - name: Build API
+        working-directory: services/api
+        run: npm run build
+
+      - name: Start API (background)
+        working-directory: services/api
+        run: |
+          nohup npm run start > "${RUNNER_TEMP}/api.log" 2>&1 &
+          echo $! > "${RUNNER_TEMP}/api.pid"
+          for i in $(seq 1 90); do
+            if curl -fsS "http://127.0.0.1:3001/api/v1/health" >/dev/null 2>&1; then
+              echo "API is up."
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "API failed to become healthy."
+          tail -n 200 "${RUNNER_TEMP}/api.log" || true
+          exit 1
+
+      - name: Install web dependencies
+        working-directory: apps/web
+        run: npm ci
+
+      - name: Build web
+        working-directory: apps/web
+        run: npm run build
+
+      - name: Start web (background)
+        working-directory: apps/web
+        run: |
+          nohup npm run start > "${RUNNER_TEMP}/web.log" 2>&1 &
+          echo $! > "${RUNNER_TEMP}/web.pid"
+          for i in $(seq 1 120); do
+            if curl -fsS -o /dev/null "http://127.0.0.1:3000/" 2>/dev/null; then
+              echo "Web is up."
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Web failed to become ready."
+          tail -n 200 "${RUNNER_TEMP}/web.log" || true
+          exit 1
+
+      - name: Install Playwright browsers
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright (JSON to RUNNER_TEMP)
+        id: playwright
+        working-directory: apps/web
+        continue-on-error: true
+        run: |
+          set +e
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            PW_ARGS='${{ github.event.inputs.playwright_paths }}'
+          else
+            PW_ARGS=""
+          fi
+          if [ -z "${PW_ARGS}" ]; then
+            PW_ARGS="tests/playwright/smoke"
+          fi
+          # Intentional word-splitting so inputs can pass multiple args (paths, --grep, etc.)
+          echo "Running: npx playwright test (args) --reporter=json"
+          # shellcheck disable=SC2086
+          npx playwright test ${PW_ARGS} --reporter=json > "${PLAYWRIGHT_JSON_REPORT}"
+          PW_EXIT=$?
+          echo "playwright_exit=${PW_EXIT}" >> "${GITHUB_OUTPUT}"
+          exit ${PW_EXIT}
+
+      - name: Upload Playwright artifacts (trace / video / screenshots)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: apps/web/test-results
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload JSON report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-json-report
+          path: ${{ env.PLAYWRIGHT_JSON_REPORT }}
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Ingest report (system-tests API)
+        if: always() && (github.event_name != 'workflow_dispatch' || github.event.inputs.skip_upload != 'true')
+        env:
+          SYSTEM_TESTS_ADMIN_TOKEN_SECRET: ${{ secrets.SYSTEM_TESTS_ADMIN_TOKEN }}
+        working-directory: apps/web
+        run: |
+          set -euo pipefail
+          if [ ! -s "${PLAYWRIGHT_JSON_REPORT}" ]; then
+            echo "No JSON report at ${PLAYWRIGHT_JSON_REPORT}; skipping upload."
+            exit 0
+          fi
+
+          if [ -n "${SYSTEM_TESTS_ADMIN_TOKEN_SECRET}" ]; then
+            export SYSTEM_TESTS_ADMIN_TOKEN="${SYSTEM_TESTS_ADMIN_TOKEN_SECRET}"
+            echo "::add-mask::${SYSTEM_TESTS_ADMIN_TOKEN_SECRET}"
+          else
+            curl -fsS -o /dev/null "http://127.0.0.1:3001/api/v1/dev/playwright/admin-scenario"
+            LOGIN_BODY="$(curl -fsS -X POST "http://127.0.0.1:3001/api/v1/auth/login" \
+              -H "Content-Type: application/json" \
+              -d "{\"email\":\"${SYSTEM_TESTS_LOGIN_EMAIL}\",\"password\":\"${SYSTEM_TESTS_LOGIN_PASSWORD}\"}")"
+            export SYSTEM_TESTS_ADMIN_TOKEN="$(printf '%s' "${LOGIN_BODY}" | jq -er '.accessToken')"
+            echo "::add-mask::${SYSTEM_TESTS_ADMIN_TOKEN}"
+          fi
+
+          export NEXT_PUBLIC_API_BASE_URL="http://127.0.0.1:3001"
+          npm run upload:playwright -- --file="${PLAYWRIGHT_JSON_REPORT}"
+
+      - name: Stop background servers
+        if: always()
+        run: |
+          for f in api.pid web.pid; do
+            p="${RUNNER_TEMP}/${f}"
+            if [ -f "$p" ]; then
+              kill "$(cat "$p")" 2>/dev/null || true
+            fi
+          done
+
+      - name: Fail job if Playwright failed
+        if: steps.playwright.outcome == 'failure'
+        run: |
+          echo "Playwright exited non-zero."
+          exit 1
