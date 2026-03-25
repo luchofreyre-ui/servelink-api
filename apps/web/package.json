@@ -15,7 +15,8 @@
     "test:e2e:fo": "playwright test tests/playwright/regression/fo tests/playwright/smoke/fo-smoke.spec.ts",
     "test:e2e:customer": "playwright test tests/playwright/regression/customer tests/playwright/smoke/customer-smoke.spec.ts",
     "test:e2e:public": "playwright test tests/playwright/regression/public tests/playwright/smoke/public-knowledge-smoke.spec.ts",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "upload:playwright": "tsx scripts/upload-playwright-report.ts"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^5.6.1",
@@ -39,6 +40,7 @@
     "jsdom": "^25.0.1",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
+    "tsx": "^4.19.2",
     "typescript": "~5.6.2",
     "vitest": "^3.0.5"
   }
