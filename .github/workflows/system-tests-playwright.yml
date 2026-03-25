@@ -68,7 +68,7 @@ jobs:
       NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:3001
       # Uploader + stable JSON path (outside apps/web/test-results — Playwright wipes that dir)
       PLAYWRIGHT_UPLOAD_SOURCE: github-actions
-      PLAYWRIGHT_JSON_REPORT: ${{ runner.temp }}/playwright-report.json
+      PLAYWRIGHT_JSON_REPORT: /tmp/playwright-report.json
       # Deterministic scenario admin (matches services/api dev.service seed)
       SYSTEM_TESTS_LOGIN_EMAIL: playwright_admin_scenario_admin@servelink.local
       SYSTEM_TESTS_LOGIN_PASSWORD: Passw0rd!
