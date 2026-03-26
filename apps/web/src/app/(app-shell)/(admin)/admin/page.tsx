@@ -358,6 +358,27 @@ export default function AdminPage() {
         </div>
       </section>
 
+      <DashboardCard
+        eyebrow="Quality"
+        title="System tests"
+        actions={
+          <Link
+            href="/admin/system-tests"
+            className="text-sm font-medium text-slate-300 hover:text-white"
+          >
+            Open dashboard
+          </Link>
+        }
+      >
+        <p className="text-sm text-slate-400">
+          Hosted Playwright ingestion, run history, and failure diagnostics. Ingest runs via CI or{" "}
+          <code className="rounded bg-black/30 px-1 py-0.5 text-xs text-slate-300">
+            POST /api/v1/admin/system-tests/report
+          </code>
+          .
+        </p>
+      </DashboardCard>
+
       <div className="grid gap-6 xl:grid-cols-2">
         <AdminLaunchReadinessCard />
         <AdminBookingRevenueReadinessCard />
