@@ -223,22 +223,19 @@ jobs:
         working-directory: apps/web
         run: |
           set -euo pipefail
+
+          echo "DEBUG → token length: ${#SYSTEM_TESTS_ADMIN_TOKEN}"
+
           if [ ! -s "${PLAYWRIGHT_JSON_REPORT}" ]; then
             echo "No JSON report at ${PLAYWRIGHT_JSON_REPORT}; skipping upload."
             exit 0
           fi
 
-          echo "::add-mask::${SYSTEM_TESTS_ADMIN_TOKEN}"
-
-          # Derive API base for uploader compatibility from the full report URL.
-          # Example:
-          #   https://api.example.com/api/v1/admin/system-tests/report
-          # becomes:
-          #   https://api.example.com
           API_BASE="$(printf '%s' "${SYSTEM_TESTS_REPORT_URL}" | sed -E 's#(/api/v1/admin/system-tests/report)$##')"
-
           export NEXT_PUBLIC_API_BASE_URL="${API_BASE}"
 
+          # 👇 THIS IS THE KEY FIX
+          SYSTEM_TESTS_ADMIN_TOKEN="${SYSTEM_TESTS_ADMIN_TOKEN}" \
           npm run upload:playwright -- --file="${PLAYWRIGHT_JSON_REPORT}"
 
       - name: Stop background servers
