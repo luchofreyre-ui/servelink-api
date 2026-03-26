@@ -16,6 +16,7 @@
  *   GITHUB_SHA / COMMIT_SHA — optional commit
  */
 
+import { createHash } from "crypto";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -294,13 +295,16 @@ async function main() {
   }
 
   const token = process.env.SYSTEM_TESTS_ADMIN_TOKEN || "";
+  const tokenHash = createHash("sha256").update(token).digest("hex").slice(0, 12);
+
+  console.log("UPLOAD DEBUG token exists:", !!token);
+  console.log("UPLOAD DEBUG token length:", token.length);
+  console.log("UPLOAD DEBUG token sha12:", tokenHash);
+  console.log("UPLOAD DEBUG api base:", process.env.NEXT_PUBLIC_API_BASE_URL || "");
 
   if (!token) {
     throw new Error("Missing SYSTEM_TESTS_ADMIN_TOKEN in upload script");
   }
-
-  console.log("UPLOAD DEBUG token exists:", !!token);
-  console.log("UPLOAD DEBUG token length:", token.length);
 
   const raw = fs.readFileSync(file, "utf8");
   const report = JSON.parse(raw) as Json;
