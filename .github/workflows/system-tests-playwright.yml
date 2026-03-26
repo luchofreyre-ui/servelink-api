@@ -1,10 +1,13 @@
-# System tests: API + web, Playwright (JSON reporter), upload to system-tests API, artifacts.
+# System tests: API + web, Playwright (JSON reporter), upload to persistent system-tests API, artifacts.
 #
-# Secrets (optional):
-#   SYSTEM_TESTS_ADMIN_TOKEN — if set, used for upload; otherwise a token is obtained by
-#   logging in as the dev Playwright scenario admin (same credentials as dev.service seed).
+# Required GitHub repo secrets:
+#   SYSTEM_TESTS_REPORT_URL   e.g. https://YOUR_HOSTED_API/api/v1/admin/system-tests/report
+#   SYSTEM_TESTS_ADMIN_TOKEN  admin bearer token for the hosted target
 #
-# Do not echo tokens or passwords. Login response bodies are not printed.
+# Notes:
+# - Playwright still runs against the runner-local API/web stack.
+# - Ingestion is sent to a persistent hosted environment, not the ephemeral CI database.
+# - Do not echo tokens or passwords.
 
 name: System tests (Playwright)
 
@@ -20,7 +23,7 @@ on:
         default: "tests/playwright/smoke"
         type: string
       skip_upload:
-        description: "Skip POST to /api/v1/admin/system-tests/report"
+        description: "Skip POST to hosted /api/v1/admin/system-tests/report"
         required: false
         default: false
         type: boolean
@@ -55,7 +58,8 @@ jobs:
 
     env:
       CI: "true"
-      # API env.validation + dev Playwright scenario (non-production only)
+
+      # Runner-local stack for Playwright execution
       NODE_ENV: development
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/servelink
       JWT_SECRET: ci-system-tests-jwt-secret-not-for-production-use
@@ -63,16 +67,18 @@ jobs:
       APP_BASE_URL: http://127.0.0.1:3001
       WEB_BASE_URL: http://127.0.0.1:3000
       DISABLE_DEV_SCENARIO_API: "0"
-      # Playwright + web client
+
+      # Playwright + web client target the runner-local stack
       PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
       PLAYWRIGHT_API_BASE_URL: http://127.0.0.1:3001/api/v1
       NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:3001
-      # Uploader + stable JSON path (outside apps/web/test-results — Playwright wipes that dir)
+
+      # Upload metadata + stable JSON path
       PLAYWRIGHT_UPLOAD_SOURCE: github-actions
       PLAYWRIGHT_JSON_REPORT: /tmp/playwright-report.json
-      # Deterministic scenario admin (matches services/api dev.service seed)
-      SYSTEM_TESTS_LOGIN_EMAIL: playwright_admin_scenario_admin@servelink.local
-      SYSTEM_TESTS_LOGIN_PASSWORD: Passw0rd!
+
+      # Persistent hosted ingest target
+      SYSTEM_TESTS_REPORT_URL: ${{ secrets.SYSTEM_TESTS_REPORT_URL }}
 
     steps:
       - name: Checkout
@@ -187,10 +193,33 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-      - name: Ingest report (system-tests API)
+      - name: Validate hosted upload config
         if: always() && (github.event_name != 'workflow_dispatch' || github.event.inputs.skip_upload != 'true')
         env:
           SYSTEM_TESTS_ADMIN_TOKEN_SECRET: ${{ secrets.SYSTEM_TESTS_ADMIN_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ ! -s "${PLAYWRIGHT_JSON_REPORT}" ]; then
+            echo "No JSON report at ${PLAYWRIGHT_JSON_REPORT}; upload validation not needed."
+            exit 0
+          fi
+
+          if [ -z "${SYSTEM_TESTS_REPORT_URL:-}" ]; then
+            echo "Missing required secret: SYSTEM_TESTS_REPORT_URL"
+            exit 1
+          fi
+
+          if [ -z "${SYSTEM_TESTS_ADMIN_TOKEN_SECRET:-}" ]; then
+            echo "Missing required secret: SYSTEM_TESTS_ADMIN_TOKEN"
+            exit 1
+          fi
+
+      - name: Ingest report (hosted system-tests API)
+        if: always() && (github.event_name != 'workflow_dispatch' || github.event.inputs.skip_upload != 'true')
+        env:
+          SYSTEM_TESTS_ADMIN_TOKEN: ${{ secrets.SYSTEM_TESTS_ADMIN_TOKEN }}
+          GIT_BRANCH: ${{ github.ref_name }}
+          COMMIT_SHA: ${{ github.sha }}
         working-directory: apps/web
         run: |
           set -euo pipefail
@@ -199,19 +228,17 @@ jobs:
             exit 0
           fi
 
-          if [ -n "${SYSTEM_TESTS_ADMIN_TOKEN_SECRET}" ]; then
-            export SYSTEM_TESTS_ADMIN_TOKEN="${SYSTEM_TESTS_ADMIN_TOKEN_SECRET}"
-            echo "::add-mask::${SYSTEM_TESTS_ADMIN_TOKEN_SECRET}"
-          else
-            curl -fsS -o /dev/null "http://127.0.0.1:3001/api/v1/dev/playwright/admin-scenario"
-            LOGIN_BODY="$(curl -fsS -X POST "http://127.0.0.1:3001/api/v1/auth/login" \
-              -H "Content-Type: application/json" \
-              -d "{\"email\":\"${SYSTEM_TESTS_LOGIN_EMAIL}\",\"password\":\"${SYSTEM_TESTS_LOGIN_PASSWORD}\"}")"
-            export SYSTEM_TESTS_ADMIN_TOKEN="$(printf '%s' "${LOGIN_BODY}" | jq -er '.accessToken')"
-            echo "::add-mask::${SYSTEM_TESTS_ADMIN_TOKEN}"
-          fi
+          echo "::add-mask::${SYSTEM_TESTS_ADMIN_TOKEN}"
 
-          export NEXT_PUBLIC_API_BASE_URL="http://127.0.0.1:3001"
+          # Derive API base for uploader compatibility from the full report URL.
+          # Example:
+          #   https://api.example.com/api/v1/admin/system-tests/report
+          # becomes:
+          #   https://api.example.com
+          API_BASE="$(printf '%s' "${SYSTEM_TESTS_REPORT_URL}" | sed -E 's#(/api/v1/admin/system-tests/report)$##')"
+
+          export NEXT_PUBLIC_API_BASE_URL="${API_BASE}"
+
           npm run upload:playwright -- --file="${PLAYWRIGHT_JSON_REPORT}"
 
       - name: Stop background servers
