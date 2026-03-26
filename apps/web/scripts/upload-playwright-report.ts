@@ -293,11 +293,14 @@ async function main() {
     process.exit(1);
   }
 
-  const token = process.env.SYSTEM_TESTS_ADMIN_TOKEN?.trim();
+  const token = process.env.SYSTEM_TESTS_ADMIN_TOKEN || "";
+
   if (!token) {
-    console.error("SYSTEM_TESTS_ADMIN_TOKEN is required (admin JWT).");
-    process.exit(1);
+    throw new Error("Missing SYSTEM_TESTS_ADMIN_TOKEN in upload script");
   }
+
+  console.log("UPLOAD DEBUG token exists:", !!token);
+  console.log("UPLOAD DEBUG token length:", token.length);
 
   const raw = fs.readFileSync(file, "utf8");
   const report = JSON.parse(raw) as Json;
