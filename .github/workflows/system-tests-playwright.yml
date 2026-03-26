@@ -123,6 +123,8 @@ jobs:
 
       - name: Build web
         working-directory: apps/web
+        env:
+          NODE_ENV: production
         run: npm run build
 
       - name: Start web (background)
