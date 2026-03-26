@@ -65,7 +65,7 @@ export async function gotoAuthedPage(page: Page, path: string, token: string): P
   ]);
   await primeLocalStorageToken(page, trimmed);
   await page.goto(`${playwrightOrigin()}${path.startsWith("/") ? path : `/${path}`}`, {
-    waitUntil: "networkidle",
+    waitUntil: "domcontentloaded",
   });
 }
 
