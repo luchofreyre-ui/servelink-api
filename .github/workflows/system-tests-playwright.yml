@@ -1,8 +1,9 @@
 # System tests: API + web, Playwright (JSON reporter), upload to persistent system-tests API, artifacts.
 #
 # Required GitHub repo secrets:
-#   SYSTEM_TESTS_REPORT_URL   e.g. https://YOUR_HOSTED_API/api/v1/admin/system-tests/report
-#   SYSTEM_TESTS_ADMIN_TOKEN  admin bearer token for the hosted target
+#   SYSTEM_TESTS_REPORT_URL      e.g. https://YOUR_HOSTED_API/api/v1/admin/system-tests/report
+#   SYSTEM_TESTS_ADMIN_EMAIL     admin user email on the hosted target
+#   SYSTEM_TESTS_ADMIN_PASSWORD  admin user password (used only to mint a short-lived JWT at job runtime)
 #
 # Notes:
 # - Playwright still runs against the runner-local API/web stack.
@@ -196,7 +197,8 @@ jobs:
       - name: Validate hosted upload config
         if: always() && (github.event_name != 'workflow_dispatch' || github.event.inputs.skip_upload != 'true')
         env:
-          SYSTEM_TESTS_ADMIN_TOKEN_SECRET: ${{ secrets.SYSTEM_TESTS_ADMIN_TOKEN }}
+          SYSTEM_TESTS_ADMIN_EMAIL: ${{ secrets.SYSTEM_TESTS_ADMIN_EMAIL }}
+          SYSTEM_TESTS_ADMIN_PASSWORD: ${{ secrets.SYSTEM_TESTS_ADMIN_PASSWORD }}
         run: |
           set -euo pipefail
           if [ ! -s "${PLAYWRIGHT_JSON_REPORT}" ]; then
@@ -209,22 +211,26 @@ jobs:
             exit 1
           fi
 
-          if [ -z "${SYSTEM_TESTS_ADMIN_TOKEN_SECRET:-}" ]; then
-            echo "Missing required secret: SYSTEM_TESTS_ADMIN_TOKEN"
+          if [ -z "${SYSTEM_TESTS_ADMIN_EMAIL:-}" ]; then
+            echo "Missing required secret: SYSTEM_TESTS_ADMIN_EMAIL"
+            exit 1
+          fi
+
+          if [ -z "${SYSTEM_TESTS_ADMIN_PASSWORD:-}" ]; then
+            echo "Missing required secret: SYSTEM_TESTS_ADMIN_PASSWORD"
             exit 1
           fi
 
       - name: Ingest report (hosted system-tests API)
         if: always() && (github.event_name != 'workflow_dispatch' || github.event.inputs.skip_upload != 'true')
         env:
-          SYSTEM_TESTS_ADMIN_TOKEN: ${{ secrets.SYSTEM_TESTS_ADMIN_TOKEN }}
+          SYSTEM_TESTS_ADMIN_EMAIL: ${{ secrets.SYSTEM_TESTS_ADMIN_EMAIL }}
+          SYSTEM_TESTS_ADMIN_PASSWORD: ${{ secrets.SYSTEM_TESTS_ADMIN_PASSWORD }}
           GIT_BRANCH: ${{ github.ref_name }}
           COMMIT_SHA: ${{ github.sha }}
         working-directory: apps/web
         run: |
           set -euo pipefail
-
-          echo "DEBUG → token length: ${#SYSTEM_TESTS_ADMIN_TOKEN}"
 
           if [ ! -s "${PLAYWRIGHT_JSON_REPORT}" ]; then
             echo "No JSON report at ${PLAYWRIGHT_JSON_REPORT}; skipping upload."
@@ -234,8 +240,23 @@ jobs:
           API_BASE="$(printf '%s' "${SYSTEM_TESTS_REPORT_URL}" | sed -E 's#(/api/v1/admin/system-tests/report)$##')"
           export NEXT_PUBLIC_API_BASE_URL="${API_BASE}"
 
-          # 👇 THIS IS THE KEY FIX
-          SYSTEM_TESTS_ADMIN_TOKEN="${SYSTEM_TESTS_ADMIN_TOKEN}" \
+          LOGIN_BODY="$(jq -n \
+            --arg email "${SYSTEM_TESTS_ADMIN_EMAIL}" \
+            --arg password "${SYSTEM_TESTS_ADMIN_PASSWORD}" \
+            '{email: $email, password: $password}')"
+
+          LOGIN_RES="$(curl -fsS -X POST "${API_BASE}/api/v1/auth/login" \
+            -H "Content-Type: application/json" \
+            -d "${LOGIN_BODY}")"
+
+          ACCESS_TOKEN="$(printf '%s' "${LOGIN_RES}" | jq -r '.accessToken // empty')"
+          if [ -z "${ACCESS_TOKEN}" ]; then
+            echo "Hosted login failed: no accessToken in response (check credentials and that the user exists on the hosted API)."
+            exit 1
+          fi
+
+          export SYSTEM_TESTS_ADMIN_TOKEN="${ACCESS_TOKEN}"
+
           npm run upload:playwright -- --file="${PLAYWRIGHT_JSON_REPORT}"
 
       - name: Stop background servers
