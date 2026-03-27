@@ -9,6 +9,9 @@ const buckets = new Map<string, Bucket>();
 
 const WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS ?? 60_000);
 const MAX_REQUESTS = Number(process.env.RATE_LIMIT_MAX_REQUESTS ?? 300);
+const NODE_ENV = process.env.NODE_ENV ?? "development";
+const RATE_LIMIT_BYPASS_LOCAL_PLAYWRIGHT =
+  process.env.RATE_LIMIT_BYPASS_LOCAL_PLAYWRIGHT ?? "true";
 
 function getClientKey(req: Request) {
   const forwardedFor = req.header("x-forwarded-for");
@@ -32,12 +35,48 @@ function isPlaywrightAdminScenarioGet(req: Request): boolean {
   );
 }
 
+function isLocalHostLike(value: string | undefined): boolean {
+  if (!value) {
+    return false;
+  }
+
+  return (
+    value.includes("localhost") ||
+    value.includes("127.0.0.1") ||
+    value.includes("::1")
+  );
+}
+
+function looksLikeLocalPlaywrightTraffic(req: Request): boolean {
+  if (NODE_ENV === "production") {
+    return false;
+  }
+
+  if (RATE_LIMIT_BYPASS_LOCAL_PLAYWRIGHT.toLowerCase() === "false") {
+    return false;
+  }
+
+  const host = String(req.header("host") ?? "");
+  const origin = String(req.header("origin") ?? "");
+  const referer = String(req.header("referer") ?? "");
+  const isLocalRequest =
+    isLocalHostLike(host) || isLocalHostLike(origin) || isLocalHostLike(referer);
+
+  if (!isLocalRequest) {
+    return false;
+  }
+
+  // In non-production, local app/server traffic is expected in dev + e2e loops.
+  // Keep this bypass local-only and env-gated to avoid weakening deployed behavior.
+  return true;
+}
+
 export function rateLimitMiddleware(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
-  if (isPlaywrightAdminScenarioGet(req)) {
+  if (isPlaywrightAdminScenarioGet(req) || looksLikeLocalPlaywrightTraffic(req)) {
     return next();
   }
 
