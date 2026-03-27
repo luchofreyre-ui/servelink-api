@@ -13,12 +13,18 @@ import {
 import { buildDashboardAlerts } from "@/lib/system-tests/alerts";
 import { buildHistoricalChanges } from "@/lib/system-tests/compare";
 import { buildFlakyCaseAnalysis } from "@/lib/system-tests/flaky";
-import { buildFailurePatterns } from "@/lib/system-tests/patterns";
+import { buildFailurePatterns, deprioritizeNoisePatterns } from "@/lib/system-tests/patterns";
 import {
   buildTopProblemsSummary,
   sortFlakyByImpact,
   sortRegressionsByImpact,
 } from "@/lib/system-tests/prioritization";
+import {
+  isTrustedCIRun,
+  pickRunDetailsForIntelligence,
+  pickTrendRunItems,
+} from "@/lib/system-tests/runQuality";
+import { SystemTestsDataQualityBanner } from "@/components/admin/system-tests/SystemTestsDataQualityBanner";
 import { SystemTestsAlertsPanel } from "@/components/admin/system-tests/SystemTestsAlertsPanel";
 import { SystemTestsFailurePatternsPanel } from "@/components/admin/system-tests/SystemTestsFailurePatternsPanel";
 import { SystemTestsFlakyCasesTable } from "@/components/admin/system-tests/SystemTestsFlakyCasesTable";
@@ -122,9 +128,16 @@ export default function AdminSystemTestsPage() {
     [runsResponse],
   );
 
+  const trendSlice = useMemo(() => pickTrendRunItems(runsResponse), [runsResponse]);
+
+  const trendRunsResponse = useMemo(() => {
+    if (!runsResponse) return null;
+    return { ...runsResponse, items: trendSlice.items };
+  }, [runsResponse, trendSlice.items]);
+
   const trendPoints = useMemo(
-    () => (runsResponse ? buildSystemTestsTrendPoints(runsResponse) : []),
-    [runsResponse],
+    () => (trendRunsResponse ? buildSystemTestsTrendPoints(trendRunsResponse) : []),
+    [trendRunsResponse],
   );
 
   const trendInsights = useMemo(
@@ -134,20 +147,50 @@ export default function AdminSystemTestsPage() {
 
   const latestRunId = runsResponse?.items[0]?.id;
 
+  const trustedRunsInList = useMemo(
+    () => runsResponse?.items.filter((r) => isTrustedCIRun(r)).length ?? 0,
+    [runsResponse],
+  );
+
+  const intelPick = useMemo(() => pickRunDetailsForIntelligence(recentDetails, 2), [recentDetails]);
+
   const flakyRows = useMemo(
-    () => (recentDetails.length ? buildFlakyCaseAnalysis(recentDetails, { maxRuns: 12 }) : []),
-    [recentDetails],
+    () =>
+      intelPick.primary.length ? buildFlakyCaseAnalysis(intelPick.primary, { maxRuns: 12 }) : [],
+    [intelPick],
+  );
+
+  const failurePatternsRaw = useMemo(
+    () =>
+      intelPick.primary.length ? buildFailurePatterns(intelPick.primary, { maxRuns: 12 }) : [],
+    [intelPick],
   );
 
   const failurePatterns = useMemo(
-    () => (recentDetails.length ? buildFailurePatterns(recentDetails, { maxRuns: 12 }) : []),
-    [recentDetails],
+    () =>
+      deprioritizeNoisePatterns(failurePatternsRaw, {
+        preferTrustedSignal:
+          intelPick.trustedCount >= 1 && intelPick.noisyCount > 0 && failurePatternsRaw.length > 1,
+      }),
+    [failurePatternsRaw, intelPick],
   );
 
   const historicalChanges = useMemo(
-    () => (recentDetails.length >= 2 ? buildHistoricalChanges(recentDetails, { maxRuns: 12 }) : null),
-    [recentDetails],
+    () =>
+      intelPick.primary.length >= 2 ? buildHistoricalChanges(intelPick.primary, { maxRuns: 12 }) : null,
+    [intelPick],
   );
+
+  const intelligenceScopeNote = useMemo(() => {
+    if (!recentDetails.length) return "";
+    if (intelPick.scope === "trusted") {
+      return "Analysis uses trusted CI runs only (two or more matched in this window).";
+    }
+    if (intelPick.scope === "thin") {
+      return "Fewer than two trusted CI runs — using every uploaded run in the window; treat signals as noisy.";
+    }
+    return "Mixed sources; trusted CI runs are preferred when available.";
+  }, [intelPick, recentDetails.length]);
 
   const dashboardAlerts = useMemo(
     () =>
@@ -158,8 +201,28 @@ export default function AdminSystemTestsPage() {
         flakyCases: flakyRows,
         patterns: failurePatterns,
         historical: historicalChanges,
+        analysisTrust: runsResponse
+          ? {
+              scope: intelPick.scope,
+              trustedInWindow: intelPick.trustedCount,
+              totalInWindow: intelPick.totalCount,
+              trendMode: trendSlice.mode,
+              trustedRunsInList: trustedRunsInList,
+            }
+          : undefined,
       }),
-    [trendPoints, trendInsights, summary, flakyRows, failurePatterns, historicalChanges],
+    [
+      trendPoints,
+      trendInsights,
+      summary,
+      flakyRows,
+      failurePatterns,
+      historicalChanges,
+      runsResponse,
+      intelPick,
+      trendSlice.mode,
+      trustedRunsInList,
+    ],
   );
 
   const topProblems = useMemo(
@@ -191,6 +254,12 @@ export default function AdminSystemTestsPage() {
   }, [historicalChanges]);
 
   const flakyDisplay = useMemo(() => sortFlakyByImpact(flakyRows), [flakyRows]);
+
+  const showMixedHistoryBanner =
+    intelPick.noisyCount > 0 && intelPick.totalCount > 0 && recentDetails.length > 0;
+  const trendUsesAllSources =
+    trendSlice.mode === "all_runs" && trustedRunsInList >= 1 && (runsResponse?.items.length ?? 0) > 0;
+  const intelligenceFallbackBanner = intelPick.usedFallback && intelPick.totalCount >= 2;
 
   if (!tokenChecked) {
     return (
@@ -245,6 +314,12 @@ export default function AdminSystemTestsPage() {
               averageDurationMs={avgMs}
             />
 
+            <SystemTestsDataQualityBanner
+              showMixedHistory={showMixedHistoryBanner}
+              trendUsesAllSources={trendUsesAllSources}
+              intelligenceFallback={intelligenceFallbackBanner}
+            />
+
             <SystemTestsAlertsPanel alerts={dashboardAlerts} />
 
             <SystemTestsTopIssuesPanel
@@ -269,11 +344,20 @@ export default function AdminSystemTestsPage() {
             <SystemTestsHistoricalChangesPanel
               historical={historicalSorted}
               loading={analysisLoading && recentDetails.length < 2}
+              scopeNote={intelligenceScopeNote}
             />
 
-            <SystemTestsFlakyCasesTable rows={flakyDisplay} loading={analysisLoading} />
+            <SystemTestsFlakyCasesTable
+              rows={flakyDisplay}
+              loading={analysisLoading}
+              scopeNote={intelligenceScopeNote}
+            />
 
-            <SystemTestsFailurePatternsPanel patterns={failurePatterns} loading={analysisLoading} />
+            <SystemTestsFailurePatternsPanel
+              patterns={failurePatterns}
+              loading={analysisLoading}
+              scopeNote={intelligenceScopeNote}
+            />
 
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">Recent runs</h2>

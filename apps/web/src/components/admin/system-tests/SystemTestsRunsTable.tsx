@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { classifyRunProvenance, provenanceBadgeLabel } from "@/lib/system-tests/runQuality";
 import type { SystemTestsRunsResponse } from "@/types/systemTests";
 import {
   formatDateTime,
@@ -38,6 +39,7 @@ export function SystemTestsRunsTable(props: Props) {
           <tr>
             <th className="px-4 py-3">Created</th>
             <th className="px-4 py-3">Source</th>
+            <th className="px-4 py-3">Provenance</th>
             <th className="px-4 py-3">Branch</th>
             <th className="px-4 py-3">Commit</th>
             <th className="px-4 py-3">Status</th>
@@ -50,6 +52,8 @@ export function SystemTestsRunsTable(props: Props) {
         </thead>
         <tbody>
           {items.map((r) => {
+            const prov = classifyRunProvenance(r);
+            const provLabel = provenanceBadgeLabel(prov);
             const st = r.status.toLowerCase();
             const failed = st === "failed";
             const passed = st === "passed";
@@ -67,6 +71,24 @@ export function SystemTestsRunsTable(props: Props) {
                   <span className="text-white/90">{formatRelativeTime(r.createdAt)}</span>
                 </td>
                 <td className="px-4 py-2">{r.source}</td>
+                <td className="px-4 py-2">
+                  <span
+                    className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${
+                      prov === "trusted_ci"
+                        ? "bg-emerald-500/20 text-emerald-100 ring-emerald-500/35"
+                        : prov === "synthetic"
+                          ? "bg-fuchsia-500/15 text-fuchsia-100 ring-fuchsia-500/35"
+                          : prov === "local"
+                            ? "bg-slate-500/20 text-slate-100 ring-slate-500/35"
+                            : prov === "manual"
+                              ? "bg-sky-500/15 text-sky-100 ring-sky-500/35"
+                              : "bg-white/10 text-white/70 ring-white/20"
+                    }`}
+                    title={`${provLabel} (from source/branch heuristics)`}
+                  >
+                    {provLabel}
+                  </span>
+                </td>
                 <td className="px-4 py-2 font-mono text-xs">{r.branch ?? "—"}</td>
                 <td
                   className="max-w-[120px] truncate px-4 py-2 font-mono text-xs"

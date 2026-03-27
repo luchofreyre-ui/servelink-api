@@ -195,3 +195,32 @@ export function buildFailurePatterns(
 
   return sortPatternsByImpact(patterns);
 }
+
+const NOISE_MSG = /^(boom|nope|bad|also\s+bad|alsobad|fail|error)$/i;
+
+function isLikelySyntheticNoisePattern(p: SystemTestsFailurePattern): boolean {
+  if (p.severity === "high") return false;
+  const ex = p.examples.map((e) => e.trim().toLowerCase());
+  if (ex.length && ex.every((e) => e.length <= 16 && NOISE_MSG.test(e))) return true;
+  if (p.count <= 3 && p.affectedFiles.length <= 1 && p.latestRunCount <= 1) {
+    if (ex.some((e) => NOISE_MSG.test(e))) return true;
+  }
+  return false;
+}
+
+/**
+ * When trusted CI signal exists alongside noisy runs, push obvious junk messages to the bottom.
+ */
+export function deprioritizeNoisePatterns(
+  patterns: SystemTestsFailurePattern[],
+  opts: { preferTrustedSignal: boolean },
+): SystemTestsFailurePattern[] {
+  if (!opts.preferTrustedSignal || patterns.length <= 1) return patterns;
+  const signal: SystemTestsFailurePattern[] = [];
+  const tail: SystemTestsFailurePattern[] = [];
+  for (const p of patterns) {
+    (isLikelySyntheticNoisePattern(p) ? tail : signal).push(p);
+  }
+  if (!signal.length) return patterns;
+  return [...signal, ...tail];
+}

@@ -10,9 +10,9 @@ import type {
 
 const WEIGHT = { critical: 100, warning: 50, info: 10 } as const;
 
-/** Local thresholds — adjust as product learns. */
-const PASS_RATE_DROP_CRITICAL = 0.08;
-const PASS_RATE_DROP_WARNING = 0.04;
+/** Absolute pass-rate deltas (0–1 scale). Critical only at 10+ points; warning at 5+. */
+const PASS_RATE_DROP_CRITICAL = 0.1;
+const PASS_RATE_DROP_WARNING = 0.05;
 const NEW_REGRESSIONS_CRITICAL = 5;
 const NEW_REGRESSIONS_WARNING = 2;
 const DURATION_SPIKE_RATIO_CRITICAL = 1.55;
@@ -30,6 +30,13 @@ export type DashboardAlertInput = {
   flakyCases: SystemTestsFlakyCaseRow[];
   patterns: SystemTestsFailurePattern[];
   historical: SystemTestsHistoricalChanges | null;
+  analysisTrust?: {
+    scope: "trusted" | "mixed_fallback" | "thin";
+    trustedInWindow: number;
+    totalInWindow: number;
+    trendMode: "trusted_ci" | "all_runs";
+    trustedRunsInList: number;
+  };
 };
 
 function mk(
@@ -48,7 +55,7 @@ function mk(
 
 export function buildDashboardAlerts(input: DashboardAlertInput): SystemTestsAlert[] {
   const alerts: SystemTestsAlert[] = [];
-  const { trendPoints, trendInsights, summary, flakyCases, patterns, historical } = input;
+  const { trendPoints, trendInsights, summary, flakyCases, patterns, historical, analysisTrust } = input;
 
   if (trendInsights?.passRateDelta != null) {
     const d = trendInsights.passRateDelta;
@@ -236,6 +243,48 @@ export function buildDashboardAlerts(input: DashboardAlertInput): SystemTestsAle
           operatorSummary: "You may be past the incident window — good moment to snapshot and protect the branch.",
           recommendedAction: "Tag or merge if policy allows; keep monitoring the next scheduled run.",
           impactScore: 6,
+        }),
+      );
+    }
+  }
+
+  if (analysisTrust) {
+    if (analysisTrust.scope === "mixed_fallback" && analysisTrust.trustedInWindow > 0) {
+      alerts.push(
+        mk({
+          id: "intel-mixed-runs",
+          level: "info",
+          title: "Intelligence blended non-CI runs",
+          message: `Using ${analysisTrust.totalInWindow} run(s) in window; only ${analysisTrust.trustedInWindow} matched trusted CI heuristics.`,
+          operatorSummary:
+            "Recent history mixes CI with local, manual, or synthetic uploads — treat rankings as directional, not definitive.",
+          recommendedAction: "Filter uploads in CI or compare two trusted runs only when triaging regressions.",
+          impactScore: 4,
+        }),
+      );
+    } else if (analysisTrust.scope === "thin") {
+      alerts.push(
+        mk({
+          id: "intel-thin-trust",
+          level: "info",
+          title: "Limited trusted CI in this window",
+          message: "Fewer than two runs matched trusted CI patterns — analysis may reflect dev noise.",
+          operatorSummary: "Without enough hosted CI runs, flaky and pattern signals are weaker.",
+          recommendedAction: "Wait for the next CI upload or narrow compare to known-good CI runs.",
+          impactScore: 3,
+        }),
+      );
+    }
+    if (analysisTrust.trendMode === "all_runs" && analysisTrust.trustedRunsInList >= 1) {
+      alerts.push(
+        mk({
+          id: "trend-all-runs",
+          level: "info",
+          title: "Trend line uses all sources",
+          message: "Not enough trusted CI rows for a dedicated trend — chart includes every uploaded run.",
+          operatorSummary: "Pass-rate trend may include local or manual uploads.",
+          recommendedAction: "Prefer the compare view with two CI runs once history allows.",
+          impactScore: 2,
         }),
       );
     }

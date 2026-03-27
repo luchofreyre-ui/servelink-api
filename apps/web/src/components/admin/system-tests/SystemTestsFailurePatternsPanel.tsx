@@ -6,6 +6,7 @@ import { SystemTestsBadge } from "./SystemTestsBadge";
 type Props = {
   patterns: SystemTestsFailurePattern[];
   loading?: boolean;
+  scopeNote?: string;
 };
 
 function severityBadge(s: SystemTestsFailurePatternSeverity): "critical" | "warning" | "stable" {
@@ -15,7 +16,7 @@ function severityBadge(s: SystemTestsFailurePatternSeverity): "critical" | "warn
 }
 
 export function SystemTestsFailurePatternsPanel(props: Props) {
-  const { patterns, loading } = props;
+  const { patterns, loading, scopeNote } = props;
   if (loading) {
     return (
       <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/55">
@@ -39,6 +40,7 @@ export function SystemTestsFailurePatternsPanel(props: Props) {
       <p className="text-sm text-white/55">
         Grouped by normalized error text — spikes in the latest run weigh heavier.
       </p>
+      {scopeNote ? <p className="text-xs text-sky-200/80">{scopeNote}</p> : null}
       <div className="grid gap-3 md:grid-cols-2">
         {top.map((p) => (
           <div

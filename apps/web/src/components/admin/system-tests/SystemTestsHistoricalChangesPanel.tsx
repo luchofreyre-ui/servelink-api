@@ -78,10 +78,11 @@ function DurationList(props: { title: string; rows: SystemTestsDurationRegressio
 type Props = {
   historical: SystemTestsHistoricalChanges | null;
   loading?: boolean;
+  scopeNote?: string;
 };
 
 export function SystemTestsHistoricalChangesPanel(props: Props) {
-  const { historical, loading } = props;
+  const { historical, loading, scopeNote } = props;
 
   if (loading) {
     return (
@@ -105,6 +106,7 @@ export function SystemTestsHistoricalChangesPanel(props: Props) {
       <p className="text-sm text-white/55">
         Latest vs prior run in the fetched window, plus duration movers.
       </p>
+      {scopeNote ? <p className="text-xs text-sky-200/80">{scopeNote}</p> : null}
       <div className="grid gap-3 lg:grid-cols-2">
         <CaseList
           title="New regressions"

@@ -54,9 +54,16 @@ test.describe("FO booking knowledge", () => {
     const bookingId = foBookingIds.active;
     await openFoAuthedPath(page, foToken, foBookingDetailPath(bookingId));
 
+    await expect(page.getByTestId("fo-booking-detail-shell")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByTestId(knowledgeTestIds.foBookingOpenQuickSolve)).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.getByTestId(knowledgeTestIds.foBookingOpenQuickSolve)).toBeEnabled();
     await page.getByTestId(knowledgeTestIds.foBookingOpenQuickSolve).click();
 
-    await expect(page).toHaveURL(/\/fo\/knowledge\?/);
+    await expect(page).toHaveURL(/focusQuickSolve=1/);
+    await expect(page.getByTestId(knowledgeTestIds.foQuickSolveForm)).toBeVisible({ timeout: 15_000 });
+
     const url = new URL(page.url());
     expect(url.pathname).toBe("/fo/knowledge");
     expect(url.searchParams.get("focusQuickSolve")).toBe("1");

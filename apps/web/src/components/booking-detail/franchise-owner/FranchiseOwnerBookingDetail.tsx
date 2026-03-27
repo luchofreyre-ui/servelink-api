@@ -47,7 +47,7 @@ export function FranchiseOwnerBookingDetail({
   const shortcuts = selectFoScenarioShortcuts(screen);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="fo-booking-detail-shell">
       {bookingId && shortcuts.length > 0 ? (
         <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-4" data-testid="fo-booking-scenario-shortcuts">
           <h3 className="mb-2 text-sm font-semibold text-indigo-900">

@@ -14,8 +14,13 @@ test.describe("FO knowledge Quick Solve", () => {
     await openFoAuthedPath(page, foToken, foKnowledgeHubPath());
 
     await expect(page.getByTestId(knowledgeTestIds.foKnowledgePage)).toBeVisible();
+
+    // wait for boot to complete by waiting for Quick Solve form (stronger signal)
+    await expect(page.getByTestId(knowledgeTestIds.foQuickSolveForm)).toBeVisible({
+      timeout: 15_000,
+    });
+
     await expect(page.getByTestId(knowledgeTestIds.foKnowledgeSearchPanel)).toBeVisible();
-    await expect(page.getByTestId(knowledgeTestIds.foQuickSolveForm)).toBeVisible();
   });
 
   test("prefill params populate controls", async ({ page, foToken }) => {

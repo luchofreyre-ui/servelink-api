@@ -12,9 +12,10 @@ import type {
 } from "@/types/systemTests";
 import { buildDashboardAlerts, type DashboardAlertInput } from "./alerts";
 import { buildHistoricalChanges } from "./compare";
-import { buildFailurePatterns } from "./patterns";
+import { buildFailurePatterns, deprioritizeNoisePatterns } from "./patterns";
 import { buildFlakyCaseAnalysis } from "./flaky";
 import { buildTopProblemsSummary } from "./prioritization";
+import { pickRunDetailsForIntelligence } from "./runQuality";
 
 const DIAG_EXCERPT_LEN = 4000;
 const MAX_SLOW = 12;
@@ -45,20 +46,28 @@ export function buildEnrichedDiagnosticExport(
 ): SystemTestsEnrichedDiagnosticExport {
   const basePayload = buildSystemTestSupportPayload(detail);
 
-  const window = options?.recentDetails?.length
+  const merged = options?.recentDetails?.length
     ? [detail, ...options.recentDetails.filter((d) => d.run.id !== detail.run.id)].slice(0, 12)
     : [detail];
 
+  const picked = pickRunDetailsForIntelligence(merged, 2);
+  const analysisWindow = picked.primary;
+
   const flakyRows =
     options?.flakyRows ??
-    (window.length >= 1 ? buildFlakyCaseAnalysis(window, { maxRuns: 12 }) : []);
+    (analysisWindow.length >= 1 ? buildFlakyCaseAnalysis(analysisWindow, { maxRuns: 12 }) : []);
 
-  const patterns =
+  const patternsRaw =
     options?.patterns ??
-    (window.length >= 1 ? buildFailurePatterns(window, { maxRuns: 12 }) : []);
+    (analysisWindow.length >= 1 ? buildFailurePatterns(analysisWindow, { maxRuns: 12 }) : []);
+
+  const patterns = deprioritizeNoisePatterns(patternsRaw, {
+    preferTrustedSignal:
+      picked.trustedCount >= 1 && picked.noisyCount > 0 && patternsRaw.length > 1,
+  });
 
   const historical =
-    window.length >= 2 ? buildHistoricalChanges(window, { maxRuns: 12 }) : null;
+    analysisWindow.length >= 2 ? buildHistoricalChanges(analysisWindow, { maxRuns: 12 }) : null;
 
   const ctx = options?.dashboardContext;
   const alerts =
@@ -70,6 +79,13 @@ export function buildEnrichedDiagnosticExport(
       flakyCases: flakyRows,
       patterns,
       historical,
+      analysisTrust: {
+        scope: picked.scope,
+        trustedInWindow: picked.trustedCount,
+        totalInWindow: picked.totalCount,
+        trendMode: "all_runs",
+        trustedRunsInList: picked.trustedCount,
+      },
     }).slice(0, 12);
 
   const topProblems = buildTopProblemsSummary({
@@ -130,10 +146,15 @@ export function buildEnrichedDiagnosticExport(
   if (newRegressions.length) {
     notes.push(`${newRegressions.length} case(s) regressed vs the previous run in this window.`);
   }
+  if (picked.usedFallback) {
+    notes.push(
+      "Intelligence window includes non-CI uploads because fewer than two trusted CI runs were available.",
+    );
+  }
 
   let compareHints: string[] | undefined;
-  if (window.length >= 2) {
-    const asc = [...window].sort(
+  if (merged.length >= 2) {
+    const asc = [...merged].sort(
       (a, b) => new Date(a.run.createdAt).getTime() - new Date(b.run.createdAt).getTime(),
     );
     const older = asc[asc.length - 2]?.run.id;

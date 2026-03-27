@@ -6,10 +6,12 @@ import { SystemTestsBadge } from "./SystemTestsBadge";
 type Props = {
   rows: SystemTestsFlakyCaseRow[];
   loading?: boolean;
+  /** Explains trusted vs blended window. */
+  scopeNote?: string;
 };
 
 export function SystemTestsFlakyCasesTable(props: Props) {
-  const { rows, loading } = props;
+  const { rows, loading, scopeNote } = props;
   if (loading) {
     return (
       <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/55">
@@ -33,6 +35,9 @@ export function SystemTestsFlakyCasesTable(props: Props) {
       <p className="text-sm text-white/55">
         Ranked from recent runs — transitions and mixed pass/fail history drive the score.
       </p>
+      {scopeNote ? (
+        <p className="text-xs text-sky-200/80">{scopeNote}</p>
+      ) : null}
       <div className="overflow-x-auto rounded-xl border border-white/10">
         <table className="min-w-full text-left text-sm text-white/90">
           <thead className="border-b border-white/10 bg-white/[0.04] text-xs uppercase tracking-wide text-white/50">

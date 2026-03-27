@@ -69,8 +69,11 @@ export function SystemTestsSummaryCards(props: Props) {
       <Card label="Failed (latest)">
         <p className="text-2xl font-semibold text-red-200/90">{summary?.latestFailedCount ?? "—"}</p>
       </Card>
-      <Card label="Flaky (latest)">
+      <Card label="Flaky (latest run only)">
         <p className="text-2xl font-semibold text-amber-200/90">{latest?.flakyCount ?? "—"}</p>
+        <p className="mt-2 text-[11px] leading-snug text-white/45">
+          API summary for the newest ingested run. The flaky table below uses a multi-run window and may differ.
+        </p>
       </Card>
       <Card label="Avg duration (loaded page)">
         <p className="text-2xl font-semibold text-white">{formatDurationMs(averageDurationMs)}</p>

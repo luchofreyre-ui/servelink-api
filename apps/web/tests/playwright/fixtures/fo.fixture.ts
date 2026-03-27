@@ -17,16 +17,22 @@ type FoFixture = {
 };
 
 export const test = base.extend<FoFixture>({
-  scenario: async ({}, use) => {
-    const payload = await fetchPlaywrightScenario();
-    await use(payload.scenario);
-  },
+  scenario: [
+    async ({}, use) => {
+      const payload = await fetchPlaywrightScenario();
+      await use(payload.scenario);
+    },
+    { scope: "worker" },
+  ],
 
-  foToken: async ({ scenario }, use) => {
-    const credentials = resolveFoCredentialsFromScenario(scenario);
-    const token = await loginViaApi(credentials.email, credentials.password);
-    await use(token);
-  },
+  foToken: [
+    async ({ scenario }, use) => {
+      const credentials = resolveFoCredentialsFromScenario(scenario);
+      const token = await loginViaApi(credentials.email, credentials.password);
+      await use(token);
+    },
+    { scope: "worker" },
+  ],
 
   foBookingIds: async ({ scenario }, use) => {
     await use(scenario.bookingIds);
