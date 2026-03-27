@@ -1,17 +1,20 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import type { SystemTestsCompareResult } from "@/types/systemTests";
+import type { SystemTestsCompareIntelligence, SystemTestsCompareResult } from "@/types/systemTests";
 import { SystemTestsCompareCaseGroups } from "./SystemTestsCompareCaseGroups";
+import { SystemTestsCompareIntelligencePanel } from "./SystemTestsCompareIntelligencePanel";
 import { SystemTestsCompareSummary } from "./SystemTestsCompareSummary";
 
 type Props = {
   compare: SystemTestsCompareResult;
+  /** JSON string (enriched export for AI / operators). */
   payload: string;
+  intelligence: SystemTestsCompareIntelligence;
 };
 
 export function SystemTestsCompareView(props: Props) {
-  const { compare, payload } = props;
+  const { compare, payload, intelligence } = props;
   const [copied, setCopied] = useState(false);
 
   const copyPayload = useCallback(async () => {
@@ -38,6 +41,8 @@ export function SystemTestsCompareView(props: Props) {
       </div>
 
       <SystemTestsCompareSummary compare={compare} />
+
+      <SystemTestsCompareIntelligencePanel intelligence={intelligence} />
 
       <SystemTestsCompareCaseGroups
         title="New failures"

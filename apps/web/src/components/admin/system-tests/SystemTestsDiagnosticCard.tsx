@@ -4,13 +4,16 @@ import { useCallback, useState } from "react";
 
 type Props = {
   diagnosticReport: string;
+  /** Enriched AI / operator payload (preferred). */
   supportPayload: string;
+  /** Optional compact legacy JSON without intelligence layer. */
+  legacySupportPayload?: string;
 };
 
 export function SystemTestsDiagnosticCard(props: Props) {
-  const [copied, setCopied] = useState<"diag" | "support" | null>(null);
+  const [copied, setCopied] = useState<"diag" | "support" | "legacy" | null>(null);
 
-  const copy = useCallback(async (kind: "diag" | "support", text: string) => {
+  const copy = useCallback(async (kind: "diag" | "support" | "legacy", text: string) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(kind);
@@ -37,8 +40,17 @@ export function SystemTestsDiagnosticCard(props: Props) {
             onClick={() => void copy("support", props.supportPayload)}
             className="rounded-lg border border-sky-500/30 bg-sky-500/15 px-3 py-1.5 text-sm font-medium text-sky-100 hover:bg-sky-500/25"
           >
-            {copied === "support" ? "Copied" : "Copy support payload"}
+            {copied === "support" ? "Copied" : "Copy AI diagnostic payload"}
           </button>
+          {props.legacySupportPayload ? (
+            <button
+              type="button"
+              onClick={() => void copy("legacy", props.legacySupportPayload!)}
+              className="rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-medium text-white/80 hover:bg-white/10"
+            >
+              {copied === "legacy" ? "Copied" : "Copy raw payload"}
+            </button>
+          ) : null}
         </div>
       </div>
       <pre className="max-h-[28rem] overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-black/50 p-4 font-mono text-xs leading-relaxed text-emerald-100/90">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import { buildSystemTestSupportPayload } from "@/lib/api/systemTests";
+import { buildEnrichedDiagnosticExport } from "@/lib/system-tests/export";
 import type { SystemTestRunDetailResponse } from "@/types/systemTests";
 import { SystemTestsDiagnosticCard } from "./SystemTestsDiagnosticCard";
 import { SystemTestsFailureList } from "./SystemTestsFailureList";
@@ -14,6 +15,9 @@ import {
 
 type Props = {
   detail: SystemTestRunDetailResponse;
+  /** Peer runs (excluding `detail`) for multi-run flaky/pattern/historical context in exports. */
+  recentDetailsForExport?: SystemTestRunDetailResponse[];
+  peersLoading?: boolean;
 };
 
 function suiteDurationSum(
@@ -33,10 +37,22 @@ function suiteDurationSum(
 }
 
 export function SystemTestsRunDetail(props: Props) {
-  const { detail } = props;
+  const { detail, recentDetailsForExport, peersLoading } = props;
   const { run, suiteBreakdown, diagnosticReport, cases } = detail;
 
   const supportPayload = useMemo(
+    () =>
+      JSON.stringify(
+        buildEnrichedDiagnosticExport(detail, {
+          recentDetails: recentDetailsForExport,
+        }),
+        null,
+        2,
+      ),
+    [detail, recentDetailsForExport],
+  );
+
+  const legacySupportPayload = useMemo(
     () => JSON.stringify(buildSystemTestSupportPayload(detail), null, 2),
     [detail],
   );
@@ -57,6 +73,9 @@ export function SystemTestsRunDetail(props: Props) {
               {run.id}
             </span>
           </h1>
+          {peersLoading ? (
+            <p className="mt-2 text-xs text-white/45">Loading nearby runs for full diagnostic context…</p>
+          ) : null}
           <div className="mt-3 flex flex-wrap gap-2 text-xs text-white/55">
             <span>created: {formatDateTime(run.createdAt)}</span>
             <span>·</span>
@@ -144,6 +163,7 @@ export function SystemTestsRunDetail(props: Props) {
       <SystemTestsDiagnosticCard
         diagnosticReport={diagnosticReport}
         supportPayload={supportPayload}
+        legacySupportPayload={legacySupportPayload}
       />
 
       <section className="space-y-3">

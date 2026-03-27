@@ -6,14 +6,33 @@ import { getStoredAccessToken } from "@/lib/auth";
 import {
   buildSystemTestsTrendInsights,
   buildSystemTestsTrendPoints,
+  fetchAdminSystemTestRunDetail,
   fetchAdminSystemTestRuns,
   fetchAdminSystemTestsSummary,
 } from "@/lib/api/systemTests";
+import { buildDashboardAlerts } from "@/lib/system-tests/alerts";
+import { buildHistoricalChanges } from "@/lib/system-tests/compare";
+import { buildFlakyCaseAnalysis } from "@/lib/system-tests/flaky";
+import { buildFailurePatterns } from "@/lib/system-tests/patterns";
+import {
+  buildTopProblemsSummary,
+  sortFlakyByImpact,
+  sortRegressionsByImpact,
+} from "@/lib/system-tests/prioritization";
+import { SystemTestsAlertsPanel } from "@/components/admin/system-tests/SystemTestsAlertsPanel";
+import { SystemTestsFailurePatternsPanel } from "@/components/admin/system-tests/SystemTestsFailurePatternsPanel";
+import { SystemTestsFlakyCasesTable } from "@/components/admin/system-tests/SystemTestsFlakyCasesTable";
+import { SystemTestsHistoricalChangesPanel } from "@/components/admin/system-tests/SystemTestsHistoricalChangesPanel";
 import { SystemTestsRunsTable } from "@/components/admin/system-tests/SystemTestsRunsTable";
 import { SystemTestsSummaryCards } from "@/components/admin/system-tests/SystemTestsSummaryCards";
 import { SystemTestsTrendCharts } from "@/components/admin/system-tests/SystemTestsTrendCharts";
+import { SystemTestsTopIssuesPanel } from "@/components/admin/system-tests/SystemTestsTopIssuesPanel";
 import { SystemTestsTrendInsightsPanel } from "@/components/admin/system-tests/SystemTestsTrendInsights";
-import type { SystemTestsRunsResponse, SystemTestsSummaryResponse } from "@/types/systemTests";
+import type {
+  SystemTestRunDetailResponse,
+  SystemTestsRunsResponse,
+  SystemTestsSummaryResponse,
+} from "@/types/systemTests";
 
 function meanDurationMs(items: SystemTestsRunsResponse["items"]): number | null {
   const nums = items.map((r) => r.durationMs).filter((d): d is number => d != null);
@@ -26,6 +45,8 @@ export default function AdminSystemTestsPage() {
   const [token, setToken] = useState<string | null>(null);
   const [summary, setSummary] = useState<SystemTestsSummaryResponse | null>(null);
   const [runsResponse, setRunsResponse] = useState<SystemTestsRunsResponse | null>(null);
+  const [recentDetails, setRecentDetails] = useState<SystemTestRunDetailResponse[]>([]);
+  const [analysisLoading, setAnalysisLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -67,6 +88,35 @@ export default function AdminSystemTestsPage() {
     };
   }, [token, tokenChecked]);
 
+  useEffect(() => {
+    if (!tokenChecked || !token || !runsResponse?.items.length) {
+      setRecentDetails([]);
+      setAnalysisLoading(false);
+      return;
+    }
+    const ids = runsResponse.items.slice(0, 12).map((r) => r.id);
+    let cancelled = false;
+    (async () => {
+      setAnalysisLoading(true);
+      try {
+        const settled = await Promise.allSettled(
+          ids.map((id) => fetchAdminSystemTestRunDetail(token, id)),
+        );
+        if (cancelled) return;
+        const ok = settled
+          .filter((s): s is PromiseFulfilledResult<SystemTestRunDetailResponse> => s.status === "fulfilled")
+          .map((s) => s.value)
+          .sort((a, b) => new Date(a.run.createdAt).getTime() - new Date(b.run.createdAt).getTime());
+        setRecentDetails(ok);
+      } finally {
+        if (!cancelled) setAnalysisLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [token, tokenChecked, runsResponse]);
+
   const avgMs = useMemo(
     () => (runsResponse ? meanDurationMs(runsResponse.items) : null),
     [runsResponse],
@@ -83,6 +133,64 @@ export default function AdminSystemTestsPage() {
   );
 
   const latestRunId = runsResponse?.items[0]?.id;
+
+  const flakyRows = useMemo(
+    () => (recentDetails.length ? buildFlakyCaseAnalysis(recentDetails, { maxRuns: 12 }) : []),
+    [recentDetails],
+  );
+
+  const failurePatterns = useMemo(
+    () => (recentDetails.length ? buildFailurePatterns(recentDetails, { maxRuns: 12 }) : []),
+    [recentDetails],
+  );
+
+  const historicalChanges = useMemo(
+    () => (recentDetails.length >= 2 ? buildHistoricalChanges(recentDetails, { maxRuns: 12 }) : null),
+    [recentDetails],
+  );
+
+  const dashboardAlerts = useMemo(
+    () =>
+      buildDashboardAlerts({
+        trendPoints,
+        trendInsights,
+        summary,
+        flakyCases: flakyRows,
+        patterns: failurePatterns,
+        historical: historicalChanges,
+      }),
+    [trendPoints, trendInsights, summary, flakyRows, failurePatterns, historicalChanges],
+  );
+
+  const topProblems = useMemo(
+    () =>
+      buildTopProblemsSummary({
+        regressions: historicalChanges?.newRegressions ?? [],
+        persistentFailures: historicalChanges?.persistentFailures ?? [],
+        flakyCases: flakyRows,
+        patterns: failurePatterns,
+        alerts: dashboardAlerts,
+        durationRegressions: historicalChanges?.slowestRegressions ?? [],
+      }),
+    [historicalChanges, flakyRows, failurePatterns, dashboardAlerts],
+  );
+
+  const historicalSorted = useMemo(() => {
+    if (!historicalChanges) return null;
+    return {
+      ...historicalChanges,
+      newRegressions: sortRegressionsByImpact(historicalChanges.newRegressions),
+      resolvedFailures: sortRegressionsByImpact(historicalChanges.resolvedFailures),
+      persistentFailures: sortRegressionsByImpact(historicalChanges.persistentFailures),
+      newPasses: sortRegressionsByImpact(historicalChanges.newPasses),
+      addedCases: sortRegressionsByImpact(historicalChanges.addedCases),
+      removedCases: sortRegressionsByImpact(historicalChanges.removedCases),
+      slowestRegressions: [...historicalChanges.slowestRegressions].sort((a, b) => b.deltaMs - a.deltaMs),
+      biggestDurationDeltas: [...historicalChanges.biggestDurationDeltas].sort((a, b) => b.deltaMs - a.deltaMs),
+    };
+  }, [historicalChanges]);
+
+  const flakyDisplay = useMemo(() => sortFlakyByImpact(flakyRows), [flakyRows]);
 
   if (!tokenChecked) {
     return (
@@ -137,6 +245,13 @@ export default function AdminSystemTestsPage() {
               averageDurationMs={avgMs}
             />
 
+            <SystemTestsAlertsPanel alerts={dashboardAlerts} />
+
+            <SystemTestsTopIssuesPanel
+              items={topProblems}
+              loading={analysisLoading && recentDetails.length === 0}
+            />
+
             <section className="space-y-4">
               <div className="flex flex-wrap items-end justify-between gap-2">
                 <h2 className="text-lg font-semibold text-white">Trends</h2>
@@ -150,6 +265,15 @@ export default function AdminSystemTestsPage() {
               <SystemTestsTrendInsightsPanel insights={trendInsights} />
               <SystemTestsTrendCharts points={trendPoints} />
             </section>
+
+            <SystemTestsHistoricalChangesPanel
+              historical={historicalSorted}
+              loading={analysisLoading && recentDetails.length < 2}
+            />
+
+            <SystemTestsFlakyCasesTable rows={flakyDisplay} loading={analysisLoading} />
+
+            <SystemTestsFailurePatternsPanel patterns={failurePatterns} loading={analysisLoading} />
 
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">Recent runs</h2>

@@ -221,3 +221,155 @@ export type SystemTestsComparePayload = {
   newFlaky: SystemTestsCompareCaseGroup[];
   resolvedFlaky: SystemTestsCompareCaseGroup[];
 };
+
+/** Phase 3 — flaky ranking (client-derived). */
+export type SystemTestsFlakyCaseRow = {
+  caseKey: string;
+  title: string;
+  file: string;
+  totalObservations: number;
+  passCount: number;
+  failCount: number;
+  skipCount: number;
+  transitionCount: number;
+  flakyScore: number;
+  lastStatuses: string[];
+  latestStatus: string;
+  previousStatus: string | null;
+  isCurrentlyFailing: boolean;
+};
+
+export type SystemTestsFailurePatternSeverity = "low" | "medium" | "high";
+
+export type SystemTestsPatternCategory =
+  | "auth"
+  | "navigation"
+  | "api"
+  | "assertion"
+  | "rendering"
+  | "data/seed"
+  | "unknown";
+
+export type SystemTestsFailurePattern = {
+  patternKey: string;
+  label: string;
+  patternCategory: SystemTestsPatternCategory;
+  count: number;
+  latestRunCount: number;
+  affectedCases: string[];
+  affectedFiles: string[];
+  signature: string;
+  examples: string[];
+  severity: SystemTestsFailurePatternSeverity;
+};
+
+export type SystemTestsHistoricalCaseRef = {
+  caseKey: string;
+  title: string;
+  filePath: string;
+  detail?: string;
+};
+
+export type SystemTestsDurationRegression = {
+  caseKey: string;
+  title: string;
+  filePath: string;
+  previousDurationMs: number | null;
+  latestDurationMs: number | null;
+  deltaMs: number;
+};
+
+export type SystemTestsHistoricalChanges = {
+  newRegressions: SystemTestsHistoricalCaseRef[];
+  resolvedFailures: SystemTestsHistoricalCaseRef[];
+  persistentFailures: SystemTestsHistoricalCaseRef[];
+  newPasses: SystemTestsHistoricalCaseRef[];
+  addedCases: SystemTestsHistoricalCaseRef[];
+  removedCases: SystemTestsHistoricalCaseRef[];
+  slowestRegressions: SystemTestsDurationRegression[];
+  biggestDurationDeltas: SystemTestsDurationRegression[];
+};
+
+export type SystemTestsAlertLevel = "info" | "warning" | "critical";
+
+export type SystemTestsAlert = {
+  id: string;
+  level: SystemTestsAlertLevel;
+  title: string;
+  message: string;
+  /** One-line operator conclusion. */
+  operatorSummary: string;
+  /** Short actionable directive. */
+  recommendedAction: string;
+  /** Base priority tier: critical 100, warning 50, info 10. */
+  weight: number;
+  /** Extra sort signal within tier (counts, deltas). */
+  impactScore: number;
+};
+
+export type SystemTestsCompareCaseFlakyHint = {
+  caseKey: string;
+  historicallyFlaky: boolean;
+  flakyScore: number | null;
+  transitionCount: number | null;
+};
+
+export type SystemTestsCompareIntelligence = {
+  newRegressions: SystemTestsHistoricalCaseRef[];
+  resolvedFailures: SystemTestsHistoricalCaseRef[];
+  persistentFailures: SystemTestsHistoricalCaseRef[];
+  newPasses: SystemTestsHistoricalCaseRef[];
+  addedCases: SystemTestsHistoricalCaseRef[];
+  removedCases: SystemTestsHistoricalCaseRef[];
+  slowestRegressions: SystemTestsDurationRegression[];
+  biggestDurationDeltas: SystemTestsDurationRegression[];
+  flakyHintsForChangedFailures: SystemTestsCompareCaseFlakyHint[];
+};
+
+export type SystemTestsTopProblemType = "regression" | "pattern" | "flaky" | "duration";
+
+export type SystemTestsTopProblemSeverity = "high" | "medium" | "low";
+
+export type SystemTestsTopProblemItem = {
+  title: string;
+  type: SystemTestsTopProblemType;
+  severity: SystemTestsTopProblemSeverity;
+  impactScore: number;
+  summary: string;
+};
+
+/** AI / support — enriched single-run export (concise). Field order matters for operators / LLMs. */
+export type SystemTestsEnrichedDiagnosticExport = {
+  version: 1;
+  generatedAt: string;
+  run: SystemTestSupportPayload["run"];
+  summary: SystemTestSupportPayload["summary"];
+  alerts: SystemTestsAlert[];
+  topProblems: SystemTestsTopProblemItem[];
+  newRegressions: SystemTestsHistoricalCaseRef[];
+  persistentFailures: SystemTestsHistoricalCaseRef[];
+  flakyCases: Pick<
+    SystemTestsFlakyCaseRow,
+    "caseKey" | "title" | "latestStatus" | "flakyScore" | "isCurrentlyFailing"
+  >[];
+  patterns: Pick<
+    SystemTestsFailurePattern,
+    "label" | "patternCategory" | "count" | "severity" | "examples" | "affectedFiles"
+  >[];
+  slowCases: { title: string; filePath: string; durationMs: number | null }[];
+  failingCasesPreview: { title: string; filePath: string; errorMessage: string | null }[];
+  diagnosticReportExcerpt: string;
+  notes: string[];
+  /** Suggested compare URLs when multiple runs are available. */
+  compareHints?: string[];
+};
+
+/** AI / support — enriched compare export. */
+export type SystemTestsEnrichedCompareExport = {
+  version: 1;
+  generatedAt: string;
+  topProblems: SystemTestsTopProblemItem[];
+  compare: SystemTestsComparePayload;
+  intelligence: SystemTestsCompareIntelligence;
+  notes: string[];
+};

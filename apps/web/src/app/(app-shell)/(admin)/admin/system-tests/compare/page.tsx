@@ -10,10 +10,13 @@ import {
   fetchAdminSystemTestRunDetail,
   fetchAdminSystemTestRuns,
 } from "@/lib/api/systemTests";
+import { buildCompareRunIntelligence } from "@/lib/system-tests/compare";
+import { buildEnrichedCompareExport } from "@/lib/system-tests/export";
 import { SystemTestsCompareSelector } from "@/components/admin/system-tests/SystemTestsCompareSelector";
 import { SystemTestsCompareView } from "@/components/admin/system-tests/SystemTestsCompareView";
 import type {
   SystemTestRunDetailResponse,
+  SystemTestsCompareIntelligence,
   SystemTestsCompareResult,
   SystemTestsRunsResponse,
 } from "@/types/systemTests";
@@ -31,6 +34,7 @@ function ComparePageInner() {
   const [error, setError] = useState<string | null>(null);
   const [loadingList, setLoadingList] = useState(true);
   const [loadingCompare, setLoadingCompare] = useState(false);
+  const [recentWindow, setRecentWindow] = useState<SystemTestRunDetailResponse[]>([]);
 
   useEffect(() => {
     setToken(getStoredAccessToken());
@@ -66,12 +70,14 @@ function ComparePageInner() {
     if (!tokenChecked || !token || !baseRunId || !targetRunId || baseRunId === targetRunId) {
       setBaseDetail(null);
       setTargetDetail(null);
+      setRecentWindow([]);
       setLoadingCompare(false);
       return;
     }
     let cancelled = false;
     (async () => {
       setLoadingCompare(true);
+      setRecentWindow([]);
       setError(null);
       try {
         const [b, t] = await Promise.all([
@@ -97,15 +103,77 @@ function ComparePageInner() {
     };
   }, [token, tokenChecked, baseRunId, targetRunId]);
 
+  useEffect(() => {
+    if (!tokenChecked || !token || !runs?.items.length || !baseDetail || !targetDetail) {
+      setRecentWindow([]);
+      return;
+    }
+    const want = new Set(runs.items.slice(0, 10).map((r) => r.id));
+    const have = new Map<string, SystemTestRunDetailResponse>([
+      [baseDetail.run.id, baseDetail],
+      [targetDetail.run.id, targetDetail],
+    ]);
+    const missing = [...want].filter((id) => !have.has(id)).slice(0, 8);
+
+    if (missing.length === 0) {
+      const merged = [...have.values()].sort(
+        (a, b) => new Date(a.run.createdAt).getTime() - new Date(b.run.createdAt).getTime(),
+      );
+      setRecentWindow(merged);
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const settled = await Promise.allSettled(
+          missing.map((id) => fetchAdminSystemTestRunDetail(token, id)),
+        );
+        if (cancelled) return;
+        for (const s of settled) {
+          if (s.status === "fulfilled") have.set(s.value.run.id, s.value);
+        }
+        const merged = [...have.values()].sort(
+          (a, b) => new Date(a.run.createdAt).getTime() - new Date(b.run.createdAt).getTime(),
+        );
+        setRecentWindow(merged);
+      } catch {
+        if (!cancelled) {
+          const merged = [...have.values()].sort(
+            (a, b) => new Date(a.run.createdAt).getTime() - new Date(b.run.createdAt).getTime(),
+          );
+          setRecentWindow(merged);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, tokenChecked, runs, baseDetail, targetDetail]);
+
   const compare: SystemTestsCompareResult | null = useMemo(() => {
     if (!baseDetail || !targetDetail) return null;
     return buildSystemTestsCompareResult(baseDetail, targetDetail);
   }, [baseDetail, targetDetail]);
 
+  const intelligence: SystemTestsCompareIntelligence | null = useMemo(() => {
+    if (!baseDetail || !targetDetail) return null;
+    return buildCompareRunIntelligence(
+      baseDetail,
+      targetDetail,
+      recentWindow.length >= 2 ? recentWindow : undefined,
+    );
+  }, [baseDetail, targetDetail, recentWindow]);
+
   const payload = useMemo(() => {
-    if (!compare) return "";
-    return JSON.stringify(buildSystemTestsComparePayload(compare), null, 2);
-  }, [compare]);
+    if (!compare || !intelligence) return "";
+    return JSON.stringify(
+      buildEnrichedCompareExport(compare, buildSystemTestsComparePayload(compare), intelligence),
+      null,
+      2,
+    );
+  }, [compare, intelligence]);
 
   if (!tokenChecked) {
     return (
@@ -159,8 +227,8 @@ function ComparePageInner() {
         {baseRunId && targetRunId && baseRunId !== targetRunId ? (
           loadingCompare ? (
             <p className="text-sm text-white/60">Loading comparison…</p>
-          ) : compare && payload ? (
-            <SystemTestsCompareView compare={compare} payload={payload} />
+          ) : compare && payload && intelligence ? (
+            <SystemTestsCompareView compare={compare} payload={payload} intelligence={intelligence} />
           ) : !error ? (
             <p className="text-sm text-white/50">Could not build comparison.</p>
           ) : null

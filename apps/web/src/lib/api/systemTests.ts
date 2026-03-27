@@ -1,4 +1,9 @@
 import { API_BASE_URL } from "@/lib/api";
+import {
+  isFailedCaseStatus,
+  isFlakyCase,
+  stableCaseKey,
+} from "@/lib/system-tests/shared";
 import type {
   SystemTestCaseResult,
   SystemTestRunDetailResponse,
@@ -87,24 +92,9 @@ export async function fetchAdminSystemTestRunDetail(
   );
 }
 
-function isFailedCaseStatus(status: string): boolean {
-  const s = status.toLowerCase();
-  return s === "failed" || s === "timedout" || s === "interrupted";
-}
-
-function isFlakyCase(c: SystemTestCaseResult): boolean {
-  const s = c.status.toLowerCase();
-  if (s === "flaky") return true;
-  return c.retryCount > 0 && !isFailedCaseStatus(c.status);
-}
-
 /** Stable identity for compare: fullName → title → title::route */
 export function systemTestCaseKey(c: SystemTestCaseResult): string {
-  const fn = c.fullName?.trim();
-  if (fn) return fn;
-  const t = c.title?.trim();
-  if (t) return t;
-  return `${c.title}::${c.route ?? ""}`;
+  return stableCaseKey(c);
 }
 
 function firstByKey(
@@ -114,7 +104,7 @@ function firstByKey(
   const m = new Map<string, SystemTestCaseResult>();
   for (const c of cases) {
     if (!pred(c)) continue;
-    const k = systemTestCaseKey(c);
+    const k = stableCaseKey(c);
     if (!m.has(k)) m.set(k, c);
   }
   return m;
@@ -123,7 +113,7 @@ function firstByKey(
 function allFirstByKey(cases: SystemTestCaseResult[]): Map<string, SystemTestCaseResult> {
   const m = new Map<string, SystemTestCaseResult>();
   for (const c of cases) {
-    const k = systemTestCaseKey(c);
+    const k = stableCaseKey(c);
     if (!m.has(k)) m.set(k, c);
   }
   return m;
