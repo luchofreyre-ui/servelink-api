@@ -1,7 +1,16 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { buildDiagnosticReportPlainText } from "@servelink/system-test-intelligence";
+import { forwardRef, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import type { Prisma } from "@prisma/client";
 
 import { PrismaService } from "../../prisma";
+import {
+  mapPrismaCaseToRowInput,
+  mapPrismaRunToDiagnosticInput,
+} from "../system-tests-intelligence/system-tests-intelligence-prisma-map";
+import { SystemTestsFamiliesReadService } from "../system-tests-families/system-tests-families-read.service";
+import { SystemTestsIncidentsReadService } from "../system-tests-incidents/system-tests-incidents-read.service";
+import { SystemTestsIntelligenceService } from "../system-tests-intelligence/system-tests-intelligence.service";
+import { SystemTestsPipelineService } from "../system-tests-pipeline/system-tests-pipeline.service";
 import type { SystemTestReportIngestDto } from "./dto/system-test-report.dto";
 import type {
   SystemTestLatestFailureDto,
@@ -13,7 +22,6 @@ import type {
   SystemTestRunDetailResponseDto,
   SystemTestRunDetailSuiteCountsDto,
 } from "./dto/system-test-run-detail.dto";
-import { buildSystemTestDiagnosticReport } from "./utils/build-diagnostic-report";
 import { classifySystemTestSuite } from "./utils/classify-system-test-suite";
 
 function isFailedStatus(status: string): boolean {
@@ -60,7 +68,16 @@ function mapToBreakdown(map: Map<string, { total: number; passed: number; failed
 
 @Injectable()
 export class SystemTestsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly log = new Logger(SystemTestsService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly intelligence: SystemTestsIntelligenceService,
+    @Inject(forwardRef(() => SystemTestsPipelineService))
+    private readonly systemTestsPipeline: SystemTestsPipelineService,
+    private readonly familiesRead: SystemTestsFamiliesReadService,
+    private readonly incidentsRead: SystemTestsIncidentsReadService,
+  ) {}
 
   async ingestReport(dto: SystemTestReportIngestDto) {
     const rawReport = dto.rawReportJson as Prisma.InputJsonValue;
@@ -111,6 +128,15 @@ export class SystemTestsService {
         cases: { create: caseRows },
       },
     });
+
+    const queued = await this.systemTestsPipeline.enqueueAnalysis(run.id, {
+      triggerSource: "ingestion",
+    });
+    if (queued.mode === "deduped") {
+      this.log.log(
+        `Post-ingest analysis job deduped for run ${run.id} (pipelineJobId=${queued.pipelineJobId}).`,
+      );
+    }
 
     return {
       run: {
@@ -271,7 +297,24 @@ export class SystemTestsService {
       column: c.column,
     }));
 
-    const diagnosticReport = buildSystemTestDiagnosticReport(run, run.cases);
+    const diagnosticReport = buildDiagnosticReportPlainText(
+      mapPrismaRunToDiagnosticInput(run),
+      run.cases.map(mapPrismaCaseToRowInput),
+    );
+
+    let persistedIntelligence =
+      await this.intelligence.getPersistedIntelligenceApiDto(run.id);
+    if (persistedIntelligence) {
+      persistedIntelligence = await this.familiesRead.enrichPersistedIntelligence(
+        run.id,
+        persistedIntelligence,
+      );
+      persistedIntelligence =
+        await this.incidentsRead.enrichPersistedIntelligenceWithIncidents(
+          run.id,
+          persistedIntelligence,
+        );
+    }
 
     return {
       run: {
@@ -293,6 +336,7 @@ export class SystemTestsService {
       suiteBreakdown,
       diagnosticReport,
       cases,
+      persistedIntelligence,
     };
   }
 
