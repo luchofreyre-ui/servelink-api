@@ -1,175 +1,143 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
-import { buildSystemTestSupportPayload } from "@/lib/api/systemTests";
-import { buildEnrichedDiagnosticExport } from "@/lib/system-tests/export";
-import type { SystemTestRunDetailResponse } from "@/types/systemTests";
-import { SystemTestsDiagnosticCard } from "./SystemTestsDiagnosticCard";
-import { SystemTestsFailureList } from "./SystemTestsFailureList";
+import { useCallback, useMemo } from "react";
+import { buildSystemTestReportFromPayload } from "@/lib/systemTests/buildSystemTestReport";
+import { buildSystemTestReportPayload } from "@/lib/systemTests/buildSystemTestReportPayload";
+import { buildSystemTestTriageReportFromPayload } from "@/lib/systemTests/buildSystemTestTriageReport";
 import {
-  formatDateTime,
-  formatDurationMs,
-  statusPillClass,
-} from "./systemTestsFormatting";
+  normalizeRunSummaryFromListItem,
+  normalizeSystemTestRunDetail,
+  trendVsPrevious,
+} from "@/lib/systemTests/normalizeSystemTestRun";
+import type {
+  SystemTestHistoricalAnalysis,
+  SystemTestRunDetailResponse,
+  SystemTestRunsListItem,
+} from "@/types/systemTests";
+import { SystemTestsCopyReportButton } from "./SystemTestsCopyReportButton";
+import { SystemTestsFailureGroupsPanel } from "./SystemTestsFailureGroupsPanel";
+import { SystemTestsHistoricalInsightsPanel } from "./SystemTestsHistoricalInsightsPanel";
+import { SystemTestsPageHeader } from "./SystemTestsPageHeader";
+import { SystemTestsRerunPriorityPanel } from "./SystemTestsRerunPriorityPanel";
+import { SystemTestsSpecBreakdownTable } from "./SystemTestsSpecBreakdownTable";
+import { SystemTestsSummaryCards } from "./SystemTestsSummaryCards";
+import { SystemTestsUnstableFilesPanel } from "./SystemTestsUnstableFilesPanel";
+import { formatDateTime } from "./systemTestsFormatting";
 
 type Props = {
   detail: SystemTestRunDetailResponse;
-  /** Peer runs (excluding `detail`) for multi-run flaky/pattern/historical context in exports. */
-  recentDetailsForExport?: SystemTestRunDetailResponse[];
-  peersLoading?: boolean;
+  sortedRuns: SystemTestRunsListItem[];
+  historicalAnalysis: SystemTestHistoricalAnalysis;
+  historyLoading?: boolean;
 };
 
-function suiteDurationSum(
-  cases: SystemTestRunDetailResponse["cases"],
-  suite: string,
-): number | null {
-  let n = 0;
-  let any = false;
-  for (const c of cases) {
-    if (c.suite !== suite) continue;
-    if (c.durationMs != null) {
-      n += c.durationMs;
-      any = true;
-    }
-  }
-  return any ? n : null;
-}
-
 export function SystemTestsRunDetail(props: Props) {
-  const { detail, recentDetailsForExport, peersLoading } = props;
-  const { run, suiteBreakdown, diagnosticReport, cases } = detail;
+  const { detail, sortedRuns, historicalAnalysis, historyLoading } = props;
 
-  const supportPayload = useMemo(
-    () =>
-      JSON.stringify(
-        buildEnrichedDiagnosticExport(detail, {
-          recentDetails: recentDetailsForExport,
-        }),
-        null,
-        2,
-      ),
-    [detail, recentDetailsForExport],
-  );
+  const normalized = useMemo(() => normalizeSystemTestRunDetail(detail), [detail]);
 
-  const legacySupportPayload = useMemo(
-    () => JSON.stringify(buildSystemTestSupportPayload(detail), null, 2),
-    [detail],
-  );
+  const latestRunId = sortedRuns[0]?.id ?? null;
+
+  const trendVsPrev = useMemo(() => {
+    const idx = sortedRuns.findIndex((r) => r.id === detail.run.id);
+    const older = idx >= 0 && idx < sortedRuns.length - 1 ? sortedRuns[idx + 1] : null;
+    const prevSummary = older ? normalizeRunSummaryFromListItem(older) : null;
+    return trendVsPrevious(normalized.summary, prevSummary);
+  }, [detail.run.id, sortedRuns, normalized.summary]);
+
+  const getReportText = useCallback(async () => {
+    const idx = sortedRuns.findIndex((r) => r.id === detail.run.id);
+    const older = idx >= 0 && idx < sortedRuns.length - 1 ? sortedRuns[idx + 1] : null;
+    const prevSummary = older ? normalizeRunSummaryFromListItem(older) : null;
+    const payload = buildSystemTestReportPayload({
+      currentDetailResponse: detail,
+      previousRunSummary: prevSummary,
+    });
+    return buildSystemTestReportFromPayload(payload);
+  }, [detail, sortedRuns]);
+
+  const getTriageReportText = useCallback(async () => {
+    const idx = sortedRuns.findIndex((r) => r.id === detail.run.id);
+    const older = idx >= 0 && idx < sortedRuns.length - 1 ? sortedRuns[idx + 1] : null;
+    const prevSummary = older ? normalizeRunSummaryFromListItem(older) : null;
+    const payload = buildSystemTestReportPayload({
+      currentDetailResponse: detail,
+      previousRunSummary: prevSummary,
+      historicalAnalysis,
+    });
+    return buildSystemTestTriageReportFromPayload(payload);
+  }, [detail, sortedRuns, historicalAnalysis]);
+
+  const showCompareCta = latestRunId && detail.run.id !== latestRunId;
 
   return (
     <div className="space-y-10">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <Link
-            href="/admin/system-tests"
-            className="text-sm text-sky-300 hover:text-sky-200"
-          >
+          <Link href="/admin/system-tests" className="text-sm text-sky-300 hover:text-sky-200">
             ← System tests
           </Link>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white">
-            Run{" "}
-            <span className="font-mono text-lg text-white/85" title={run.id}>
-              {run.id}
-            </span>
-          </h1>
-          {peersLoading ? (
-            <p className="mt-2 text-xs text-white/45">Loading nearby runs for full diagnostic context…</p>
-          ) : null}
-          <div className="mt-3 flex flex-wrap gap-2 text-xs text-white/55">
-            <span>created: {formatDateTime(run.createdAt)}</span>
-            <span>·</span>
-            <span>source: {run.source}</span>
-            <span>·</span>
-            <span>branch: {run.branch ?? "—"}</span>
-            <span>·</span>
-            <span className="font-mono" title={run.commitSha ?? ""}>
-              commit: {run.commitSha ?? "—"}
-            </span>
-            <span>·</span>
-            <span>ingest v{run.ingestVersion}</span>
-          </div>
         </div>
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
-          <p className="text-xs uppercase tracking-wide text-white/45">Status</p>
-          <p
-            className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold ring-1 ${statusPillClass(run.status)}`}
+        {showCompareCta ? (
+          <Link
+            href={`/admin/system-tests/compare?baseRunId=${encodeURIComponent(detail.run.id)}&targetRunId=${encodeURIComponent(latestRunId)}`}
+            className="rounded-xl border border-violet-400/35 bg-violet-500/15 px-3 py-2 text-sm font-medium text-violet-100 hover:bg-violet-500/25"
           >
-            {run.status}
-          </p>
-          <p className="mt-2 text-sm text-white/70">
-            Duration {formatDurationMs(run.durationMs)}
-          </p>
-        </div>
+            Compare to latest
+          </Link>
+        ) : null}
       </div>
 
-      <section>
-        <h2 className="mb-3 text-lg font-semibold text-white">Breakdown</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {(
-            [
-              ["Total", run.totalCount],
-              ["Passed", run.passedCount],
-              ["Failed", run.failedCount],
-              ["Skipped", run.skippedCount],
-              ["Flaky", run.flakyCount],
-            ] as const
-          ).map(([label, n]) => (
-            <div
-              key={label}
-              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-center"
-            >
-              <p className="text-xs uppercase tracking-wide text-white/45">{label}</p>
-              <p className="mt-1 text-2xl font-semibold text-white">{n}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-white">Suite breakdown</h2>
-        <div className="overflow-x-auto rounded-xl border border-white/10">
-          <table className="min-w-full text-left text-sm text-white/90">
-            <thead className="border-b border-white/10 bg-white/[0.04] text-xs uppercase text-white/50">
-              <tr>
-                <th className="px-4 py-3">Suite</th>
-                <th className="px-4 py-3">Total</th>
-                <th className="px-4 py-3">Passed</th>
-                <th className="px-4 py-3">Failed</th>
-                <th className="px-4 py-3">Skipped</th>
-                <th className="px-4 py-3">Flaky</th>
-                <th className="px-4 py-3">Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-              {suiteBreakdown.map((row) => (
-                <tr key={row.suite} className="border-b border-white/5">
-                  <td className="px-4 py-2 font-medium">{row.suite}</td>
-                  <td className="px-4 py-2">{row.total}</td>
-                  <td className="px-4 py-2 text-emerald-200/90">{row.passed}</td>
-                  <td className="px-4 py-2 text-red-200/85">{row.failed}</td>
-                  <td className="px-4 py-2">{row.skipped}</td>
-                  <td className="px-4 py-2 text-amber-200/85">{row.flaky}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    {formatDurationMs(suiteDurationSum(cases, row.suite))}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <SystemTestsDiagnosticCard
-        diagnosticReport={diagnosticReport}
-        supportPayload={supportPayload}
-        legacySupportPayload={legacySupportPayload}
+      <SystemTestsPageHeader
+        title="System test run"
+        summary={normalized.summary}
+        subtitle={`Source ${detail.run.source} · Ingest v${detail.run.ingestVersion}`}
       />
 
+      <SystemTestsSummaryCards summary={normalized.summary} trendVsPrevious={trendVsPrev} />
+
+      <div className="flex flex-wrap gap-3">
+        <SystemTestsCopyReportButton getReportText={getReportText} />
+        <SystemTestsCopyReportButton getReportText={getTriageReportText} label="Copy triage report" />
+      </div>
+
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-white">Cases</h2>
-        <SystemTestsFailureList cases={cases} />
+        <h2 className="text-lg font-semibold text-white">Per-file breakdown</h2>
+        <SystemTestsSpecBreakdownTable rows={normalized.specs} />
       </section>
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold text-white">Failure groups</h2>
+        <SystemTestsFailureGroupsPanel
+          groups={normalized.failureGroups}
+          failureProfiles={historicalAnalysis.failureProfiles}
+          historyLoading={historyLoading}
+        />
+      </section>
+
+      <SystemTestsHistoricalInsightsPanel
+        insights={historicalAnalysis.historicalInsights}
+        chronologyNote={historicalAnalysis.historyChronologyNote}
+        loading={historyLoading}
+        historyWindowSize={historicalAnalysis.historyWindowSize}
+      />
+      <SystemTestsRerunPriorityPanel
+        groups={normalized.failureGroups}
+        profiles={historicalAnalysis.failureProfiles}
+        loading={historyLoading}
+      />
+      <SystemTestsUnstableFilesPanel files={historicalAnalysis.unstableFiles} loading={historyLoading} />
+
+      {detail.diagnosticReport?.trim() ? (
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold text-white">Raw evidence</h2>
+          <p className="text-xs text-white/45">Diagnostic bundle generated at ingest ({formatDateTime(detail.run.createdAt)}).</p>
+          <pre className="max-h-[480px] overflow-auto rounded-xl border border-white/10 bg-black/40 p-4 font-mono text-xs text-white/80 whitespace-pre-wrap">
+            {detail.diagnosticReport}
+          </pre>
+        </section>
+      ) : null}
     </div>
   );
 }

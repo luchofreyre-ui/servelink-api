@@ -1,5 +1,3 @@
-"use client";
-
 import { GlobalSearchForm } from "./GlobalSearchForm";
 
 interface ShellSearchBarProps {
@@ -10,7 +8,7 @@ interface ShellSearchBarProps {
 
 export function ShellSearchBar({
   initialQuery = "",
-  placeholder = "Search the encyclopedia",
+  placeholder = "Search cleaning methods, surfaces, problems, and guides",
   className = "",
 }: ShellSearchBarProps) {
   return (

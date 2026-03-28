@@ -1,32 +1,57 @@
 "use client";
 
 import Link from "next/link";
-import { classifyRunProvenance, provenanceBadgeLabel } from "@/lib/system-tests/runQuality";
-import type { SystemTestsRunsResponse } from "@/types/systemTests";
+import { useCallback } from "react";
+import { buildSystemTestReportFromPayload } from "@/lib/systemTests/buildSystemTestReport";
+import { buildSystemTestReportPayload } from "@/lib/systemTests/buildSystemTestReportPayload";
+import { normalizeRunSummaryFromListItem } from "@/lib/systemTests/normalizeSystemTestRun";
+import { fetchAdminSystemTestRunDetail } from "@/lib/api/systemTests";
+import type { SystemTestRunsListItem } from "@/types/systemTests";
 import {
   formatDateTime,
   formatDurationMs,
+  formatPercent,
   formatRelativeTime,
   statusPillClass,
-  truncateSha,
 } from "./systemTestsFormatting";
+import { SystemTestsCopyReportButton } from "./SystemTestsCopyReportButton";
 
 type Props = {
-  runs: SystemTestsRunsResponse;
-  /** Newest run id (items[0] when API returns desc). Used for Compare to latest. */
-  latestRunId?: string;
+  runs: SystemTestRunsListItem[];
+  /** Newest-first list (caller sorted). */
+  latestRunId: string | null;
+  accessToken: string;
 };
 
-export function SystemTestsRunsTable(props: Props) {
-  const { items } = props.runs;
-  const latestId = props.latestRunId ?? items[0]?.id;
+function passRate(run: SystemTestRunsListItem): number {
+  return run.totalCount > 0 ? run.passedCount / run.totalCount : 0;
+}
 
-  if (!items.length) {
+export function SystemTestsRunsTable(props: Props) {
+  const { runs, latestRunId, accessToken } = props;
+  const latestId = latestRunId ?? runs[0]?.id ?? null;
+
+  const makeReportGetter = useCallback(
+    (runId: string) => async () => {
+      const detail = await fetchAdminSystemTestRunDetail(accessToken, runId);
+      const idx = runs.findIndex((r) => r.id === runId);
+      const older = idx >= 0 && idx < runs.length - 1 ? runs[idx + 1] : null;
+      const prevSummary = older ? normalizeRunSummaryFromListItem(older) : null;
+      const payload = buildSystemTestReportPayload({
+        currentDetailResponse: detail,
+        previousRunSummary: prevSummary,
+      });
+      return buildSystemTestReportFromPayload(payload);
+    },
+    [accessToken, runs],
+  );
+
+  if (!runs.length) {
     return (
       <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8">
-        <p className="text-center text-sm font-medium text-white/80">No run history yet</p>
+        <p className="text-center text-sm font-medium text-white/80">No system test runs recorded yet</p>
         <p className="mt-2 text-center text-sm text-white/50">
-          Once GitHub Actions uploads hosted Playwright results, they will appear here.
+          Ingest runs via CI uploader to populate this dashboard.
         </p>
       </div>
     );
@@ -37,23 +62,19 @@ export function SystemTestsRunsTable(props: Props) {
       <table className="min-w-full text-left text-sm text-white/90">
         <thead className="border-b border-white/10 bg-white/[0.04] text-xs uppercase tracking-wide text-white/50">
           <tr>
-            <th className="px-4 py-3">Created</th>
-            <th className="px-4 py-3">Source</th>
-            <th className="px-4 py-3">Provenance</th>
-            <th className="px-4 py-3">Branch</th>
-            <th className="px-4 py-3">Commit</th>
             <th className="px-4 py-3">Status</th>
+            <th className="px-4 py-3">Started</th>
+            <th className="px-4 py-3">Duration</th>
+            <th className="px-4 py-3">Total</th>
             <th className="px-4 py-3">Passed</th>
             <th className="px-4 py-3">Failed</th>
-            <th className="px-4 py-3">Flaky</th>
-            <th className="px-4 py-3">Duration</th>
+            <th className="px-4 py-3">Skipped</th>
+            <th className="px-4 py-3">Pass rate</th>
             <th className="px-4 py-3 text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {items.map((r) => {
-            const prov = classifyRunProvenance(r);
-            const provLabel = provenanceBadgeLabel(prov);
+          {runs.map((r) => {
             const st = r.status.toLowerCase();
             const failed = st === "failed";
             const passed = st === "passed";
@@ -62,62 +83,26 @@ export function SystemTestsRunsTable(props: Props) {
               : passed
                 ? "bg-emerald-500/20 text-emerald-100 ring-emerald-500/35"
                 : statusPillClass(r.status);
+            const pr = passRate(r);
             return (
               <tr key={r.id} className="border-b border-white/5">
-                <td
-                  className="px-4 py-2 whitespace-nowrap"
-                  title={formatDateTime(r.createdAt)}
-                >
-                  <span className="text-white/90">{formatRelativeTime(r.createdAt)}</span>
-                </td>
-                <td className="px-4 py-2">{r.source}</td>
                 <td className="px-4 py-2">
-                  <span
-                    className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${
-                      prov === "trusted_ci"
-                        ? "bg-emerald-500/20 text-emerald-100 ring-emerald-500/35"
-                        : prov === "synthetic"
-                          ? "bg-fuchsia-500/15 text-fuchsia-100 ring-fuchsia-500/35"
-                          : prov === "local"
-                            ? "bg-slate-500/20 text-slate-100 ring-slate-500/35"
-                            : prov === "manual"
-                              ? "bg-sky-500/15 text-sky-100 ring-sky-500/35"
-                              : "bg-white/10 text-white/70 ring-white/20"
-                    }`}
-                    title={`${provLabel} (from source/branch heuristics)`}
-                  >
-                    {provLabel}
-                  </span>
-                </td>
-                <td className="px-4 py-2 font-mono text-xs">{r.branch ?? "—"}</td>
-                <td
-                  className="max-w-[120px] truncate px-4 py-2 font-mono text-xs"
-                  title={r.commitSha ?? ""}
-                >
-                  {truncateSha(r.commitSha, 8)}
-                </td>
-                <td className="px-4 py-2">
-                  <span
-                    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ${pill}`}
-                  >
+                  <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ${pill}`}>
                     {r.status}
                   </span>
-                  {r.flakyCount > 0 ? (
-                    <span className="ml-2 inline-flex rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-100 ring-1 ring-amber-500/30">
-                      flaky {r.flakyCount}
-                    </span>
-                  ) : null}
                 </td>
+                <td className="px-4 py-2 whitespace-nowrap" title={formatDateTime(r.createdAt)}>
+                  <span className="text-white/90">{formatRelativeTime(r.createdAt)}</span>
+                </td>
+                <td className="px-4 py-2 whitespace-nowrap">{formatDurationMs(r.durationMs)}</td>
+                <td className="px-4 py-2">{r.totalCount}</td>
                 <td className="px-4 py-2 text-emerald-200/90">{r.passedCount}</td>
                 <td className="px-4 py-2 text-red-200/85">{r.failedCount}</td>
-                <td className="px-4 py-2 text-amber-200/85">{r.flakyCount}</td>
-                <td className="px-4 py-2 whitespace-nowrap">{formatDurationMs(r.durationMs)}</td>
+                <td className="px-4 py-2">{r.skippedCount}</td>
+                <td className="px-4 py-2">{formatPercent(pr)}</td>
                 <td className="px-4 py-2 text-right">
-                  <div className="flex flex-col items-end gap-1 sm:flex-row sm:justify-end sm:gap-3">
-                    <Link
-                      href={`/admin/system-tests/${r.id}`}
-                      className="font-medium text-sky-300 hover:text-sky-200"
-                    >
+                  <div className="flex flex-col items-end gap-2 sm:flex-row sm:justify-end sm:gap-3">
+                    <Link href={`/admin/system-tests/${r.id}`} className="font-medium text-sky-300 hover:text-sky-200">
                       View run
                     </Link>
                     {latestId && r.id !== latestId ? (
@@ -132,6 +117,13 @@ export function SystemTestsRunsTable(props: Props) {
                         —
                       </span>
                     )}
+                    <div className="inline-flex max-w-[140px] justify-end">
+                      <SystemTestsCopyReportButton
+                        label="Copy report"
+                        getReportText={makeReportGetter(r.id)}
+                        className="!space-y-0"
+                      />
+                    </div>
                   </div>
                 </td>
               </tr>

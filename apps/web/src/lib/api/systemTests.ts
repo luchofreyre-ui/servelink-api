@@ -28,16 +28,26 @@ function parseJsonStrict(raw: string, status: number): unknown {
   }
 }
 
+/**
+ * All admin system-tests GETs must bypass Next/browser caching so the dashboard
+ * always reflects the latest ingested runs (summary, runs list, run detail, compare).
+ */
 async function adminJson<T>(accessToken: string, path: string, init?: RequestInit): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   let response: Response;
   try {
+    const initHeaders = init?.headers;
+    const extra =
+      initHeaders && typeof initHeaders === "object" && !Array.isArray(initHeaders)
+        ? Object.fromEntries(new Headers(initHeaders as HeadersInit).entries())
+        : {};
+
     response = await fetch(`${API_BASE_URL}${path}`, {
       ...init,
       headers: {
+        ...extra,
         Authorization: `Bearer ${accessToken}`,
-        ...(init?.headers as Record<string, string>),
       },
       cache: "no-store",
       signal: controller.signal,
@@ -71,11 +81,11 @@ export async function fetchAdminSystemTestsSummary(
 
 export async function fetchAdminSystemTestRuns(
   accessToken: string,
-  query?: { page?: number; limit?: number },
+  params?: { limit?: number; page?: number },
 ): Promise<SystemTestsRunsResponse> {
   const qs = new URLSearchParams();
-  qs.set("page", String(query?.page ?? 1));
-  qs.set("limit", String(query?.limit ?? 20));
+  qs.set("page", String(params?.page ?? 1));
+  qs.set("limit", String(params?.limit ?? 20));
   return adminJson<SystemTestsRunsResponse>(
     accessToken,
     `/api/v1/admin/system-tests/runs?${qs.toString()}`,

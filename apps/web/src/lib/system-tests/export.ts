@@ -12,7 +12,7 @@ import type {
 } from "@/types/systemTests";
 import { buildDashboardAlerts, type DashboardAlertInput } from "./alerts";
 import { buildHistoricalChanges } from "./compare";
-import { buildFailurePatterns, deprioritizeNoisePatterns } from "./patterns";
+import { buildFailurePatterns } from "./patterns";
 import { buildFlakyCaseAnalysis } from "./flaky";
 import { buildTopProblemsSummary } from "./prioritization";
 import { pickRunDetailsForIntelligence } from "./runQuality";
@@ -61,10 +61,7 @@ export function buildEnrichedDiagnosticExport(
     options?.patterns ??
     (analysisWindow.length >= 1 ? buildFailurePatterns(analysisWindow, { maxRuns: 12 }) : []);
 
-  const patterns = deprioritizeNoisePatterns(patternsRaw, {
-    preferTrustedSignal:
-      picked.trustedCount >= 1 && picked.noisyCount > 0 && patternsRaw.length > 1,
-  });
+  const patterns = patternsRaw;
 
   const historical =
     analysisWindow.length >= 2 ? buildHistoricalChanges(analysisWindow, { maxRuns: 12 }) : null;
@@ -79,13 +76,7 @@ export function buildEnrichedDiagnosticExport(
       flakyCases: flakyRows,
       patterns,
       historical,
-      analysisTrust: {
-        scope: picked.scope,
-        trustedInWindow: picked.trustedCount,
-        totalInWindow: picked.totalCount,
-        trendMode: "all_runs",
-        trustedRunsInList: picked.trustedCount,
-      },
+      trustedAnalysisDetailCount: analysisWindow.length,
     }).slice(0, 12);
 
   const topProblems = buildTopProblemsSummary({
@@ -145,11 +136,6 @@ export function buildEnrichedDiagnosticExport(
   }
   if (newRegressions.length) {
     notes.push(`${newRegressions.length} case(s) regressed vs the previous run in this window.`);
-  }
-  if (picked.usedFallback) {
-    notes.push(
-      "Intelligence window includes non-CI uploads because fewer than two trusted CI runs were available.",
-    );
   }
 
   let compareHints: string[] | undefined;

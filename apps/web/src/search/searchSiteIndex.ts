@@ -1,158 +1,137 @@
-import {
-  SiteSearchGroupedResults,
-  SiteSearchResult,
-  SiteSearchResultType,
-  SiteSearchResultWithScore,
-} from "@/types/search";
-import { buildSiteSearchIndex } from "./buildSiteSearchIndex";
+import { cache } from "react";
+import { getResolvedEncyclopediaIndex } from "@/lib/encyclopedia/loader";
+import { detectSearchIntent } from "@/lib/encyclopedia/searchIntent";
+import { rankEncyclopediaResults } from "@/lib/encyclopedia/searchRanking";
+import type { EncyclopediaCategory, EncyclopediaResolvedIndexEntry } from "@/lib/encyclopedia/types";
+import { buildUnifiedSearchIndex } from "./buildUnifiedSearchIndex";
+import type { SiteSearchDocument } from "@/types/search";
 
-const SEARCH_INDEX = buildSiteSearchIndex();
+export interface SearchSiteIndexOptions {
+  query: string;
+  limit?: number;
+}
 
-const TYPE_LABELS: Record<SiteSearchResultType, string> = {
-  encyclopedia: "Encyclopedia",
-  method: "Methods",
-  surface: "Surfaces",
-  problem: "Problems",
-  tool: "Tools",
-  article: "Articles",
-  guide: "Guides",
-  cluster: "Clusters",
-  comparison: "Comparisons",
-  question: "Questions",
-};
+const PIPELINE_ENCYCLOPEDIA_CATEGORIES = new Set<EncyclopediaCategory>([
+  "problems",
+  "methods",
+  "surfaces",
+]);
 
-const TYPE_ORDER: SiteSearchResultType[] = [
-  "encyclopedia",
-  "problem",
-  "surface",
-  "method",
-  "guide",
-  "article",
-  "tool",
-  "cluster",
-  "comparison",
-  "question",
-];
-
-function normalize(value: string): string {
+function normalizeQuery(value: string): string {
   return value.trim().toLowerCase();
 }
 
-function tokenize(value: string): string[] {
-  return normalize(value)
-    .split(/[\s,/:\-()]+/)
-    .map((part) => part.trim())
-    .filter(Boolean);
+function parseEncyclopediaDocumentId(
+  id: string,
+): { category: EncyclopediaCategory; slug: string } | null {
+  const m = /^encyclopedia:([^:]+):(.+)$/.exec(id);
+  if (!m) return null;
+  const category = m[1] as EncyclopediaCategory;
+  const slug = m[2];
+  return { category, slug };
 }
 
-function scoreResult(result: SiteSearchResult, query: string, tokens: string[]): number {
-  const title = normalize(result.title);
-  const description = normalize(result.description);
-  const href = normalize(result.href);
-  const keywords = result.keywords.map(normalize);
+function scoreDocument(
+  document: SiteSearchDocument,
+  normalizedQuery: string,
+): number {
+  if (!normalizedQuery) {
+    return 0;
+  }
 
   let score = 0;
+  const title = document.title.toLowerCase();
+  const description = document.description.toLowerCase();
+  const body = document.body.toLowerCase();
+  const href = document.href.toLowerCase();
+  const keywords = document.keywords.map((keyword) => keyword.toLowerCase());
 
-  if (title === query) score += 150;
-  if (keywords.includes(query)) score += 100;
-  if (title.startsWith(query)) score += 70;
-  if (title.includes(query)) score += 45;
-  if (description.includes(query)) score += 18;
-  if (href.includes(query)) score += 12;
-
-  for (const keyword of keywords) {
-    if (keyword.startsWith(query)) score += 20;
-    else if (keyword.includes(query)) score += 10;
-  }
-
-  for (const token of tokens) {
-    if (title === token) score += 40;
-    if (title.startsWith(token)) score += 20;
-    if (title.includes(token)) score += 10;
-    if (description.includes(token)) score += 4;
-    if (href.includes(token)) score += 3;
-
-    for (const keyword of keywords) {
-      if (keyword === token) score += 15;
-      else if (keyword.startsWith(token)) score += 6;
-      else if (keyword.includes(token)) score += 3;
-    }
-  }
-
-  if (result.type === "encyclopedia" && (query.includes("encyclopedia") || query.includes("knowledge"))) {
-    score += 25;
-  }
-
-  if (
-    result.type === "problem" &&
-    (query.includes("stain") || query.includes("buildup") || query.includes("problem"))
-  ) {
-    score += 12;
-  }
-
-  if (result.type === "surface" && query.includes("surface")) {
-    score += 8;
-  }
-
-  if (result.type === "method" && (query.includes("method") || query.includes("cleaning"))) {
-    score += 8;
-  }
-
-  if (result.type === "guide" && query.includes("guide")) {
-    score += 10;
-  }
+  if (title === normalizedQuery) score += 120;
+  if (title.includes(normalizedQuery)) score += 80;
+  if (href.includes(normalizedQuery)) score += 40;
+  if (description.includes(normalizedQuery)) score += 30;
+  if (body.includes(normalizedQuery)) score += 15;
+  if (keywords.some((keyword) => keyword === normalizedQuery)) score += 60;
+  if (keywords.some((keyword) => keyword.includes(normalizedQuery))) score += 25;
 
   return score;
 }
 
-function sortGrouped(
-  groupedMap: Map<SiteSearchResultType, SiteSearchResultWithScore[]>,
-): SiteSearchGroupedResults["grouped"] {
-  return Array.from(groupedMap.entries())
-    .sort(
-      ([typeA], [typeB]) =>
-        TYPE_ORDER.indexOf(typeA) - TYPE_ORDER.indexOf(typeB),
-    )
-    .map(([type, items]) => ({
-      type,
-      label: TYPE_LABELS[type],
-      items: items.sort((a, b) => b.score - a.score || a.title.localeCompare(b.title)),
-    }));
-}
+export const searchSiteIndex = cache(
+  ({ query, limit = 24 }: SearchSiteIndexOptions): SiteSearchDocument[] => {
+    const normalizedQuery = normalizeQuery(query);
 
-export function searchSiteIndex(rawQuery: string, limit = 24): SiteSearchGroupedResults {
-  const query = normalize(rawQuery);
-  const tokens = tokenize(rawQuery);
+    if (!normalizedQuery) {
+      return [];
+    }
 
-  if (!query) {
-    return {
-      query: rawQuery,
-      total: 0,
-      results: [],
-      grouped: [],
-    };
-  }
+    const resolvedByKey = new Map<string, EncyclopediaResolvedIndexEntry>();
+    for (const e of getResolvedEncyclopediaIndex()) {
+      resolvedByKey.set(`${e.category}:${e.slug}`, e);
+    }
 
-  const scored: SiteSearchResultWithScore[] = SEARCH_INDEX.map((result) => ({
-    ...result,
-    score: scoreResult(result, query, tokens),
-  }))
-    .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title))
-    .slice(0, limit);
+    const scored = buildUnifiedSearchIndex()
+      .map((document) => ({
+        document,
+        score: scoreDocument(document, normalizedQuery),
+      }))
+      .filter((item) => item.score > 0);
 
-  const groupedMap = new Map<SiteSearchResultType, SiteSearchResultWithScore[]>();
+    const encScored = scored.filter((x) => x.document.source === "encyclopedia");
+    const nonEncScored = scored.filter((x) => x.document.source !== "encyclopedia");
 
-  for (const item of scored) {
-    const current = groupedMap.get(item.type) ?? [];
-    current.push(item);
-    groupedMap.set(item.type, current);
-  }
+    const pipelineEncScored = encScored.filter((item) => {
+      const key = parseEncyclopediaDocumentId(item.document.id);
+      return key !== null && PIPELINE_ENCYCLOPEDIA_CATEGORIES.has(key.category);
+    });
 
-  return {
-    query: rawQuery,
-    total: scored.length,
-    results: scored,
-    grouped: sortGrouped(groupedMap),
-  };
-}
+    const pipelineEncIds = new Set(pipelineEncScored.map((x) => x.document.id));
+
+    const secondaryEncScored = encScored.filter(
+      (item) => !pipelineEncIds.has(item.document.id),
+    );
+
+    type Scored = (typeof scored)[number];
+
+    const pipelinePairs: { item: Scored; entry: EncyclopediaResolvedIndexEntry }[] = [];
+    for (const item of pipelineEncScored) {
+      const key = parseEncyclopediaDocumentId(item.document.id);
+      if (!key) continue;
+      const entry = resolvedByKey.get(`${key.category}:${key.slug}`);
+      if (entry) pipelinePairs.push({ item, entry });
+    }
+
+    const intent = detectSearchIntent(query);
+    const rankedPipelineEntries = rankEncyclopediaResults(
+      pipelinePairs.map((p) => p.entry),
+      { query, intent },
+    );
+
+    const pipelineItemByKey = new Map<string, Scored>();
+    for (const p of pipelinePairs) {
+      pipelineItemByKey.set(`${p.entry.category}:${p.entry.slug}`, p.item);
+    }
+
+    const rankedPipelineDocs: SiteSearchDocument[] = [];
+    for (const entry of rankedPipelineEntries) {
+      const hit = pipelineItemByKey.get(`${entry.category}:${entry.slug}`);
+      if (hit) rankedPipelineDocs.push(hit.document);
+    }
+
+    const rankedPipelineDocIds = new Set(rankedPipelineDocs.map((d) => d.id));
+    const pipelineMatchedButNotRankOrdered = pipelineEncScored
+      .filter((x) => !rankedPipelineDocIds.has(x.document.id))
+      .sort((a, b) => b.score - a.score)
+      .map((x) => x.document);
+
+    const secondarySorted = [...secondaryEncScored, ...nonEncScored]
+      .sort((a, b) => b.score - a.score)
+      .map((x) => x.document);
+
+    return [
+      ...rankedPipelineDocs,
+      ...pipelineMatchedButNotRankOrdered,
+      ...secondarySorted,
+    ].slice(0, limit);
+  },
+);

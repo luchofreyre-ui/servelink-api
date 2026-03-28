@@ -1,0 +1,186 @@
+{
+  "pages": [
+    {
+      "id": "P-GREASE-001",
+      "title": "Grease Buildup",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-buildup",
+      "summary": "Professional overview of kitchen grease buildup: formation, risks, and how operators approach removal without damaging finishes.",
+      "image": {
+        "primaryAlt": "Grease buildup on kitchen cabinet near stove",
+        "queries": [
+          "grease buildup kitchen cabinets stove area",
+          "oily residue kitchen surfaces professional cleaning",
+          "cooking grease film on cabinets close up"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grease buildup is the accumulation of cooking oils, aerosolized fats, and hand-transfer residue on kitchen surfaces—especially near the range, on cabinets, backsplashes, hoods, and adjacent walls.",
+        "why_it_happens": "Heat and cooking vapor deposit hydrophobic films that bind to paint, wood sealers, metal, and tile. Over time layers polymerize and become harder to remove with neutral cleaners alone.",
+        "what_people_do_wrong": "Operators often under-clean with mild sprays, skip dwell time, or attack polymerized film with abrasives that damage finishes.",
+        "professional_method": "Identify finish and soil severity, use a degreaser matched to the material, allow controlled dwell, agitate with non-scratch tools, rinse or wipe residue, and dry to limit streaking.",
+        "data_and_benchmarks": "Severity scales with cooking frequency, ventilation quality, and maintenance gaps. Light films often release in one pass; layered or baked-on residue typically needs repeat treatment.",
+        "professional_insights": "Grease often reads as dust until a side-angle light check reveals an oily sheen. Chemistry and dwell usually outperform force.",
+        "when_to_call_a_professional": "Call a professional when finishes are delicate, residue spans ceilings or large wall areas, or DIY attempts have dulled or damaged surfaces.",
+        "related_topics": ["M-DEG-001", "P-GREASE-006", "S-SS-001"]
+      }
+    },
+    {
+      "id": "P-GREASE-002",
+      "title": "Grease on Kitchen Cabinets",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-on-kitchen-cabinets",
+      "summary": "Surface-specific guidance for grease on painted, laminate, and sealed wood kitchen cabinets near cooking zones.",
+      "image": {
+        "primaryAlt": "Grease marks on white kitchen cabinet doors",
+        "queries": [
+          "grease stains kitchen cabinet doors cleaning",
+          "oily cabinet fronts near stove",
+          "kitchen cabinet degreasing before painting prep"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Cabinet grease is localized oily film or streaking on door faces, frames, and hardware zones most exposed to cooking plumes and hand contact.",
+        "why_it_happens": "Vertical surfaces near the range receive repeated vapor and splatter. Handles and edges collect transfer oils from daily use.",
+        "what_people_do_wrong": "Spraying excess product that seeps into seams, using harsh pads on painted or thermofoil fronts, or wiping once without rotating clean towel faces.",
+        "professional_method": "Protect floors, work top-to-bottom on small sections, use finish-safe degreaser loading on the towel, fold-and-rotate, and dry-polish to remove residue.",
+        "data_and_benchmarks": "Flat paint and some thermofoil finishes are less forgiving than sealed wood or laminate; test spots reduce risk.",
+        "professional_insights": "The tell is often a tacky or rainbows-under-light sheen rather than loose dust.",
+        "when_to_call_a_professional": "Call when coatings are unknown, when gloss has dulled from prior attempts, or when grease has migrated to crown or ceiling lines.",
+        "related_topics": ["P-GREASE-001", "M-DEG-001", "S-WOOD-001"]
+      }
+    },
+    {
+      "id": "P-GREASE-003",
+      "title": "Grease on Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-on-stainless-steel",
+      "summary": "How grease behaves on brushed stainless appliances and how to remove it without streaking or grain damage.",
+      "image": {
+        "primaryAlt": "Fingerprints and grease on stainless refrigerator",
+        "queries": [
+          "stainless steel appliance grease fingerprints cleaning",
+          "brushed stainless streak free degreasing",
+          "range hood stainless steel grease removal"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Stainless steel in kitchens shows grease as smudges, directional streaks, and dull patches that follow the grain of the finish.",
+        "why_it_happens": "Cooking aerosols and hand oils adhere strongly; brushed grain makes uneven residue highly visible under side lighting.",
+        "what_people_do_wrong": "Wiping against the grain, over-wetting electronics-adjacent panels, or leaving cleaner residue that reads as new streaks.",
+        "professional_method": "Dry dust first, apply light degreaser or stainless-appropriate cleaner, wipe with the grain in long passes, then dry-buff with clean microfiber.",
+        "data_and_benchmarks": "Residue control matters more than product brand; excess liquid is a common cause of poor appearance.",
+        "professional_insights": "Treat hoods and vertical fridge panels as finish-sensitive; control product volume strictly.",
+        "when_to_call_a_professional": "Call when coatings are specialty black stainless or when pitting or discoloration suggests damage, not soil.",
+        "related_topics": ["P-GREASE-001", "S-SS-001", "M-NEU-001"]
+      }
+    },
+    {
+      "id": "P-GREASE-004",
+      "title": "Grease on Backsplashes",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-on-backsplashes",
+      "summary": "Removing cooking grease from tile, stone, and composite backsplashes while protecting grout and sealers.",
+      "image": {
+        "primaryAlt": "Grease splatter on kitchen tile backsplash",
+        "queries": [
+          "greasy tile backsplash behind stove",
+          "kitchen backsplash degreasing grout safe",
+          "cooking splatter on subway tile cleaning"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Backsplash grease is splatter and vapor-deposited film on vertical surfaces behind cooktops, often concentrated in a low band behind burners.",
+        "why_it_happens": "Boiling, frying, and high-heat cooking propel fine oil droplets that adhere to grout pores and tile glaze irregularities.",
+        "what_people_do_wrong": "Using the wrong chemistry for natural stone, flooding grout lines with liquid, or scrubbing unsealed grout into discoloration.",
+        "professional_method": "Identify tile and stone type, dry-remove loose soil, apply compatible degreaser, dwell briefly, agitate with non-scratch tools, and remove suspended soil without dirty rinse pooling.",
+        "data_and_benchmarks": "Porous grout holds grease longer than glazed tile; targeted grout attention often determines overall appearance.",
+        "professional_insights": "Pattern matters: a horizontal band behind the cooktop usually confirms vapor deposition versus random splatter.",
+        "when_to_call_a_professional": "Call when stone type is uncertain, when grout is heavily stained, or when sealers may need reassessment after cleaning.",
+        "related_topics": ["P-GREASE-001", "S-TILE-001", "S-GROUT-001"]
+      }
+    },
+    {
+      "id": "P-GREASE-005",
+      "title": "Grease on Walls Near the Stove",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-on-walls-near-the-stove",
+      "summary": "Addressing grease on painted drywall and trim adjacent to ranges without burnishing or lifting paint.",
+      "image": {
+        "primaryAlt": "Discolored wall area next to kitchen stove",
+        "queries": [
+          "grease on painted wall behind stove",
+          "kitchen wall yellowing near range cleaning",
+          "flat paint grease spot removal wall"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Wall-adjacent grease presents as yellowing, tacky patches, or dull smears on paint within the thermal and vapor plume of the stove.",
+        "why_it_happens": "Heat drives oils onto vertical paint films; flat and matte paints embed soil more visibly than glossier finishes.",
+        "what_people_do_wrong": "Scrubbing aggressively on delicate paint, saturating drywall, or using strong solvents that soften coatings.",
+        "professional_method": "Use minimal moisture, work in small arcs with lightly loaded towels, step up chemistry only as needed, and blot-dry quickly.",
+        "data_and_benchmarks": "Older flats often require gentler sequences; repeated light passes beat one heavy wet pass.",
+        "professional_insights": "If color lifts onto the towel, stop and reassess—this is coating failure risk, not a soil-only issue.",
+        "when_to_call_a_professional": "Call when paint is failing, when large areas are involved, or when touch-up and reprep are likely after soil removal.",
+        "related_topics": ["P-GREASE-001", "M-NEU-001", "C-PH-001"]
+      }
+    },
+    {
+      "id": "P-GREASE-006",
+      "title": "Polymerized Grease Residue",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "polymerized-grease-residue",
+      "summary": "Recognizing heat-cured grease films that resist quick wipes and require controlled chemistry and dwell—not just more pressure.",
+      "image": {
+        "primaryAlt": "Baked on brown grease on range hood filter area",
+        "queries": [
+          "baked on grease range hood sticky residue",
+          "polymerized oil residue stovetop edge",
+          "brown hardened grease kitchen cleaning professional"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Polymerized grease is a hardened or highly tacky film formed when cooking oils undergo heat-driven chemical change, common on hoods, stove edges, and nearby metal or enamel.",
+        "why_it_happens": "Repeated heat cycles crosslink residues into a layer that neutral surfactants struggle to emulsify quickly.",
+        "what_people_do_wrong": "Increasing scrub pressure instead of dwell, using abrasive pads on coated metals, or chipping at edges and damaging finishes.",
+        "professional_method": "Select a degreaser rated for the substrate, apply evenly, allow sufficient dwell, reapply as needed, agitate gently, and fully remove loosened residue.",
+        "data_and_benchmarks": "Thicker polymerized layers often need multiple controlled cycles rather than a single heavy application.",
+        "professional_insights": "If the surface feels smooth but visually cloudy, you may be seeing partially broken film—finish with clean dry passes.",
+        "when_to_call_a_professional": "Call when near electrical components, when coatings are unknown, or when damage or corrosion is visible under residue.",
+        "related_topics": ["P-GREASE-001", "M-DEG-001", "P-SOAP-001"]
+      }
+    },
+    {
+      "id": "P-RESIDUE-001",
+      "title": "Product Residue Buildup",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "product-residue-buildup",
+      "summary": "Cleaner and polish buildup that dulls surfaces, causes streaking, and masquerades as permanent soil.",
+      "image": {
+        "primaryAlt": "Streaky countertop from cleaner residue",
+        "queries": [
+          "cleaner residue streaks on countertop",
+          "product buildup dull quartz surface",
+          "too much floor cleaner residue haze"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Product residue buildup is accumulated surfactants, polymers, oils, or wax components left from over-application, incomplete rinsing, or incompatible stacking of products.",
+        "why_it_happens": "More product does not always mean cleaner; without removal and drying, films accumulate and attract dust.",
+        "what_people_do_wrong": "Layering multi-surface sprays, mopping with strong concentrate ratios, or buffing without verifying true soil removal.",
+        "professional_method": "Strip the assumption of grease or hard water first—test a small low-residue rinse sequence, use compatible chemistry to dissolve the film, and dry-finish thoroughly.",
+        "data_and_benchmarks": "Residue issues often spike after product changes or after deep cleans that skipped rinse steps.",
+        "professional_insights": "If soil returns quickly after a perfect-looking wipe, suspect film—not new dirt.",
+        "when_to_call_a_professional": "Call when stone or coated floors are involved, when manufacturer care guides conflict, or when etching could be mistaken for residue.",
+        "related_topics": ["M-NEU-001", "C-PH-001", "P-HARD-001"]
+      }
+    }
+  ]
+}

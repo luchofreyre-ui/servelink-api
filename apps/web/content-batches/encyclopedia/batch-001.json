@@ -1,0 +1,64 @@
+{
+  "pages": [
+    {
+      "id": "P-SOAP-001",
+      "title": "Soap Scum Removal",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "slug": "soap-scum-removal",
+      "summary": "Professional guide to understanding, removing, and preventing soap scum on bathroom surfaces.",
+      "image": {
+        "primaryAlt": "Soap scum buildup on shower glass",
+        "queries": [
+          "soap scum shower glass buildup close up",
+          "soap scum tile bathroom buildup",
+          "soap residue on bathtub surface"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Soap scum is a white, cloudy, or chalky residue that accumulates on bathroom surfaces such as shower glass, tile, bathtubs, and fixtures. It forms a bonded film that becomes progressively more difficult to remove as it layers and hardens.",
+        "why_it_happens": "Soap scum forms when traditional soap reacts with calcium and magnesium in water. Those minerals create insoluble deposits that bind to surfaces, especially when heat, steam, body oils, and infrequent cleaning are involved.",
+        "what_people_do_wrong": "Most people use neutral cleaners, skip dwell time, or scrub aggressively with abrasive tools. Those mistakes either fail to break the residue down or damage the surface while leaving the buildup in place.",
+        "professional_method": "Assess severity first. Use an acidic cleaner appropriate for the surface. Apply evenly, allow sufficient dwell time, agitate with a non-scratch tool, rinse thoroughly, and dry the surface fully with microfiber or a squeegee to prevent re-deposition.",
+        "data_and_benchmarks": "Soap scum accumulates faster in hard water environments. Surface drying dramatically reduces re-formation. Light buildup can often be removed in one cycle, while layered buildup commonly requires repeat application and agitation.",
+        "professional_insights": "Synthetic body washes usually leave less insoluble residue than traditional soap bars. Surface-safe chemistry selection matters more than brute force scrubbing. Preventative drying after each shower can reduce repeated restoration work significantly.",
+        "when_to_call_a_professional": "Call a professional when buildup does not respond to surface-safe chemistry, when glass appears permanently cloudy, when natural stone is involved, or when heavy residue is spread across the entire bathroom.",
+        "related_topics": [
+          "P-HARD-001",
+          "S-GLASS-001",
+          "C-PH-001"
+        ]
+      }
+    },
+    {
+      "id": "P-HARD-001",
+      "title": "Hard Water Stains",
+      "category": "problems",
+      "cluster": "hard-water",
+      "slug": "hard-water-stains",
+      "summary": "Professional guide to identifying, removing, and preventing hard water stains on common household surfaces.",
+      "image": {
+        "primaryAlt": "Hard water stains on a metal faucet",
+        "queries": [
+          "hard water stains faucet close up",
+          "hard water stains shower glass mineral deposits",
+          "mineral buildup on bathroom fixtures"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Hard water stains are mineral deposits left behind when water evaporates and leaves calcium, magnesium, and related compounds on surfaces such as glass, fixtures, tile, and sinks.",
+        "why_it_happens": "When hard water dries, dissolved minerals remain behind and accumulate over time. Repeated wetting and drying cycles cause deposits to layer, bond, and sometimes etch sensitive surfaces if not removed early.",
+        "what_people_do_wrong": "People often confuse hard water stains with soap scum, use the wrong chemistry, wipe too soon, or ignore drying. They also over-scrub delicate finishes and make restoration more difficult.",
+        "professional_method": "Identify the surface and severity. Apply a mineral-targeting acidic cleaner that is safe for the material, allow dwell time, agitate appropriately, rinse thoroughly, and fully dry the surface. Repeat as needed for layered buildup.",
+        "data_and_benchmarks": "Hard water staining increases as water hardness rises. Repeated evaporation cycles create progressive accumulation, especially on shower glass, chrome fixtures, tile, and sinks.",
+        "professional_insights": "Prevention matters as much as removal. Drying surfaces after use, reducing standing water, and maintaining a regular descaling schedule greatly reduce restoration intensity later.",
+        "when_to_call_a_professional": "Call a professional when deposits do not respond to normal descaling, when glass may be etched, when sensitive natural stone is involved, or when buildup is extensive across multiple rooms.",
+        "related_topics": [
+          "P-SOAP-001",
+          "S-GLASS-001",
+          "C-PH-001"
+        ]
+      }
+    }
+  ]
+}

@@ -4,22 +4,18 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, Suspense } from "react";
 import { getStoredAccessToken } from "@/lib/auth";
-import {
-  buildSystemTestsComparePayload,
-  buildSystemTestsCompareResult,
-  fetchAdminSystemTestRunDetail,
-  fetchAdminSystemTestRuns,
-} from "@/lib/api/systemTests";
-import { buildCompareRunIntelligence } from "@/lib/system-tests/compare";
-import { buildEnrichedCompareExport } from "@/lib/system-tests/export";
+import { fetchAdminSystemTestRunDetail, fetchAdminSystemTestRuns } from "@/lib/api/systemTests";
+import { buildSystemTestComparisonReport } from "@/lib/systemTests/buildSystemTestComparisonReport";
+import { compareSystemTestRuns } from "@/lib/systemTests/compareSystemTestRuns";
+import { sortSystemTestRunsListNewestFirst } from "@/lib/systemTests/sortSystemTestRuns";
+import { SystemTestsComparisonGroupsPanel } from "@/components/admin/system-tests/SystemTestsComparisonGroupsPanel";
+import { SystemTestsComparisonHeader } from "@/components/admin/system-tests/SystemTestsComparisonHeader";
+import { SystemTestsComparisonSummaryCards } from "@/components/admin/system-tests/SystemTestsComparisonSummaryCards";
+import { SystemTestsCopyReportButton } from "@/components/admin/system-tests/SystemTestsCopyReportButton";
+import { SystemTestsFileHealthComparisonTable } from "@/components/admin/system-tests/SystemTestsFileHealthComparisonTable";
+import { SystemTestsOperatorInsightsPanel } from "@/components/admin/system-tests/SystemTestsOperatorInsightsPanel";
 import { SystemTestsCompareSelector } from "@/components/admin/system-tests/SystemTestsCompareSelector";
-import { SystemTestsCompareView } from "@/components/admin/system-tests/SystemTestsCompareView";
-import type {
-  SystemTestRunDetailResponse,
-  SystemTestsCompareIntelligence,
-  SystemTestsCompareResult,
-  SystemTestsRunsResponse,
-} from "@/types/systemTests";
+import type { SystemTestRunComparison, SystemTestRunDetailResponse, SystemTestsRunsResponse } from "@/types/systemTests";
 
 function ComparePageInner() {
   const searchParams = useSearchParams();
@@ -34,7 +30,6 @@ function ComparePageInner() {
   const [error, setError] = useState<string | null>(null);
   const [loadingList, setLoadingList] = useState(true);
   const [loadingCompare, setLoadingCompare] = useState(false);
-  const [recentWindow, setRecentWindow] = useState<SystemTestRunDetailResponse[]>([]);
 
   useEffect(() => {
     setToken(getStoredAccessToken());
@@ -70,14 +65,12 @@ function ComparePageInner() {
     if (!tokenChecked || !token || !baseRunId || !targetRunId || baseRunId === targetRunId) {
       setBaseDetail(null);
       setTargetDetail(null);
-      setRecentWindow([]);
       setLoadingCompare(false);
       return;
     }
     let cancelled = false;
     (async () => {
       setLoadingCompare(true);
-      setRecentWindow([]);
       setError(null);
       try {
         const [b, t] = await Promise.all([
@@ -103,77 +96,21 @@ function ComparePageInner() {
     };
   }, [token, tokenChecked, baseRunId, targetRunId]);
 
-  useEffect(() => {
-    if (!tokenChecked || !token || !runs?.items.length || !baseDetail || !targetDetail) {
-      setRecentWindow([]);
-      return;
-    }
-    const want = new Set(runs.items.slice(0, 10).map((r) => r.id));
-    const have = new Map<string, SystemTestRunDetailResponse>([
-      [baseDetail.run.id, baseDetail],
-      [targetDetail.run.id, targetDetail],
-    ]);
-    const missing = [...want].filter((id) => !have.has(id)).slice(0, 8);
+  const runsForSelector = useMemo(() => {
+    if (!runs) return null;
+    const { sorted } = sortSystemTestRunsListNewestFirst(runs.items);
+    return { ...runs, items: sorted };
+  }, [runs]);
 
-    if (missing.length === 0) {
-      const merged = [...have.values()].sort(
-        (a, b) => new Date(a.run.createdAt).getTime() - new Date(b.run.createdAt).getTime(),
-      );
-      setRecentWindow(merged);
-      return;
-    }
-
-    let cancelled = false;
-    (async () => {
-      try {
-        const settled = await Promise.allSettled(
-          missing.map((id) => fetchAdminSystemTestRunDetail(token, id)),
-        );
-        if (cancelled) return;
-        for (const s of settled) {
-          if (s.status === "fulfilled") have.set(s.value.run.id, s.value);
-        }
-        const merged = [...have.values()].sort(
-          (a, b) => new Date(a.run.createdAt).getTime() - new Date(b.run.createdAt).getTime(),
-        );
-        setRecentWindow(merged);
-      } catch {
-        if (!cancelled) {
-          const merged = [...have.values()].sort(
-            (a, b) => new Date(a.run.createdAt).getTime() - new Date(b.run.createdAt).getTime(),
-          );
-          setRecentWindow(merged);
-        }
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [token, tokenChecked, runs, baseDetail, targetDetail]);
-
-  const compare: SystemTestsCompareResult | null = useMemo(() => {
+  const comparison: SystemTestRunComparison | null = useMemo(() => {
     if (!baseDetail || !targetDetail) return null;
-    return buildSystemTestsCompareResult(baseDetail, targetDetail);
+    return compareSystemTestRuns(baseDetail, targetDetail);
   }, [baseDetail, targetDetail]);
 
-  const intelligence: SystemTestsCompareIntelligence | null = useMemo(() => {
-    if (!baseDetail || !targetDetail) return null;
-    return buildCompareRunIntelligence(
-      baseDetail,
-      targetDetail,
-      recentWindow.length >= 2 ? recentWindow : undefined,
-    );
-  }, [baseDetail, targetDetail, recentWindow]);
-
-  const payload = useMemo(() => {
-    if (!compare || !intelligence) return "";
-    return JSON.stringify(
-      buildEnrichedCompareExport(compare, buildSystemTestsComparePayload(compare), intelligence),
-      null,
-      2,
-    );
-  }, [compare, intelligence]);
+  const getComparisonReport = useMemo(() => {
+    if (!comparison) return async () => "";
+    return async () => buildSystemTestComparisonReport(comparison);
+  }, [comparison]);
 
   if (!tokenChecked) {
     return (
@@ -188,10 +125,7 @@ function ComparePageInner() {
       <main className="min-h-screen bg-neutral-950 px-6 py-12 text-white">
         <div className="mx-auto max-w-lg rounded-2xl border border-amber-400/25 bg-amber-500/10 p-8">
           <p className="font-semibold">Authentication required</p>
-          <Link
-            href="/admin/auth?next=/admin/system-tests/compare"
-            className="mt-4 inline-flex rounded-xl border border-amber-300/30 px-4 py-2 text-sm"
-          >
+          <Link href="/admin/auth?next=/admin/system-tests/compare" className="mt-4 inline-flex rounded-xl border border-amber-300/30 px-4 py-2 text-sm">
             Sign in
           </Link>
         </div>
@@ -201,34 +135,47 @@ function ComparePageInner() {
 
   return (
     <main className="min-h-screen bg-neutral-950 px-6 py-12 text-white">
-      <div className="mx-auto max-w-6xl space-y-8">
+      <div className="mx-auto max-w-6xl space-y-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link href="/admin/system-tests" className="text-sm text-sky-300 hover:text-sky-200">
             ← System tests
           </Link>
         </div>
 
-        {loadingList || !runs ? (
+        {loadingList || !runsForSelector ? (
           <p className="text-sm text-white/60">Loading run list…</p>
         ) : (
           <SystemTestsCompareSelector
-            runs={runs}
+            runs={runsForSelector}
             baseRunId={baseRunId || undefined}
             targetRunId={targetRunId || undefined}
           />
         )}
 
         {error ? (
-          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-100">
-            {error}
-          </div>
+          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-100">{error}</div>
         ) : null}
 
         {baseRunId && targetRunId && baseRunId !== targetRunId ? (
           loadingCompare ? (
             <p className="text-sm text-white/60">Loading comparison…</p>
-          ) : compare && payload && intelligence ? (
-            <SystemTestsCompareView compare={compare} payload={payload} intelligence={intelligence} />
+          ) : comparison ? (
+            <div className="space-y-10">
+              <SystemTestsComparisonHeader comparison={comparison} />
+              <SystemTestsComparisonSummaryCards comparison={comparison} />
+              <SystemTestsComparisonGroupsPanel variant="new" groups={comparison.newFailures} />
+              <SystemTestsComparisonGroupsPanel variant="resolved" groups={comparison.resolvedFailures} />
+              <SystemTestsComparisonGroupsPanel variant="persistent" groups={comparison.persistentFailures} />
+              <section className="space-y-3">
+                <h2 className="text-lg font-semibold text-white">File health comparison</h2>
+                <SystemTestsFileHealthComparisonTable rows={comparison.fileHealthChanges} />
+              </section>
+              <SystemTestsOperatorInsightsPanel insights={comparison.operatorInsights} />
+              <section className="space-y-2">
+                <h2 className="text-lg font-semibold text-white">Copy comparison report</h2>
+                <SystemTestsCopyReportButton getReportText={getComparisonReport} label="Copy comparison report" />
+              </section>
+            </div>
           ) : !error ? (
             <p className="text-sm text-white/50">Could not build comparison.</p>
           ) : null

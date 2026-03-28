@@ -79,10 +79,11 @@ type Props = {
   historical: SystemTestsHistoricalChanges | null;
   loading?: boolean;
   scopeNote?: string;
+  emptyHint?: string;
 };
 
 export function SystemTestsHistoricalChangesPanel(props: Props) {
-  const { historical, loading, scopeNote } = props;
+  const { historical, loading, scopeNote, emptyHint } = props;
 
   if (loading) {
     return (
@@ -95,7 +96,7 @@ export function SystemTestsHistoricalChangesPanel(props: Props) {
   if (!historical) {
     return (
       <section className="rounded-2xl border border-dashed border-white/12 bg-white/[0.02] p-6 text-center text-sm text-white/50">
-        Need at least two recent runs with case data to diff history.
+        {emptyHint ?? "Waiting for at least two trusted runs before showing historical changes."}
       </section>
     );
   }

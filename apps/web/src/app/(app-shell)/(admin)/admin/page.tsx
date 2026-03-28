@@ -12,6 +12,8 @@ import {
   clearStoredAccessToken,
   getStoredAccessToken,
 } from "@/lib/auth";
+import { fetchDispatchExceptionActions } from "@/lib/api/dispatchExceptionActions";
+import { buildDispatchExceptionKeyFromBookingId } from "@/types/dispatchExceptionActions";
 
 type DispatchExceptionItem = {
   bookingId: string;
@@ -138,6 +140,14 @@ export default function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [exceptions, setExceptions] = useState<DispatchExceptionItem[]>([]);
   const [activity, setActivity] = useState<AdminActivityItem[]>([]);
+  const [dexActionMetrics, setDexActionMetrics] = useState<{
+    active: number;
+    unassignedCritical: number;
+    needsValidation: number;
+    overdue: number;
+    dueSoon: number;
+    escalationReady: number;
+  } | null>(null);
 
   useEffect(() => {
     const nextToken = getStoredAccessToken();
@@ -152,22 +162,28 @@ export default function AdminPage() {
     }
 
     let cancelled = false;
+    const authToken = token;
 
     async function loadDashboardData() {
       setLoading(true);
       setError(null);
+      setDexActionMetrics(null);
 
       try {
-        const [exceptionsResponse, activityResponse] = await Promise.all([
-          fetch(`${API_BASE_URL}/api/v1/admin/dispatch/exceptions?limit=10`, {
-            headers: { Authorization: `Bearer ${token}` },
-            cache: "no-store",
-          }),
-          fetch(`${API_BASE_URL}/api/v1/admin/activity?limit=10`, {
-            headers: { Authorization: `Bearer ${token}` },
-            cache: "no-store",
-          }),
-        ]);
+        const [exceptionsResponse, activityResponse, dexActions] =
+          await Promise.all([
+            fetch(`${API_BASE_URL}/api/v1/admin/dispatch/exceptions?limit=10`, {
+              headers: { Authorization: `Bearer ${authToken}` },
+              cache: "no-store",
+            }),
+            fetch(`${API_BASE_URL}/api/v1/admin/activity?limit=10`, {
+              headers: { Authorization: `Bearer ${authToken}` },
+              cache: "no-store",
+            }),
+            fetchDispatchExceptionActions(authToken, { limit: 400 }).catch(
+              () => null,
+            ),
+          ]);
 
         if (!exceptionsResponse.ok) {
           throw new Error(
@@ -200,6 +216,30 @@ export default function AdminPage() {
             mapAdminActivityApiItem(row, i),
           ),
         );
+
+        if (dexActions?.items) {
+          const activeSt = new Set(["open", "investigating", "waiting"]);
+          const rows = dexActions.items;
+          const activeRows = rows.filter((r) => activeSt.has(r.status));
+          setDexActionMetrics({
+            active: activeRows.length,
+            unassignedCritical: activeRows.filter(
+              (r) => !r.ownerUserId && r.priority === "critical",
+            ).length,
+            needsValidation: rows.filter(
+              (r) =>
+                r.status === "resolved" &&
+                r.validationState !== "passed",
+            ).length,
+            overdue: activeRows.filter((r) => r.slaStatus === "overdue").length,
+            dueSoon: activeRows.filter((r) => r.slaStatus === "due_soon")
+              .length,
+            escalationReady: activeRows.filter((r) => r.escalationReadyAt)
+              .length,
+          });
+        } else {
+          setDexActionMetrics(null);
+        }
       } catch (err) {
         if (cancelled) return;
         setError(
@@ -379,6 +419,98 @@ export default function AdminPage() {
         </p>
       </DashboardCard>
 
+      <DashboardCard
+        eyebrow="Dispatch"
+        title="Exception actions (queue)"
+        actions={
+          <Link
+            href="/admin/exceptions"
+            className="text-sm font-medium text-slate-300 hover:text-white"
+          >
+            Open queue
+          </Link>
+        }
+      >
+        {dexActionMetrics ?
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <Link
+              href="/admin/exceptions?preset=active"
+              className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs uppercase tracking-wide text-slate-500">
+                Active
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-slate-50">
+                {dexActionMetrics.active}
+              </p>
+            </Link>
+            <Link
+              href="/admin/exceptions?preset=unassigned-critical"
+              className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs uppercase tracking-wide text-slate-500">
+                Unassigned critical
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-amber-100">
+                {dexActionMetrics.unassignedCritical}
+              </p>
+            </Link>
+            <Link
+              href="/admin/exceptions?needsValidation=1"
+              className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs uppercase tracking-wide text-slate-500">
+                Needs validation
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-slate-50">
+                {dexActionMetrics.needsValidation}
+              </p>
+            </Link>
+            <Link
+              href="/admin/exceptions?preset=sla-overdue"
+              className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs uppercase tracking-wide text-slate-500">
+                SLA overdue
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-rose-100">
+                {dexActionMetrics.overdue}
+              </p>
+            </Link>
+            <Link
+              href="/admin/exceptions?preset=sla-due-soon"
+              className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs uppercase tracking-wide text-slate-500">
+                Due soon
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-orange-100">
+                {dexActionMetrics.dueSoon}
+              </p>
+            </Link>
+            <Link
+              href="/admin/exceptions?preset=escalation-ready"
+              className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs uppercase tracking-wide text-slate-500">
+                Escalation ready
+              </p>
+              <p className="mt-1 text-2xl font-semibold text-violet-100">
+                {dexActionMetrics.escalationReady}
+              </p>
+            </Link>
+          </div>
+        : (
+          <p className="text-sm text-slate-400">
+            Action metrics did not load (forbidden, network error, or empty). Open{" "}
+            <Link href="/admin/exceptions" className="text-slate-200 underline">
+              the queue
+            </Link>{" "}
+            after hitting dispatch exceptions once so actions can bootstrap.
+          </p>
+        )}
+      </DashboardCard>
+
       <div className="grid gap-6 xl:grid-cols-2">
         <AdminLaunchReadinessCard />
         <AdminBookingRevenueReadinessCard />
@@ -415,7 +547,7 @@ export default function AdminPage() {
               {exceptions.map((item) => (
                 <Link
                   key={`${item.bookingId}-${item.createdAt}`}
-                  href={`/admin/bookings/${item.bookingId}`}
+                  href={`/admin/exceptions/actions/${encodeURIComponent(buildDispatchExceptionKeyFromBookingId(item.bookingId))}`}
                   className="block rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
                 >
                   <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">

@@ -30,13 +30,8 @@ export type DashboardAlertInput = {
   flakyCases: SystemTestsFlakyCaseRow[];
   patterns: SystemTestsFailurePattern[];
   historical: SystemTestsHistoricalChanges | null;
-  analysisTrust?: {
-    scope: "trusted" | "mixed_fallback" | "thin";
-    trustedInWindow: number;
-    totalInWindow: number;
-    trendMode: "trusted_ci" | "all_runs";
-    trustedRunsInList: number;
-  };
+  /** When 0, only the “no trusted runs” info alert is returned (trusted-only intelligence). */
+  trustedAnalysisDetailCount: number;
 };
 
 function mk(
@@ -55,7 +50,22 @@ function mk(
 
 export function buildDashboardAlerts(input: DashboardAlertInput): SystemTestsAlert[] {
   const alerts: SystemTestsAlert[] = [];
-  const { trendPoints, trendInsights, summary, flakyCases, patterns, historical, analysisTrust } = input;
+  const { trendPoints, trendInsights, summary, flakyCases, patterns, historical, trustedAnalysisDetailCount } =
+    input;
+
+  if (trustedAnalysisDetailCount === 0) {
+    return [
+      mk({
+        id: "intel-no-trusted-runs",
+        level: "info",
+        title: "No trusted runs available",
+        message: "Intelligence is waiting for trusted CI or local-dev uploads.",
+        operatorSummary: "Historical signals are hidden until trusted runs are available.",
+        recommendedAction: "Run CI or upload a trusted local-dev report.",
+        impactScore: 1,
+      }),
+    ];
+  }
 
   if (trendInsights?.passRateDelta != null) {
     const d = trendInsights.passRateDelta;
@@ -243,48 +253,6 @@ export function buildDashboardAlerts(input: DashboardAlertInput): SystemTestsAle
           operatorSummary: "You may be past the incident window — good moment to snapshot and protect the branch.",
           recommendedAction: "Tag or merge if policy allows; keep monitoring the next scheduled run.",
           impactScore: 6,
-        }),
-      );
-    }
-  }
-
-  if (analysisTrust) {
-    if (analysisTrust.scope === "mixed_fallback" && analysisTrust.trustedInWindow > 0) {
-      alerts.push(
-        mk({
-          id: "intel-mixed-runs",
-          level: "info",
-          title: "Intelligence blended non-CI runs",
-          message: `Using ${analysisTrust.totalInWindow} run(s) in window; only ${analysisTrust.trustedInWindow} matched trusted CI heuristics.`,
-          operatorSummary:
-            "Recent history mixes CI with local, manual, or synthetic uploads — treat rankings as directional, not definitive.",
-          recommendedAction: "Filter uploads in CI or compare two trusted runs only when triaging regressions.",
-          impactScore: 4,
-        }),
-      );
-    } else if (analysisTrust.scope === "thin") {
-      alerts.push(
-        mk({
-          id: "intel-thin-trust",
-          level: "info",
-          title: "Limited trusted CI in this window",
-          message: "Fewer than two runs matched trusted CI patterns — analysis may reflect dev noise.",
-          operatorSummary: "Without enough hosted CI runs, flaky and pattern signals are weaker.",
-          recommendedAction: "Wait for the next CI upload or narrow compare to known-good CI runs.",
-          impactScore: 3,
-        }),
-      );
-    }
-    if (analysisTrust.trendMode === "all_runs" && analysisTrust.trustedRunsInList >= 1) {
-      alerts.push(
-        mk({
-          id: "trend-all-runs",
-          level: "info",
-          title: "Trend line uses all sources",
-          message: "Not enough trusted CI rows for a dedicated trend — chart includes every uploaded run.",
-          operatorSummary: "Pass-rate trend may include local or manual uploads.",
-          recommendedAction: "Prefer the compare view with two CI runs once history allows.",
-          impactScore: 2,
         }),
       );
     }

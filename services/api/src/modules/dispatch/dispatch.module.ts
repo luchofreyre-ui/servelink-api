@@ -2,6 +2,10 @@ import { Module } from "@nestjs/common";
 import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
 import { FoModule } from "../fo/fo.module";
 import { DispatchAdminController } from "./dispatch.admin.controller";
+import { DispatchExceptionActionsAdminController } from "./dispatch-exception-actions.admin.controller";
+import { DispatchExceptionActionsService } from "./dispatch-exception-actions.service";
+import { DispatchExceptionAutomationService } from "./dispatch-exception-automation.service";
+import { DispatchExceptionLifecycleService } from "./dispatch-exception-lifecycle.service";
 import { DispatchConfigAdminController } from "./dispatch-config.admin.controller";
 import { DispatchFoController } from "./dispatch.fo.controller";
 import { DispatchFoOfferResponseController } from "./dispatch.fo-offer-response.controller";
@@ -21,12 +25,16 @@ import { TrustModule } from "../trust/trust.module";
   imports: [FoModule, TrustModule],
   controllers: [
     DispatchAdminController,
+    DispatchExceptionActionsAdminController,
     DispatchConfigAdminController,
     DispatchFoController,
     DispatchFoOfferResponseController,
   ],
   providers: [
     AdminPermissionsGuard,
+    DispatchExceptionAutomationService,
+    DispatchExceptionActionsService,
+    DispatchExceptionLifecycleService,
     DispatchService,
     DispatchWorker,
     ReputationService,

@@ -9,14 +9,22 @@ import {
 import { AuthorityJsonLd } from "@/components/authority/AuthorityJsonLd";
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
+import { getPublishedEncyclopediaEntriesByCategory } from "@/lib/encyclopedia/loader";
 
 export const metadata: Metadata = buildAuthoritySurfacesIndexMetadata();
 
 const SURFACES_TITLE = "Surfaces";
-const SURFACES_DESCRIPTION = "Finish-first guidance with graph-linked methods and problems.";
+const SURFACES_DESCRIPTION =
+  "Finish-first guidance with graph-linked methods and problems.";
 
 export default function SurfacesIndexPage() {
-  const surfaces = getAllSurfacePages();
+  const legacySurfaces = getAllSurfacePages();
+  const pipelineSurfaces = getPublishedEncyclopediaEntriesByCategory("surfaces");
+  const legacySlugs = new Set(legacySurfaces.map((surface) => surface.slug));
+  const pipelineOnlySurfaces = pipelineSurfaces.filter(
+    (entry) => !legacySlugs.has(entry.slug),
+  );
+
   const indexJsonLd = [
     buildBreadcrumbListSchema([
       { label: "Home", href: "/" },
@@ -42,32 +50,77 @@ export default function SurfacesIndexPage() {
           {" / "}
           <span className="text-[#0F172A]">Surfaces</span>
         </nav>
-        <h1 className="mt-6 font-[var(--font-poppins)] text-4xl font-semibold tracking-tight">{SURFACES_TITLE}</h1>
-        <p className="mt-4 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">{SURFACES_DESCRIPTION}</p>
-        <ul className="mt-10 space-y-3 font-[var(--font-manrope)] text-sm">
-          {surfaces.map((s) => (
-            <li key={s.slug}>
-              <Link href={`/surfaces/${s.slug}`} className="font-medium text-[#0D9488] hover:underline">
-                {s.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
+
+        <h1 className="mt-6 font-[var(--font-poppins)] text-4xl font-semibold tracking-tight">
+          {SURFACES_TITLE}
+        </h1>
+
+        <p className="mt-4 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
+          {SURFACES_DESCRIPTION}
+        </p>
+
+        <section className="mt-10">
+          <h2 className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A]">
+            Authority graph pages
+          </h2>
+          <ul className="mt-4 space-y-3 font-[var(--font-manrope)] text-sm">
+            {legacySurfaces.map((surface) => (
+              <li key={surface.slug}>
+                <Link
+                  href={`/surfaces/${surface.slug}`}
+                  className="font-medium text-[#0D9488] hover:underline"
+                >
+                  {surface.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {pipelineOnlySurfaces.length > 0 ? (
+          <section className="mt-14 border-t border-[#C9B27C]/20 pt-10">
+            <h2 className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A]">
+              Pipeline-backed articles
+            </h2>
+            <ul className="mt-4 space-y-3 font-[var(--font-manrope)] text-sm">
+              {pipelineOnlySurfaces.map((entry) => (
+                <li key={entry.id}>
+                  <Link
+                    href={`/surfaces/${entry.slug}`}
+                    className="font-medium text-[#0D9488] hover:underline"
+                  >
+                    {entry.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
         <section className="mt-14 border-t border-[#C9B27C]/20 pt-10">
-          <h2 className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A]">Surface protection</h2>
+          <h2 className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A]">
+            Surface protection
+          </h2>
           <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
-            <Link href="/guides/when-cleaning-damages-surfaces" className="font-medium text-[#0D9488] hover:underline">
+            <Link
+              href="/guides/when-cleaning-damages-surfaces"
+              className="font-medium text-[#0D9488] hover:underline"
+            >
               When cleaning damages surfaces
             </Link>
-            — abrasion, chemistry, moisture, and cumulative risk.
+            {" "}— abrasion, chemistry, moisture, and cumulative risk.
           </p>
         </section>
+
         <section className="mt-10 border-t border-[#C9B27C]/20 pt-10">
           <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
-            <Link href="/compare/surfaces" className="font-medium text-[#0D9488] hover:underline">
+            <Link
+              href="/compare/surfaces"
+              className="font-medium text-[#0D9488] hover:underline"
+            >
               Compare surfaces
             </Link>
-            — structured “vs” pages from the authority graph.
+            {" "}— structured “vs” pages from the authority graph.
           </p>
           <ul className="mt-4 space-y-2 font-[var(--font-manrope)] text-sm text-[#475569]">
             <li>

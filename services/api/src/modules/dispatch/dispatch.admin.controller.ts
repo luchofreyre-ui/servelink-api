@@ -5,12 +5,16 @@ import { AdminPermissions } from "../../common/admin/admin-permissions.decorator
 import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
 import type { GetAdminDispatchExceptionsQueryDto } from "./dto/admin-dispatch-exceptions.dto";
 import { DispatchDecisionService } from "../bookings/dispatch-decision.service";
+import { DispatchExceptionLifecycleService } from "./dispatch-exception-lifecycle.service";
 
 @Controller("/api/v1/admin/dispatch")
 @UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
 @AdminPermissions("exceptions.read")
 export class DispatchAdminController {
-  constructor(private readonly dispatchDecisionService: DispatchDecisionService) {}
+  constructor(
+    private readonly dispatchDecisionService: DispatchDecisionService,
+    private readonly dispatchExceptionLifecycle: DispatchExceptionLifecycleService,
+  ) {}
 
   @Get("exceptions")
   async getDispatchExceptions(
@@ -31,6 +35,11 @@ export class DispatchAdminController {
       sortOrder: query.sortOrder === "asc" ? "asc" : "desc",
       requiresFollowUp: requiresFollowUp || undefined,
       priorityBucket: query.priorityBucket ?? null,
+      onFiltered: (items) =>
+        this.dispatchExceptionLifecycle.syncAfterExceptionsRefreshed(
+          items,
+          null,
+        ),
     });
   }
 }

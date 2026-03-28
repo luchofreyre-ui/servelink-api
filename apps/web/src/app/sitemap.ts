@@ -7,6 +7,7 @@ import {
   getAllQuestionEntries,
   getAllServiceEntries,
 } from "@/components/marketing/precision-luxury/content/publicContentSelectors";
+import { buildEncyclopediaSitemapAbsoluteUrls } from "@/lib/encyclopedia/sitemap";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -45,5 +46,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...serviceRoutes, ...questionRoutes, ...guideRoutes];
+  const enc = buildEncyclopediaSitemapAbsoluteUrls(PUBLIC_SITE_URL);
+  const encyclopediaRoutes: MetadataRoute.Sitemap = [
+    ...enc.encyclopediaRoot,
+    ...enc.categoryListings,
+    ...enc.clusterHubs,
+    ...enc.articles,
+  ];
+
+  return [
+    ...staticRoutes,
+    ...serviceRoutes,
+    ...questionRoutes,
+    ...guideRoutes,
+    ...encyclopediaRoutes,
+  ];
 }

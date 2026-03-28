@@ -341,6 +341,10 @@ export class DispatchDecisionService {
     sortOrder?: "asc" | "desc";
     requiresFollowUp?: boolean;
     priorityBucket?: string | null;
+    /** Called after filters + sort, before pagination slice (full filtered set). */
+    onFiltered?: (
+      items: AdminDispatchExceptionItemDto[],
+    ) => void | Promise<void>;
   }): Promise<AdminDispatchExceptionsResponseDto> {
     const type: DispatchExceptionType = args.type ?? "all";
     const minDispatchPasses = Math.max(args.minDispatchPasses ?? 3, 1);
@@ -591,6 +595,10 @@ export class DispatchDecisionService {
 
     const compare = this.buildExceptionsSortCompare(sortBy, sortOrder);
     filtered.sort(compare);
+
+    if (args.onFiltered) {
+      await args.onFiltered(filtered);
+    }
 
     const capped = filtered.slice(0, limit);
     // v1: cursor-based pagination not implemented for exceptions; use nextCursor: null

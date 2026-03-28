@@ -1,0 +1,587 @@
+[
+  {
+    "id": "P-SOAP-001",
+    "title": "Soap Scum Removal",
+    "category": "problems",
+    "cluster": "soap-scum",
+    "role": "core",
+    "slug": "soap-scum-removal",
+    "status": "published"
+  },
+  {
+    "id": "P-HARD-001",
+    "title": "Hard Water Stains",
+    "category": "problems",
+    "cluster": "hard-water",
+    "role": "core",
+    "slug": "hard-water-stains",
+    "status": "published"
+  },
+  {
+    "id": "M-DEG-001",
+    "title": "Degreasing",
+    "category": "methods",
+    "cluster": "degreasing",
+    "role": "core",
+    "slug": "degreasing",
+    "status": "published"
+  },
+  {
+    "id": "M-NEU-001",
+    "title": "Neutral Surface Cleaning",
+    "category": "methods",
+    "cluster": "neutral-cleaning",
+    "role": "core",
+    "slug": "neutral-surface-cleaning",
+    "status": "published"
+  },
+  {
+    "id": "M-HWD-001",
+    "title": "Hard Water Deposit Removal",
+    "category": "methods",
+    "cluster": "hard-water-removal",
+    "role": "core",
+    "slug": "hard-water-deposit-removal",
+    "status": "published"
+  },
+  {
+    "id": "M-GLS-001",
+    "title": "Streak-Free Glass Cleaning",
+    "category": "methods",
+    "cluster": "glass-cleaning",
+    "role": "core",
+    "slug": "streak-free-glass-cleaning",
+    "status": "published"
+  },
+  {
+    "id": "M-DST-001",
+    "title": "Dry Dust Removal",
+    "category": "methods",
+    "cluster": "dust-removal",
+    "role": "core",
+    "slug": "dry-dust-removal",
+    "status": "published"
+  },
+  {
+    "id": "M-TCH-001",
+    "title": "Touchpoint Sanitization",
+    "category": "methods",
+    "cluster": "touchpoint-sanitization",
+    "role": "core",
+    "slug": "touchpoint-sanitization",
+    "status": "published"
+  },
+  {
+    "id": "S-GLASS-001",
+    "title": "Cleaning Glass Surfaces",
+    "category": "surfaces",
+    "cluster": "glass",
+    "role": "core",
+    "slug": "cleaning-glass-surfaces",
+    "status": "published"
+  },
+  {
+    "id": "S-SHWR-001",
+    "title": "Cleaning Shower Glass",
+    "category": "surfaces",
+    "cluster": "shower-glass",
+    "role": "core",
+    "slug": "cleaning-shower-glass",
+    "status": "published"
+  },
+  {
+    "id": "S-TILE-001",
+    "title": "Cleaning Tile Surfaces",
+    "category": "surfaces",
+    "cluster": "tile",
+    "role": "core",
+    "slug": "cleaning-tile-surfaces",
+    "status": "published"
+  },
+  {
+    "id": "S-GROUT-001",
+    "title": "Cleaning Grout",
+    "category": "surfaces",
+    "cluster": "grout",
+    "role": "core",
+    "slug": "cleaning-grout",
+    "status": "published"
+  },
+  {
+    "id": "S-SS-001",
+    "title": "Cleaning Stainless Steel",
+    "category": "surfaces",
+    "cluster": "stainless-steel",
+    "role": "core",
+    "slug": "cleaning-stainless-steel",
+    "status": "published"
+  },
+  {
+    "id": "S-WOOD-001",
+    "title": "Cleaning Finished Wood",
+    "category": "surfaces",
+    "cluster": "finished-wood",
+    "role": "core",
+    "slug": "cleaning-finished-wood",
+    "status": "published"
+  },
+  {
+    "id": "C-PH-001",
+    "title": "pH in Cleaning",
+    "category": "chemicals",
+    "cluster": "ph",
+    "role": "core",
+    "slug": "ph-in-cleaning",
+    "status": "draft"
+  },
+  {
+    "id": "P-GREASE-001",
+    "title": "Grease Buildup",
+    "category": "problems",
+    "cluster": "grease-buildup",
+    "role": "core",
+    "slug": "grease-buildup",
+    "status": "published"
+  },
+  {
+    "id": "P-GREASE-002",
+    "title": "Grease on Kitchen Cabinets",
+    "category": "problems",
+    "cluster": "grease-buildup",
+    "role": "surface-variant",
+    "slug": "grease-on-kitchen-cabinets",
+    "status": "published"
+  },
+  {
+    "id": "P-GREASE-003",
+    "title": "Grease on Stainless Steel",
+    "category": "problems",
+    "cluster": "grease-buildup",
+    "role": "surface-variant",
+    "slug": "grease-on-stainless-steel",
+    "status": "published"
+  },
+  {
+    "id": "P-GREASE-004",
+    "title": "Grease on Backsplashes",
+    "category": "problems",
+    "cluster": "grease-buildup",
+    "role": "surface-variant",
+    "slug": "grease-on-backsplashes",
+    "status": "published"
+  },
+  {
+    "id": "P-GREASE-005",
+    "title": "Grease on Walls Near the Stove",
+    "category": "problems",
+    "cluster": "grease-buildup",
+    "role": "surface-variant",
+    "slug": "grease-on-walls-near-the-stove",
+    "status": "published"
+  },
+  {
+    "id": "P-GREASE-006",
+    "title": "Polymerized Grease Residue",
+    "category": "problems",
+    "cluster": "grease-buildup",
+    "role": "severity-variant",
+    "slug": "polymerized-grease-residue",
+    "status": "published"
+  },
+  {
+    "id": "P-RESIDUE-001",
+    "title": "Product Residue Buildup",
+    "category": "problems",
+    "cluster": "product-residue",
+    "role": "core",
+    "slug": "product-residue-buildup",
+    "status": "published"
+  },
+  {
+    "id": "P-RESIDUE-002",
+    "title": "Floor Residue After Mopping",
+    "category": "problems",
+    "cluster": "product-residue",
+    "role": "surface-variant",
+    "slug": "floor-residue-after-mopping",
+    "status": "published"
+  },
+  {
+    "id": "P-RESIDUE-003",
+    "title": "Sticky Floors After Cleaning",
+    "category": "problems",
+    "cluster": "product-residue",
+    "role": "severity-variant",
+    "slug": "sticky-floors-after-cleaning",
+    "status": "published"
+  },
+  {
+    "id": "P-RESIDUE-004",
+    "title": "Cleaner Film on Countertops",
+    "category": "problems",
+    "cluster": "product-residue",
+    "role": "surface-variant",
+    "slug": "cleaner-film-on-countertops",
+    "status": "published"
+  },
+  {
+    "id": "P-RESIDUE-005",
+    "title": "Residue on Stainless Steel",
+    "category": "problems",
+    "cluster": "product-residue",
+    "role": "surface-variant",
+    "slug": "residue-on-stainless-steel",
+    "status": "published"
+  },
+  {
+    "id": "P-RESIDUE-006",
+    "title": "Residue on Glass Surfaces",
+    "category": "problems",
+    "cluster": "product-residue",
+    "role": "surface-variant",
+    "slug": "residue-on-glass-surfaces",
+    "status": "published"
+  },
+  {
+    "id": "P-HAZE-001",
+    "title": "Surface Haze",
+    "category": "problems",
+    "cluster": "surface-haze",
+    "role": "core",
+    "slug": "surface-haze",
+    "status": "published"
+  },
+  {
+    "id": "P-HAZE-002",
+    "title": "Haze on Glass",
+    "category": "problems",
+    "cluster": "surface-haze",
+    "role": "surface-variant",
+    "slug": "haze-on-glass",
+    "status": "published"
+  },
+  {
+    "id": "P-HAZE-003",
+    "title": "Haze on Tile Floors",
+    "category": "problems",
+    "cluster": "surface-haze",
+    "role": "surface-variant",
+    "slug": "haze-on-tile-floors",
+    "status": "published"
+  },
+  {
+    "id": "P-HAZE-004",
+    "title": "Haze on Finished Wood",
+    "category": "problems",
+    "cluster": "surface-haze",
+    "role": "surface-variant",
+    "slug": "haze-on-finished-wood",
+    "status": "published"
+  },
+  {
+    "id": "P-HAZE-005",
+    "title": "Haze on Stainless Steel",
+    "category": "problems",
+    "cluster": "surface-haze",
+    "role": "surface-variant",
+    "slug": "haze-on-stainless-steel",
+    "status": "published"
+  },
+  {
+    "id": "P-HAZE-006",
+    "title": "Haze After Cleaning",
+    "category": "problems",
+    "cluster": "surface-haze",
+    "role": "intent-variant",
+    "slug": "haze-after-cleaning",
+    "status": "published"
+  },
+  {
+    "id": "P-STREAK-001",
+    "title": "Streaking",
+    "category": "problems",
+    "cluster": "streaking",
+    "role": "core",
+    "slug": "streaking",
+    "status": "published"
+  },
+  {
+    "id": "P-STREAK-002",
+    "title": "Streaks on Glass",
+    "category": "problems",
+    "cluster": "streaking",
+    "role": "surface-variant",
+    "slug": "streaks-on-glass",
+    "status": "published"
+  },
+  {
+    "id": "P-STREAK-003",
+    "title": "Streaks on Mirrors",
+    "category": "problems",
+    "cluster": "streaking",
+    "role": "surface-variant",
+    "slug": "streaks-on-mirrors",
+    "status": "published"
+  },
+  {
+    "id": "P-STREAK-004",
+    "title": "Streaks on Stainless Steel",
+    "category": "problems",
+    "cluster": "streaking",
+    "role": "surface-variant",
+    "slug": "streaks-on-stainless-steel",
+    "status": "published"
+  },
+  {
+    "id": "P-STREAK-005",
+    "title": "Streaks on Black Fixtures",
+    "category": "problems",
+    "cluster": "streaking",
+    "role": "surface-variant",
+    "slug": "streaks-on-black-fixtures",
+    "status": "published"
+  },
+  {
+    "id": "P-STREAK-006",
+    "title": "Why Surfaces Streak After Cleaning",
+    "category": "problems",
+    "cluster": "streaking",
+    "role": "intent-variant",
+    "slug": "why-surfaces-streak-after-cleaning",
+    "status": "published"
+  },
+  {
+    "id": "P-DUST-001",
+    "title": "Dust Buildup",
+    "category": "problems",
+    "cluster": "dust-buildup",
+    "role": "core",
+    "slug": "dust-buildup",
+    "status": "published"
+  },
+  {
+    "id": "P-DUST-002",
+    "title": "Dust on Finished Wood",
+    "category": "problems",
+    "cluster": "dust-buildup",
+    "role": "surface-variant",
+    "slug": "dust-on-finished-wood",
+    "status": "published"
+  },
+  {
+    "id": "P-DUST-003",
+    "title": "Dust on Glass Surfaces",
+    "category": "problems",
+    "cluster": "dust-buildup",
+    "role": "surface-variant",
+    "slug": "dust-on-glass-surfaces",
+    "status": "published"
+  },
+  {
+    "id": "P-DUST-004",
+    "title": "Dust on Baseboards",
+    "category": "problems",
+    "cluster": "dust-buildup",
+    "role": "surface-variant",
+    "slug": "dust-on-baseboards",
+    "status": "published"
+  },
+  {
+    "id": "P-DUST-005",
+    "title": "Dust on Ceiling Fans",
+    "category": "problems",
+    "cluster": "dust-buildup",
+    "role": "surface-variant",
+    "slug": "dust-on-ceiling-fans",
+    "status": "published"
+  },
+  {
+    "id": "P-DUST-006",
+    "title": "Dust Returning Quickly",
+    "category": "problems",
+    "cluster": "dust-buildup",
+    "role": "intent-variant",
+    "slug": "dust-returning-quickly",
+    "status": "published"
+  },
+  {
+    "id": "P-SOIL-001",
+    "title": "General Soil Buildup",
+    "category": "problems",
+    "cluster": "general-soil",
+    "role": "core",
+    "slug": "general-soil-buildup",
+    "status": "published"
+  },
+  {
+    "id": "P-SOIL-002",
+    "title": "Tracked-In Soil on Floors",
+    "category": "problems",
+    "cluster": "general-soil",
+    "role": "surface-variant",
+    "slug": "tracked-in-soil-on-floors",
+    "status": "published"
+  },
+  {
+    "id": "P-SOIL-003",
+    "title": "General Soil on Tile",
+    "category": "problems",
+    "cluster": "general-soil",
+    "role": "surface-variant",
+    "slug": "general-soil-on-tile",
+    "status": "published"
+  },
+  {
+    "id": "P-SOIL-004",
+    "title": "General Soil on Finished Wood",
+    "category": "problems",
+    "cluster": "general-soil",
+    "role": "surface-variant",
+    "slug": "general-soil-on-finished-wood",
+    "status": "published"
+  },
+  {
+    "id": "P-SOIL-005",
+    "title": "General Soil on Grout",
+    "category": "problems",
+    "cluster": "general-soil",
+    "role": "surface-variant",
+    "slug": "general-soil-on-grout",
+    "status": "published"
+  },
+  {
+    "id": "P-SOIL-006",
+    "title": "Embedded General Soil",
+    "category": "problems",
+    "cluster": "general-soil",
+    "role": "severity-variant",
+    "slug": "embedded-general-soil",
+    "status": "published"
+  },
+  {
+    "id": "P-LIME-001",
+    "title": "Limescale Buildup",
+    "category": "problems",
+    "cluster": "limescale",
+    "role": "core",
+    "slug": "limescale-buildup",
+    "status": "published"
+  },
+  {
+    "id": "P-LIME-002",
+    "title": "Limescale on Fixtures",
+    "category": "problems",
+    "cluster": "limescale",
+    "role": "surface-variant",
+    "slug": "limescale-on-fixtures",
+    "status": "published"
+  },
+  {
+    "id": "P-LIME-003",
+    "title": "Limescale on Shower Glass",
+    "category": "problems",
+    "cluster": "limescale",
+    "role": "surface-variant",
+    "slug": "limescale-on-shower-glass",
+    "status": "published"
+  },
+  {
+    "id": "P-LIME-004",
+    "title": "Limescale on Tile",
+    "category": "problems",
+    "cluster": "limescale",
+    "role": "surface-variant",
+    "slug": "limescale-on-tile",
+    "status": "published"
+  },
+  {
+    "id": "P-LIME-005",
+    "title": "Heavy Limescale Deposits",
+    "category": "problems",
+    "cluster": "limescale",
+    "role": "severity-variant",
+    "slug": "heavy-limescale-deposits",
+    "status": "published"
+  },
+  {
+    "id": "P-LIME-006",
+    "title": "Limescale vs Hard Water Stains",
+    "category": "problems",
+    "cluster": "limescale",
+    "role": "intent-variant",
+    "slug": "limescale-vs-hard-water-stains",
+    "status": "published"
+  },
+  {
+    "id": "P-ETCH-001",
+    "title": "Glass Etching",
+    "category": "problems",
+    "cluster": "glass-etching",
+    "role": "core",
+    "slug": "glass-etching",
+    "status": "published"
+  },
+  {
+    "id": "P-ETCH-002",
+    "title": "Etching on Shower Glass",
+    "category": "problems",
+    "cluster": "glass-etching",
+    "role": "surface-variant",
+    "slug": "etching-on-shower-glass",
+    "status": "published"
+  },
+  {
+    "id": "P-ETCH-003",
+    "title": "Cloudy Glass vs Etched Glass",
+    "category": "problems",
+    "cluster": "glass-etching",
+    "role": "intent-variant",
+    "slug": "cloudy-glass-vs-etched-glass",
+    "status": "published"
+  },
+  {
+    "id": "P-ETCH-004",
+    "title": "Permanent Glass Damage from Hard Water",
+    "category": "problems",
+    "cluster": "glass-etching",
+    "role": "intent-variant",
+    "slug": "permanent-glass-damage-from-hard-water",
+    "status": "published"
+  },
+  {
+    "id": "P-ETCH-005",
+    "title": "Etching vs Residue on Glass",
+    "category": "problems",
+    "cluster": "glass-etching",
+    "role": "intent-variant",
+    "slug": "etching-vs-residue-on-glass",
+    "status": "published"
+  },
+  {
+    "id": "P-ETCH-006",
+    "title": "When Glass Cannot Be Restored by Cleaning",
+    "category": "problems",
+    "cluster": "glass-etching",
+    "role": "supporting",
+    "slug": "when-glass-cannot-be-restored-by-cleaning",
+    "status": "published"
+  },
+  {
+    "id": "P-GROUT-001",
+    "title": "Dirty Grout Lines",
+    "category": "problems",
+    "cluster": "grout-soiling",
+    "role": "core",
+    "slug": "dirty-grout-lines",
+    "status": "published"
+  },
+  {
+    "id": "P-GROUT-002",
+    "title": "Dark Grout After Cleaning",
+    "category": "problems",
+    "cluster": "grout-soiling",
+    "role": "severity-variant",
+    "slug": "dark-grout-after-cleaning",
+    "status": "published"
+  }
+]

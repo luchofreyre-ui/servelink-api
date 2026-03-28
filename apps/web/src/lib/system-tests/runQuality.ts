@@ -4,134 +4,167 @@ import type {
   SystemTestsRunsResponse,
 } from "@/types/systemTests";
 
-/**
- * Coarse provenance for operator trust — derived from `source` + `branch` only (no backend changes).
- */
-export type RunProvenance = "trusted_ci" | "local" | "manual" | "synthetic" | "unknown";
+export type SystemTestsRunProvenance =
+  | "trusted_ci"
+  | "local_dev"
+  | "manual"
+  | "synthetic"
+  | "unknown";
 
-const TRUSTED_RE =
-  /github|gitea|actions|workflow|ci[/_-]|hosted|pipeline|railway|vercel|circle|jenkins|gitlab|buildkite|azure.?devops/i;
-const LOCAL_RE = /local|localhost|127\.0\.0\.1|workstation|dev\s*machine|my\s*machine/i;
-const MANUAL_RE = /manual|adhoc|ad-hoc|cursor|one[-_]?off|upload[-_]?only|hand[-_]?run/i;
-const SYNTH_RE =
-  /synthetic|fixture|seed|dev[-_]?only|pw[-_]?fixture|test[-_]?harness|playwright[-_]?fixture|mock[-_]?run|fake[-_]?ci/i;
+/** @deprecated Use SystemTestsRunProvenance */
+export type RunProvenance = SystemTestsRunProvenance;
 
-export function classifyRunProvenance(meta: {
-  source: string;
+function normalize(value: string | null | undefined): string {
+  return (value ?? "").trim().toLowerCase();
+}
+
+export function classifyRunProvenance(input: {
+  source?: string | null;
   branch?: string | null;
-}): RunProvenance {
-  const s = (meta.source ?? "").toLowerCase().trim();
-  const b = (meta.branch ?? "").toLowerCase().trim();
-  const blob = `${s} ${b}`;
+  commitSha?: string | null;
+}): SystemTestsRunProvenance {
+  const source = normalize(input.source);
+  const branch = normalize(input.branch);
+  const hasCommit = Boolean((input.commitSha ?? "").trim());
 
-  if (SYNTH_RE.test(blob) || /fixture|synthetic|seed-only|dev\/playwright/i.test(b)) {
+  if (source === "github-actions") {
+    return "trusted_ci";
+  }
+
+  if (source === "local-dev") {
+    return "local_dev";
+  }
+
+  if (
+    source === "ci" ||
+    source === "playwright-json" ||
+    source === "playwright-local" ||
+    source === "older" ||
+    source === "newer" ||
+    source === "second-run" ||
+    source === "manual" ||
+    source === "fixture" ||
+    source === "synthetic"
+  ) {
     return "synthetic";
   }
-  if (LOCAL_RE.test(blob)) return "local";
-  if (MANUAL_RE.test(blob)) return "manual";
-  if (TRUSTED_RE.test(blob)) return "trusted_ci";
-  if (!s || s === "unknown" || s === "—") return "unknown";
-  return "unknown";
+
+  if (source === "local" && branch === "main" && hasCommit) {
+    return "local_dev";
+  }
+
+  if (!source && !branch && !hasCommit) {
+    return "unknown";
+  }
+
+  return "manual";
 }
 
-export function isTrustedCIRun(meta: { source: string; branch?: string | null }): boolean {
-  return classifyRunProvenance(meta) === "trusted_ci";
+export function isTrustedIntelligenceRun(input: {
+  source?: string | null;
+  branch?: string | null;
+  commitSha?: string | null;
+}): boolean {
+  const provenance = classifyRunProvenance(input);
+  return provenance === "trusted_ci" || provenance === "local_dev";
 }
 
-export function isNoisyProvenance(p: RunProvenance): boolean {
-  return p === "local" || p === "manual" || p === "synthetic";
+export function isStrictTrustedCIRun(input: {
+  source?: string | null;
+  branch?: string | null;
+  commitSha?: string | null;
+}): boolean {
+  return classifyRunProvenance(input) === "trusted_ci";
+}
+
+export function isNoisyIntelligenceRun(input: {
+  source?: string | null;
+  branch?: string | null;
+  commitSha?: string | null;
+}): boolean {
+  return !isTrustedIntelligenceRun(input);
+}
+
+/** @deprecated Prefer isStrictTrustedCIRun */
+export function isTrustedCIRun(meta: { source: string; branch?: string | null; commitSha?: string | null }): boolean {
+  return isStrictTrustedCIRun(meta);
+}
+
+/** @deprecated No longer used for intelligence; kept for legacy call sites if any */
+export function isNoisyProvenance(p: SystemTestsRunProvenance): boolean {
+  return p === "manual" || p === "synthetic" || p === "unknown";
 }
 
 export type IntelligenceWindowPick = {
-  /** Runs used for flaky/patterns/historical (chronological asc). */
   primary: SystemTestRunDetailResponse[];
-  /** True when we fell back to all runs because trusted count was low. */
   usedFallback: boolean;
   trustedCount: number;
   noisyCount: number;
   totalCount: number;
-  /** Human-readable scope for UI. */
   scope: "trusted" | "mixed_fallback" | "thin";
 };
 
-const MIN_TRUSTED_FOR_PRIMARY = 2;
-
 /**
- * Prefer trusted CI runs for intelligence; fall back to full window with clear labeling.
+ * Trusted-only window for exports: same rules as dashboard intelligenceRuns (1+ trusted details, asc by time).
  */
 export function pickRunDetailsForIntelligence(
   details: SystemTestRunDetailResponse[],
-  minTrusted = MIN_TRUSTED_FOR_PRIMARY,
+  _minTrusted = 2,
 ): IntelligenceWindowPick {
   const sorted = [...details].sort(
     (a, b) => new Date(a.run.createdAt).getTime() - new Date(b.run.createdAt).getTime(),
   );
-  const totalCount = sorted.length;
-  const trusted = sorted.filter((d) => isTrustedCIRun(d.run));
-  const noisyCount = sorted.filter((d) => isNoisyProvenance(classifyRunProvenance(d.run))).length;
+  const trusted = sorted.filter((d) =>
+    isTrustedIntelligenceRun({
+      source: d.run.source,
+      branch: d.run.branch,
+      commitSha: d.run.commitSha,
+    }),
+  );
+  const noisyCount = sorted.filter((d) => isNoisyIntelligenceRun(d.run)).length;
   const trustedCount = trusted.length;
+  const totalCount = sorted.length;
 
-  if (trusted.length >= minTrusted && totalCount >= 2) {
-    return {
-      primary: trusted,
-      usedFallback: false,
-      trustedCount,
-      noisyCount,
-      totalCount,
-      scope: noisyCount > 0 ? "mixed_fallback" : "trusted",
-    };
-  }
-
-  if (sorted.length >= 2) {
-    return {
-      primary: sorted,
-      usedFallback: trusted.length < minTrusted,
-      trustedCount,
-      noisyCount,
-      totalCount,
-      scope: trustedCount === 0 ? "thin" : "mixed_fallback",
-    };
-  }
+  const primary =
+    trusted.length >= 2 ? trusted : trusted.length === 1 ? trusted : [];
 
   return {
-    primary: sorted,
-    usedFallback: true,
+    primary,
+    usedFallback: false,
     trustedCount,
     noisyCount,
     totalCount,
-    scope: "thin",
+    scope: primary.length >= 2 ? "trusted" : primary.length === 1 ? "thin" : "thin",
   };
 }
 
-/** Build a runs response slice for trend charts — prefer trusted CI rows when enough exist. */
+/** Trend series: trusted CI + local-dev uploads only, chronological asc */
 export function pickTrendRunItems(
   runs: SystemTestsRunsResponse | null,
-  minTrusted = 3,
 ): { items: SystemTestRunsListItem[]; mode: "trusted_ci" | "all_runs" } {
   if (!runs?.items.length) return { items: [], mode: "all_runs" };
-  const trusted = runs.items.filter((r) => isTrustedCIRun(r));
-  if (trusted.length >= minTrusted) {
-    return {
-      items: [...trusted].sort(
-        (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      ),
-      mode: "trusted_ci",
-    };
-  }
+  const trusted = runs.items.filter((r) =>
+    isTrustedIntelligenceRun({
+      source: r.source,
+      branch: r.branch,
+      commitSha: r.commitSha,
+    }),
+  );
+  if (!trusted.length) return { items: [], mode: "all_runs" };
   return {
-    items: [...runs.items].sort(
+    items: [...trusted].sort(
       (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     ),
-    mode: "all_runs",
+    mode: "trusted_ci",
   };
 }
 
-export function provenanceBadgeLabel(p: RunProvenance): string {
+export function provenanceBadgeLabel(p: SystemTestsRunProvenance): string {
   switch (p) {
     case "trusted_ci":
       return "Trusted CI";
-    case "local":
-      return "Local";
+    case "local_dev":
+      return "Local dev";
     case "manual":
       return "Manual";
     case "synthetic":

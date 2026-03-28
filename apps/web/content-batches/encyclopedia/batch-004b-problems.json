@@ -1,0 +1,1294 @@
+{
+  "pages": [
+    {
+      "id": "P-RESIDUE-002",
+      "title": "Floor Residue After Mopping",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "floor-residue-after-mopping",
+      "summary": "Why floors look dull or tacky after mopping: concentrate films, incomplete pickup, and chemistry mismatched to the floor type.",
+      "image": {
+        "primaryAlt": "Dull tile floor with mop streaks and cloudy film",
+        "queries": [
+          "floor cloudy after mopping cleaner residue",
+          "tile floor sticky after cleaning streaks",
+          "hardwood hazy film after wet mop"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Floor residue after mopping is a thin film of surfactant, polymer, wax, or oil left when cleaning solution dries before it is fully removed, or when the mix is too strong for the coating on the floor.",
+        "why_it_happens": "Porosity, grout texture, and micro-scratches slow evaporation unevenly, so some lanes look glossy while others look matte. High-gloss finishes show film instantly; matte finishes may hide it until traffic returns soil.",
+        "what_people_do_wrong": "People often mop with a single bucket, reuse dirty water, or skip a clean-water pass. They also flood wood and stone, or use all-purpose concentrates at aggressive ratios on coated vinyl or laminate.",
+        "professional_method": "Use two-bucket or frequent rinse water, a measured dilution matched to the floor manufacturer guidance, figure-eight pickup with clean pad faces, and a final dry pass on edges and grout lines where puddles linger.",
+        "data_and_benchmarks": "Improvement is judged by uniform appearance under side lighting and by hand drag: a clean floor should not feel tacky when dry. Recurring tackiness within hours usually points to film, not new soil alone.",
+        "professional_insights": "If the floor cleans beautifully with plain water but films after product, the product or ratio is the variable—not foot traffic.",
+        "when_to_call_a_professional": "Call a professional when the floor type or sealer is unknown, when coatings may be failing, or when repeated stripping attempts are needed on stone or commercial finishes.",
+        "related_topics": [
+          "P-RESIDUE-001",
+          "M-NEU-001",
+          "C-PH-001"
+        ]
+      }
+    },
+    {
+      "id": "P-RESIDUE-003",
+      "title": "Sticky Floors After Cleaning",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "sticky-floors-after-cleaning",
+      "summary": "Sticky floors usually signal leftover cleaner, sugar soils, or incompatible products—not that you need more detergent.",
+      "image": {
+        "primaryAlt": "Footprints on sticky kitchen tile floor surface",
+        "queries": [
+          "sticky floor after mopping sugar residue kitchen",
+          "tacky vinyl floor cleaner buildup",
+          "floor feels sticky when dry cleaning mistake"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Sticky floors after cleaning present as shoe pull, visible prints minutes after walking, or a grabby feel on bare feet even when the surface looks visually clean.",
+        "why_it_happens": "Sweet spills, sports drinks, and some plant-based cleaners can leave hygroscopic residues. Over-concentrated neutral cleaners also dry to a tacky surfactant film, especially in humid air.",
+        "what_people_do_wrong": "Adding more product to fix stickiness, mopping without changing rinse water, or mixing vinegar with products that contain polymers can create gummy layers.",
+        "professional_method": "Identify recent spills, rinse with plain water on a test lane, then use a compatible low-residue sequence: light application, aggressive pickup, dry buff, and reassess before introducing new chemistry.",
+        "data_and_benchmarks": "A single well-rinsed lane that loses tackiness confirms film or sugar soil rather than structural floor damage.",
+        "professional_insights": "Kitchen stickiness near islands often tracks beverage drips; entryways often track deicer or tracked sugary drinks.",
+        "when_to_call_a_professional": "Call a professional when commercial kitchens, waxed VCT, or large stone areas need controlled strip-rinse cycles, or when coatings require manufacturer-specific reset procedures.",
+        "related_topics": [
+          "P-RESIDUE-001",
+          "P-RESIDUE-002",
+          "M-DEG-001"
+        ]
+      }
+    },
+    {
+      "id": "P-RESIDUE-004",
+      "title": "Cleaner Film on Countertops",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "cleaner-film-on-countertops",
+      "summary": "Dull smears and rainbow sheen on counters are often polymer or surfactant films—not permanent etching—until proven otherwise.",
+      "image": {
+        "primaryAlt": "Quartz countertop with smeary dull patches under light",
+        "queries": [
+          "quartz countertop dull film cleaner residue",
+          "countertop rainbow streaks after spray cleaner",
+          "solid surface hazy wipe marks kitchen"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Cleaner film on countertops is a low-contrast haze, smear pattern that follows wiping direction, or iridescent streaks left when multi-surface sprays dry incompletely on quartz, solid surface, laminate, or sealed stone.",
+        "why_it_happens": "Textured finishes and low-contrast colors hide partial removal; oils from cooking aerosols can bond on top of cleaner films and lock them in place.",
+        "what_people_do_wrong": "People overspray edges and seams, buff with the same towel face repeatedly, or stack polish on top of daily cleaner without a true rinse step.",
+        "professional_method": "Work small zones with minimal liquid, fold-and-rotate towels, finish with dry microfiber passes, and separate true soil removal from shine agents until the base surface reads clean under raking light.",
+        "data_and_benchmarks": "Film lifts faster when humidity is moderate; bone-dry winter air can make surfactants tackier during wiping.",
+        "professional_insights": "If water-only wiping improves gloss but product restores haze, you are fighting residue chemistry—not stone damage.",
+        "when_to_call_a_professional": "Call a professional when etching is suspected on marble or when manufacturer warranty service requires documented care sequences.",
+        "related_topics": [
+          "P-RESIDUE-001",
+          "P-HAZE-001",
+          "C-PH-001"
+        ]
+      }
+    },
+    {
+      "id": "P-RESIDUE-005",
+      "title": "Residue on Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "residue-on-stainless-steel",
+      "summary": "Stainless shows every directional wipe; cleaner oils and surfactants often masquerade as permanent water spots.",
+      "image": {
+        "primaryAlt": "Streaky stainless refrigerator door with wipe marks",
+        "queries": [
+          "stainless steel cleaner residue streaks",
+          "brushed stainless rainbow film after wiping",
+          "appliance front smudges wont buff out"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Residue on stainless steel reads as directional streaks, cloudy islands, or fingerprints that return immediately because the surface is still tacky from oils or surfactants.",
+        "why_it_happens": "Brushed grain traps microfilm in valleys; vertical panels drain product to edges where it dries last and looks darkest.",
+        "what_people_do_wrong": "People saturate panels, wipe in circles against the grain, or use glass cleaners that leave polymers on brushed metal.",
+        "professional_method": "Dry-dust first, apply a light compatible cleaner, wipe with long passes that follow the grain, then dry-buff with a clean low-lint towel; repeat with fresh faces rather than more liquid.",
+        "data_and_benchmarks": "Less product almost always beats more product on vertical stainless; the goal is suspension and immediate pickup.",
+        "professional_insights": "Edges and handles are residue reservoirs; finishing those zones prevents drip lines down the panel.",
+        "when_to_call_a_professional": "Call a professional when specialty coated stainless, black stainless, or commercial kitchens need OEM-approved protocols, or when pitting suggests corrosion rather than film.",
+        "related_topics": [
+          "P-RESIDUE-001",
+          "S-SS-001",
+          "M-NEU-001"
+        ]
+      }
+    },
+    {
+      "id": "P-RESIDUE-006",
+      "title": "Residue on Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "residue-on-glass-surfaces",
+      "summary": "Glass makes surfactant streaks obvious; separating film from etching and from hard water is the first diagnostic step.",
+      "image": {
+        "primaryAlt": "Interior window glass with cloudy wipe streaks",
+        "queries": [
+          "glass streaks after cleaning product residue",
+          "window haze wont squeegee off cleaner film",
+          "shower door streaks not hard water"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Residue on glass surfaces appears as fan-shaped wipe marks, repeating arcs, or a uniform fog that worsens when the sun hits at a low angle.",
+        "why_it_happens": "Evaporation fronts concentrate dissolved solids and surfactants at the edges of each wipe stroke, especially on warm glass or single-pane sun-facing windows.",
+        "what_people_do_wrong": "People use too much product, clean hot glass, or buff with towels that shed lint that sticks into the film.",
+        "professional_method": "Use minimal cleaner, change towel quadrants often, finish with a dry edge or squeegee on large panes, and verify with a cross-light check from two angles.",
+        "data_and_benchmarks": "If a razor test on a small edge zone does not change appearance, suspect etching or bonded mineral—not simple film.",
+        "professional_insights": "Indoor particulate from candles or frying can nucleate streaks; the pattern is often worse near kitchen openings.",
+        "when_to_call_a_professional": "Call a professional when high glass, coated low-E failures, or historic glazing limits access and tool choice, or when etching diagnosis needs controlled polishing scope.",
+        "related_topics": [
+          "P-RESIDUE-001",
+          "M-GLS-001",
+          "P-HAZE-002"
+        ]
+      }
+    },
+    {
+      "id": "P-HAZE-001",
+      "title": "Surface Haze",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "slug": "surface-haze",
+      "summary": "Surface haze is a diffuse loss of clarity—often wax, oil, cleaner film, wear, or micro-scratches—not always a single cause.",
+      "image": {
+        "primaryAlt": "Countertop with uniform dull haze under angled light",
+        "queries": [
+          "surface haze on countertop dull finish",
+          "floor cloudy appearance not dirt",
+          "furniture haze after polish buildup"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Surface haze is a broad term for a finish that looks uniformly dull, slightly milky, or low-contrast under raking light while still feeling mostly smooth to the touch.",
+        "why_it_happens": "It can come from accumulated polymers, embedded oil films, abrasion from past cleaning tools, or incompatible product stacking that micro-layers over time.",
+        "what_people_do_wrong": "People confuse haze with smudges and keep adding product, or they attack with dry powders that increase fine scratching.",
+        "professional_method": "Map the surface type, test a small low-risk zone with plain water pickup, then escalate to manufacturer-approved film removal before assuming permanent damage.",
+        "data_and_benchmarks": "Haze that improves after a controlled rinse-and-dry pass is overwhelmingly film-related; haze unchanged after careful stripping suggests wear or etching.",
+        "professional_insights": "Document lighting angle when comparing before and after; phone flash from the side reveals film others miss head-on.",
+        "when_to_call_a_professional": "Call a professional when natural stone, factory-coated floors, or warranty finishes require documented procedures, or when abrasion repair is outside homeowner tooling.",
+        "related_topics": [
+          "P-RESIDUE-001",
+          "P-HAZE-006",
+          "M-NEU-001"
+        ]
+      }
+    },
+    {
+      "id": "P-HAZE-002",
+      "title": "Haze on Glass",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "slug": "haze-on-glass",
+      "summary": "Glass haze may be film, mineral, environmental particulate, or permanent etching—each needs a different response.",
+      "image": {
+        "primaryAlt": "Bathroom mirror with uniform foggy appearance",
+        "queries": [
+          "glass mirror hazy not streaks",
+          "window glass cloudy indoors film",
+          "shower glass uniform haze difference etching"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Haze on glass is a widespread loss of transparency that may look even across the pane or slightly patchy, unlike sharp drip marks from hard water alone.",
+        "why_it_happens": "Off-gassing, cleaner polymers, smoke films, and bonded environmental aerosols can create thin layers that scatter light. Etching from acids or age presents similarly at a glance.",
+        "what_people_do_wrong": "People compound haze by mixing vinegar and blue cleaners, cleaning in direct sun, or using worn scrub pads that micro-mar low-e coatings.",
+        "professional_method": "Start with particulate removal, then test a discrete corner with a film-targeted sequence; compare to a razor-scrape test only where safe and legal for the glazing type.",
+        "data_and_benchmarks": "Film often responds to chemistry change; etching does not improve meaningfully with surfactants alone.",
+        "professional_insights": "New construction haze sometimes tracks drywall dust plus moisture—pattern near HVAC registers is a clue.",
+        "when_to_call_a_professional": "Call a professional when coatings are unknown, when ladders or rope access is required, or when warranty glass needs vendor-approved methods.",
+        "related_topics": [
+          "P-ETCH-003",
+          "M-GLS-001",
+          "S-GLASS-001"
+        ]
+      }
+    },
+    {
+      "id": "P-HAZE-003",
+      "title": "Haze on Tile Floors",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "slug": "haze-on-tile-floors",
+      "summary": "Tile can look cloudy from grout efflorescence, wax, sealer failure, or cleaner film trapped in texture.",
+      "image": {
+        "primaryAlt": "Ceramic tile floor cloudy appearance grout lines dull",
+        "queries": [
+          "tile floor looks cloudy after cleaning",
+          "ceramic tile haze grout mist film",
+          "porcelain tile dull haze stripper needed"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Haze on tile floors is a sheet-like dullness that may sit on the tile body, in grout joints, or both, often visible when you squat to sight along the plane.",
+        "why_it_happens": "Improper initial wash after install, topical coatings, or repeated mop chemistry can leave polymers. Porous grout wicks and redeposits solids during drying.",
+        "what_people_do_wrong": "People wax ceramic inappropriately, use steam at wrong temperatures on failing sealers, or mop with a single dirty solution that redeposits fines.",
+        "professional_method": "Identify tile class and any topical coating history, then choose between a rinse-forward maintenance reset versus a controlled coating removal on a test tile.",
+        "data_and_benchmarks": "If grout is uniformly lighter-gray while tile is cloudy, two mechanisms may be active and should be separated in testing.",
+        "professional_insights": "Entry lanes often show the worst haze where outdoor dust loads combine with indoor chemistry.",
+        "when_to_call_a_professional": "Call a professional when large stone-tile blends, epoxy grout, or commercial coatings need machine agitation and controlled extraction.",
+        "related_topics": [
+          "P-GROUT-001",
+          "S-TILE-001",
+          "M-NEU-001"
+        ]
+      }
+    },
+    {
+      "id": "P-HAZE-004",
+      "title": "Haze on Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "slug": "haze-on-finished-wood",
+      "summary": "Wood finishes can cloud from oils, wax buildup, humidity reaction, or coating damage—treat causes, not symptoms.",
+      "image": {
+        "primaryAlt": "Dining table with cloudy finish in reflected light",
+        "queries": [
+          "wood table cloudy finish haze",
+          "polyurethane haze after cleaning product",
+          "finished wood dull film furniture"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Haze on finished wood is a milky or low-sheen veil on tables, floors, or trim where the coating still feels mostly intact but no longer reads crisp in reflection.",
+        "why_it_happens": "Silicone polishes, furniture sprays, and some disinfectant films can layer. Heat rings and moisture blush can look like haze but are coating events, not dust.",
+        "what_people_do_wrong": "People buff silicone into open-pore veneers, use excess water on seams, or apply paste wax on polyurethane without compatibility checks.",
+        "professional_method": "Test an inconspicuous edge for film removal with a dry microfiber-only pass, then manufacturer-approved cleaner, escalating slowly while monitoring gloss transfer to the towel.",
+        "data_and_benchmarks": "If haze is ring-shaped around a cup mark, you are likely addressing coating damage rather than removable soil.",
+        "professional_insights": "Grain direction matters: haze that follows sanding scratches differs from uniform spray fallout.",
+        "when_to_call_a_professional": "Call a professional when floors need screening and recoat, when antiques have shellac or oil systems, or when insurance documentation is needed after water events.",
+        "related_topics": [
+          "S-WOOD-001",
+          "P-RESIDUE-001",
+          "M-NEU-001"
+        ]
+      }
+    },
+    {
+      "id": "P-HAZE-005",
+      "title": "Haze on Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "slug": "haze-on-stainless-steel",
+      "summary": "Broad cloudy panels on stainless usually mean oils, surfactants, or heat tint—not always permanent damage.",
+      "image": {
+        "primaryAlt": "Brushed stainless range hood with cloudy dull panel",
+        "queries": [
+          "stainless steel hood hazy cloudiness",
+          "brushed stainless uniform dull film",
+          "appliance stainless haze after cleaner"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Haze on stainless steel reads as a large matte island or overall cloud that reduces specular highlight sharpness compared with a clean neighbor panel.",
+        "why_it_happens": "Cooking aerosols, cleaner polymers, and hard-water drying on hot metal can bond a thin scattering layer into brushed valleys.",
+        "what_people_do_wrong": "People use coarse scrubbers that unify scratches into a cloudy appearance, or they heat panels with oven cleaner overspray risks.",
+        "professional_method": "Cool the surface, remove dry soil, apply minimal compatible chemistry, work with the grain in long passes, and finish with dry buffing; reassess before any abrasive restoration.",
+        "data_and_benchmarks": "If haze tracks exactly to cleaner brand changes, film probability is high; if it follows heat discoloration bands, involve OEM guidance.",
+        "professional_insights": "Horizontal hood tops often show the worst haze because dust settles into tacky films between cleans.",
+        "when_to_call_a_professional": "Call a professional when welded commercial hood systems, coated finishes, or warranty service limits homeowner products.",
+        "related_topics": [
+          "S-SS-001",
+          "P-RESIDUE-005",
+          "M-DEG-001"
+        ]
+      }
+    },
+    {
+      "id": "P-HAZE-006",
+      "title": "Haze After Cleaning",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "slug": "haze-after-cleaning",
+      "summary": "When haze appears right after a clean pass, the process—product volume, towel, drying, or chemistry—is usually the culprit.",
+      "image": {
+        "primaryAlt": "Just-cleaned floor with visible cloudy mop trails",
+        "queries": [
+          "haze appears right after cleaning floors",
+          "cloudy residue immediately after wiping counters",
+          "streak haze after using all purpose cleaner"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Haze after cleaning is a finish that looked acceptable before the job but turns dull, streaky, or filmy as the last liquid dries.",
+        "why_it_happens": "Fast evaporation at edges, oversized liquid load, and towels that glaze over redistribute soil and surfactant instead of removing it.",
+        "what_people_do_wrong": "People mop themselves into corners with one solution, use fabric softener-laden laundry towels, or work hot sun-facing glass.",
+        "professional_method": "Reduce liquid, increase pickup frequency, segregate rinse water, and finish with dry passes timed before the film sets; change tools before changing chemistry.",
+        "data_and_benchmarks": "If rotating to a fresh microfiber fixes the issue mid-job, the towel state—not the surface—was limiting.",
+        "professional_insights": "Ceiling fans and HVAC can dry lanes unevenly; work with, not against, the dominant airflow direction on large floors.",
+        "when_to_call_a_professional": "Call a professional when reset chemistry for stone or coated floors requires extraction equipment, or when training a team on a recurring problem property.",
+        "related_topics": [
+          "P-HAZE-001",
+          "M-NEU-001",
+          "C-PH-001"
+        ]
+      }
+    },
+    {
+      "id": "P-STREAK-001",
+      "title": "Streaking",
+      "category": "problems",
+      "cluster": "streaking",
+      "slug": "streaking",
+      "summary": "Streaking is the visible record of how liquid dried—surfactant edges, oils, minerals, or tool marks—not random bad luck.",
+      "image": {
+        "primaryAlt": "Glass door with vertical cleaner streak lines",
+        "queries": [
+          "streaking after cleaning glass doors",
+          "floor mop streak lines dry pattern",
+          "stainless steel streaks cleaning mistakes"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Streaking is patterned residue—lines, arcs, or tiger stripes—that tracks wiping direction, mop lanes, or squeegee edges after a surface dries.",
+        "why_it_happens": "Evaporation concentrates solutes at boundaries; uneven pressure leaves thicker wet film in centers; dirty solution redeposits fines along the last path.",
+        "what_people_do_wrong": "People add speed before pickup quality, reuse a single wet towel across large areas, or work top-to-bottom without controlling drips on verticals.",
+        "professional_method": "Slow down pickup, use more dry towel faces, control product to a fine mist where appropriate, and finish verticals with a dry leading edge to catch runs.",
+        "data_and_benchmarks": "Streak count often drops when water quality improves or when rinse steps are added between chemistry and final buff.",
+        "professional_insights": "Black fixtures and dark paint show streak geometry earlier than light surfaces—use them as training feedback, not panic signals.",
+        "when_to_call_a_professional": "Call a professional when atrium glass, coated displays, or production facilities need pole tools and staged quality checks.",
+        "related_topics": [
+          "P-STREAK-006",
+          "M-GLS-001",
+          "S-SS-001"
+        ]
+      }
+    },
+    {
+      "id": "P-STREAK-002",
+      "title": "Streaks on Glass",
+      "category": "problems",
+      "cluster": "streaking",
+      "slug": "streaks-on-glass",
+      "summary": "Glass streaks are almost always drying artifacts—optimize volume, towel discipline, and water purity before chasing exotic causes.",
+      "image": {
+        "primaryAlt": "Window pane with sunlit wipe streak pattern",
+        "queries": [
+          "window glass streaks after cleaning sun",
+          "interior glass arcs from microfiber",
+          "glass table streaks cleaner residue lines"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Streaks on glass are high-contrast lines or arcs where cleaner or water dried unevenly, often obvious when sunlight rakes the pane.",
+        "why_it_happens": "Warm glass accelerates edge drying; cheap towels glaze and smear; hard water leaves mineral trails that look like cleaner streaks.",
+        "what_people_do_wrong": "People spray the center of large panes, buff in tight circles, or use paper that sheds lint into the wet film.",
+        "professional_method": "Use minimal product, wipe in overlapping verticals or horizontals on a chosen face, finish with a dry pass, and verify from two viewing angles.",
+        "data_and_benchmarks": "Distilled or DI water on a test section isolates chemistry from water hardness quickly.",
+        "professional_insights": "Exterior streaks that survive careful interior technique may be between panes or on storm assemblies—know the glazing stack.",
+        "when_to_call_a_professional": "Call a professional when rope access, lift equipment, or scratch-sensitive low-e exteriors are involved.",
+        "related_topics": [
+          "P-STREAK-001",
+          "M-GLS-001",
+          "S-GLASS-001"
+        ]
+      }
+    },
+    {
+      "id": "P-STREAK-003",
+      "title": "Streaks on Mirrors",
+      "category": "problems",
+      "cluster": "streaking",
+      "slug": "streaks-on-mirrors",
+      "summary": "Mirrors amplify edge drying; backs can fail from moisture intrusion—keep liquid away from bevels and frames.",
+      "image": {
+        "primaryAlt": "Bathroom mirror with vertical streak lines fog edge",
+        "queries": [
+          "bathroom mirror streaks after wiping",
+          "mirror foggy edges cleaner runs",
+          "frameless mirror streaks silicone bevel"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Streaks on mirrors present as fan patterns from the center, drip legs from overspray on frames, or banding at the bottom where solution collects.",
+        "why_it_happens": "Steam condenses on cold glass during cleaning, re-wets zones you already dried, creating secondary streak fronts.",
+        "what_people_do_wrong": "People flood decorative frames, spray electronics-adjacent medicine cabinets, or use ammonia-heavy products near aging silvering edges.",
+        "professional_method": "Pre-dry steam with ventilation, apply cleaner to the towel not the mirror on small baths, work top edge first, and catch frame drips immediately.",
+        "data_and_benchmarks": "Black spots that do not move with wiping indicate backing damage, not streak film.",
+        "professional_insights": "Hot showers after cleaning can redeposit condensation soil; timing matters in primary baths.",
+        "when_to_call_a_professional": "Call a professional when large wall mirrors need safe detachment, when desilvering is advancing, or when LED-integrated mirrors need OEM care.",
+        "related_topics": [
+          "P-STREAK-002",
+          "M-GLS-001",
+          "P-HAZE-002"
+        ]
+      }
+    },
+    {
+      "id": "P-STREAK-004",
+      "title": "Streaks on Stainless Steel",
+      "category": "problems",
+      "cluster": "streaking",
+      "slug": "streaks-on-stainless-steel",
+      "summary": "Directional metal streaks mean finish management: grain, pressure, and residue balance outrank brand obsession.",
+      "image": {
+        "primaryAlt": "Appliance door with horizontal brush streak lines",
+        "queries": [
+          "stainless steel streaks with grain cleaning",
+          "refrigerator door wipe streaks brushed finish",
+          "dishwasher front stainless streak pattern"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Streaks on stainless steel are elongated dull or shiny bands that follow brushing direction, often alternating with clean lanes where towel contact differed.",
+        "why_it_happens": "Excess liquid pools at horizontal seams and vertical mullions, drying last into dark lines mistaken for scratches.",
+        "what_people_do_wrong": "People change wipe direction mid-panel, use oily polishes on brushed grain, or cross-contaminate towels from stone or wood products.",
+        "professional_method": "Dry soil first, apply sparingly, long straight passes with the grain, fresh towel for final buff; treat edges as drip collection zones.",
+        "data_and_benchmarks": "If streaks are rainbow-like, suspect thin oil or surfactant film rather than deep scratching.",
+        "professional_insights": "Handles and dispense zones need separate final buffs—they reintroduce oils after the panel looks done.",
+        "when_to_call_a_professional": "Call a professional when commercial kitchens require food-safe documentation, or when specialty finishes prohibit consumer chemistry.",
+        "related_topics": [
+          "S-SS-001",
+          "P-STREAK-001",
+          "M-NEU-001"
+        ]
+      }
+    },
+    {
+      "id": "P-STREAK-005",
+      "title": "Streaks on Black Fixtures",
+      "category": "problems",
+      "cluster": "streaking",
+      "slug": "streaks-on-black-fixtures",
+      "summary": "Low-luminance finishes reveal every drying boundary; technique and lint control matter more than stronger chemistry.",
+      "image": {
+        "primaryAlt": "Matte black faucet with visible wipe streak marks",
+        "queries": [
+          "black faucet streaks after cleaning matte",
+          "matte black hardware smudges streak lines",
+          "dark plumbing fixtures streak free cleaning"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Streaks on black fixtures are high-visibility wipe marks on matte paint, PVD coatings, or powder coats where any residue changes specular response.",
+        "why_it_happens": "Finger oils, wax detail sprays, and some disinfectants leave contrasty paths on micro-textured blacks.",
+        "what_people_do_wrong": "People over-wet near escutcheons, use fluffy towels that lint, or buff while drips are still running.",
+        "professional_method": "Use damp-not-wet towels, low-lint microfiber, frequent face changes, and a final dry pass in one direction; avoid petroleum-heavy polishes unless specified.",
+        "data_and_benchmarks": "Under cabinet lighting makes streak geometry obvious—check lighting angle before declaring failure.",
+        "professional_insights": "If streaks follow only horizontal pulls, drips from the spout or handle are redepositing during the wipe.",
+        "when_to_call_a_professional": "Call a professional when factory coatings are chipped to substrate, or when large matte black panels need controlled spot repair.",
+        "related_topics": [
+          "P-STREAK-001",
+          "M-NEU-001",
+          "C-PH-001"
+        ]
+      }
+    },
+    {
+      "id": "P-STREAK-006",
+      "title": "Why Surfaces Streak After Cleaning",
+      "category": "problems",
+      "cluster": "streaking",
+      "slug": "why-surfaces-streak-after-cleaning",
+      "summary": "Streaking is physics and process: where liquid last stood is where solutes concentrate when it leaves.",
+      "image": {
+        "primaryAlt": "Split comparison clean vs streaky floor tile lanes",
+        "queries": [
+          "why does my floor streak after mopping",
+          "cleaning leaves streaks science surfactant drying",
+          "how to prevent streaks when cleaning glass"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Why surfaces streak after cleaning is explained by uneven film thickness during drying: thicker wet zones dry slower and deposit more residue at their borders.",
+        "why_it_happens": "Tools redistribute soil when they saturate; water hardness precipitates at evaporation fronts; vertical surfaces channel runs that set into lines.",
+        "what_people_do_wrong": "People blame the surface type first; they change brands repeatedly without changing volume, towel cadence, or rinse discipline.",
+        "professional_method": "Standardize dilution, reduce total liquid, add a rinse or dry-finishing step, and measure improvement by repeating the same lighting check each time.",
+        "data_and_benchmarks": "Streak count should fall monotonically as pickup quality rises; if not, suspect water quality or incompatible chemistry.",
+        "professional_insights": "Teaching crews to 'chase the dry edge' on glass and floors prevents the classic arc-and-tail pattern.",
+        "when_to_call_a_professional": "Call a professional when properties need SOP writing, water treatment, or equipment upgrades for large-format glass or stone programs.",
+        "related_topics": [
+          "P-STREAK-001",
+          "C-PH-001",
+          "M-NEU-001"
+        ]
+      }
+    },
+    {
+      "id": "P-DUST-001",
+      "title": "Dust Buildup",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "slug": "dust-buildup",
+      "summary": "Dust is a mix of fibers, skin, soil, and aerosols that electrostatically clings—removal and source control beat perpetual chasing.",
+      "image": {
+        "primaryAlt": "Dust layer on dark wood furniture surface",
+        "queries": [
+          "house dust buildup surfaces furniture",
+          "fine dust film on shelves professional",
+          "dust accumulation between cleaning visits"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust buildup is visible particulate and fine film on horizontal surfaces, electronics, trim tops, and fan blades where air slows and lets particles settle.",
+        "why_it_happens": "HVAC filtration, textiles, pets, and outdoor ingress continuously generate dust; static on dry finishes attracts fines after wiping.",
+        "what_people_do_wrong": "People dry-dust with charged synthetics that skip crevices, or they wet-wipe first and create mud lines in grooves.",
+        "professional_method": "Dry removal with appropriate tools for the texture, damp detailing for capture, and then source checks (filters, textiles, entryway mats) stabilize appearance between visits.",
+        "data_and_benchmarks": "Dust reload rate correlates with foot traffic lanes, pet paths, and window usage—not only cleaning frequency.",
+        "professional_insights": "Ceiling fan leading edges often predict whole-room dust load; they are fast diagnostic surfaces.",
+        "when_to_call_a_professional": "Call a professional when post-construction mineral dust, large atriums, or commercial HEPA programs are required.",
+        "related_topics": [
+          "M-DST-001",
+          "P-DUST-006",
+          "S-WOOD-001"
+        ]
+      }
+    },
+    {
+      "id": "P-DUST-002",
+      "title": "Dust on Finished Wood",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "slug": "dust-on-finished-wood",
+      "summary": "Wood shows dust in grain and pores; the goal is lift without micro-scratching the coating.",
+      "image": {
+        "primaryAlt": "Dust in wood grain on table top close up",
+        "queries": [
+          "dust in wood grain table cleaning",
+          "finished wood furniture dust static cling",
+          "hardwood dust film without scratching"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust on finished wood lodges in open grain, molding profiles, and along sheens where raking light reveals a veil.",
+        "why_it_happens": "Dry winter air increases static; oils from hands create tacky zones that grab lint.",
+        "what_people_do_wrong": "People use dusty rags, silicone sprays that attract future dust, or back-and-forth pressure that burnishes edges.",
+        "professional_method": "Work dry-to-damp progression along grain, detail crevices with soft tools, and finish with a clean dry microfiber to reset static.",
+        "data_and_benchmarks": "Low-sheen finishes hide less than gloss; adjust client expectations with lighting demos.",
+        "professional_insights": "Horizontal rails on chairs and legs often outpace tabletops for tactile dust—do not skip verticals.",
+        "when_to_call_a_professional": "Call a professional when coatings are unknown antiques, or when floors need microfiber system training for large areas.",
+        "related_topics": [
+          "S-WOOD-001",
+          "M-DST-001",
+          "P-DUST-001"
+        ]
+      }
+    },
+    {
+      "id": "P-DUST-003",
+      "title": "Dust on Glass Surfaces",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "slug": "dust-on-glass-surfaces",
+      "summary": "Glass dust combines with humidity into haze; dry removal first prevents mud streaks.",
+      "image": {
+        "primaryAlt": "Dust particles on glass tabletop in sunlight",
+        "queries": [
+          "dusty glass table streak free wipe",
+          "window sill dust film interior glass",
+          "glass shelves dust cleaning technique"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust on glass surfaces reads as speckle under sun and can feel slightly gritty before wet cleaning turns it into streak-prone slurry.",
+        "why_it_happens": "Air currents deposit larger particles near sills and doorways; cooking aerosols can glue dust to vertical panes behind seating.",
+        "what_people_do_wrong": "People wet-wipe immediately, grind particles in arcs, or use paper that shreds into the film.",
+        "professional_method": "Dry microfiber or soft brush first, then minimal damp cleaning with disciplined drying to preserve clarity.",
+        "data_and_benchmarks": "If specks survive wet cleaning, they may be paint overspray or mineral spots—not loose dust.",
+        "professional_insights": "Shelving edges show comb patterns where dust nucleates on vertical runs—wipe edges before faces.",
+        "when_to_call_a_professional": "Call a professional when display cases, storefronts, or high interior glass need pole systems and safety planning.",
+        "related_topics": [
+          "S-GLASS-001",
+          "M-GLS-001",
+          "P-DUST-001"
+        ]
+      }
+    },
+    {
+      "id": "P-DUST-004",
+      "title": "Dust on Baseboards",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "slug": "dust-on-baseboards",
+      "summary": "Baseboards are low laminar zones where fibers and pet hair accumulate in static bands.",
+      "image": {
+        "primaryAlt": "White baseboard with dark dust line along top edge",
+        "queries": [
+          "dusty baseboards hair fiber line",
+          "cleaning baseboards without spreading dust",
+          "baseboard dust electrostatic home"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust on baseboards clings along the top ledge and inside shoe-quarter angles, often darkest behind beds and along pet corridors.",
+        "why_it_happens": "Air slows near the floor; electrostatic fields from carpet and drapes pull fines to trim.",
+        "what_people_do_wrong": "People kick dust off baseboards onto walls, use stiff tools that mar paint, or vacuum without brush contact.",
+        "professional_method": "Vacuum brush crevice first, capture with damp microfiber on a thin tool, and protect carpet edges from overwetting.",
+        "data_and_benchmarks": "Bedroom baseboards often exceed living areas for fiber loading due to textiles.",
+        "professional_insights": "Quarter-round back corners are reservoirs—tool reach matters more than product choice.",
+        "when_to_call_a_professional": "Call a professional when post-renovation concrete dust loads trim heavily, or when tall commercial base requires lift planning.",
+        "related_topics": [
+          "M-DST-001",
+          "P-DUST-001",
+          "M-NEU-001"
+        ]
+      }
+    },
+    {
+      "id": "P-DUST-005",
+      "title": "Dust on Ceiling Fans",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "slug": "dust-on-ceiling-fans",
+      "summary": "Fan blades fling balanced dust rings when started; clean before rotation spreads soil.",
+      "image": {
+        "primaryAlt": "Ceiling fan blade thick dust buildup edge",
+        "queries": [
+          "ceiling fan dust cleaning blade buildup",
+          "dust ring on ceiling above fan",
+          "fan blade dust professional cleaning safe"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust on ceiling fans forms even strips on leading edges and can throw mud-rings onto ceilings when blades spin.",
+        "why_it_happens": "Static and oil from kitchens can make fan dust tackier than bedroom dust.",
+        "what_people_do_wrong": "People spin dirty blades, spray liquid upward toward motors, or skip drop cloths.",
+        "professional_method": "Turn power off, capture dry soil with a blade pocket tool or bag method, then light damp detail; verify balance after cleaning.",
+        "data_and_benchmarks": "Heavy loading changes blade aerodynamics slightly; note wobble after deep cleans.",
+        "professional_insights": "Motor housings are not rinse zones—keep liquids out of electrical assemblies.",
+        "when_to_call_a_professional": "Call a professional when vaulted ceilings, commercial fans, or integrated lighting complicate access.",
+        "related_topics": [
+          "M-DST-001",
+          "P-DUST-001",
+          "P-DUST-006"
+        ]
+      }
+    },
+    {
+      "id": "P-DUST-006",
+      "title": "Dust Returning Quickly",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "slug": "dust-returning-quickly",
+      "summary": "Rapid dust return usually means filtration gaps, textile shedding, residue tack, or foot traffic lanes—not a mystery curse.",
+      "image": {
+        "primaryAlt": "Coffee table dusty again one day after cleaning",
+        "queries": [
+          "why does dust come back so fast",
+          "house dusty again next day HVAC",
+          "sticky residue attracts dust furniture"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust returning quickly describes surfaces that look freshly soiled within a short window after an otherwise acceptable clean.",
+        "why_it_happens": "Open windows during pollen events, cheap filter bypass, pet dander, and cleaner films that tackify all increase redeposition.",
+        "what_people_do_wrong": "People blame the cleaner brand while ignoring HVAC maintenance, missing door mats, or using oily polishes.",
+        "professional_method": "Address filtration and entryway capture, remove tacky films if present, and schedule dusting to follow vacuuming so airborne fines resettle before final passes.",
+        "data_and_benchmarks": "If dust reload improves after filter upgrade, source control was the lever—not more spray.",
+        "professional_insights": "New textiles and rugs shed for weeks; expect temporary high fiber counts.",
+        "when_to_call_a_professional": "Call a professional when duct assessment, commercial MAT programs, or post-construction HEPA plans are needed.",
+        "related_topics": [
+          "P-DUST-001",
+          "P-RESIDUE-001",
+          "M-DST-001"
+        ]
+      }
+    },
+    {
+      "id": "P-SOIL-001",
+      "title": "General Soil Buildup",
+      "category": "problems",
+      "cluster": "general-soil",
+      "slug": "general-soil-buildup",
+      "summary": "General soil is the everyday mix of oils, particulates, and biofilms that accumulates where people touch and walk.",
+      "image": {
+        "primaryAlt": "Light soil film on high traffic hallway floor",
+        "queries": [
+          "general soil buildup floors foot traffic",
+          "everyday soil on surfaces cleaning",
+          "household grime accumulation professional"
+        ]
+      },
+      "sections": {
+        "what_this_is": "General soil buildup is the broad, low-contrast dulling on floors, counters, and fixtures from combined foot transfer, hand oils, and airborne particulate.",
+        "why_it_happens": "Soil loads rise with occupancy, pets, outdoor access, and cooking styles; humidity can make films feel tackier sooner.",
+        "what_people_do_wrong": "People escalate to strong chemistry before improving pickup, or they clean visible centers while ignoring edges where soil actually concentrates.",
+        "professional_method": "Use progressive cleaning: dry soil removal, compatible wet process with good pickup, and targeted detail on high-contact points.",
+        "data_and_benchmarks": "Soil recurrence curves help set cadence; entry systems flatten the curve more than kitchen tricks alone.",
+        "professional_insights": "Door hardware and switch plates are soil truth-tellers for whole-home hygiene perception.",
+        "when_to_call_a_professional": "Call a professional when move-in/move-out loads, commercial traffic, or stone programs need extraction equipment.",
+        "related_topics": [
+          "M-NEU-001",
+          "P-SOIL-006",
+          "S-TILE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-SOIL-002",
+      "title": "Tracked-In Soil on Floors",
+      "category": "problems",
+      "cluster": "general-soil",
+      "slug": "tracked-in-soil-on-floors",
+      "summary": "Most floor soil walks in; mats, shoes, and first-ten-feet strategy matter as much as mop choice.",
+      "image": {
+        "primaryAlt": "Entry tile with dark foot traffic soil pattern",
+        "queries": [
+          "tracked in dirt entryway floor cleaning",
+          "mud and soil first few feet interior",
+          "floor soil from shoes professional matting"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Tracked-in soil on floors concentrates in the first meters past entries, garage connectors, and kitchen transitions, often as darkened grout and dull lanes.",
+        "why_it_happens": "Wet seasons, landscaping projects, and pet paws amplify particulate transfer before HVAC filters ever see it.",
+        "what_people_do_wrong": "People small-mat at wide openings, skip vacuum before wet mopping, or cross wet soil into dry zones on shoes.",
+        "professional_method": "Vacuum dry first, spot-treat gum mud, use measured wet process with rinse discipline, and right-size walk-off mats with cleaning SOPs.",
+        "data_and_benchmarks": "Soil color often matches local substrate—red clay versus black asphalt tells a useful story.",
+        "professional_insights": "Pivot points at island stools show secondary tracked patterns beyond the front door.",
+        "when_to_call_a_professional": "Call a professional when commercial entries need scheduled maintenance contracts or when stone needs impregnator reassessment.",
+        "related_topics": [
+          "P-SOIL-001",
+          "M-NEU-001",
+          "S-TILE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-SOIL-003",
+      "title": "General Soil on Tile",
+      "category": "problems",
+      "cluster": "general-soil",
+      "slug": "general-soil-on-tile",
+      "summary": "Tile glaze releases soil readily; grout and texture determine whether the job reads 'done.'",
+      "image": {
+        "primaryAlt": "Kitchen floor tile with dull grout and clean tile",
+        "queries": [
+          "dirty grout general soil tile floor",
+          "tile looks clean grout dark soil",
+          "textured tile soil trapped cleaning"
+        ]
+      },
+      "sections": {
+        "what_this_is": "General soil on tile is a combination of film on glaze and fines trapped in grout pores and texture lows that mop fibers skip.",
+        "why_it_happens": "Kitchen aerosols drift to floors; pets add dander oils that bind dust to grout.",
+        "what_people_do_wrong": "People use the same mop water until grout darkens uniformly, mistaking that for 'how grout looks.'",
+        "professional_method": "Segment the job: glaze passes with controlled liquid, grout detail with appropriate tools, and dry finish to prevent wicking shadows.",
+        "data_and_benchmarks": "If glaze improves but grout does not, you have not reached the grout mechanism yet.",
+        "professional_insights": "Patterned soil behind sinks and ranges indicates splash and spray, not random walking.",
+        "when_to_call_a_professional": "Call a professional when epoxy grout, stone tile, or commercial kitchens need machine extraction.",
+        "related_topics": [
+          "S-TILE-001",
+          "S-GROUT-001",
+          "P-SOIL-001"
+        ]
+      }
+    },
+    {
+      "id": "P-SOIL-004",
+      "title": "General Soil on Finished Wood",
+      "category": "problems",
+      "cluster": "general-soil",
+      "slug": "general-soil-on-finished-wood",
+      "summary": "Wood floors scuff and dull from micro-grit; dry removal protects the coating.",
+      "image": {
+        "primaryAlt": "Hardwood floor dull lane along sofa path",
+        "queries": [
+          "hardwood floor soil path dull finish",
+          "wood floor grime buildup high traffic",
+          "engineered wood soil cleaning safe"
+        ]
+      },
+      "sections": {
+        "what_this_is": "General soil on finished wood shows as dulled traffic lanes, faint heel marks, and embedded grit that whispers under shoes.",
+        "why_it_happens": "Grit acts like sandpaper under pet nails and rolling chairs; kitchen-adjacent wood sees finer oily film.",
+        "what_people_do_wrong": "People wet-mop like tile, use steam against manufacturer guidance, or drag stiff brushes across bevels.",
+        "professional_method": "Vacuum or dry microfiber first, damp flat mop with manufacturer-approved cleaner sparingly, and detail edges without puddling at seams.",
+        "data_and_benchmarks": "Traffic lane contrast often exceeds absolute soil thickness—lighting angle controls perceived severity.",
+        "professional_insights": "Area rugs without pad can trap grit at edges—lift and detail periodically.",
+        "when_to_call_a_professional": "Call a professional when recoating intervals arrive, when finish type is uncertain, or when cupping suggests moisture—not soil alone.",
+        "related_topics": [
+          "S-WOOD-001",
+          "M-NEU-001",
+          "P-SOIL-001"
+        ]
+      }
+    },
+    {
+      "id": "P-SOIL-005",
+      "title": "General Soil on Grout",
+      "category": "problems",
+      "cluster": "general-soil",
+      "slug": "general-soil-on-grout",
+      "summary": "Grout soils by microporosity and meniscus wicking—surface color may lie about joint cleanliness.",
+      "image": {
+        "primaryAlt": "Floor tile with darkened grout joints soil",
+        "queries": [
+          "grout lines dirty general soil cleaning",
+          "tile grout soil vs stain difference",
+          "floor grout dark after mopping still"
+        ]
+      },
+      "sections": {
+        "what_this_is": "General soil on grout is particulate and oil films drawn into pores and surface roughness, reading darker than adjacent glaze.",
+        "why_it_happens": "Mop water crossing dirty grout redeposits fines; pet areas add protein oils that gray joints.",
+        "what_people_do_wrong": "People bleach first without removing soil, or they scrub with tools that gouge soft cementitious grout.",
+        "professional_method": "Pre-vacuum joints, apply compatible chemistry with short dwell, agitate with grout-safe tools, and extract or wipe lift before residue dries.",
+        "data_and_benchmarks": "Uniform joint darkening across a room often tracks process; spotty darkening tracks spills and pet habits.",
+        "professional_insights": "Shower grout versus floor grout often differs in mechanism—do not assume one product fits both.",
+        "when_to_call_a_professional": "Call a professional when resealing, color sealing, or replacement is on the table after soil removal proves insufficient.",
+        "related_topics": [
+          "S-GROUT-001",
+          "S-TILE-001",
+          "P-GROUT-001"
+        ]
+      }
+    },
+    {
+      "id": "P-SOIL-006",
+      "title": "Embedded General Soil",
+      "category": "problems",
+      "cluster": "general-soil",
+      "slug": "embedded-general-soil",
+      "summary": "Embedded soil resists quick wipes; it needs suspension time and mechanical help matched to the finish.",
+      "image": {
+        "primaryAlt": "Textured floor tile with soil in lows close up",
+        "queries": [
+          "embedded soil textured tile cleaning",
+          "ground in dirt wont mop away",
+          "deep soil buildup grout pores professional"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Embedded general soil is soil mechanically trapped in texture, scratches, or pores that reappears after light cleaning passes.",
+        "why_it_happens": "Time, foot traffic, and prior abrasive habits drive soil deeper; oils act as binders.",
+        "what_people_do_wrong": "People respond with hotter water and more pressure, glazing soil into microvalleys instead of lifting it.",
+        "professional_method": "Use chemistry appropriate to the soil type, controlled dwell, grout-brush or pad systems that reach lows, and rinse extraction to remove suspension.",
+        "data_and_benchmarks": "Progress checks on a 2x2 test square prevent whole-floor damage during aggressive recovery.",
+        "professional_insights": "If nothing lifts in a controlled test, reconsider whether the darkening is stain, pigment loss, or wear.",
+        "when_to_call_a_professional": "Call a professional when rotary extraction, stone honing, or commercial floor machines are indicated.",
+        "related_topics": [
+          "P-SOIL-001",
+          "S-TILE-001",
+          "M-NEU-001"
+        ]
+      }
+    },
+    {
+      "id": "P-LIME-001",
+      "title": "Limescale Buildup",
+      "category": "problems",
+      "cluster": "limescale",
+      "slug": "limescale-buildup",
+      "summary": "Limescale is hard-water mineral deposition—mostly carbonates—that builds where water dries repeatedly.",
+      "image": {
+        "primaryAlt": "White crusty buildup on faucet aerator and base",
+        "queries": [
+          "limescale buildup faucet white crust",
+          "hard water deposits bathroom fixtures",
+          "calcium carbonate scale shower head"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Limescale buildup is chalky or crusty mineral residue from evaporative drying of hard water, common on fixtures, glass, and tile in wet areas.",
+        "why_it_happens": "Heat accelerates precipitation; slow drips and spray droplets create nodular growth over time.",
+        "what_people_do_wrong": "People scrape with metal on plated finishes, mix strong acids casually, or seal over scale without removal.",
+        "professional_method": "Select acid or chelator chemistry matched to substrate and ventilation, apply evenly, dwell with monitoring, agitate gently, rinse thoroughly, and dry-polish.",
+        "data_and_benchmarks": "Thickness scales with water hardness and years of neglect; thin films often release in one cycle, crusts need repeats.",
+        "professional_insights": "Pattern around drips and spatter points distinguishes limescale from soap scum overlays.",
+        "when_to_call_a_professional": "Call a professional when stone surrounds are involved, when venting is inadequate for acid work, or when plated fixtures risk exposure damage.",
+        "related_topics": [
+          "M-HWD-001",
+          "P-HARD-001",
+          "P-LIME-006"
+        ]
+      }
+    },
+    {
+      "id": "P-LIME-002",
+      "title": "Limescale on Fixtures",
+      "category": "problems",
+      "cluster": "limescale",
+      "slug": "limescale-on-fixtures",
+      "summary": "Fixtures accumulate at laminar edges—aerators, bases, and drains—where evaporation concentrates minerals.",
+      "image": {
+        "primaryAlt": "Chrome faucet base ring white mineral deposit",
+        "queries": [
+          "limescale around faucet base ring",
+          "shower head crust mineral buildup cleaning",
+          "bathroom fixture hard water stains remove"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Limescale on fixtures presents as white rings, crusty aerators, and rough mouthfeel on spouts where water sheets and dries.",
+        "why_it_happens": "Metal temperatures and micro-roughness nucleate crystals faster than smooth glass nearby.",
+        "what_people_do_wrong": "People damage plating with picks, use CLR-class products without spot tests, or leave acids on caulking.",
+        "professional_method": "Disassemble removable parts when safe, soak per manufacturer guidance, detail bases with controlled application away from stone, and restore shine with rinsed neutral pickup.",
+        "data_and_benchmarks": "If flow improves after aerator soak, scale was functional—not only cosmetic.",
+        "professional_insights": "Silicone joints fail faster when acid traces remain—rinse generously.",
+        "when_to_call_a_professional": "Call a professional when widespread fixture sets, warranty risks, or adjacent natural stone require sequenced protection.",
+        "related_topics": [
+          "P-LIME-001",
+          "M-HWD-001",
+          "S-SS-001"
+        ]
+      }
+    },
+    {
+      "id": "P-LIME-003",
+      "title": "Limescale on Shower Glass",
+      "category": "problems",
+      "cluster": "limescale",
+      "slug": "limescale-on-shower-glass",
+      "summary": "Shower glass combines limescale with soap scum; sequencing chemistry avoids cemented messes.",
+      "image": {
+        "primaryAlt": "Shower door glass with white water spots and scale",
+        "queries": [
+          "shower glass limescale spots cleaning",
+          "hard water stains shower door glass",
+          "glass shower enclosure mineral buildup"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Limescale on shower glass shows as spotty or sheet white deposits that feel slightly gritty and resist quick squeegee passes.",
+        "why_it_happens": "Heat, overspray from body products, and irregular squeegee habits leave droplets that dry to minerals.",
+        "what_people_do_wrong": "People scrub dry powder that scratches, use razor on coated glass, or stack incompatible products.",
+        "professional_method": "Test a corner for mineral versus fatty film, choose the matching sequence, use controlled dwell, then rinse and dry to reveal true clarity.",
+        "data_and_benchmarks": "Squeegeeing starts the prevention clock after restoration—maintenance beats heroic removal.",
+        "professional_insights": "Lower door zones often show heavier pattern from bounce-back spray.",
+        "when_to_call_a_professional": "Call a professional when coatings are unknown, when etching is suspected, or when large panels need safe access systems.",
+        "related_topics": [
+          "S-SHWR-001",
+          "M-HWD-001",
+          "M-GLS-001"
+        ]
+      }
+    },
+    {
+      "id": "P-LIME-004",
+      "title": "Limescale on Tile",
+      "category": "problems",
+      "cluster": "limescale",
+      "slug": "limescale-on-tile",
+      "summary": "Tile glaze may stay clean while grout shoulders grow white mineral caps—target each zone.",
+      "image": {
+        "primaryAlt": "Bathroom wall tile with white deposits on grout joints",
+        "queries": [
+          "limescale on bathroom tile grout",
+          "hard water deposits ceramic tile shower",
+          "white mineral crust tile edges"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Limescale on tile accumulates at grout shoulders, texture lows, and shelf edges where water stands briefly before evaporation.",
+        "why_it_happens": "Porcelain is often more forgiving than cementitious grout, which can absorb and wick minerals.",
+        "what_people_do_wrong": "People flood walls, let acids run uncontrolled onto marble thresholds, or confuse efflorescence with tap-water scale indoors.",
+        "professional_method": "Detail horizontal ledges first, control vertical runs with saturated towels as dams, rinse progressively, and verify grout color stability on a test joint.",
+        "data_and_benchmarks": "If deposits return quickly after cleaning, evaporation points or slow leaks need review—not only chemistry.",
+        "professional_insights": "Fan runtime and squeegee discipline change mineral deposition rates measurably.",
+        "when_to_call_a_professional": "Call a professional when natural stone is mixed into the assembly, or when waterproofing concerns appear at failing corners.",
+        "related_topics": [
+          "S-TILE-001",
+          "P-LIME-001",
+          "S-GROUT-001"
+        ]
+      }
+    },
+    {
+      "id": "P-LIME-005",
+      "title": "Heavy Limescale Deposits",
+      "category": "problems",
+      "cluster": "limescale",
+      "slug": "heavy-limescale-deposits",
+      "summary": "Heavy scale is layered and often bonded with soap films—expect staged reduction, not one magic wipe.",
+      "image": {
+        "primaryAlt": "Thick white scale crust on shower head and arm",
+        "queries": [
+          "heavy limescale removal shower fixtures",
+          "thick calcium buildup cleaning professional",
+          "severely scaled faucet restoration safe"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Heavy limescale deposits are thick, nodular, or sheet crusts that reduce flow, snag cleaning cloths, and shadow underlying finish.",
+        "why_it_happens": "Years of drip drying and product stacking create laminate-like mineral layers interleaved with organics.",
+        "what_people_do_wrong": "People chip scale with steel, over-concentrate acids, or work without timers and ventilation.",
+        "professional_method": "Plan multiple milder cycles over one risky blast; protect adjacent finishes, keep chemistry wet evenly, and mechanically assist only where plating allows.",
+        "data_and_benchmarks": "Flow tests on shower heads quantify functional recovery beyond appearance.",
+        "professional_insights": "Photograph thickness before/after for warranty and property management records.",
+        "when_to_call_a_professional": "Call a professional when gas valves, complex thermostatic cartridges, or stone surrounds constrain DIY approaches.",
+        "related_topics": [
+          "P-LIME-001",
+          "M-HWD-001",
+          "P-SOAP-001"
+        ]
+      }
+    },
+    {
+      "id": "P-LIME-006",
+      "title": "Limescale vs Hard Water Stains",
+      "category": "problems",
+      "cluster": "limescale",
+      "slug": "limescale-vs-hard-water-stains",
+      "summary": "Language overlaps; operators separate mineral type, thickness, and substrate sensitivity before picking chemistry.",
+      "image": {
+        "primaryAlt": "Comparison of spotty glass deposits versus uniform haze",
+        "queries": [
+          "limescale vs hard water stains difference",
+          "calcium spots versus mineral film glass",
+          "identify scale type bathroom cleaning"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Limescale versus hard water stains is mostly a language distinction in homes: both refer to mineral residues from evaporated hard water, but severity, crystal structure, and co-deposits differ in practice.",
+        "why_it_happens": "Thin ion films may look like haze; thicker spots read as discrete dots; iron-heavy water adds color casts.",
+        "what_people_do_wrong": "People treat every white mark as acid-safe, ignoring marble, sealed stone, and plated metals.",
+        "professional_method": "Identify substrate, test inconspicuously, choose chelation or mild acid per compatibility, and separate true minerals from soap scum before locking in a plan.",
+        "data_and_benchmarks": "If chemistry removes soil but cloudiness remains, pivot to etching or coating failure hypotheses.",
+        "professional_insights": "Water tests help in ambiguous regions—know your local hardness seasonal shifts.",
+        "when_to_call_a_professional": "Call a professional when multi-substrate wet rooms need sequencing, or when insurance documentation requires expert classification.",
+        "related_topics": [
+          "P-HARD-001",
+          "P-LIME-001",
+          "P-ETCH-004"
+        ]
+      }
+    },
+    {
+      "id": "P-ETCH-001",
+      "title": "Glass Etching",
+      "category": "problems",
+      "cluster": "glass-etching",
+      "slug": "glass-etching",
+      "summary": "True etching is physical glass damage—cleaning cannot restore clarity once the structure is altered.",
+      "image": {
+        "primaryAlt": "Close up of permanently cloudy glass etching pattern",
+        "queries": [
+          "etched glass permanent cloudiness",
+          "glass etching from cleaner damage",
+          "damaged glass cannot polish clear"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Glass etching is micro-pitting or chemical alteration of the glass surface that scatters light, producing a permanent fog unlike removable films.",
+        "why_it_happens": "Repeated acid exposure, some bacterial films in pools, and manufacturing defects can etch; hard water can etch if allowed to work long enough on some glass.",
+        "what_people_do_wrong": "People razor and acid-cycle until clarity worsens, mistaking etching for stubborn scale.",
+        "professional_method": "Confirm with tactile and test patches: if scale removal yields no clarity gain, stop aggressive chemistry and discuss replacement or professional glass restoration scope.",
+        "data_and_benchmarks": "Document location—showers versus windows have different etiology and expectations.",
+        "professional_insights": "Coated low-e exteriors have their own damage modes—do not assume bath products caused exterior haze.",
+        "when_to_call_a_professional": "Call a professional when large panels, safety glazing, or warranty replacement paths are involved.",
+        "related_topics": [
+          "P-ETCH-006",
+          "P-ETCH-003",
+          "M-GLS-001"
+        ]
+      }
+    },
+    {
+      "id": "P-ETCH-002",
+      "title": "Etching on Shower Glass",
+      "category": "problems",
+      "cluster": "glass-etching",
+      "slug": "etching-on-shower-glass",
+      "summary": "Shower etching is common where scale cycles and strong acids repeat on warm glass.",
+      "image": {
+        "primaryAlt": "Shower glass panel with permanent foggy etching",
+        "queries": [
+          "etched shower glass door permanent",
+          "shower glass wont clean clear etched",
+          "acid damage shower glass etching"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Etching on shower glass is a widespread cloud that survives correct scale removal and feels slightly rough or grabby compared with unaffected glass.",
+        "why_it_happens": "Consumer acids, low ventilation, and squeegee neglect create cycles of mineral bond and aggressive removal attempts.",
+        "what_people_do_wrong": "People confuse etching with coating failure on factory-treated glass—testing methodology differs.",
+        "professional_method": "Remove true soils first, assess clarity, then decide if specialty polishing or panel replacement is the economical path.",
+        "data_and_benchmarks": "If only the lower third is affected, splash and pooling geometry usually explains the pattern.",
+        "professional_insights": "Maintenance after restoration must shift to milder prevention—otherwise etching returns on replacement panels.",
+        "when_to_call_a_professional": "Call a professional when coatings are advertised, when big panels need safe handling, or when remodel scope is near.",
+        "related_topics": [
+          "S-SHWR-001",
+          "P-ETCH-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "P-ETCH-003",
+      "title": "Cloudy Glass vs Etched Glass",
+      "category": "problems",
+      "cluster": "glass-etching",
+      "slug": "cloudy-glass-vs-etched-glass",
+      "summary": "Cloudiness can be film, scale, coating, or etch—different tools prove which.",
+      "image": {
+        "primaryAlt": "Side by side glass samples film versus etched appearance",
+        "queries": [
+          "cloudy glass vs etched how to tell",
+          "glass haze film or permanent etching test",
+          "difference cloudy etched shower glass"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Cloudy glass versus etched glass compares removable haze—films and minerals—with permanent surface damage that does not change with surfactants alone.",
+        "why_it_happens": "Coatings can fail into a cloudy sheet that mimics etching; oils can mimic both until removed systematically.",
+        "what_people_do_wrong": "People pick one hypothesis and buy aggressive products that push film cases into true etch cases.",
+        "professional_method": "Run a structured removal ladder on a test corner, document results at consistent lighting, and stop when improvement plateaus.",
+        "data_and_benchmarks": "If oil pull with a dry cloth changes appearance materially, you are not finished diagnosing films.",
+        "professional_insights": "Record whether cloudiness is interior, exterior, or interlayer for windows—each has different implications.",
+        "when_to_call_a_professional": "Call a professional when test results are ambiguous across large commercial facades or expensive shower enclosures.",
+        "related_topics": [
+          "P-ETCH-001",
+          "P-HAZE-002",
+          "M-GLS-001"
+        ]
+      }
+    },
+    {
+      "id": "P-ETCH-004",
+      "title": "Permanent Glass Damage from Hard Water",
+      "category": "problems",
+      "cluster": "glass-etching",
+      "slug": "permanent-glass-damage-from-hard-water",
+      "summary": "Minerals can bond long enough to damage glass; early intervention prevents costly panel outcomes.",
+      "image": {
+        "primaryAlt": "Glass with severe mineral damage dull surface",
+        "queries": [
+          "hard water ruined glass permanent damage",
+          "mineral etching glass shower long term",
+          "cannot remove hard water etched glass"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Permanent glass damage from hard water describes cases where mineral deposition and cleaning cycles have altered the glass beyond simple dissolution removal.",
+        "why_it_happens": "Time, heat, and pH extremes increase bond strength; some regions with silica-rich water show tougher films.",
+        "what_people_do_wrong": "People delay maintenance until optics fail, then escalate to risky abrasives.",
+        "professional_method": "After thorough soil removal, if clarity remains unacceptable, classify as damage and choose polishing, coating replacement, or panel swap with cost-benefit analysis.",
+        "data_and_benchmarks": "Photometric improvement expectations should be set honestly—polishing thins glass microscopically.",
+        "professional_insights": "Tenant turnovers often reveal multi-year neglect patterns in second baths.",
+        "when_to_call_a_professional": "Call a professional when building glass, liability, or manufacturer warranties require documented assessments.",
+        "related_topics": [
+          "P-ETCH-001",
+          "P-LIME-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "P-ETCH-005",
+      "title": "Etching vs Residue on Glass",
+      "category": "problems",
+      "cluster": "glass-etching",
+      "slug": "etching-vs-residue-on-glass",
+      "summary": "Residue feels unfairly permanent; etching actually is—separate them before buying new doors.",
+      "image": {
+        "primaryAlt": "Finger drag test on glass residue versus etched area",
+        "queries": [
+          "glass etching or residue how to know",
+          "etched glass vs cleaner film test",
+          "shower glass still cloudy after descale"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Etching versus residue on glass contrasts removable films—including polymers and oils—with damage that remains after correct removal attempts.",
+        "why_it_happens": "Residue can be tacky; etching is not tacky but can feel slightly rough.",
+        "what_people_do_wrong": "People declare etching after one brand change instead of after a disciplined ladder test.",
+        "professional_method": "Perform solvent-safe and water-purity tests, then mineral removal where appropriate, each with neutralized rinse and dry inspection.",
+        "data_and_benchmarks": "If a new razor glide changes nothing on a flat test patch, suspicion shifts toward etch or interlayer failure.",
+        "professional_insights": "Lint embedded in residue mimics speckled etch—change towels before conclusions.",
+        "when_to_call_a_professional": "Call a professional when large samples need microscopy-level decisions or when replacement logistics need vendor coordination.",
+        "related_topics": [
+          "P-RESIDUE-006",
+          "P-ETCH-001",
+          "M-GLS-001"
+        ]
+      }
+    },
+    {
+      "id": "P-ETCH-006",
+      "title": "When Glass Cannot Be Restored by Cleaning",
+      "category": "problems",
+      "cluster": "glass-etching",
+      "slug": "when-glass-cannot-be-restored-by-cleaning",
+      "summary": "Knowing the stop point protects money, warranties, and safety glass integrity.",
+      "image": {
+        "primaryAlt": "Technician inspecting shower glass panel for replacement",
+        "queries": [
+          "glass cannot be restored cleaning only",
+          "when to replace etched shower glass",
+          "stop cleaning damaged glass professional"
+        ]
+      },
+      "sections": {
+        "what_this_is": "When glass cannot be restored by cleaning is the decision point after correct film and mineral removal still leaves unacceptable scatter or distortion.",
+        "why_it_happens": "Coating delamination, deep etch, and interlayer fog in IGUs are common non-cleaning outcomes.",
+        "what_people_do_wrong": "People keep buying stronger bottles until frames and stone suffer collateral damage.",
+        "professional_method": "Establish a test patch standard, document clarity outcomes, compare replacement quote to restoration scope, and preserve adjacent finishes during any last attempts.",
+        "data_and_benchmarks": "Safety tempering limits some polishing approaches—verify before mechanical correction.",
+        "professional_insights": "Property managers benefit from photo standards to align resident expectations.",
+        "when_to_call_a_professional": "Call a professional for measurement, tempered glass spec, installation, and stone protection during swaps.",
+        "related_topics": [
+          "P-ETCH-001",
+          "P-ETCH-003",
+          "S-GLASS-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GROUT-001",
+      "title": "Dirty Grout Lines",
+      "category": "problems",
+      "cluster": "grout-soiling",
+      "slug": "dirty-grout-lines",
+      "summary": "Dirty grout is usually soil in pores, stain, or failing seal—not always 'the wrong mop.'",
+      "image": {
+        "primaryAlt": "Floor tile with discolored gray grout lines",
+        "queries": [
+          "dirty grout lines floor tile cleaning",
+          "grout looks dark discolored soil",
+          "tile grout cleaning professional method"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dirty grout lines are joints that read darker, mottled, or uneven compared with tile glaze, often uniform in traffic lanes or splash zones.",
+        "why_it_happens": "Porous cementitious grout absorbs spills; wax and mop films wick in; mold can pigment joints in wet areas.",
+        "what_people_do_wrong": "People bleach color out of sealers, use steam against soft grout, or seal over dirty joints—locking soil in.",
+        "professional_method": "Pre-clean glaze to avoid redeposit, treat joints with compatible chemistry and tools, extract suspension, dry, and reassess seal needs honestly.",
+        "data_and_benchmarks": "If joints clean but re-darken in days on floors, redeposit process—not magic grout—is the issue.",
+        "professional_insights": "Kitchen grout near stoves often carries polymerized oils distinct from bath soap films.",
+        "when_to_call_a_professional": "Call a professional when regrouting, color sealing, or waterproofing remediation is required after cleaning plateaus.",
+        "related_topics": [
+          "S-GROUT-001",
+          "S-TILE-001",
+          "P-SOIL-005"
+        ]
+      }
+    },
+    {
+      "id": "P-GROUT-002",
+      "title": "Dark Grout After Cleaning",
+      "category": "problems",
+      "cluster": "grout-soiling",
+      "slug": "dark-grout-after-cleaning",
+      "summary": "Grout that darkens as it dries usually signals wicking, leftover solution, or internal stain—not a spotless joint.",
+      "image": {
+        "primaryAlt": "Grout joints darkening as floor dries after mopping",
+        "queries": [
+          "grout darker after cleaning wicking",
+          "tile grout dries darker mop residue",
+          "grout lines look dirty when dry still"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dark grout after cleaning is the pattern where joints looked improved when wet but return to a dingy tone as water evaporates.",
+        "why_it_happens": "Soil deep in pores floats to the meniscus during drying; high pH residues can alter appearance temporarily; some stains are simply unremoved.",
+        "what_people_do_wrong": "People use dirty mop water final passes, flood joints, or skip dry buffing on porous grout.",
+        "professional_method": "Finish with clean rinse water, detail joints with grout tools, towel-dry high-risk areas, and if darkness persists, escalate from maintenance clean to extraction or stain treatment on samples.",
+        "data_and_benchmarks": "Compare a fully extracted test joint to neighbors—if only one stays dark, it is local stain or damage.",
+        "professional_insights": "New grout can darken unevenly if cure moisture was trapped—know install age before blaming cleaners.",
+        "when_to_call_a_professional": "Call a professional when hydrostatic concerns, failing pans, or systemic re-darkening suggests moisture behind tile.",
+        "related_topics": [
+          "P-GROUT-001",
+          "S-GROUT-001",
+          "P-SOIL-005"
+        ]
+      }
+    }
+  ]
+}

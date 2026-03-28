@@ -8,10 +8,12 @@ type Props = {
   loading?: boolean;
   /** Explains trusted vs blended window. */
   scopeNote?: string;
+  /** Overrides default empty copy (trusted-only intelligence). */
+  emptyHint?: string;
 };
 
 export function SystemTestsFlakyCasesTable(props: Props) {
-  const { rows, loading, scopeNote } = props;
+  const { rows, loading, scopeNote, emptyHint } = props;
   if (loading) {
     return (
       <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/55">
@@ -22,7 +24,7 @@ export function SystemTestsFlakyCasesTable(props: Props) {
   if (!rows.length) {
     return (
       <section className="rounded-2xl border border-dashed border-white/12 bg-white/[0.02] p-6 text-center text-sm text-white/50">
-        Not enough multi-run history to rank flaky cases.
+        {emptyHint ?? "No trusted instability detected in the current analysis window."}
       </section>
     );
   }

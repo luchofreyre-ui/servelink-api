@@ -26,29 +26,270 @@ export type SystemTestLatestFailure = {
   retryCount: number;
 };
 
-/** Latest run snapshot + aggregates (summary endpoint). */
+/** Normalized run summary for admin system test dashboard (Phase 1). */
 export type SystemTestRunSummary = {
   id: string;
+  status: "passed" | "failed" | "partial" | "running" | "unknown";
   createdAt: string;
-  source: string;
+  finishedAt: string | null;
+  durationMs: number | null;
   branch: string | null;
   commitSha: string | null;
-  status: string;
   totalCount: number;
   passedCount: number;
   failedCount: number;
   skippedCount: number;
-  flakyCount: number;
-  durationMs: number | null;
+  passRate: number;
 };
 
-export type SystemTestsSummaryResponse = {
-  latestRun: SystemTestRunSummary | null;
-  latestPassRate: number | null;
-  latestFailedCount: number | null;
-  latestRunAt: string | null;
-  suiteBreakdown: SystemTestSuiteBreakdownRow[];
-  latestFailures: SystemTestLatestFailure[];
+/** Deterministic, compact evidence extracted from raw failure text (Phase 4). */
+export type SystemTestFailureEvidenceSummary = {
+  messageLine: string | null;
+  assertionLine: string | null;
+  locationLine: string | null;
+  diagnosticLines: string[];
+};
+
+export type SystemTestArtifactRefType =
+  | "trace"
+  | "screenshot"
+  | "video"
+  | "stdout_log"
+  | "stderr_log"
+  | "attachment"
+  | "html_report_ref";
+
+/** Mirrors API persisted artifact ref (Phase 7B). */
+export type SystemTestArtifactRef = {
+  type: SystemTestArtifactRefType;
+  path: string;
+  displayName: string;
+  mimeType: string | null;
+  sourceCaseId: string | null;
+  isPrimary: boolean;
+  sizeBytes: number | null;
+};
+
+/** Phase 8 — cross-run root-cause family (from API persisted intelligence). */
+export type SystemTestFailureFamilySummary = {
+  familyId: string;
+  displayTitle: string;
+  rootCauseSummary: string;
+  matchBasis: string;
+  status: string;
+  trendKind: string;
+  seenInWindowLabel: string;
+  recurrenceLine: string;
+};
+
+/** Phase 9 — operator incident linked to a failure family. */
+export type SystemTestIncidentSummary = {
+  incidentKey: string;
+  displayTitle: string;
+  severity: string;
+  status: string;
+  trendKind: string;
+  rootCauseCategory: string;
+  leadFamilyId: string | null;
+  fixTrackPrimaryArea: string;
+  fixTrackFirstStep: string;
+};
+
+/** Structured evidence from canonical ingestion (Phase 7B). */
+export type SystemTestRichEvidence = {
+  assertionType: string | null;
+  expectedText: string | null;
+  receivedText: string | null;
+  timeoutMs: number | null;
+  locator: string | null;
+  selector: string | null;
+  routeUrl: string | null;
+  actionName: string | null;
+  stepName: string | null;
+  testStepPath: string[];
+  errorCode: string | null;
+  primaryArtifactPath: string | null;
+  primaryArtifactType: SystemTestArtifactRefType | null;
+};
+
+export type SystemTestFailureGroup = {
+  key: string;
+  fingerprint: string;
+  file: string;
+  projectName: string | null;
+  title: string;
+  shortMessage: string;
+  fullMessage: string | null;
+  finalStatus: string | null;
+  occurrences: number;
+  testTitles: string[];
+  evidenceLines: string[];
+  evidenceSummary: SystemTestFailureEvidenceSummary;
+  /** First extra lines from raw message (not full stack); compact preview. */
+  diagnosticPreview: string | null;
+  /** Populated when persisted intelligence is completed (Phase 7B). */
+  richEvidence?: SystemTestRichEvidence | null;
+  artifactRefs?: SystemTestArtifactRef[];
+  debuggingHint?: string | null;
+  family?: SystemTestFailureFamilySummary | null;
+  incident?: SystemTestIncidentSummary | null;
+};
+
+export type SystemTestSpecBreakdownRow = {
+  file: string;
+  totalCount: number;
+  passedCount: number;
+  failedCount: number;
+  skippedCount: number;
+  passRate: number;
+};
+
+export type SystemTestTrendPoint = {
+  runId: string;
+  createdAt: string;
+  durationMs: number | null;
+  failedCount: number;
+  passRate: number;
+  status: SystemTestRunSummary["status"];
+};
+
+export type SystemTestRunDetail = {
+  summary: SystemTestRunSummary;
+  specs: SystemTestSpecBreakdownRow[];
+  failureGroups: SystemTestFailureGroup[];
+};
+
+export type SystemTestComparisonHeadline =
+  | "Regression detected"
+  | "Improvement detected"
+  | "Mixed change"
+  | "No material change";
+
+/** Phase 2 — failure group row for compare (new / resolved / persistent). */
+export type SystemTestFailureGroupComparison = {
+  key: string;
+  file: string;
+  projectName: string | null;
+  title: string;
+  shortMessage: string;
+  baseOccurrences: number;
+  targetOccurrences: number;
+  deltaOccurrences: number;
+  status: "new" | "resolved" | "persistent";
+  testTitles: string[];
+  /** Present when status === "new". */
+  novelty?: "new" | "expanded";
+  /** Present when status === "persistent". */
+  changeVersusBase?: "worse" | "better" | "same";
+  baseShortMessage?: string | null;
+  targetShortMessage?: string | null;
+  evidenceSummary?: SystemTestFailureEvidenceSummary | null;
+  richEvidence?: SystemTestRichEvidence | null;
+  artifactRefs?: SystemTestArtifactRef[];
+  debuggingHint?: string | null;
+  family?: SystemTestFailureFamilySummary | null;
+  incident?: SystemTestIncidentSummary | null;
+};
+
+export type SystemTestFileHealthComparisonRow = {
+  file: string;
+  baseTotalCount: number;
+  baseFailedCount: number;
+  basePassRate: number;
+  targetTotalCount: number;
+  targetFailedCount: number;
+  targetPassRate: number;
+  failedDelta: number;
+  passRateDelta: number;
+  trend: "regressed" | "improved" | "unchanged";
+};
+
+export type SystemTestRunComparison = {
+  baseRun: SystemTestRunDetail;
+  targetRun: SystemTestRunDetail;
+  passRateDelta: number;
+  failedDelta: number;
+  durationDeltaMs: number | null;
+  newFailures: SystemTestFailureGroupComparison[];
+  resolvedFailures: SystemTestFailureGroupComparison[];
+  persistentFailures: SystemTestFailureGroupComparison[];
+  fileHealthChanges: SystemTestFileHealthComparisonRow[];
+  operatorInsights: string[];
+  headline: SystemTestComparisonHeadline;
+  /**
+   * True when runs were swapped so base = chronologically older and target = newer
+   * (selection had base newer than target by parsed timestamps).
+   */
+  chronologyCorrected?: boolean;
+  /** Human-readable chronology / ordering note for operators. */
+  chronologyNote?: string | null;
+  /**
+   * @deprecated Prefer chronologyNote. True when comparison order may not match wall-clock intent
+   * and runs were not auto-corrected (e.g. missing timestamps).
+   */
+  chronologyWarning?: boolean;
+};
+
+/** Phase 3 — per-failure-group history + triage scoring (prior window excludes current run). */
+export type SystemTestFailureHistoryProfile = {
+  key: string;
+  seenInPriorRuns: number;
+  historyWindowSize: number;
+  lastSeenRunId: string | null;
+  consecutiveStreak: number;
+  intermittentCount: number;
+  firstSeenInLoadedWindow: boolean;
+  likelyFlaky: boolean;
+  likelyRecurring: boolean;
+  rerunPriorityScore: number;
+  rerunPriorityBand: "high" | "medium" | "low";
+  rerunPriorityReasons: string[];
+};
+
+export type SystemTestFileHistoryProfile = {
+  file: string;
+  failedInPriorRuns: number;
+  historyWindowSize: number;
+  averageFailedCount: number;
+  worstFailedCount: number;
+  instabilityScore: number;
+  trend: "improving" | "worsening" | "noisy" | "stable";
+};
+
+export type SystemTestHistoricalAnalysis = {
+  runId: string;
+  historyWindowSize: number;
+  failureProfiles: Record<string, SystemTestFailureHistoryProfile>;
+  unstableFiles: SystemTestFileHistoryProfile[];
+  historicalInsights: string[];
+  /** Non-null when prior window ordering relied on fallbacks or ties. */
+  historyChronologyNote?: string | null;
+};
+
+/** Per-run ordering metadata when sorting by time (Phase 4). */
+export type SystemTestRunOrderingDiagnostics = {
+  sortCreatedAt: string | null;
+  usedFallback: boolean;
+  chronologyWarning: string | null;
+};
+
+/**
+ * Normalized inputs for clipboard / future scheduled digests (Phase 4).
+ * Assembled in lib; pages should not stitch these fields ad hoc.
+ */
+export type SystemTestReportPayload = {
+  run: SystemTestRunDetail;
+  previousRun: SystemTestRunSummary | null;
+  trendVsPrevious: SystemTestRunTrendVsPrevious;
+  comparison: SystemTestRunComparison | null;
+  historicalAnalysis: SystemTestHistoricalAnalysis | null;
+};
+
+export type SystemTestRunTrendVsPrevious = {
+  previousRunId: string | null;
+  passRateDelta: number | null;
+  failedDelta: number | null;
+  durationDeltaMs: number | null;
 };
 
 export type SystemTestRunsListItem = {
@@ -71,6 +312,15 @@ export type SystemTestsRunsResponse = {
   total: number;
   page: number;
   limit: number;
+};
+
+export type SystemTestsSummaryResponse = {
+  latestRun: SystemTestRunsListItem | null;
+  latestPassRate: number | null;
+  latestFailedCount: number | null;
+  latestRunAt: string | null;
+  suiteBreakdown: SystemTestSuiteBreakdownRow[];
+  latestFailures: SystemTestLatestFailure[];
 };
 
 export type SystemTestCaseResult = {
@@ -107,11 +357,67 @@ export type SystemTestRunDetailMeta = {
   ingestVersion: number;
 };
 
+/** Raw API shape for persisted run intelligence (aligns with admin run detail DTO). */
+export type SystemTestPersistedIntelligenceResponse = {
+  summary: {
+    ingestionVersion: string;
+    lastAnalyzedAt: string;
+    analysisStatus: string;
+    analysisError: string | null;
+    passRate: number;
+    totalCount: number;
+    passedCount: number;
+    failedCount: number;
+    skippedCount: number;
+    flakyCount: number;
+    durationMs: number | null;
+    isStaleVersusCode: boolean;
+  };
+  ingestionWarnings: string[];
+  chronology: {
+    version: "v1";
+    runCreatedAtIso: string;
+    runUpdatedAtIso: string;
+    caseOrderingBasis: string;
+    warnings: string[];
+    duplicateTimestampGroupCount: number;
+    parsedCaseTimestampCount: number;
+  };
+  failureGroups: Array<{
+    canonicalKey: string;
+    canonicalFingerprint: string;
+    file: string;
+    projectName: string | null;
+    title: string;
+    shortMessage: string;
+    fullMessage: string | null;
+    finalStatus: string | null;
+    occurrences: number;
+    testTitles: string[];
+    evidenceSummary: {
+      routes: string[];
+      selectors: string[];
+      artifactPaths: string[];
+      sampleLines: string[];
+    };
+    diagnosticPreview: { text: string } | null;
+    richEvidence: SystemTestRichEvidence | null;
+    artifactRefs: SystemTestArtifactRef[];
+    debuggingHint: string | null;
+    sortOrder: number;
+    family?: SystemTestFailureFamilySummary | null;
+    incident?: SystemTestIncidentSummary | null;
+  }>;
+  specSummaries: Array<SystemTestSpecBreakdownRow & { sortOrder: number }>;
+};
+
 export type SystemTestRunDetailResponse = {
   run: SystemTestRunDetailMeta;
   suiteBreakdown: SystemTestSuiteBreakdownRow[];
   diagnosticReport: string;
   cases: SystemTestCaseResult[];
+  /** Present when canonical ingestion has run for this row. */
+  persistedIntelligence?: SystemTestPersistedIntelligenceResponse | null;
 };
 
 /** Compact JSON for ChatGPT / support (client-built). */

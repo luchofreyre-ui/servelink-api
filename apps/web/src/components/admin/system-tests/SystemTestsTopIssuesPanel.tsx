@@ -6,6 +6,7 @@ import { SystemTestsBadge } from "./SystemTestsBadge";
 type Props = {
   items: SystemTestsTopProblemItem[];
   loading?: boolean;
+  emptyHint?: string;
 };
 
 function severityToBadge(s: SystemTestsTopProblemSeverity): "critical" | "warning" | "stable" {
@@ -30,7 +31,7 @@ function typeLabel(t: SystemTestsTopProblemItem["type"]): string {
 }
 
 export function SystemTestsTopIssuesPanel(props: Props) {
-  const { items, loading } = props;
+  const { items, loading, emptyHint } = props;
 
   if (loading) {
     return (
@@ -43,7 +44,7 @@ export function SystemTestsTopIssuesPanel(props: Props) {
   if (!items.length) {
     return (
       <section className="rounded-2xl border border-dashed border-white/12 bg-white/[0.02] p-6 text-center text-sm text-white/50">
-        No prioritized issues right now — suite looks steady in this window.
+        {emptyHint ?? "No prioritized issues in the trusted analysis window."}
       </section>
     );
   }

@@ -7,6 +7,7 @@ type Props = {
   patterns: SystemTestsFailurePattern[];
   loading?: boolean;
   scopeNote?: string;
+  emptyHint?: string;
 };
 
 function severityBadge(s: SystemTestsFailurePatternSeverity): "critical" | "warning" | "stable" {
@@ -16,7 +17,7 @@ function severityBadge(s: SystemTestsFailurePatternSeverity): "critical" | "warn
 }
 
 export function SystemTestsFailurePatternsPanel(props: Props) {
-  const { patterns, loading, scopeNote } = props;
+  const { patterns, loading, scopeNote, emptyHint } = props;
   if (loading) {
     return (
       <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/55">
@@ -27,7 +28,7 @@ export function SystemTestsFailurePatternsPanel(props: Props) {
   if (!patterns.length) {
     return (
       <section className="rounded-2xl border border-dashed border-white/12 bg-white/[0.02] p-6 text-center text-sm text-white/50">
-        No clustered failure patterns in the recent window.
+        {emptyHint ?? "No trusted instability detected in the current analysis window."}
       </section>
     );
   }

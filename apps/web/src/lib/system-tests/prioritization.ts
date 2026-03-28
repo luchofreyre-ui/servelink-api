@@ -147,19 +147,6 @@ export function buildTopProblemsSummary(input: TopProblemsSummaryInput): SystemT
     });
   }
 
-  if (items.length === 0 && alerts.length) {
-    const a = alerts.find((x) => x.level === "critical") ?? alerts.find((x) => x.level === "warning");
-    if (a) {
-      items.push({
-        title: a.title,
-        type: "regression",
-        severity: a.level === "critical" ? "high" : "medium",
-        impactScore: a.weight + a.impactScore,
-        summary: a.operatorSummary,
-      });
-    }
-  }
-
   items.sort((x, y) => {
     if (y.impactScore !== x.impactScore) return y.impactScore - x.impactScore;
     return TYPE_ORDER[x.type] - TYPE_ORDER[y.type];

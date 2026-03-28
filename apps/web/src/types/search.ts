@@ -1,43 +1,24 @@
-export type SiteSearchResultType =
-  | "encyclopedia"
+export type SearchDocumentSource =
+  | "authority"
+  | "encyclopedia";
+
+export type SearchDocumentType =
+  | "problem"
   | "method"
   | "surface"
-  | "problem"
-  | "tool"
-  | "article"
   | "guide"
+  | "question"
   | "cluster"
   | "comparison"
-  | "question";
+  | "encyclopedia";
 
-export interface SiteSearchResult {
+export interface SiteSearchDocument {
   id: string;
-  type: SiteSearchResultType;
+  source: SearchDocumentSource;
+  type: SearchDocumentType;
   title: string;
-  href: string;
   description: string;
-  keywords: string[];
-}
-
-export interface SiteSearchResultWithScore extends SiteSearchResult {
-  score: number;
-}
-
-export interface SiteSearchSuggestion {
-  id: string;
-  type: SiteSearchResultType;
-  title: string;
   href: string;
-  subtitle: string;
-}
-
-export interface SiteSearchGroupedResults {
-  query: string;
-  total: number;
-  results: SiteSearchResultWithScore[];
-  grouped: Array<{
-    type: SiteSearchResultType;
-    label: string;
-    items: SiteSearchResultWithScore[];
-  }>;
+  keywords: string[];
+  body: string;
 }

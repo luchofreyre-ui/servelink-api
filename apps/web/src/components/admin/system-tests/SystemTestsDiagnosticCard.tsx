@@ -8,6 +8,14 @@ type Props = {
   supportPayload: string;
   /** Optional compact legacy JSON without intelligence layer. */
   legacySupportPayload?: string;
+  runMeta: {
+    id: string;
+    source: string;
+    branch?: string | null;
+    commitSha?: string | null;
+    status: string;
+    createdAt: string;
+  };
 };
 
 export function SystemTestsDiagnosticCard(props: Props) {
@@ -25,6 +33,30 @@ export function SystemTestsDiagnosticCard(props: Props) {
 
   return (
     <section className="space-y-3">
+      <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-xs text-white/80">
+        <div className="flex flex-wrap gap-x-3 gap-y-1">
+          <span>
+            <span className="text-white/55">Run ID:</span>{" "}
+            <span className="font-mono text-white">{props.runMeta.id}</span>
+          </span>
+          <span>
+            <span className="text-white/55">Source:</span> {props.runMeta.source}
+          </span>
+          <span>
+            <span className="text-white/55">Branch:</span> {props.runMeta.branch ?? "—"}
+          </span>
+          <span>
+            <span className="text-white/55">Commit:</span>{" "}
+            <span className="font-mono">{props.runMeta.commitSha ?? "—"}</span>
+          </span>
+          <span>
+            <span className="text-white/55">Status:</span> {props.runMeta.status}
+          </span>
+          <span>
+            <span className="text-white/55">Created at:</span> {props.runMeta.createdAt}
+          </span>
+        </div>
+      </div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold text-white">Diagnostic report</h2>
         <div className="flex flex-wrap gap-2">
@@ -40,7 +72,7 @@ export function SystemTestsDiagnosticCard(props: Props) {
             onClick={() => void copy("support", props.supportPayload)}
             className="rounded-lg border border-sky-500/30 bg-sky-500/15 px-3 py-1.5 text-sm font-medium text-sky-100 hover:bg-sky-500/25"
           >
-            {copied === "support" ? "Copied" : "Copy AI diagnostic payload"}
+            {copied === "support" ? "Copied" : "Copy AI diagnostic payload for this run"}
           </button>
           {props.legacySupportPayload ? (
             <button

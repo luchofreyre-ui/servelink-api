@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getStoredAccessToken } from "@/lib/auth";
 import { fetchAdminSystemTestRunDetail, fetchAdminSystemTestRuns } from "@/lib/api/systemTests";
+import { analyzeSystemTestHistory } from "@/lib/systemTests/analyzeSystemTestHistory";
 import { SystemTestsRunDetail } from "@/components/admin/system-tests/SystemTestsRunDetail";
-import type { SystemTestRunDetailResponse } from "@/types/systemTests";
+import { sortSystemTestRunsListNewestFirst } from "@/lib/systemTests/sortSystemTestRuns";
+import type { SystemTestRunDetailResponse, SystemTestRunsListItem } from "@/types/systemTests";
 
 export default function AdminSystemTestRunDetailPage() {
   const params = useParams();
@@ -15,8 +17,9 @@ export default function AdminSystemTestRunDetailPage() {
   const [tokenChecked, setTokenChecked] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [detail, setDetail] = useState<SystemTestRunDetailResponse | null>(null);
-  const [peerDetails, setPeerDetails] = useState<SystemTestRunDetailResponse[]>([]);
-  const [peersLoading, setPeersLoading] = useState(false);
+  const [runs, setRuns] = useState<SystemTestRunsListItem[]>([]);
+  const [priorDetails, setPriorDetails] = useState<SystemTestRunDetailResponse[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,6 +27,30 @@ export default function AdminSystemTestRunDetailPage() {
     setToken(getStoredAccessToken());
     setTokenChecked(true);
   }, []);
+
+  useEffect(() => {
+    if (!tokenChecked || !token) {
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const list = await fetchAdminSystemTestRuns(token, { limit: 40, page: 1 });
+        if (!cancelled) {
+          setRuns(list.items);
+        }
+      } catch {
+        if (!cancelled) setRuns([]);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, tokenChecked]);
+
+  const { sorted: sortedRuns } = useMemo(() => sortSystemTestRunsListNewestFirst(runs), [runs]);
 
   useEffect(() => {
     if (!tokenChecked || !token || !runId) {
@@ -53,41 +80,51 @@ export default function AdminSystemTestRunDetailPage() {
   }, [token, tokenChecked, runId]);
 
   useEffect(() => {
-    if (!tokenChecked || !token || !runId || !detail) {
-      setPeerDetails([]);
-      setPeersLoading(false);
+    if (!tokenChecked || !token || !runId || !sortedRuns.length) {
+      setPriorDetails([]);
+      setHistoryLoading(false);
+      return;
+    }
+
+    const idx = sortedRuns.findIndex((r) => r.id === runId);
+    if (idx < 0) {
+      setPriorDetails([]);
+      return;
+    }
+
+    const older = sortedRuns.slice(idx + 1, idx + 10);
+    if (!older.length) {
+      setPriorDetails([]);
+      setHistoryLoading(false);
       return;
     }
 
     let cancelled = false;
     (async () => {
-      setPeersLoading(true);
+      setHistoryLoading(true);
       try {
-        const list = await fetchAdminSystemTestRuns(token, { page: 1, limit: 24 });
-        if (cancelled) return;
-        let ids = list.items.slice(0, 12).map((r) => r.id);
-        if (!ids.includes(runId)) {
-          ids = [runId, ...ids].slice(0, 12);
-        }
         const settled = await Promise.allSettled(
-          ids.map((id) => fetchAdminSystemTestRunDetail(token, id)),
+          older.map((r) => fetchAdminSystemTestRunDetail(token, r.id)),
         );
         if (cancelled) return;
         const ok = settled
           .filter((s): s is PromiseFulfilledResult<SystemTestRunDetailResponse> => s.status === "fulfilled")
           .map((s) => s.value);
-        setPeerDetails(ok.filter((d) => d.run.id !== runId));
-      } catch {
-        if (!cancelled) setPeerDetails([]);
+        setPriorDetails(ok);
       } finally {
-        if (!cancelled) setPeersLoading(false);
+        if (!cancelled) setHistoryLoading(false);
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [token, tokenChecked, runId, detail]);
+  }, [token, tokenChecked, runId, sortedRuns]);
+
+  const historicalAnalysis = useMemo(() => {
+    if (!detail) return null;
+    return analyzeSystemTestHistory(detail, priorDetails);
+  }, [detail, priorDetails]);
 
   if (!tokenChecked) {
     return (
@@ -137,8 +174,9 @@ export default function AdminSystemTestRunDetailPage() {
         ) : (
           <SystemTestsRunDetail
             detail={detail}
-            recentDetailsForExport={peerDetails}
-            peersLoading={peersLoading}
+            sortedRuns={sortedRuns}
+            historicalAnalysis={historicalAnalysis!}
+            historyLoading={historyLoading}
           />
         )}
       </div>

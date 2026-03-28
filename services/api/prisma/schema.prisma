@@ -22,6 +22,12 @@ model User {
   refreshTokens                   RefreshToken[]
   bookingAuthorityResultsReviewed BookingAuthorityResult[] @relation("BookingAuthorityResultReviewedBy")
   bookingAuthorityMismatchesAsActor BookingAuthorityMismatch[] @relation("BookingAuthorityMismatchActor")
+  systemTestIncidentActionsOwned   SystemTestIncidentAction[] @relation("SystemTestIncidentActionOwner")
+  systemTestIncidentEventsAuthored SystemTestIncidentEvent[]  @relation("SystemTestIncidentEventActor")
+  systemTestIncidentNotesAuthored  SystemTestIncidentNote[]   @relation("SystemTestIncidentNoteUser")
+  dispatchExceptionActionsOwned    DispatchExceptionAction[]  @relation("DispatchExceptionActionOwner")
+  dispatchExceptionActionEventsAuthored DispatchExceptionActionEvent[] @relation("DispatchExceptionActionEventActor")
+  dispatchExceptionActionNotesAuthored DispatchExceptionActionNote[] @relation("DispatchExceptionActionNoteUser")
 }
 
 model RefreshToken {
@@ -843,10 +849,464 @@ model SystemTestRun {
   summaryJson  Json?
   ingestVersion Int     @default(1)
 
-  cases SystemTestCaseResult[]
+  cases        SystemTestCaseResult[]
+  intelligence SystemTestRunIntelligence?
+  incidents    SystemTestIncident[]
 
   @@index([createdAt])
   @@index([status, createdAt])
+}
+
+/// Canonical persisted analysis for a system test run (Phase 5B / 6).
+model SystemTestRunIntelligence {
+  id                    String   @id @default(cuid())
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  runId                 String   @unique
+  /// Canonical algorithm version (@servelink/system-test-intelligence).
+  ingestionVersion      String
+  sourceContentHash     String
+  canonicalRunAt        DateTime
+  status                String
+  totalCount            Int
+  passedCount           Int
+  failedCount           Int
+  skippedCount          Int
+  flakyCount            Int
+  passRate              Float
+  durationMs            Int?
+  branch                String?
+  commitSha             String?
+  chronologyJson        Json
+  ingestionWarningsJson Json
+  lastAnalyzedAt        DateTime @default(now())
+  /// pending | completed | failed
+  analysisStatus        String   @default("pending")
+  analysisError         String?  @db.Text
+
+  run           SystemTestRun             @relation(fields: [runId], references: [id], onDelete: Cascade)
+  failureGroups SystemTestFailureGroup[]
+  specSummaries SystemTestSpecSummary[]
+
+  @@index([ingestionVersion])
+  @@index([sourceContentHash])
+  @@index([analysisStatus])
+}
+
+model SystemTestFailureGroup {
+  id                    String   @id @default(cuid())
+  createdAt             DateTime @default(now())
+  runId                 String
+  runIntelligenceId     String
+  canonicalKey          String
+  canonicalFingerprint  String
+  file                  String
+  projectName           String?
+  title                 String
+  shortMessage          String   @db.Text
+  fullMessage           String?  @db.Text
+  finalStatus           String?
+  occurrences           Int
+  testTitlesJson        Json
+  evidenceSummaryJson   Json
+  diagnosticPreviewJson Json
+  /// Structured assertion / locator / route context (Phase 7B).
+  richEvidenceJson      Json?
+  /// Canonical artifact refs (trace, screenshot, logs, …).
+  artifactRefsJson      Json?
+  sortOrder             Int
+
+  runIntelligence SystemTestRunIntelligence @relation(fields: [runIntelligenceId], references: [id], onDelete: Cascade)
+
+  @@unique([runIntelligenceId, canonicalKey])
+  @@index([runId])
+  @@index([canonicalFingerprint])
+  @@index([runIntelligenceId])
+
+  familyMemberships SystemTestFailureFamilyMembership[]
+}
+
+/// Cross-run root-cause family (Phase 8).
+model SystemTestFailureFamily {
+  id                         String   @id @default(cuid())
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+  familyKey                  String
+  /// @servelink/system-test-intelligence SYSTEM_TEST_FAILURE_FAMILY_VERSION
+  familyVersion              String   @default("v1")
+  familyKind                 String   @default("layered_signature")
+  displayTitle               String
+  rootCauseSummary           String   @db.Text
+  primaryAssertionType       String?
+  primaryLocator             String?  @db.Text
+  primarySelector            String?  @db.Text
+  primaryRouteUrl            String?  @db.Text
+  primaryActionName          String?
+  primaryErrorCode           String?
+  firstSeenRunId             String?
+  lastSeenRunId              String?
+  totalOccurrencesAcrossRuns Int      @default(0)
+  affectedRunCount           Int      @default(0)
+  affectedFileCount          Int      @default(0)
+  /// active | quiet | resolved_candidate
+  status                     String   @default("quiet")
+  /// trendKind, seenInWindow stats, etc.
+  metadataJson               Json?
+
+  memberships         SystemTestFailureFamilyMembership[]
+  incidentMemberships SystemTestIncidentFamilyMembership[]
+  incidentLeads       SystemTestIncident[]                @relation("IncidentLeadFamily")
+
+  @@unique([familyKey, familyVersion])
+  @@index([lastSeenRunId])
+  @@index([status])
+  @@index([updatedAt])
+}
+
+/// Operator incident cluster above failure families (Phase 9).
+/// Scoped per run; `incidentKey` is the stable cross-run identifier (hash of signature + surface + failure type).
+model SystemTestIncident {
+  id                     String   @id @default(cuid())
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  runId                  String
+  incidentKey            String
+  /// @servelink/system-test-intelligence SYSTEM_TEST_INCIDENT_VERSION
+  incidentVersion        String   @default("v1")
+  displayTitle           String
+  rootCauseCategory      String
+  summary                String   @db.Text
+  severity               String
+  status                 String
+  firstSeenRunId         String?
+  lastSeenRunId          String?
+  affectedRunCount       Int      @default(0)
+  affectedFamilyCount    Int      @default(0)
+  affectedFileCount      Int      @default(0)
+  currentRunFamilyCount  Int      @default(0)
+  currentRunFailureCount Int      @default(0)
+  leadFamilyId           String?
+  metadataJson           Json?
+
+  run         SystemTestRun                        @relation(fields: [runId], references: [id], onDelete: Cascade)
+  leadFamily  SystemTestFailureFamily?             @relation("IncidentLeadFamily", fields: [leadFamilyId], references: [id], onDelete: SetNull)
+  memberships SystemTestIncidentFamilyMembership[]
+
+  @@unique([runId, incidentKey])
+  @@index([severity])
+  @@index([status])
+  @@index([updatedAt])
+  @@index([runId])
+}
+
+/// Cross-run registry for stable `incidentKey` (occurrence + gap / reappearance).
+model SystemTestIncidentIndex {
+  id               String   @id @default(cuid())
+  incidentKey      String   @unique
+  firstSeenAt      DateTime @default(now())
+  lastSeenAt       DateTime @updatedAt
+  firstSeenRunId   String?
+  lastSeenRunId    String?
+  occurrenceCount  Int      @default(0)
+  /// Consecutive runs without this key before the last ingest that reset it (see pipeline).
+  lastSeenGapRuns  Int      @default(0)
+
+  @@index([lastSeenRunId])
+}
+
+/// Per-run snapshot for diffing and Phase 10 validation (lightweight audit trail).
+model SystemTestIncidentSnapshot {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  incidentKey      String
+  runId            String
+  familyIdsJson    Json
+  summary          String   @db.Text
+  severity         String
+  /// Gap immediately before this appearance (0 if also present in the chronologically prior run).
+  gapRunsBefore    Int      @default(0)
+  reappearedAfterGap Boolean @default(false)
+
+  @@unique([incidentKey, runId])
+  @@index([runId])
+  @@index([incidentKey])
+}
+
+/// Deterministic operator fix track keyed by stable `incidentKey` (not DB incident id).
+model SystemTestIncidentFixTrack {
+  id                        String   @id @default(cuid())
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  incidentKey               String   @unique
+  incidentVersion           String   @default("v1")
+  primaryArea               String
+  recommendedStepsJson      Json
+  validationStepsJson       Json
+  representativeFilesJson   Json?
+  representativeFamilyKeysJson Json?
+}
+
+/// Phase 10 — operator action / workflow layer keyed by stable incidentKey.
+model SystemTestIncidentAction {
+  id            String                           @id @default(cuid())
+  incidentKey   String                           @unique
+  status        SystemTestIncidentActionStatus   @default(open)
+  priority      SystemTestIncidentActionPriority @default(medium)
+  ownerUserId   String?
+  lastSeenRunId String?
+  metadataJson  Json?
+  createdAt     DateTime                         @default(now())
+  updatedAt     DateTime                         @updatedAt
+  resolvedAt    DateTime?
+
+  /// pending | passed | failed — resolution validation (run-driven).
+  validationState         String?
+  validationLastCheckedAt DateTime?
+  validationLastPassedAt  DateTime?
+  validationLastFailedAt  DateTime?
+  reopenedAt              DateTime?
+  reopenCount             Int                              @default(0)
+
+  /// Phase 11A — SLA + automation (notification-ready, no external delivery).
+  slaPolicyHours           Int?
+  slaStartedAt             DateTime?
+  slaDueAt                 DateTime?
+  slaStatus                String?
+  slaLastEvaluatedAt       DateTime?
+  slaDueSoonNotifiedAt     DateTime?
+  slaOverdueNotifiedAt     DateTime?
+  escalationReadyAt        DateTime?
+  lastNotificationQueuedAt DateTime?
+
+  owner          User?                           @relation("SystemTestIncidentActionOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+  stepExecutions SystemTestIncidentStepExecution[]
+  events         SystemTestIncidentEvent[]
+  notes          SystemTestIncidentNote[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([ownerUserId])
+  @@index([lastSeenRunId])
+  @@index([status, priority])
+  @@index([validationState])
+  @@index([reopenedAt])
+  @@index([slaStatus])
+  @@index([slaDueAt])
+  @@index([escalationReadyAt])
+}
+
+model SystemTestIncidentStepExecution {
+  id               String                                @id @default(cuid())
+  incidentActionId String
+  stepIndex        Int
+  status           SystemTestIncidentStepExecutionStatus @default(pending)
+  notes            String?
+  createdAt        DateTime                              @default(now())
+  updatedAt        DateTime                              @updatedAt
+
+  incidentAction SystemTestIncidentAction @relation(fields: [incidentActionId], references: [id], onDelete: Cascade)
+
+  @@unique([incidentActionId, stepIndex])
+  @@index([incidentActionId])
+  @@index([status])
+}
+
+model SystemTestIncidentEvent {
+  id               String                    @id @default(cuid())
+  incidentActionId String
+  incidentKey      String
+  type             SystemTestIncidentEventType
+  actorUserId      String?
+  metadataJson     Json?
+  createdAt        DateTime                  @default(now())
+
+  incidentAction SystemTestIncidentAction @relation(fields: [incidentActionId], references: [id], onDelete: Cascade)
+  actorUser      User?                    @relation("SystemTestIncidentEventActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([incidentActionId, createdAt])
+  @@index([incidentKey, createdAt])
+  @@index([type, createdAt])
+}
+
+model SystemTestIncidentNote {
+  id               String   @id @default(cuid())
+  incidentActionId String
+  incidentKey      String
+  userId           String?
+  text             String   @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  incidentAction SystemTestIncidentAction @relation(fields: [incidentActionId], references: [id], onDelete: Cascade)
+  user           User?                    @relation("SystemTestIncidentNoteUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([incidentActionId, createdAt])
+  @@index([incidentKey, createdAt])
+}
+
+enum DispatchExceptionActionStatus {
+  open
+  investigating
+  waiting
+  resolved
+  dismissed
+}
+
+enum DispatchExceptionActionPriority {
+  critical
+  high
+  medium
+  low
+}
+
+enum DispatchExceptionActionEventType {
+  action_created
+  assigned
+  unassigned
+  priority_changed
+  status_changed
+  note_added
+  exception_seen
+  validation_passed
+  validation_failed
+  reopened
+  sla_started
+  sla_due_soon
+  sla_overdue
+  escalation_ready
+  notification_queued
+}
+
+model DispatchExceptionAction {
+  id                       String                           @id @default(cuid())
+  dispatchExceptionKey     String                           @unique
+  status                   DispatchExceptionActionStatus    @default(open)
+  priority                 DispatchExceptionActionPriority  @default(medium)
+  ownerUserId              String?
+  lastSeenAt               DateTime?
+  lastSeenExceptionId      String?
+  metadataJson             Json?
+
+  validationState          String?
+  validationLastCheckedAt  DateTime?
+  validationLastPassedAt   DateTime?
+  validationLastFailedAt   DateTime?
+  reopenedAt               DateTime?
+  reopenCount              Int                              @default(0)
+
+  slaPolicyHours           Int?
+  slaStartedAt             DateTime?
+  slaDueAt                 DateTime?
+  slaStatus                String?
+  slaLastEvaluatedAt       DateTime?
+  slaDueSoonNotifiedAt     DateTime?
+  slaOverdueNotifiedAt     DateTime?
+  escalationReadyAt        DateTime?
+  lastNotificationQueuedAt DateTime?
+
+  createdAt                DateTime                         @default(now())
+  updatedAt                DateTime                         @updatedAt
+  resolvedAt               DateTime?
+
+  owner                    User?                            @relation("DispatchExceptionActionOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+  events                   DispatchExceptionActionEvent[]
+  notes                    DispatchExceptionActionNote[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([ownerUserId])
+  @@index([slaStatus])
+  @@index([slaDueAt])
+  @@index([escalationReadyAt])
+  @@index([validationState])
+}
+
+model DispatchExceptionActionEvent {
+  id                        String                           @id @default(cuid())
+  dispatchExceptionActionId String
+  dispatchExceptionKey      String
+  type                      DispatchExceptionActionEventType
+  actorUserId               String?
+  metadataJson              Json?
+  createdAt                 DateTime                         @default(now())
+
+  action                    DispatchExceptionAction          @relation(fields: [dispatchExceptionActionId], references: [id], onDelete: Cascade)
+  actorUser                 User?                            @relation("DispatchExceptionActionEventActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([dispatchExceptionActionId, createdAt])
+  @@index([dispatchExceptionKey, createdAt])
+}
+
+model DispatchExceptionActionNote {
+  id                        String                  @id @default(cuid())
+  dispatchExceptionActionId String
+  dispatchExceptionKey      String
+  userId                    String?
+  text                      String                  @db.Text
+  createdAt                 DateTime                @default(now())
+  updatedAt                 DateTime                @updatedAt
+
+  action                    DispatchExceptionAction @relation(fields: [dispatchExceptionActionId], references: [id], onDelete: Cascade)
+  user                      User?                   @relation("DispatchExceptionActionNoteUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([dispatchExceptionActionId, createdAt])
+  @@index([dispatchExceptionKey, createdAt])
+}
+
+model SystemTestIncidentFamilyMembership {
+  id              String   @id @default(cuid())
+  incidentId      String
+  familyId        String
+  incidentVersion String   @default("v1")
+  matchBasis      String
+  role            String
+  createdAt       DateTime @default(now())
+
+  incident SystemTestIncident      @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  family   SystemTestFailureFamily @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  @@unique([incidentId, familyId])
+  @@index([incidentId])
+  @@index([familyId])
+}
+
+model SystemTestFailureFamilyMembership {
+  id             String   @id @default(cuid())
+  familyId       String
+  familyVersion  String   @default("v1")
+  runId          String
+  failureGroupId String
+  canonicalKey   String
+  matchBasis     String
+  createdAt      DateTime @default(now())
+
+  family       SystemTestFailureFamily   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  failureGroup SystemTestFailureGroup    @relation(fields: [failureGroupId], references: [id], onDelete: Cascade)
+
+  @@unique([failureGroupId, familyVersion])
+  @@index([familyId])
+  @@index([runId])
+  @@index([canonicalKey])
+}
+
+model SystemTestSpecSummary {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  runId             String
+  runIntelligenceId String
+  file              String
+  totalCount        Int
+  passedCount       Int
+  failedCount       Int
+  skippedCount      Int
+  passRate          Float
+  sortOrder         Int
+
+  runIntelligence SystemTestRunIntelligence @relation(fields: [runIntelligenceId], references: [id], onDelete: Cascade)
+
+  @@unique([runIntelligenceId, file])
+  @@index([runId])
+  @@index([runIntelligenceId])
 }
 
 model SystemTestCaseResult {
@@ -877,6 +1337,142 @@ model SystemTestCaseResult {
   @@index([runId, suite])
   @@index([filePath])
   @@index([status])
+}
+
+enum SystemTestAutomationJobType {
+  digest
+  regression_alert
+  triage_generation
+}
+
+enum SystemTestAutomationJobStatus {
+  pending
+  generated
+  sent
+  suppressed
+  failed
+}
+
+enum SystemTestAutomationTriggerSource {
+  schedule
+  manual
+  test
+}
+
+/// Queue orchestration stages for system-test analysis + automation (Phase 7A).
+enum SystemTestPipelineJobStage {
+  analysis
+  automation
+}
+
+enum SystemTestPipelineJobStatus {
+  queued
+  running
+  completed
+  failed
+  retrying
+  dead
+}
+
+enum SystemTestPipelineTriggerSource {
+  ingestion
+  manual
+  schedule
+  reanalysis
+}
+
+enum SystemTestIncidentActionStatus {
+  open
+  investigating
+  fixing
+  validating
+  resolved
+  dismissed
+}
+
+enum SystemTestIncidentActionPriority {
+  critical
+  high
+  medium
+  low
+}
+
+enum SystemTestIncidentStepExecutionStatus {
+  pending
+  in_progress
+  completed
+}
+
+enum SystemTestIncidentEventType {
+  action_created
+  assigned
+  unassigned
+  priority_changed
+  status_changed
+  note_added
+  validation_passed
+  validation_failed
+  reopened
+  incident_seen
+  sla_started
+  sla_due_soon
+  sla_overdue
+  escalation_ready
+  notification_queued
+}
+
+/// Durable pipeline job row (separate from SystemTestAutomationJob report records).
+model SystemTestPipelineJob {
+  id            String                         @id @default(cuid())
+  createdAt     DateTime                       @default(now())
+  updatedAt     DateTime                       @updatedAt
+  runId         String?
+  stage         SystemTestPipelineJobStage
+  status        SystemTestPipelineJobStatus    @default(queued)
+  triggerSource SystemTestPipelineTriggerSource
+  attemptCount  Int                            @default(0)
+  maxAttempts   Int                            @default(3)
+  queueJobId    String?
+  parentJobId   String?
+  /// Logical dedupe key (e.g. analysis:runId:version:hash); not unique across completed rows.
+  dedupeKey     String?
+  payloadJson   Json
+  errorMessage  String?                        @db.Text
+  startedAt     DateTime?
+  completedAt   DateTime?
+
+  parent   SystemTestPipelineJob?  @relation("PipelineJobChildren", fields: [parentJobId], references: [id], onDelete: SetNull)
+  children SystemTestPipelineJob[] @relation("PipelineJobChildren")
+
+  @@index([runId, createdAt])
+  @@index([stage, status])
+  @@index([dedupeKey])
+  @@index([createdAt])
+}
+
+/// Durable record for system-test digest / alert / triage automation (Phase 5A).
+model SystemTestAutomationJob {
+  id                String                         @id @default(cuid())
+  createdAt         DateTime                       @default(now())
+  updatedAt         DateTime                       @updatedAt
+  type              SystemTestAutomationJobType
+  status            SystemTestAutomationJobStatus
+  triggerSource     SystemTestAutomationTriggerSource
+  targetRunId       String?
+  baseRunId         String?
+  reportKind        String
+  headline          String?
+  shortSummary      String?                        @db.Text
+  dedupeKey         String?
+  suppressionReason String?                        @db.Text
+  payloadJson       Json
+  generatedAt       DateTime?
+  sentAt            DateTime?
+  failureReason     String?                        @db.Text
+
+  @@index([type, createdAt])
+  @@index([dedupeKey, createdAt])
+  @@index([status, createdAt])
 }
 
 model LocationPing {

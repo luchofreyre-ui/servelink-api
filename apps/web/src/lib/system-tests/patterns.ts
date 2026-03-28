@@ -119,6 +119,8 @@ export function buildFailurePatterns(
   details: SystemTestRunDetailResponse[],
   options?: { maxRuns?: number },
 ): SystemTestsFailurePattern[] {
+  if (!details.length) return [];
+
   const maxRuns = Math.max(1, options?.maxRuns ?? DEFAULT_MAX_RUNS);
   const slice = details.slice(0, maxRuns);
   const sortedDesc = [...slice].sort(

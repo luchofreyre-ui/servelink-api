@@ -32,9 +32,18 @@ import { AuthorityJsonLd } from "./AuthorityJsonLd";
 import { AuthorityRelatedLinks } from "./AuthorityRelatedLinks";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
+import { AuthorityToEncyclopediaBridge } from "./AuthorityToEncyclopediaBridge";
+import { getBuiltBridgeMap } from "@/lib/encyclopedia/bridgeMap";
+import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
 
 export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageData }) {
   const { data } = props;
+  const bridgeMap = getBuiltBridgeMap();
+  const encyclopediaBridge = resolveBridgeForLegacyPage(
+    "problems",
+    data.slug,
+    bridgeMap,
+  );
   const crumbs = buildProblemBreadcrumbs(data.slug);
   const seeAlso = buildProblemSeeAlso(data.slug);
   const path = `/problems/${data.slug}`;
@@ -178,6 +187,12 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         ) : null}
         <AuthorityFaq block={faqBlock} />
         <AuthoritySeeAlso groups={seeAlso} />
+        {encyclopediaBridge ?
+          <AuthorityToEncyclopediaBridge
+            href={encyclopediaBridge.href}
+            title="Learn the full breakdown"
+          />
+        : null}
         <div className="mt-14 flex flex-wrap gap-4 border-t border-[#C9B27C]/20 pt-10">
           <MarketingLinkButton href="/book" variant="primary">
             Book a cleaning

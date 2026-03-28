@@ -46,6 +46,8 @@ export function buildFlakyCaseAnalysis(
   details: SystemTestRunDetailResponse[],
   options?: { maxRuns?: number },
 ): SystemTestsFlakyCaseRow[] {
+  if (!details.length) return [];
+
   const maxRuns = Math.max(1, options?.maxRuns ?? DEFAULT_MAX_RUNS);
   const slice = details.slice(0, maxRuns);
   const sortedRuns = [...slice].sort(
@@ -133,12 +135,15 @@ export function buildFlakyCaseAnalysis(
     });
   }
 
-  rows.sort((a, b) => {
-    if (a.isCurrentlyFailing !== b.isCurrentlyFailing) return a.isCurrentlyFailing ? -1 : 1;
-    if (b.flakyScore !== a.flakyScore) return b.flakyScore - a.flakyScore;
-    if (b.transitionCount !== a.transitionCount) return b.transitionCount - a.transitionCount;
-    return b.failCount - a.failCount;
-  });
-
-  return rows;
+  return rows
+    .filter(
+      (item) =>
+        item.transitionCount > 0 || item.isCurrentlyFailing || item.failCount > 0,
+    )
+    .sort((a, b) => {
+      if (a.isCurrentlyFailing !== b.isCurrentlyFailing) {
+        return a.isCurrentlyFailing ? -1 : 1;
+      }
+      return b.flakyScore - a.flakyScore;
+    });
 }

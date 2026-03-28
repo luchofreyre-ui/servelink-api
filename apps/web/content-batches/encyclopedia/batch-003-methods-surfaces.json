@@ -1,0 +1,364 @@
+{
+  "pages": [
+    {
+      "id": "M-DEG-001",
+      "title": "Degreasing",
+      "category": "methods",
+      "cluster": "degreasing",
+      "slug": "degreasing",
+      "summary": "Professional method for breaking down and removing oily, sticky, and polymerized residues from kitchen and high-soil surfaces.",
+      "image": {
+        "primaryAlt": "Degreasing greasy kitchen cabinet surface",
+        "queries": [
+          "grease buildup kitchen cabinet cleaning close up",
+          "degreasing stovetop residue professional cleaning",
+          "sticky kitchen residue on cabinets"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Degreasing is a cleaning method designed to break down oily, fatty, and sticky soils that do not respond well to neutral cleaners alone. It is commonly used on kitchen cabinets, backsplashes, range hoods, appliances, and floors near cooking areas.",
+        "why_it_happens": "Grease soils are hydrophobic, meaning they resist plain water. Cooking aerosols, food oils, hand transfer, and heat exposure create films that bind to surfaces and can polymerize over time, especially near stoves and ovens.",
+        "what_people_do_wrong": "Most people either under-clean grease with neutral spray cleaners or over-attack it with abrasive scrubbing. They also skip dwell time, which is essential for breaking oily films down before agitation.",
+        "professional_method": "Assess the surface first. Select a degreaser appropriate for the finish and soil level. Apply evenly, allow dwell time, agitate with a non-scratch towel or brush, rinse or wipe residue away, then dry to prevent streaks and re-deposition.",
+        "data_and_benchmarks": "Grease removal typically improves when chemistry is matched to soil load and temperature. Light grease may release in a single pass, while layered or polymerized buildup often requires repeat application and controlled agitation.",
+        "professional_insights": "Heat and cooking vapors create some of the most deceptive residue in a home because the surface may look dusty while actually carrying an oily film. Effective degreasing relies on chemistry and dwell time far more than brute scrubbing.",
+        "when_to_call_a_professional": "Call a professional when grease has layered for long periods, when cabinets have delicate finishes, when residue has spread to ceilings and walls, or when commercial-grade buildup is present.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "S-SS-001"
+        ]
+      }
+    },
+    {
+      "id": "M-NEU-001",
+      "title": "Neutral Surface Cleaning",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "slug": "neutral-surface-cleaning",
+      "summary": "Professional low-residue maintenance cleaning method for everyday soil on finished household surfaces.",
+      "image": {
+        "primaryAlt": "Neutral surface cleaning on countertop",
+        "queries": [
+          "neutral cleaner countertop wiping microfiber",
+          "daily maintenance cleaning surface spray and wipe",
+          "professional house cleaning countertop microfiber"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Neutral surface cleaning is the maintenance method used for routine soil removal on finished surfaces that do not require aggressive chemistry. It is intended for everyday dust, fingerprints, light soil, and light transfer residue.",
+        "why_it_happens": "Most routine household soil is a mix of particulate matter, skin oils, airborne residue, and light contact transfer. These soils often respond well to controlled wiping and mild surfactant chemistry without the risks associated with stronger products.",
+        "what_people_do_wrong": "People often expect neutral cleaners to solve every problem, including grease, hard water, and soap scum. They also overapply product, which can leave residue and make surfaces look worse over time.",
+        "professional_method": "Dry remove loose dust first where needed. Apply a neutral cleaner lightly to the towel or surface depending on the finish, wipe using controlled folded microfiber technique, rotate to a clean towel face, and dry-finish if needed.",
+        "data_and_benchmarks": "Neutral maintenance cleaning is most effective on low-to-moderate routine soil and on finishes where aggressive chemistry creates unnecessary risk. Product overuse is one of the most common causes of streaking and residual film.",
+        "professional_insights": "This is the foundational method of routine home maintenance, but it only works when cleaners know what not to use it for. Proper soil identification is the difference between professional results and endless rewiping.",
+        "when_to_call_a_professional": "Call a professional when the soil is recurring despite routine maintenance, when product residue has built up, or when the surface is expensive, delicate, or reacting poorly to repeated DIY cleaning.",
+        "related_topics": [
+          "S-GLASS-001",
+          "S-SS-001",
+          "S-WOOD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-HWD-001",
+      "title": "Hard Water Deposit Removal",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "slug": "hard-water-deposit-removal",
+      "summary": "Professional method for dissolving and removing mineral deposits left by hard water evaporation on glass, fixtures, and tile.",
+      "image": {
+        "primaryAlt": "Hard water deposit removal on shower glass",
+        "queries": [
+          "hard water stain removal shower glass close up",
+          "mineral deposit removal faucet cleaning",
+          "hard water buildup tile fixture cleaning"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Hard water deposit removal is the method used to dissolve mineral residue caused by repeated water evaporation. It is primarily used on shower glass, fixtures, tile, sinks, and other surfaces exposed to frequent drying cycles.",
+        "why_it_happens": "Hard water contains dissolved minerals such as calcium and magnesium. When water evaporates, these minerals remain behind and bond to the surface, eventually building into visible deposits and sometimes surface etching.",
+        "what_people_do_wrong": "People often confuse hard water residue with soap scum, use the wrong chemistry, wipe too quickly, or scrub delicate finishes too aggressively. These mistakes either fail to remove deposits or damage the surface.",
+        "professional_method": "Identify the surface and severity. Apply a mineral-targeting acidic cleaner that is safe for the material, allow dwell time, agitate with a non-scratch tool, rinse thoroughly, and dry fully. Repeat as needed for layered deposits.",
+        "data_and_benchmarks": "Deposit severity increases with hardness level, evaporation frequency, and maintenance gaps. Light mineral film can often be removed in one treatment, while layered deposits usually require repeated controlled passes.",
+        "professional_insights": "The best hard water removal jobs are won in prevention, not restoration. Regular drying, squeegee use, and routine descaling reduce the need for more aggressive corrective work later.",
+        "when_to_call_a_professional": "Call a professional when deposits remain after proper descaling, when glass may be etched, when fixtures are specialty finishes, or when natural stone is present.",
+        "related_topics": [
+          "P-HARD-001",
+          "P-SOAP-001",
+          "S-SHWR-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GLS-001",
+      "title": "Streak-Free Glass Cleaning",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "slug": "streak-free-glass-cleaning",
+      "summary": "Professional method for cleaning glass and mirrors without streaking, haze, or residue.",
+      "image": {
+        "primaryAlt": "Streak-free glass cleaning with microfiber",
+        "queries": [
+          "streak free glass cleaning microfiber close up",
+          "mirror cleaning no streaks professional",
+          "window glass cleaning indoor streak free"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Streak-free glass cleaning is a controlled finishing method used on mirrors, windows, shower glass, and glass furniture. The goal is to remove soil and residue without leaving haze, drag marks, or overspray trails.",
+        "why_it_happens": "Glass shows residue quickly because it is highly reflective and often receives direct light. Product overuse, dirty towels, and poor drying technique all contribute to visible streaking.",
+        "what_people_do_wrong": "Most people use too much cleaner, use dirty towels, clean in direct sun, or fail to separate soil removal from dry finishing. They also treat mineral deposits like routine glass soil, which creates frustration and repeated rewiping.",
+        "professional_method": "Assess whether the problem is routine film or mineral residue. Use a low-residue cleaner for routine glass, apply minimally, wipe with a clean microfiber, then dry-finish using a dedicated dry side or towel. Work edges carefully.",
+        "data_and_benchmarks": "Glass clarity depends heavily on towel quality, product residue control, and drying technique. On routine glass, technique often matters more than product brand.",
+        "professional_insights": "Streak-free results usually come from restraint, not saturation. The cleaner should assist the towel, not flood the surface.",
+        "when_to_call_a_professional": "Call a professional when haze persists after proper glass cleaning, when shower glass may be etched, or when large glass areas require restoration-quality results.",
+        "related_topics": [
+          "S-GLASS-001",
+          "S-SHWR-001",
+          "P-HARD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-DST-001",
+      "title": "Dry Dust Removal",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "slug": "dry-dust-removal",
+      "summary": "Professional dry-removal method for lifting particulate soil without smearing, redistributing, or embedding it into surfaces.",
+      "image": {
+        "primaryAlt": "Dry dust removal from furniture with microfiber",
+        "queries": [
+          "dust removal microfiber furniture close up",
+          "dry dusting shelf cleaning professional",
+          "ceiling fan dust cleaning microfiber"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dry dust removal is the method used to lift loose particulate soil before introducing moisture. It is used on furniture, shelves, baseboards, electronics-adjacent surfaces, décor, and many finished materials.",
+        "why_it_happens": "Dust is a mix of fibers, skin cells, outdoor particulates, airborne debris, and microscopic fragments that settle on surfaces. If moisture is introduced too early, dust can become muddy residue rather than being lifted cleanly.",
+        "what_people_do_wrong": "People often spray first and wipe second, which turns light dust into smear film. They also use low-quality cloths that push particles around rather than holding them.",
+        "professional_method": "Use folded microfiber or a dry removal tool suited to the surface. Start high, control fall, rotate towel faces frequently, and remove bulk particulate before applying maintenance chemistry where needed.",
+        "data_and_benchmarks": "Dry removal is the lowest-risk first step for many maintenance cleanings. It reduces smear formation, improves finish quality, and prevents unnecessary wet passes.",
+        "professional_insights": "Many recurring complaints about residue, haze, and ineffective cleaning are actually dust-process problems. Sequence matters more than speed here.",
+        "when_to_call_a_professional": "Call a professional when dust returns unusually fast, when construction dust or HVAC dust is involved, or when sensitive finishes require controlled cleaning.",
+        "related_topics": [
+          "S-WOOD-001",
+          "S-GLASS-001",
+          "M-NEU-001"
+        ]
+      }
+    },
+    {
+      "id": "M-TCH-001",
+      "title": "Touchpoint Sanitization",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "slug": "touchpoint-sanitization",
+      "summary": "Professional high-touch surface treatment method focused on controlled cleaning and sanitization of frequently handled surfaces.",
+      "image": {
+        "primaryAlt": "Touchpoint sanitization on door handle",
+        "queries": [
+          "touchpoint sanitization door handle cleaning",
+          "high touch surface sanitizing switch plate",
+          "professional disinfecting common contact surfaces"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Touchpoint sanitization is the controlled treatment of frequently handled surfaces such as handles, switches, remotes, railings, and pull points. It focuses on reducing transferable soil and maintaining safer high-contact areas.",
+        "why_it_happens": "High-touch surfaces accumulate hand oils, residue, and repeated contact transfer faster than many surrounding surfaces. Without regular maintenance, they become concentrated points of visible soil and hygiene concern.",
+        "what_people_do_wrong": "People often confuse cleaning with sanitizing, skip pre-cleaning, or fail to follow dwell-time requirements for the selected product. They also over-wet sensitive materials like electronics-adjacent controls.",
+        "professional_method": "Pre-clean visible soil first. Use a surface-appropriate product and application method, observe label dwell requirements where relevant, avoid oversaturation, and dry or detail-finish where the surface demands it.",
+        "data_and_benchmarks": "Effectiveness depends on correct sequence, proper product selection, and contact time. Sanitizing chemistry cannot perform correctly through visible soil or residue buildup.",
+        "professional_insights": "This method works best when targeted, not when sprayed indiscriminately across everything. Product control and surface compatibility matter just as much as intent.",
+        "when_to_call_a_professional": "Call a professional when touchpoints are widespread across a property, when sensitive finishes are involved, or when a higher-consistency sanitation program is needed.",
+        "related_topics": [
+          "M-NEU-001",
+          "S-SS-001",
+          "S-GLASS-001"
+        ]
+      }
+    },
+    {
+      "id": "S-GLASS-001",
+      "title": "Cleaning Glass Surfaces",
+      "category": "surfaces",
+      "cluster": "glass",
+      "slug": "cleaning-glass-surfaces",
+      "summary": "Professional guidance for cleaning interior glass surfaces without streaking, haze, scratching, or mineral confusion.",
+      "image": {
+        "primaryAlt": "Cleaning interior glass surface with microfiber",
+        "queries": [
+          "cleaning glass surface microfiber close up",
+          "interior glass cleaning professional technique",
+          "glass table cleaning no streaks"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Glass surfaces require low-residue cleaning, controlled towel technique, and clear differentiation between routine soil and bonded mineral residue. This applies to mirrors, windows, glass tables, doors, and decorative glass.",
+        "why_it_happens": "Glass highlights residue more than many other materials because it reflects light strongly. Fingerprints, overspray, dust film, and cleaner residue all show quickly, especially when lighting is directional.",
+        "what_people_do_wrong": "People often use too much product, use dirty towels, confuse mineral buildup with simple film, or use abrasive tools that permanently mark the surface.",
+        "professional_method": "Identify whether the issue is routine soil or mineral buildup. Remove loose dust first where needed, apply a low-residue cleaner lightly, wipe with clean microfiber, and dry-finish with a separate clean towel face or dedicated towel.",
+        "data_and_benchmarks": "Routine glass cleaning depends more on towel quality and low-residue finishing than on strong chemistry. Persistent cloudiness after proper cleaning may indicate mineral etching, not removable soil.",
+        "professional_insights": "Glass care is a visibility discipline. Minor residue that would be invisible on many materials becomes obvious on glass, which is why process control matters so much.",
+        "when_to_call_a_professional": "Call a professional when haze persists, when large panes require restoration-quality results, or when shower and architectural glass may have mineral damage.",
+        "related_topics": [
+          "M-GLS-001",
+          "P-HARD-001",
+          "S-SHWR-001"
+        ]
+      }
+    },
+    {
+      "id": "S-SHWR-001",
+      "title": "Cleaning Shower Glass",
+      "category": "surfaces",
+      "cluster": "shower-glass",
+      "slug": "cleaning-shower-glass",
+      "summary": "Professional guidance for cleaning shower glass with correct distinction between routine film, soap scum, and mineral deposits.",
+      "image": {
+        "primaryAlt": "Cleaning shower glass with squeegee and microfiber",
+        "queries": [
+          "cleaning shower glass professional close up",
+          "shower glass hard water soap scum cleaning",
+          "shower door cleaning squeegee microfiber"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Shower glass is a specialty glass surface exposed to repeated moisture, evaporation, soap residues, and mineral deposits. It requires a different decision process than ordinary mirrors or windows.",
+        "why_it_happens": "Repeated wetting and drying create mineral layering, while soaps and body products leave additional residue. Over time, this combination can move from removable soil into etching risk.",
+        "what_people_do_wrong": "People treat shower glass like ordinary mirror cleaning, use too little chemistry for mineral buildup, or scrub too aggressively with abrasive pads that scratch the surface.",
+        "professional_method": "Differentiate among routine film, soap scum, and hard water deposits. Use the appropriate method for the actual soil, rinse thoroughly, and dry completely. Preventive drying after use is a major part of the process.",
+        "data_and_benchmarks": "Shower glass degrades visually faster in hard-water environments and in bathrooms with poor drying habits. Prevention and maintenance frequency strongly affect restoration difficulty.",
+        "professional_insights": "The best shower glass cleaning programs are maintenance-first. Waiting too long turns light correction into restoration work.",
+        "when_to_call_a_professional": "Call a professional when shower glass remains cloudy after correct treatment, when etching is suspected, or when buildup has covered the full enclosure.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "S-TILE-001",
+      "title": "Cleaning Tile Surfaces",
+      "category": "surfaces",
+      "cluster": "tile",
+      "slug": "cleaning-tile-surfaces",
+      "summary": "Professional guidance for cleaning tile safely and effectively while matching chemistry and agitation to the actual soil type.",
+      "image": {
+        "primaryAlt": "Cleaning tile surface with non-scratch pad",
+        "queries": [
+          "cleaning tile surface bathroom non scratch pad",
+          "tile cleaning professional close up",
+          "kitchen tile cleaning microfiber and brush"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Tile surfaces vary widely in finish, porosity, location, and soil exposure. Effective tile cleaning requires identifying both the tile type and the actual residue present before selecting method and chemistry.",
+        "why_it_happens": "Tile collects routine dust, grease, soap residue, hard water deposits, and tracked-in soil depending on location. Bathrooms, kitchens, and floors create very different cleaning conditions even when the material category is similar.",
+        "what_people_do_wrong": "People use one cleaner for every tile situation, ignore grout interaction, or scrub too aggressively without first matching chemistry to the soil. They also leave residue behind by failing to rinse or dry correctly.",
+        "professional_method": "Identify the tile environment and soil type, remove loose soil first, apply the appropriate cleaner, allow dwell time where needed, agitate with a surface-safe tool, then rinse or wipe away loosened residue.",
+        "data_and_benchmarks": "Tile outcomes depend heavily on soil identification and finish sensitivity. What works on greasy kitchen backsplash tile may fail completely on bathroom mineral residue or floor film buildup.",
+        "professional_insights": "Tile is often treated as a simple material, but the real challenge is the soil system sitting on top of it and inside the grout lines around it.",
+        "when_to_call_a_professional": "Call a professional when tile remains dull after correct cleaning, when grout is heavily stained, or when specialty or delicate tile finishes are involved.",
+        "related_topics": [
+          "S-GROUT-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "S-GROUT-001",
+      "title": "Cleaning Grout",
+      "category": "surfaces",
+      "cluster": "grout",
+      "slug": "cleaning-grout",
+      "summary": "Professional guidance for cleaning grout lines without over-wetting, over-scrubbing, or mistaking staining for removable soil.",
+      "image": {
+        "primaryAlt": "Cleaning grout line with detail brush",
+        "queries": [
+          "cleaning grout line detail brush close up",
+          "tile grout cleaning professional technique",
+          "grout line cleaning bathroom floor"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grout cleaning is a focused surface process dealing with narrow, often porous joint lines that collect concentrated soil. It requires more control than broad-surface tile cleaning.",
+        "why_it_happens": "Grout lines trap soil, moisture, soap residue, grease, and tracked particulate because they sit below the surrounding tile plane and often have more texture or porosity than the tile itself.",
+        "what_people_do_wrong": "People over-saturate grout, scrub with excessive force, or assume every dark line is removable. In reality, some grout is stained, worn, or permanently discolored rather than dirty.",
+        "professional_method": "Vacuum or dry remove first, apply soil-specific chemistry carefully, agitate with a grout-safe brush, control moisture, then remove suspended soil without leaving dirty rinse behind. Assess staining separately from soil.",
+        "data_and_benchmarks": "Grout responds best to targeted cleaning rather than broad overspray. Over-wetting can spread soil and extend drying time without improving results.",
+        "professional_insights": "The fastest way to damage grout cleaning results is to confuse aggressive effort with effective technique. Controlled chemistry and moisture usually outperform force.",
+        "when_to_call_a_professional": "Call a professional when grout remains dark after correct soil removal, when discoloration is widespread, or when restoration and sealing decisions are needed.",
+        "related_topics": [
+          "S-TILE-001",
+          "M-NEU-001",
+          "P-SOAP-001"
+        ]
+      }
+    },
+    {
+      "id": "S-SS-001",
+      "title": "Cleaning Stainless Steel",
+      "category": "surfaces",
+      "cluster": "stainless-steel",
+      "slug": "cleaning-stainless-steel",
+      "summary": "Professional guidance for cleaning stainless steel without streaking, dulling, scratching, or leaving oily residue behind.",
+      "image": {
+        "primaryAlt": "Cleaning stainless steel appliance with microfiber",
+        "queries": [
+          "cleaning stainless steel appliance microfiber close up",
+          "stainless steel streak free cleaning professional",
+          "kitchen stainless steel cleaning no residue"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Stainless steel cleaning is a finish-sensitive maintenance process used on appliances, fixtures, and other metal surfaces where smudging, streaking, and directional grain matter.",
+        "why_it_happens": "Stainless steel shows fingerprints, oils, cleaner residue, and water spotting quickly. Lighting and brushed grain patterns can exaggerate even minor finishing mistakes.",
+        "what_people_do_wrong": "People use too much product, wipe against the grain, use abrasive pads, or fail to remove oily residue fully. They also confuse water spotting, grease, and cleaner film.",
+        "professional_method": "Dry remove loose dust first, identify the actual residue, use low-residue or grease-appropriate chemistry as needed, wipe with the grain, and finish dry with clean microfiber to eliminate streaking.",
+        "data_and_benchmarks": "Finish quality depends more on residue control and towel discipline than strong chemistry. Overapplication is one of the biggest causes of poor-looking stainless steel.",
+        "professional_insights": "Stainless steel often punishes excess. The cleanest-looking finish usually comes from the lightest effective chemistry and the best towel control.",
+        "when_to_call_a_professional": "Call a professional when streaking persists, when residue has layered over time, or when specialty appliance finishes require more careful treatment.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "P-HARD-001"
+        ]
+      }
+    },
+    {
+      "id": "S-WOOD-001",
+      "title": "Cleaning Finished Wood",
+      "category": "surfaces",
+      "cluster": "finished-wood",
+      "slug": "cleaning-finished-wood",
+      "summary": "Professional guidance for cleaning finished wood with low-moisture, low-residue methods that protect the finish while removing routine soil.",
+      "image": {
+        "primaryAlt": "Cleaning finished wood surface with microfiber",
+        "queries": [
+          "cleaning finished wood microfiber close up",
+          "wood furniture cleaning professional low moisture",
+          "finished wood surface dusting and wiping"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Finished wood cleaning is a low-risk, finish-preserving maintenance process for furniture, trim, cabinetry, and other sealed wood surfaces. It emphasizes residue control and moisture restraint.",
+        "why_it_happens": "Finished wood accumulates dust, hand oils, fingerprints, and light transfer soil, but many finishes are sensitive to over-wetting, product buildup, and aggressive abrasion.",
+        "what_people_do_wrong": "People spray directly onto wood, over-wet the surface, use oily products that build up over time, or assume all wood finishes can tolerate the same process.",
+        "professional_method": "Dry remove dust first, use a lightly loaded microfiber with finish-safe maintenance chemistry, wipe in controlled passes, and avoid unnecessary moisture. Dry-finish if the product or finish demands it.",
+        "data_and_benchmarks": "Many wood-cleaning complaints are actually product-residue problems rather than soil problems. Lower-moisture approaches generally reduce streaking, hazing, and finish stress.",
+        "professional_insights": "Finished wood responds best to restraint and consistency. Product overload often creates more visible problems than the original soil.",
+        "when_to_call_a_professional": "Call a professional when the finish appears dull from buildup, when water sensitivity is high, or when the piece is valuable or finish-damaged.",
+        "related_topics": [
+          "M-DST-001",
+          "M-NEU-001",
+          "S-GLASS-001"
+        ]
+      }
+    }
+  ]
+}

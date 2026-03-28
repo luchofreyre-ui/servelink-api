@@ -44,6 +44,9 @@ import { AuthorityJsonLd } from "./AuthorityJsonLd";
 import { AuthorityRelatedLinks } from "./AuthorityRelatedLinks";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
+import { AuthorityToEncyclopediaBridge } from "./AuthorityToEncyclopediaBridge";
+import { getBuiltBridgeMap } from "@/lib/encyclopedia/bridgeMap";
+import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
 
 function MethodBody({ data }: { data: AuthorityMethodPageData }) {
   return (
@@ -242,6 +245,13 @@ export function AuthorityDetailPage(props: {
       ? getRelatedClusterSlugsForMethod(data.slug)
       : getRelatedClusterSlugsForSurface(data.slug);
 
+  const bridgeMap = getBuiltBridgeMap();
+  const encyclopediaBridge = resolveBridgeForLegacyPage(
+    variant === "method" ? "methods" : "surfaces",
+    data.slug,
+    bridgeMap,
+  );
+
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />
@@ -287,6 +297,12 @@ export function AuthorityDetailPage(props: {
         ) : null}
         <AuthorityFaq block={faqBlock} />
         <AuthoritySeeAlso groups={seeAlso} />
+        {encyclopediaBridge ?
+          <AuthorityToEncyclopediaBridge
+            href={encyclopediaBridge.href}
+            title="Learn the full breakdown"
+          />
+        : null}
         <div className="mt-14 flex flex-wrap gap-4 border-t border-[#C9B27C]/20 pt-10">
           <MarketingLinkButton href="/book" variant="primary">
             Book a cleaning
