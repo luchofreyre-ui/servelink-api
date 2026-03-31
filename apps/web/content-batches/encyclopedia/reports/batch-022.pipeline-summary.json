@@ -1,0 +1,37 @@
+{
+  "batchName": "batch-022",
+  "mode": "expanded",
+  "startedAt": "2026-03-29T05:29:54.404Z",
+  "finishedAt": "2026-03-29T05:30:09.688Z",
+  "inputFiles": {
+    "rawCandidates": "content-batches/encyclopedia/pipeline-runs/batch-022/expanded-raw.json",
+    "reviewedCandidates": "content-batches/encyclopedia/pipeline-runs/batch-022/expanded-reviewed.json",
+    "appendedIds": "content-batches/encyclopedia/pipeline-runs/batch-022/appended-ids.json"
+  },
+  "reviewedSummary": {
+    "total": 982,
+    "promote": 951,
+    "review": 31,
+    "reject": 0
+  },
+  "promoteSummary": {
+    "appendedCount": 0,
+    "skippedCount": 300,
+    "consideredCount": 300,
+    "sourceCandidateCount": 982
+  },
+  "appendedIds": [],
+  "scaffold": null,
+  "enriched": null,
+  "generatedFileCount": 0,
+  "build": {
+    "ok": true,
+    "exitCode": 0
+  },
+  "steps": [
+    "generate-expanded-index-candidates",
+    "expand-reviewed-index-candidates",
+    "promote-index-candidates",
+    "npm run build"
+  ]
+}

@@ -1,0 +1,317 @@
+[2026-03-29T06:55:38.811Z] === OVERNIGHT SCALE START ===
+[2026-03-29T06:55:38.812Z] --- CYCLE 1 START ---
+[2026-03-29T06:55:38.821Z] Selected 300 candidates for promotion
+[2026-03-29T06:56:06.085Z] Cycle 1 completed successfully
+[2026-03-29T06:56:06.086Z] --- CYCLE 2 START ---
+[2026-03-29T06:56:06.099Z] Selected 300 candidates for promotion
+[2026-03-29T06:56:31.527Z] Cycle 2 completed successfully
+[2026-03-29T06:56:31.528Z] --- CYCLE 3 START ---
+[2026-03-29T06:56:31.537Z] Selected 300 candidates for promotion
+[2026-03-29T06:56:47.974Z] Cycle 3 completed successfully
+[2026-03-29T06:56:47.974Z] --- CYCLE 4 START ---
+[2026-03-29T06:56:47.997Z] Selected 300 candidates for promotion
+[2026-03-29T06:57:07.697Z] Cycle 4 completed successfully
+[2026-03-29T06:57:07.697Z] --- CYCLE 5 START ---
+[2026-03-29T06:57:07.707Z] Selected 300 candidates for promotion
+[2026-03-29T06:57:28.430Z] Cycle 5 completed successfully
+[2026-03-29T06:57:28.430Z] --- CYCLE 6 START ---
+[2026-03-29T06:57:28.439Z] Selected 300 candidates for promotion
+[2026-03-29T06:57:43.852Z] Cycle 6 completed successfully
+[2026-03-29T06:57:43.852Z] --- CYCLE 7 START ---
+[2026-03-29T06:57:43.861Z] Selected 300 candidates for promotion
+[2026-03-29T06:58:03.529Z] Cycle 7 completed successfully
+[2026-03-29T06:58:03.529Z] --- CYCLE 8 START ---
+[2026-03-29T06:58:03.539Z] Selected 300 candidates for promotion
+[2026-03-29T06:58:20.726Z] Cycle 8 completed successfully
+[2026-03-29T06:58:20.726Z] --- CYCLE 9 START ---
+[2026-03-29T06:58:20.755Z] Selected 300 candidates for promotion
+[2026-03-29T06:58:38.026Z] Cycle 9 completed successfully
+[2026-03-29T06:58:38.026Z] --- CYCLE 10 START ---
+[2026-03-29T06:58:38.037Z] Selected 300 candidates for promotion
+[2026-03-29T06:58:57.667Z] Cycle 10 completed successfully
+[2026-03-29T06:58:57.667Z] --- CYCLE 11 START ---
+[2026-03-29T06:58:57.676Z] Selected 300 candidates for promotion
+[2026-03-29T06:59:13.108Z] Cycle 11 completed successfully
+[2026-03-29T06:59:13.108Z] --- CYCLE 12 START ---
+[2026-03-29T06:59:13.119Z] Selected 300 candidates for promotion
+[2026-03-29T06:59:32.519Z] Cycle 12 completed successfully
+[2026-03-29T06:59:32.519Z] --- CYCLE 13 START ---
+[2026-03-29T06:59:32.532Z] Selected 300 candidates for promotion
+[2026-03-29T06:59:48.949Z] Cycle 13 completed successfully
+[2026-03-29T06:59:48.950Z] --- CYCLE 14 START ---
+[2026-03-29T06:59:48.966Z] Selected 300 candidates for promotion
+[2026-03-29T07:00:07.164Z] Cycle 14 completed successfully
+[2026-03-29T07:00:07.164Z] --- CYCLE 15 START ---
+[2026-03-29T07:00:07.175Z] Selected 300 candidates for promotion
+[2026-03-29T07:00:26.654Z] Cycle 15 completed successfully
+[2026-03-29T07:00:26.654Z] --- CYCLE 16 START ---
+[2026-03-29T07:00:26.664Z] Selected 300 candidates for promotion
+[2026-03-29T07:00:42.486Z] Cycle 16 completed successfully
+[2026-03-29T07:00:42.486Z] --- CYCLE 17 START ---
+[2026-03-29T07:00:42.497Z] Selected 300 candidates for promotion
+[2026-03-29T07:01:02.038Z] Cycle 17 completed successfully
+[2026-03-29T07:01:02.038Z] --- CYCLE 18 START ---
+[2026-03-29T07:01:02.050Z] Selected 300 candidates for promotion
+[2026-03-29T07:01:17.845Z] Cycle 18 completed successfully
+[2026-03-29T07:01:17.846Z] --- CYCLE 19 START ---
+[2026-03-29T07:01:17.868Z] Selected 300 candidates for promotion
+[2026-03-29T07:01:36.506Z] Cycle 19 completed successfully
+[2026-03-29T07:01:36.506Z] --- CYCLE 20 START ---
+[2026-03-29T07:01:36.516Z] Selected 300 candidates for promotion
+[2026-03-29T07:01:55.767Z] Cycle 20 completed successfully
+[2026-03-29T07:01:55.767Z] === OVERNIGHT SCALE COMPLETE ===
+[2026-03-29T13:49:53.243Z] === OVERNIGHT SCALE START ===
+[2026-03-29T13:49:53.244Z] --- CYCLE 1 START ---
+[2026-03-29T13:49:53.250Z] Fresh promotable rows found: 300
+[2026-03-29T13:49:53.614Z] Cycle 1 appendedCount: 259
+[2026-03-29T13:50:22.869Z] --- CYCLE 1 COMPLETE ---
+[2026-03-29T13:50:22.870Z] Running total appendedCount: 259
+[2026-03-29T13:50:22.870Z] --- CYCLE 2 START ---
+[2026-03-29T13:50:22.879Z] Fresh promotable rows found: 300
+[2026-03-29T13:50:23.307Z] Cycle 2 appendedCount: 254
+[2026-03-29T13:50:43.608Z] --- CYCLE 2 COMPLETE ---
+[2026-03-29T13:50:43.609Z] Running total appendedCount: 513
+[2026-03-29T13:50:43.609Z] --- CYCLE 3 START ---
+[2026-03-29T13:50:43.626Z] Fresh promotable rows found: 69
+[2026-03-29T13:50:44.052Z] Cycle 3 appendedCount: 21
+[2026-03-29T13:51:02.289Z] --- CYCLE 3 COMPLETE ---
+[2026-03-29T13:51:02.290Z] Running total appendedCount: 534
+[2026-03-29T13:51:02.291Z] --- CYCLE 4 START ---
+[2026-03-29T13:51:02.306Z] Fresh promotable rows found: 48
+[2026-03-29T13:51:02.841Z] Cycle 4 appendedCount: 0
+[2026-03-29T13:51:02.841Z] Cycle produced appendedCount 0. Stopping to avoid useless repeats.
+[2026-03-29T13:51:02.841Z] === OVERNIGHT SCALE COMPLETE | total appendedCount: 534 ===
+[2026-03-29T13:56:02.880Z] === OVERNIGHT SCALE START ===
+[2026-03-29T13:56:02.880Z] --- CYCLE 1 START ---
+[2026-03-29T13:56:02.887Z] Fresh promotable rows found: 0
+[2026-03-29T13:56:02.888Z] No fresh promotable rows left. Stopping.
+[2026-03-29T13:56:02.888Z] === OVERNIGHT SCALE COMPLETE | total appendedCount: 0 ===
+[2026-03-29T14:12:24.736Z] === OVERNIGHT SCALE START ===
+[2026-03-29T14:12:24.736Z] --- CYCLE 1 START ---
+[2026-03-29T14:12:24.744Z] Startup diagnostics | totalRows=2297 | review=942 | promote=1355 | reviewIntent=918 | reviewIntentNotInMaster=0 | promoteIntent=0 | promoteIntentNotInMaster=0 | promoteNonIntentNotInMaster=734
+[2026-03-29T14:12:24.745Z] Fresh promotable rows found: 0
+[2026-03-29T14:12:24.745Z] No fresh promotable rows left. Stopping.
+[2026-03-29T14:12:24.745Z] === OVERNIGHT SCALE COMPLETE | total appendedCount: 0 ===
+[2026-03-29T14:17:13.759Z] === OVERNIGHT SCALE START ===
+[2026-03-29T14:17:13.759Z] --- CYCLE 1 START ---
+[2026-03-29T14:17:13.763Z] Startup diagnostics | totalRows=1086 | review=1086 | promote=0 | reviewIntent=1086 | reviewIntentNotInMaster=1086 | promoteIntent=0 | promoteIntentNotInMaster=0 | promoteNonIntentNotInMaster=0
+[2026-03-29T14:17:13.780Z] Fresh promotable rows found: 231
+[2026-03-29T14:17:14.129Z] Cycle 1 appendedCount: 231
+[2026-03-29T14:17:40.633Z] --- CYCLE 1 COMPLETE ---
+[2026-03-29T14:17:40.634Z] Running total appendedCount: 231
+[2026-03-29T14:17:40.634Z] --- CYCLE 2 START ---
+[2026-03-29T14:17:40.641Z] Fresh promotable rows found: 156
+[2026-03-29T14:17:41.250Z] Cycle 2 appendedCount: 156
+[2026-03-29T14:18:00.137Z] --- CYCLE 2 COMPLETE ---
+[2026-03-29T14:18:00.137Z] Running total appendedCount: 387
+[2026-03-29T14:18:00.137Z] --- CYCLE 3 START ---
+[2026-03-29T14:18:00.145Z] Fresh promotable rows found: 144
+[2026-03-29T14:18:00.560Z] Cycle 3 appendedCount: 144
+[2026-03-29T14:18:21.175Z] --- CYCLE 3 COMPLETE ---
+[2026-03-29T14:18:21.175Z] Running total appendedCount: 531
+[2026-03-29T14:18:21.175Z] --- CYCLE 4 START ---
+[2026-03-29T14:18:21.190Z] Fresh promotable rows found: 119
+[2026-03-29T14:18:21.608Z] Cycle 4 appendedCount: 119
+[2026-03-29T14:18:39.052Z] --- CYCLE 4 COMPLETE ---
+[2026-03-29T14:18:39.053Z] Running total appendedCount: 650
+[2026-03-29T14:18:39.053Z] --- CYCLE 5 START ---
+[2026-03-29T14:18:39.062Z] Fresh promotable rows found: 14
+[2026-03-29T14:18:39.654Z] Cycle 5 appendedCount: 14
+[2026-03-29T14:18:58.836Z] --- CYCLE 5 COMPLETE ---
+[2026-03-29T14:18:58.836Z] Running total appendedCount: 664
+[2026-03-29T14:18:58.836Z] --- CYCLE 6 START ---
+[2026-03-29T14:18:58.842Z] Fresh promotable rows found: 8
+[2026-03-29T14:18:59.256Z] Cycle 6 appendedCount: 8
+[2026-03-29T14:19:19.911Z] --- CYCLE 6 COMPLETE ---
+[2026-03-29T14:19:19.911Z] Running total appendedCount: 672
+[2026-03-29T14:19:19.911Z] --- CYCLE 7 START ---
+[2026-03-29T14:19:19.916Z] Fresh promotable rows found: 8
+[2026-03-29T14:19:20.329Z] Cycle 7 appendedCount: 8
+[2026-03-29T14:19:36.479Z] --- CYCLE 7 COMPLETE ---
+[2026-03-29T14:19:36.479Z] Running total appendedCount: 680
+[2026-03-29T14:19:36.479Z] --- CYCLE 8 START ---
+[2026-03-29T14:19:36.484Z] Fresh promotable rows found: 8
+[2026-03-29T14:19:36.899Z] Cycle 8 appendedCount: 8
+[2026-03-29T14:19:58.507Z] --- CYCLE 8 COMPLETE ---
+[2026-03-29T14:19:58.507Z] Running total appendedCount: 688
+[2026-03-29T14:19:58.507Z] --- CYCLE 9 START ---
+[2026-03-29T14:19:58.513Z] Fresh promotable rows found: 8
+[2026-03-29T14:19:58.936Z] Cycle 9 appendedCount: 8
+[2026-03-29T14:20:19.488Z] --- CYCLE 9 COMPLETE ---
+[2026-03-29T14:20:19.488Z] Running total appendedCount: 696
+[2026-03-29T14:20:19.488Z] --- CYCLE 10 START ---
+[2026-03-29T14:20:19.495Z] Fresh promotable rows found: 8
+[2026-03-29T14:20:20.009Z] Cycle 10 appendedCount: 8
+[2026-03-29T14:20:37.153Z] --- CYCLE 10 COMPLETE ---
+[2026-03-29T14:20:37.153Z] Running total appendedCount: 704
+[2026-03-29T14:20:37.153Z] --- CYCLE 11 START ---
+[2026-03-29T14:20:37.158Z] Fresh promotable rows found: 8
+[2026-03-29T14:20:37.540Z] Cycle 11 appendedCount: 8
+[2026-03-29T14:20:57.580Z] --- CYCLE 11 COMPLETE ---
+[2026-03-29T14:20:57.580Z] Running total appendedCount: 712
+[2026-03-29T14:20:57.580Z] --- CYCLE 12 START ---
+[2026-03-29T14:20:57.585Z] Fresh promotable rows found: 8
+[2026-03-29T14:20:57.968Z] Cycle 12 appendedCount: 8
+[2026-03-29T14:21:17.098Z] --- CYCLE 12 COMPLETE ---
+[2026-03-29T14:21:17.098Z] Running total appendedCount: 720
+[2026-03-29T14:21:17.098Z] --- CYCLE 13 START ---
+[2026-03-29T14:21:17.107Z] Fresh promotable rows found: 8
+[2026-03-29T14:21:17.583Z] Cycle 13 appendedCount: 8
+[2026-03-29T14:21:35.824Z] --- CYCLE 13 COMPLETE ---
+[2026-03-29T14:21:35.824Z] Running total appendedCount: 728
+[2026-03-29T14:21:35.824Z] --- CYCLE 14 START ---
+[2026-03-29T14:21:35.830Z] Fresh promotable rows found: 8
+[2026-03-29T14:21:36.242Z] Cycle 14 appendedCount: 8
+[2026-03-29T14:21:57.037Z] --- CYCLE 14 COMPLETE ---
+[2026-03-29T14:21:57.037Z] Running total appendedCount: 736
+[2026-03-29T14:21:57.037Z] --- CYCLE 15 START ---
+[2026-03-29T14:21:57.043Z] Fresh promotable rows found: 8
+[2026-03-29T14:21:57.480Z] Cycle 15 appendedCount: 8
+[2026-03-29T14:22:16.768Z] --- CYCLE 15 COMPLETE ---
+[2026-03-29T14:22:16.769Z] Running total appendedCount: 744
+[2026-03-29T14:22:16.769Z] --- CYCLE 16 START ---
+[2026-03-29T14:22:16.777Z] Fresh promotable rows found: 8
+[2026-03-29T14:22:17.228Z] Cycle 16 appendedCount: 8
+[2026-03-29T14:22:35.437Z] --- CYCLE 16 COMPLETE ---
+[2026-03-29T14:22:35.438Z] Running total appendedCount: 752
+[2026-03-29T14:22:35.438Z] --- CYCLE 17 START ---
+[2026-03-29T14:22:35.444Z] Fresh promotable rows found: 8
+[2026-03-29T14:22:35.815Z] Cycle 17 appendedCount: 8
+[2026-03-29T14:22:57.337Z] --- CYCLE 17 COMPLETE ---
+[2026-03-29T14:22:57.337Z] Running total appendedCount: 760
+[2026-03-29T14:22:57.337Z] --- CYCLE 18 START ---
+[2026-03-29T14:22:57.343Z] Fresh promotable rows found: 8
+[2026-03-29T14:22:57.760Z] Cycle 18 appendedCount: 8
+[2026-03-29T14:23:16.135Z] --- CYCLE 18 COMPLETE ---
+[2026-03-29T14:23:16.136Z] Running total appendedCount: 768
+[2026-03-29T14:23:16.137Z] --- CYCLE 19 START ---
+[2026-03-29T14:23:16.148Z] Fresh promotable rows found: 8
+[2026-03-29T14:23:16.721Z] Cycle 19 appendedCount: 8
+[2026-03-29T14:23:34.726Z] --- CYCLE 19 COMPLETE ---
+[2026-03-29T14:23:34.726Z] Running total appendedCount: 776
+[2026-03-29T14:23:34.726Z] --- CYCLE 20 START ---
+[2026-03-29T14:23:34.732Z] Fresh promotable rows found: 8
+[2026-03-29T14:23:35.148Z] Cycle 20 appendedCount: 8
+[2026-03-29T14:23:56.467Z] --- CYCLE 20 COMPLETE ---
+[2026-03-29T14:23:56.467Z] Running total appendedCount: 784
+[2026-03-29T14:23:56.467Z] === OVERNIGHT SCALE COMPLETE | total appendedCount: 784 ===
+[2026-03-29T14:31:33.111Z] === OVERNIGHT SCALE START ===
+[2026-03-29T14:31:33.111Z] --- CYCLE 1 START ---
+[2026-03-29T14:31:33.115Z] Startup diagnostics | totalRows=675 | review=675 | promote=0 | reviewIntent=675 | reviewIntentNotInMaster=482 | promoteIntent=0 | promoteIntentNotInMaster=0 | promoteNonIntentNotInMaster=0
+[2026-03-29T14:31:33.125Z] Fresh promotable rows found: 161
+[2026-03-29T14:31:33.498Z] Cycle 1 appendedCount: 161
+[2026-03-29T14:32:05.316Z] --- CYCLE 1 COMPLETE ---
+[2026-03-29T14:32:05.328Z] Running total appendedCount: 161
+[2026-03-29T14:32:05.328Z] --- CYCLE 2 START ---
+[2026-03-29T14:32:05.334Z] Fresh promotable rows found: 37
+[2026-03-29T14:32:05.978Z] Cycle 2 appendedCount: 37
+[2026-03-29T14:32:29.595Z] --- CYCLE 2 COMPLETE ---
+[2026-03-29T14:32:29.595Z] Running total appendedCount: 198
+[2026-03-29T14:32:29.595Z] --- CYCLE 3 START ---
+[2026-03-29T14:32:29.599Z] Fresh promotable rows found: 9
+[2026-03-29T14:32:30.020Z] Cycle 3 appendedCount: 9
+[2026-03-29T14:32:47.042Z] --- CYCLE 3 COMPLETE ---
+[2026-03-29T14:32:47.042Z] Running total appendedCount: 207
+[2026-03-29T14:32:47.042Z] --- CYCLE 4 START ---
+[2026-03-29T14:32:47.046Z] Fresh promotable rows found: 8
+[2026-03-29T14:32:47.462Z] Cycle 4 appendedCount: 8
+[2026-03-29T14:33:08.113Z] --- CYCLE 4 COMPLETE ---
+[2026-03-29T14:33:08.113Z] Running total appendedCount: 215
+[2026-03-29T14:33:08.113Z] --- CYCLE 5 START ---
+[2026-03-29T14:33:08.118Z] Fresh promotable rows found: 8
+[2026-03-29T14:33:08.537Z] Cycle 5 appendedCount: 8
+[2026-03-29T14:33:29.147Z] --- CYCLE 5 COMPLETE ---
+[2026-03-29T14:33:29.147Z] Running total appendedCount: 223
+[2026-03-29T14:33:29.147Z] --- CYCLE 6 START ---
+[2026-03-29T14:33:29.152Z] Fresh promotable rows found: 8
+[2026-03-29T14:33:29.649Z] Cycle 6 appendedCount: 8
+[2026-03-29T14:33:47.654Z] --- CYCLE 6 COMPLETE ---
+[2026-03-29T14:33:47.654Z] Running total appendedCount: 231
+[2026-03-29T14:33:47.654Z] --- CYCLE 7 START ---
+[2026-03-29T14:33:47.658Z] Fresh promotable rows found: 8
+[2026-03-29T14:33:48.069Z] Cycle 7 appendedCount: 8
+[2026-03-29T14:34:09.663Z] --- CYCLE 7 COMPLETE ---
+[2026-03-29T14:34:09.664Z] Running total appendedCount: 239
+[2026-03-29T14:34:09.664Z] --- CYCLE 8 START ---
+[2026-03-29T14:34:09.668Z] Fresh promotable rows found: 8
+[2026-03-29T14:34:10.084Z] Cycle 8 appendedCount: 8
+[2026-03-29T14:34:29.630Z] --- CYCLE 8 COMPLETE ---
+[2026-03-29T14:34:29.631Z] Running total appendedCount: 247
+[2026-03-29T14:34:29.631Z] --- CYCLE 9 START ---
+[2026-03-29T14:34:29.635Z] Fresh promotable rows found: 8
+[2026-03-29T14:34:30.052Z] Cycle 9 appendedCount: 8
+[2026-03-29T14:34:47.409Z] --- CYCLE 9 COMPLETE ---
+[2026-03-29T14:34:47.409Z] Running total appendedCount: 255
+[2026-03-29T14:34:47.409Z] --- CYCLE 10 START ---
+[2026-03-29T14:34:47.413Z] Fresh promotable rows found: 8
+[2026-03-29T14:34:47.831Z] Cycle 10 appendedCount: 8
+[2026-03-29T14:35:08.310Z] --- CYCLE 10 COMPLETE ---
+[2026-03-29T14:35:08.310Z] Running total appendedCount: 263
+[2026-03-29T14:35:08.310Z] --- CYCLE 11 START ---
+[2026-03-29T14:35:08.314Z] Fresh promotable rows found: 8
+[2026-03-29T14:35:08.731Z] Cycle 11 appendedCount: 8
+[2026-03-29T14:35:27.409Z] --- CYCLE 11 COMPLETE ---
+[2026-03-29T14:35:27.410Z] Running total appendedCount: 271
+[2026-03-29T14:35:27.411Z] --- CYCLE 12 START ---
+[2026-03-29T14:35:27.428Z] Fresh promotable rows found: 8
+[2026-03-29T14:35:27.896Z] Cycle 12 appendedCount: 8
+[2026-03-29T14:35:46.226Z] --- CYCLE 12 COMPLETE ---
+[2026-03-29T14:35:46.226Z] Running total appendedCount: 279
+[2026-03-29T14:35:46.226Z] --- CYCLE 13 START ---
+[2026-03-29T14:35:46.230Z] Fresh promotable rows found: 8
+[2026-03-29T14:35:46.602Z] Cycle 13 appendedCount: 8
+[2026-03-29T14:36:07.796Z] --- CYCLE 13 COMPLETE ---
+[2026-03-29T14:36:07.796Z] Running total appendedCount: 287
+[2026-03-29T14:36:07.796Z] --- CYCLE 14 START ---
+[2026-03-29T14:36:07.800Z] Fresh promotable rows found: 8
+[2026-03-29T14:36:08.219Z] Cycle 14 appendedCount: 8
+[2026-03-29T14:36:26.093Z] --- CYCLE 14 COMPLETE ---
+[2026-03-29T14:36:26.093Z] Running total appendedCount: 295
+[2026-03-29T14:36:26.093Z] --- CYCLE 15 START ---
+[2026-03-29T14:36:26.099Z] Fresh promotable rows found: 8
+[2026-03-29T14:36:26.526Z] Cycle 15 appendedCount: 8
+[2026-03-29T14:36:45.948Z] --- CYCLE 15 COMPLETE ---
+[2026-03-29T14:36:45.948Z] Running total appendedCount: 303
+[2026-03-29T14:36:45.948Z] --- CYCLE 16 START ---
+[2026-03-29T14:36:45.952Z] Fresh promotable rows found: 8
+[2026-03-29T14:36:46.368Z] Cycle 16 appendedCount: 8
+[2026-03-29T14:37:08.462Z] --- CYCLE 16 COMPLETE ---
+[2026-03-29T14:37:08.462Z] Running total appendedCount: 311
+[2026-03-29T14:37:08.462Z] --- CYCLE 17 START ---
+[2026-03-29T14:37:08.467Z] Fresh promotable rows found: 8
+[2026-03-29T14:37:08.917Z] Cycle 17 appendedCount: 8
+[2026-03-29T14:37:29.490Z] --- CYCLE 17 COMPLETE ---
+[2026-03-29T14:37:29.491Z] Running total appendedCount: 319
+[2026-03-29T14:37:29.492Z] --- CYCLE 18 START ---
+[2026-03-29T14:37:29.502Z] Fresh promotable rows found: 8
+[2026-03-29T14:37:30.034Z] Cycle 18 appendedCount: 8
+[2026-03-29T14:37:48.073Z] --- CYCLE 18 COMPLETE ---
+[2026-03-29T14:37:48.073Z] Running total appendedCount: 327
+[2026-03-29T14:37:48.073Z] --- CYCLE 19 START ---
+[2026-03-29T14:37:48.078Z] Fresh promotable rows found: 8
+[2026-03-29T14:37:48.494Z] Cycle 19 appendedCount: 8
+[2026-03-29T14:38:09.659Z] --- CYCLE 19 COMPLETE ---
+[2026-03-29T14:38:09.659Z] Running total appendedCount: 335
+[2026-03-29T14:38:09.659Z] --- CYCLE 20 START ---
+[2026-03-29T14:38:09.664Z] Fresh promotable rows found: 8
+[2026-03-29T14:38:10.081Z] Cycle 20 appendedCount: 8
+[2026-03-29T14:38:29.709Z] --- CYCLE 20 COMPLETE ---
+[2026-03-29T14:38:29.714Z] Running total appendedCount: 343
+[2026-03-29T14:38:29.714Z] === OVERNIGHT SCALE COMPLETE | total appendedCount: 343 ===
+[2026-03-29T14:54:05.237Z] === OVERNIGHT SCALE START ===
+[2026-03-29T14:54:05.238Z] --- CYCLE 1 START ---
+[2026-03-29T14:54:05.241Z] Startup diagnostics | totalRows=340 | review=340 | promote=0 | reviewIntent=340 | reviewIntentNotInMaster=81 | promoteIntent=0 | promoteIntentNotInMaster=0 | promoteNonIntentNotInMaster=0
+[2026-03-29T14:54:05.242Z] Fresh promotable rows found: 81
+[2026-03-29T14:54:05.602Z] Cycle 1 appendedCount: 81
+[2026-03-29T14:54:36.727Z] --- CYCLE 1 COMPLETE ---
+[2026-03-29T14:54:36.732Z] Running total appendedCount: 81
+[2026-03-29T14:54:36.733Z] --- CYCLE 2 START ---
+[2026-03-29T14:54:36.738Z] Fresh promotable rows found: 0
+[2026-03-29T14:54:36.739Z] No fresh promotable rows left. Stopping.
+[2026-03-29T14:54:36.739Z] === OVERNIGHT SCALE COMPLETE | total appendedCount: 81 ===
+[2026-03-29T15:34:30.324Z] === OVERNIGHT SCALE START ===
+[2026-03-29T15:34:30.324Z] --- CYCLE 1 START ---
+[2026-03-29T15:34:30.329Z] Startup diagnostics | totalRows=340 | review=340 | promote=0 | reviewIntent=340 | reviewIntentNotInMaster=0 | promoteIntent=0 | promoteIntentNotInMaster=0 | promoteNonIntentNotInMaster=0
+[2026-03-29T15:34:30.329Z] Fresh promotable rows found: 0
+[2026-03-29T15:34:30.329Z] No fresh promotable rows left. Stopping.
+[2026-03-29T15:34:30.329Z] === OVERNIGHT SCALE COMPLETE | total appendedCount: 0 ===

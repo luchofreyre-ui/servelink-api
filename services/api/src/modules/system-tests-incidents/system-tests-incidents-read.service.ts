@@ -5,6 +5,7 @@ import {
 } from "@servelink/system-test-intelligence";
 
 import { PrismaService } from "../../prisma";
+import type { SystemTestFamilyLifecycleState } from "../system-tests/system-test-family-lifecycle";
 import type { SystemTestPersistedIntelligenceDto } from "../system-tests/dto/system-test-run-detail.dto";
 import type {
   SystemTestIncidentDetailDto,
@@ -12,6 +13,17 @@ import type {
   SystemTestIncidentMemberDto,
   SystemTestIncidentSummaryDto,
 } from "./dto/system-test-incidents.dto";
+import {
+  previewMatchesCategoryFilter,
+  previewMatchesConfidenceTierFilter,
+  sortIncidentListRowsInPlace,
+  type SystemTestIncidentListSortBy,
+  type SystemTestResolutionConfidenceTier,
+} from "../system-tests/system-test-resolution-preview-filters";
+import { toResolutionPreviewOrNull } from "../system-tests/system-test-resolution-preview";
+import { toSystemTestFamilyOperatorStateDto } from "../system-tests/system-test-family-operator-state";
+import { SystemTestsFamilyLifecycleService } from "../system-tests-families/system-tests-family-lifecycle.service";
+import { SystemTestsFamilyResolutionService } from "../system-tests/system-tests-family-resolution.service";
 
 function metaString(o: unknown, k: string): string | null {
   if (o == null || typeof o !== "object" || Array.isArray(o)) return null;
@@ -44,12 +56,24 @@ function mapFixTrackFromRow(row: {
 
 @Injectable()
 export class SystemTestsIncidentsReadService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly familyResolution: SystemTestsFamilyResolutionService,
+    private readonly familyLifecycleSvc: SystemTestsFamilyLifecycleService,
+  ) {}
 
   async listIncidents(opts?: {
     limit?: number;
     status?: string;
     runId?: string;
+    diagnosisCategory?: string;
+    confidenceTier?: SystemTestResolutionConfidenceTier;
+    sortBy?: SystemTestIncidentListSortBy;
+    sortDirection?: "asc" | "desc";
+    showDismissed?: boolean;
+    lifecycleState?: SystemTestFamilyLifecycleState;
+    includeDormant?: boolean;
+    includeResolved?: boolean;
   }): Promise<SystemTestIncidentListItemDto[]> {
     const limit = Math.min(Math.max(opts?.limit ?? 80, 1), 200);
     const targetRunId =
@@ -81,30 +105,120 @@ export class SystemTestsIncidentsReadService {
     };
     if (statusFilter) where.status = statusFilter;
 
+    const sortBy = opts?.sortBy ?? "recent";
+    const sortDirection = opts?.sortDirection ?? "desc";
+    const categoryFilter = opts?.diagnosisCategory?.trim() || undefined;
+    const tierFilter = opts?.confidenceTier;
+    const lifecycleStateFilter = opts?.lifecycleState;
+    const includeDormant = opts?.includeDormant ?? true;
+    const includeResolved = opts?.includeResolved ?? false;
+
+    const needsExpandedFetch =
+      Boolean(categoryFilter || tierFilter || lifecycleStateFilter) ||
+      sortBy !== "recent" ||
+      sortDirection !== "desc";
+
+    const fetchTake = needsExpandedFetch ? Math.min(500, Math.max(limit * 25, 120)) : limit;
+
     const rows = await this.prisma.systemTestIncident.findMany({
       where,
       orderBy: { updatedAt: "desc" },
-      take: limit,
+      take: fetchTake,
+      include: {
+        leadFamily: {
+          select: {
+            displayTitle: true,
+            operatorState: true,
+            operatorStateUpdatedAt: true,
+            operatorStateUpdatedById: true,
+            operatorStateNote: true,
+          },
+        },
+      },
     });
 
-    return rows.map((r) => ({
-      runId: r.runId,
-      incidentKey: r.incidentKey,
-      incidentVersion: r.incidentVersion,
-      displayTitle: r.displayTitle,
-      rootCauseCategory: r.rootCauseCategory,
-      summary: r.summary,
-      severity: r.severity,
-      status: r.status,
-      trendKind: metaString(r.metadataJson, "trendKind") ?? "stable",
-      leadFamilyId: r.leadFamilyId,
-      affectedFamilyCount: r.affectedFamilyCount,
-      affectedFileCount: r.affectedFileCount,
-      currentRunFailureCount: r.currentRunFailureCount,
-      lastSeenRunId: r.lastSeenRunId,
-      firstSeenRunId: r.firstSeenRunId,
-      updatedAt: r.updatedAt.toISOString(),
-    }));
+    const leadIds = [
+      ...new Set(rows.map((r) => r.leadFamilyId).filter((id): id is string => Boolean(id))),
+    ];
+    const lifecycleMap = await this.familyLifecycleSvc.buildFamilyLifecycleMap(leadIds);
+
+    const list = await Promise.all(
+      rows.map(async (r) => {
+        let resolutionPreview: SystemTestIncidentListItemDto["resolutionPreview"] = null;
+        if (r.leadFamilyId) {
+          try {
+            const resolution = await this.familyResolution.getFamilyResolution(r.leadFamilyId);
+            resolutionPreview = toResolutionPreviewOrNull(resolution);
+          } catch {
+            resolutionPreview = null;
+          }
+        }
+
+        return {
+          runId: r.runId,
+          incidentKey: r.incidentKey,
+          incidentVersion: r.incidentVersion,
+          displayTitle: r.displayTitle,
+          rootCauseCategory: r.rootCauseCategory,
+          summary: r.summary,
+          severity: r.severity,
+          status: r.status,
+          trendKind: metaString(r.metadataJson, "trendKind") ?? "stable",
+          leadFamilyId: r.leadFamilyId,
+          affectedFamilyCount: r.affectedFamilyCount,
+          affectedFileCount: r.affectedFileCount,
+          currentRunFailureCount: r.currentRunFailureCount,
+          lastSeenRunId: r.lastSeenRunId,
+          firstSeenRunId: r.firstSeenRunId,
+          updatedAt: r.updatedAt.toISOString(),
+          resolutionPreview,
+          familyOperatorState: r.leadFamily
+            ? toSystemTestFamilyOperatorStateDto(r.leadFamily)
+            : null,
+          familyLifecycle:
+            r.leadFamilyId ? (lifecycleMap.get(r.leadFamilyId) ?? null) : null,
+          leadFamilyTitle: r.leadFamily?.displayTitle ?? null,
+        };
+      }),
+    );
+
+    let filtered = list;
+    if (!opts?.showDismissed) {
+      filtered = filtered.filter(
+        (row) =>
+          !row.leadFamilyId ||
+          !row.familyOperatorState ||
+          row.familyOperatorState.state !== "dismissed",
+      );
+    }
+    if (categoryFilter) {
+      filtered = filtered.filter((r) => previewMatchesCategoryFilter(r.resolutionPreview, categoryFilter));
+    }
+    if (tierFilter) {
+      filtered = filtered.filter((r) =>
+        previewMatchesConfidenceTierFilter(r.resolutionPreview, tierFilter),
+      );
+    }
+    if (lifecycleStateFilter) {
+      filtered = filtered.filter(
+        (row) =>
+          Boolean(row.leadFamilyId) &&
+          row.familyLifecycle?.lifecycleState === lifecycleStateFilter,
+      );
+    } else {
+      filtered = filtered.filter((row) => {
+        if (!row.leadFamilyId) return true;
+        const s = row.familyLifecycle?.lifecycleState;
+        if (!s) return true;
+        if (s === "resolved" && !includeResolved) return false;
+        if (s === "dormant" && !includeDormant) return false;
+        return true;
+      });
+    }
+
+    sortIncidentListRowsInPlace(filtered, sortBy, sortDirection);
+
+    return filtered.slice(0, limit);
   }
 
   async getIncidentDetailByKey(
@@ -123,6 +237,15 @@ export class SystemTestsIncidentsReadService {
             memberships: {
               include: { family: true },
             },
+            leadFamily: {
+              select: {
+                displayTitle: true,
+                operatorState: true,
+                operatorStateUpdatedAt: true,
+                operatorStateUpdatedById: true,
+                operatorStateNote: true,
+              },
+            },
           },
         })
       : await this.prisma.systemTestIncident.findFirst({
@@ -132,12 +255,25 @@ export class SystemTestsIncidentsReadService {
             memberships: {
               include: { family: true },
             },
+            leadFamily: {
+              select: {
+                displayTitle: true,
+                operatorState: true,
+                operatorStateUpdatedAt: true,
+                operatorStateUpdatedById: true,
+                operatorStateNote: true,
+              },
+            },
           },
         });
 
     if (!row) {
       throw new NotFoundException("SYSTEM_TEST_INCIDENT_NOT_FOUND");
     }
+
+    const detailLifecycleMap = row.leadFamilyId
+      ? await this.familyLifecycleSvc.buildFamilyLifecycleMap([row.leadFamilyId])
+      : new Map();
 
     const fixRow = await this.prisma.systemTestIncidentFixTrack.findUnique({
       where: { incidentKey },
@@ -169,6 +305,16 @@ export class SystemTestsIncidentsReadService {
 
     members.sort((a, b) => a.displayTitle.localeCompare(b.displayTitle));
 
+    let resolutionPreview: SystemTestIncidentListItemDto["resolutionPreview"] = null;
+    if (row.leadFamilyId) {
+      try {
+        const resolution = await this.familyResolution.getFamilyResolution(row.leadFamilyId);
+        resolutionPreview = toResolutionPreviewOrNull(resolution);
+      } catch {
+        resolutionPreview = null;
+      }
+    }
+
     return {
       runId: row.runId,
       incidentKey: row.incidentKey,
@@ -186,6 +332,13 @@ export class SystemTestsIncidentsReadService {
       lastSeenRunId: row.lastSeenRunId,
       firstSeenRunId: row.firstSeenRunId,
       updatedAt: row.updatedAt.toISOString(),
+      resolutionPreview,
+      familyOperatorState: row.leadFamily
+        ? toSystemTestFamilyOperatorStateDto(row.leadFamily)
+        : null,
+      familyLifecycle:
+        row.leadFamilyId ? (detailLifecycleMap.get(row.leadFamilyId) ?? null) : null,
+      leadFamilyTitle: row.leadFamily?.displayTitle ?? null,
       fixTrack,
       metadataJson: row.metadataJson,
       members,

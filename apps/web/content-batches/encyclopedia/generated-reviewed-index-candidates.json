@@ -1,0 +1,2230 @@
+{
+  "generatedAt": "2026-03-29T02:29:13.126Z",
+  "summary": {
+    "total": 93,
+    "promote": 38,
+    "review": 55,
+    "reject": 0
+  },
+  "candidates": [
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-FINISHED-WOOD",
+      "slug": "cleaner-film-on-countertops-on-finished-wood",
+      "title": "Cleaner Film on Countertops on Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "cleaner-film-on-countertops-on-finished-wood",
+      "cleanedTitle": "Cleaner Film on Countertops on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Cleaner Film on Finished Wood",
+      "normalizedSlug": "cleaner-film-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "COUNTERTOP_SURFACE_MISMATCH"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-GLASS-SURFACES",
+      "slug": "cleaner-film-on-countertops-on-glass-surfaces",
+      "title": "Cleaner Film on Countertops on Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "cleaner-film-on-countertops-on-glass-surfaces",
+      "cleanedTitle": "Cleaner Film on Countertops on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Cleaner Film on Glass",
+      "normalizedSlug": "cleaner-film-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "COUNTERTOP_SURFACE_MISMATCH",
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-GROUT",
+      "slug": "cleaner-film-on-countertops-on-grout",
+      "title": "Cleaner Film on Countertops on Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "cleaner-film-on-countertops-on-grout",
+      "cleanedTitle": "Cleaner Film on Countertops on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Cleaner Film on Grout",
+      "normalizedSlug": "cleaner-film-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "COUNTERTOP_SURFACE_MISMATCH"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-STAINLESS-STEEL",
+      "slug": "cleaner-film-on-countertops-on-stainless-steel",
+      "title": "Cleaner Film on Countertops on Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "cleaner-film-on-countertops-on-stainless-steel",
+      "cleanedTitle": "Cleaner Film on Countertops on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Cleaner Film on Stainless Steel",
+      "normalizedSlug": "cleaner-film-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "COUNTERTOP_SURFACE_MISMATCH"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-TILE-FLOORS",
+      "slug": "cleaner-film-on-countertops-on-tile-floors",
+      "title": "Cleaner Film on Countertops on Tile Floors",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "cleaner-film-on-countertops-on-tile-floors",
+      "cleanedTitle": "Cleaner Film on Countertops on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Cleaner Film on Tile Floors",
+      "normalizedSlug": "cleaner-film-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "COUNTERTOP_SURFACE_MISMATCH"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "M-GEN-DEGREASING-FINISHED-WOOD-FINISHED-WOOD",
+      "slug": "degreasing-finished-wood-finished-wood",
+      "title": "Degreasing for Finished Wood for Finished Wood",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "degreasing-finished-wood-finished-wood",
+      "cleanedTitle": "Degreasing for Finished Wood for Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Degreasing for Finished Wood",
+      "normalizedSlug": "degreasing-finished-wood",
+      "normalizationWarnings": [
+        "DUPLICATE_SURFACE_SEGMENT"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-DEGREASING-FINISHED-WOOD-GLASS-SURFACES",
+      "slug": "degreasing-finished-wood-glass-surfaces",
+      "title": "Degreasing for Finished Wood for Glass Surfaces",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "degreasing-finished-wood-glass-surfaces",
+      "cleanedTitle": "Degreasing for Finished Wood for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Degreasing Finished Wood for Glass",
+      "normalizedSlug": "degreasing-finished-wood-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-DEGREASING-GLASS-SURFACES-GLASS-SURFACES",
+      "slug": "degreasing-glass-surfaces-glass-surfaces",
+      "title": "Degreasing for Glass Surfaces for Glass Surfaces",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "degreasing-glass-surfaces-glass-surfaces",
+      "cleanedTitle": "Degreasing for Glass Surfaces for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Degreasing for Glass",
+      "normalizedSlug": "degreasing-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED",
+        "DUPLICATE_SURFACE_SEGMENT"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-DEGREASING-GROUT-GLASS-SURFACES",
+      "slug": "degreasing-grout-glass-surfaces",
+      "title": "Degreasing for Grout for Glass Surfaces",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "degreasing-grout-glass-surfaces",
+      "cleanedTitle": "Degreasing for Grout for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Degreasing Grout for Glass",
+      "normalizedSlug": "degreasing-grout-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-DEGREASING-GROUT-GROUT",
+      "slug": "degreasing-grout-grout",
+      "title": "Degreasing for Grout for Grout",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "degreasing-grout-grout",
+      "cleanedTitle": "Degreasing for Grout for Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Degreasing for Grout",
+      "normalizedSlug": "degreasing-grout",
+      "normalizationWarnings": [
+        "DUPLICATE_SURFACE_SEGMENT"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-DEGREASING-STAINLESS-STEEL-GLASS-SURFACES",
+      "slug": "degreasing-stainless-steel-glass-surfaces",
+      "title": "Degreasing for Stainless Steel for Glass Surfaces",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "degreasing-stainless-steel-glass-surfaces",
+      "cleanedTitle": "Degreasing for Stainless Steel for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Degreasing Stainless Steel for Glass",
+      "normalizedSlug": "degreasing-stainless-steel-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-DEGREASING-STAINLESS-STEEL-STAINLESS-STEEL",
+      "slug": "degreasing-stainless-steel-stainless-steel",
+      "title": "Degreasing for Stainless Steel for Stainless Steel",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "degreasing-stainless-steel-stainless-steel",
+      "cleanedTitle": "Degreasing for Stainless Steel for Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Degreasing for Stainless Steel",
+      "normalizedSlug": "degreasing-stainless-steel",
+      "normalizationWarnings": [
+        "DUPLICATE_SURFACE_SEGMENT"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-FINISHED-WOOD",
+      "slug": "grease-on-backsplashes-on-finished-wood",
+      "title": "Grease on Backsplashes on Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-backsplashes-on-finished-wood",
+      "cleanedTitle": "Grease on Backsplashes on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Backsplashes on Finished Wood",
+      "normalizedSlug": "grease-on-backsplashes-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-GLASS-SURFACES",
+      "slug": "grease-on-backsplashes-on-glass-surfaces",
+      "title": "Grease on Backsplashes on Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-backsplashes-on-glass-surfaces",
+      "cleanedTitle": "Grease on Backsplashes on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Backsplashes on Glass",
+      "normalizedSlug": "grease-on-backsplashes-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-GROUT",
+      "slug": "grease-on-backsplashes-on-grout",
+      "title": "Grease on Backsplashes on Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-backsplashes-on-grout",
+      "cleanedTitle": "Grease on Backsplashes on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Backsplashes on Grout",
+      "normalizedSlug": "grease-on-backsplashes-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-STAINLESS-STEEL",
+      "slug": "grease-on-backsplashes-on-stainless-steel",
+      "title": "Grease on Backsplashes on Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-backsplashes-on-stainless-steel",
+      "cleanedTitle": "Grease on Backsplashes on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Backsplashes on Stainless Steel",
+      "normalizedSlug": "grease-on-backsplashes-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-TILE-FLOORS",
+      "slug": "grease-on-backsplashes-on-tile-floors",
+      "title": "Grease on Backsplashes on Tile Floors",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-backsplashes-on-tile-floors",
+      "cleanedTitle": "Grease on Backsplashes on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Backsplashes on Tile Floors",
+      "normalizedSlug": "grease-on-backsplashes-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-FINISHED-WOOD",
+      "slug": "grease-on-kitchen-cabinets-on-finished-wood",
+      "title": "Grease on Kitchen Cabinets on Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-kitchen-cabinets-on-finished-wood",
+      "cleanedTitle": "Grease on Kitchen Cabinets on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Kitchen Cabinets on Finished Wood",
+      "normalizedSlug": "grease-on-kitchen-cabinets-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-GLASS-SURFACES",
+      "slug": "grease-on-kitchen-cabinets-on-glass-surfaces",
+      "title": "Grease on Kitchen Cabinets on Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-kitchen-cabinets-on-glass-surfaces",
+      "cleanedTitle": "Grease on Kitchen Cabinets on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Kitchen Cabinets on Glass",
+      "normalizedSlug": "grease-on-kitchen-cabinets-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-GROUT",
+      "slug": "grease-on-kitchen-cabinets-on-grout",
+      "title": "Grease on Kitchen Cabinets on Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-kitchen-cabinets-on-grout",
+      "cleanedTitle": "Grease on Kitchen Cabinets on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Kitchen Cabinets on Grout",
+      "normalizedSlug": "grease-on-kitchen-cabinets-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-STAINLESS-STEEL",
+      "slug": "grease-on-kitchen-cabinets-on-stainless-steel",
+      "title": "Grease on Kitchen Cabinets on Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-kitchen-cabinets-on-stainless-steel",
+      "cleanedTitle": "Grease on Kitchen Cabinets on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Kitchen Cabinets on Stainless Steel",
+      "normalizedSlug": "grease-on-kitchen-cabinets-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-TILE-FLOORS",
+      "slug": "grease-on-kitchen-cabinets-on-tile-floors",
+      "title": "Grease on Kitchen Cabinets on Tile Floors",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-kitchen-cabinets-on-tile-floors",
+      "cleanedTitle": "Grease on Kitchen Cabinets on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Kitchen Cabinets on Tile Floors",
+      "normalizedSlug": "grease-on-kitchen-cabinets-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-FINISHED-WOOD",
+      "slug": "grease-on-stainless-steel-on-finished-wood",
+      "title": "Grease on Stainless Steel on Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-stainless-steel-on-finished-wood",
+      "cleanedTitle": "Grease on Stainless Steel on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Stainless Steel on Finished Wood",
+      "normalizedSlug": "grease-on-stainless-steel-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-GLASS-SURFACES",
+      "slug": "grease-on-stainless-steel-on-glass-surfaces",
+      "title": "Grease on Stainless Steel on Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-stainless-steel-on-glass-surfaces",
+      "cleanedTitle": "Grease on Stainless Steel on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Stainless Steel on Glass",
+      "normalizedSlug": "grease-on-stainless-steel-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-GROUT",
+      "slug": "grease-on-stainless-steel-on-grout",
+      "title": "Grease on Stainless Steel on Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-stainless-steel-on-grout",
+      "cleanedTitle": "Grease on Stainless Steel on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Stainless Steel on Grout",
+      "normalizedSlug": "grease-on-stainless-steel-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-STAINLESS-STEEL",
+      "slug": "grease-on-stainless-steel-on-stainless-steel",
+      "title": "Grease on Stainless Steel on Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-stainless-steel-on-stainless-steel",
+      "cleanedTitle": "Grease on Stainless Steel on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Stainless Steel on Stainless Steel",
+      "normalizedSlug": "grease-on-stainless-steel-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-TILE-FLOORS",
+      "slug": "grease-on-stainless-steel-on-tile-floors",
+      "title": "Grease on Stainless Steel on Tile Floors",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-stainless-steel-on-tile-floors",
+      "cleanedTitle": "Grease on Stainless Steel on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Stainless Steel on Tile Floors",
+      "normalizedSlug": "grease-on-stainless-steel-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-FINISHED-WOOD",
+      "slug": "grease-on-walls-near-the-stove-on-finished-wood",
+      "title": "Grease on Walls Near the Stove on Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-walls-near-the-stove-on-finished-wood",
+      "cleanedTitle": "Grease on Walls Near the Stove on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Walls Near The Stove on Finished Wood",
+      "normalizedSlug": "grease-on-walls-near-the-stove-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-GLASS-SURFACES",
+      "slug": "grease-on-walls-near-the-stove-on-glass-surfaces",
+      "title": "Grease on Walls Near the Stove on Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-walls-near-the-stove-on-glass-surfaces",
+      "cleanedTitle": "Grease on Walls Near the Stove on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Walls Near The Stove on Glass",
+      "normalizedSlug": "grease-on-walls-near-the-stove-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-GROUT",
+      "slug": "grease-on-walls-near-the-stove-on-grout",
+      "title": "Grease on Walls Near the Stove on Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-walls-near-the-stove-on-grout",
+      "cleanedTitle": "Grease on Walls Near the Stove on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Walls Near The Stove on Grout",
+      "normalizedSlug": "grease-on-walls-near-the-stove-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-STAINLESS-STEEL",
+      "slug": "grease-on-walls-near-the-stove-on-stainless-steel",
+      "title": "Grease on Walls Near the Stove on Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-walls-near-the-stove-on-stainless-steel",
+      "cleanedTitle": "Grease on Walls Near the Stove on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Walls Near The Stove on Stainless Steel",
+      "normalizedSlug": "grease-on-walls-near-the-stove-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-TILE-FLOORS",
+      "slug": "grease-on-walls-near-the-stove-on-tile-floors",
+      "title": "Grease on Walls Near the Stove on Tile Floors",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "grease-on-walls-near-the-stove-on-tile-floors",
+      "cleanedTitle": "Grease on Walls Near the Stove on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Grease On Walls Near The Stove on Tile Floors",
+      "normalizedSlug": "grease-on-walls-near-the-stove-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "M-GEN-HARD-WATER-DEPOSIT-REMOVAL-GLASS-SURFACES",
+      "slug": "hard-water-deposit-removal-glass-surfaces",
+      "title": "Hard Water Deposit Removal for Glass Surfaces",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "hard-water-deposit-removal-glass-surfaces",
+      "cleanedTitle": "Hard Water Deposit Removal for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Hard Water Deposit Removal for Glass",
+      "normalizedSlug": "hard-water-deposit-removal-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-HARD-WATER-STAINS-ON-GLASS-SURFACES",
+      "slug": "hard-water-stains-on-glass-surfaces",
+      "title": "Hard Water Stains on Glass Surfaces",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "hard-water-stains-on-glass-surfaces",
+      "cleanedTitle": "Hard Water Stains on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Hard Water Stains on Glass",
+      "normalizedSlug": "hard-water-stains-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-HAZE-AFTER-CLEANING-ON-GLASS-SURFACES",
+      "slug": "haze-after-cleaning-on-glass-surfaces",
+      "title": "Haze After Cleaning on Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-after-cleaning-on-glass-surfaces",
+      "cleanedTitle": "Haze After Cleaning on Glass Surfaces",
+      "qualityScore": 90,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Haze After Cleaning on Glass",
+      "normalizedSlug": "haze-after-cleaning-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-FINISHED-WOOD",
+      "slug": "haze-on-finished-wood-on-finished-wood",
+      "title": "Haze on Finished Wood on Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-finished-wood-on-finished-wood",
+      "cleanedTitle": "Haze on Finished Wood on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Finished Wood on Finished Wood",
+      "normalizedSlug": "haze-on-finished-wood-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-GLASS-SURFACES",
+      "slug": "haze-on-finished-wood-on-glass-surfaces",
+      "title": "Haze on Finished Wood on Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-finished-wood-on-glass-surfaces",
+      "cleanedTitle": "Haze on Finished Wood on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Finished Wood on Glass",
+      "normalizedSlug": "haze-on-finished-wood-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-GROUT",
+      "slug": "haze-on-finished-wood-on-grout",
+      "title": "Haze on Finished Wood on Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-finished-wood-on-grout",
+      "cleanedTitle": "Haze on Finished Wood on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Finished Wood on Grout",
+      "normalizedSlug": "haze-on-finished-wood-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-STAINLESS-STEEL",
+      "slug": "haze-on-finished-wood-on-stainless-steel",
+      "title": "Haze on Finished Wood on Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-finished-wood-on-stainless-steel",
+      "cleanedTitle": "Haze on Finished Wood on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Finished Wood on Stainless Steel",
+      "normalizedSlug": "haze-on-finished-wood-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-TILE-FLOORS",
+      "slug": "haze-on-finished-wood-on-tile-floors",
+      "title": "Haze on Finished Wood on Tile Floors",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-finished-wood-on-tile-floors",
+      "cleanedTitle": "Haze on Finished Wood on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Finished Wood on Tile Floors",
+      "normalizedSlug": "haze-on-finished-wood-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-FINISHED-WOOD",
+      "slug": "haze-on-glass-on-finished-wood",
+      "title": "Haze on Glass on Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-glass-on-finished-wood",
+      "cleanedTitle": "Haze on Glass on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Glass on Finished Wood",
+      "normalizedSlug": "haze-on-glass-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-GLASS-SURFACES",
+      "slug": "haze-on-glass-on-glass-surfaces",
+      "title": "Haze on Glass on Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-glass-on-glass-surfaces",
+      "cleanedTitle": "Haze on Glass on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Glass on Glass",
+      "normalizedSlug": "haze-on-glass-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-GROUT",
+      "slug": "haze-on-glass-on-grout",
+      "title": "Haze on Glass on Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-glass-on-grout",
+      "cleanedTitle": "Haze on Glass on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Glass on Grout",
+      "normalizedSlug": "haze-on-glass-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-STAINLESS-STEEL",
+      "slug": "haze-on-glass-on-stainless-steel",
+      "title": "Haze on Glass on Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-glass-on-stainless-steel",
+      "cleanedTitle": "Haze on Glass on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Glass on Stainless Steel",
+      "normalizedSlug": "haze-on-glass-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-TILE-FLOORS",
+      "slug": "haze-on-glass-on-tile-floors",
+      "title": "Haze on Glass on Tile Floors",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-glass-on-tile-floors",
+      "cleanedTitle": "Haze on Glass on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Glass on Tile Floors",
+      "normalizedSlug": "haze-on-glass-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-FINISHED-WOOD",
+      "slug": "haze-on-stainless-steel-on-finished-wood",
+      "title": "Haze on Stainless Steel on Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-stainless-steel-on-finished-wood",
+      "cleanedTitle": "Haze on Stainless Steel on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Stainless Steel on Finished Wood",
+      "normalizedSlug": "haze-on-stainless-steel-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-GLASS-SURFACES",
+      "slug": "haze-on-stainless-steel-on-glass-surfaces",
+      "title": "Haze on Stainless Steel on Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-stainless-steel-on-glass-surfaces",
+      "cleanedTitle": "Haze on Stainless Steel on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Stainless Steel on Glass",
+      "normalizedSlug": "haze-on-stainless-steel-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-GROUT",
+      "slug": "haze-on-stainless-steel-on-grout",
+      "title": "Haze on Stainless Steel on Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-stainless-steel-on-grout",
+      "cleanedTitle": "Haze on Stainless Steel on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Stainless Steel on Grout",
+      "normalizedSlug": "haze-on-stainless-steel-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-STAINLESS-STEEL",
+      "slug": "haze-on-stainless-steel-on-stainless-steel",
+      "title": "Haze on Stainless Steel on Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-stainless-steel-on-stainless-steel",
+      "cleanedTitle": "Haze on Stainless Steel on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Stainless Steel on Stainless Steel",
+      "normalizedSlug": "haze-on-stainless-steel-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-TILE-FLOORS",
+      "slug": "haze-on-stainless-steel-on-tile-floors",
+      "title": "Haze on Stainless Steel on Tile Floors",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-stainless-steel-on-tile-floors",
+      "cleanedTitle": "Haze on Stainless Steel on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Stainless Steel on Tile Floors",
+      "normalizedSlug": "haze-on-stainless-steel-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-FINISHED-WOOD",
+      "slug": "haze-on-tile-floors-on-finished-wood",
+      "title": "Haze on Tile Floors on Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-tile-floors-on-finished-wood",
+      "cleanedTitle": "Haze on Tile Floors on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Tile Floors on Finished Wood",
+      "normalizedSlug": "haze-on-tile-floors-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-GLASS-SURFACES",
+      "slug": "haze-on-tile-floors-on-glass-surfaces",
+      "title": "Haze on Tile Floors on Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-tile-floors-on-glass-surfaces",
+      "cleanedTitle": "Haze on Tile Floors on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Tile Floors on Glass",
+      "normalizedSlug": "haze-on-tile-floors-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-GROUT",
+      "slug": "haze-on-tile-floors-on-grout",
+      "title": "Haze on Tile Floors on Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-tile-floors-on-grout",
+      "cleanedTitle": "Haze on Tile Floors on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Tile Floors on Grout",
+      "normalizedSlug": "haze-on-tile-floors-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-STAINLESS-STEEL",
+      "slug": "haze-on-tile-floors-on-stainless-steel",
+      "title": "Haze on Tile Floors on Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-tile-floors-on-stainless-steel",
+      "cleanedTitle": "Haze on Tile Floors on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Tile Floors on Stainless Steel",
+      "normalizedSlug": "haze-on-tile-floors-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-TILE-FLOORS",
+      "slug": "haze-on-tile-floors-on-tile-floors",
+      "title": "Haze on Tile Floors on Tile Floors",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "haze-on-tile-floors-on-tile-floors",
+      "cleanedTitle": "Haze on Tile Floors on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Haze On Tile Floors on Tile Floors",
+      "normalizedSlug": "haze-on-tile-floors-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "M-GEN-NEUTRAL-SURFACE-CLEANING-GLASS-SURFACES",
+      "slug": "neutral-surface-cleaning-glass-surfaces",
+      "title": "Neutral Surface Cleaning for Glass Surfaces",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "neutral-surface-cleaning-glass-surfaces",
+      "cleanedTitle": "Neutral Surface Cleaning for Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Neutral Surface Cleaning for Glass",
+      "normalizedSlug": "neutral-surface-cleaning-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-POLYMERIZED-GREASE-RESIDUE-ON-GLASS-SURFACES",
+      "slug": "polymerized-grease-residue-on-glass-surfaces",
+      "title": "Polymerized Grease Residue on Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "polymerized-grease-residue-on-glass-surfaces",
+      "cleanedTitle": "Polymerized Grease Residue on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Polymerized Grease Residue on Glass",
+      "normalizedSlug": "polymerized-grease-residue-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-PRODUCT-RESIDUE-BUILDUP-ON-GLASS-SURFACES",
+      "slug": "product-residue-buildup-on-glass-surfaces",
+      "title": "Product Residue Buildup on Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "product-residue-buildup-on-glass-surfaces",
+      "cleanedTitle": "Product Residue Buildup on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Product Residue Buildup on Glass",
+      "normalizedSlug": "product-residue-buildup-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-FINISHED-WOOD",
+      "slug": "residue-on-glass-surfaces-on-finished-wood",
+      "title": "Residue on Glass Surfaces on Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-glass-surfaces-on-finished-wood",
+      "cleanedTitle": "Residue on Glass Surfaces on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Glass Surfaces on Finished Wood",
+      "normalizedSlug": "residue-on-glass-surfaces-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-GLASS-SURFACES",
+      "slug": "residue-on-glass-surfaces-on-glass-surfaces",
+      "title": "Residue on Glass Surfaces on Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-glass-surfaces-on-glass-surfaces",
+      "cleanedTitle": "Residue on Glass Surfaces on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Glass Surfaces on Glass",
+      "normalizedSlug": "residue-on-glass-surfaces-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-GROUT",
+      "slug": "residue-on-glass-surfaces-on-grout",
+      "title": "Residue on Glass Surfaces on Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-glass-surfaces-on-grout",
+      "cleanedTitle": "Residue on Glass Surfaces on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Glass Surfaces on Grout",
+      "normalizedSlug": "residue-on-glass-surfaces-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-STAINLESS-STEEL",
+      "slug": "residue-on-glass-surfaces-on-stainless-steel",
+      "title": "Residue on Glass Surfaces on Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-glass-surfaces-on-stainless-steel",
+      "cleanedTitle": "Residue on Glass Surfaces on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Glass Surfaces on Stainless Steel",
+      "normalizedSlug": "residue-on-glass-surfaces-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-TILE-FLOORS",
+      "slug": "residue-on-glass-surfaces-on-tile-floors",
+      "title": "Residue on Glass Surfaces on Tile Floors",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-glass-surfaces-on-tile-floors",
+      "cleanedTitle": "Residue on Glass Surfaces on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Glass Surfaces on Tile Floors",
+      "normalizedSlug": "residue-on-glass-surfaces-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-FINISHED-WOOD",
+      "slug": "residue-on-stainless-steel-on-finished-wood",
+      "title": "Residue on Stainless Steel on Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-stainless-steel-on-finished-wood",
+      "cleanedTitle": "Residue on Stainless Steel on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Stainless Steel on Finished Wood",
+      "normalizedSlug": "residue-on-stainless-steel-on-finished-wood",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-GLASS-SURFACES",
+      "slug": "residue-on-stainless-steel-on-glass-surfaces",
+      "title": "Residue on Stainless Steel on Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-stainless-steel-on-glass-surfaces",
+      "cleanedTitle": "Residue on Stainless Steel on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Stainless Steel on Glass",
+      "normalizedSlug": "residue-on-stainless-steel-on-glass",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "SURFACE_NAME_NORMALIZED",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-GROUT",
+      "slug": "residue-on-stainless-steel-on-grout",
+      "title": "Residue on Stainless Steel on Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-stainless-steel-on-grout",
+      "cleanedTitle": "Residue on Stainless Steel on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Stainless Steel on Grout",
+      "normalizedSlug": "residue-on-stainless-steel-on-grout",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-STAINLESS-STEEL",
+      "slug": "residue-on-stainless-steel-on-stainless-steel",
+      "title": "Residue on Stainless Steel on Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-stainless-steel-on-stainless-steel",
+      "cleanedTitle": "Residue on Stainless Steel on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Stainless Steel on Stainless Steel",
+      "normalizedSlug": "residue-on-stainless-steel-on-stainless-steel",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-TILE-FLOORS",
+      "slug": "residue-on-stainless-steel-on-tile-floors",
+      "title": "Residue on Stainless Steel on Tile Floors",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "residue-on-stainless-steel-on-tile-floors",
+      "cleanedTitle": "Residue on Stainless Steel on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Residue On Stainless Steel on Tile Floors",
+      "normalizedSlug": "residue-on-stainless-steel-on-tile-floors",
+      "normalizationWarnings": [
+        "DOUBLE_PREPOSITION",
+        "LOW_CONFIDENCE_REWRITE"
+      ],
+      "normalizationAction": "review",
+      "recommendation": "review"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-FINISHED-WOOD",
+      "slug": "soap-scum-removal-on-finished-wood",
+      "title": "Soap Scum Removal on Finished Wood",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "soap-scum-removal-on-finished-wood",
+      "cleanedTitle": "Soap Scum Removal on Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Soap Scum Removal on Finished Wood",
+      "normalizedSlug": "soap-scum-removal-on-finished-wood",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-GLASS-SURFACES",
+      "slug": "soap-scum-removal-on-glass-surfaces",
+      "title": "Soap Scum Removal on Glass Surfaces",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "soap-scum-removal-on-glass-surfaces",
+      "cleanedTitle": "Soap Scum Removal on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Soap Scum Removal on Glass",
+      "normalizedSlug": "soap-scum-removal-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-GROUT",
+      "slug": "soap-scum-removal-on-grout",
+      "title": "Soap Scum Removal on Grout",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "soap-scum-removal-on-grout",
+      "cleanedTitle": "Soap Scum Removal on Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Soap Scum Removal on Grout",
+      "normalizedSlug": "soap-scum-removal-on-grout",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-STAINLESS-STEEL",
+      "slug": "soap-scum-removal-on-stainless-steel",
+      "title": "Soap Scum Removal on Stainless Steel",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "soap-scum-removal-on-stainless-steel",
+      "cleanedTitle": "Soap Scum Removal on Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Soap Scum Removal on Stainless Steel",
+      "normalizedSlug": "soap-scum-removal-on-stainless-steel",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-TILE-FLOORS",
+      "slug": "soap-scum-removal-on-tile-floors",
+      "title": "Soap Scum Removal on Tile Floors",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "soap-scum-removal-on-tile-floors",
+      "cleanedTitle": "Soap Scum Removal on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Soap Scum Removal on Tile Floors",
+      "normalizedSlug": "soap-scum-removal-on-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-FINISHED-WOOD",
+      "slug": "sticky-floors-after-cleaning-on-finished-wood",
+      "title": "Sticky Floors After Cleaning on Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "sticky-floors-after-cleaning-on-finished-wood",
+      "cleanedTitle": "Sticky Floors After Cleaning on Finished Wood",
+      "qualityScore": 90,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Sticky Floors After Cleaning on Finished Wood",
+      "normalizedSlug": "sticky-floors-after-cleaning-on-finished-wood",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-GLASS-SURFACES",
+      "slug": "sticky-floors-after-cleaning-on-glass-surfaces",
+      "title": "Sticky Floors After Cleaning on Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "sticky-floors-after-cleaning-on-glass-surfaces",
+      "cleanedTitle": "Sticky Floors After Cleaning on Glass Surfaces",
+      "qualityScore": 90,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Sticky Floors After Cleaning on Glass",
+      "normalizedSlug": "sticky-floors-after-cleaning-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-GROUT",
+      "slug": "sticky-floors-after-cleaning-on-grout",
+      "title": "Sticky Floors After Cleaning on Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "sticky-floors-after-cleaning-on-grout",
+      "cleanedTitle": "Sticky Floors After Cleaning on Grout",
+      "qualityScore": 90,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Sticky Floors After Cleaning on Grout",
+      "normalizedSlug": "sticky-floors-after-cleaning-on-grout",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-STAINLESS-STEEL",
+      "slug": "sticky-floors-after-cleaning-on-stainless-steel",
+      "title": "Sticky Floors After Cleaning on Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "sticky-floors-after-cleaning-on-stainless-steel",
+      "cleanedTitle": "Sticky Floors After Cleaning on Stainless Steel",
+      "qualityScore": 90,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Sticky Floors After Cleaning on Stainless Steel",
+      "normalizedSlug": "sticky-floors-after-cleaning-on-stainless-steel",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-TILE-FLOORS",
+      "slug": "sticky-floors-after-cleaning-on-tile-floors",
+      "title": "Sticky Floors After Cleaning on Tile Floors",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "sticky-floors-after-cleaning-on-tile-floors",
+      "cleanedTitle": "Sticky Floors After Cleaning on Tile Floors",
+      "qualityScore": 90,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Sticky Floors After Cleaning on Tile Floors",
+      "normalizedSlug": "sticky-floors-after-cleaning-on-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-FINISHED-WOOD",
+      "slug": "streak-free-glass-cleaning-finished-wood",
+      "title": "Streak-Free Glass Cleaning for Finished Wood",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "streak-free-glass-cleaning-finished-wood",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streak Free Glass Cleaning for Finished Wood",
+      "normalizedSlug": "streak-free-glass-cleaning-finished-wood",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-GLASS-SURFACES",
+      "slug": "streak-free-glass-cleaning-glass-surfaces",
+      "title": "Streak-Free Glass Cleaning for Glass Surfaces",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "streak-free-glass-cleaning-glass-surfaces",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streak Free Glass Cleaning for Glass",
+      "normalizedSlug": "streak-free-glass-cleaning-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-GROUT",
+      "slug": "streak-free-glass-cleaning-grout",
+      "title": "Streak-Free Glass Cleaning for Grout",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "streak-free-glass-cleaning-grout",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streak Free Glass Cleaning for Grout",
+      "normalizedSlug": "streak-free-glass-cleaning-grout",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-STAINLESS-STEEL",
+      "slug": "streak-free-glass-cleaning-stainless-steel",
+      "title": "Streak-Free Glass Cleaning for Stainless Steel",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "streak-free-glass-cleaning-stainless-steel",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streak Free Glass Cleaning for Stainless Steel",
+      "normalizedSlug": "streak-free-glass-cleaning-stainless-steel",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-TILE-FLOORS",
+      "slug": "streak-free-glass-cleaning-tile-floors",
+      "title": "Streak-Free Glass Cleaning for Tile Floors",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "streak-free-glass-cleaning-tile-floors",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streak Free Glass Cleaning for Tile Floors",
+      "normalizedSlug": "streak-free-glass-cleaning-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-FINISHED-WOOD",
+      "slug": "surface-haze-on-finished-wood",
+      "title": "Surface Haze on Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "surface-haze-on-finished-wood",
+      "cleanedTitle": "Surface Haze on Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Surface Haze on Finished Wood",
+      "normalizedSlug": "surface-haze-on-finished-wood",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-GLASS-SURFACES",
+      "slug": "surface-haze-on-glass-surfaces",
+      "title": "Surface Haze on Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "surface-haze-on-glass-surfaces",
+      "cleanedTitle": "Surface Haze on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Surface Haze on Glass",
+      "normalizedSlug": "surface-haze-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-GROUT",
+      "slug": "surface-haze-on-grout",
+      "title": "Surface Haze on Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "surface-haze-on-grout",
+      "cleanedTitle": "Surface Haze on Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Surface Haze on Grout",
+      "normalizedSlug": "surface-haze-on-grout",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-STAINLESS-STEEL",
+      "slug": "surface-haze-on-stainless-steel",
+      "title": "Surface Haze on Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "surface-haze-on-stainless-steel",
+      "cleanedTitle": "Surface Haze on Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Surface Haze on Stainless Steel",
+      "normalizedSlug": "surface-haze-on-stainless-steel",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-TILE-FLOORS",
+      "slug": "surface-haze-on-tile-floors",
+      "title": "Surface Haze on Tile Floors",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "cleanedSlug": "surface-haze-on-tile-floors",
+      "cleanedTitle": "Surface Haze on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Surface Haze on Tile Floors",
+      "normalizedSlug": "surface-haze-on-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-FINISHED-WOOD",
+      "slug": "touchpoint-sanitization-finished-wood",
+      "title": "Touchpoint Sanitization for Finished Wood",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "touchpoint-sanitization-finished-wood",
+      "cleanedTitle": "Touchpoint Sanitization for Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Touchpoint Sanitization for Finished Wood",
+      "normalizedSlug": "touchpoint-sanitization-finished-wood",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-GLASS-SURFACES",
+      "slug": "touchpoint-sanitization-glass-surfaces",
+      "title": "Touchpoint Sanitization for Glass Surfaces",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "touchpoint-sanitization-glass-surfaces",
+      "cleanedTitle": "Touchpoint Sanitization for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Touchpoint Sanitization for Glass",
+      "normalizedSlug": "touchpoint-sanitization-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-GROUT",
+      "slug": "touchpoint-sanitization-grout",
+      "title": "Touchpoint Sanitization for Grout",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "touchpoint-sanitization-grout",
+      "cleanedTitle": "Touchpoint Sanitization for Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Touchpoint Sanitization for Grout",
+      "normalizedSlug": "touchpoint-sanitization-grout",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-STAINLESS-STEEL",
+      "slug": "touchpoint-sanitization-stainless-steel",
+      "title": "Touchpoint Sanitization for Stainless Steel",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "touchpoint-sanitization-stainless-steel",
+      "cleanedTitle": "Touchpoint Sanitization for Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Touchpoint Sanitization for Stainless Steel",
+      "normalizedSlug": "touchpoint-sanitization-stainless-steel",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-TILE-FLOORS",
+      "slug": "touchpoint-sanitization-tile-floors",
+      "title": "Touchpoint Sanitization for Tile Floors",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "cleanedSlug": "touchpoint-sanitization-tile-floors",
+      "cleanedTitle": "Touchpoint Sanitization for Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Touchpoint Sanitization for Tile Floors",
+      "normalizedSlug": "touchpoint-sanitization-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote"
+    }
+  ]
+}

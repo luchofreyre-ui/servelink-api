@@ -44,3 +44,13 @@ Coated low-e exteriors have their own damage modes—do not assume bath products
 ## When to Call a Professional
 
 Call a professional when large panels, safety glazing, or warranty replacement paths are involved.
+
+## Related Topics
+
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Etching on Shower Glass](/encyclopedia/problems/etching-on-shower-glass)
+- [Permanent Glass Damage from Hard Water](/encyclopedia/problems/permanent-glass-damage-from-hard-water)
+- [When Glass Cannot Be Restored by Cleaning](/encyclopedia/problems/when-glass-cannot-be-restored-by-cleaning)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

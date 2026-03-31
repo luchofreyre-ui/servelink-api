@@ -9,6 +9,7 @@ import {
 import { AuthorityJsonLd } from "@/components/authority/AuthorityJsonLd";
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { getPublishedEncyclopediaEntriesByCategory } from "@/lib/encyclopedia/loader";
 
 export const metadata: Metadata = buildAuthorityMethodsIndexMetadata();
@@ -67,7 +68,7 @@ export default function MethodsIndexPage() {
             {legacyMethods.map((method) => (
               <li key={method.slug}>
                 <Link
-                  href={`/methods/${method.slug}`}
+                  href={preferEncyclopediaCanonicalHref(`/methods/${method.slug}`)}
                   className="font-medium text-[#0D9488] hover:underline"
                 >
                   {method.title}

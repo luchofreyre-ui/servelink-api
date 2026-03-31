@@ -22,6 +22,12 @@ import type {
   SystemTestRunDetailResponseDto,
   SystemTestRunDetailSuiteCountsDto,
 } from "./dto/system-test-run-detail.dto";
+import type { SystemTestResolutionDto } from "./dto/system-test-resolution.dto";
+import {
+  compareSystemTestFixOpportunities,
+  type SystemTestFixOpportunityDto,
+} from "./system-test-resolution-preview";
+import { SystemTestsFamilyResolutionService } from "./system-tests-family-resolution.service";
 import { classifySystemTestSuite } from "./utils/classify-system-test-suite";
 
 function isFailedStatus(status: string): boolean {
@@ -77,6 +83,7 @@ export class SystemTestsService {
     private readonly systemTestsPipeline: SystemTestsPipelineService,
     private readonly familiesRead: SystemTestsFamiliesReadService,
     private readonly incidentsRead: SystemTestsIncidentsReadService,
+    private readonly familyResolution: SystemTestsFamilyResolutionService,
   ) {}
 
   async ingestReport(dto: SystemTestReportIngestDto) {
@@ -156,7 +163,11 @@ export class SystemTestsService {
     };
   }
 
-  async getSummary(): Promise<SystemTestSummaryResponseDto> {
+  async getSummary(opts?: {
+    showDismissed?: boolean;
+    includeDormant?: boolean;
+    includeResolved?: boolean;
+  }): Promise<SystemTestSummaryResponseDto> {
     const latest = await this.prisma.systemTestRun.findFirst({
       orderBy: { createdAt: "desc" },
       include: { cases: true },
@@ -170,6 +181,7 @@ export class SystemTestsService {
         latestRunAt: null,
         suiteBreakdown: emptySuiteBreakdown(),
         latestFailures: [],
+        fixOpportunities: [],
       };
     }
 
@@ -196,6 +208,38 @@ export class SystemTestsService {
     const passRate =
       latest.totalCount > 0 ? latest.passedCount / latest.totalCount : null;
 
+    const familyRows = await this.familiesRead.listFamilies({
+      limit: 120,
+      showDismissed: opts?.showDismissed,
+      includeDormant: opts?.includeDormant ?? true,
+      includeResolved: opts?.includeResolved ?? false,
+    });
+    const fixOpportunities: SystemTestFixOpportunityDto[] = familyRows
+      .map((family) => {
+        const preview = family.resolutionPreview;
+        if (!preview?.hasResolution) {
+          return null;
+        }
+
+        return {
+          familyId: family.id,
+          familyKey: family.familyKey,
+          title: family.displayTitle,
+          category: preview.category,
+          confidence: preview.confidence,
+          confidenceLabel: preview.confidenceLabel,
+          topRecommendationSummary: preview.topRecommendationSummary,
+          failureCount: family.totalOccurrencesAcrossRuns,
+          affectedRunCount: family.affectedRunCount,
+          highestPriority: preview.highestPriority,
+          operatorState: family.operatorState,
+          lifecycle: family.lifecycle,
+        };
+      })
+      .filter((value): value is SystemTestFixOpportunityDto => value !== null)
+      .sort(compareSystemTestFixOpportunities)
+      .slice(0, 5);
+
     return {
       latestRun: {
         id: latest.id,
@@ -216,6 +260,7 @@ export class SystemTestsService {
       latestRunAt: latest.createdAt.toISOString(),
       suiteBreakdown: mapToBreakdown(suiteMap),
       latestFailures,
+      fixOpportunities,
     };
   }
 
@@ -340,4 +385,7 @@ export class SystemTestsService {
     };
   }
 
+  async getFamilyResolution(familyId: string): Promise<SystemTestResolutionDto> {
+    return this.familyResolution.getFamilyResolution(familyId);
+  }
 }

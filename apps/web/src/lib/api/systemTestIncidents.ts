@@ -1,4 +1,9 @@
 import { API_BASE_URL } from "@/lib/api";
+import type {
+  SystemTestFamilyLifecycle,
+  SystemTestFamilyOperatorState,
+  SystemTestResolutionPreview,
+} from "@/types/systemTestResolution";
 
 const FETCH_TIMEOUT_MS = 25_000;
 
@@ -43,6 +48,10 @@ export type SystemTestIncidentListItemApi = {
   lastSeenRunId: string | null;
   firstSeenRunId: string | null;
   updatedAt: string;
+  resolutionPreview: SystemTestResolutionPreview | null;
+  familyOperatorState: SystemTestFamilyOperatorState | null;
+  familyLifecycle: SystemTestFamilyLifecycle | null;
+  leadFamilyTitle: string | null;
 };
 
 export type SystemTestIncidentFixTrackApi = {
@@ -71,12 +80,32 @@ export type SystemTestIncidentDetailApi = SystemTestIncidentListItemApi & {
 
 export async function fetchAdminSystemTestIncidents(
   accessToken: string,
-  opts?: { limit?: number; status?: string; runId?: string },
+  opts?: {
+    limit?: number;
+    status?: string;
+    runId?: string;
+    diagnosisCategory?: string;
+    confidenceTier?: "high" | "medium" | "low";
+    sortBy?: string;
+    sortDirection?: "asc" | "desc";
+    showDismissed?: boolean;
+    lifecycleState?: string;
+    includeDormant?: boolean;
+    includeResolved?: boolean;
+  },
 ): Promise<SystemTestIncidentListItemApi[]> {
   const q = new URLSearchParams();
   if (opts?.limit != null) q.set("limit", String(opts.limit));
   if (opts?.status) q.set("status", opts.status);
   if (opts?.runId) q.set("runId", opts.runId);
+  if (opts?.diagnosisCategory) q.set("diagnosisCategory", opts.diagnosisCategory);
+  if (opts?.confidenceTier) q.set("confidenceTier", opts.confidenceTier);
+  if (opts?.sortBy) q.set("sortBy", opts.sortBy);
+  if (opts?.sortDirection) q.set("sortDirection", opts.sortDirection);
+  if (opts?.showDismissed) q.set("showDismissed", "true");
+  if (opts?.lifecycleState) q.set("lifecycleState", opts.lifecycleState);
+  if (opts?.includeDormant === false) q.set("includeDormant", "false");
+  if (opts?.includeResolved === true) q.set("includeResolved", "true");
   const qs = q.toString();
   return adminJson<SystemTestIncidentListItemApi[]>(
     accessToken,

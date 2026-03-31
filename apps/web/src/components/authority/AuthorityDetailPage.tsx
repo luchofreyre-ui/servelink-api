@@ -45,6 +45,11 @@ import { AuthorityRelatedLinks } from "./AuthorityRelatedLinks";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
 import { AuthorityToEncyclopediaBridge } from "./AuthorityToEncyclopediaBridge";
+import {
+  resolveCanonicalMetadataHref,
+  resolveJsonLdBreadcrumbHrefs,
+} from "@/lib/encyclopedia/encyclopediaCanonicalMetadataHref";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { getBuiltBridgeMap } from "@/lib/encyclopedia/bridgeMap";
 import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
 
@@ -202,7 +207,10 @@ function SurfaceBody({ data }: { data: AuthoritySurfacePageData }) {
                   {getProblemPageBySlug(slug)?.title ?? slug} — surface + problem playbook
                 </Link>
                 <span className="text-[#64748B]"> · </span>
-                <Link href={`/problems/${slug}`} className="text-[#64748B] hover:text-[#0D9488] hover:underline">
+                <Link
+                  href={preferEncyclopediaCanonicalHref(`/problems/${slug}`)}
+                  className="text-[#64748B] hover:text-[#0D9488] hover:underline"
+                >
                   Problem guide
                 </Link>
               </li>
@@ -228,11 +236,13 @@ export function AuthorityDetailPage(props: {
   const seeAlso =
     variant === "method" ? buildMethodSeeAlso(data.slug) : buildSurfaceSeeAlso(data.slug);
   const eyebrow = variant === "method" ? "Cleaning method" : "Surface guide";
-  const path = variant === "method" ? `/methods/${data.slug}` : `/surfaces/${data.slug}`;
+  const path = resolveCanonicalMetadataHref(
+    variant === "method" ? `/methods/${data.slug}` : `/surfaces/${data.slug}`,
+  );
   const faqBlock =
     variant === "method" ? buildMethodFaqBlock(data.slug) : buildSurfaceFaqBlock(data.slug);
   const jsonLd: Record<string, unknown>[] = [
-    buildBreadcrumbListSchema(crumbs),
+    buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(crumbs)),
     buildDefinedTermSchema({ name: data.title, description: data.summary, path }),
   ];
   if (faqBlock?.items.length) jsonLd.push(buildFaqSchema(faqBlock.items));

@@ -3,8 +3,19 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import {
+  fetchAdminSystemTestIncidents,
+  type SystemTestIncidentListItemApi,
+} from "@/lib/api/systemTestIncidents";
 import { fetchSystemTestIncidentActions } from "@/lib/api/systemTestIncidentActions";
 import { getStoredAccessToken } from "@/lib/auth";
+import { SystemTestsIncidentsTable } from "@/components/admin/system-tests/SystemTestsIncidentsTable";
+import { SystemTestsListResolutionFilters } from "@/components/admin/system-tests/SystemTestsListResolutionFilters";
+import {
+  parseSortCombo,
+  SYSTEM_TEST_INCIDENTS_SORT_OPTIONS,
+  SYSTEM_TEST_LIFECYCLE_FILTER_OPTIONS,
+} from "@/lib/system-tests/diagnosisCategoryFilterOptions";
 import type {
   IncidentValidationState,
   SystemTestIncidentActionListItem,
@@ -92,6 +103,8 @@ export default function AdminSystemTestIncidentsPage() {
   const searchParams = useSearchParams();
   const initRef = useRef(false);
 
+  const [surfaceTab, setSurfaceTab] = useState<"actions" | "runIncidents">("actions");
+
   const [token, setToken] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -106,6 +119,17 @@ export default function AdminSystemTestIncidentsPage() {
   const [items, setItems] = useState<SystemTestIncidentActionListItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [runIncidentItems, setRunIncidentItems] = useState<SystemTestIncidentListItemApi[]>([]);
+  const [runIncidentError, setRunIncidentError] = useState<string | null>(null);
+  const [runIncidentLoading, setRunIncidentLoading] = useState(false);
+  const [riCategory, setRiCategory] = useState("");
+  const [riConfidence, setRiConfidence] = useState("");
+  const [riSortCombo, setRiSortCombo] = useState("recent:desc");
+  const [riShowDismissed, setRiShowDismissed] = useState(false);
+  const [riLifecycle, setRiLifecycle] = useState("");
+  const [riIncludeDormant, setRiIncludeDormant] = useState(true);
+  const [riIncludeResolved, setRiIncludeResolved] = useState(false);
 
   useEffect(() => {
     setToken(getStoredAccessToken());
@@ -185,6 +209,56 @@ export default function AdminSystemTestIncidentsPage() {
     void load();
   }, [token, load]);
 
+  useEffect(() => {
+    if (!token || surfaceTab !== "runIncidents") {
+      if (!token) setRunIncidentLoading(false);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      setRunIncidentLoading(true);
+      setRunIncidentError(null);
+      try {
+        const { sortBy, sortDirection } = parseSortCombo(riSortCombo);
+        const data = await fetchAdminSystemTestIncidents(token, {
+          limit: 120,
+          diagnosisCategory: riCategory || undefined,
+          confidenceTier:
+            riConfidence === "high" || riConfidence === "medium" || riConfidence === "low" ?
+              riConfidence
+            : undefined,
+          sortBy,
+          sortDirection,
+          showDismissed: riShowDismissed,
+          lifecycleState: riLifecycle || undefined,
+          includeDormant: riIncludeDormant,
+          includeResolved: riIncludeResolved,
+        });
+        if (!cancelled) setRunIncidentItems(data);
+      } catch (e) {
+        if (!cancelled) {
+          setRunIncidentError(e instanceof Error ? e.message : "Failed to load run incidents.");
+          setRunIncidentItems([]);
+        }
+      } finally {
+        if (!cancelled) setRunIncidentLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    token,
+    surfaceTab,
+    riCategory,
+    riConfidence,
+    riSortCombo,
+    riShowDismissed,
+    riLifecycle,
+    riIncludeDormant,
+    riIncludeResolved,
+  ]);
+
   return (
     <main className="min-h-screen bg-neutral-950 px-6 py-10 text-white">
       <div className="mx-auto max-w-6xl space-y-6">
@@ -200,6 +274,123 @@ export default function AdminSystemTestIncidentsPage() {
           </div>
         </div>
 
+        <div className="flex flex-wrap gap-2 border-b border-white/10 pb-4">
+          <button
+            type="button"
+            onClick={() => setSurfaceTab("actions")}
+            className={`rounded-lg px-4 py-2 text-sm font-medium ${
+              surfaceTab === "actions" ?
+                "bg-teal-500/25 text-teal-100 ring-1 ring-teal-400/40"
+              : "text-white/60 hover:bg-white/[0.06]"
+            }`}
+            data-testid="incidents-tab-actions"
+          >
+            Operator queue
+          </button>
+          <button
+            type="button"
+            onClick={() => setSurfaceTab("runIncidents")}
+            className={`rounded-lg px-4 py-2 text-sm font-medium ${
+              surfaceTab === "runIncidents" ?
+                "bg-teal-500/25 text-teal-100 ring-1 ring-teal-400/40"
+              : "text-white/60 hover:bg-white/[0.06]"
+            }`}
+            data-testid="incidents-tab-run"
+          >
+            Run incidents
+          </button>
+        </div>
+
+        {surfaceTab === "runIncidents" ?
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+              <h2 className="text-sm font-semibold text-white">Resolution filters</h2>
+              <p className="mt-1 text-xs text-white/45">
+                Per-run incidents from the latest ingest, with diagnosis preview inherited from the lead family when
+                present.
+              </p>
+              <div className="mt-4 space-y-3">
+                <label className="flex cursor-pointer items-center gap-2 text-xs text-white/60">
+                  <input
+                    type="checkbox"
+                    className="rounded border-white/20 bg-white/10"
+                    checked={riShowDismissed}
+                    onChange={(e) => setRiShowDismissed(e.target.checked)}
+                    data-testid="incidents-show-dismissed-toggle"
+                  />
+                  Show dismissed
+                </label>
+                <label className="block text-xs text-white/45">
+                  Lifecycle state
+                  <select
+                    value={riLifecycle}
+                    onChange={(e) => setRiLifecycle(e.target.value)}
+                    className="mt-1 w-full max-w-xs rounded-lg border border-white/15 bg-black/30 px-3 py-2 text-sm text-white"
+                    data-testid="incidents-lifecycle-filter"
+                  >
+                    {SYSTEM_TEST_LIFECYCLE_FILTER_OPTIONS.map((o) => (
+                      <option key={o.value || "all"} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="flex cursor-pointer items-center gap-2 text-xs text-white/60">
+                  <input
+                    type="checkbox"
+                    className="rounded border-white/20 bg-white/10"
+                    checked={riIncludeDormant}
+                    onChange={(e) => setRiIncludeDormant(e.target.checked)}
+                    data-testid="incidents-include-dormant-toggle"
+                  />
+                  Include dormant
+                </label>
+                <label className="flex cursor-pointer items-center gap-2 text-xs text-white/60">
+                  <input
+                    type="checkbox"
+                    className="rounded border-white/20 bg-white/10"
+                    checked={riIncludeResolved}
+                    onChange={(e) => setRiIncludeResolved(e.target.checked)}
+                    data-testid="incidents-include-resolved-toggle"
+                  />
+                  Include resolved
+                </label>
+                <SystemTestsListResolutionFilters
+                  sortOptions={SYSTEM_TEST_INCIDENTS_SORT_OPTIONS}
+                  category={riCategory}
+                  confidenceTier={riConfidence}
+                  sortCombo={riSortCombo}
+                  onCategoryChange={setRiCategory}
+                  onConfidenceChange={setRiConfidence}
+                  onSortComboChange={setRiSortCombo}
+                  disabled={!token || runIncidentLoading}
+                  data-testid="run-incidents-resolution-filters"
+                />
+              </div>
+            </div>
+            {runIncidentLoading ? <p className="text-sm text-white/55">Loading…</p> : null}
+            {runIncidentError ?
+              <p className="text-sm text-amber-200/90">{runIncidentError}</p>
+            : null}
+            {!runIncidentLoading && !runIncidentError ?
+              <SystemTestsIncidentsTable
+                items={runIncidentItems}
+                onLeadFamilyOperatorStateUpdated={(runId, incidentKey, next) => {
+                  setRunIncidentItems((prev) =>
+                    prev.map((r) =>
+                      r.runId === runId && r.incidentKey === incidentKey && r.leadFamilyId ?
+                        { ...r, familyOperatorState: next }
+                      : r,
+                    ),
+                  );
+                }}
+              />
+            : null}
+          </div>
+        : null}
+
+        {surfaceTab === "actions" ?
+          <>
         <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
           <h2 className="text-sm font-semibold text-white">Filters</h2>
           <div className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
@@ -435,6 +626,8 @@ export default function AdminSystemTestIncidentsPage() {
               </table>
             </div>
           )
+        : null}
+          </>
         : null}
       </div>
     </main>

@@ -1,4 +1,5 @@
 import type { AuthorityBreadcrumbItem, AuthoritySeeAlsoGroup } from "@/authority/types/authorityNavigationTypes";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { getMethodPageBySlug } from "@/authority/data/authorityMethodPageData";
 import { getSurfacePageBySlug } from "@/authority/data/authoritySurfacePageData";
 import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
@@ -22,7 +23,7 @@ export function buildMethodBreadcrumbs(methodSlug: string): AuthorityBreadcrumbI
   return [
     { label: "Cleaning encyclopedia", href: "/encyclopedia" },
     { label: "Methods", href: "/methods" },
-    { label: method.title, href: `/methods/${method.slug}` },
+    { label: method.title, href: preferEncyclopediaCanonicalHref(`/methods/${method.slug}`) },
   ];
 }
 
@@ -42,7 +43,7 @@ export function buildProblemBreadcrumbs(problemSlug: string): AuthorityBreadcrum
   return [
     { label: "Cleaning encyclopedia", href: "/encyclopedia" },
     { label: "Problems", href: "/problems" },
-    { label: problem.title, href: `/problems/${problem.slug}` },
+    { label: problem.title, href: preferEncyclopediaCanonicalHref(`/problems/${problem.slug}`) },
   ];
 }
 
@@ -71,7 +72,7 @@ export function buildMethodComboBreadcrumbs(
   return [
     { label: "Cleaning encyclopedia", href: "/encyclopedia" },
     { label: "Methods", href: "/methods" },
-    { label: method.title, href: `/methods/${method.slug}` },
+    { label: method.title, href: preferEncyclopediaCanonicalHref(`/methods/${method.slug}`) },
     { label: comboTitle, href: `/methods/${methodSlug}/${comboSlug}` },
   ];
 }

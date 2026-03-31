@@ -44,3 +44,14 @@ If the floor cleans beautifully with plain water but films after product, the pr
 ## When to Call a Professional
 
 Call a professional when the floor type or sealer is unknown, when coatings may be failing, or when repeated stripping attempts are needed on stone or commercial finishes.
+
+## Related Topics
+
+- [Cleaner Film on Countertops](/encyclopedia/problems/cleaner-film-on-countertops)
+- [Product Residue Buildup](/encyclopedia/problems/product-residue-buildup)
+- [Residue on Glass Surfaces](/encyclopedia/problems/residue-on-glass-surfaces)
+- [Residue on Stainless Steel](/encyclopedia/problems/residue-on-stainless-steel)
+- [Sticky Floors After Cleaning](/encyclopedia/problems/sticky-floors-after-cleaning)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

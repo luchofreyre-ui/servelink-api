@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "P-PL-NN-00001",
+      "title": "What Causes product residue on sealed granite",
+      "slug": "what-causes-product-residue-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00002",
+      "title": "How to Remove product residue from sealed granite",
+      "slug": "how-to-remove-product-residue-from-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00003",
+      "title": "How to Prevent product residue on sealed granite",
+      "slug": "how-to-prevent-product-residue-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00004",
+      "title": "How to Fix product residue on sealed granite",
+      "slug": "how-to-fix-product-residue-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00005",
+      "title": "How to Clean product residue from sealed granite",
+      "slug": "how-to-clean-product-residue-from-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00006",
+      "title": "How to Tell if product residue on sealed granite is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-sealed-granite-is-permanent",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00007",
+      "title": "Why product residue Keeps Coming Back on sealed granite",
+      "slug": "why-product-residue-keeps-coming-back-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00008",
+      "title": "How to Maintain sealed granite and Keep product residue Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00009",
+      "title": "How to Recover After a Cleaning Mistake With product residue on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00010",
+      "title": "What Causes product residue on sealed marble",
+      "slug": "what-causes-product-residue-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00011",
+      "title": "How to Remove product residue from sealed marble",
+      "slug": "how-to-remove-product-residue-from-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00012",
+      "title": "How to Prevent product residue on sealed marble",
+      "slug": "how-to-prevent-product-residue-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00013",
+      "title": "How to Fix product residue on sealed marble",
+      "slug": "how-to-fix-product-residue-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00014",
+      "title": "How to Clean product residue from sealed marble",
+      "slug": "how-to-clean-product-residue-from-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00015",
+      "title": "How to Tell if product residue on sealed marble is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-sealed-marble-is-permanent",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00016",
+      "title": "Why product residue Keeps Coming Back on sealed marble",
+      "slug": "why-product-residue-keeps-coming-back-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00017",
+      "title": "How to Maintain sealed marble and Keep product residue Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00018",
+      "title": "How to Recover After a Cleaning Mistake With product residue on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00019",
+      "title": "What Causes product residue on quartz countertops",
+      "slug": "what-causes-product-residue-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00020",
+      "title": "How to Remove product residue from quartz countertops",
+      "slug": "how-to-remove-product-residue-from-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00021",
+      "title": "How to Prevent product residue on quartz countertops",
+      "slug": "how-to-prevent-product-residue-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00022",
+      "title": "How to Fix product residue on quartz countertops",
+      "slug": "how-to-fix-product-residue-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00023",
+      "title": "How to Clean product residue from quartz countertops",
+      "slug": "how-to-clean-product-residue-from-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00024",
+      "title": "How to Tell if product residue on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-quartz-countertops-is-permanent",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00025",
+      "title": "Why product residue Keeps Coming Back on quartz countertops",
+      "slug": "why-product-residue-keeps-coming-back-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00026",
+      "title": "How to Maintain quartz countertops and Keep product residue Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00027",
+      "title": "How to Recover After a Cleaning Mistake With product residue on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00028",
+      "title": "What Causes product residue on butcher block",
+      "slug": "what-causes-product-residue-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00029",
+      "title": "How to Remove product residue from butcher block",
+      "slug": "how-to-remove-product-residue-from-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00030",
+      "title": "How to Prevent product residue on butcher block",
+      "slug": "how-to-prevent-product-residue-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00031",
+      "title": "How to Fix product residue on butcher block",
+      "slug": "how-to-fix-product-residue-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00032",
+      "title": "How to Clean product residue from butcher block",
+      "slug": "how-to-clean-product-residue-from-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00033",
+      "title": "How to Tell if product residue on butcher block is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-butcher-block-is-permanent",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00034",
+      "title": "Why product residue Keeps Coming Back on butcher block",
+      "slug": "why-product-residue-keeps-coming-back-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00035",
+      "title": "How to Maintain butcher block and Keep product residue Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00036",
+      "title": "How to Recover After a Cleaning Mistake With product residue on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00037",
+      "title": "What Causes product residue on sealed wood",
+      "slug": "what-causes-product-residue-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00038",
+      "title": "How to Remove product residue from sealed wood",
+      "slug": "how-to-remove-product-residue-from-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00039",
+      "title": "How to Prevent product residue on sealed wood",
+      "slug": "how-to-prevent-product-residue-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00040",
+      "title": "How to Fix product residue on sealed wood",
+      "slug": "how-to-fix-product-residue-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00041",
+      "title": "How to Clean product residue from sealed wood",
+      "slug": "how-to-clean-product-residue-from-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00042",
+      "title": "How to Tell if product residue on sealed wood is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-sealed-wood-is-permanent",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00043",
+      "title": "Why product residue Keeps Coming Back on sealed wood",
+      "slug": "why-product-residue-keeps-coming-back-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00044",
+      "title": "How to Maintain sealed wood and Keep product residue Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00045",
+      "title": "How to Recover After a Cleaning Mistake With product residue on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00046",
+      "title": "What Causes water spots on light switches",
+      "slug": "what-causes-water-spots-on-light-switches",
+      "problem": "water spots",
+      "surface": "light switches",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00047",
+      "title": "How to Remove water spots from light switches",
+      "slug": "how-to-remove-water-spots-from-light-switches",
+      "problem": "water spots",
+      "surface": "light switches",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00048",
+      "title": "How to Prevent water spots on light switches",
+      "slug": "how-to-prevent-water-spots-on-light-switches",
+      "problem": "water spots",
+      "surface": "light switches",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00049",
+      "title": "How to Fix water spots on light switches",
+      "slug": "how-to-fix-water-spots-on-light-switches",
+      "problem": "water spots",
+      "surface": "light switches",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00050",
+      "title": "How to Clean water spots from light switches",
+      "slug": "how-to-clean-water-spots-from-light-switches",
+      "problem": "water spots",
+      "surface": "light switches",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00051",
+      "title": "How to Tell if water spots on light switches is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-light-switches-is-permanent",
+      "problem": "water spots",
+      "surface": "light switches",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00052",
+      "title": "Why water spots Keeps Coming Back on light switches",
+      "slug": "why-water-spots-keeps-coming-back-on-light-switches",
+      "problem": "water spots",
+      "surface": "light switches",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00053",
+      "title": "How to Maintain light switches and Keep water spots Under Control",
+      "slug": "how-to-maintain-light-switches-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "light switches",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00054",
+      "title": "How to Recover After a Cleaning Mistake With water spots on light switches",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-light-switches",
+      "problem": "water spots",
+      "surface": "light switches",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00055",
+      "title": "What Causes yellowing on oven interiors",
+      "slug": "what-causes-yellowing-on-oven-interiors",
+      "problem": "yellowing",
+      "surface": "oven interiors",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00056",
+      "title": "How to Remove yellowing from oven interiors",
+      "slug": "how-to-remove-yellowing-from-oven-interiors",
+      "problem": "yellowing",
+      "surface": "oven interiors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00057",
+      "title": "How to Prevent yellowing on oven interiors",
+      "slug": "how-to-prevent-yellowing-on-oven-interiors",
+      "problem": "yellowing",
+      "surface": "oven interiors",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00058",
+      "title": "How to Fix yellowing on oven interiors",
+      "slug": "how-to-fix-yellowing-on-oven-interiors",
+      "problem": "yellowing",
+      "surface": "oven interiors",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00059",
+      "title": "How to Clean yellowing from oven interiors",
+      "slug": "how-to-clean-yellowing-from-oven-interiors",
+      "problem": "yellowing",
+      "surface": "oven interiors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00060",
+      "title": "How to Tell if yellowing on oven interiors is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-oven-interiors-is-permanent",
+      "problem": "yellowing",
+      "surface": "oven interiors",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00061",
+      "title": "Why yellowing Keeps Coming Back on oven interiors",
+      "slug": "why-yellowing-keeps-coming-back-on-oven-interiors",
+      "problem": "yellowing",
+      "surface": "oven interiors",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00062",
+      "title": "How to Maintain oven interiors and Keep yellowing Under Control",
+      "slug": "how-to-maintain-oven-interiors-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "oven interiors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00063",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on oven interiors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-oven-interiors",
+      "problem": "yellowing",
+      "surface": "oven interiors",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00064",
+      "title": "What Causes yellowing on refrigerator interiors",
+      "slug": "what-causes-yellowing-on-refrigerator-interiors",
+      "problem": "yellowing",
+      "surface": "refrigerator interiors",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00065",
+      "title": "How to Remove yellowing from refrigerator interiors",
+      "slug": "how-to-remove-yellowing-from-refrigerator-interiors",
+      "problem": "yellowing",
+      "surface": "refrigerator interiors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00066",
+      "title": "How to Prevent yellowing on refrigerator interiors",
+      "slug": "how-to-prevent-yellowing-on-refrigerator-interiors",
+      "problem": "yellowing",
+      "surface": "refrigerator interiors",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00067",
+      "title": "How to Fix yellowing on refrigerator interiors",
+      "slug": "how-to-fix-yellowing-on-refrigerator-interiors",
+      "problem": "yellowing",
+      "surface": "refrigerator interiors",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00068",
+      "title": "How to Clean yellowing from refrigerator interiors",
+      "slug": "how-to-clean-yellowing-from-refrigerator-interiors",
+      "problem": "yellowing",
+      "surface": "refrigerator interiors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00069",
+      "title": "How to Tell if yellowing on refrigerator interiors is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-refrigerator-interiors-is-permanent",
+      "problem": "yellowing",
+      "surface": "refrigerator interiors",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00070",
+      "title": "Why yellowing Keeps Coming Back on refrigerator interiors",
+      "slug": "why-yellowing-keeps-coming-back-on-refrigerator-interiors",
+      "problem": "yellowing",
+      "surface": "refrigerator interiors",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00071",
+      "title": "How to Maintain refrigerator interiors and Keep yellowing Under Control",
+      "slug": "how-to-maintain-refrigerator-interiors-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "refrigerator interiors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00072",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on refrigerator interiors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-refrigerator-interiors",
+      "problem": "yellowing",
+      "surface": "refrigerator interiors",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00073",
+      "title": "What Causes yellowing on freezer drawers",
+      "slug": "what-causes-yellowing-on-freezer-drawers",
+      "problem": "yellowing",
+      "surface": "freezer drawers",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00074",
+      "title": "How to Remove yellowing from freezer drawers",
+      "slug": "how-to-remove-yellowing-from-freezer-drawers",
+      "problem": "yellowing",
+      "surface": "freezer drawers",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00075",
+      "title": "How to Prevent yellowing on freezer drawers",
+      "slug": "how-to-prevent-yellowing-on-freezer-drawers",
+      "problem": "yellowing",
+      "surface": "freezer drawers",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00076",
+      "title": "How to Fix yellowing on freezer drawers",
+      "slug": "how-to-fix-yellowing-on-freezer-drawers",
+      "problem": "yellowing",
+      "surface": "freezer drawers",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00077",
+      "title": "How to Clean yellowing from freezer drawers",
+      "slug": "how-to-clean-yellowing-from-freezer-drawers",
+      "problem": "yellowing",
+      "surface": "freezer drawers",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00078",
+      "title": "How to Tell if yellowing on freezer drawers is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-freezer-drawers-is-permanent",
+      "problem": "yellowing",
+      "surface": "freezer drawers",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00079",
+      "title": "Why yellowing Keeps Coming Back on freezer drawers",
+      "slug": "why-yellowing-keeps-coming-back-on-freezer-drawers",
+      "problem": "yellowing",
+      "surface": "freezer drawers",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00080",
+      "title": "How to Maintain freezer drawers and Keep yellowing Under Control",
+      "slug": "how-to-maintain-freezer-drawers-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "freezer drawers",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00081",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on freezer drawers",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-freezer-drawers",
+      "problem": "yellowing",
+      "surface": "freezer drawers",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00082",
+      "title": "What Causes yellowing on dishwashers",
+      "slug": "what-causes-yellowing-on-dishwashers",
+      "problem": "yellowing",
+      "surface": "dishwashers",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00083",
+      "title": "How to Remove yellowing from dishwashers",
+      "slug": "how-to-remove-yellowing-from-dishwashers",
+      "problem": "yellowing",
+      "surface": "dishwashers",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00084",
+      "title": "How to Prevent yellowing on dishwashers",
+      "slug": "how-to-prevent-yellowing-on-dishwashers",
+      "problem": "yellowing",
+      "surface": "dishwashers",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00085",
+      "title": "How to Fix yellowing on dishwashers",
+      "slug": "how-to-fix-yellowing-on-dishwashers",
+      "problem": "yellowing",
+      "surface": "dishwashers",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00086",
+      "title": "How to Clean yellowing from dishwashers",
+      "slug": "how-to-clean-yellowing-from-dishwashers",
+      "problem": "yellowing",
+      "surface": "dishwashers",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00087",
+      "title": "How to Tell if yellowing on dishwashers is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-dishwashers-is-permanent",
+      "problem": "yellowing",
+      "surface": "dishwashers",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00088",
+      "title": "Why yellowing Keeps Coming Back on dishwashers",
+      "slug": "why-yellowing-keeps-coming-back-on-dishwashers",
+      "problem": "yellowing",
+      "surface": "dishwashers",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00089",
+      "title": "How to Maintain dishwashers and Keep yellowing Under Control",
+      "slug": "how-to-maintain-dishwashers-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "dishwashers",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00090",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on dishwashers",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-dishwashers",
+      "problem": "yellowing",
+      "surface": "dishwashers",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00091",
+      "title": "What Causes yellowing on shower grout",
+      "slug": "what-causes-yellowing-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00092",
+      "title": "How to Remove yellowing from shower grout",
+      "slug": "how-to-remove-yellowing-from-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00093",
+      "title": "How to Prevent yellowing on shower grout",
+      "slug": "how-to-prevent-yellowing-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00094",
+      "title": "How to Fix yellowing on shower grout",
+      "slug": "how-to-fix-yellowing-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00095",
+      "title": "How to Clean yellowing from shower grout",
+      "slug": "how-to-clean-yellowing-from-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00096",
+      "title": "How to Tell if yellowing on shower grout is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-shower-grout-is-permanent",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00097",
+      "title": "Why yellowing Keeps Coming Back on shower grout",
+      "slug": "why-yellowing-keeps-coming-back-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00098",
+      "title": "How to Maintain shower grout and Keep yellowing Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00099",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00100",
+      "title": "What Causes yellowing on tile grout",
+      "slug": "what-causes-yellowing-on-tile-grout",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    }
+  ]
+}

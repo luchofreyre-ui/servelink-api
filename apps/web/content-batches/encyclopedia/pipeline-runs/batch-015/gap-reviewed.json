@@ -1,0 +1,2335 @@
+{
+  "generatedAt": "2026-03-29T04:47:27.164Z",
+  "sourceFile": "content-batches/encyclopedia/pipeline-runs/batch-015/gap-raw.json",
+  "summary": {
+    "total": 84,
+    "promote": 40,
+    "review": 44,
+    "reject": 0
+  },
+  "bySourceFamily": {
+    "gap_backfill_problem_surface": {
+      "promote": 10,
+      "review": 0,
+      "reject": 0
+    },
+    "gap_backfill_method_surface": {
+      "promote": 30,
+      "review": 0,
+      "reject": 0
+    },
+    "question_prevention_troubleshooting": {
+      "promote": 0,
+      "review": 22,
+      "reject": 0
+    },
+    "question_symptom_cause": {
+      "promote": 0,
+      "review": 22,
+      "reject": 0
+    }
+  },
+  "candidates": [
+    {
+      "id": "GAP-P-DEGREASING-ON-GLASS-SURFACES",
+      "slug": "degreasing-on-glass-surfaces",
+      "title": "Degreasing on Glass Surfaces",
+      "category": "problems",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Degreasing on Glass",
+      "normalizedSlug": "degreasing-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Degreasing on Glass Surfaces",
+      "cleanedSlug": "degreasing-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-DUST-BUILDUP-GLASS-SURFACES",
+      "slug": "dust-buildup-glass-surfaces",
+      "title": "Dust Buildup for Glass Surfaces",
+      "category": "methods",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Dust Buildup for Glass",
+      "normalizedSlug": "dust-buildup-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Dust Buildup for Glass Surfaces",
+      "cleanedSlug": "dust-buildup-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-DUST-BUILDUP-TILE-FLOORS",
+      "slug": "dust-buildup-tile-floors",
+      "title": "Dust Buildup for Tile Floors",
+      "category": "methods",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Dust Buildup for Tile Floors",
+      "normalizedSlug": "dust-buildup-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Dust Buildup for Tile Floors",
+      "cleanedSlug": "dust-buildup-tile-floors",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-DUST-BUILDUP-VINYL",
+      "slug": "dust-buildup-vinyl",
+      "title": "Dust Buildup for Vinyl",
+      "category": "methods",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "vinyl",
+          "normalizedSlug": "vinyl",
+          "label": "Vinyl"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Dust Buildup Vinyl",
+      "normalizedSlug": "dust-buildup-vinyl",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Dust Buildup for Vinyl",
+      "cleanedSlug": "dust-buildup-vinyl",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-DUST-REMOVAL-GLASS-SURFACES",
+      "slug": "dust-removal-glass-surfaces",
+      "title": "Dust Removal for Glass Surfaces",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "dust-removal",
+          "title": "Dust Removal"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Dust Removal for Glass",
+      "normalizedSlug": "dust-removal-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Dust Removal for Glass Surfaces",
+      "cleanedSlug": "dust-removal-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-P-DUST-REMOVAL-ON-GLASS-SURFACES",
+      "slug": "dust-removal-on-glass-surfaces",
+      "title": "Dust Removal on Glass Surfaces",
+      "category": "problems",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "dust-removal",
+          "title": "Dust Removal"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Dust Removal on Glass",
+      "normalizedSlug": "dust-removal-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Dust Removal on Glass Surfaces",
+      "cleanedSlug": "dust-removal-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-DUST-REMOVAL-TILE-FLOORS",
+      "slug": "dust-removal-tile-floors",
+      "title": "Dust Removal for Tile Floors",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "dust-removal",
+          "title": "Dust Removal"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Dust Removal for Tile Floors",
+      "normalizedSlug": "dust-removal-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Dust Removal for Tile Floors",
+      "cleanedSlug": "dust-removal-tile-floors",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-DUST-REMOVAL-VINYL",
+      "slug": "dust-removal-vinyl",
+      "title": "Dust Removal for Vinyl",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "dust-removal",
+          "title": "Dust Removal"
+        },
+        "surface": {
+          "inputSlug": "vinyl",
+          "normalizedSlug": "vinyl",
+          "label": "Vinyl"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Dust Removal Vinyl",
+      "normalizedSlug": "dust-removal-vinyl",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Dust Removal for Vinyl",
+      "cleanedSlug": "dust-removal-vinyl",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-FINISHED-WOOD-GLASS-SURFACES",
+      "slug": "finished-wood-glass-surfaces",
+      "title": "Finished Wood for Glass Surfaces",
+      "category": "methods",
+      "cluster": "finished-wood",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "finished-wood",
+          "title": "Finished Wood"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Finished Wood for Glass",
+      "normalizedSlug": "finished-wood-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Finished Wood for Glass Surfaces",
+      "cleanedSlug": "finished-wood-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-P-FINISHED-WOOD-ON-GLASS-SURFACES",
+      "slug": "finished-wood-on-glass-surfaces",
+      "title": "Finished Wood on Glass Surfaces",
+      "category": "problems",
+      "cluster": "finished-wood",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "finished-wood",
+          "title": "Finished Wood"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Finished Wood on Glass",
+      "normalizedSlug": "finished-wood-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Finished Wood on Glass Surfaces",
+      "cleanedSlug": "finished-wood-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GENERAL-SOIL-GLASS-SURFACES",
+      "slug": "general-soil-glass-surfaces",
+      "title": "General Soil for Glass Surfaces",
+      "category": "methods",
+      "cluster": "general-soil",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "general-soil",
+          "title": "General Soil"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "General Soil for Glass",
+      "normalizedSlug": "general-soil-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "General Soil for Glass Surfaces",
+      "cleanedSlug": "general-soil-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GENERAL-SOIL-TILE-FLOORS",
+      "slug": "general-soil-tile-floors",
+      "title": "General Soil for Tile Floors",
+      "category": "methods",
+      "cluster": "general-soil",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "general-soil",
+          "title": "General Soil"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "General Soil for Tile Floors",
+      "normalizedSlug": "general-soil-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "General Soil for Tile Floors",
+      "cleanedSlug": "general-soil-tile-floors",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GENERAL-SOIL-VINYL",
+      "slug": "general-soil-vinyl",
+      "title": "General Soil for Vinyl",
+      "category": "methods",
+      "cluster": "general-soil",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "general-soil",
+          "title": "General Soil"
+        },
+        "surface": {
+          "inputSlug": "vinyl",
+          "normalizedSlug": "vinyl",
+          "label": "Vinyl"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "General Soil Vinyl",
+      "normalizedSlug": "general-soil-vinyl",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "General Soil for Vinyl",
+      "cleanedSlug": "general-soil-vinyl",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GLASS-GLASS-SURFACES",
+      "slug": "glass-glass-surfaces",
+      "title": "Glass for Glass Surfaces",
+      "category": "methods",
+      "cluster": "glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "glass",
+          "title": "Glass"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Glass for Glass",
+      "normalizedSlug": "glass-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Glass for Glass Surfaces",
+      "cleanedSlug": "glass-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-P-GLASS-ON-GLASS-SURFACES",
+      "slug": "glass-on-glass-surfaces",
+      "title": "Glass on Glass Surfaces",
+      "category": "problems",
+      "cluster": "glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "glass",
+          "title": "Glass"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Glass on Glass",
+      "normalizedSlug": "glass-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Glass on Glass Surfaces",
+      "cleanedSlug": "glass-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GREASE-BUILDUP-GLASS-SURFACES",
+      "slug": "grease-buildup-glass-surfaces",
+      "title": "Grease Buildup for Glass Surfaces",
+      "category": "methods",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Grease Buildup for Glass",
+      "normalizedSlug": "grease-buildup-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Grease Buildup for Glass Surfaces",
+      "cleanedSlug": "grease-buildup-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GREASE-BUILDUP-TILE-FLOORS",
+      "slug": "grease-buildup-tile-floors",
+      "title": "Grease Buildup for Tile Floors",
+      "category": "methods",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Grease Buildup for Tile Floors",
+      "normalizedSlug": "grease-buildup-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Grease Buildup for Tile Floors",
+      "cleanedSlug": "grease-buildup-tile-floors",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GREASE-BUILDUP-VINYL",
+      "slug": "grease-buildup-vinyl",
+      "title": "Grease Buildup for Vinyl",
+      "category": "methods",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "vinyl",
+          "normalizedSlug": "vinyl",
+          "label": "Vinyl"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Grease Buildup Vinyl",
+      "normalizedSlug": "grease-buildup-vinyl",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Grease Buildup for Vinyl",
+      "cleanedSlug": "grease-buildup-vinyl",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GROUT-GLASS-SURFACES",
+      "slug": "grout-glass-surfaces",
+      "title": "Grout for Glass Surfaces",
+      "category": "methods",
+      "cluster": "grout",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "grout",
+          "title": "Grout"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Grout for Glass",
+      "normalizedSlug": "grout-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Grout for Glass Surfaces",
+      "cleanedSlug": "grout-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-P-GROUT-ON-GLASS-SURFACES",
+      "slug": "grout-on-glass-surfaces",
+      "title": "Grout on Glass Surfaces",
+      "category": "problems",
+      "cluster": "grout",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "grout",
+          "title": "Grout"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Grout on Glass",
+      "normalizedSlug": "grout-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Grout on Glass Surfaces",
+      "cleanedSlug": "grout-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GROUT-SOILING-GLASS-SURFACES",
+      "slug": "grout-soiling-glass-surfaces",
+      "title": "Grout Soiling for Glass Surfaces",
+      "category": "methods",
+      "cluster": "grout-soiling",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "grout-soiling",
+          "title": "Grout Soiling"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Grout Soiling for Glass",
+      "normalizedSlug": "grout-soiling-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Grout Soiling for Glass Surfaces",
+      "cleanedSlug": "grout-soiling-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-P-GROUT-SOILING-ON-GLASS-SURFACES",
+      "slug": "grout-soiling-on-glass-surfaces",
+      "title": "Grout Soiling on Glass Surfaces",
+      "category": "problems",
+      "cluster": "grout-soiling",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "grout-soiling",
+          "title": "Grout Soiling"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Grout Soiling on Glass",
+      "normalizedSlug": "grout-soiling-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Grout Soiling on Glass Surfaces",
+      "cleanedSlug": "grout-soiling-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GROUT-SOILING-TILE-FLOORS",
+      "slug": "grout-soiling-tile-floors",
+      "title": "Grout Soiling for Tile Floors",
+      "category": "methods",
+      "cluster": "grout-soiling",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "grout-soiling",
+          "title": "Grout Soiling"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Grout Soiling for Tile Floors",
+      "normalizedSlug": "grout-soiling-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Grout Soiling for Tile Floors",
+      "cleanedSlug": "grout-soiling-tile-floors",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-GROUT-SOILING-VINYL",
+      "slug": "grout-soiling-vinyl",
+      "title": "Grout Soiling for Vinyl",
+      "category": "methods",
+      "cluster": "grout-soiling",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "grout-soiling",
+          "title": "Grout Soiling"
+        },
+        "surface": {
+          "inputSlug": "vinyl",
+          "normalizedSlug": "vinyl",
+          "label": "Vinyl"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Grout Soiling Vinyl",
+      "normalizedSlug": "grout-soiling-vinyl",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Grout Soiling for Vinyl",
+      "cleanedSlug": "grout-soiling-vinyl",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-DUST-BUILDUP",
+      "slug": "how-to-maintain-surfaces-prone-to-dust-buildup",
+      "title": "How to maintain surfaces prone to dust buildup",
+      "category": "methods",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to dust buildup"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Maintain Surfaces Prone To Dust Buildup",
+      "normalizedSlug": "how-to-maintain-surfaces-prone-to-dust-buildup",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-GENERAL-SOIL",
+      "slug": "how-to-maintain-surfaces-prone-to-general-soil",
+      "title": "How to maintain surfaces prone to general soil",
+      "category": "methods",
+      "cluster": "general-soil",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to general soil"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Maintain Surfaces Prone To General Soil",
+      "normalizedSlug": "how-to-maintain-surfaces-prone-to-general-soil",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-GLASS-ETCHING",
+      "slug": "how-to-maintain-surfaces-prone-to-glass-etching",
+      "title": "How to maintain surfaces prone to glass etching",
+      "category": "methods",
+      "cluster": "glass-etching",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to glass etching"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Maintain Surfaces Prone To Glass Etching",
+      "normalizedSlug": "how-to-maintain-surfaces-prone-to-glass-etching",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-GREASE-BUILDUP",
+      "slug": "how-to-maintain-surfaces-prone-to-grease-buildup",
+      "title": "How to maintain surfaces prone to grease buildup",
+      "category": "methods",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to grease buildup"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Maintain Surfaces Prone To Grease Buildup",
+      "normalizedSlug": "how-to-maintain-surfaces-prone-to-grease-buildup",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-LIMESCALE",
+      "slug": "how-to-maintain-surfaces-prone-to-limescale",
+      "title": "How to maintain surfaces prone to limescale",
+      "category": "methods",
+      "cluster": "limescale",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to limescale"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Maintain Surfaces Prone To Limescale",
+      "normalizedSlug": "how-to-maintain-surfaces-prone-to-limescale",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-PRODUCT-RESIDUE",
+      "slug": "how-to-maintain-surfaces-prone-to-product-residue",
+      "title": "How to maintain surfaces prone to product residue",
+      "category": "methods",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to product residue"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Maintain Surfaces Prone To Product Residue",
+      "normalizedSlug": "how-to-maintain-surfaces-prone-to-product-residue",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-SURFACE-HAZE",
+      "slug": "how-to-maintain-surfaces-prone-to-surface-haze",
+      "title": "How to maintain surfaces prone to surface haze",
+      "category": "methods",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to surface haze"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Maintain Surfaces Prone To Surface Haze",
+      "normalizedSlug": "how-to-maintain-surfaces-prone-to-surface-haze",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-DEGREASING-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-degreasing-from-building-up-again",
+      "title": "How to prevent degreasing from building up again",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent degreasing from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Degreasing From Building Up Again",
+      "normalizedSlug": "how-to-prevent-degreasing-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-DUST-REMOVAL-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-dust-removal-from-building-up-again",
+      "title": "How to prevent dust removal from building up again",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent dust removal from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Dust Removal From Building Up Again",
+      "normalizedSlug": "how-to-prevent-dust-removal-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-FINISHED-WOOD-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-finished-wood-from-building-up-again",
+      "title": "How to prevent finished wood from building up again",
+      "category": "methods",
+      "cluster": "finished-wood",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent finished wood from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Finished Wood From Building Up Again",
+      "normalizedSlug": "how-to-prevent-finished-wood-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-GLASS-CLEANING-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-glass-cleaning-from-building-up-again",
+      "title": "How to prevent glass cleaning from building up again",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent glass cleaning from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Glass Cleaning From Building Up Again",
+      "normalizedSlug": "how-to-prevent-glass-cleaning-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-GLASS-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-glass-from-building-up-again",
+      "title": "How to prevent glass from building up again",
+      "category": "methods",
+      "cluster": "glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent glass from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Glass From Building Up Again",
+      "normalizedSlug": "how-to-prevent-glass-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-GROUT-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-grout-from-building-up-again",
+      "title": "How to prevent grout from building up again",
+      "category": "methods",
+      "cluster": "grout",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent grout from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Grout From Building Up Again",
+      "normalizedSlug": "how-to-prevent-grout-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-GROUT-SOILING-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-grout-soiling-from-building-up-again",
+      "title": "How to prevent grout soiling from building up again",
+      "category": "methods",
+      "cluster": "grout-soiling",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent grout soiling from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Grout Soiling From Building Up Again",
+      "normalizedSlug": "how-to-prevent-grout-soiling-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-HARD-WATER-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-hard-water-from-building-up-again",
+      "title": "How to prevent hard water from building up again",
+      "category": "methods",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent hard water from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Hard Water From Building Up Again",
+      "normalizedSlug": "how-to-prevent-hard-water-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-HARD-WATER-REMOVAL-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-hard-water-removal-from-building-up-again",
+      "title": "How to prevent hard water removal from building up again",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent hard water removal from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Hard Water Removal From Building Up Again",
+      "normalizedSlug": "how-to-prevent-hard-water-removal-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-NEUTRAL-CLEANING-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-neutral-cleaning-from-building-up-again",
+      "title": "How to prevent neutral cleaning from building up again",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent neutral cleaning from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Neutral Cleaning From Building Up Again",
+      "normalizedSlug": "how-to-prevent-neutral-cleaning-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-SHOWER-GLASS-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-shower-glass-from-building-up-again",
+      "title": "How to prevent shower glass from building up again",
+      "category": "methods",
+      "cluster": "shower-glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent shower glass from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Shower Glass From Building Up Again",
+      "normalizedSlug": "how-to-prevent-shower-glass-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-SOAP-SCUM-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-soap-scum-from-building-up-again",
+      "title": "How to prevent soap scum from building up again",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent soap scum from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Soap Scum From Building Up Again",
+      "normalizedSlug": "how-to-prevent-soap-scum-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-STAINLESS-STEEL-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-stainless-steel-from-building-up-again",
+      "title": "How to prevent stainless steel from building up again",
+      "category": "methods",
+      "cluster": "stainless-steel",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent stainless steel from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Stainless Steel From Building Up Again",
+      "normalizedSlug": "how-to-prevent-stainless-steel-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-TILE-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-tile-from-building-up-again",
+      "title": "How to prevent tile from building up again",
+      "category": "methods",
+      "cluster": "tile",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent tile from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Tile From Building Up Again",
+      "normalizedSlug": "how-to-prevent-tile-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-TOUCHPOINT-SANITIZATION-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-touchpoint-sanitization-from-building-up-again",
+      "title": "How to prevent touchpoint sanitization from building up again",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent touchpoint sanitization from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Touchpoint Sanitization From Building Up Again",
+      "normalizedSlug": "how-to-prevent-touchpoint-sanitization-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-P-NEUTRAL-CLEANING-ON-GLASS-SURFACES",
+      "slug": "neutral-cleaning-on-glass-surfaces",
+      "title": "Neutral Cleaning on Glass Surfaces",
+      "category": "problems",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "neutral-cleaning",
+          "title": "Neutral Cleaning"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Neutral Cleaning on Glass",
+      "normalizedSlug": "neutral-cleaning-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Neutral Cleaning on Glass Surfaces",
+      "cleanedSlug": "neutral-cleaning-on-glass-surfaces",
+      "qualityScore": 90,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ]
+    },
+    {
+      "id": "GAP-M-NEUTRAL-SURFACE-CLEANING-GLASS-SURFACES",
+      "slug": "neutral-surface-cleaning-glass-surfaces",
+      "title": "Neutral Surface Cleaning for Glass Surfaces",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Neutral Surface Cleaning for Glass",
+      "normalizedSlug": "neutral-surface-cleaning-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Neutral Surface Cleaning for Glass Surfaces",
+      "cleanedSlug": "neutral-surface-cleaning-glass-surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ]
+    },
+    {
+      "id": "GAP-M-NEUTRAL-SURFACE-CLEANING-VINYL",
+      "slug": "neutral-surface-cleaning-vinyl",
+      "title": "Neutral Surface Cleaning for Vinyl",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "vinyl",
+          "normalizedSlug": "vinyl",
+          "label": "Vinyl"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Neutral Surface Cleaning Vinyl",
+      "normalizedSlug": "neutral-surface-cleaning-vinyl",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Neutral Surface Cleaning for Vinyl",
+      "cleanedSlug": "neutral-surface-cleaning-vinyl",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ]
+    },
+    {
+      "id": "GAP-M-STAINLESS-STEEL-GLASS-SURFACES",
+      "slug": "stainless-steel-glass-surfaces",
+      "title": "Stainless Steel for Glass Surfaces",
+      "category": "methods",
+      "cluster": "stainless-steel",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "stainless-steel",
+          "title": "Stainless Steel"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Stainless Steel for Glass",
+      "normalizedSlug": "stainless-steel-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Stainless Steel for Glass Surfaces",
+      "cleanedSlug": "stainless-steel-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-P-STAINLESS-STEEL-ON-GLASS-SURFACES",
+      "slug": "stainless-steel-on-glass-surfaces",
+      "title": "Stainless Steel on Glass Surfaces",
+      "category": "problems",
+      "cluster": "stainless-steel",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "stainless-steel",
+          "title": "Stainless Steel"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Stainless Steel on Glass",
+      "normalizedSlug": "stainless-steel-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Stainless Steel on Glass Surfaces",
+      "cleanedSlug": "stainless-steel-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-STREAKING-GLASS-SURFACES",
+      "slug": "streaking-glass-surfaces",
+      "title": "Streaking for Glass Surfaces",
+      "category": "methods",
+      "cluster": "streaking",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "streaking",
+          "title": "Streaking"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streaking for Glass",
+      "normalizedSlug": "streaking-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Streaking for Glass Surfaces",
+      "cleanedSlug": "streaking-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-STREAKING-TILE-FLOORS",
+      "slug": "streaking-tile-floors",
+      "title": "Streaking for Tile Floors",
+      "category": "methods",
+      "cluster": "streaking",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "streaking",
+          "title": "Streaking"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streaking for Tile Floors",
+      "normalizedSlug": "streaking-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Streaking for Tile Floors",
+      "cleanedSlug": "streaking-tile-floors",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-STREAKING-VINYL",
+      "slug": "streaking-vinyl",
+      "title": "Streaking for Vinyl",
+      "category": "methods",
+      "cluster": "streaking",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "streaking",
+          "title": "Streaking"
+        },
+        "surface": {
+          "inputSlug": "vinyl",
+          "normalizedSlug": "vinyl",
+          "label": "Vinyl"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streaking Vinyl",
+      "normalizedSlug": "streaking-vinyl",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Streaking for Vinyl",
+      "cleanedSlug": "streaking-vinyl",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-SURFACE-HAZE-GLASS-SURFACES",
+      "slug": "surface-haze-glass-surfaces",
+      "title": "Surface Haze for Glass Surfaces",
+      "category": "methods",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "surface-haze",
+          "title": "Surface Haze"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Surface Haze for Glass",
+      "normalizedSlug": "surface-haze-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Surface Haze for Glass Surfaces",
+      "cleanedSlug": "surface-haze-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-SURFACE-HAZE-TILE-FLOORS",
+      "slug": "surface-haze-tile-floors",
+      "title": "Surface Haze for Tile Floors",
+      "category": "methods",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "surface-haze",
+          "title": "Surface Haze"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Surface Haze for Tile Floors",
+      "normalizedSlug": "surface-haze-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Surface Haze for Tile Floors",
+      "cleanedSlug": "surface-haze-tile-floors",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-SURFACE-HAZE-VINYL",
+      "slug": "surface-haze-vinyl",
+      "title": "Surface Haze for Vinyl",
+      "category": "methods",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "surface-haze",
+          "title": "Surface Haze"
+        },
+        "surface": {
+          "inputSlug": "vinyl",
+          "normalizedSlug": "vinyl",
+          "label": "Vinyl"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Surface Haze Vinyl",
+      "normalizedSlug": "surface-haze-vinyl",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Surface Haze for Vinyl",
+      "cleanedSlug": "surface-haze-vinyl",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-TILE-GLASS-SURFACES",
+      "slug": "tile-glass-surfaces",
+      "title": "Tile for Glass Surfaces",
+      "category": "methods",
+      "cluster": "tile",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "tile",
+          "title": "Tile"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Tile for Glass",
+      "normalizedSlug": "tile-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Tile for Glass Surfaces",
+      "cleanedSlug": "tile-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-P-TILE-ON-GLASS-SURFACES",
+      "slug": "tile-on-glass-surfaces",
+      "title": "Tile on Glass Surfaces",
+      "category": "problems",
+      "cluster": "tile",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "tile",
+          "title": "Tile"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Tile on Glass",
+      "normalizedSlug": "tile-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Tile on Glass Surfaces",
+      "cleanedSlug": "tile-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-TOUCHPOINT-SANITIZATION-GLASS-SURFACES",
+      "slug": "touchpoint-sanitization-glass-surfaces",
+      "title": "Touchpoint Sanitization for Glass Surfaces",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Touchpoint Sanitization for Glass",
+      "normalizedSlug": "touchpoint-sanitization-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Touchpoint Sanitization for Glass Surfaces",
+      "cleanedSlug": "touchpoint-sanitization-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-P-TOUCHPOINT-SANITIZATION-ON-GLASS-SURFACES",
+      "slug": "touchpoint-sanitization-on-glass-surfaces",
+      "title": "Touchpoint Sanitization on Glass Surfaces",
+      "category": "problems",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Touchpoint Sanitization on Glass",
+      "normalizedSlug": "touchpoint-sanitization-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Touchpoint Sanitization on Glass Surfaces",
+      "cleanedSlug": "touchpoint-sanitization-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-TOUCHPOINT-SANITIZATION-VINYL",
+      "slug": "touchpoint-sanitization-vinyl",
+      "title": "Touchpoint Sanitization for Vinyl",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "vinyl",
+          "normalizedSlug": "vinyl",
+          "label": "Vinyl"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Touchpoint Sanitization Vinyl",
+      "normalizedSlug": "touchpoint-sanitization-vinyl",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Touchpoint Sanitization for Vinyl",
+      "cleanedSlug": "touchpoint-sanitization-vinyl",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-DEGREASING-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-degreasing-keep-coming-back-after-cleaning",
+      "title": "Why does degreasing keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does degreasing keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Degreasing Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-degreasing-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-DUST-REMOVAL-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-dust-removal-keep-coming-back-after-cleaning",
+      "title": "Why does dust removal keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does dust removal keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Dust Removal Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-dust-removal-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-FINISHED-WOOD-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-finished-wood-keep-coming-back-after-cleaning",
+      "title": "Why does finished wood keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "finished-wood",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does finished wood keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Finished Wood Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-finished-wood-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-GLASS-CLEANING-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-glass-cleaning-keep-coming-back-after-cleaning",
+      "title": "Why does glass cleaning keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does glass cleaning keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Glass Cleaning Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-glass-cleaning-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-GLASS-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-glass-keep-coming-back-after-cleaning",
+      "title": "Why does glass keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does glass keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Glass Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-glass-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-GROUT-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-grout-keep-coming-back-after-cleaning",
+      "title": "Why does grout keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "grout",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does grout keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Grout Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-grout-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-GROUT-SOILING-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-grout-soiling-keep-coming-back-after-cleaning",
+      "title": "Why does grout soiling keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "grout-soiling",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does grout soiling keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Grout Soiling Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-grout-soiling-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-HARD-WATER-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-hard-water-keep-coming-back-after-cleaning",
+      "title": "Why does hard water keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does hard water keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Hard Water Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-hard-water-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-HARD-WATER-REMOVAL-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-hard-water-removal-keep-coming-back-after-cleaning",
+      "title": "Why does hard water removal keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does hard water removal keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Hard Water Removal Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-hard-water-removal-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-NEUTRAL-CLEANING-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-neutral-cleaning-keep-coming-back-after-cleaning",
+      "title": "Why does neutral cleaning keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does neutral cleaning keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Neutral Cleaning Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-neutral-cleaning-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-SHOWER-GLASS-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-shower-glass-keep-coming-back-after-cleaning",
+      "title": "Why does shower glass keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "shower-glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does shower glass keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Shower Glass Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-shower-glass-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-SOAP-SCUM-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-soap-scum-keep-coming-back-after-cleaning",
+      "title": "Why does soap scum keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does soap scum keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Soap Scum Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-soap-scum-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-STAINLESS-STEEL-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-stainless-steel-keep-coming-back-after-cleaning",
+      "title": "Why does stainless steel keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "stainless-steel",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does stainless steel keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Stainless Steel Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-stainless-steel-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-TILE-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-tile-keep-coming-back-after-cleaning",
+      "title": "Why does tile keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "tile",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does tile keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Tile Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-tile-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-TOUCHPOINT-SANITIZATION-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-touchpoint-sanitization-keep-coming-back-after-cleaning",
+      "title": "Why does touchpoint sanitization keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does touchpoint sanitization keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Touchpoint Sanitization Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-touchpoint-sanitization-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DUST-BUILDUP-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-dust-buildup-is-hard-to-remove-completely",
+      "title": "Why dust buildup is hard to remove completely",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why dust buildup is hard to remove completely"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Dust Buildup Is Hard To Remove Completely",
+      "normalizedSlug": "why-dust-buildup-is-hard-to-remove-completely",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-GENERAL-SOIL-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-general-soil-is-hard-to-remove-completely",
+      "title": "Why general soil is hard to remove completely",
+      "category": "problems",
+      "cluster": "general-soil",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why general soil is hard to remove completely"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why General Soil Is Hard To Remove Completely",
+      "normalizedSlug": "why-general-soil-is-hard-to-remove-completely",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-GLASS-ETCHING-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-glass-etching-is-hard-to-remove-completely",
+      "title": "Why glass etching is hard to remove completely",
+      "category": "problems",
+      "cluster": "glass-etching",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why glass etching is hard to remove completely"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Glass Etching Is Hard To Remove Completely",
+      "normalizedSlug": "why-glass-etching-is-hard-to-remove-completely",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-GREASE-BUILDUP-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-grease-buildup-is-hard-to-remove-completely",
+      "title": "Why grease buildup is hard to remove completely",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why grease buildup is hard to remove completely"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Grease Buildup Is Hard To Remove Completely",
+      "normalizedSlug": "why-grease-buildup-is-hard-to-remove-completely",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-LIMESCALE-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-limescale-is-hard-to-remove-completely",
+      "title": "Why limescale is hard to remove completely",
+      "category": "problems",
+      "cluster": "limescale",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why limescale is hard to remove completely"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Limescale Is Hard To Remove Completely",
+      "normalizedSlug": "why-limescale-is-hard-to-remove-completely",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-PRODUCT-RESIDUE-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-product-residue-is-hard-to-remove-completely",
+      "title": "Why product residue is hard to remove completely",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why product residue is hard to remove completely"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Product Residue Is Hard To Remove Completely",
+      "normalizedSlug": "why-product-residue-is-hard-to-remove-completely",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-SURFACE-HAZE-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-surface-haze-is-hard-to-remove-completely",
+      "title": "Why surface haze is hard to remove completely",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why surface haze is hard to remove completely"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Surface Haze Is Hard To Remove Completely",
+      "normalizedSlug": "why-surface-haze-is-hard-to-remove-completely",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    }
+  ]
+}

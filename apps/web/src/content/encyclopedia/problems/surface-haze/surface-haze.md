@@ -44,3 +44,14 @@ Document lighting angle when comparing before and after; phone flash from the si
 ## When to Call a Professional
 
 Call a professional when natural stone, factory-coated floors, or warranty finishes require documented procedures, or when abrasion repair is outside homeowner tooling.
+
+## Related Topics
+
+- [Haze After Cleaning](/encyclopedia/problems/haze-after-cleaning)
+- [Haze on Finished Wood](/encyclopedia/problems/haze-on-finished-wood)
+- [Haze on Glass](/encyclopedia/problems/haze-on-glass)
+- [Haze on Stainless Steel](/encyclopedia/problems/haze-on-stainless-steel)
+- [Haze on Tile Floors](/encyclopedia/problems/haze-on-tile-floors)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

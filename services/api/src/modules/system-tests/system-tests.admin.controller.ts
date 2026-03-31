@@ -12,9 +12,16 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 
+import {
+  parseIncludeDormantParam,
+  parseIncludeResolvedParam,
+  parseShowDismissedParam,
+} from "./system-test-resolution-preview-filters";
+
 import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
 import { AdminGuard } from "../../guards/admin.guard";
 import { SystemTestReportIngestDto } from "./dto/system-test-report.dto";
+import type { SystemTestResolutionDto } from "./dto/system-test-resolution.dto";
 import { SystemTestsService } from "./system-tests.service";
 
 @Controller("/api/v1/admin/system-tests")
@@ -36,8 +43,16 @@ export class SystemTestsAdminController {
   }
 
   @Get("summary")
-  async summary() {
-    return this.systemTests.getSummary();
+  async summary(
+    @Query("showDismissed") showDismissedRaw?: string,
+    @Query("includeDormant") includeDormantRaw?: string,
+    @Query("includeResolved") includeResolvedRaw?: string,
+  ) {
+    return this.systemTests.getSummary({
+      showDismissed: parseShowDismissedParam(showDismissedRaw),
+      includeDormant: parseIncludeDormantParam(includeDormantRaw),
+      includeResolved: parseIncludeResolvedParam(includeResolvedRaw),
+    });
   }
 
   @Get("runs")
@@ -58,5 +73,10 @@ export class SystemTestsAdminController {
   @Get("runs/:id")
   async runDetail(@Param("id") id: string) {
     return this.systemTests.getRunDetail(id);
+  }
+
+  @Get("families/:familyId/resolution")
+  async getFamilyResolution(@Param("familyId") familyId: string): Promise<SystemTestResolutionDto> {
+    return this.systemTests.getFamilyResolution(familyId);
   }
 }

@@ -44,3 +44,14 @@ Hot showers after cleaning can redeposit condensation soil; timing matters in pr
 ## When to Call a Professional
 
 Call a professional when large wall mirrors need safe detachment, when desilvering is advancing, or when LED-integrated mirrors need OEM care.
+
+## Related Topics
+
+- [Streaks on Black Fixtures](/encyclopedia/problems/streaks-on-black-fixtures)
+- [Streaks on Glass](/encyclopedia/problems/streaks-on-glass)
+- [Streaks on Stainless Steel](/encyclopedia/problems/streaks-on-stainless-steel)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Streaking](/encyclopedia/problems/streaking)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

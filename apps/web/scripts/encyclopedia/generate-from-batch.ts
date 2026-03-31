@@ -8,6 +8,11 @@ import type {
   EncyclopediaBatchPage,
   EncyclopediaIndexEntry,
 } from "../../src/lib/encyclopedia/types";
+import { buildRelatedTopicsMarkdownSection } from "../../src/lib/encyclopedia/internalLinkRecommendations";
+import {
+  loadEncyclopediaIndexEntriesForAnalysis,
+  type EncyclopediaCorpusEntry,
+} from "../../src/lib/encyclopedia/loadEncyclopediaIndexEntries";
 import {
   normalizeParagraphBlock,
   readJsonFile,
@@ -89,6 +94,7 @@ function assertBatchPageMatchesIndex(
 function buildMarkdown(
   page: EncyclopediaBatchPage,
   indexEntry: EncyclopediaIndexEntry,
+  corpus: EncyclopediaCorpusEntry[],
 ): string {
   const frontmatter = [
     "---",
@@ -140,7 +146,8 @@ function buildMarkdown(
     "",
   ].join("\n");
 
-  return `${frontmatter}${body}`;
+  const related = buildRelatedTopicsMarkdownSection(indexEntry.slug, corpus);
+  return `${frontmatter}${body}${related}`;
 }
 
 function main(): void {
@@ -156,6 +163,7 @@ function main(): void {
   const raw = readJsonFile<unknown>(batchPath);
   const batch = encyclopediaBatchFileSchema.parse(raw);
   const indexEntries = getIndexEntries();
+  const corpus = loadEncyclopediaIndexEntriesForAnalysis();
 
   for (const page of batch.pages) {
     const indexEntry = getIndexEntryById(indexEntries, page.id);
@@ -171,7 +179,7 @@ function main(): void {
       `${indexEntry.slug}.md`,
     );
 
-    writeTextFile(outputPath, buildMarkdown(page, indexEntry));
+    writeTextFile(outputPath, buildMarkdown(page, indexEntry, corpus));
     console.log(`Generated: ${outputPath}`);
   }
 }

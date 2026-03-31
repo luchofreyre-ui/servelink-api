@@ -31,6 +31,12 @@ export class ApiExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
 
+      // Mandatory debug visibility (terminal): 5xx and unexpected errors
+      if (status >= 500) {
+        // eslint-disable-next-line no-console
+        console.error("GLOBAL ERROR:", exception?.stack ?? exception);
+      }
+
       const r: any = exception.getResponse();
       const rawMessage =
         typeof r === "string"
@@ -65,6 +71,10 @@ export class ApiExceptionFilter implements ExceptionFilter {
         if (code === "STRIPE_NOT_CONFIGURED") message = "Stripe is not configured";
         else if (code === "WEBHOOK_INVALID_SIGNATURE") message = "Invalid Stripe webhook signature";
       }
+    } else {
+      // Mandatory debug visibility (terminal): non-HTTP exceptions
+      // eslint-disable-next-line no-console
+      console.error("GLOBAL ERROR:", exception?.stack ?? exception);
     }
 
     // DEV visibility: log all 5xx errors (including HttpException wrappers)

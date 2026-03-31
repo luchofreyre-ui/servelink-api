@@ -44,3 +44,14 @@ Water tests help in ambiguous regions—know your local hardness seasonal shifts
 ## When to Call a Professional
 
 Call a professional when multi-substrate wet rooms need sequencing, or when insurance documentation requires expert classification.
+
+## Related Topics
+
+- [Heavy Limescale Deposits](/encyclopedia/problems/heavy-limescale-deposits)
+- [Limescale Buildup](/encyclopedia/problems/limescale-buildup)
+- [Limescale on Fixtures](/encyclopedia/problems/limescale-on-fixtures)
+- [Limescale on Shower Glass](/encyclopedia/problems/limescale-on-shower-glass)
+- [Limescale on Tile](/encyclopedia/problems/limescale-on-tile)
+- [Hard Water Stains](/encyclopedia/problems/hard-water-stains)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)

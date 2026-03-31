@@ -44,3 +44,14 @@ Horizontal hood tops often show the worst haze because dust settles into tacky f
 ## When to Call a Professional
 
 Call a professional when welded commercial hood systems, coated finishes, or warranty service limits homeowner products.
+
+## Related Topics
+
+- [Haze on Finished Wood](/encyclopedia/problems/haze-on-finished-wood)
+- [Haze on Glass](/encyclopedia/problems/haze-on-glass)
+- [Haze on Tile Floors](/encyclopedia/problems/haze-on-tile-floors)
+- [Haze After Cleaning](/encyclopedia/problems/haze-after-cleaning)
+- [Surface Haze](/encyclopedia/problems/surface-haze)
+- [Grease on Stainless Steel](/encyclopedia/problems/grease-on-stainless-steel)
+- [Residue on Stainless Steel](/encyclopedia/problems/residue-on-stainless-steel)
+- [Streaks on Stainless Steel](/encyclopedia/problems/streaks-on-stainless-steel)

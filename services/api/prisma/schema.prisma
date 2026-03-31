@@ -25,6 +25,7 @@ model User {
   systemTestIncidentActionsOwned   SystemTestIncidentAction[] @relation("SystemTestIncidentActionOwner")
   systemTestIncidentEventsAuthored SystemTestIncidentEvent[]  @relation("SystemTestIncidentEventActor")
   systemTestIncidentNotesAuthored  SystemTestIncidentNote[]   @relation("SystemTestIncidentNoteUser")
+  systemTestFamilyOperatorStatesUpdated SystemTestFailureFamily[] @relation("SystemTestFamilyOperatorStateUpdatedBy")
   dispatchExceptionActionsOwned    DispatchExceptionAction[]  @relation("DispatchExceptionActionOwner")
   dispatchExceptionActionEventsAuthored DispatchExceptionActionEvent[] @relation("DispatchExceptionActionEventActor")
   dispatchExceptionActionNotesAuthored DispatchExceptionActionNote[] @relation("DispatchExceptionActionNoteUser")
@@ -926,6 +927,12 @@ model SystemTestFailureGroup {
   familyMemberships SystemTestFailureFamilyMembership[]
 }
 
+enum SystemTestFamilyOperatorState {
+  open
+  acknowledged
+  dismissed
+}
+
 /// Cross-run root-cause family (Phase 8).
 model SystemTestFailureFamily {
   id                         String   @id @default(cuid())
@@ -953,6 +960,12 @@ model SystemTestFailureFamily {
   /// trendKind, seenInWindow stats, etc.
   metadataJson               Json?
 
+  operatorState             SystemTestFamilyOperatorState @default(open)
+  operatorStateUpdatedAt    DateTime?
+  operatorStateUpdatedById  String?
+  operatorStateNote         String?
+  operatorStateUpdatedBy    User?                         @relation("SystemTestFamilyOperatorStateUpdatedBy", fields: [operatorStateUpdatedById], references: [id], onDelete: SetNull)
+
   memberships         SystemTestFailureFamilyMembership[]
   incidentMemberships SystemTestIncidentFamilyMembership[]
   incidentLeads       SystemTestIncident[]                @relation("IncidentLeadFamily")
@@ -961,6 +974,7 @@ model SystemTestFailureFamily {
   @@index([lastSeenRunId])
   @@index([status])
   @@index([updatedAt])
+  @@index([operatorState, updatedAt])
 }
 
 /// Operator incident cluster above failure families (Phase 9).
@@ -2408,4 +2422,22 @@ model KnowledgeReviewSignal {
   @@index([entityType, entityKey])
   @@index([status])
   @@index([signalType])
+}
+
+/// Generated encyclopedia review queue (pipeline intake → human review).
+model EncyclopediaReviewRecord {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  surface       String?
+  problem       String?
+  intent        String?
+
+  sections      Json
+  internalLinks Json
+
+  status        String   @default("pending")
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

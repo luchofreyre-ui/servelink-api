@@ -311,11 +311,23 @@ export default function AdminPage() {
 
           <div className="flex flex-wrap gap-3">
             <Link
-              href="/admin/knowledge-review"
-              title="Review weak scenarios, SOPs, and timing signals."
+              href="/admin/encyclopedia/review"
+              title="Review encyclopedia pages, quality, and publish policy."
               className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
             >
-              Knowledge Review
+              Encyclopedia Review
+            </Link>
+            <Link
+              href="/admin/encyclopedia/ops"
+              title="Weak pages, repair queue, and system health."
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-left transition hover:bg-white/[0.14]"
+            >
+              <div className="text-sm font-semibold text-slate-100">
+                Encyclopedia Ops
+              </div>
+              <div className="mt-1 max-w-[220px] text-xs leading-snug text-slate-400">
+                Weak pages, repair queue, and system health
+              </div>
             </Link>
             <Link
               href="/admin/anomalies"

@@ -1,0 +1,1566 @@
+{
+  "generatedAt": "2026-03-28T22:29:24.735Z",
+  "total": 156,
+  "candidates": [
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-CLEANING-FINISHED-WOOD",
+      "slug": "cleaner-film-on-countertops-on-cleaning-finished-wood",
+      "title": "Cleaner Film on Countertops on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-CLEANING-GLASS-SURFACES",
+      "slug": "cleaner-film-on-countertops-on-cleaning-glass-surfaces",
+      "title": "Cleaner Film on Countertops on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-CLEANING-GROUT",
+      "slug": "cleaner-film-on-countertops-on-cleaning-grout",
+      "title": "Cleaner Film on Countertops on Cleaning Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-CLEANING-SHOWER-GLASS",
+      "slug": "cleaner-film-on-countertops-on-cleaning-shower-glass",
+      "title": "Cleaner Film on Countertops on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "cleaner-film-on-countertops-on-cleaning-stainless-steel",
+      "title": "Cleaner Film on Countertops on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-CLEANER-FILM-ON-COUNTERTOPS-ON-CLEANING-TILE-SURFACES",
+      "slug": "cleaner-film-on-countertops-on-cleaning-tile-surfaces",
+      "title": "Cleaner Film on Countertops on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "M-GEN-DEGREASING-CLEANING-FINISHED-WOOD",
+      "slug": "degreasing-cleaning-finished-wood",
+      "title": "Degreasing for Cleaning Finished Wood",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DEGREASING-CLEANING-GLASS-SURFACES",
+      "slug": "degreasing-cleaning-glass-surfaces",
+      "title": "Degreasing for Cleaning Glass Surfaces",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DEGREASING-CLEANING-GROUT",
+      "slug": "degreasing-cleaning-grout",
+      "title": "Degreasing for Cleaning Grout",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DEGREASING-CLEANING-SHOWER-GLASS",
+      "slug": "degreasing-cleaning-shower-glass",
+      "title": "Degreasing for Cleaning Shower Glass",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DEGREASING-CLEANING-STAINLESS-STEEL",
+      "slug": "degreasing-cleaning-stainless-steel",
+      "title": "Degreasing for Cleaning Stainless Steel",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DEGREASING-CLEANING-TILE-SURFACES",
+      "slug": "degreasing-cleaning-tile-surfaces",
+      "title": "Degreasing for Cleaning Tile Surfaces",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-CLEANING-FINISHED-WOOD",
+      "slug": "dry-dust-removal-cleaning-finished-wood",
+      "title": "Dry Dust Removal for Cleaning Finished Wood",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-CLEANING-GLASS-SURFACES",
+      "slug": "dry-dust-removal-cleaning-glass-surfaces",
+      "title": "Dry Dust Removal for Cleaning Glass Surfaces",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-CLEANING-GROUT",
+      "slug": "dry-dust-removal-cleaning-grout",
+      "title": "Dry Dust Removal for Cleaning Grout",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-CLEANING-SHOWER-GLASS",
+      "slug": "dry-dust-removal-cleaning-shower-glass",
+      "title": "Dry Dust Removal for Cleaning Shower Glass",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-CLEANING-STAINLESS-STEEL",
+      "slug": "dry-dust-removal-cleaning-stainless-steel",
+      "title": "Dry Dust Removal for Cleaning Stainless Steel",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-CLEANING-TILE-SURFACES",
+      "slug": "dry-dust-removal-cleaning-tile-surfaces",
+      "title": "Dry Dust Removal for Cleaning Tile Surfaces",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-CLEANING-FINISHED-WOOD",
+      "slug": "floor-residue-after-mopping-on-cleaning-finished-wood",
+      "title": "Floor Residue After Mopping on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-CLEANING-GLASS-SURFACES",
+      "slug": "floor-residue-after-mopping-on-cleaning-glass-surfaces",
+      "title": "Floor Residue After Mopping on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-CLEANING-GROUT",
+      "slug": "floor-residue-after-mopping-on-cleaning-grout",
+      "title": "Floor Residue After Mopping on Cleaning Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-CLEANING-SHOWER-GLASS",
+      "slug": "floor-residue-after-mopping-on-cleaning-shower-glass",
+      "title": "Floor Residue After Mopping on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "floor-residue-after-mopping-on-cleaning-stainless-steel",
+      "title": "Floor Residue After Mopping on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-CLEANING-TILE-SURFACES",
+      "slug": "floor-residue-after-mopping-on-cleaning-tile-surfaces",
+      "title": "Floor Residue After Mopping on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-CLEANING-FINISHED-WOOD",
+      "slug": "grease-buildup-on-cleaning-finished-wood",
+      "title": "Grease Buildup on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-CLEANING-GLASS-SURFACES",
+      "slug": "grease-buildup-on-cleaning-glass-surfaces",
+      "title": "Grease Buildup on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-CLEANING-GROUT",
+      "slug": "grease-buildup-on-cleaning-grout",
+      "title": "Grease Buildup on Cleaning Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-CLEANING-SHOWER-GLASS",
+      "slug": "grease-buildup-on-cleaning-shower-glass",
+      "title": "Grease Buildup on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "grease-buildup-on-cleaning-stainless-steel",
+      "title": "Grease Buildup on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-CLEANING-TILE-SURFACES",
+      "slug": "grease-buildup-on-cleaning-tile-surfaces",
+      "title": "Grease Buildup on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-CLEANING-FINISHED-WOOD",
+      "slug": "grease-on-backsplashes-on-cleaning-finished-wood",
+      "title": "Grease on Backsplashes on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-CLEANING-GLASS-SURFACES",
+      "slug": "grease-on-backsplashes-on-cleaning-glass-surfaces",
+      "title": "Grease on Backsplashes on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-CLEANING-GROUT",
+      "slug": "grease-on-backsplashes-on-cleaning-grout",
+      "title": "Grease on Backsplashes on Cleaning Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-CLEANING-SHOWER-GLASS",
+      "slug": "grease-on-backsplashes-on-cleaning-shower-glass",
+      "title": "Grease on Backsplashes on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "grease-on-backsplashes-on-cleaning-stainless-steel",
+      "title": "Grease on Backsplashes on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-BACKSPLASHES-ON-CLEANING-TILE-SURFACES",
+      "slug": "grease-on-backsplashes-on-cleaning-tile-surfaces",
+      "title": "Grease on Backsplashes on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-CLEANING-FINISHED-WOOD",
+      "slug": "grease-on-kitchen-cabinets-on-cleaning-finished-wood",
+      "title": "Grease on Kitchen Cabinets on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-CLEANING-GLASS-SURFACES",
+      "slug": "grease-on-kitchen-cabinets-on-cleaning-glass-surfaces",
+      "title": "Grease on Kitchen Cabinets on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-CLEANING-GROUT",
+      "slug": "grease-on-kitchen-cabinets-on-cleaning-grout",
+      "title": "Grease on Kitchen Cabinets on Cleaning Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-CLEANING-SHOWER-GLASS",
+      "slug": "grease-on-kitchen-cabinets-on-cleaning-shower-glass",
+      "title": "Grease on Kitchen Cabinets on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "grease-on-kitchen-cabinets-on-cleaning-stainless-steel",
+      "title": "Grease on Kitchen Cabinets on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-KITCHEN-CABINETS-ON-CLEANING-TILE-SURFACES",
+      "slug": "grease-on-kitchen-cabinets-on-cleaning-tile-surfaces",
+      "title": "Grease on Kitchen Cabinets on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-CLEANING-FINISHED-WOOD",
+      "slug": "grease-on-stainless-steel-on-cleaning-finished-wood",
+      "title": "Grease on Stainless Steel on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-CLEANING-GLASS-SURFACES",
+      "slug": "grease-on-stainless-steel-on-cleaning-glass-surfaces",
+      "title": "Grease on Stainless Steel on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-CLEANING-GROUT",
+      "slug": "grease-on-stainless-steel-on-cleaning-grout",
+      "title": "Grease on Stainless Steel on Cleaning Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-CLEANING-SHOWER-GLASS",
+      "slug": "grease-on-stainless-steel-on-cleaning-shower-glass",
+      "title": "Grease on Stainless Steel on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "grease-on-stainless-steel-on-cleaning-stainless-steel",
+      "title": "Grease on Stainless Steel on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-STAINLESS-STEEL-ON-CLEANING-TILE-SURFACES",
+      "slug": "grease-on-stainless-steel-on-cleaning-tile-surfaces",
+      "title": "Grease on Stainless Steel on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-CLEANING-FINISHED-WOOD",
+      "slug": "grease-on-walls-near-the-stove-on-cleaning-finished-wood",
+      "title": "Grease on Walls Near the Stove on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-CLEANING-GLASS-SURFACES",
+      "slug": "grease-on-walls-near-the-stove-on-cleaning-glass-surfaces",
+      "title": "Grease on Walls Near the Stove on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-CLEANING-GROUT",
+      "slug": "grease-on-walls-near-the-stove-on-cleaning-grout",
+      "title": "Grease on Walls Near the Stove on Cleaning Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-CLEANING-SHOWER-GLASS",
+      "slug": "grease-on-walls-near-the-stove-on-cleaning-shower-glass",
+      "title": "Grease on Walls Near the Stove on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "grease-on-walls-near-the-stove-on-cleaning-stainless-steel",
+      "title": "Grease on Walls Near the Stove on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-GREASE-ON-WALLS-NEAR-THE-STOVE-ON-CLEANING-TILE-SURFACES",
+      "slug": "grease-on-walls-near-the-stove-on-cleaning-tile-surfaces",
+      "title": "Grease on Walls Near the Stove on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "M-GEN-HARD-WATER-DEPOSIT-REMOVAL-CLEANING-FINISHED-WOOD",
+      "slug": "hard-water-deposit-removal-cleaning-finished-wood",
+      "title": "Hard Water Deposit Removal for Cleaning Finished Wood",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-HARD-WATER-DEPOSIT-REMOVAL-CLEANING-GLASS-SURFACES",
+      "slug": "hard-water-deposit-removal-cleaning-glass-surfaces",
+      "title": "Hard Water Deposit Removal for Cleaning Glass Surfaces",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-HARD-WATER-DEPOSIT-REMOVAL-CLEANING-GROUT",
+      "slug": "hard-water-deposit-removal-cleaning-grout",
+      "title": "Hard Water Deposit Removal for Cleaning Grout",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-HARD-WATER-DEPOSIT-REMOVAL-CLEANING-SHOWER-GLASS",
+      "slug": "hard-water-deposit-removal-cleaning-shower-glass",
+      "title": "Hard Water Deposit Removal for Cleaning Shower Glass",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-HARD-WATER-DEPOSIT-REMOVAL-CLEANING-STAINLESS-STEEL",
+      "slug": "hard-water-deposit-removal-cleaning-stainless-steel",
+      "title": "Hard Water Deposit Removal for Cleaning Stainless Steel",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-HARD-WATER-DEPOSIT-REMOVAL-CLEANING-TILE-SURFACES",
+      "slug": "hard-water-deposit-removal-cleaning-tile-surfaces",
+      "title": "Hard Water Deposit Removal for Cleaning Tile Surfaces",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "P-GEN-HARD-WATER-STAINS-ON-CLEANING-FINISHED-WOOD",
+      "slug": "hard-water-stains-on-cleaning-finished-wood",
+      "title": "Hard Water Stains on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HARD-WATER-STAINS-ON-CLEANING-GLASS-SURFACES",
+      "slug": "hard-water-stains-on-cleaning-glass-surfaces",
+      "title": "Hard Water Stains on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HARD-WATER-STAINS-ON-CLEANING-GROUT",
+      "slug": "hard-water-stains-on-cleaning-grout",
+      "title": "Hard Water Stains on Cleaning Grout",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HARD-WATER-STAINS-ON-CLEANING-SHOWER-GLASS",
+      "slug": "hard-water-stains-on-cleaning-shower-glass",
+      "title": "Hard Water Stains on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HARD-WATER-STAINS-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "hard-water-stains-on-cleaning-stainless-steel",
+      "title": "Hard Water Stains on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HARD-WATER-STAINS-ON-CLEANING-TILE-SURFACES",
+      "slug": "hard-water-stains-on-cleaning-tile-surfaces",
+      "title": "Hard Water Stains on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-AFTER-CLEANING-ON-CLEANING-FINISHED-WOOD",
+      "slug": "haze-after-cleaning-on-cleaning-finished-wood",
+      "title": "Haze After Cleaning on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-AFTER-CLEANING-ON-CLEANING-GLASS-SURFACES",
+      "slug": "haze-after-cleaning-on-cleaning-glass-surfaces",
+      "title": "Haze After Cleaning on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-AFTER-CLEANING-ON-CLEANING-GROUT",
+      "slug": "haze-after-cleaning-on-cleaning-grout",
+      "title": "Haze After Cleaning on Cleaning Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-AFTER-CLEANING-ON-CLEANING-SHOWER-GLASS",
+      "slug": "haze-after-cleaning-on-cleaning-shower-glass",
+      "title": "Haze After Cleaning on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-AFTER-CLEANING-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "haze-after-cleaning-on-cleaning-stainless-steel",
+      "title": "Haze After Cleaning on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-AFTER-CLEANING-ON-CLEANING-TILE-SURFACES",
+      "slug": "haze-after-cleaning-on-cleaning-tile-surfaces",
+      "title": "Haze After Cleaning on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-CLEANING-FINISHED-WOOD",
+      "slug": "haze-on-finished-wood-on-cleaning-finished-wood",
+      "title": "Haze on Finished Wood on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-CLEANING-GLASS-SURFACES",
+      "slug": "haze-on-finished-wood-on-cleaning-glass-surfaces",
+      "title": "Haze on Finished Wood on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-CLEANING-GROUT",
+      "slug": "haze-on-finished-wood-on-cleaning-grout",
+      "title": "Haze on Finished Wood on Cleaning Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-CLEANING-SHOWER-GLASS",
+      "slug": "haze-on-finished-wood-on-cleaning-shower-glass",
+      "title": "Haze on Finished Wood on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "haze-on-finished-wood-on-cleaning-stainless-steel",
+      "title": "Haze on Finished Wood on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-FINISHED-WOOD-ON-CLEANING-TILE-SURFACES",
+      "slug": "haze-on-finished-wood-on-cleaning-tile-surfaces",
+      "title": "Haze on Finished Wood on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-CLEANING-FINISHED-WOOD",
+      "slug": "haze-on-glass-on-cleaning-finished-wood",
+      "title": "Haze on Glass on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-CLEANING-GLASS-SURFACES",
+      "slug": "haze-on-glass-on-cleaning-glass-surfaces",
+      "title": "Haze on Glass on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-CLEANING-GROUT",
+      "slug": "haze-on-glass-on-cleaning-grout",
+      "title": "Haze on Glass on Cleaning Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-CLEANING-SHOWER-GLASS",
+      "slug": "haze-on-glass-on-cleaning-shower-glass",
+      "title": "Haze on Glass on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "haze-on-glass-on-cleaning-stainless-steel",
+      "title": "Haze on Glass on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-GLASS-ON-CLEANING-TILE-SURFACES",
+      "slug": "haze-on-glass-on-cleaning-tile-surfaces",
+      "title": "Haze on Glass on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-CLEANING-FINISHED-WOOD",
+      "slug": "haze-on-stainless-steel-on-cleaning-finished-wood",
+      "title": "Haze on Stainless Steel on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-CLEANING-GLASS-SURFACES",
+      "slug": "haze-on-stainless-steel-on-cleaning-glass-surfaces",
+      "title": "Haze on Stainless Steel on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-CLEANING-GROUT",
+      "slug": "haze-on-stainless-steel-on-cleaning-grout",
+      "title": "Haze on Stainless Steel on Cleaning Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-CLEANING-SHOWER-GLASS",
+      "slug": "haze-on-stainless-steel-on-cleaning-shower-glass",
+      "title": "Haze on Stainless Steel on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "haze-on-stainless-steel-on-cleaning-stainless-steel",
+      "title": "Haze on Stainless Steel on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-STAINLESS-STEEL-ON-CLEANING-TILE-SURFACES",
+      "slug": "haze-on-stainless-steel-on-cleaning-tile-surfaces",
+      "title": "Haze on Stainless Steel on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-CLEANING-FINISHED-WOOD",
+      "slug": "haze-on-tile-floors-on-cleaning-finished-wood",
+      "title": "Haze on Tile Floors on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-CLEANING-GLASS-SURFACES",
+      "slug": "haze-on-tile-floors-on-cleaning-glass-surfaces",
+      "title": "Haze on Tile Floors on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-CLEANING-GROUT",
+      "slug": "haze-on-tile-floors-on-cleaning-grout",
+      "title": "Haze on Tile Floors on Cleaning Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-CLEANING-SHOWER-GLASS",
+      "slug": "haze-on-tile-floors-on-cleaning-shower-glass",
+      "title": "Haze on Tile Floors on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "haze-on-tile-floors-on-cleaning-stainless-steel",
+      "title": "Haze on Tile Floors on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-HAZE-ON-TILE-FLOORS-ON-CLEANING-TILE-SURFACES",
+      "slug": "haze-on-tile-floors-on-cleaning-tile-surfaces",
+      "title": "Haze on Tile Floors on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "M-GEN-NEUTRAL-SURFACE-CLEANING-CLEANING-FINISHED-WOOD",
+      "slug": "neutral-surface-cleaning-cleaning-finished-wood",
+      "title": "Neutral Surface Cleaning for Cleaning Finished Wood",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-NEUTRAL-SURFACE-CLEANING-CLEANING-GLASS-SURFACES",
+      "slug": "neutral-surface-cleaning-cleaning-glass-surfaces",
+      "title": "Neutral Surface Cleaning for Cleaning Glass Surfaces",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-NEUTRAL-SURFACE-CLEANING-CLEANING-GROUT",
+      "slug": "neutral-surface-cleaning-cleaning-grout",
+      "title": "Neutral Surface Cleaning for Cleaning Grout",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-NEUTRAL-SURFACE-CLEANING-CLEANING-SHOWER-GLASS",
+      "slug": "neutral-surface-cleaning-cleaning-shower-glass",
+      "title": "Neutral Surface Cleaning for Cleaning Shower Glass",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-NEUTRAL-SURFACE-CLEANING-CLEANING-STAINLESS-STEEL",
+      "slug": "neutral-surface-cleaning-cleaning-stainless-steel",
+      "title": "Neutral Surface Cleaning for Cleaning Stainless Steel",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-NEUTRAL-SURFACE-CLEANING-CLEANING-TILE-SURFACES",
+      "slug": "neutral-surface-cleaning-cleaning-tile-surfaces",
+      "title": "Neutral Surface Cleaning for Cleaning Tile Surfaces",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "P-GEN-POLYMERIZED-GREASE-RESIDUE-ON-CLEANING-FINISHED-WOOD",
+      "slug": "polymerized-grease-residue-on-cleaning-finished-wood",
+      "title": "Polymerized Grease Residue on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-POLYMERIZED-GREASE-RESIDUE-ON-CLEANING-GLASS-SURFACES",
+      "slug": "polymerized-grease-residue-on-cleaning-glass-surfaces",
+      "title": "Polymerized Grease Residue on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-POLYMERIZED-GREASE-RESIDUE-ON-CLEANING-GROUT",
+      "slug": "polymerized-grease-residue-on-cleaning-grout",
+      "title": "Polymerized Grease Residue on Cleaning Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-POLYMERIZED-GREASE-RESIDUE-ON-CLEANING-SHOWER-GLASS",
+      "slug": "polymerized-grease-residue-on-cleaning-shower-glass",
+      "title": "Polymerized Grease Residue on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-POLYMERIZED-GREASE-RESIDUE-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "polymerized-grease-residue-on-cleaning-stainless-steel",
+      "title": "Polymerized Grease Residue on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-POLYMERIZED-GREASE-RESIDUE-ON-CLEANING-TILE-SURFACES",
+      "slug": "polymerized-grease-residue-on-cleaning-tile-surfaces",
+      "title": "Polymerized Grease Residue on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-PRODUCT-RESIDUE-BUILDUP-ON-CLEANING-FINISHED-WOOD",
+      "slug": "product-residue-buildup-on-cleaning-finished-wood",
+      "title": "Product Residue Buildup on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-PRODUCT-RESIDUE-BUILDUP-ON-CLEANING-GLASS-SURFACES",
+      "slug": "product-residue-buildup-on-cleaning-glass-surfaces",
+      "title": "Product Residue Buildup on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-PRODUCT-RESIDUE-BUILDUP-ON-CLEANING-GROUT",
+      "slug": "product-residue-buildup-on-cleaning-grout",
+      "title": "Product Residue Buildup on Cleaning Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-PRODUCT-RESIDUE-BUILDUP-ON-CLEANING-SHOWER-GLASS",
+      "slug": "product-residue-buildup-on-cleaning-shower-glass",
+      "title": "Product Residue Buildup on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-PRODUCT-RESIDUE-BUILDUP-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "product-residue-buildup-on-cleaning-stainless-steel",
+      "title": "Product Residue Buildup on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-PRODUCT-RESIDUE-BUILDUP-ON-CLEANING-TILE-SURFACES",
+      "slug": "product-residue-buildup-on-cleaning-tile-surfaces",
+      "title": "Product Residue Buildup on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-CLEANING-FINISHED-WOOD",
+      "slug": "residue-on-glass-surfaces-on-cleaning-finished-wood",
+      "title": "Residue on Glass Surfaces on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-CLEANING-GLASS-SURFACES",
+      "slug": "residue-on-glass-surfaces-on-cleaning-glass-surfaces",
+      "title": "Residue on Glass Surfaces on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-CLEANING-GROUT",
+      "slug": "residue-on-glass-surfaces-on-cleaning-grout",
+      "title": "Residue on Glass Surfaces on Cleaning Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-CLEANING-SHOWER-GLASS",
+      "slug": "residue-on-glass-surfaces-on-cleaning-shower-glass",
+      "title": "Residue on Glass Surfaces on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "residue-on-glass-surfaces-on-cleaning-stainless-steel",
+      "title": "Residue on Glass Surfaces on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-GLASS-SURFACES-ON-CLEANING-TILE-SURFACES",
+      "slug": "residue-on-glass-surfaces-on-cleaning-tile-surfaces",
+      "title": "Residue on Glass Surfaces on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-CLEANING-FINISHED-WOOD",
+      "slug": "residue-on-stainless-steel-on-cleaning-finished-wood",
+      "title": "Residue on Stainless Steel on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-CLEANING-GLASS-SURFACES",
+      "slug": "residue-on-stainless-steel-on-cleaning-glass-surfaces",
+      "title": "Residue on Stainless Steel on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-CLEANING-GROUT",
+      "slug": "residue-on-stainless-steel-on-cleaning-grout",
+      "title": "Residue on Stainless Steel on Cleaning Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-CLEANING-SHOWER-GLASS",
+      "slug": "residue-on-stainless-steel-on-cleaning-shower-glass",
+      "title": "Residue on Stainless Steel on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "residue-on-stainless-steel-on-cleaning-stainless-steel",
+      "title": "Residue on Stainless Steel on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-RESIDUE-ON-STAINLESS-STEEL-ON-CLEANING-TILE-SURFACES",
+      "slug": "residue-on-stainless-steel-on-cleaning-tile-surfaces",
+      "title": "Residue on Stainless Steel on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-CLEANING-FINISHED-WOOD",
+      "slug": "soap-scum-removal-on-cleaning-finished-wood",
+      "title": "Soap Scum Removal on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-CLEANING-GLASS-SURFACES",
+      "slug": "soap-scum-removal-on-cleaning-glass-surfaces",
+      "title": "Soap Scum Removal on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-CLEANING-GROUT",
+      "slug": "soap-scum-removal-on-cleaning-grout",
+      "title": "Soap Scum Removal on Cleaning Grout",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-CLEANING-SHOWER-GLASS",
+      "slug": "soap-scum-removal-on-cleaning-shower-glass",
+      "title": "Soap Scum Removal on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "soap-scum-removal-on-cleaning-stainless-steel",
+      "title": "Soap Scum Removal on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SOAP-SCUM-REMOVAL-ON-CLEANING-TILE-SURFACES",
+      "slug": "soap-scum-removal-on-cleaning-tile-surfaces",
+      "title": "Soap Scum Removal on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-CLEANING-FINISHED-WOOD",
+      "slug": "sticky-floors-after-cleaning-on-cleaning-finished-wood",
+      "title": "Sticky Floors After Cleaning on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-CLEANING-GLASS-SURFACES",
+      "slug": "sticky-floors-after-cleaning-on-cleaning-glass-surfaces",
+      "title": "Sticky Floors After Cleaning on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-CLEANING-GROUT",
+      "slug": "sticky-floors-after-cleaning-on-cleaning-grout",
+      "title": "Sticky Floors After Cleaning on Cleaning Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-CLEANING-SHOWER-GLASS",
+      "slug": "sticky-floors-after-cleaning-on-cleaning-shower-glass",
+      "title": "Sticky Floors After Cleaning on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "sticky-floors-after-cleaning-on-cleaning-stainless-steel",
+      "title": "Sticky Floors After Cleaning on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-STICKY-FLOORS-AFTER-CLEANING-ON-CLEANING-TILE-SURFACES",
+      "slug": "sticky-floors-after-cleaning-on-cleaning-tile-surfaces",
+      "title": "Sticky Floors After Cleaning on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-CLEANING-FINISHED-WOOD",
+      "slug": "streak-free-glass-cleaning-cleaning-finished-wood",
+      "title": "Streak-Free Glass Cleaning for Cleaning Finished Wood",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-CLEANING-GLASS-SURFACES",
+      "slug": "streak-free-glass-cleaning-cleaning-glass-surfaces",
+      "title": "Streak-Free Glass Cleaning for Cleaning Glass Surfaces",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-CLEANING-GROUT",
+      "slug": "streak-free-glass-cleaning-cleaning-grout",
+      "title": "Streak-Free Glass Cleaning for Cleaning Grout",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-CLEANING-SHOWER-GLASS",
+      "slug": "streak-free-glass-cleaning-cleaning-shower-glass",
+      "title": "Streak-Free Glass Cleaning for Cleaning Shower Glass",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-CLEANING-STAINLESS-STEEL",
+      "slug": "streak-free-glass-cleaning-cleaning-stainless-steel",
+      "title": "Streak-Free Glass Cleaning for Cleaning Stainless Steel",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-STREAK-FREE-GLASS-CLEANING-CLEANING-TILE-SURFACES",
+      "slug": "streak-free-glass-cleaning-cleaning-tile-surfaces",
+      "title": "Streak-Free Glass Cleaning for Cleaning Tile Surfaces",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-CLEANING-FINISHED-WOOD",
+      "slug": "surface-haze-on-cleaning-finished-wood",
+      "title": "Surface Haze on Cleaning Finished Wood",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-CLEANING-GLASS-SURFACES",
+      "slug": "surface-haze-on-cleaning-glass-surfaces",
+      "title": "Surface Haze on Cleaning Glass Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-CLEANING-GROUT",
+      "slug": "surface-haze-on-cleaning-grout",
+      "title": "Surface Haze on Cleaning Grout",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-CLEANING-SHOWER-GLASS",
+      "slug": "surface-haze-on-cleaning-shower-glass",
+      "title": "Surface Haze on Cleaning Shower Glass",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-CLEANING-STAINLESS-STEEL",
+      "slug": "surface-haze-on-cleaning-stainless-steel",
+      "title": "Surface Haze on Cleaning Stainless Steel",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "P-GEN-SURFACE-HAZE-ON-CLEANING-TILE-SURFACES",
+      "slug": "surface-haze-on-cleaning-tile-surfaces",
+      "title": "Surface Haze on Cleaning Tile Surfaces",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-CLEANING-FINISHED-WOOD",
+      "slug": "touchpoint-sanitization-cleaning-finished-wood",
+      "title": "Touchpoint Sanitization for Cleaning Finished Wood",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-CLEANING-GLASS-SURFACES",
+      "slug": "touchpoint-sanitization-cleaning-glass-surfaces",
+      "title": "Touchpoint Sanitization for Cleaning Glass Surfaces",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-CLEANING-GROUT",
+      "slug": "touchpoint-sanitization-cleaning-grout",
+      "title": "Touchpoint Sanitization for Cleaning Grout",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-CLEANING-SHOWER-GLASS",
+      "slug": "touchpoint-sanitization-cleaning-shower-glass",
+      "title": "Touchpoint Sanitization for Cleaning Shower Glass",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-CLEANING-STAINLESS-STEEL",
+      "slug": "touchpoint-sanitization-cleaning-stainless-steel",
+      "title": "Touchpoint Sanitization for Cleaning Stainless Steel",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    },
+    {
+      "id": "M-GEN-TOUCHPOINT-SANITIZATION-CLEANING-TILE-SURFACES",
+      "slug": "touchpoint-sanitization-cleaning-tile-surfaces",
+      "title": "Touchpoint Sanitization for Cleaning Tile Surfaces",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface"
+    }
+  ]
+}

@@ -1,0 +1,484 @@
+{
+  "pages": [
+    {
+      "id": "GAP-M-DUST-BUILDUP-TILE-FLOORS",
+      "title": "Dust Buildup for Tile Floors",
+      "category": "methods",
+      "cluster": "dust-buildup",
+      "slug": "dust-buildup-tile-floors",
+      "summary": "Dust Buildup for Tile Floors is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from tile surfaces, grout edges, and textured floor planes. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Dust Buildup for Tile Floors shown under angled inspection light on tile surfaces, grout edges, and textured floor planes",
+        "queries": [
+          "dust buildup tile floors professional cleaning",
+          "dust buildup for tile floors before after cleaning",
+          "dust buildup tile floors residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust Buildup for Tile Floors is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on tile surfaces, grout edges, and textured floor planes. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make dust buildup for tile floors worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-DUST-BUILDUP-VINYL",
+      "title": "Dust Buildup Vinyl",
+      "category": "methods",
+      "cluster": "dust-buildup",
+      "slug": "dust-buildup-vinyl",
+      "summary": "Dust Buildup Vinyl is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from the affected surface and its surrounding contact zones. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Dust Buildup Vinyl shown under angled inspection light on the affected surface and its surrounding contact zones",
+        "queries": [
+          "dust buildup vinyl professional cleaning",
+          "dust buildup vinyl before after cleaning",
+          "dust buildup vinyl residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust Buildup Vinyl is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on the affected surface and its surrounding contact zones. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make dust buildup vinyl worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-DUST-REMOVAL-TILE-FLOORS",
+      "title": "Dust Removal for Tile Floors",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "slug": "dust-removal-tile-floors",
+      "summary": "Dust Removal for Tile Floors is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from tile surfaces, grout edges, and textured floor planes. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Dust Removal for Tile Floors shown under angled inspection light on tile surfaces, grout edges, and textured floor planes",
+        "queries": [
+          "dust removal tile floors professional cleaning",
+          "dust removal for tile floors before after cleaning",
+          "dust removal tile floors residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust Removal for Tile Floors is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on tile surfaces, grout edges, and textured floor planes. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make dust removal for tile floors worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-DUST-REMOVAL-VINYL",
+      "title": "Dust Removal Vinyl",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "slug": "dust-removal-vinyl",
+      "summary": "Dust Removal Vinyl is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from the affected surface and its surrounding contact zones. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Dust Removal Vinyl shown under angled inspection light on the affected surface and its surrounding contact zones",
+        "queries": [
+          "dust removal vinyl professional cleaning",
+          "dust removal vinyl before after cleaning",
+          "dust removal vinyl residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dust Removal Vinyl is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on the affected surface and its surrounding contact zones. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make dust removal vinyl worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-GENERAL-SOIL-TILE-FLOORS",
+      "title": "General Soil for Tile Floors",
+      "category": "methods",
+      "cluster": "general-soil",
+      "slug": "general-soil-tile-floors",
+      "summary": "General Soil for Tile Floors is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from tile surfaces, grout edges, and textured floor planes. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "General Soil for Tile Floors shown under angled inspection light on tile surfaces, grout edges, and textured floor planes",
+        "queries": [
+          "general soil tile floors professional cleaning",
+          "general soil for tile floors before after cleaning",
+          "general soil tile floors residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "General Soil for Tile Floors is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on tile surfaces, grout edges, and textured floor planes. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make general soil for tile floors worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-GENERAL-SOIL-VINYL",
+      "title": "General Soil Vinyl",
+      "category": "methods",
+      "cluster": "general-soil",
+      "slug": "general-soil-vinyl",
+      "summary": "General Soil Vinyl is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from the affected surface and its surrounding contact zones. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "General Soil Vinyl shown under angled inspection light on the affected surface and its surrounding contact zones",
+        "queries": [
+          "general soil vinyl professional cleaning",
+          "general soil vinyl before after cleaning",
+          "general soil vinyl residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "General Soil Vinyl is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on the affected surface and its surrounding contact zones. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make general soil vinyl worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-GREASE-BUILDUP-TILE-FLOORS",
+      "title": "Grease Buildup for Tile Floors",
+      "category": "methods",
+      "cluster": "grease-buildup",
+      "slug": "grease-buildup-tile-floors",
+      "summary": "Grease Buildup for Tile Floors is a professional cleaning approach used when oil-based residue, cooking aerosols, and sticky particulate loading must be removed safely from tile surfaces, grout edges, and textured floor planes. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Grease Buildup for Tile Floors shown under angled inspection light on tile surfaces, grout edges, and textured floor planes",
+        "queries": [
+          "grease buildup tile floors professional cleaning",
+          "grease buildup for tile floors before after cleaning",
+          "grease buildup tile floors residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grease Buildup for Tile Floors is a practical cleaning condition professionals identify by looking at how oil-based residue, cooking aerosols, and sticky particulate loading presents on tile surfaces, grout edges, and textured floor planes. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when oil-based residue, cooking aerosols, and sticky particulate loading is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make grease buildup for tile floors worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-GREASE-BUILDUP-VINYL",
+      "title": "Grease Buildup Vinyl",
+      "category": "methods",
+      "cluster": "grease-buildup",
+      "slug": "grease-buildup-vinyl",
+      "summary": "Grease Buildup Vinyl is a professional cleaning approach used when oil-based residue, cooking aerosols, and sticky particulate loading must be removed safely from the affected surface and its surrounding contact zones. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Grease Buildup Vinyl shown under angled inspection light on the affected surface and its surrounding contact zones",
+        "queries": [
+          "grease buildup vinyl professional cleaning",
+          "grease buildup vinyl before after cleaning",
+          "grease buildup vinyl residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grease Buildup Vinyl is a practical cleaning condition professionals identify by looking at how oil-based residue, cooking aerosols, and sticky particulate loading presents on the affected surface and its surrounding contact zones. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when oil-based residue, cooking aerosols, and sticky particulate loading is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make grease buildup vinyl worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-GROUT-SOILING-TILE-FLOORS",
+      "title": "Grout Soiling for Tile Floors",
+      "category": "methods",
+      "cluster": "grout-soiling",
+      "slug": "grout-soiling-tile-floors",
+      "summary": "Grout Soiling for Tile Floors is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from grout lines, porous joints, and adjacent hard surfaces. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Grout Soiling for Tile Floors shown under angled inspection light on grout lines, porous joints, and adjacent hard surfaces",
+        "queries": [
+          "grout soiling tile floors professional cleaning",
+          "grout soiling for tile floors before after cleaning",
+          "grout soiling tile floors residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grout Soiling for Tile Floors is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on grout lines, porous joints, and adjacent hard surfaces. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make grout soiling for tile floors worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-GROUT-SOILING-VINYL",
+      "title": "Grout Soiling Vinyl",
+      "category": "methods",
+      "cluster": "grout-soiling",
+      "slug": "grout-soiling-vinyl",
+      "summary": "Grout Soiling Vinyl is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from grout lines, porous joints, and adjacent hard surfaces. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Grout Soiling Vinyl shown under angled inspection light on grout lines, porous joints, and adjacent hard surfaces",
+        "queries": [
+          "grout soiling vinyl professional cleaning",
+          "grout soiling vinyl before after cleaning",
+          "grout soiling vinyl residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grout Soiling Vinyl is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on grout lines, porous joints, and adjacent hard surfaces. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make grout soiling vinyl worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-NEUTRAL-SURFACE-CLEANING-VINYL",
+      "title": "Neutral Surface Cleaning Vinyl",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "slug": "neutral-surface-cleaning-vinyl",
+      "summary": "Neutral Surface Cleaning Vinyl is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from the affected surface and its surrounding contact zones. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Neutral Surface Cleaning Vinyl shown under angled inspection light on the affected surface and its surrounding contact zones",
+        "queries": [
+          "neutral surface cleaning vinyl professional cleaning",
+          "neutral surface cleaning vinyl before after cleaning",
+          "neutral surface cleaning vinyl residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Neutral Surface Cleaning Vinyl is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on the affected surface and its surrounding contact zones. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make neutral surface cleaning vinyl worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-STREAKING-TILE-FLOORS",
+      "title": "Streaking for Tile Floors",
+      "category": "methods",
+      "cluster": "streaking",
+      "slug": "streaking-tile-floors",
+      "summary": "Streaking for Tile Floors is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from tile surfaces, grout edges, and textured floor planes. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Streaking for Tile Floors shown under angled inspection light on tile surfaces, grout edges, and textured floor planes",
+        "queries": [
+          "streaking tile floors professional cleaning",
+          "streaking for tile floors before after cleaning",
+          "streaking tile floors residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Streaking for Tile Floors is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on tile surfaces, grout edges, and textured floor planes. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make streaking for tile floors worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-STREAKING-VINYL",
+      "title": "Streaking Vinyl",
+      "category": "methods",
+      "cluster": "streaking",
+      "slug": "streaking-vinyl",
+      "summary": "Streaking Vinyl is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from the affected surface and its surrounding contact zones. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Streaking Vinyl shown under angled inspection light on the affected surface and its surrounding contact zones",
+        "queries": [
+          "streaking vinyl professional cleaning",
+          "streaking vinyl before after cleaning",
+          "streaking vinyl residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Streaking Vinyl is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on the affected surface and its surrounding contact zones. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make streaking vinyl worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-SURFACE-HAZE-TILE-FLOORS",
+      "title": "Surface Haze for Tile Floors",
+      "category": "methods",
+      "cluster": "surface-haze",
+      "slug": "surface-haze-tile-floors",
+      "summary": "Surface Haze for Tile Floors is a professional cleaning approach used when diffuse haze from film, wear, micro-residue, or mineral contamination must be removed safely from tile surfaces, grout edges, and textured floor planes. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Surface Haze for Tile Floors shown under angled inspection light on tile surfaces, grout edges, and textured floor planes",
+        "queries": [
+          "surface haze tile floors professional cleaning",
+          "surface haze for tile floors before after cleaning",
+          "surface haze tile floors residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Surface Haze for Tile Floors is a practical cleaning condition professionals identify by looking at how diffuse haze from film, wear, micro-residue, or mineral contamination presents on tile surfaces, grout edges, and textured floor planes. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when diffuse haze from film, wear, micro-residue, or mineral contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make surface haze for tile floors worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-SURFACE-HAZE-VINYL",
+      "title": "Surface Haze Vinyl",
+      "category": "methods",
+      "cluster": "surface-haze",
+      "slug": "surface-haze-vinyl",
+      "summary": "Surface Haze Vinyl is a professional cleaning approach used when diffuse haze from film, wear, micro-residue, or mineral contamination must be removed safely from the affected surface and its surrounding contact zones. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Surface Haze Vinyl shown under angled inspection light on the affected surface and its surrounding contact zones",
+        "queries": [
+          "surface haze vinyl professional cleaning",
+          "surface haze vinyl before after cleaning",
+          "surface haze vinyl residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Surface Haze Vinyl is a practical cleaning condition professionals identify by looking at how diffuse haze from film, wear, micro-residue, or mineral contamination presents on the affected surface and its surrounding contact zones. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when diffuse haze from film, wear, micro-residue, or mineral contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make surface haze vinyl worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "GAP-M-TOUCHPOINT-SANITIZATION-VINYL",
+      "title": "Touchpoint Sanitization Vinyl",
+      "category": "methods",
+      "cluster": "sanitization",
+      "slug": "touchpoint-sanitization-vinyl",
+      "summary": "Touchpoint Sanitization Vinyl is a professional cleaning approach used when surface soils, product residue, and material-specific contamination must be removed safely from the affected surface and its surrounding contact zones. This page explains where the method fits, what people get wrong, and how to sequence it correctly.",
+      "image": {
+        "primaryAlt": "Touchpoint Sanitization Vinyl shown under angled inspection light on the affected surface and its surrounding contact zones",
+        "queries": [
+          "touchpoint sanitization vinyl professional cleaning",
+          "touchpoint sanitization vinyl before after cleaning",
+          "touchpoint sanitization vinyl residue surface inspection"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Touchpoint Sanitization Vinyl is a practical cleaning condition professionals identify by looking at how surface soils, product residue, and material-specific contamination presents on the affected surface and its surrounding contact zones. In the field, it usually shows up as a repeatable visual pattern, drag, haze, tackiness, or uneven reflectivity rather than as a random isolated mark.",
+        "why_it_happens": "The issue usually develops when surface soils, product residue, and material-specific contamination is allowed to accumulate, partially dry, or get redistributed during maintenance. Surface texture, finish sensitivity, humidity, rinse behavior, and prior product history all influence whether the problem stays light and cosmetic or becomes a recurring cleaning failure.",
+        "what_people_do_wrong": "Most people make touchpoint sanitization vinyl worse by using too much product, the wrong chemistry, overly wet towels or pads, poor rinse discipline, or repeated wipe passes with already-loaded cloth faces. They often chase the visible symptom without separating true soil, cleaner residue, and actual surface damage.",
+        "professional_method": "A professional approach starts with identifying the material, the likely residue or soil family, and whether the surface can tolerate moisture, agitation, or stronger chemistry. From there, the work is done in controlled test areas, with measured application, clean pickup, towel or pad rotation, and a final visual check under directional light to confirm the issue is actually resolved rather than temporarily disguised.",
+        "data_and_benchmarks": "Useful benchmarks include how evenly the surface dries, whether reflectivity improves across multiple adjacent passes, whether tackiness or drag returns after full dry-down, and whether the result holds when viewed from different lighting angles. Professionals also compare test zones so they can distinguish film removal from simple temporary wetting improvement.",
+        "professional_insights": "One of the best professional clues is distribution: when the issue is concentrated around handles, splash zones, edges, grout lines, traffic lanes, or appliance fronts, the pattern usually tells you whether you are dealing with product buildup, environmental soil, or a surface-specific compatibility problem.",
+        "when_to_call_a_professional": "Call a professional when the surface is specialty-coated, natural stone, black stainless, factory-finished wood, high glass, unknown material, or already affected by repeated failed cleaning attempts. Professional help is also the right move when the issue keeps returning after careful cleaning, which usually means the root cause has not actually been isolated.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    }
+  ]
+}

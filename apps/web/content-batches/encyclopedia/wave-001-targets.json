@@ -1,0 +1,21 @@
+{
+  "targets": [
+    { "problem": "mold", "surface": "brick", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "mold", "surface": "shower tile", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "mildew", "surface": "grout", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "hard water stains", "surface": "shower glass", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "hard water stains", "surface": "tile", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "grease buildup", "surface": "stovetops", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "grease", "surface": "backsplashes", "intents": ["how-clean","what-causes"] },
+    { "problem": "grease", "surface": "kitchen cabinets", "intents": ["how-remove","how-prevent"] },
+    { "problem": "soap scum", "surface": "tile", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "soap scum", "surface": "glass shower doors", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "residue", "surface": "hardwood floors", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "streaking", "surface": "hardwood floors", "intents": ["how-fix"] },
+    { "problem": "discoloration", "surface": "stainless steel", "intents": ["how-fix","what-causes","how-prevent"] },
+    { "problem": "hard water stains", "surface": "stainless steel", "intents": ["how-remove","what-causes"] },
+    { "problem": "stains", "surface": "natural stone", "intents": ["how-remove","what-causes","how-prevent"] },
+    { "problem": "dullness", "surface": "tile", "intents": ["how-fix","what-causes","how-prevent"] },
+    { "problem": "stains", "surface": "brick", "intents": ["diagnosis"] }
+  ]
+}

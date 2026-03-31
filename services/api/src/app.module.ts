@@ -32,6 +32,7 @@ import { KnowledgeModule } from "./modules/knowledge/knowledge.module";
 import { SystemTestsAutomationModule } from "./modules/system-tests-automation/system-tests-automation.module";
 import { SystemTestsPipelineModule } from "./modules/system-tests-pipeline/system-tests-pipeline.module";
 import { SystemTestsModule } from "./modules/system-tests/system-tests.module";
+import { EncyclopediaModule } from "./modules/encyclopedia/encyclopedia.module";
 
 const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
 
@@ -73,6 +74,7 @@ const enableDevScenarioApi =
     SystemModule,
     BookingDirectionIntakeModule,
     AuthorityModule,
+    EncyclopediaModule,
     SystemTestsModule,
     SystemTestsPipelineModule,
     SystemTestsAutomationModule,

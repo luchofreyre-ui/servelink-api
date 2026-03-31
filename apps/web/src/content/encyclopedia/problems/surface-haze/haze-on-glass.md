@@ -44,3 +44,14 @@ New construction haze sometimes tracks drywall dust plus moisture—pattern near
 ## When to Call a Professional
 
 Call a professional when coatings are unknown, when ladders or rope access is required, or when warranty glass needs vendor-approved methods.
+
+## Related Topics
+
+- [Haze on Finished Wood](/encyclopedia/problems/haze-on-finished-wood)
+- [Haze on Stainless Steel](/encyclopedia/problems/haze-on-stainless-steel)
+- [Haze on Tile Floors](/encyclopedia/problems/haze-on-tile-floors)
+- [Haze After Cleaning](/encyclopedia/problems/haze-after-cleaning)
+- [Surface Haze](/encyclopedia/problems/surface-haze)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Streaks on Glass](/encyclopedia/problems/streaks-on-glass)

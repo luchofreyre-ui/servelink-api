@@ -44,3 +44,14 @@ If water-only wiping improves gloss but product restores haze, you are fighting 
 ## When to Call a Professional
 
 Call a professional when etching is suspected on marble or when manufacturer warranty service requires documented care sequences.
+
+## Related Topics
+
+- [Floor Residue After Mopping](/encyclopedia/problems/floor-residue-after-mopping)
+- [Product Residue Buildup](/encyclopedia/problems/product-residue-buildup)
+- [Residue on Glass Surfaces](/encyclopedia/problems/residue-on-glass-surfaces)
+- [Residue on Stainless Steel](/encyclopedia/problems/residue-on-stainless-steel)
+- [Sticky Floors After Cleaning](/encyclopedia/problems/sticky-floors-after-cleaning)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

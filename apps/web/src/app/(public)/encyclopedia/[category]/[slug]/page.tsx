@@ -1,8 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { EncyclopediaPage } from "@/components/encyclopedia/EncyclopediaPage";
+import { EncyclopediaPipelineArticle } from "@/components/encyclopedia/EncyclopediaPipelineArticle";
+import { resolveEncyclopediaPageFromApi } from "@/lib/encyclopedia/encyclopediaApiPublic.server";
+import { getResolvedEncyclopediaPage } from "@/lib/encyclopedia/encyclopediaContentResolver";
 import { getEncyclopediaDocumentByCategoryAndSlug, getPublishedEncyclopediaParams } from "@/lib/encyclopedia/loader";
 import { encyclopediaCategorySchema } from "@/lib/encyclopedia/schema";
+import type { EncyclopediaCategory, EncyclopediaDocument } from "@/lib/encyclopedia/types";
+
+async function resolveEncyclopediaPageWithApiFallback(
+  category: EncyclopediaCategory,
+  slug: string,
+) {
+  const local = getResolvedEncyclopediaPage(category, slug);
+  if (local) {
+    return local;
+  }
+  return resolveEncyclopediaPageFromApi(category, slug);
+}
 
 interface EncyclopediaDocPageProps {
   params: Promise<{
@@ -20,17 +35,22 @@ export async function generateMetadata({
 }: EncyclopediaDocPageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const category = encyclopediaCategorySchema.parse(resolvedParams.category);
-  const document = getEncyclopediaDocumentByCategoryAndSlug(
-    category,
-    resolvedParams.slug,
-  );
+  const resolved = getResolvedEncyclopediaPage(category, resolvedParams.slug);
 
-  if (!document) {
+  if (!resolved) {
     return {
       title: "Encyclopedia",
     };
   }
 
+  if (resolved.source === "live") {
+    return {
+      title: `${resolved.title} | Cleaning Encyclopedia`,
+      description: "Encyclopedia (promoted pipeline)",
+    };
+  }
+
+  const document = resolved.content as EncyclopediaDocument;
   return {
     title: `${document.frontmatter.title} | Cleaning Encyclopedia`,
     description: document.frontmatter.summary,
@@ -49,14 +69,20 @@ export default async function EncyclopediaDocPage({
     notFound();
   }
 
-  const document = getEncyclopediaDocumentByCategoryAndSlug(
+  const resolved = await resolveEncyclopediaPageWithApiFallback(
     category.data,
     resolvedParams.slug,
   );
 
-  if (!document) {
+  if (!resolved) {
     notFound();
   }
 
-  return <EncyclopediaPage document={document} />;
+  if (resolved.source === "live") {
+    return (
+      <EncyclopediaPipelineArticle page={resolved} category={category.data} />
+    );
+  }
+
+  return <EncyclopediaPage document={resolved.content as EncyclopediaDocument} />;
 }

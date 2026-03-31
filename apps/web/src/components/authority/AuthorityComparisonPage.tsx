@@ -8,6 +8,10 @@ import {
   buildBreadcrumbListSchema,
   buildFaqSchema,
 } from "@/authority/metadata/authoritySchema";
+import {
+  resolveCanonicalMetadataHref,
+  resolveJsonLdBreadcrumbHrefs,
+} from "@/lib/encyclopedia/encyclopediaCanonicalMetadataHref";
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
 import { MarketingLinkButton } from "@/components/marketing/precision-luxury/shared/MarketingLinkButton";
@@ -15,6 +19,7 @@ import { AuthorityBreadcrumbs } from "./AuthorityBreadcrumbs";
 import { AuthorityCallout } from "./AuthorityCallout";
 import { AuthorityFaq } from "./AuthorityFaq";
 import { AuthorityHero } from "./AuthorityHero";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { AuthorityJsonLd } from "./AuthorityJsonLd";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
@@ -40,7 +45,7 @@ function buildSeeAlsoGroups(data: AuthorityComparisonPageData): AuthoritySeeAlso
             title: "Related methods",
             links: data.relatedMethods.map((slug) => ({
               title: getMethodPageBySlug(slug)?.title ?? slug,
-              href: `/methods/${slug}`,
+              href: preferEncyclopediaCanonicalHref(`/methods/${slug}`),
             })),
           },
         ]
@@ -62,7 +67,7 @@ function buildSeeAlsoGroups(data: AuthorityComparisonPageData): AuthoritySeeAlso
             title: "Related problems",
             links: data.relatedProblems.map((slug) => ({
               title: getProblemPageBySlug(slug)?.title ?? slug,
-              href: `/problems/${slug}`,
+              href: preferEncyclopediaCanonicalHref(`/problems/${slug}`),
             })),
           },
         ]
@@ -101,11 +106,11 @@ export function AuthorityComparisonPage({
 }) {
   const faq = buildComparisonFaq(data);
   const schemas = [
-    buildBreadcrumbListSchema(breadcrumbs),
+    buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(breadcrumbs)),
     buildArticleSchema({
       title: data.title,
       description: data.description,
-      path,
+      path: resolveCanonicalMetadataHref(path),
     }),
     buildFaqSchema(faq.items),
   ];

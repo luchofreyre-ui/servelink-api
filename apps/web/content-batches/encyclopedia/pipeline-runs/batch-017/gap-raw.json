@@ -1,0 +1,912 @@
+{
+  "generatedAt": "2026-03-29T05:09:07.614Z",
+  "totalCandidates": 46,
+  "masterIndexSuppressedCount": 457,
+  "clusters": [
+    {
+      "clusterSlug": "finished-wood",
+      "clusterLabel": "Finished Wood",
+      "status": "thin",
+      "priority": 170,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 26
+    },
+    {
+      "clusterSlug": "glass",
+      "clusterLabel": "Glass",
+      "status": "thin",
+      "priority": 170,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 28
+    },
+    {
+      "clusterSlug": "grout",
+      "clusterLabel": "Grout",
+      "status": "thin",
+      "priority": 170,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 24
+    },
+    {
+      "clusterSlug": "shower-glass",
+      "clusterLabel": "Shower Glass",
+      "status": "thin",
+      "priority": 170,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 4
+    },
+    {
+      "clusterSlug": "stainless-steel",
+      "clusterLabel": "Stainless Steel",
+      "status": "thin",
+      "priority": 170,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 26
+    },
+    {
+      "clusterSlug": "tile",
+      "clusterLabel": "Tile",
+      "status": "thin",
+      "priority": 170,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 28
+    },
+    {
+      "clusterSlug": "degreasing",
+      "clusterLabel": "Degreasing",
+      "status": "thin",
+      "priority": 162,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 34
+    },
+    {
+      "clusterSlug": "dust-removal",
+      "clusterLabel": "Dust Removal",
+      "status": "thin",
+      "priority": 162,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 34
+    },
+    {
+      "clusterSlug": "glass-cleaning",
+      "clusterLabel": "Glass Cleaning",
+      "status": "thin",
+      "priority": 162,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 0
+    },
+    {
+      "clusterSlug": "hard-water-removal",
+      "clusterLabel": "Hard Water Removal",
+      "status": "thin",
+      "priority": 162,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 18
+    },
+    {
+      "clusterSlug": "neutral-cleaning",
+      "clusterLabel": "Neutral Cleaning",
+      "status": "thin",
+      "priority": 162,
+      "candidatesAdded": 3,
+      "suppressedByMasterIndex": 33
+    },
+    {
+      "clusterSlug": "touchpoint-sanitization",
+      "clusterLabel": "Touchpoint Sanitization",
+      "status": "thin",
+      "priority": 162,
+      "candidatesAdded": 3,
+      "suppressedByMasterIndex": 33
+    },
+    {
+      "clusterSlug": "grout-soiling",
+      "clusterLabel": "Grout Soiling",
+      "status": "thin",
+      "priority": 157,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 32
+    },
+    {
+      "clusterSlug": "hard-water",
+      "clusterLabel": "Hard Water",
+      "status": "thin",
+      "priority": 157,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 18
+    },
+    {
+      "clusterSlug": "soap-scum",
+      "clusterLabel": "Soap Scum",
+      "status": "thin",
+      "priority": 157,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 18
+    },
+    {
+      "clusterSlug": "dust-buildup",
+      "clusterLabel": "Dust Buildup",
+      "status": "developing",
+      "priority": 95,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 17
+    },
+    {
+      "clusterSlug": "general-soil",
+      "clusterLabel": "General Soil",
+      "status": "developing",
+      "priority": 95,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 17
+    },
+    {
+      "clusterSlug": "grease-buildup",
+      "clusterLabel": "Grease Buildup",
+      "status": "developing",
+      "priority": 95,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 17
+    },
+    {
+      "clusterSlug": "product-residue",
+      "clusterLabel": "Product Residue",
+      "status": "developing",
+      "priority": 95,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 9
+    },
+    {
+      "clusterSlug": "surface-haze",
+      "clusterLabel": "Surface Haze",
+      "status": "developing",
+      "priority": 95,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 16
+    },
+    {
+      "clusterSlug": "glass-etching",
+      "clusterLabel": "Glass Etching",
+      "status": "developing",
+      "priority": 85,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 0
+    },
+    {
+      "clusterSlug": "limescale",
+      "clusterLabel": "Limescale",
+      "status": "developing",
+      "priority": 85,
+      "candidatesAdded": 2,
+      "suppressedByMasterIndex": 9
+    },
+    {
+      "clusterSlug": "streaking",
+      "clusterLabel": "Streaking",
+      "status": "developing",
+      "priority": 80,
+      "candidatesAdded": 0,
+      "suppressedByMasterIndex": 16
+    }
+  ],
+  "candidates": [
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-DUST-BUILDUP",
+      "slug": "how-to-maintain-surfaces-prone-to-dust-buildup",
+      "title": "How to maintain surfaces prone to dust buildup",
+      "category": "methods",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to dust buildup"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-GENERAL-SOIL",
+      "slug": "how-to-maintain-surfaces-prone-to-general-soil",
+      "title": "How to maintain surfaces prone to general soil",
+      "category": "methods",
+      "cluster": "general-soil",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to general soil"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-GLASS-ETCHING",
+      "slug": "how-to-maintain-surfaces-prone-to-glass-etching",
+      "title": "How to maintain surfaces prone to glass etching",
+      "category": "methods",
+      "cluster": "glass-etching",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to glass etching"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-GREASE-BUILDUP",
+      "slug": "how-to-maintain-surfaces-prone-to-grease-buildup",
+      "title": "How to maintain surfaces prone to grease buildup",
+      "category": "methods",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to grease buildup"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-LIMESCALE",
+      "slug": "how-to-maintain-surfaces-prone-to-limescale",
+      "title": "How to maintain surfaces prone to limescale",
+      "category": "methods",
+      "cluster": "limescale",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to limescale"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-PRODUCT-RESIDUE",
+      "slug": "how-to-maintain-surfaces-prone-to-product-residue",
+      "title": "How to maintain surfaces prone to product residue",
+      "category": "methods",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to product residue"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-MAINTAIN-SURFACES-PRONE-TO-SURFACE-HAZE",
+      "slug": "how-to-maintain-surfaces-prone-to-surface-haze",
+      "title": "How to maintain surfaces prone to surface haze",
+      "category": "methods",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to maintain surfaces prone to surface haze"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-DEGREASING-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-degreasing-from-building-up-again",
+      "title": "How to prevent degreasing from building up again",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent degreasing from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-DUST-REMOVAL-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-dust-removal-from-building-up-again",
+      "title": "How to prevent dust removal from building up again",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent dust removal from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-FINISHED-WOOD-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-finished-wood-from-building-up-again",
+      "title": "How to prevent finished wood from building up again",
+      "category": "methods",
+      "cluster": "finished-wood",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent finished wood from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-GLASS-CLEANING-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-glass-cleaning-from-building-up-again",
+      "title": "How to prevent glass cleaning from building up again",
+      "category": "methods",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent glass cleaning from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-GLASS-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-glass-from-building-up-again",
+      "title": "How to prevent glass from building up again",
+      "category": "methods",
+      "cluster": "glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent glass from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-GROUT-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-grout-from-building-up-again",
+      "title": "How to prevent grout from building up again",
+      "category": "methods",
+      "cluster": "grout",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent grout from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-GROUT-SOILING-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-grout-soiling-from-building-up-again",
+      "title": "How to prevent grout soiling from building up again",
+      "category": "methods",
+      "cluster": "grout-soiling",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent grout soiling from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-HARD-WATER-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-hard-water-from-building-up-again",
+      "title": "How to prevent hard water from building up again",
+      "category": "methods",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent hard water from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-HARD-WATER-REMOVAL-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-hard-water-removal-from-building-up-again",
+      "title": "How to prevent hard water removal from building up again",
+      "category": "methods",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent hard water removal from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-NEUTRAL-CLEANING-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-neutral-cleaning-from-building-up-again",
+      "title": "How to prevent neutral cleaning from building up again",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent neutral cleaning from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-SHOWER-GLASS-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-shower-glass-from-building-up-again",
+      "title": "How to prevent shower glass from building up again",
+      "category": "methods",
+      "cluster": "shower-glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent shower glass from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-SOAP-SCUM-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-soap-scum-from-building-up-again",
+      "title": "How to prevent soap scum from building up again",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent soap scum from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-STAINLESS-STEEL-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-stainless-steel-from-building-up-again",
+      "title": "How to prevent stainless steel from building up again",
+      "category": "methods",
+      "cluster": "stainless-steel",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent stainless steel from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-TILE-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-tile-from-building-up-again",
+      "title": "How to prevent tile from building up again",
+      "category": "methods",
+      "cluster": "tile",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent tile from building up again"
+      }
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-TOUCHPOINT-SANITIZATION-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-touchpoint-sanitization-from-building-up-again",
+      "title": "How to prevent touchpoint sanitization from building up again",
+      "category": "methods",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent touchpoint sanitization from building up again"
+      }
+    },
+    {
+      "id": "GAP-M-NEUTRAL-SURFACE-CLEANING-GLASS-SURFACES",
+      "slug": "neutral-surface-cleaning-glass-surfaces",
+      "title": "Neutral Surface Cleaning for Glass Surfaces",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "neutral-surface-cleaning-glass-surfaces",
+      "cleanedTitle": "Neutral Surface Cleaning for Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "GAP-M-TOUCHPOINT-SANITIZATION-GLASS-SURFACES",
+      "slug": "touchpoint-sanitization-glass-surfaces",
+      "title": "Touchpoint Sanitization for Glass Surfaces",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "touchpoint-sanitization-glass-surfaces",
+      "cleanedTitle": "Touchpoint Sanitization for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-DEGREASING-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-degreasing-keep-coming-back-after-cleaning",
+      "title": "Why does degreasing keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does degreasing keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-DUST-REMOVAL-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-dust-removal-keep-coming-back-after-cleaning",
+      "title": "Why does dust removal keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "dust-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does dust removal keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-FINISHED-WOOD-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-finished-wood-keep-coming-back-after-cleaning",
+      "title": "Why does finished wood keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "finished-wood",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does finished wood keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-GLASS-CLEANING-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-glass-cleaning-keep-coming-back-after-cleaning",
+      "title": "Why does glass cleaning keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "glass-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does glass cleaning keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-GLASS-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-glass-keep-coming-back-after-cleaning",
+      "title": "Why does glass keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does glass keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-GROUT-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-grout-keep-coming-back-after-cleaning",
+      "title": "Why does grout keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "grout",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does grout keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-GROUT-SOILING-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-grout-soiling-keep-coming-back-after-cleaning",
+      "title": "Why does grout soiling keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "grout-soiling",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does grout soiling keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-HARD-WATER-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-hard-water-keep-coming-back-after-cleaning",
+      "title": "Why does hard water keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does hard water keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-HARD-WATER-REMOVAL-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-hard-water-removal-keep-coming-back-after-cleaning",
+      "title": "Why does hard water removal keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "hard-water-removal",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does hard water removal keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-NEUTRAL-CLEANING-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-neutral-cleaning-keep-coming-back-after-cleaning",
+      "title": "Why does neutral cleaning keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does neutral cleaning keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-SHOWER-GLASS-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-shower-glass-keep-coming-back-after-cleaning",
+      "title": "Why does shower glass keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "shower-glass",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does shower glass keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-SOAP-SCUM-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-soap-scum-keep-coming-back-after-cleaning",
+      "title": "Why does soap scum keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does soap scum keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-STAINLESS-STEEL-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-stainless-steel-keep-coming-back-after-cleaning",
+      "title": "Why does stainless steel keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "stainless-steel",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does stainless steel keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-TILE-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-tile-keep-coming-back-after-cleaning",
+      "title": "Why does tile keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "tile",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does tile keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-TOUCHPOINT-SANITIZATION-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-touchpoint-sanitization-keep-coming-back-after-cleaning",
+      "title": "Why does touchpoint sanitization keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "touchpoint-sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does touchpoint sanitization keep coming back after cleaning"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-DUST-BUILDUP-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-dust-buildup-is-hard-to-remove-completely",
+      "title": "Why dust buildup is hard to remove completely",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why dust buildup is hard to remove completely"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-GENERAL-SOIL-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-general-soil-is-hard-to-remove-completely",
+      "title": "Why general soil is hard to remove completely",
+      "category": "problems",
+      "cluster": "general-soil",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why general soil is hard to remove completely"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-GLASS-ETCHING-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-glass-etching-is-hard-to-remove-completely",
+      "title": "Why glass etching is hard to remove completely",
+      "category": "problems",
+      "cluster": "glass-etching",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why glass etching is hard to remove completely"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-GREASE-BUILDUP-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-grease-buildup-is-hard-to-remove-completely",
+      "title": "Why grease buildup is hard to remove completely",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why grease buildup is hard to remove completely"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-LIMESCALE-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-limescale-is-hard-to-remove-completely",
+      "title": "Why limescale is hard to remove completely",
+      "category": "problems",
+      "cluster": "limescale",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why limescale is hard to remove completely"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-PRODUCT-RESIDUE-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-product-residue-is-hard-to-remove-completely",
+      "title": "Why product residue is hard to remove completely",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why product residue is hard to remove completely"
+      }
+    },
+    {
+      "id": "GAP-QS-WHY-SURFACE-HAZE-IS-HARD-TO-REMOVE-COMPLETELY",
+      "slug": "why-surface-haze-is-hard-to-remove-completely",
+      "title": "Why surface haze is hard to remove completely",
+      "category": "problems",
+      "cluster": "surface-haze",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why surface haze is hard to remove completely"
+      }
+    }
+  ]
+}

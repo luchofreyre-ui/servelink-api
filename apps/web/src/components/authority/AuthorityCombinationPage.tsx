@@ -20,6 +20,11 @@ import {
   buildBreadcrumbListSchema,
   buildFaqSchema,
 } from "@/authority/metadata/authoritySchema";
+import {
+  resolveCanonicalMetadataHref,
+  resolveJsonLdBreadcrumbHrefs,
+} from "@/lib/encyclopedia/encyclopediaCanonicalMetadataHref";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
 import { MarketingLinkButton } from "@/components/marketing/precision-luxury/shared/MarketingLinkButton";
@@ -41,7 +46,9 @@ function buildComboSeeAlso(data: AuthorityCombinationPageData): AuthoritySeeAlso
   const methodLinks = cap(data.relatedMethods)
     .map((slug) => {
       const m = getMethodPageBySlug(slug);
-      return m ? { title: m.title, href: `/methods/${slug}`, description: m.summary } : null;
+      return m
+        ? { title: m.title, href: preferEncyclopediaCanonicalHref(`/methods/${slug}`), description: m.summary }
+        : null;
     })
     .filter(Boolean) as AuthoritySeeAlsoGroup["links"];
   if (methodLinks.length) groups.push({ title: "Related methods", links: methodLinks });
@@ -67,7 +74,7 @@ function buildComboSeeAlso(data: AuthorityCombinationPageData): AuthoritySeeAlso
     .map((slug) => {
       const p = getProblemPageBySlug(slug);
       if (!p) return null;
-      let href = `/problems/${slug}`;
+      let href = preferEncyclopediaCanonicalHref(`/problems/${slug}`);
       if (
         data.type === "method_problem" &&
         data.methodSlug &&
@@ -128,10 +135,10 @@ export function AuthorityCombinationPage(props: { data: AuthorityCombinationPage
   const { data } = props;
   const crumbs = comboBreadcrumbs(data);
   const seeAlso = buildComboSeeAlso(data);
-  const path = comboCanonicalPath(data);
+  const path = resolveCanonicalMetadataHref(comboCanonicalPath(data));
   const faqBlock = comboFaqBlock(data);
   const jsonLd: Record<string, unknown>[] = [
-    buildBreadcrumbListSchema(crumbs),
+    buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(crumbs)),
     buildArticleSchema({ title: data.title, description: data.description, path }),
   ];
   if (faqBlock?.items.length) jsonLd.push(buildFaqSchema(faqBlock.items));

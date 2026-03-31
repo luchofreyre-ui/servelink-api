@@ -1,0 +1,604 @@
+{
+  "pages": [
+    {
+      "id": "M-GEN-DEGREASING-FINISHED-WOOD",
+      "title": "Degreasing for Finished Wood",
+      "category": "methods",
+      "cluster": "degreasing",
+      "slug": "degreasing-finished-wood",
+      "summary": "Degreasing for Finished Wood explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Degreasing for Finished Wood surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "degreasing finished wood cleaning",
+          "degreasing for finished wood professional cleaning",
+          "degreasing for finished wood surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Degreasing for Finished Wood describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GEN-DEGREASING-GLASS-SURFACES",
+      "title": "Degreasing for Glass Surfaces",
+      "category": "methods",
+      "cluster": "degreasing",
+      "slug": "degreasing-glass-surfaces",
+      "summary": "Degreasing for Glass Surfaces explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Degreasing for Glass Surfaces surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "degreasing glass surfaces cleaning",
+          "degreasing for glass surfaces professional cleaning",
+          "degreasing for glass surfaces surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Degreasing for Glass Surfaces describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GEN-DEGREASING-GROUT",
+      "title": "Degreasing for Grout",
+      "category": "methods",
+      "cluster": "degreasing",
+      "slug": "degreasing-grout",
+      "summary": "Degreasing for Grout explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Degreasing for Grout surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "degreasing grout cleaning",
+          "degreasing for grout professional cleaning",
+          "degreasing for grout surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Degreasing for Grout describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GEN-DEGREASING-STAINLESS-STEEL",
+      "title": "Degreasing for Stainless Steel",
+      "category": "methods",
+      "cluster": "degreasing",
+      "slug": "degreasing-stainless-steel",
+      "summary": "Degreasing for Stainless Steel explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Degreasing for Stainless Steel surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "degreasing stainless steel cleaning",
+          "degreasing for stainless steel professional cleaning",
+          "degreasing for stainless steel surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Degreasing for Stainless Steel describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GEN-DEGREASING-TILE-FLOORS",
+      "title": "Degreasing for Tile Floors",
+      "category": "methods",
+      "cluster": "degreasing",
+      "slug": "degreasing-tile-floors",
+      "summary": "Degreasing for Tile Floors explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Degreasing for Tile Floors surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "degreasing tile floors cleaning",
+          "degreasing for tile floors professional cleaning",
+          "degreasing for tile floors surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Degreasing for Tile Floors describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-FINISHED-WOOD",
+      "title": "Dry Dust Removal for Finished Wood",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "slug": "dry-dust-removal-finished-wood",
+      "summary": "Dry Dust Removal for Finished Wood explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Dry Dust Removal for Finished Wood surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "dry dust removal finished wood cleaning",
+          "dry dust removal for finished wood professional cleaning",
+          "dry dust removal for finished wood surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dry Dust Removal for Finished Wood describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-GLASS-SURFACES",
+      "title": "Dry Dust Removal for Glass Surfaces",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "slug": "dry-dust-removal-glass-surfaces",
+      "summary": "Dry Dust Removal for Glass Surfaces explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Dry Dust Removal for Glass Surfaces surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "dry dust removal glass surfaces cleaning",
+          "dry dust removal for glass surfaces professional cleaning",
+          "dry dust removal for glass surfaces surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dry Dust Removal for Glass Surfaces describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-GROUT",
+      "title": "Dry Dust Removal for Grout",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "slug": "dry-dust-removal-grout",
+      "summary": "Dry Dust Removal for Grout explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Dry Dust Removal for Grout surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "dry dust removal grout cleaning",
+          "dry dust removal for grout professional cleaning",
+          "dry dust removal for grout surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dry Dust Removal for Grout describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-STAINLESS-STEEL",
+      "title": "Dry Dust Removal for Stainless Steel",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "slug": "dry-dust-removal-stainless-steel",
+      "summary": "Dry Dust Removal for Stainless Steel explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Dry Dust Removal for Stainless Steel surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "dry dust removal stainless steel cleaning",
+          "dry dust removal for stainless steel professional cleaning",
+          "dry dust removal for stainless steel surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dry Dust Removal for Stainless Steel describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "M-GEN-DRY-DUST-REMOVAL-TILE-FLOORS",
+      "title": "Dry Dust Removal for Tile Floors",
+      "category": "methods",
+      "cluster": "dust-removal",
+      "slug": "dry-dust-removal-tile-floors",
+      "summary": "Dry Dust Removal for Tile Floors explained: when professionals use it, where it works best, and how to apply it with the right sequence and material awareness.",
+      "image": {
+        "primaryAlt": "Dry Dust Removal for Tile Floors surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "dry dust removal tile floors cleaning",
+          "dry dust removal for tile floors professional cleaning",
+          "dry dust removal for tile floors surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Dry Dust Removal for Tile Floors describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "M-DEG-001",
+          "M-NEU-001",
+          "M-HWD-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-FINISHED-WOOD",
+      "title": "Floor Residue After Mopping on Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "floor-residue-after-mopping-on-finished-wood",
+      "summary": "Floor Residue After Mopping on Finished Wood explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Floor Residue After Mopping on Finished Wood surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "floor residue after mopping on finished wood cleaning",
+          "floor residue after mopping on finished wood professional cleaning",
+          "floor residue after mopping on finished wood surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Floor Residue After Mopping on Finished Wood describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-GLASS-SURFACES",
+      "title": "Floor Residue After Mopping on Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "floor-residue-after-mopping-on-glass-surfaces",
+      "summary": "Floor Residue After Mopping on Glass Surfaces explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Floor Residue After Mopping on Glass Surfaces surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "floor residue after mopping on glass surfaces cleaning",
+          "floor residue after mopping on glass surfaces professional cleaning",
+          "floor residue after mopping on glass surfaces surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Floor Residue After Mopping on Glass Surfaces describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-GROUT",
+      "title": "Floor Residue After Mopping on Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "floor-residue-after-mopping-on-grout",
+      "summary": "Floor Residue After Mopping on Grout explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Floor Residue After Mopping on Grout surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "floor residue after mopping on grout cleaning",
+          "floor residue after mopping on grout professional cleaning",
+          "floor residue after mopping on grout surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Floor Residue After Mopping on Grout describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-STAINLESS-STEEL",
+      "title": "Floor Residue After Mopping on Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "floor-residue-after-mopping-on-stainless-steel",
+      "summary": "Floor Residue After Mopping on Stainless Steel explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Floor Residue After Mopping on Stainless Steel surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "floor residue after mopping on stainless steel cleaning",
+          "floor residue after mopping on stainless steel professional cleaning",
+          "floor residue after mopping on stainless steel surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Floor Residue After Mopping on Stainless Steel describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-FLOOR-RESIDUE-AFTER-MOPPING-ON-TILE-FLOORS",
+      "title": "Floor Residue After Mopping on Tile Floors",
+      "category": "problems",
+      "cluster": "product-residue",
+      "slug": "floor-residue-after-mopping-on-tile-floors",
+      "summary": "Floor Residue After Mopping on Tile Floors explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Floor Residue After Mopping on Tile Floors surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "floor residue after mopping on tile floors cleaning",
+          "floor residue after mopping on tile floors professional cleaning",
+          "floor residue after mopping on tile floors surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Floor Residue After Mopping on Tile Floors describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-FINISHED-WOOD",
+      "title": "Grease Buildup on Finished Wood",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-buildup-on-finished-wood",
+      "summary": "Grease Buildup on Finished Wood explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Grease Buildup on Finished Wood surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "grease buildup on finished wood cleaning",
+          "grease buildup on finished wood professional cleaning",
+          "grease buildup on finished wood surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grease Buildup on Finished Wood describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-GLASS-SURFACES",
+      "title": "Grease Buildup on Glass Surfaces",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-buildup-on-glass-surfaces",
+      "summary": "Grease Buildup on Glass Surfaces explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Grease Buildup on Glass Surfaces surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "grease buildup on glass surfaces cleaning",
+          "grease buildup on glass surfaces professional cleaning",
+          "grease buildup on glass surfaces surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grease Buildup on Glass Surfaces describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-GROUT",
+      "title": "Grease Buildup on Grout",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-buildup-on-grout",
+      "summary": "Grease Buildup on Grout explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Grease Buildup on Grout surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "grease buildup on grout cleaning",
+          "grease buildup on grout professional cleaning",
+          "grease buildup on grout surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grease Buildup on Grout describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-STAINLESS-STEEL",
+      "title": "Grease Buildup on Stainless Steel",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-buildup-on-stainless-steel",
+      "summary": "Grease Buildup on Stainless Steel explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Grease Buildup on Stainless Steel surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "grease buildup on stainless steel cleaning",
+          "grease buildup on stainless steel professional cleaning",
+          "grease buildup on stainless steel surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grease Buildup on Stainless Steel describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    },
+    {
+      "id": "P-GEN-GREASE-BUILDUP-ON-TILE-FLOORS",
+      "title": "Grease Buildup on Tile Floors",
+      "category": "problems",
+      "cluster": "grease-buildup",
+      "slug": "grease-buildup-on-tile-floors",
+      "summary": "Grease Buildup on Tile Floors explained: what causes it, what makes it worse, and how professionals approach it without creating secondary damage or residue.",
+      "image": {
+        "primaryAlt": "Grease Buildup on Tile Floors surface or condition shown under cleaning inspection lighting",
+        "queries": [
+          "grease buildup on tile floors cleaning",
+          "grease buildup on tile floors professional cleaning",
+          "grease buildup on tile floors surface condition"
+        ]
+      },
+      "sections": {
+        "what_this_is": "Grease Buildup on Tile Floors describes a real-world cleaning condition professionals identify by surface behavior, residue pattern, soil loading, and how the material reacts under normal maintenance.",
+        "why_it_happens": "The root causes usually involve a mix of soil type, surface condition, product choice, dwell time, moisture control, and repeated maintenance habits that compound over time.",
+        "what_people_do_wrong": "Most people make this worse by using the wrong chemistry, too much liquid, poor towel or pad rotation, aggressive scrubbing, or by treating the symptom without identifying the actual soil or surface issue first.",
+        "professional_method": "Professionals isolate the surface type, test small areas first, match chemistry and agitation to the material, control residue and rinse behavior, and verify the result under proper inspection light before scaling the process.",
+        "data_and_benchmarks": "Useful benchmarks include visual uniformity under side lighting, residue reduction after controlled passes, repeatability across similar surfaces, and whether the result holds after drying rather than only while wet.",
+        "professional_insights": "A strong professional read usually comes from pattern recognition: where the issue is concentrated, how it returns, what previous products were used, and whether the surface is signaling contamination, wear, or incompatibility.",
+        "when_to_call_a_professional": "Call a professional when the material is specialty-coated, natural stone, unknown, historically damaged, high-risk to over-wet, or when repeated DIY attempts have already layered in more residue or surface confusion.",
+        "related_topics": [
+          "P-SOAP-001",
+          "P-HARD-001",
+          "P-GREASE-001"
+        ]
+      }
+    }
+  ]
+}

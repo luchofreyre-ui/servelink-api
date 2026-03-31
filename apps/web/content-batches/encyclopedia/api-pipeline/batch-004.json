@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "P-PL-NN-00301",
+      "title": "What Causes uneven finish on marble",
+      "slug": "what-causes-uneven-finish-on-marble",
+      "problem": "uneven finish",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00302",
+      "title": "How to Remove uneven finish from marble",
+      "slug": "how-to-remove-uneven-finish-from-marble",
+      "problem": "uneven finish",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00303",
+      "title": "How to Prevent uneven finish on marble",
+      "slug": "how-to-prevent-uneven-finish-on-marble",
+      "problem": "uneven finish",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00304",
+      "title": "How to Fix uneven finish on marble",
+      "slug": "how-to-fix-uneven-finish-on-marble",
+      "problem": "uneven finish",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00305",
+      "title": "How to Clean uneven finish from marble",
+      "slug": "how-to-clean-uneven-finish-from-marble",
+      "problem": "uneven finish",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00306",
+      "title": "How to Tell if uneven finish on marble is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-marble-is-permanent",
+      "problem": "uneven finish",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00307",
+      "title": "Why uneven finish Keeps Coming Back on marble",
+      "slug": "why-uneven-finish-keeps-coming-back-on-marble",
+      "problem": "uneven finish",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00308",
+      "title": "How to Maintain marble and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-marble-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00309",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-marble",
+      "problem": "uneven finish",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00310",
+      "title": "What Causes uneven finish on quartz",
+      "slug": "what-causes-uneven-finish-on-quartz",
+      "problem": "uneven finish",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00311",
+      "title": "How to Remove uneven finish from quartz",
+      "slug": "how-to-remove-uneven-finish-from-quartz",
+      "problem": "uneven finish",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00312",
+      "title": "How to Prevent uneven finish on quartz",
+      "slug": "how-to-prevent-uneven-finish-on-quartz",
+      "problem": "uneven finish",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00313",
+      "title": "How to Fix uneven finish on quartz",
+      "slug": "how-to-fix-uneven-finish-on-quartz",
+      "problem": "uneven finish",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00314",
+      "title": "How to Clean uneven finish from quartz",
+      "slug": "how-to-clean-uneven-finish-from-quartz",
+      "problem": "uneven finish",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00315",
+      "title": "How to Tell if uneven finish on quartz is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-quartz-is-permanent",
+      "problem": "uneven finish",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00316",
+      "title": "Why uneven finish Keeps Coming Back on quartz",
+      "slug": "why-uneven-finish-keeps-coming-back-on-quartz",
+      "problem": "uneven finish",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00317",
+      "title": "How to Maintain quartz and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00318",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-quartz",
+      "problem": "uneven finish",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00319",
+      "title": "What Causes uneven finish on vinyl",
+      "slug": "what-causes-uneven-finish-on-vinyl",
+      "problem": "uneven finish",
+      "surface": "vinyl",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00320",
+      "title": "How to Remove uneven finish from vinyl",
+      "slug": "how-to-remove-uneven-finish-from-vinyl",
+      "problem": "uneven finish",
+      "surface": "vinyl",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00321",
+      "title": "How to Prevent uneven finish on vinyl",
+      "slug": "how-to-prevent-uneven-finish-on-vinyl",
+      "problem": "uneven finish",
+      "surface": "vinyl",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00322",
+      "title": "How to Fix uneven finish on vinyl",
+      "slug": "how-to-fix-uneven-finish-on-vinyl",
+      "problem": "uneven finish",
+      "surface": "vinyl",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00323",
+      "title": "How to Clean uneven finish from vinyl",
+      "slug": "how-to-clean-uneven-finish-from-vinyl",
+      "problem": "uneven finish",
+      "surface": "vinyl",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00324",
+      "title": "How to Tell if uneven finish on vinyl is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-vinyl-is-permanent",
+      "problem": "uneven finish",
+      "surface": "vinyl",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00325",
+      "title": "Why uneven finish Keeps Coming Back on vinyl",
+      "slug": "why-uneven-finish-keeps-coming-back-on-vinyl",
+      "problem": "uneven finish",
+      "surface": "vinyl",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00326",
+      "title": "How to Maintain vinyl and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-vinyl-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "vinyl",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00327",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on vinyl",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-vinyl",
+      "problem": "uneven finish",
+      "surface": "vinyl",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00328",
+      "title": "What Causes uneven finish on laminate",
+      "slug": "what-causes-uneven-finish-on-laminate",
+      "problem": "uneven finish",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00329",
+      "title": "How to Remove uneven finish from laminate",
+      "slug": "how-to-remove-uneven-finish-from-laminate",
+      "problem": "uneven finish",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00330",
+      "title": "How to Prevent uneven finish on laminate",
+      "slug": "how-to-prevent-uneven-finish-on-laminate",
+      "problem": "uneven finish",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00331",
+      "title": "How to Fix uneven finish on laminate",
+      "slug": "how-to-fix-uneven-finish-on-laminate",
+      "problem": "uneven finish",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00332",
+      "title": "How to Clean uneven finish from laminate",
+      "slug": "how-to-clean-uneven-finish-from-laminate",
+      "problem": "uneven finish",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00333",
+      "title": "How to Tell if uneven finish on laminate is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-laminate-is-permanent",
+      "problem": "uneven finish",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00334",
+      "title": "Why uneven finish Keeps Coming Back on laminate",
+      "slug": "why-uneven-finish-keeps-coming-back-on-laminate",
+      "problem": "uneven finish",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00335",
+      "title": "How to Maintain laminate and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00336",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-laminate",
+      "problem": "uneven finish",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00337",
+      "title": "What Causes uneven finish on wood",
+      "slug": "what-causes-uneven-finish-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00338",
+      "title": "How to Remove uneven finish from wood",
+      "slug": "how-to-remove-uneven-finish-from-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00339",
+      "title": "How to Prevent uneven finish on wood",
+      "slug": "how-to-prevent-uneven-finish-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00340",
+      "title": "How to Fix uneven finish on wood",
+      "slug": "how-to-fix-uneven-finish-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00341",
+      "title": "How to Clean uneven finish from wood",
+      "slug": "how-to-clean-uneven-finish-from-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00342",
+      "title": "How to Tell if uneven finish on wood is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-wood-is-permanent",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00343",
+      "title": "Why uneven finish Keeps Coming Back on wood",
+      "slug": "why-uneven-finish-keeps-coming-back-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00344",
+      "title": "How to Maintain wood and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-wood-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00345",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00346",
+      "title": "What Causes uneven finish on painted walls",
+      "slug": "what-causes-uneven-finish-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00347",
+      "title": "How to Remove uneven finish from painted walls",
+      "slug": "how-to-remove-uneven-finish-from-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00348",
+      "title": "How to Prevent uneven finish on painted walls",
+      "slug": "how-to-prevent-uneven-finish-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00349",
+      "title": "How to Fix uneven finish on painted walls",
+      "slug": "how-to-fix-uneven-finish-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00350",
+      "title": "How to Clean uneven finish from painted walls",
+      "slug": "how-to-clean-uneven-finish-from-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00351",
+      "title": "How to Tell if uneven finish on painted walls is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-painted-walls-is-permanent",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00352",
+      "title": "Why uneven finish Keeps Coming Back on painted walls",
+      "slug": "why-uneven-finish-keeps-coming-back-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00353",
+      "title": "How to Maintain painted walls and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-painted-walls-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00354",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on painted walls",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00355",
+      "title": "What Causes uneven finish on grout",
+      "slug": "what-causes-uneven-finish-on-grout",
+      "problem": "uneven finish",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00356",
+      "title": "How to Remove uneven finish from grout",
+      "slug": "how-to-remove-uneven-finish-from-grout",
+      "problem": "uneven finish",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00357",
+      "title": "How to Prevent uneven finish on grout",
+      "slug": "how-to-prevent-uneven-finish-on-grout",
+      "problem": "uneven finish",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00358",
+      "title": "How to Fix uneven finish on grout",
+      "slug": "how-to-fix-uneven-finish-on-grout",
+      "problem": "uneven finish",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00359",
+      "title": "How to Clean uneven finish from grout",
+      "slug": "how-to-clean-uneven-finish-from-grout",
+      "problem": "uneven finish",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00360",
+      "title": "How to Tell if uneven finish on grout is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-grout-is-permanent",
+      "problem": "uneven finish",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00361",
+      "title": "Why uneven finish Keeps Coming Back on grout",
+      "slug": "why-uneven-finish-keeps-coming-back-on-grout",
+      "problem": "uneven finish",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00362",
+      "title": "How to Maintain grout and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-grout-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00363",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-grout",
+      "problem": "uneven finish",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00364",
+      "title": "What Causes uneven finish on glass cooktops",
+      "slug": "what-causes-uneven-finish-on-glass-cooktops",
+      "problem": "uneven finish",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00365",
+      "title": "How to Remove uneven finish from glass cooktops",
+      "slug": "how-to-remove-uneven-finish-from-glass-cooktops",
+      "problem": "uneven finish",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00366",
+      "title": "How to Prevent uneven finish on glass cooktops",
+      "slug": "how-to-prevent-uneven-finish-on-glass-cooktops",
+      "problem": "uneven finish",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00367",
+      "title": "How to Fix uneven finish on glass cooktops",
+      "slug": "how-to-fix-uneven-finish-on-glass-cooktops",
+      "problem": "uneven finish",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00368",
+      "title": "How to Clean uneven finish from glass cooktops",
+      "slug": "how-to-clean-uneven-finish-from-glass-cooktops",
+      "problem": "uneven finish",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00369",
+      "title": "How to Tell if uneven finish on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-glass-cooktops-is-permanent",
+      "problem": "uneven finish",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00370",
+      "title": "Why uneven finish Keeps Coming Back on glass cooktops",
+      "slug": "why-uneven-finish-keeps-coming-back-on-glass-cooktops",
+      "problem": "uneven finish",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00371",
+      "title": "How to Maintain glass cooktops and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00372",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-glass-cooktops",
+      "problem": "uneven finish",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00373",
+      "title": "What Causes uneven finish on shower doors",
+      "slug": "what-causes-uneven-finish-on-shower-doors",
+      "problem": "uneven finish",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00374",
+      "title": "How to Remove uneven finish from shower doors",
+      "slug": "how-to-remove-uneven-finish-from-shower-doors",
+      "problem": "uneven finish",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00375",
+      "title": "How to Prevent uneven finish on shower doors",
+      "slug": "how-to-prevent-uneven-finish-on-shower-doors",
+      "problem": "uneven finish",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00376",
+      "title": "How to Fix uneven finish on shower doors",
+      "slug": "how-to-fix-uneven-finish-on-shower-doors",
+      "problem": "uneven finish",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00377",
+      "title": "How to Clean uneven finish from shower doors",
+      "slug": "how-to-clean-uneven-finish-from-shower-doors",
+      "problem": "uneven finish",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00378",
+      "title": "How to Tell if uneven finish on shower doors is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-shower-doors-is-permanent",
+      "problem": "uneven finish",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00379",
+      "title": "Why uneven finish Keeps Coming Back on shower doors",
+      "slug": "why-uneven-finish-keeps-coming-back-on-shower-doors",
+      "problem": "uneven finish",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00380",
+      "title": "How to Maintain shower doors and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00381",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-shower-doors",
+      "problem": "uneven finish",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00382",
+      "title": "What Causes uneven finish on sink basins",
+      "slug": "what-causes-uneven-finish-on-sink-basins",
+      "problem": "uneven finish",
+      "surface": "sink basins",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00383",
+      "title": "How to Remove uneven finish from sink basins",
+      "slug": "how-to-remove-uneven-finish-from-sink-basins",
+      "problem": "uneven finish",
+      "surface": "sink basins",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00384",
+      "title": "How to Prevent uneven finish on sink basins",
+      "slug": "how-to-prevent-uneven-finish-on-sink-basins",
+      "problem": "uneven finish",
+      "surface": "sink basins",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00385",
+      "title": "How to Fix uneven finish on sink basins",
+      "slug": "how-to-fix-uneven-finish-on-sink-basins",
+      "problem": "uneven finish",
+      "surface": "sink basins",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00386",
+      "title": "How to Clean uneven finish from sink basins",
+      "slug": "how-to-clean-uneven-finish-from-sink-basins",
+      "problem": "uneven finish",
+      "surface": "sink basins",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00387",
+      "title": "How to Tell if uneven finish on sink basins is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-sink-basins-is-permanent",
+      "problem": "uneven finish",
+      "surface": "sink basins",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00388",
+      "title": "Why uneven finish Keeps Coming Back on sink basins",
+      "slug": "why-uneven-finish-keeps-coming-back-on-sink-basins",
+      "problem": "uneven finish",
+      "surface": "sink basins",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00389",
+      "title": "How to Maintain sink basins and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-sink-basins-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "sink basins",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00390",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on sink basins",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-sink-basins",
+      "problem": "uneven finish",
+      "surface": "sink basins",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00391",
+      "title": "What Causes uneven finish on painted cabinets",
+      "slug": "what-causes-uneven-finish-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00392",
+      "title": "How to Remove uneven finish from painted cabinets",
+      "slug": "how-to-remove-uneven-finish-from-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00393",
+      "title": "How to Prevent uneven finish on painted cabinets",
+      "slug": "how-to-prevent-uneven-finish-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00394",
+      "title": "How to Fix uneven finish on painted cabinets",
+      "slug": "how-to-fix-uneven-finish-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00395",
+      "title": "How to Clean uneven finish from painted cabinets",
+      "slug": "how-to-clean-uneven-finish-from-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00396",
+      "title": "How to Tell if uneven finish on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-painted-cabinets-is-permanent",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00397",
+      "title": "Why uneven finish Keeps Coming Back on painted cabinets",
+      "slug": "why-uneven-finish-keeps-coming-back-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "low",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00398",
+      "title": "How to Maintain painted cabinets and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00399",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "high",
+      "status": "draft"
+    },
+    {
+      "id": "P-PL-NN-00400",
+      "title": "What Causes uneven finish on sealed stone",
+      "slug": "what-causes-uneven-finish-on-sealed-stone",
+      "problem": "uneven finish",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "low",
+      "status": "draft"
+    }
+  ]
+}

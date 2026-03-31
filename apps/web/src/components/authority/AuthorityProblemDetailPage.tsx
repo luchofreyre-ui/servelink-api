@@ -20,6 +20,10 @@ import {
   buildDefinedTermSchema,
   buildFaqSchema,
 } from "@/authority/metadata/authoritySchema";
+import {
+  resolveCanonicalMetadataHref,
+  resolveJsonLdBreadcrumbHrefs,
+} from "@/lib/encyclopedia/encyclopediaCanonicalMetadataHref";
 import Link from "next/link";
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
@@ -46,10 +50,10 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
   );
   const crumbs = buildProblemBreadcrumbs(data.slug);
   const seeAlso = buildProblemSeeAlso(data.slug);
-  const path = `/problems/${data.slug}`;
+  const path = resolveCanonicalMetadataHref(`/problems/${data.slug}`);
   const faqBlock = buildProblemFaqBlock(data.slug);
   const jsonLd: Record<string, unknown>[] = [
-    buildBreadcrumbListSchema(crumbs),
+    buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(crumbs)),
     buildDefinedTermSchema({ name: data.title, description: data.summary, path }),
   ];
   if (faqBlock?.items.length) jsonLd.push(buildFaqSchema(faqBlock.items));

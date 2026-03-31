@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { SYSTEM_TEST_INCIDENT_VERSION } from "@servelink/system-test-intelligence";
+import { SystemTestFamilyOperatorState } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 import { PrismaService } from "../../prisma";
 import type {
@@ -11,6 +13,18 @@ import type {
   SystemTestFamilyListItemDto,
   SystemTestFamilyMembershipItemDto,
 } from "./dto/system-test-families.dto";
+import type { SystemTestFamilyLifecycleState } from "../system-tests/system-test-family-lifecycle";
+import {
+  previewMatchesCategoryFilter,
+  previewMatchesConfidenceTierFilter,
+  sortFamilyListRowsInPlace,
+  type SystemTestFamilyListSortBy,
+  type SystemTestResolutionConfidenceTier,
+} from "../system-tests/system-test-resolution-preview-filters";
+import { toResolutionPreviewOrNull } from "../system-tests/system-test-resolution-preview";
+import { toSystemTestFamilyOperatorStateDto } from "../system-tests/system-test-family-operator-state";
+import { SystemTestsFamilyResolutionService } from "../system-tests/system-tests-family-resolution.service";
+import { SystemTestsFamilyLifecycleService } from "./system-tests-family-lifecycle.service";
 
 function metaString(o: unknown, k: string): string | null {
   if (o == null || typeof o !== "object" || Array.isArray(o)) return null;
@@ -26,44 +40,118 @@ function metaNumber(o: unknown, k: string): number | null {
 
 @Injectable()
 export class SystemTestsFamiliesReadService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly familyResolution: SystemTestsFamilyResolutionService,
+    private readonly familyLifecycleSvc: SystemTestsFamilyLifecycleService,
+  ) {}
 
   async listFamilies(opts?: {
     limit?: number;
     status?: string;
+    diagnosisCategory?: string;
+    confidenceTier?: SystemTestResolutionConfidenceTier;
+    sortBy?: SystemTestFamilyListSortBy;
+    sortDirection?: "asc" | "desc";
+    showDismissed?: boolean;
+    lifecycleState?: SystemTestFamilyLifecycleState;
+    includeDormant?: boolean;
+    includeResolved?: boolean;
   }): Promise<SystemTestFamilyListItemDto[]> {
     const limit = Math.min(Math.max(opts?.limit ?? 60, 1), 200);
-    const where =
-      opts?.status && ["active", "quiet", "resolved_candidate"].includes(opts.status) ?
+    const where: Prisma.SystemTestFailureFamilyWhereInput = {
+      ...(opts?.status && ["active", "quiet", "resolved_candidate"].includes(opts.status) ?
         { status: opts.status }
-      : {};
+      : {}),
+    };
+    if (!opts?.showDismissed) {
+      where.operatorState = { not: SystemTestFamilyOperatorState.dismissed };
+    }
+
+    const sortBy = opts?.sortBy ?? "recent";
+    const sortDirection = opts?.sortDirection ?? "desc";
+    const categoryFilter = opts?.diagnosisCategory?.trim() || undefined;
+    const tierFilter = opts?.confidenceTier;
+    const lifecycleStateFilter = opts?.lifecycleState;
+    const includeDormant = opts?.includeDormant ?? true;
+    const includeResolved = opts?.includeResolved ?? false;
+
+    const needsExpandedFetch =
+      Boolean(categoryFilter || tierFilter || lifecycleStateFilter) ||
+      sortBy !== "recent" ||
+      sortDirection !== "desc";
+
+    const fetchTake = needsExpandedFetch ? Math.min(500, Math.max(limit * 25, 120)) : limit;
 
     const rows = await this.prisma.systemTestFailureFamily.findMany({
       where,
       orderBy: { updatedAt: "desc" },
-      take: limit,
+      take: fetchTake,
     });
 
-    return rows.map((f) => {
-      const trendKind = metaString(f.metadataJson, "trendKind") ?? "stable";
-      const recurrenceLine = metaString(f.metadataJson, "recurrenceLine");
-      return {
-        id: f.id,
-        displayTitle: f.displayTitle,
-        status: f.status,
-        trendKind,
-        lastSeenRunId: f.lastSeenRunId,
-        firstSeenRunId: f.firstSeenRunId,
-        affectedRunCount: f.affectedRunCount,
-        affectedFileCount: f.affectedFileCount,
-        totalOccurrencesAcrossRuns: f.totalOccurrencesAcrossRuns,
-        recurrenceLine,
-        primaryAssertionType: f.primaryAssertionType,
-        primaryLocator: f.primaryLocator,
-        primaryRouteUrl: f.primaryRouteUrl,
-        updatedAt: f.updatedAt.toISOString(),
-      };
-    });
+    const lifecycleMap = await this.familyLifecycleSvc.buildFamilyLifecycleMap(
+      rows.map((f) => f.id),
+    );
+
+    const list = await Promise.all(
+      rows.map(async (f) => {
+        const trendKind = metaString(f.metadataJson, "trendKind") ?? "stable";
+        const recurrenceLine = metaString(f.metadataJson, "recurrenceLine");
+
+        let resolutionPreview: SystemTestFamilyListItemDto["resolutionPreview"] = null;
+        try {
+          const resolution = await this.familyResolution.getFamilyResolution(f.id);
+          resolutionPreview = toResolutionPreviewOrNull(resolution);
+        } catch {
+          resolutionPreview = null;
+        }
+
+        return {
+          id: f.id,
+          familyKey: f.familyKey,
+          displayTitle: f.displayTitle,
+          status: f.status,
+          trendKind,
+          lastSeenRunId: f.lastSeenRunId,
+          firstSeenRunId: f.firstSeenRunId,
+          affectedRunCount: f.affectedRunCount,
+          affectedFileCount: f.affectedFileCount,
+          totalOccurrencesAcrossRuns: f.totalOccurrencesAcrossRuns,
+          recurrenceLine,
+          primaryAssertionType: f.primaryAssertionType,
+          primaryLocator: f.primaryLocator,
+          primaryRouteUrl: f.primaryRouteUrl,
+          updatedAt: f.updatedAt.toISOString(),
+          resolutionPreview,
+          operatorState: toSystemTestFamilyOperatorStateDto(f),
+          lifecycle: lifecycleMap.get(f.id)!,
+        };
+      }),
+    );
+
+    let filtered = list;
+    if (categoryFilter) {
+      filtered = filtered.filter((r) => previewMatchesCategoryFilter(r.resolutionPreview, categoryFilter));
+    }
+    if (tierFilter) {
+      filtered = filtered.filter((r) =>
+        previewMatchesConfidenceTierFilter(r.resolutionPreview, tierFilter),
+      );
+    }
+    if (lifecycleStateFilter) {
+      filtered = filtered.filter((r) => r.lifecycle.lifecycleState === lifecycleStateFilter);
+    } else {
+      filtered = filtered.filter((r) => {
+        const s = r.lifecycle.lifecycleState;
+        if (s === "resolved" && !includeResolved) return false;
+        if (s === "dormant" && !includeDormant) return false;
+        return true;
+      });
+    }
+
+    sortFamilyListRowsInPlace(filtered, sortBy, sortDirection);
+
+    return filtered.slice(0, limit);
   }
 
   async getFamilyDetail(id: string): Promise<SystemTestFamilyDetailDto> {
@@ -81,6 +169,9 @@ export class SystemTestsFamiliesReadService {
     if (!f) {
       throw new NotFoundException("SYSTEM_TEST_FAMILY_NOT_FOUND");
     }
+
+    const lifecycleMap = await this.familyLifecycleSvc.buildFamilyLifecycleMap([id]);
+    const lifecycle = lifecycleMap.get(id)!;
 
     const trendKind = metaString(f.metadataJson, "trendKind") ?? "stable";
     const recurrenceLine = metaString(f.metadataJson, "recurrenceLine");
@@ -140,6 +231,8 @@ export class SystemTestsFamiliesReadService {
       updatedAt: f.updatedAt.toISOString(),
       memberships,
       incident: incidentStub,
+      operatorState: toSystemTestFamilyOperatorStateDto(f),
+      lifecycle,
     };
   }
 

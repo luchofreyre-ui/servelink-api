@@ -44,3 +44,13 @@ Tenant turnovers often reveal multi-year neglect patterns in second baths.
 ## When to Call a Professional
 
 Call a professional when building glass, liability, or manufacturer warranties require documented assessments.
+
+## Related Topics
+
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Etching on Shower Glass](/encyclopedia/problems/etching-on-shower-glass)
+- [Glass Etching](/encyclopedia/problems/glass-etching)
+- [When Glass Cannot Be Restored by Cleaning](/encyclopedia/problems/when-glass-cannot-be-restored-by-cleaning)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

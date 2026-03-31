@@ -1,26 +1,26 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import AdminAuthorityIntelHubPage from "./page";
+import AdminAuthorityHubPage from "./page";
 
-describe("AdminAuthorityIntelHubPage", () => {
-  it("links to core authority surfaces", () => {
-    render(<AdminAuthorityIntelHubPage />);
+describe("AdminAuthorityHubPage", () => {
+  it("renders encyclopedia authority cards with correct hrefs", () => {
+    render(<AdminAuthorityHubPage />);
     expect(screen.getByTestId("admin-authority-hub-page")).toBeInTheDocument();
-    expect(screen.getByTestId("admin-authority-hub-link-report")).toHaveAttribute(
+    expect(screen.getByTestId("admin-authority-hub-card-overview")).toHaveAttribute(
       "href",
-      "/admin/authority/report",
+      "/admin/authority",
     );
-    expect(screen.getByTestId("admin-authority-hub-link-quality")).toHaveAttribute(
+    expect(screen.getByTestId("admin-authority-hub-card-review-queue")).toHaveAttribute(
       "href",
-      "/admin/authority/quality",
+      "/admin/authority/review-queue",
     );
-    expect(screen.getByTestId("admin-authority-hub-link-drift")).toHaveAttribute(
+    expect(screen.getByTestId("admin-authority-hub-card-cluster-density")).toHaveAttribute(
       "href",
-      "/admin/authority/drift",
+      "/admin/authority/cluster-density",
     );
-    expect(screen.getByTestId("admin-authority-hub-link-alerts")).toHaveAttribute(
+    expect(screen.getByTestId("admin-authority-hub-card-batches")).toHaveAttribute(
       "href",
-      "/admin/authority/alerts",
+      "/admin/authority/batches",
     );
   });
 });

@@ -44,3 +44,14 @@ Handles and dispense zones need separate final buffs—they reintroduce oils aft
 ## When to Call a Professional
 
 Call a professional when commercial kitchens require food-safe documentation, or when specialty finishes prohibit consumer chemistry.
+
+## Related Topics
+
+- [Streaks on Black Fixtures](/encyclopedia/problems/streaks-on-black-fixtures)
+- [Streaks on Glass](/encyclopedia/problems/streaks-on-glass)
+- [Streaks on Mirrors](/encyclopedia/problems/streaks-on-mirrors)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Streaking](/encyclopedia/problems/streaking)
+- [Grease on Stainless Steel](/encyclopedia/problems/grease-on-stainless-steel)
+- [Haze on Stainless Steel](/encyclopedia/problems/haze-on-stainless-steel)
+- [Residue on Stainless Steel](/encyclopedia/problems/residue-on-stainless-steel)

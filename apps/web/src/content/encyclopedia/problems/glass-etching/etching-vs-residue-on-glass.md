@@ -44,3 +44,14 @@ Lint embedded in residue mimics speckled etch—change towels before conclusions
 ## When to Call a Professional
 
 Call a professional when large samples need microscopy-level decisions or when replacement logistics need vendor coordination.
+
+## Related Topics
+
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching on Shower Glass](/encyclopedia/problems/etching-on-shower-glass)
+- [Glass Etching](/encyclopedia/problems/glass-etching)
+- [Permanent Glass Damage from Hard Water](/encyclopedia/problems/permanent-glass-damage-from-hard-water)
+- [When Glass Cannot Be Restored by Cleaning](/encyclopedia/problems/when-glass-cannot-be-restored-by-cleaning)
+- [Haze on Glass](/encyclopedia/problems/haze-on-glass)
+- [Streaks on Glass](/encyclopedia/problems/streaks-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

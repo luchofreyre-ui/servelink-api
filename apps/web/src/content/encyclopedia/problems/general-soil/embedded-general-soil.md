@@ -44,3 +44,14 @@ If nothing lifts in a controlled test, reconsider whether the darkening is stain
 ## When to Call a Professional
 
 Call a professional when rotary extraction, stone honing, or commercial floor machines are indicated.
+
+## Related Topics
+
+- [General Soil Buildup](/encyclopedia/problems/general-soil-buildup)
+- [General Soil on Finished Wood](/encyclopedia/problems/general-soil-on-finished-wood)
+- [General Soil on Grout](/encyclopedia/problems/general-soil-on-grout)
+- [General Soil on Tile](/encyclopedia/problems/general-soil-on-tile)
+- [Tracked-In Soil on Floors](/encyclopedia/problems/tracked-in-soil-on-floors)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

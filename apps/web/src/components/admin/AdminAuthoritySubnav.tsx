@@ -5,11 +5,15 @@ import { usePathname } from "next/navigation";
 
 const LINKS = [
   { href: "/admin/authority", label: "Overview" },
-  { href: "/admin/authority/report", label: "Report" },
-  { href: "/admin/authority/quality", label: "Quality" },
-  { href: "/admin/authority/drift", label: "Drift" },
-  { href: "/admin/authority/alerts", label: "Alerts" },
+  { href: "/admin/authority/review-queue", label: "Review queue" },
+  { href: "/admin/authority/cluster-density", label: "Cluster density" },
+  { href: "/admin/authority/batches", label: "Batches" },
 ] as const;
+
+function subnavTestId(href: string): string {
+  const tail = href.replace(/^\/admin\/authority\/?/, "").replace(/\//g, "-");
+  return `admin-authority-subnav-${tail || "overview"}`;
+}
 
 function linkActive(pathname: string | null, href: string): boolean {
   if (!pathname) return false;
@@ -22,7 +26,7 @@ export function AdminAuthoritySubnav() {
 
   return (
     <nav
-      aria-label="Authority intelligence"
+      aria-label="Encyclopedia authority"
       data-testid="admin-authority-subnav"
       className="flex flex-wrap gap-2 border-b border-white/10 pb-4"
     >
@@ -32,7 +36,7 @@ export function AdminAuthoritySubnav() {
           <Link
             key={href}
             href={href}
-            data-testid={`admin-authority-subnav-${label.toLowerCase()}`}
+            data-testid={subnavTestId(href)}
             data-active={active ? "true" : "false"}
             className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
               active

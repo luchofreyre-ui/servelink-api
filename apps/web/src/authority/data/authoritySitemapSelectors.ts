@@ -22,6 +22,7 @@ import {
   getSurfaceProblemComboCanonicalPath,
   getSurfacesIndexCanonicalPath,
 } from "../metadata/authorityCanonicalPaths";
+import { resolveCanonicalMetadataHref } from "@/lib/encyclopedia/encyclopediaCanonicalMetadataHref";
 import { getAuthorityLastmodDate } from "./authorityLastmod";
 import { AuthoritySitemapSection, AuthoritySitemapUrlEntry } from "../types/authoritySitemapTypes";
 import { AUTHORITY_SITEMAP_SECTION_ORDER } from "./authoritySitemapRegistry";
@@ -33,8 +34,9 @@ function absolute(path: string): string {
 }
 
 function entry(path: string): AuthoritySitemapUrlEntry {
+  const resolvedPath = resolveCanonicalMetadataHref(path);
   return {
-    url: absolute(path),
+    url: absolute(resolvedPath),
     lastModified: getAuthorityLastmodDate(),
   };
 }

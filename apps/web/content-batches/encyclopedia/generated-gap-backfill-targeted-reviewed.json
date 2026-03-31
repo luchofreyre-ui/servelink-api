@@ -1,0 +1,359 @@
+{
+  "generatedAt": "2026-03-29T04:05:00.800Z",
+  "sourceFile": "content-batches/encyclopedia/generated-gap-backfill-targeted.json",
+  "summary": {
+    "total": 11,
+    "promote": 7,
+    "review": 4,
+    "reject": 0
+  },
+  "bySourceFamily": {
+    "gap_backfill_method_surface": {
+      "promote": 5,
+      "review": 0,
+      "reject": 0
+    },
+    "gap_backfill_problem_surface": {
+      "promote": 2,
+      "review": 0,
+      "reject": 0
+    },
+    "question_prevention_troubleshooting": {
+      "promote": 0,
+      "review": 2,
+      "reject": 0
+    },
+    "question_symptom_cause": {
+      "promote": 0,
+      "review": 2,
+      "reject": 0
+    }
+  },
+  "candidates": [
+    {
+      "id": "GAP-M-HARD-WATER-GLASS-SURFACES",
+      "slug": "hard-water-glass-surfaces",
+      "title": "Hard Water for Glass Surfaces",
+      "category": "methods",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "hard-water",
+          "title": "Hard Water"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Hard Water for Glass",
+      "normalizedSlug": "hard-water-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Hard Water for Glass Surfaces",
+      "cleanedSlug": "hard-water-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-P-HARD-WATER-ON-GLASS-SURFACES",
+      "slug": "hard-water-on-glass-surfaces",
+      "title": "Hard Water on Glass Surfaces",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "hard-water",
+          "title": "Hard Water"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Hard Water on Glass",
+      "normalizedSlug": "hard-water-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Hard Water on Glass Surfaces",
+      "cleanedSlug": "hard-water-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-HARD-WATER-TILE-FLOORS",
+      "slug": "hard-water-tile-floors",
+      "title": "Hard Water for Tile Floors",
+      "category": "methods",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "hard-water",
+          "title": "Hard Water"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Hard Water for Tile Floors",
+      "normalizedSlug": "hard-water-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Hard Water for Tile Floors",
+      "cleanedSlug": "hard-water-tile-floors",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-HARD-WATER-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-hard-water-from-building-up-again",
+      "title": "How to prevent hard water from building up again",
+      "category": "methods",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent hard water from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Hard Water From Building Up Again",
+      "normalizedSlug": "how-to-prevent-hard-water-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QP-HOW-TO-PREVENT-SOAP-SCUM-FROM-BUILDING-UP-AGAIN",
+      "slug": "how-to-prevent-soap-scum-from-building-up-again",
+      "title": "How to prevent soap scum from building up again",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "how to prevent soap scum from building up again"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "How To Prevent Soap Scum From Building Up Again",
+      "normalizedSlug": "how-to-prevent-soap-scum-from-building-up-again",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-P-SOAP-SCUM-ON-GLASS-SURFACES",
+      "slug": "soap-scum-on-glass-surfaces",
+      "title": "Soap Scum on Glass Surfaces",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "gap_backfill_problem_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "problem": {
+          "slug": "soap-scum",
+          "title": "Soap Scum"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Soap Scum on Glass",
+      "normalizedSlug": "soap-scum-on-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Soap Scum on Glass Surfaces",
+      "cleanedSlug": "soap-scum-on-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-SOAP-SCUM-REMOVAL-GLASS-SURFACES",
+      "slug": "soap-scum-removal-glass-surfaces",
+      "title": "Soap Scum Removal for Glass Surfaces",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "soap-scum-removal",
+          "title": "Soap Scum Removal"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Soap Scum Removal for Glass",
+      "normalizedSlug": "soap-scum-removal-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Soap Scum Removal for Glass Surfaces",
+      "cleanedSlug": "soap-scum-removal-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-STREAKING-GLASS-SURFACES",
+      "slug": "streaking-glass-surfaces",
+      "title": "Streaking for Glass Surfaces",
+      "category": "methods",
+      "cluster": "streaking",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "streaking",
+          "title": "Streaking"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streaking for Glass",
+      "normalizedSlug": "streaking-glass",
+      "normalizationWarnings": [
+        "SURFACE_NAME_NORMALIZED"
+      ],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Streaking for Glass Surfaces",
+      "cleanedSlug": "streaking-glass-surfaces",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-M-STREAKING-TILE-FLOORS",
+      "slug": "streaking-tile-floors",
+      "title": "Streaking for Tile Floors",
+      "category": "methods",
+      "cluster": "streaking",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "gap_backfill_method_surface",
+      "sourceParts": {
+        "gapBackfill": true,
+        "method": {
+          "slug": "streaking",
+          "title": "Streaking"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "scorerRecommendation": "promote",
+      "normalizedTitle": "Streaking for Tile Floors",
+      "normalizedSlug": "streaking-tile-floors",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "promote",
+      "cleanedTitle": "Streaking for Tile Floors",
+      "cleanedSlug": "streaking-tile-floors",
+      "qualityScore": 100,
+      "qualityFlags": []
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-HARD-WATER-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-hard-water-keep-coming-back-after-cleaning",
+      "title": "Why does hard water keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "hard-water",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does hard water keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Hard Water Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-hard-water-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    },
+    {
+      "id": "GAP-QS-WHY-DOES-SOAP-SCUM-KEEP-COMING-BACK-AFTER-CLEANING",
+      "slug": "why-does-soap-scum-keep-coming-back-after-cleaning",
+      "title": "Why does soap scum keep coming back after cleaning",
+      "category": "problems",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "gapBackfill": true,
+        "questionStem": "why does soap scum keep coming back after cleaning"
+      },
+      "scorerRecommendation": "review",
+      "normalizedTitle": "Why Does Soap Scum Keep Coming Back After Cleaning",
+      "normalizedSlug": "why-does-soap-scum-keep-coming-back-after-cleaning",
+      "normalizationWarnings": [],
+      "normalizationAction": "keep",
+      "recommendation": "review"
+    }
+  ]
+}

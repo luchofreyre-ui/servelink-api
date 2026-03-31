@@ -44,3 +44,14 @@ Pattern around drips and spatter points distinguishes limescale from soap scum o
 ## When to Call a Professional
 
 Call a professional when stone surrounds are involved, when venting is inadequate for acid work, or when plated fixtures risk exposure damage.
+
+## Related Topics
+
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)
+- [Heavy Limescale Deposits](/encyclopedia/problems/heavy-limescale-deposits)
+- [Limescale on Fixtures](/encyclopedia/problems/limescale-on-fixtures)
+- [Limescale on Shower Glass](/encyclopedia/problems/limescale-on-shower-glass)
+- [Limescale on Tile](/encyclopedia/problems/limescale-on-tile)
+- [Dust Buildup](/encyclopedia/problems/dust-buildup)
+- [General Soil Buildup](/encyclopedia/problems/general-soil-buildup)
+- [Grease Buildup](/encyclopedia/problems/grease-buildup)

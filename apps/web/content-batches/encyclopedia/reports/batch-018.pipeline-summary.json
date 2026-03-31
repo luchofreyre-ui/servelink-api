@@ -1,0 +1,37 @@
+{
+  "batchName": "batch-018",
+  "mode": "gap",
+  "startedAt": "2026-03-29T05:12:02.379Z",
+  "finishedAt": "2026-03-29T05:12:20.238Z",
+  "inputFiles": {
+    "rawCandidates": "content-batches/encyclopedia/pipeline-runs/batch-018/gap-raw.json",
+    "reviewedCandidates": "content-batches/encyclopedia/pipeline-runs/batch-018/gap-reviewed.json",
+    "appendedIds": "content-batches/encyclopedia/pipeline-runs/batch-018/appended-ids.json"
+  },
+  "reviewedSummary": {
+    "total": 44,
+    "promote": 0,
+    "review": 44,
+    "reject": 0
+  },
+  "promoteSummary": {
+    "appendedCount": 0,
+    "skippedCount": 0,
+    "consideredCount": 0,
+    "sourceCandidateCount": 44
+  },
+  "appendedIds": [],
+  "scaffold": null,
+  "enriched": null,
+  "generatedFileCount": 0,
+  "build": {
+    "ok": true,
+    "exitCode": 0
+  },
+  "steps": [
+    "generate-gap-backfill-candidates",
+    "expand-reviewed-index-candidates",
+    "promote-index-candidates",
+    "npm run build"
+  ]
+}

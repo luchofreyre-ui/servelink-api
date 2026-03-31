@@ -1,5 +1,9 @@
 import type { SystemTestIncidentFixTrack } from "@servelink/system-test-intelligence";
 
+import type { SystemTestFamilyOperatorStateDto } from "../../system-tests/system-test-family-operator-state";
+import type { SystemTestFamilyLifecycleDto } from "../../system-tests/system-test-family-lifecycle";
+import type { SystemTestResolutionPreviewDto } from "../../system-tests/system-test-resolution-preview";
+
 export type SystemTestIncidentListItemDto = {
   runId: string;
   incidentKey: string;
@@ -17,6 +21,10 @@ export type SystemTestIncidentListItemDto = {
   lastSeenRunId: string | null;
   firstSeenRunId: string | null;
   updatedAt: string;
+  resolutionPreview: SystemTestResolutionPreviewDto | null;
+  familyOperatorState: SystemTestFamilyOperatorStateDto | null;
+  familyLifecycle: SystemTestFamilyLifecycleDto | null;
+  leadFamilyTitle: string | null;
 };
 
 export type SystemTestIncidentMemberDto = {

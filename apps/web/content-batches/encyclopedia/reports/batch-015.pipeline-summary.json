@@ -1,0 +1,62 @@
+{
+  "batchName": "batch-015",
+  "mode": "gap",
+  "startedAt": "2026-03-29T04:47:25.733Z",
+  "finishedAt": "2026-03-29T04:47:48.002Z",
+  "inputFiles": {
+    "rawCandidates": "content-batches/encyclopedia/pipeline-runs/batch-015/gap-raw.json",
+    "reviewedCandidates": "content-batches/encyclopedia/pipeline-runs/batch-015/gap-reviewed.json"
+  },
+  "reviewedSummary": {
+    "total": 84,
+    "promote": 40,
+    "review": 44,
+    "reject": 0
+  },
+  "promoteSummary": {
+    "appendedCount": 16,
+    "skippedCount": 24,
+    "consideredCount": 40,
+    "sourceCandidateCount": 84
+  },
+  "appendedIds": [
+    "GAP-M-DUST-BUILDUP-TILE-FLOORS",
+    "GAP-M-DUST-BUILDUP-VINYL",
+    "GAP-M-DUST-REMOVAL-TILE-FLOORS",
+    "GAP-M-DUST-REMOVAL-VINYL",
+    "GAP-M-GENERAL-SOIL-TILE-FLOORS",
+    "GAP-M-GENERAL-SOIL-VINYL",
+    "GAP-M-GREASE-BUILDUP-TILE-FLOORS",
+    "GAP-M-GREASE-BUILDUP-VINYL",
+    "GAP-M-GROUT-SOILING-TILE-FLOORS",
+    "GAP-M-GROUT-SOILING-VINYL",
+    "GAP-M-NEUTRAL-SURFACE-CLEANING-VINYL",
+    "GAP-M-STREAKING-TILE-FLOORS",
+    "GAP-M-STREAKING-VINYL",
+    "GAP-M-SURFACE-HAZE-TILE-FLOORS",
+    "GAP-M-SURFACE-HAZE-VINYL",
+    "GAP-M-TOUCHPOINT-SANITIZATION-VINYL"
+  ],
+  "scaffold": {
+    "outputPath": "content-batches/encyclopedia/batch-015.json",
+    "pageCount": 16
+  },
+  "enriched": {
+    "outputPath": "content-batches/encyclopedia/batch-015.enriched.json",
+    "pageCount": 16
+  },
+  "generatedFileCount": 16,
+  "build": {
+    "ok": true,
+    "exitCode": 0
+  },
+  "steps": [
+    "generate-gap-backfill-candidates",
+    "expand-reviewed-index-candidates",
+    "promote-index-candidates",
+    "build-batch-scaffold",
+    "enrich-batch-copy",
+    "generate-from-batch",
+    "npm run build"
+  ]
+}

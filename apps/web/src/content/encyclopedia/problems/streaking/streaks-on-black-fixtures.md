@@ -44,3 +44,14 @@ If streaks follow only horizontal pulls, drips from the spout or handle are rede
 ## When to Call a Professional
 
 Call a professional when factory coatings are chipped to substrate, or when large matte black panels need controlled spot repair.
+
+## Related Topics
+
+- [Streaks on Glass](/encyclopedia/problems/streaks-on-glass)
+- [Streaks on Mirrors](/encyclopedia/problems/streaks-on-mirrors)
+- [Streaks on Stainless Steel](/encyclopedia/problems/streaks-on-stainless-steel)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Streaking](/encyclopedia/problems/streaking)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

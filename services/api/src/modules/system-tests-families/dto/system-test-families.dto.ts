@@ -1,5 +1,10 @@
+import type { SystemTestFamilyOperatorStateDto } from "../../system-tests/system-test-family-operator-state";
+import type { SystemTestFamilyLifecycleDto } from "../../system-tests/system-test-family-lifecycle";
+import type { SystemTestResolutionPreviewDto } from "../../system-tests/system-test-resolution-preview";
+
 export type SystemTestFamilyListItemDto = {
   id: string;
+  familyKey: string;
   displayTitle: string;
   status: string;
   trendKind: string;
@@ -13,6 +18,9 @@ export type SystemTestFamilyListItemDto = {
   primaryLocator: string | null;
   primaryRouteUrl: string | null;
   updatedAt: string;
+  resolutionPreview: SystemTestResolutionPreviewDto | null;
+  operatorState: SystemTestFamilyOperatorStateDto;
+  lifecycle: SystemTestFamilyLifecycleDto;
 };
 
 export type SystemTestFamilyMembershipItemDto = {
@@ -62,4 +70,6 @@ export type SystemTestFamilyDetailDto = {
   updatedAt: string;
   memberships: SystemTestFamilyMembershipItemDto[];
   incident: SystemTestFamilyIncidentStubDto | null;
+  operatorState: SystemTestFamilyOperatorStateDto;
+  lifecycle: SystemTestFamilyLifecycleDto;
 };

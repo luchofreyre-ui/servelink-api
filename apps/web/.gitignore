@@ -5,3 +5,6 @@ out
 playwright-report
 test-results
 .vercel
+
+# Ephemeral targets derived from api-pipeline batch `pages` JSON
+content-batches/encyclopedia/api-pipeline/*.resolved-targets.json

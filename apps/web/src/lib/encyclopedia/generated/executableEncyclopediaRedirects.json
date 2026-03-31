@@ -1,0 +1,32 @@
+[
+  {
+    "source": "/methods/degreasing",
+    "destination": "/encyclopedia/methods/degreasing",
+    "permanent": true
+  },
+  {
+    "source": "/methods/hard-water-deposit-removal",
+    "destination": "/encyclopedia/methods/hard-water-deposit-removal",
+    "permanent": true
+  },
+  {
+    "source": "/methods/neutral-surface-cleaning",
+    "destination": "/encyclopedia/methods/neutral-surface-cleaning",
+    "permanent": true
+  },
+  {
+    "source": "/methods/touchpoint-sanitization",
+    "destination": "/encyclopedia/methods/touchpoint-sanitization",
+    "permanent": true
+  },
+  {
+    "source": "/problems/dust-buildup",
+    "destination": "/encyclopedia/problems/dust-buildup",
+    "permanent": true
+  },
+  {
+    "source": "/problems/grease-buildup",
+    "destination": "/encyclopedia/problems/grease-buildup",
+    "permanent": true
+  }
+]

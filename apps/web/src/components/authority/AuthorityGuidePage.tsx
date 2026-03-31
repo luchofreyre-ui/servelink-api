@@ -10,6 +10,10 @@ import {
   buildBreadcrumbListSchema,
   buildFaqSchema,
 } from "@/authority/metadata/authoritySchema";
+import {
+  resolveCanonicalMetadataHref,
+  resolveJsonLdBreadcrumbHrefs,
+} from "@/lib/encyclopedia/encyclopediaCanonicalMetadataHref";
 import Link from "next/link";
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
@@ -70,11 +74,11 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
   const crumbs = buildGuideBreadcrumbs(data.slug);
   const seeAlso = buildGuideSeeAlso(data.slug);
   const lead = data.intro ?? data.summary;
-  const path = `/guides/${data.slug}`;
+  const path = resolveCanonicalMetadataHref(`/guides/${data.slug}`);
   const articleDescription = data.description ?? data.summary;
   const faqBlock = buildGuideFaqBlock(data.slug);
   const jsonLd: Record<string, unknown>[] = [
-    buildBreadcrumbListSchema(crumbs),
+    buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(crumbs)),
     buildArticleSchema({ title: data.title, description: articleDescription, path }),
   ];
   if (faqBlock?.items.length) jsonLd.push(buildFaqSchema(faqBlock.items));

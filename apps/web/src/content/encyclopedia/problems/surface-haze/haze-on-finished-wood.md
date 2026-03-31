@@ -44,3 +44,14 @@ Grain direction matters: haze that follows sanding scratches differs from unifor
 ## When to Call a Professional
 
 Call a professional when floors need screening and recoat, when antiques have shellac or oil systems, or when insurance documentation is needed after water events.
+
+## Related Topics
+
+- [Haze on Glass](/encyclopedia/problems/haze-on-glass)
+- [Haze on Stainless Steel](/encyclopedia/problems/haze-on-stainless-steel)
+- [Haze on Tile Floors](/encyclopedia/problems/haze-on-tile-floors)
+- [Haze After Cleaning](/encyclopedia/problems/haze-after-cleaning)
+- [Surface Haze](/encyclopedia/problems/surface-haze)
+- [Dust on Finished Wood](/encyclopedia/problems/dust-on-finished-wood)
+- [General Soil on Finished Wood](/encyclopedia/problems/general-soil-on-finished-wood)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)

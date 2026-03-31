@@ -1,9 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getStoredAccessToken } from "@/lib/auth";
-import { fetchAdminSystemTestRunDetail, fetchAdminSystemTestRuns } from "@/lib/api/systemTests";
+import {
+  buildSystemTestsTrendInsights,
+  buildSystemTestsTrendPoints,
+  fetchAdminSystemTestRunDetail,
+  fetchAdminSystemTestRuns,
+  fetchAdminSystemTestsSummary,
+} from "@/lib/api/systemTests";
 import { analyzeSystemTestHistory } from "@/lib/systemTests/analyzeSystemTestHistory";
 import { buildSystemTestReportFromPayload } from "@/lib/systemTests/buildSystemTestReport";
 import { buildSystemTestReportPayload } from "@/lib/systemTests/buildSystemTestReportPayload";
@@ -14,10 +20,13 @@ import {
   normalizeSystemTestRunDetail,
   trendVsPrevious,
 } from "@/lib/systemTests/normalizeSystemTestRun";
+import { mergeFixOpportunitiesIntoTopProblems } from "@/lib/system-tests/prioritization";
+import { buildEnrichedDiagnosticExport } from "@/lib/system-tests/export";
+import { fixOpportunityToResolutionPreview } from "@/lib/system-tests/fixOpportunityPreview";
 import { sortSystemTestRunsListNewestFirst } from "@/lib/systemTests/sortSystemTestRuns";
 import { SystemTestsCopyReportButton } from "@/components/admin/system-tests/SystemTestsCopyReportButton";
 import { SystemTestsHistoricalInsightsPanel } from "@/components/admin/system-tests/SystemTestsHistoricalInsightsPanel";
-import { SystemTestsLatestFailuresPanel } from "@/components/admin/system-tests/SystemTestsLatestFailuresPanel";
+import { SystemTestsOverviewPanels } from "@/components/admin/system-tests/SystemTestsOverviewPanels";
 import { SystemTestsPageHeader } from "@/components/admin/system-tests/SystemTestsPageHeader";
 import { SystemTestsRerunPriorityPanel } from "@/components/admin/system-tests/SystemTestsRerunPriorityPanel";
 import { SystemTestsRunsTable } from "@/components/admin/system-tests/SystemTestsRunsTable";
@@ -25,7 +34,16 @@ import { SystemTestsSummaryCards } from "@/components/admin/system-tests/SystemT
 import { SystemTestsTrendStrip } from "@/components/admin/system-tests/SystemTestsTrendStrip";
 import { SystemTestIncidentOperationsSection } from "@/components/admin/system-tests/SystemTestIncidentOperationsSection";
 import { SystemTestsUnstableFilesPanel } from "@/components/admin/system-tests/SystemTestsUnstableFilesPanel";
-import type { SystemTestRunDetailResponse, SystemTestRunsListItem } from "@/types/systemTests";
+import type {
+  SystemTestRunDetailResponse,
+  SystemTestRunsListItem,
+  SystemTestsRunsResponse,
+  SystemTestsSummaryResponse,
+} from "@/types/systemTests";
+import type {
+  SystemTestFamilyLifecycle,
+  SystemTestFamilyOperatorState,
+} from "@/types/systemTestResolution";
 
 export default function AdminSystemTestsPage() {
   const [tokenChecked, setTokenChecked] = useState(false);
@@ -38,6 +56,13 @@ export default function AdminSystemTestsPage() {
   const [loading, setLoading] = useState(true);
   const [detailError, setDetailError] = useState<string | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
+  const [dashboardSummary, setDashboardSummary] = useState<SystemTestsSummaryResponse | null>(null);
+  const [showDismissedDashboard, setShowDismissedDashboard] = useState(false);
+  const [includeDormantDashboard, setIncludeDormantDashboard] = useState(true);
+  const [includeResolvedDashboard, setIncludeResolvedDashboard] = useState(false);
+  const [familyOperatorOverlay, setFamilyOperatorOverlay] = useState<
+    Record<string, SystemTestFamilyOperatorState>
+  >({});
 
   useEffect(() => {
     setToken(getStoredAccessToken());
@@ -55,9 +80,31 @@ export default function AdminSystemTestsPage() {
       setLoading(true);
       setError(null);
       try {
-        const list = await fetchAdminSystemTestRuns(token, { limit: 25, page: 1 });
-        if (!cancelled) {
-          setRuns(list.items);
+        const [runsResult, summaryResult] = await Promise.allSettled([
+          fetchAdminSystemTestRuns(token, { limit: 25, page: 1 }),
+          fetchAdminSystemTestsSummary(token, {
+            showDismissed: showDismissedDashboard,
+            includeDormant: includeDormantDashboard,
+            includeResolved: includeResolvedDashboard,
+          }),
+        ]);
+        if (cancelled) return;
+
+        if (runsResult.status === "fulfilled") {
+          setRuns(runsResult.value.items);
+        } else {
+          setRuns([]);
+          setError(
+            runsResult.reason instanceof Error ?
+              runsResult.reason.message
+            : "Failed to load system tests.",
+          );
+        }
+
+        if (summaryResult.status === "fulfilled") {
+          setDashboardSummary(summaryResult.value);
+        } else {
+          setDashboardSummary(null);
         }
       } catch (e) {
         if (!cancelled) {
@@ -71,7 +118,11 @@ export default function AdminSystemTestsPage() {
     return () => {
       cancelled = true;
     };
-  }, [token, tokenChecked]);
+  }, [token, tokenChecked, showDismissedDashboard, includeDormantDashboard, includeResolvedDashboard]);
+
+  useEffect(() => {
+    setFamilyOperatorOverlay({});
+  }, [showDismissedDashboard, includeDormantDashboard, includeResolvedDashboard]);
 
   const { sorted: sortedRuns, listChronologyNote } = useMemo(
     () => sortSystemTestRunsListNewestFirst(runs),
@@ -169,6 +220,122 @@ export default function AdminSystemTestsPage() {
   );
 
   const trendPoints = useMemo(() => buildTrendPointsFromRuns(sortedRuns, { limit: 20 }), [sortedRuns]);
+
+  const runsAsListResponse = useMemo(
+    (): SystemTestsRunsResponse => ({
+      items: sortedRuns,
+      total: sortedRuns.length,
+      page: 1,
+      limit: sortedRuns.length || 25,
+    }),
+    [sortedRuns],
+  );
+
+  const adminTrendPoints = useMemo(
+    () => buildSystemTestsTrendPoints(runsAsListResponse),
+    [runsAsListResponse],
+  );
+
+  const trendInsights = useMemo(
+    () => buildSystemTestsTrendInsights(adminTrendPoints),
+    [adminTrendPoints],
+  );
+
+  const patchFamilyOperatorState = useCallback(
+    (familyId: string, next: SystemTestFamilyOperatorState) => {
+      setFamilyOperatorOverlay((prev) => ({ ...prev, [familyId]: next }));
+      setDashboardSummary((prev) => {
+        if (!prev) return prev;
+        const idx = prev.fixOpportunities.findIndex((o) => o.familyId === familyId);
+        let fixOpportunities =
+          idx >= 0 ?
+            prev.fixOpportunities.map((o) =>
+              o.familyId === familyId ? { ...o, operatorState: next, lifecycle: o.lifecycle } : o,
+            )
+          : prev.fixOpportunities;
+        if (!showDismissedDashboard && next.state === "dismissed") {
+          fixOpportunities = fixOpportunities.filter((o) => o.familyId !== familyId);
+        }
+        return { ...prev, fixOpportunities };
+      });
+    },
+    [showDismissedDashboard],
+  );
+
+  const mergedTopProblems = useMemo(() => {
+    const opps = dashboardSummary?.fixOpportunities ?? [];
+    if (!latestDetail) return [];
+    const exp = buildEnrichedDiagnosticExport(latestDetail, {
+      recentDetails: priorDetails,
+      dashboardContext: {
+        trendPoints: adminTrendPoints,
+        trendInsights,
+        summary: dashboardSummary,
+      },
+    });
+    let merged = mergeFixOpportunitiesIntoTopProblems(exp.topProblems, opps);
+    merged = merged.map((it) => {
+      if (!it.familyId) return it;
+      const overlay = familyOperatorOverlay[it.familyId];
+      const opp = opps.find((o) => o.familyId === it.familyId);
+      const operatorState = overlay ?? opp?.operatorState ?? it.operatorState ?? null;
+      const lifecycle = opp?.lifecycle ?? it.lifecycle ?? null;
+      return { ...it, operatorState, lifecycle };
+    });
+    if (!showDismissedDashboard) {
+      merged = merged.filter(
+        (it) => !it.familyId || !it.operatorState || it.operatorState.state !== "dismissed",
+      );
+    }
+    if (!includeResolvedDashboard) {
+      merged = merged.filter(
+        (it) => !it.lifecycle || it.lifecycle.lifecycleState !== "resolved",
+      );
+    }
+    if (!includeDormantDashboard) {
+      merged = merged.filter(
+        (it) => !it.lifecycle || it.lifecycle.lifecycleState !== "dormant",
+      );
+    }
+    return merged;
+  }, [
+    latestDetail,
+    priorDetails,
+    adminTrendPoints,
+    trendInsights,
+    dashboardSummary,
+    familyOperatorOverlay,
+    showDismissedDashboard,
+    includeDormantDashboard,
+    includeResolvedDashboard,
+  ]);
+
+  const familyResolutionPreviewByFamilyId = useMemo(() => {
+    const m: Record<string, ReturnType<typeof fixOpportunityToResolutionPreview>> = {};
+    for (const opp of dashboardSummary?.fixOpportunities ?? []) {
+      m[opp.familyId] = fixOpportunityToResolutionPreview(opp);
+    }
+    return m;
+  }, [dashboardSummary]);
+
+  const familyOperatorStateByFamilyId = useMemo(() => {
+    const m: Record<string, SystemTestFamilyOperatorState> = {};
+    for (const opp of dashboardSummary?.fixOpportunities ?? []) {
+      m[opp.familyId] = familyOperatorOverlay[opp.familyId] ?? opp.operatorState;
+    }
+    for (const [fid, st] of Object.entries(familyOperatorOverlay)) {
+      m[fid] = st;
+    }
+    return m;
+  }, [dashboardSummary, familyOperatorOverlay]);
+
+  const familyLifecycleByFamilyId = useMemo(() => {
+    const m: Record<string, SystemTestFamilyLifecycle> = {};
+    for (const opp of dashboardSummary?.fixOpportunities ?? []) {
+      m[opp.familyId] = opp.lifecycle;
+    }
+    return m;
+  }, [dashboardSummary]);
 
   const failureDigest = useMemo(() => {
     if (latestDetail) {
@@ -316,6 +483,36 @@ export default function AdminSystemTestsPage() {
               </p>
             ) : null}
 
+            <SystemTestsOverviewPanels
+              fixOpportunities={dashboardSummary?.fixOpportunities ?? []}
+              topProblems={mergedTopProblems}
+              topIssuesLoading={Boolean(latestRun && detailLoading && !latestDetail)}
+              showDismissed={showDismissedDashboard}
+              onShowDismissedChange={setShowDismissedDashboard}
+              includeDormant={includeDormantDashboard}
+              onIncludeDormantChange={setIncludeDormantDashboard}
+              includeResolved={includeResolvedDashboard}
+              onIncludeResolvedChange={setIncludeResolvedDashboard}
+              onFixOpportunityOperatorStateUpdated={(updated) => {
+                patchFamilyOperatorState(updated.familyId, updated.operatorState);
+              }}
+              onFamilyBackedTopIssueOperatorStateUpdated={(familyId, next) => {
+                patchFamilyOperatorState(familyId, next);
+              }}
+              latestFailures={{
+                runId: latestRun?.id ?? "",
+                groups: failureDigest,
+                loading: Boolean(latestRun && detailLoading && !detailError),
+                error: detailError,
+                failureProfiles: historicalAnalysis?.failureProfiles,
+                historyLoading,
+                familyResolutionPreviewByFamilyId,
+                familyOperatorStateByFamilyId,
+                familyLifecycleByFamilyId,
+                showDismissed: showDismissedDashboard,
+              }}
+            />
+
             {trendPoints.length > 0 ? (
               <SystemTestsTrendStrip
                 points={trendPoints}
@@ -323,15 +520,6 @@ export default function AdminSystemTestsPage() {
                 previousRunId={previousRun?.id ?? null}
               />
             ) : null}
-
-            <SystemTestsLatestFailuresPanel
-              runId={latestRun?.id ?? ""}
-              groups={failureDigest}
-              loading={Boolean(latestRun && detailLoading && !detailError)}
-              error={detailError}
-              failureProfiles={historicalAnalysis?.failureProfiles}
-              historyLoading={historyLoading}
-            />
 
             {historicalAnalysis ? (
               <>

@@ -1,0 +1,16 @@
+{
+  "targets": [
+    { "surface": "kitchen cabinets", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "wood", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "painted walls", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "painted cabinets", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "butcher block", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "unfinished wood", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "sealed wood", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "baseboards", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "door frames", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "window tracks", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "light switches", "problem": "uneven finish", "intents": ["how-clean"] },
+    { "surface": "garbage cans", "problem": "uneven finish", "intents": ["how-clean"] }
+  ]
+}

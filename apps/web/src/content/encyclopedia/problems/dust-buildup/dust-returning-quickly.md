@@ -44,3 +44,14 @@ New textiles and rugs shed for weeks; expect temporary high fiber counts.
 ## When to Call a Professional
 
 Call a professional when duct assessment, commercial MAT programs, or post-construction HEPA plans are needed.
+
+## Related Topics
+
+- [Dust Buildup](/encyclopedia/problems/dust-buildup)
+- [Dust on Baseboards](/encyclopedia/problems/dust-on-baseboards)
+- [Dust on Ceiling Fans](/encyclopedia/problems/dust-on-ceiling-fans)
+- [Dust on Finished Wood](/encyclopedia/problems/dust-on-finished-wood)
+- [Dust on Glass Surfaces](/encyclopedia/problems/dust-on-glass-surfaces)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

@@ -50,7 +50,7 @@ describe("FoRecommendedKnowledgeBlock", () => {
     expect(screen.getByText("Source: saved intelligence")).toBeInTheDocument();
 
     const grease = screen.getByRole("link", { name: "Grease Buildup" });
-    expect(grease).toHaveAttribute("href", "/problems/grease-buildup");
+    expect(grease).toHaveAttribute("href", "/encyclopedia/problems/grease-buildup");
     const tile = screen.getByRole("link", { name: "Tile" });
     expect(tile).toHaveAttribute("href", "/surfaces/tile");
 

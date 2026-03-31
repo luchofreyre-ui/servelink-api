@@ -1,4 +1,9 @@
 import { API_BASE_URL } from "@/lib/api";
+import type {
+  SystemTestFamilyLifecycle,
+  SystemTestFamilyOperatorState,
+  SystemTestResolutionPreview,
+} from "@/types/systemTestResolution";
 
 const FETCH_TIMEOUT_MS = 25_000;
 
@@ -28,6 +33,7 @@ async function adminJson<T>(accessToken: string, path: string): Promise<T> {
 
 export type SystemTestFamilyListItemApi = {
   id: string;
+  familyKey: string;
   displayTitle: string;
   status: string;
   trendKind: string;
@@ -41,6 +47,9 @@ export type SystemTestFamilyListItemApi = {
   primaryLocator: string | null;
   primaryRouteUrl: string | null;
   updatedAt: string;
+  resolutionPreview: SystemTestResolutionPreview | null;
+  operatorState: SystemTestFamilyOperatorState;
+  lifecycle: SystemTestFamilyLifecycle;
 };
 
 export type SystemTestFamilyMembershipApi = {
@@ -77,11 +86,30 @@ export type SystemTestFamilyDetailApi = SystemTestFamilyListItemApi & {
 
 export async function fetchAdminSystemTestFamilies(
   accessToken: string,
-  params?: { limit?: number; status?: string },
+  params?: {
+    limit?: number;
+    status?: string;
+    diagnosisCategory?: string;
+    confidenceTier?: "high" | "medium" | "low";
+    sortBy?: string;
+    sortDirection?: "asc" | "desc";
+    showDismissed?: boolean;
+    lifecycleState?: string;
+    includeDormant?: boolean;
+    includeResolved?: boolean;
+  },
 ): Promise<SystemTestFamilyListItemApi[]> {
   const qs = new URLSearchParams();
   if (params?.limit != null) qs.set("limit", String(params.limit));
   if (params?.status) qs.set("status", params.status);
+  if (params?.diagnosisCategory) qs.set("diagnosisCategory", params.diagnosisCategory);
+  if (params?.confidenceTier) qs.set("confidenceTier", params.confidenceTier);
+  if (params?.sortBy) qs.set("sortBy", params.sortBy);
+  if (params?.sortDirection) qs.set("sortDirection", params.sortDirection);
+  if (params?.showDismissed) qs.set("showDismissed", "true");
+  if (params?.lifecycleState) qs.set("lifecycleState", params.lifecycleState);
+  if (params?.includeDormant === false) qs.set("includeDormant", "false");
+  if (params?.includeResolved === true) qs.set("includeResolved", "true");
   const q = qs.toString();
   return adminJson<SystemTestFamilyListItemApi[]>(
     accessToken,

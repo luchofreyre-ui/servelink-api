@@ -44,3 +44,14 @@ Teaching crews to 'chase the dry edge' on glass and floors prevents the classic 
 ## When to Call a Professional
 
 Call a professional when properties need SOP writing, water treatment, or equipment upgrades for large-format glass or stone programs.
+
+## Related Topics
+
+- [Streaking](/encyclopedia/problems/streaking)
+- [Streaks on Black Fixtures](/encyclopedia/problems/streaks-on-black-fixtures)
+- [Streaks on Glass](/encyclopedia/problems/streaks-on-glass)
+- [Streaks on Mirrors](/encyclopedia/problems/streaks-on-mirrors)
+- [Streaks on Stainless Steel](/encyclopedia/problems/streaks-on-stainless-steel)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

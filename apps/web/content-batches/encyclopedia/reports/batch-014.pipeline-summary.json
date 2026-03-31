@@ -1,0 +1,85 @@
+{
+  "batchName": "batch-014",
+  "mode": "gap",
+  "startedAt": "2026-03-29T04:43:34.105Z",
+  "finishedAt": "2026-03-29T04:43:55.349Z",
+  "inputFiles": {
+    "rawCandidates": "content-batches/encyclopedia/pipeline-runs/batch-014/gap-raw.json",
+    "reviewedCandidates": "content-batches/encyclopedia/pipeline-runs/batch-014/gap-reviewed.json"
+  },
+  "reviewedSummary": {
+    "total": 107,
+    "promote": 63,
+    "review": 44,
+    "reject": 0
+  },
+  "promoteSummary": {
+    "appendedCount": 39,
+    "skippedCount": 24,
+    "consideredCount": 63,
+    "sourceCandidateCount": 107
+  },
+  "appendedIds": [
+    "GAP-M-DEGREASING-PAINTED-WALLS",
+    "GAP-M-DEGREASING-SHOWER-WALLS",
+    "GAP-M-DEGREASING-VINYL",
+    "GAP-M-DUST-BUILDUP-PAINTED-WALLS",
+    "GAP-M-DUST-BUILDUP-SHOWER-WALLS",
+    "GAP-M-DUST-REMOVAL-PAINTED-WALLS",
+    "GAP-M-DUST-REMOVAL-SHOWER-WALLS",
+    "GAP-M-FINISHED-WOOD-SHOWER-WALLS",
+    "GAP-M-FINISHED-WOOD-TILE-FLOORS",
+    "GAP-M-GENERAL-SOIL-PAINTED-WALLS",
+    "GAP-M-GENERAL-SOIL-SHOWER-WALLS",
+    "GAP-M-GLASS-SHOWER-WALLS",
+    "GAP-M-GLASS-TILE-FLOORS",
+    "GAP-M-GREASE-BUILDUP-PAINTED-WALLS",
+    "GAP-M-GREASE-BUILDUP-SHOWER-WALLS",
+    "GAP-M-GROUT-SHOWER-WALLS",
+    "GAP-M-GROUT-SOILING-PAINTED-WALLS",
+    "GAP-M-GROUT-SOILING-SHOWER-WALLS",
+    "GAP-M-HARD-WATER-REMOVAL-SHOWER-WALLS",
+    "GAP-M-HARD-WATER-REMOVAL-TILE-FLOORS",
+    "GAP-M-HARD-WATER-SHOWER-WALLS",
+    "GAP-M-HARD-WATER-TILE-FLOORS",
+    "GAP-M-LIMESCALE-SHOWER-WALLS",
+    "GAP-M-LIMESCALE-TILE-FLOORS",
+    "GAP-M-NEUTRAL-SURFACE-CLEANING-PAINTED-WALLS",
+    "GAP-M-NEUTRAL-SURFACE-CLEANING-SHOWER-WALLS",
+    "GAP-M-PRODUCT-RESIDUE-SHOWER-WALLS",
+    "GAP-M-PRODUCT-RESIDUE-TILE-FLOORS",
+    "GAP-M-SHOWER-GLASS-SHOWER-WALLS",
+    "GAP-M-SOAP-SCUM-REMOVAL-SHOWER-WALLS",
+    "GAP-M-STAINLESS-STEEL-SHOWER-WALLS",
+    "GAP-M-STREAKING-PAINTED-WALLS",
+    "GAP-M-STREAKING-SHOWER-WALLS",
+    "GAP-M-SURFACE-HAZE-PAINTED-WALLS",
+    "GAP-M-SURFACE-HAZE-SHOWER-WALLS",
+    "GAP-M-TILE-SHOWER-WALLS",
+    "GAP-M-TILE-TILE-FLOORS",
+    "GAP-M-TOUCHPOINT-SANITIZATION-PAINTED-WALLS",
+    "GAP-M-TOUCHPOINT-SANITIZATION-SHOWER-WALLS"
+  ],
+  "scaffold": {
+    "outputPath": "content-batches/encyclopedia/batch-014.json",
+    "pageCount": 39
+  },
+  "enriched": {
+    "outputPath": "content-batches/encyclopedia/batch-014.enriched.json",
+    "pageCount": 39
+  },
+  "generatedFileCount": 39,
+  "build": {
+    "ok": true,
+    "exitCode": 0
+  },
+  "steps": [
+    "generate-gap-backfill-candidates",
+    "expand-reviewed-index-candidates",
+    "promote-index-candidates",
+    "build-batch-scaffold",
+    "enrich-batch-copy",
+    "generate-from-batch",
+    "npm run build"
+  ]
+}

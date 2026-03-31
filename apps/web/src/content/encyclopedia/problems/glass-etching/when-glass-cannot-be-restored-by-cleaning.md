@@ -44,3 +44,13 @@ Property managers benefit from photo standards to align resident expectations.
 ## When to Call a Professional
 
 Call a professional for measurement, tempered glass spec, installation, and stone protection during swaps.
+
+## Related Topics
+
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Etching on Shower Glass](/encyclopedia/problems/etching-on-shower-glass)
+- [Glass Etching](/encyclopedia/problems/glass-etching)
+- [Permanent Glass Damage from Hard Water](/encyclopedia/problems/permanent-glass-damage-from-hard-water)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

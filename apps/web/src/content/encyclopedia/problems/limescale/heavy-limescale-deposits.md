@@ -44,3 +44,14 @@ Photograph thickness before/after for warranty and property management records.
 ## When to Call a Professional
 
 Call a professional when gas valves, complex thermostatic cartridges, or stone surrounds constrain DIY approaches.
+
+## Related Topics
+
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)
+- [Limescale Buildup](/encyclopedia/problems/limescale-buildup)
+- [Limescale on Fixtures](/encyclopedia/problems/limescale-on-fixtures)
+- [Limescale on Shower Glass](/encyclopedia/problems/limescale-on-shower-glass)
+- [Limescale on Tile](/encyclopedia/problems/limescale-on-tile)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)

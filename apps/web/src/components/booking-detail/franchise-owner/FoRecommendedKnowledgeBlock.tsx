@@ -9,6 +9,7 @@ import {
   selectFoKnowledgeLinksFromScreen,
 } from "@/booking-screen/foKnowledgeScreenSelectors";
 import { submitFoAuthorityKnowledgeFeedback } from "@/lib/api/foAuthorityKnowledgeFeedback";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { WEB_ENV } from "@/lib/env";
 import { getStoredAccessToken } from "@/lib/auth";
 
@@ -130,7 +131,7 @@ export function FoRecommendedKnowledgeBlock({
                   {kindLabel(item.kind)}
                 </span>
                 <Link
-                  href={item.pathname}
+                  href={preferEncyclopediaCanonicalHref(item.pathname)}
                   className="min-w-0 flex-1 text-sm font-medium text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-600"
                 >
                   {item.title}

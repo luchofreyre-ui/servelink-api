@@ -44,3 +44,14 @@ Fan runtime and squeegee discipline change mineral deposition rates measurably.
 ## When to Call a Professional
 
 Call a professional when natural stone is mixed into the assembly, or when waterproofing concerns appear at failing corners.
+
+## Related Topics
+
+- [Limescale on Fixtures](/encyclopedia/problems/limescale-on-fixtures)
+- [Limescale on Shower Glass](/encyclopedia/problems/limescale-on-shower-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)
+- [Heavy Limescale Deposits](/encyclopedia/problems/heavy-limescale-deposits)
+- [Limescale Buildup](/encyclopedia/problems/limescale-buildup)
+- [General Soil on Tile](/encyclopedia/problems/general-soil-on-tile)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)

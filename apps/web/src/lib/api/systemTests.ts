@@ -72,10 +72,20 @@ async function adminJson<T>(accessToken: string, path: string, init?: RequestIni
 
 export async function fetchAdminSystemTestsSummary(
   accessToken: string,
+  opts?: {
+    showDismissed?: boolean;
+    includeDormant?: boolean;
+    includeResolved?: boolean;
+  },
 ): Promise<SystemTestsSummaryResponse> {
+  const q = new URLSearchParams();
+  if (opts?.showDismissed) q.set("showDismissed", "true");
+  if (opts?.includeDormant === false) q.set("includeDormant", "false");
+  if (opts?.includeResolved === true) q.set("includeResolved", "true");
+  const qs = q.toString();
   return adminJson<SystemTestsSummaryResponse>(
     accessToken,
-    "/api/v1/admin/system-tests/summary",
+    `/api/v1/admin/system-tests/summary${qs ? `?${qs}` : ""}`,
   );
 }
 

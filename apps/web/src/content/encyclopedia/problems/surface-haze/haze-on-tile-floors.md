@@ -44,3 +44,14 @@ Entry lanes often show the worst haze where outdoor dust loads combine with indo
 ## When to Call a Professional
 
 Call a professional when large stone-tile blends, epoxy grout, or commercial coatings need machine agitation and controlled extraction.
+
+## Related Topics
+
+- [Haze on Finished Wood](/encyclopedia/problems/haze-on-finished-wood)
+- [Haze on Glass](/encyclopedia/problems/haze-on-glass)
+- [Haze on Stainless Steel](/encyclopedia/problems/haze-on-stainless-steel)
+- [Haze After Cleaning](/encyclopedia/problems/haze-after-cleaning)
+- [Surface Haze](/encyclopedia/problems/surface-haze)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

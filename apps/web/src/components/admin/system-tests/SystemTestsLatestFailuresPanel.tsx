@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import type { SystemTestFailureGroup, SystemTestFailureHistoryProfile } from "@/types/systemTests";
+import type {
+  SystemTestFamilyLifecycle,
+  SystemTestFamilyOperatorState,
+  SystemTestResolutionPreview,
+} from "@/types/systemTestResolution";
 import { SystemTestsFailureEvidenceBlock } from "./SystemTestsFailureEvidenceBlock";
 import { SystemTestsFailureFamilyInline } from "./SystemTestsFailureFamilyInline";
 import { SystemTestsIncidentInline } from "./SystemTestsIncidentInline";
+import { SystemTestsResolutionPreview } from "./SystemTestsResolutionPreview";
+import { SystemTestsLifecycleBadge } from "./SystemTestsLifecycleBadge";
 
 type Props = {
   runId: string;
@@ -13,10 +20,26 @@ type Props = {
   error?: string | null;
   failureProfiles?: Record<string, SystemTestFailureHistoryProfile> | null;
   historyLoading?: boolean;
+  /** familyId → preview from dashboard summary fix opportunities (Phase 10C). */
+  familyResolutionPreviewByFamilyId?: Record<string, SystemTestResolutionPreview> | null;
+  familyOperatorStateByFamilyId?: Record<string, SystemTestFamilyOperatorState> | null;
+  familyLifecycleByFamilyId?: Record<string, SystemTestFamilyLifecycle> | null;
+  showDismissed?: boolean;
 };
 
 export function SystemTestsLatestFailuresPanel(props: Props) {
-  const { runId, groups, loading, error, failureProfiles, historyLoading } = props;
+  const {
+    runId,
+    groups,
+    loading,
+    error,
+    failureProfiles,
+    historyLoading,
+    familyResolutionPreviewByFamilyId,
+    familyOperatorStateByFamilyId,
+    familyLifecycleByFamilyId,
+    showDismissed = false,
+  } = props;
 
   if (loading) {
     return (
@@ -51,6 +74,19 @@ export function SystemTestsLatestFailuresPanel(props: Props) {
       <div className="space-y-3">
         {groups.map((g) => {
           const hp = failureProfiles?.[g.key];
+          const familyId = g.family?.familyId;
+          const familyPreview =
+            familyId && familyResolutionPreviewByFamilyId ?
+              familyResolutionPreviewByFamilyId[familyId]
+            : undefined;
+          const familyOpState =
+            familyId && familyOperatorStateByFamilyId ?
+              familyOperatorStateByFamilyId[familyId]
+            : undefined;
+          const hideFamilyPreview =
+            Boolean(familyId) &&
+            !showDismissed &&
+            familyOpState?.state === "dismissed";
           return (
             <div
               key={g.key}
@@ -87,10 +123,23 @@ export function SystemTestsLatestFailuresPanel(props: Props) {
                       </span>
                     </p>
                   ) : null}
+                  {!hideFamilyPreview && familyPreview?.hasResolution ? (
+                    <div className="mt-1.5 border-l border-white/10 pl-2" data-testid="system-tests-latest-failure-preview">
+                      <SystemTestsResolutionPreview preview={familyPreview} compact />
+                    </div>
+                  ) : null}
                   <p className="text-sm text-red-200/85">{g.shortMessage || "—"}</p>
                   {g.family ?
-                    <div className="mt-2">
+                    <div className="mt-2 space-y-1">
                       <SystemTestsFailureFamilyInline family={g.family} />
+                      {g.family.familyId &&
+                      familyLifecycleByFamilyId?.[g.family.familyId] ?
+                        <SystemTestsLifecycleBadge
+                          state={
+                            familyLifecycleByFamilyId[g.family.familyId]!.lifecycleState
+                          }
+                        />
+                      : null}
                     </div>
                   : null}
                   {g.incident ?

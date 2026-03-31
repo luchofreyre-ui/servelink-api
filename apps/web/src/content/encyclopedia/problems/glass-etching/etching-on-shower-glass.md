@@ -44,3 +44,14 @@ Maintenance after restoration must shift to milder prevention—otherwise etchin
 ## When to Call a Professional
 
 Call a professional when coatings are advertised, when big panels need safe handling, or when remodel scope is near.
+
+## Related Topics
+
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Glass Etching](/encyclopedia/problems/glass-etching)
+- [Permanent Glass Damage from Hard Water](/encyclopedia/problems/permanent-glass-damage-from-hard-water)
+- [When Glass Cannot Be Restored by Cleaning](/encyclopedia/problems/when-glass-cannot-be-restored-by-cleaning)
+- [Limescale on Shower Glass](/encyclopedia/problems/limescale-on-shower-glass)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

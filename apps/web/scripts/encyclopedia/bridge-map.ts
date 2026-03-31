@@ -6,6 +6,7 @@
  */
 import {
   buildBridgeMap,
+  getBridgeItemsEligibleForCta,
   getBuiltBridgeMap,
   type BridgeMap,
   type BridgeItem,
@@ -25,7 +26,7 @@ const VALID_BUCKETS: (keyof BridgeMap)[] = [
   "review",
 ];
 
-function counts(m: BridgeMap) {
+function planningCounts(m: BridgeMap) {
   const bridgeNowWithPipeline = m.bridgeNow.filter((i) => Boolean(i.pipelineHref))
     .length;
   return {
@@ -37,33 +38,68 @@ function counts(m: BridgeMap) {
   };
 }
 
+function renderableCtaCounts(m: BridgeMap) {
+  const items = getBridgeItemsEligibleForCta(m);
+  return {
+    renderableBridgeCta: items.length,
+    byPlanningBucket: {
+      bridgeNow: items.filter((i) =>
+        m.bridgeNow.some((b) => b.topicKey === i.topicKey),
+      ).length,
+      redirectLater: items.filter((i) =>
+        m.redirectLater.some((b) => b.topicKey === i.topicKey),
+      ).length,
+    },
+  };
+}
+
 function sampleLines(items: BridgeItem[], limit: number): string {
   return items
     .slice(0, limit)
     .map(
       (r) =>
-        `  ${r.topicKey}\n    pipeline: ${r.pipelineHref ?? "—"}\n    legacy: ${r.legacyHref ?? "—"}`,
+        `  ${r.topicKey}  showBridgeCta=${r.showBridgeCta}\n    pipeline: ${r.pipelineHref ?? "—"}\n    legacy: ${r.legacyHref ?? "—"}`,
     )
     .join("\n");
 }
 
 const rows = getConvergenceAuditRows();
 const map = buildBridgeMap(rows);
+const renderable = getBridgeItemsEligibleForCta(map);
 
 if (wantJson) {
-  const base = { counts: counts(map) };
+  const planning = planningCounts(map);
+  const cta = renderableCtaCounts(map);
+  const base = { planningBucketCounts: planning, renderableBridgeCta: cta };
   if (bucketName && VALID_BUCKETS.includes(bucketName)) {
     // eslint-disable-next-line no-console -- CLI
     console.log(
       JSON.stringify(
-        { ...base, bucket: bucketName, rows: map[bucketName] },
+        {
+          ...base,
+          bucket: bucketName,
+          rows: map[bucketName],
+          renderableBridgeCtaItems: renderable.filter((i) =>
+            map[bucketName].some((b) => b.topicKey === i.topicKey),
+          ),
+        },
         null,
         2,
       ),
     );
   } else {
     // eslint-disable-next-line no-console -- CLI
-    console.log(JSON.stringify({ ...base, ...map }, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          ...base,
+          ...map,
+          renderableBridgeCtaItems: renderable,
+        },
+        null,
+        2,
+      ),
+    );
   }
   void getBuiltBridgeMap();
   process.exit(0);
@@ -73,7 +109,11 @@ if (wantJson) {
 console.log(`
 Encyclopedia bridge map (from convergence audit)
 =================================================
-${JSON.stringify(counts(map), null, 2)}
+Planning buckets:
+${JSON.stringify(planningCounts(map), null, 2)}
+
+Renderable encyclopedia CTAs (presentation layer; redirects still off):
+${JSON.stringify(renderableCtaCounts(map), null, 2)}
 `);
 
 if (bucketName && VALID_BUCKETS.includes(bucketName)) {
@@ -92,6 +132,10 @@ if (bucketName && VALID_BUCKETS.includes(bucketName)) {
     // eslint-disable-next-line no-console -- CLI
     console.log(`${key} (sample up to 12)\n${sampleLines(map[key], 12) || "  (empty)"}\n`);
   }
+  // eslint-disable-next-line no-console -- CLI
+  console.log(
+    `Renderable CTA sample (up to 15)\n${sampleLines(renderable, 15) || "  (none)"}\n`,
+  );
 }
 
 // eslint-disable-next-line no-console -- CLI

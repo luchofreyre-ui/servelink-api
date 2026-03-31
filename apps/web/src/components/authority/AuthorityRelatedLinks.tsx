@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import type {
   AuthorityChemicalSummary,
   AuthorityEntitySummary,
@@ -23,7 +24,7 @@ function EntityLinkList({
       <ul className="space-y-2 font-[var(--font-manrope)] text-sm text-[#475569]">
         {links.map((l) => (
           <li key={l.href}>
-            <Link href={l.href} className="font-medium text-[#0D9488] hover:underline">
+            <Link href={preferEncyclopediaCanonicalHref(l.href)} className="font-medium text-[#0D9488] hover:underline">
               {l.title}
             </Link>
             {l.summary ? <span className="text-[#64748B]"> — {l.summary}</span> : null}
@@ -42,7 +43,7 @@ function ProblemLinkList({ heading, problems }: ProblemGroup) {
       <ul className="space-y-2 font-[var(--font-manrope)] text-sm text-[#475569]">
         {problems.map((p) => (
           <li key={p.href}>
-            <Link href={p.href} className="font-medium text-[#0D9488] hover:underline">
+            <Link href={preferEncyclopediaCanonicalHref(p.href)} className="font-medium text-[#0D9488] hover:underline">
               {p.title}
             </Link>
             {p.summary ? <span className="text-[#64748B]"> — {p.summary}</span> : null}

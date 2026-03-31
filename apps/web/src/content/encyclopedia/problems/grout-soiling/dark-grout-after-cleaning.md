@@ -44,3 +44,11 @@ New grout can darken unevenly if cure moisture was trapped—know install age be
 ## When to Call a Professional
 
 Call a professional when hydrostatic concerns, failing pans, or systemic re-darkening suggests moisture behind tile.
+
+## Related Topics
+
+- [Dirty Grout Lines](/encyclopedia/problems/dirty-grout-lines)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

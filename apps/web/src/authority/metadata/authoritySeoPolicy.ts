@@ -1,3 +1,4 @@
+import { resolveCanonicalMetadataHref } from "@/lib/encyclopedia/encyclopediaCanonicalMetadataHref";
 import type { AuthorityPageFamily, AuthoritySeoPolicy } from "../types/authoritySeoTypes";
 import { isAuthorityFamilyIndexable } from "./authorityIndexRules";
 
@@ -11,11 +12,12 @@ export function buildAuthoritySeoPolicy(
   canonicalPath: string,
 ): AuthoritySeoPolicy {
   const normalizedPath = normalizePath(canonicalPath);
+  const resolvedPath = resolveCanonicalMetadataHref(normalizedPath);
   const shouldIndex = isAuthorityFamilyIndexable(family);
 
   return {
     family,
-    canonicalPath: normalizedPath,
+    canonicalPath: resolvedPath,
     shouldIndex,
   };
 }

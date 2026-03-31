@@ -44,3 +44,14 @@ Lower door zones often show heavier pattern from bounce-back spray.
 ## When to Call a Professional
 
 Call a professional when coatings are unknown, when etching is suspected, or when large panels need safe access systems.
+
+## Related Topics
+
+- [Limescale on Fixtures](/encyclopedia/problems/limescale-on-fixtures)
+- [Limescale on Tile](/encyclopedia/problems/limescale-on-tile)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)
+- [Heavy Limescale Deposits](/encyclopedia/problems/heavy-limescale-deposits)
+- [Limescale Buildup](/encyclopedia/problems/limescale-buildup)
+- [Etching on Shower Glass](/encyclopedia/problems/etching-on-shower-glass)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)

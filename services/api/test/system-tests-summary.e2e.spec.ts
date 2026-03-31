@@ -118,4 +118,14 @@ describe("Admin system-tests summary (E2E)", () => {
 
     expect(Array.isArray(res.body.latestFailures)).toBe(true);
   });
+
+  it("includes fixOpportunities as an array (empty when no actionable families)", async () => {
+    const res = await request(app.getHttpServer())
+      .get("/api/v1/admin/system-tests/summary")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .expect(200);
+
+    expect(Array.isArray(res.body.fixOpportunities)).toBe(true);
+    expect(res.body.fixOpportunities.length).toBeLessThanOrEqual(5);
+  });
 });

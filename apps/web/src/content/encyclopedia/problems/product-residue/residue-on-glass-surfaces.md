@@ -44,3 +44,14 @@ Indoor particulate from candles or frying can nucleate streaks; the pattern is o
 ## When to Call a Professional
 
 Call a professional when high glass, coated low-E failures, or historic glazing limits access and tool choice, or when etching diagnosis needs controlled polishing scope.
+
+## Related Topics
+
+- [Residue on Stainless Steel](/encyclopedia/problems/residue-on-stainless-steel)
+- [Cleaner Film on Countertops](/encyclopedia/problems/cleaner-film-on-countertops)
+- [Floor Residue After Mopping](/encyclopedia/problems/floor-residue-after-mopping)
+- [Product Residue Buildup](/encyclopedia/problems/product-residue-buildup)
+- [Sticky Floors After Cleaning](/encyclopedia/problems/sticky-floors-after-cleaning)
+- [Dust on Glass Surfaces](/encyclopedia/problems/dust-on-glass-surfaces)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)

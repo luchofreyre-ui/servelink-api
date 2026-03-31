@@ -10,6 +10,11 @@ import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData"
 import { getSurfacePageBySlug } from "@/authority/data/authoritySurfacePageData";
 import { getClusterDetailCanonicalPath } from "@/authority/metadata/authorityCanonicalPaths";
 import {
+  resolveCanonicalMetadataHref,
+  resolveJsonLdBreadcrumbHrefs,
+} from "@/lib/encyclopedia/encyclopediaCanonicalMetadataHref";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
+import {
   buildArticleSchema,
   buildBreadcrumbListSchema,
   buildFaqSchema,
@@ -73,7 +78,7 @@ function buildSeeAlsoGroups(data: AuthorityClusterPageData): AuthoritySeeAlsoGro
     .slice(0, 8)
     .map((page) => ({
       title: page!.title,
-      href: `/methods/${page!.slug}`,
+      href: preferEncyclopediaCanonicalHref(`/methods/${page!.slug}`),
     }));
 
   const surfaceLinks = data.relatedSurfaces
@@ -91,7 +96,7 @@ function buildSeeAlsoGroups(data: AuthorityClusterPageData): AuthoritySeeAlsoGro
     .slice(0, 8)
     .map((page) => ({
       title: page!.title,
-      href: `/problems/${page!.slug}`,
+      href: preferEncyclopediaCanonicalHref(`/problems/${page!.slug}`),
     }));
 
   const guideLinks = (data.relatedGuides ?? [])
@@ -132,14 +137,14 @@ export function AuthorityClusterPage({ data }: { data: AuthorityClusterPageData 
   ];
 
   const faq = buildClusterFaq(data);
-  const path = getClusterDetailCanonicalPath(data.slug);
+  const path = resolveCanonicalMetadataHref(getClusterDetailCanonicalPath(data.slug));
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />
       <AuthorityJsonLd
         data={[
-          buildBreadcrumbListSchema(breadcrumbs),
+          buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(breadcrumbs)),
           buildArticleSchema({
             title: data.title,
             description: data.description,

@@ -9,6 +9,7 @@ import {
 import { AuthorityJsonLd } from "@/components/authority/AuthorityJsonLd";
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { getPublishedEncyclopediaEntriesByCategory } from "@/lib/encyclopedia/loader";
 
 export const metadata: Metadata = buildAuthorityProblemsIndexMetadata();
@@ -67,7 +68,7 @@ export default function ProblemsIndexPage() {
             {legacyProblems.map((problem) => (
               <li key={problem.slug}>
                 <Link
-                  href={`/problems/${problem.slug}`}
+                  href={preferEncyclopediaCanonicalHref(`/problems/${problem.slug}`)}
                   className="font-medium text-[#0D9488] hover:underline"
                 >
                   {problem.title}

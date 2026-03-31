@@ -7,6 +7,8 @@ export type SystemTestSuiteBreakdownDto = {
   flaky: number;
 };
 
+import type { SystemTestFixOpportunityDto } from "../system-test-resolution-preview";
+
 export type SystemTestLatestFailureDto = {
   runId: string;
   suite: string;
@@ -38,4 +40,5 @@ export type SystemTestSummaryResponseDto = {
   latestRunAt: string | null;
   suiteBreakdown: SystemTestSuiteBreakdownDto[];
   latestFailures: SystemTestLatestFailureDto[];
+  fixOpportunities: SystemTestFixOpportunityDto[];
 };

@@ -1,0 +1,591 @@
+{
+  "generatedAt": "2026-03-29T03:58:11.616Z",
+  "totalClusters": 23,
+  "rows": [
+    {
+      "clusterSlug": "degreasing",
+      "clusterLabel": "Degreasing",
+      "counts": {
+        "problems": 0,
+        "methods": 1,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": true,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": false
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "degreasing"
+      ]
+    },
+    {
+      "clusterSlug": "dust-buildup",
+      "clusterLabel": "Dust Buildup",
+      "counts": {
+        "problems": 6,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 6
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "developing",
+      "sampleSlugs": [
+        "dust-buildup",
+        "dust-on-baseboards",
+        "dust-on-ceiling-fans",
+        "dust-on-finished-wood",
+        "dust-on-glass-surfaces"
+      ]
+    },
+    {
+      "clusterSlug": "dust-removal",
+      "clusterLabel": "Dust Removal",
+      "counts": {
+        "problems": 0,
+        "methods": 1,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": true,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": false
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "dry-dust-removal"
+      ]
+    },
+    {
+      "clusterSlug": "finished-wood",
+      "clusterLabel": "Finished Wood",
+      "counts": {
+        "problems": 0,
+        "methods": 0,
+        "surfaces": 1,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "cleaning-finished-wood"
+      ]
+    },
+    {
+      "clusterSlug": "general-soil",
+      "clusterLabel": "General Soil",
+      "counts": {
+        "problems": 6,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 6
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "developing",
+      "sampleSlugs": [
+        "embedded-general-soil",
+        "general-soil-buildup",
+        "general-soil-on-finished-wood",
+        "general-soil-on-grout",
+        "general-soil-on-tile"
+      ]
+    },
+    {
+      "clusterSlug": "glass",
+      "clusterLabel": "Glass",
+      "counts": {
+        "problems": 0,
+        "methods": 0,
+        "surfaces": 1,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "cleaning-glass-surfaces"
+      ]
+    },
+    {
+      "clusterSlug": "glass-cleaning",
+      "clusterLabel": "Glass Cleaning",
+      "counts": {
+        "problems": 0,
+        "methods": 1,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": true,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": false
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "streak-free-glass-cleaning"
+      ]
+    },
+    {
+      "clusterSlug": "glass-etching",
+      "clusterLabel": "Glass Etching",
+      "counts": {
+        "problems": 6,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 2,
+        "guides": 0,
+        "total": 6
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": true,
+        "hasSurfaceCoverage": true
+      },
+      "status": "developing",
+      "sampleSlugs": [
+        "cloudy-glass-vs-etched-glass",
+        "etching-on-shower-glass",
+        "etching-vs-residue-on-glass",
+        "glass-etching",
+        "permanent-glass-damage-from-hard-water"
+      ]
+    },
+    {
+      "clusterSlug": "grease-buildup",
+      "clusterLabel": "Grease Buildup",
+      "counts": {
+        "problems": 6,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 6
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "developing",
+      "sampleSlugs": [
+        "grease-buildup",
+        "grease-on-backsplashes",
+        "grease-on-kitchen-cabinets",
+        "grease-on-stainless-steel",
+        "grease-on-walls-near-the-stove"
+      ]
+    },
+    {
+      "clusterSlug": "grout",
+      "clusterLabel": "Grout",
+      "counts": {
+        "problems": 0,
+        "methods": 0,
+        "surfaces": 1,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "cleaning-grout"
+      ]
+    },
+    {
+      "clusterSlug": "grout-soiling",
+      "clusterLabel": "Grout Soiling",
+      "counts": {
+        "problems": 2,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 2
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": false
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "dark-grout-after-cleaning",
+        "dirty-grout-lines"
+      ]
+    },
+    {
+      "clusterSlug": "hard-water",
+      "clusterLabel": "Hard Water",
+      "counts": {
+        "problems": 1,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": false
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "hard-water-stains"
+      ]
+    },
+    {
+      "clusterSlug": "hard-water-removal",
+      "clusterLabel": "Hard Water Removal",
+      "counts": {
+        "problems": 0,
+        "methods": 1,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": true,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": false
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "hard-water-deposit-removal"
+      ]
+    },
+    {
+      "clusterSlug": "limescale",
+      "clusterLabel": "Limescale",
+      "counts": {
+        "problems": 6,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 1,
+        "guides": 0,
+        "total": 6
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": true,
+        "hasSurfaceCoverage": true
+      },
+      "status": "developing",
+      "sampleSlugs": [
+        "heavy-limescale-deposits",
+        "limescale-buildup",
+        "limescale-on-fixtures",
+        "limescale-on-shower-glass",
+        "limescale-on-tile"
+      ]
+    },
+    {
+      "clusterSlug": "neutral-cleaning",
+      "clusterLabel": "Neutral Cleaning",
+      "counts": {
+        "problems": 0,
+        "methods": 1,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": true,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": false
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "neutral-surface-cleaning"
+      ]
+    },
+    {
+      "clusterSlug": "product-residue",
+      "clusterLabel": "Product Residue",
+      "counts": {
+        "problems": 6,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 6
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "developing",
+      "sampleSlugs": [
+        "cleaner-film-on-countertops",
+        "floor-residue-after-mopping",
+        "product-residue-buildup",
+        "residue-on-glass-surfaces",
+        "residue-on-stainless-steel"
+      ]
+    },
+    {
+      "clusterSlug": "shower-glass",
+      "clusterLabel": "Shower Glass",
+      "counts": {
+        "problems": 0,
+        "methods": 0,
+        "surfaces": 1,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "cleaning-shower-glass"
+      ]
+    },
+    {
+      "clusterSlug": "soap-scum",
+      "clusterLabel": "Soap Scum",
+      "counts": {
+        "problems": 1,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": false
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "soap-scum-removal"
+      ]
+    },
+    {
+      "clusterSlug": "stainless-steel",
+      "clusterLabel": "Stainless Steel",
+      "counts": {
+        "problems": 0,
+        "methods": 0,
+        "surfaces": 1,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "cleaning-stainless-steel"
+      ]
+    },
+    {
+      "clusterSlug": "streaking",
+      "clusterLabel": "Streaking",
+      "counts": {
+        "problems": 6,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 1,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 6
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": true,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "developing",
+      "sampleSlugs": [
+        "streaking",
+        "streaks-on-black-fixtures",
+        "streaks-on-glass",
+        "streaks-on-mirrors",
+        "streaks-on-stainless-steel"
+      ]
+    },
+    {
+      "clusterSlug": "surface-haze",
+      "clusterLabel": "Surface Haze",
+      "counts": {
+        "problems": 6,
+        "methods": 0,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 6
+      },
+      "missing": {
+        "hasProblemPages": true,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "developing",
+      "sampleSlugs": [
+        "haze-after-cleaning",
+        "haze-on-finished-wood",
+        "haze-on-glass",
+        "haze-on-stainless-steel",
+        "haze-on-tile-floors"
+      ]
+    },
+    {
+      "clusterSlug": "tile",
+      "clusterLabel": "Tile",
+      "counts": {
+        "problems": 0,
+        "methods": 0,
+        "surfaces": 1,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": false,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": true
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "cleaning-tile-surfaces"
+      ]
+    },
+    {
+      "clusterSlug": "touchpoint-sanitization",
+      "clusterLabel": "Touchpoint Sanitization",
+      "counts": {
+        "problems": 0,
+        "methods": 1,
+        "surfaces": 0,
+        "questions": 0,
+        "comparisons": 0,
+        "guides": 0,
+        "total": 1
+      },
+      "missing": {
+        "hasProblemPages": false,
+        "hasMethodPages": true,
+        "hasQuestionPages": false,
+        "hasComparisonPages": false,
+        "hasSurfaceCoverage": false
+      },
+      "status": "thin",
+      "sampleSlugs": [
+        "touchpoint-sanitization"
+      ]
+    }
+  ]
+}

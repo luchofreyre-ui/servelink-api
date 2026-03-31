@@ -1,0 +1,2677 @@
+{
+  "generatedAt": "2026-03-29T02:56:51.217Z",
+  "total": 101,
+  "excludedCount": 1,
+  "flaggedCount": 1,
+  "countsByFamily": {
+    "problem_surface": 47,
+    "method_surface": 40,
+    "comparison_method_method": 2,
+    "comparison_problem_problem": 2,
+    "comparison_surface_surface": 2,
+    "question_symptom_cause": 4,
+    "question_prevention_troubleshooting": 4
+  },
+  "candidates": [
+    {
+      "id": "EXP-M-DEGREASING-COUNTERTOPS",
+      "slug": "degreasing-countertops",
+      "title": "Degreasing for Countertops",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "degreasing-countertops",
+      "cleanedTitle": "Degreasing for Countertops",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-DEGREASING-FINISHED-WOOD",
+      "slug": "degreasing-finished-wood",
+      "title": "Degreasing for Finished Wood",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "degreasing-finished-wood",
+      "cleanedTitle": "Degreasing for Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-DEGREASING-FLOORS",
+      "slug": "degreasing-floors",
+      "title": "Degreasing for Floors",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "degreasing-floors",
+      "cleanedTitle": "Degreasing for Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-DEGREASING-GLASS-SURFACES",
+      "slug": "degreasing-glass-surfaces",
+      "title": "Degreasing for Glass Surfaces",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "degreasing-glass-surfaces",
+      "cleanedTitle": "Degreasing for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-DEGREASING-GROUT",
+      "slug": "degreasing-grout",
+      "title": "Degreasing for Grout",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "degreasing-grout",
+      "cleanedTitle": "Degreasing for Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-DEGREASING-STAINLESS-STEEL",
+      "slug": "degreasing-stainless-steel",
+      "title": "Degreasing for Stainless Steel",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "degreasing-stainless-steel",
+      "cleanedTitle": "Degreasing for Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-DEGREASING-TILE-FLOORS",
+      "slug": "degreasing-tile-floors",
+      "title": "Degreasing for Tile Floors",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "degreasing-tile-floors",
+      "cleanedTitle": "Degreasing for Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-DEGREASING-TILE-FLOORS",
+      "slug": "degreasing-tile-floors",
+      "title": "Degreasing for Tile Floors",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "degreasing-tile-floors",
+      "cleanedTitle": "Degreasing for Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-CMM-DEGREASING-VS-NEUTRAL-SURFACE-CLEANING",
+      "slug": "degreasing-vs-neutral-surface-cleaning",
+      "title": "Degreasing vs Neutral Surface Cleaning",
+      "category": "methods",
+      "cluster": "degreasing",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "comparison_seed",
+      "sourceFamily": "comparison_method_method",
+      "sourceParts": {
+        "leftMethod": {
+          "slug": "degreasing",
+          "title": "Degreasing"
+        },
+        "rightMethod": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        }
+      }
+    },
+    {
+      "id": "EXP-P-DUST-BUILDUP-ON-COUNTERTOPS",
+      "slug": "dust-buildup-on-countertops",
+      "title": "Dust Buildup on Countertops",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "dust-buildup-on-countertops",
+      "cleanedTitle": "Dust Buildup on Countertops",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-DUST-BUILDUP-ON-FINISHED-WOOD",
+      "slug": "dust-buildup-on-finished-wood",
+      "title": "Dust Buildup on Finished Wood",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "dust-buildup-on-finished-wood",
+      "cleanedTitle": "Dust Buildup on Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-DUST-BUILDUP-ON-FLOORS",
+      "slug": "dust-buildup-on-floors",
+      "title": "Dust Buildup on Floors",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "dust-buildup-on-floors",
+      "cleanedTitle": "Dust Buildup on Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-DUST-BUILDUP-ON-GLASS-SURFACES",
+      "slug": "dust-buildup-on-glass-surfaces",
+      "title": "Dust Buildup on Glass Surfaces",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "dust-buildup-on-glass-surfaces",
+      "cleanedTitle": "Dust Buildup on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-DUST-BUILDUP-ON-GROUT",
+      "slug": "dust-buildup-on-grout",
+      "title": "Dust Buildup on Grout",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "dust-buildup-on-grout",
+      "cleanedTitle": "Dust Buildup on Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-DUST-BUILDUP-ON-STAINLESS-STEEL",
+      "slug": "dust-buildup-on-stainless-steel",
+      "title": "Dust Buildup on Stainless Steel",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "dust-buildup-on-stainless-steel",
+      "cleanedTitle": "Dust Buildup on Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-DUST-BUILDUP-ON-TILE-FLOORS",
+      "slug": "dust-buildup-on-tile-floors",
+      "title": "Dust Buildup on Tile Floors",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "dust-buildup-on-tile-floors",
+      "cleanedTitle": "Dust Buildup on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-DUST-BUILDUP-ON-TILE-FLOORS",
+      "slug": "dust-buildup-on-tile-floors",
+      "title": "Dust Buildup on Tile Floors",
+      "category": "problems",
+      "cluster": "dust-buildup",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "dust-buildup",
+          "title": "Dust Buildup"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "dust-buildup-on-tile-floors",
+      "cleanedTitle": "Dust Buildup on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-CSS-GLASS-SURFACES-VS-TILE-FLOORS-FOR-MINERAL-BUILDUP",
+      "slug": "glass-surfaces-vs-tile-floors-for-mineral-buildup",
+      "title": "Glass Surfaces vs Tile Floors for mineral buildup",
+      "category": "problems",
+      "cluster": "surface-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "comparison_seed",
+      "sourceFamily": "comparison_surface_surface",
+      "sourceParts": {
+        "leftSurface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        },
+        "rightSurface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        },
+        "framing": "for mineral buildup"
+      }
+    },
+    {
+      "id": "EXP-P-GREASE-BUILDUP-ON-COUNTERTOPS",
+      "slug": "grease-buildup-on-countertops",
+      "title": "Grease Buildup on Countertops",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "grease-buildup-on-countertops",
+      "cleanedTitle": "Grease Buildup on Countertops",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-GREASE-BUILDUP-ON-FINISHED-WOOD",
+      "slug": "grease-buildup-on-finished-wood",
+      "title": "Grease Buildup on Finished Wood",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "grease-buildup-on-finished-wood",
+      "cleanedTitle": "Grease Buildup on Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-GREASE-BUILDUP-ON-FLOORS",
+      "slug": "grease-buildup-on-floors",
+      "title": "Grease Buildup on Floors",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "grease-buildup-on-floors",
+      "cleanedTitle": "Grease Buildup on Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-GREASE-BUILDUP-ON-GLASS-SURFACES",
+      "slug": "grease-buildup-on-glass-surfaces",
+      "title": "Grease Buildup on Glass Surfaces",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "grease-buildup-on-glass-surfaces",
+      "cleanedTitle": "Grease Buildup on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-GREASE-BUILDUP-ON-GROUT",
+      "slug": "grease-buildup-on-grout",
+      "title": "Grease Buildup on Grout",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "grease-buildup-on-grout",
+      "cleanedTitle": "Grease Buildup on Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-GREASE-BUILDUP-ON-STAINLESS-STEEL",
+      "slug": "grease-buildup-on-stainless-steel",
+      "title": "Grease Buildup on Stainless Steel",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "grease-buildup-on-stainless-steel",
+      "cleanedTitle": "Grease Buildup on Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-GREASE-BUILDUP-ON-TILE-FLOORS",
+      "slug": "grease-buildup-on-tile-floors",
+      "title": "Grease Buildup on Tile Floors",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "grease-buildup-on-tile-floors",
+      "cleanedTitle": "Grease Buildup on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-GREASE-BUILDUP-ON-TILE-FLOORS",
+      "slug": "grease-buildup-on-tile-floors",
+      "title": "Grease Buildup on Tile Floors",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "grease-buildup-on-tile-floors",
+      "cleanedTitle": "Grease Buildup on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-CPP-GREASE-BUILDUP-VS-STUCK-ON-RESIDUE",
+      "slug": "grease-buildup-vs-stuck-on-residue",
+      "title": "Grease Buildup vs Stuck-On Residue",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "comparison_seed",
+      "sourceFamily": "comparison_problem_problem",
+      "sourceParts": {
+        "leftProblem": {
+          "slug": "grease-buildup",
+          "title": "Grease Buildup"
+        },
+        "rightProblem": {
+          "slug": "stuck-on-residue",
+          "title": "Stuck-On Residue"
+        }
+      }
+    },
+    {
+      "id": "EXP-CSS-GROUT-VS-TILE-FLOORS-FOR-RESIDUE-CLEANUP",
+      "slug": "grout-vs-tile-floors-for-residue-cleanup",
+      "title": "Grout vs Tile Floors for residue cleanup",
+      "category": "problems",
+      "cluster": "surface-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "comparison_seed",
+      "sourceFamily": "comparison_surface_surface",
+      "sourceParts": {
+        "leftSurface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        },
+        "rightSurface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        },
+        "framing": "for residue cleanup"
+      }
+    },
+    {
+      "id": "EXP-P-HARD-WATER-DEPOSITS-ON-COUNTERTOPS",
+      "slug": "hard-water-deposits-on-countertops",
+      "title": "Hard Water Stains on Countertops",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "hard-water-deposits",
+          "title": "Hard Water Stains"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "hard-water-deposits-on-countertops",
+      "cleanedTitle": "Hard Water Stains on Countertops",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-HARD-WATER-DEPOSITS-ON-FINISHED-WOOD",
+      "slug": "hard-water-deposits-on-finished-wood",
+      "title": "Hard Water Stains on Finished Wood",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "hard-water-deposits",
+          "title": "Hard Water Stains"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "hard-water-deposits-on-finished-wood",
+      "cleanedTitle": "Hard Water Stains on Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-HARD-WATER-DEPOSITS-ON-FLOORS",
+      "slug": "hard-water-deposits-on-floors",
+      "title": "Hard Water Stains on Floors",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "hard-water-deposits",
+          "title": "Hard Water Stains"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "hard-water-deposits-on-floors",
+      "cleanedTitle": "Hard Water Stains on Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-HARD-WATER-DEPOSITS-ON-GLASS-SURFACES",
+      "slug": "hard-water-deposits-on-glass-surfaces",
+      "title": "Hard Water Stains on Glass Surfaces",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "hard-water-deposits",
+          "title": "Hard Water Stains"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "hard-water-deposits-on-glass-surfaces",
+      "cleanedTitle": "Hard Water Stains on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-HARD-WATER-DEPOSITS-ON-GROUT",
+      "slug": "hard-water-deposits-on-grout",
+      "title": "Hard Water Stains on Grout",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "hard-water-deposits",
+          "title": "Hard Water Stains"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "hard-water-deposits-on-grout",
+      "cleanedTitle": "Hard Water Stains on Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-HARD-WATER-DEPOSITS-ON-STAINLESS-STEEL",
+      "slug": "hard-water-deposits-on-stainless-steel",
+      "title": "Hard Water Stains on Stainless Steel",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "hard-water-deposits",
+          "title": "Hard Water Stains"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "hard-water-deposits-on-stainless-steel",
+      "cleanedTitle": "Hard Water Stains on Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-HARD-WATER-DEPOSITS-ON-TILE-FLOORS",
+      "slug": "hard-water-deposits-on-tile-floors",
+      "title": "Hard Water Stains on Tile Floors",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "hard-water-deposits",
+          "title": "Hard Water Stains"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "hard-water-deposits-on-tile-floors",
+      "cleanedTitle": "Hard Water Stains on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-HARD-WATER-DEPOSITS-ON-TILE-FLOORS",
+      "slug": "hard-water-deposits-on-tile-floors",
+      "title": "Hard Water Stains on Tile Floors",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "hard-water-deposits",
+          "title": "Hard Water Stains"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "hard-water-deposits-on-tile-floors",
+      "cleanedTitle": "Hard Water Stains on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-CPP-HARD-WATER-DEPOSITS-VS-SOAP-SCUM",
+      "slug": "hard-water-deposits-vs-soap-scum",
+      "title": "Hard Water Stains vs Soap Scum",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "comparison_seed",
+      "sourceFamily": "comparison_problem_problem",
+      "sourceParts": {
+        "leftProblem": {
+          "slug": "hard-water-deposits",
+          "title": "Hard Water Stains"
+        },
+        "rightProblem": {
+          "slug": "soap-scum",
+          "title": "Soap Scum"
+        }
+      }
+    },
+    {
+      "id": "EXP-QP-HOW-TO-AVOID-STICKY-FLOORS-AFTER-CLEANING",
+      "slug": "how-to-avoid-sticky-floors-after-cleaning",
+      "title": "How to avoid sticky floors after cleaning",
+      "category": "methods",
+      "cluster": "maintenance-guides",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "questionStem": "how to avoid sticky floors after cleaning"
+      }
+    },
+    {
+      "id": "EXP-QP-HOW-TO-KEEP-STAINLESS-STEEL-FROM-LOOKING-STREAKY",
+      "slug": "how-to-keep-stainless-steel-from-looking-streaky",
+      "title": "How to keep stainless steel from looking streaky",
+      "category": "methods",
+      "cluster": "maintenance-guides",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "questionStem": "how to keep stainless steel from looking streaky"
+      }
+    },
+    {
+      "id": "EXP-QP-HOW-TO-PREVENT-HARD-WATER-STAINS-ON-SHOWER-GLASS",
+      "slug": "how-to-prevent-hard-water-stains-on-shower-glass",
+      "title": "How to prevent hard water stains on shower glass",
+      "category": "methods",
+      "cluster": "maintenance-guides",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "questionStem": "how to prevent hard water stains on shower glass"
+      }
+    },
+    {
+      "id": "EXP-QP-HOW-TO-STOP-PRODUCT-RESIDUE-BUILDUP-ON-TILE-FLOORS",
+      "slug": "how-to-stop-product-residue-buildup-on-tile-floors",
+      "title": "How to stop product residue buildup on tile floors",
+      "category": "methods",
+      "cluster": "maintenance-guides",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_prevention_troubleshooting",
+      "sourceParts": {
+        "questionStem": "how to stop product residue buildup on tile floors"
+      }
+    },
+    {
+      "id": "EXP-M-NEUTRAL-SURFACE-CLEANING-COUNTERTOPS",
+      "slug": "neutral-surface-cleaning-countertops",
+      "title": "Neutral Surface Cleaning for Countertops",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "neutral-surface-cleaning-countertops",
+      "cleanedTitle": "Neutral Surface Cleaning for Countertops",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-NEUTRAL-SURFACE-CLEANING-FINISHED-WOOD",
+      "slug": "neutral-surface-cleaning-finished-wood",
+      "title": "Neutral Surface Cleaning for Finished Wood",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "neutral-surface-cleaning-finished-wood",
+      "cleanedTitle": "Neutral Surface Cleaning for Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-NEUTRAL-SURFACE-CLEANING-FLOORS",
+      "slug": "neutral-surface-cleaning-floors",
+      "title": "Neutral Surface Cleaning for Floors",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "neutral-surface-cleaning-floors",
+      "cleanedTitle": "Neutral Surface Cleaning for Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-NEUTRAL-SURFACE-CLEANING-GLASS-SURFACES",
+      "slug": "neutral-surface-cleaning-glass-surfaces",
+      "title": "Neutral Surface Cleaning for Glass Surfaces",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "neutral-surface-cleaning-glass-surfaces",
+      "cleanedTitle": "Neutral Surface Cleaning for Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-NEUTRAL-SURFACE-CLEANING-GROUT",
+      "slug": "neutral-surface-cleaning-grout",
+      "title": "Neutral Surface Cleaning for Grout",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "neutral-surface-cleaning-grout",
+      "cleanedTitle": "Neutral Surface Cleaning for Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-NEUTRAL-SURFACE-CLEANING-STAINLESS-STEEL",
+      "slug": "neutral-surface-cleaning-stainless-steel",
+      "title": "Neutral Surface Cleaning for Stainless Steel",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "neutral-surface-cleaning-stainless-steel",
+      "cleanedTitle": "Neutral Surface Cleaning for Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-NEUTRAL-SURFACE-CLEANING-TILE-FLOORS",
+      "slug": "neutral-surface-cleaning-tile-floors",
+      "title": "Neutral Surface Cleaning for Tile Floors",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "neutral-surface-cleaning-tile-floors",
+      "cleanedTitle": "Neutral Surface Cleaning for Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-NEUTRAL-SURFACE-CLEANING-TILE-FLOORS",
+      "slug": "neutral-surface-cleaning-tile-floors",
+      "title": "Neutral Surface Cleaning for Tile Floors",
+      "category": "methods",
+      "cluster": "neutral-cleaning",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "neutral-surface-cleaning-tile-floors",
+      "cleanedTitle": "Neutral Surface Cleaning for Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-PRODUCT-RESIDUE-ON-COUNTERTOPS",
+      "slug": "product-residue-on-countertops",
+      "title": "Product Residue Buildup on Countertops",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "product-residue",
+          "title": "Product Residue Buildup"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "product-residue-on-countertops",
+      "cleanedTitle": "Product Residue Buildup on Countertops",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-PRODUCT-RESIDUE-ON-FINISHED-WOOD",
+      "slug": "product-residue-on-finished-wood",
+      "title": "Product Residue Buildup on Finished Wood",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "product-residue",
+          "title": "Product Residue Buildup"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "product-residue-on-finished-wood",
+      "cleanedTitle": "Product Residue Buildup on Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-PRODUCT-RESIDUE-ON-FLOORS",
+      "slug": "product-residue-on-floors",
+      "title": "Product Residue Buildup on Floors",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "product-residue",
+          "title": "Product Residue Buildup"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "product-residue-on-floors",
+      "cleanedTitle": "Product Residue Buildup on Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-PRODUCT-RESIDUE-ON-GLASS-SURFACES",
+      "slug": "product-residue-on-glass-surfaces",
+      "title": "Product Residue Buildup on Glass Surfaces",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "product-residue",
+          "title": "Product Residue Buildup"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "product-residue-on-glass-surfaces",
+      "cleanedTitle": "Product Residue Buildup on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-PRODUCT-RESIDUE-ON-GROUT",
+      "slug": "product-residue-on-grout",
+      "title": "Product Residue Buildup on Grout",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "product-residue",
+          "title": "Product Residue Buildup"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "product-residue-on-grout",
+      "cleanedTitle": "Product Residue Buildup on Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-PRODUCT-RESIDUE-ON-STAINLESS-STEEL",
+      "slug": "product-residue-on-stainless-steel",
+      "title": "Product Residue Buildup on Stainless Steel",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "product-residue",
+          "title": "Product Residue Buildup"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "product-residue-on-stainless-steel",
+      "cleanedTitle": "Product Residue Buildup on Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-PRODUCT-RESIDUE-ON-TILE-FLOORS",
+      "slug": "product-residue-on-tile-floors",
+      "title": "Product Residue Buildup on Tile Floors",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "product-residue",
+          "title": "Product Residue Buildup"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "product-residue-on-tile-floors",
+      "cleanedTitle": "Product Residue Buildup on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-PRODUCT-RESIDUE-ON-TILE-FLOORS",
+      "slug": "product-residue-on-tile-floors",
+      "title": "Product Residue Buildup on Tile Floors",
+      "category": "problems",
+      "cluster": "product-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "product-residue",
+          "title": "Product Residue Buildup"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "product-residue-on-tile-floors",
+      "cleanedTitle": "Product Residue Buildup on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-SOAP-SCUM-ON-COUNTERTOPS",
+      "slug": "soap-scum-on-countertops",
+      "title": "Soap Scum on Countertops",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "soap-scum",
+          "title": "Soap Scum"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "soap-scum-on-countertops",
+      "cleanedTitle": "Soap Scum on Countertops",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-SOAP-SCUM-ON-FLOORS",
+      "slug": "soap-scum-on-floors",
+      "title": "Soap Scum on Floors",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "soap-scum",
+          "title": "Soap Scum"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "soap-scum-on-floors",
+      "cleanedTitle": "Soap Scum on Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-SOAP-SCUM-ON-GLASS-SURFACES",
+      "slug": "soap-scum-on-glass-surfaces",
+      "title": "Soap Scum on Glass Surfaces",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "soap-scum",
+          "title": "Soap Scum"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "soap-scum-on-glass-surfaces",
+      "cleanedTitle": "Soap Scum on Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-SOAP-SCUM-ON-GROUT",
+      "slug": "soap-scum-on-grout",
+      "title": "Soap Scum on Grout",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "soap-scum",
+          "title": "Soap Scum"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "soap-scum-on-grout",
+      "cleanedTitle": "Soap Scum on Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-SOAP-SCUM-ON-STAINLESS-STEEL",
+      "slug": "soap-scum-on-stainless-steel",
+      "title": "Soap Scum on Stainless Steel",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "soap-scum",
+          "title": "Soap Scum"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "soap-scum-on-stainless-steel",
+      "cleanedTitle": "Soap Scum on Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-SOAP-SCUM-ON-TILE-FLOORS",
+      "slug": "soap-scum-on-tile-floors",
+      "title": "Soap Scum on Tile Floors",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "soap-scum",
+          "title": "Soap Scum"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "soap-scum-on-tile-floors",
+      "cleanedTitle": "Soap Scum on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-SOAP-SCUM-ON-TILE-FLOORS",
+      "slug": "soap-scum-on-tile-floors",
+      "title": "Soap Scum on Tile Floors",
+      "category": "problems",
+      "cluster": "mineral-and-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "soap-scum",
+          "title": "Soap Scum"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "soap-scum-on-tile-floors",
+      "cleanedTitle": "Soap Scum on Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-SOAP-SCUM-REMOVAL-COUNTERTOPS",
+      "slug": "soap-scum-removal-countertops",
+      "title": "Soap Scum Removal for Countertops",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "soap-scum-removal",
+          "title": "Soap Scum Removal"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "soap-scum-removal-countertops",
+      "cleanedTitle": "Soap Scum Removal for Countertops",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-SOAP-SCUM-REMOVAL-FINISHED-WOOD",
+      "slug": "soap-scum-removal-finished-wood",
+      "title": "Soap Scum Removal for Finished Wood",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "soap-scum-removal",
+          "title": "Soap Scum Removal"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "soap-scum-removal-finished-wood",
+      "cleanedTitle": "Soap Scum Removal for Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-SOAP-SCUM-REMOVAL-FLOORS",
+      "slug": "soap-scum-removal-floors",
+      "title": "Soap Scum Removal for Floors",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "soap-scum-removal",
+          "title": "Soap Scum Removal"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "soap-scum-removal-floors",
+      "cleanedTitle": "Soap Scum Removal for Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-SOAP-SCUM-REMOVAL-GLASS-SURFACES",
+      "slug": "soap-scum-removal-glass-surfaces",
+      "title": "Soap Scum Removal for Glass Surfaces",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "soap-scum-removal",
+          "title": "Soap Scum Removal"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "soap-scum-removal-glass-surfaces",
+      "cleanedTitle": "Soap Scum Removal for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-SOAP-SCUM-REMOVAL-GROUT",
+      "slug": "soap-scum-removal-grout",
+      "title": "Soap Scum Removal for Grout",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "soap-scum-removal",
+          "title": "Soap Scum Removal"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "soap-scum-removal-grout",
+      "cleanedTitle": "Soap Scum Removal for Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-SOAP-SCUM-REMOVAL-STAINLESS-STEEL",
+      "slug": "soap-scum-removal-stainless-steel",
+      "title": "Soap Scum Removal for Stainless Steel",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "soap-scum-removal",
+          "title": "Soap Scum Removal"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "soap-scum-removal-stainless-steel",
+      "cleanedTitle": "Soap Scum Removal for Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-SOAP-SCUM-REMOVAL-TILE-FLOORS",
+      "slug": "soap-scum-removal-tile-floors",
+      "title": "Soap Scum Removal for Tile Floors",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "soap-scum-removal",
+          "title": "Soap Scum Removal"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "soap-scum-removal-tile-floors",
+      "cleanedTitle": "Soap Scum Removal for Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-SOAP-SCUM-REMOVAL-TILE-FLOORS",
+      "slug": "soap-scum-removal-tile-floors",
+      "title": "Soap Scum Removal for Tile Floors",
+      "category": "methods",
+      "cluster": "soap-scum",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "soap-scum-removal",
+          "title": "Soap Scum Removal"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "soap-scum-removal-tile-floors",
+      "cleanedTitle": "Soap Scum Removal for Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-STREAK-FREE-GLASS-CLEANING-COUNTERTOPS",
+      "slug": "streak-free-glass-cleaning-countertops",
+      "title": "Streak-Free Glass Cleaning for Countertops",
+      "category": "methods",
+      "cluster": "glass-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "streak-free-glass-cleaning",
+          "title": "Streak-Free Glass Cleaning"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "streak-free-glass-cleaning-countertops",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Countertops",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-STREAK-FREE-GLASS-CLEANING-FINISHED-WOOD",
+      "slug": "streak-free-glass-cleaning-finished-wood",
+      "title": "Streak-Free Glass Cleaning for Finished Wood",
+      "category": "methods",
+      "cluster": "glass-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "streak-free-glass-cleaning",
+          "title": "Streak-Free Glass Cleaning"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "streak-free-glass-cleaning-finished-wood",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-STREAK-FREE-GLASS-CLEANING-FLOORS",
+      "slug": "streak-free-glass-cleaning-floors",
+      "title": "Streak-Free Glass Cleaning for Floors",
+      "category": "methods",
+      "cluster": "glass-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "streak-free-glass-cleaning",
+          "title": "Streak-Free Glass Cleaning"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "streak-free-glass-cleaning-floors",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-STREAK-FREE-GLASS-CLEANING-GLASS-SURFACES",
+      "slug": "streak-free-glass-cleaning-glass-surfaces",
+      "title": "Streak-Free Glass Cleaning for Glass Surfaces",
+      "category": "methods",
+      "cluster": "glass-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "streak-free-glass-cleaning",
+          "title": "Streak-Free Glass Cleaning"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "streak-free-glass-cleaning-glass-surfaces",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-STREAK-FREE-GLASS-CLEANING-GROUT",
+      "slug": "streak-free-glass-cleaning-grout",
+      "title": "Streak-Free Glass Cleaning for Grout",
+      "category": "methods",
+      "cluster": "glass-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "streak-free-glass-cleaning",
+          "title": "Streak-Free Glass Cleaning"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "streak-free-glass-cleaning-grout",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote",
+      "seedWarnings": [
+        "WEAK_METHOD_SURFACE"
+      ]
+    },
+    {
+      "id": "EXP-M-STREAK-FREE-GLASS-CLEANING-STAINLESS-STEEL",
+      "slug": "streak-free-glass-cleaning-stainless-steel",
+      "title": "Streak-Free Glass Cleaning for Stainless Steel",
+      "category": "methods",
+      "cluster": "glass-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "streak-free-glass-cleaning",
+          "title": "Streak-Free Glass Cleaning"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "streak-free-glass-cleaning-stainless-steel",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-STREAK-FREE-GLASS-CLEANING-TILE-FLOORS",
+      "slug": "streak-free-glass-cleaning-tile-floors",
+      "title": "Streak-Free Glass Cleaning for Tile Floors",
+      "category": "methods",
+      "cluster": "glass-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "streak-free-glass-cleaning",
+          "title": "Streak-Free Glass Cleaning"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "streak-free-glass-cleaning-tile-floors",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-STREAK-FREE-GLASS-CLEANING-TILE-FLOORS",
+      "slug": "streak-free-glass-cleaning-tile-floors",
+      "title": "Streak-Free Glass Cleaning for Tile Floors",
+      "category": "methods",
+      "cluster": "glass-care",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "streak-free-glass-cleaning",
+          "title": "Streak-Free Glass Cleaning"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "streak-free-glass-cleaning-tile-floors",
+      "cleanedTitle": "Streak-Free Glass Cleaning for Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "raw_cleaning_taxonomy",
+        "removed_cleaning_prefix"
+      ],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-P-STUCK-ON-RESIDUE-ON-COUNTERTOPS",
+      "slug": "stuck-on-residue-on-countertops",
+      "title": "Stuck-On Residue on Countertops",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "stuck-on-residue",
+          "title": "Stuck-On Residue"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "stuck-on-residue-on-countertops",
+      "cleanedTitle": "Stuck-On Residue on Countertops",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "recommendation": "review"
+    },
+    {
+      "id": "EXP-P-STUCK-ON-RESIDUE-ON-FINISHED-WOOD",
+      "slug": "stuck-on-residue-on-finished-wood",
+      "title": "Stuck-On Residue on Finished Wood",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "stuck-on-residue",
+          "title": "Stuck-On Residue"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "stuck-on-residue-on-finished-wood",
+      "cleanedTitle": "Stuck-On Residue on Finished Wood",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "recommendation": "review"
+    },
+    {
+      "id": "EXP-P-STUCK-ON-RESIDUE-ON-FLOORS",
+      "slug": "stuck-on-residue-on-floors",
+      "title": "Stuck-On Residue on Floors",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "stuck-on-residue",
+          "title": "Stuck-On Residue"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "stuck-on-residue-on-floors",
+      "cleanedTitle": "Stuck-On Residue on Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "recommendation": "review"
+    },
+    {
+      "id": "EXP-P-STUCK-ON-RESIDUE-ON-GLASS-SURFACES",
+      "slug": "stuck-on-residue-on-glass-surfaces",
+      "title": "Stuck-On Residue on Glass Surfaces",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "stuck-on-residue",
+          "title": "Stuck-On Residue"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "stuck-on-residue-on-glass-surfaces",
+      "cleanedTitle": "Stuck-On Residue on Glass Surfaces",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "recommendation": "review"
+    },
+    {
+      "id": "EXP-P-STUCK-ON-RESIDUE-ON-GROUT",
+      "slug": "stuck-on-residue-on-grout",
+      "title": "Stuck-On Residue on Grout",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "stuck-on-residue",
+          "title": "Stuck-On Residue"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "stuck-on-residue-on-grout",
+      "cleanedTitle": "Stuck-On Residue on Grout",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "recommendation": "review"
+    },
+    {
+      "id": "EXP-P-STUCK-ON-RESIDUE-ON-STAINLESS-STEEL",
+      "slug": "stuck-on-residue-on-stainless-steel",
+      "title": "Stuck-On Residue on Stainless Steel",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "stuck-on-residue",
+          "title": "Stuck-On Residue"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "stuck-on-residue-on-stainless-steel",
+      "cleanedTitle": "Stuck-On Residue on Stainless Steel",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "recommendation": "review"
+    },
+    {
+      "id": "EXP-P-STUCK-ON-RESIDUE-ON-TILE-FLOORS",
+      "slug": "stuck-on-residue-on-tile-floors",
+      "title": "Stuck-On Residue on Tile Floors",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "stuck-on-residue",
+          "title": "Stuck-On Residue"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "stuck-on-residue-on-tile-floors",
+      "cleanedTitle": "Stuck-On Residue on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "recommendation": "review"
+    },
+    {
+      "id": "EXP-P-STUCK-ON-RESIDUE-ON-TILE-FLOORS",
+      "slug": "stuck-on-residue-on-tile-floors",
+      "title": "Stuck-On Residue on Tile Floors",
+      "category": "problems",
+      "cluster": "oil-and-kitchen-residue",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "problem_surface",
+      "sourceFamily": "problem_surface",
+      "sourceParts": {
+        "problem": {
+          "slug": "stuck-on-residue",
+          "title": "Stuck-On Residue"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "stuck-on-residue-on-tile-floors",
+      "cleanedTitle": "Stuck-On Residue on Tile Floors",
+      "qualityScore": 85,
+      "qualityFlags": [
+        "multiple_on_segments"
+      ],
+      "recommendation": "review"
+    },
+    {
+      "id": "EXP-M-TOUCHPOINT-SANITIZATION-COUNTERTOPS",
+      "slug": "touchpoint-sanitization-countertops",
+      "title": "Touchpoint Sanitization for Countertops",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "countertops",
+          "normalizedSlug": "countertops",
+          "label": "Countertops"
+        }
+      },
+      "cleanedSlug": "touchpoint-sanitization-countertops",
+      "cleanedTitle": "Touchpoint Sanitization for Countertops",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-TOUCHPOINT-SANITIZATION-FINISHED-WOOD",
+      "slug": "touchpoint-sanitization-finished-wood",
+      "title": "Touchpoint Sanitization for Finished Wood",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "finished-wood",
+          "normalizedSlug": "finished-wood",
+          "label": "Finished Wood"
+        }
+      },
+      "cleanedSlug": "touchpoint-sanitization-finished-wood",
+      "cleanedTitle": "Touchpoint Sanitization for Finished Wood",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-TOUCHPOINT-SANITIZATION-FLOORS",
+      "slug": "touchpoint-sanitization-floors",
+      "title": "Touchpoint Sanitization for Floors",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "floors",
+          "normalizedSlug": "floors",
+          "label": "Floors"
+        }
+      },
+      "cleanedSlug": "touchpoint-sanitization-floors",
+      "cleanedTitle": "Touchpoint Sanitization for Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-TOUCHPOINT-SANITIZATION-GLASS-SURFACES",
+      "slug": "touchpoint-sanitization-glass-surfaces",
+      "title": "Touchpoint Sanitization for Glass Surfaces",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "shower-glass",
+          "normalizedSlug": "glass-surfaces",
+          "label": "Glass Surfaces"
+        }
+      },
+      "cleanedSlug": "touchpoint-sanitization-glass-surfaces",
+      "cleanedTitle": "Touchpoint Sanitization for Glass Surfaces",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-TOUCHPOINT-SANITIZATION-GROUT",
+      "slug": "touchpoint-sanitization-grout",
+      "title": "Touchpoint Sanitization for Grout",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "grout",
+          "normalizedSlug": "grout",
+          "label": "Grout"
+        }
+      },
+      "cleanedSlug": "touchpoint-sanitization-grout",
+      "cleanedTitle": "Touchpoint Sanitization for Grout",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-TOUCHPOINT-SANITIZATION-STAINLESS-STEEL",
+      "slug": "touchpoint-sanitization-stainless-steel",
+      "title": "Touchpoint Sanitization for Stainless Steel",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "stainless-steel",
+          "normalizedSlug": "stainless-steel",
+          "label": "Stainless Steel"
+        }
+      },
+      "cleanedSlug": "touchpoint-sanitization-stainless-steel",
+      "cleanedTitle": "Touchpoint Sanitization for Stainless Steel",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-TOUCHPOINT-SANITIZATION-TILE-FLOORS",
+      "slug": "touchpoint-sanitization-tile-floors",
+      "title": "Touchpoint Sanitization for Tile Floors",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "tile",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "touchpoint-sanitization-tile-floors",
+      "cleanedTitle": "Touchpoint Sanitization for Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-M-TOUCHPOINT-SANITIZATION-TILE-FLOORS",
+      "slug": "touchpoint-sanitization-tile-floors",
+      "title": "Touchpoint Sanitization for Tile Floors",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "method_surface",
+      "sourceFamily": "method_surface",
+      "sourceParts": {
+        "method": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "surface": {
+          "inputSlug": "tile-floors",
+          "normalizedSlug": "tile-floors",
+          "label": "Tile Floors"
+        }
+      },
+      "cleanedSlug": "touchpoint-sanitization-tile-floors",
+      "cleanedTitle": "Touchpoint Sanitization for Tile Floors",
+      "qualityScore": 100,
+      "qualityFlags": [],
+      "recommendation": "promote"
+    },
+    {
+      "id": "EXP-CMM-TOUCHPOINT-SANITIZATION-VS-NEUTRAL-SURFACE-CLEANING",
+      "slug": "touchpoint-sanitization-vs-neutral-surface-cleaning",
+      "title": "Touchpoint Sanitization vs Neutral Surface Cleaning",
+      "category": "methods",
+      "cluster": "sanitization",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "comparison_seed",
+      "sourceFamily": "comparison_method_method",
+      "sourceParts": {
+        "leftMethod": {
+          "slug": "touchpoint-sanitization",
+          "title": "Touchpoint Sanitization"
+        },
+        "rightMethod": {
+          "slug": "neutral-surface-cleaning",
+          "title": "Neutral Surface Cleaning"
+        }
+      }
+    },
+    {
+      "id": "EXP-QS-WHY-ARE-FLOORS-STICKY-AFTER-MOPPING",
+      "slug": "why-are-floors-sticky-after-mopping",
+      "title": "Why are floors sticky after mopping",
+      "category": "problems",
+      "cluster": "diagnostics",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "questionStem": "why are floors sticky after mopping"
+      }
+    },
+    {
+      "id": "EXP-QS-WHY-DOES-GLASS-LOOK-HAZY-AFTER-CLEANING",
+      "slug": "why-does-glass-look-hazy-after-cleaning",
+      "title": "Why does glass look hazy after cleaning",
+      "category": "problems",
+      "cluster": "diagnostics",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "questionStem": "why does glass look hazy after cleaning"
+      }
+    },
+    {
+      "id": "EXP-QS-WHY-DOES-GROUT-STILL-LOOK-DIRTY-AFTER-SCRUBBING",
+      "slug": "why-does-grout-still-look-dirty-after-scrubbing",
+      "title": "Why does grout still look dirty after scrubbing",
+      "category": "problems",
+      "cluster": "diagnostics",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "questionStem": "why does grout still look dirty after scrubbing"
+      }
+    },
+    {
+      "id": "EXP-QS-WHY-DOES-SOAP-SCUM-KEEP-COMING-BACK",
+      "slug": "why-does-soap-scum-keep-coming-back",
+      "title": "Why does soap scum keep coming back",
+      "category": "problems",
+      "cluster": "diagnostics",
+      "role": "supporting",
+      "status": "draft",
+      "generatedType": "question_seed",
+      "sourceFamily": "question_symptom_cause",
+      "sourceParts": {
+        "questionStem": "why does soap scum keep coming back"
+      }
+    }
+  ]
+}

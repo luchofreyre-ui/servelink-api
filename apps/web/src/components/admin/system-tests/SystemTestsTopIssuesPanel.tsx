@@ -1,12 +1,23 @@
 "use client";
 
 import type { SystemTestsTopProblemItem, SystemTestsTopProblemSeverity } from "@/types/systemTests";
+import type { SystemTestFamilyOperatorState } from "@/types/systemTestResolution";
+import { buildTopIssueQuickFixText } from "@/lib/system-tests/quickFixCopy";
 import { SystemTestsBadge } from "./SystemTestsBadge";
+import { SystemTestsCopyQuickFixButton } from "./SystemTestsCopyQuickFixButton";
+import { SystemTestsOperatorStateActions } from "./SystemTestsOperatorStateActions";
+import { SystemTestsOperatorStateBadge } from "./SystemTestsOperatorStateBadge";
+import { SystemTestsLifecycleBadge } from "./SystemTestsLifecycleBadge";
+import { SystemTestsResolutionPreview } from "./SystemTestsResolutionPreview";
 
 type Props = {
   items: SystemTestsTopProblemItem[];
   loading?: boolean;
   emptyHint?: string;
+  onFamilyBackedOperatorStateUpdated?: (
+    familyId: string,
+    next: SystemTestFamilyOperatorState,
+  ) => void;
 };
 
 function severityToBadge(s: SystemTestsTopProblemSeverity): "critical" | "warning" | "stable" {
@@ -31,7 +42,7 @@ function typeLabel(t: SystemTestsTopProblemItem["type"]): string {
 }
 
 export function SystemTestsTopIssuesPanel(props: Props) {
-  const { items, loading, emptyHint } = props;
+  const { items, loading, emptyHint, onFamilyBackedOperatorStateUpdated } = props;
 
   if (loading) {
     return (
@@ -72,8 +83,37 @@ export function SystemTestsTopIssuesPanel(props: Props) {
                 <span className="text-[10px] font-semibold uppercase tracking-wide text-white/40">
                   {typeLabel(it.type)}
                 </span>
+                {it.familyId && it.lifecycle ?
+                  <SystemTestsLifecycleBadge state={it.lifecycle.lifecycleState} />
+                : null}
+                {it.familyId && it.operatorState ?
+                  <SystemTestsOperatorStateBadge state={it.operatorState.state} />
+                : null}
               </div>
+              {it.familyId && it.operatorState && onFamilyBackedOperatorStateUpdated ?
+                <div className="flex flex-wrap items-center gap-2">
+                  <SystemTestsOperatorStateActions
+                    familyId={it.familyId}
+                    currentState={it.operatorState.state}
+                    compact
+                    onUpdated={(next) => onFamilyBackedOperatorStateUpdated(it.familyId!, next)}
+                  />
+                  {it.lifecycle ?
+                    <span data-testid="system-tests-top-issue-copy-quick-fix">
+                      <SystemTestsCopyQuickFixButton
+                        text={buildTopIssueQuickFixText(it)}
+                        className="text-xs"
+                      />
+                    </span>
+                  : null}
+                </div>
+              : null}
               <p className="text-sm font-semibold text-white">{it.title}</p>
+              {it.resolutionPreview?.hasResolution ? (
+                <div className="border-l border-white/10 pl-2" data-testid="system-tests-top-issue-preview">
+                  <SystemTestsResolutionPreview preview={it.resolutionPreview} compact />
+                </div>
+              ) : null}
               <p className="text-sm leading-relaxed text-white/70">{it.summary}</p>
             </div>
           </li>

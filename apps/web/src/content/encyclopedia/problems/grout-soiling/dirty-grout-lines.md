@@ -44,3 +44,11 @@ Kitchen grout near stoves often carries polymerized oils distinct from bath soap
 ## When to Call a Professional
 
 Call a professional when regrouting, color sealing, or waterproofing remediation is required after cleaning plateaus.
+
+## Related Topics
+
+- [Dark Grout After Cleaning](/encyclopedia/problems/dark-grout-after-cleaning)
+- [Why Surfaces Streak After Cleaning](/encyclopedia/problems/why-surfaces-streak-after-cleaning)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)
+- [Etching vs Residue on Glass](/encyclopedia/problems/etching-vs-residue-on-glass)
+- [Limescale vs Hard Water Stains](/encyclopedia/problems/limescale-vs-hard-water-stains)

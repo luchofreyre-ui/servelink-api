@@ -1,3 +1,10 @@
+import type {
+  SystemTestFamilyLifecycle,
+  SystemTestFamilyOperatorState,
+  SystemTestFixOpportunity,
+  SystemTestResolutionPreview,
+} from "./systemTestResolution";
+
 /** Aligns with GET /api/v1/admin/system-tests/summary and related DTOs. */
 
 export type SystemTestRunStatus =
@@ -321,6 +328,7 @@ export type SystemTestsSummaryResponse = {
   latestRunAt: string | null;
   suiteBreakdown: SystemTestSuiteBreakdownRow[];
   latestFailures: SystemTestLatestFailure[];
+  fixOpportunities: SystemTestFixOpportunity[];
 };
 
 export type SystemTestCaseResult = {
@@ -642,6 +650,12 @@ export type SystemTestsTopProblemItem = {
   severity: SystemTestsTopProblemSeverity;
   impactScore: number;
   summary: string;
+  /** When set, dashboard can show compact Phase 10A resolution preview under the title. */
+  familyId?: string | null;
+  familyTitle?: string | null;
+  resolutionPreview?: SystemTestResolutionPreview | null;
+  operatorState?: SystemTestFamilyOperatorState | null;
+  lifecycle?: SystemTestFamilyLifecycle | null;
 };
 
 /** AI / support — enriched single-run export (concise). Field order matters for operators / LLMs. */

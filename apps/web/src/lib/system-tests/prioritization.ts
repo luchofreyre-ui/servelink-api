@@ -1,3 +1,4 @@
+import { fixOpportunityToResolutionPreview } from "@/lib/system-tests/fixOpportunityPreview";
 import type {
   SystemTestsFailurePattern,
   SystemTestsFlakyCaseRow,
@@ -7,6 +8,8 @@ import type {
   SystemTestsTopProblemItem,
   SystemTestsTopProblemType,
 } from "@/types/systemTests";
+import { lifecycleStateRank } from "@/lib/system-tests/lifecycle";
+import type { SystemTestFixOpportunity } from "@/types/systemTestResolution";
 
 const TYPE_ORDER: Record<SystemTestsTopProblemType, number> = {
   regression: 4,
@@ -163,6 +166,55 @@ export function buildTopProblemsSummary(input: TopProblemsSummaryInput): SystemT
   }
 
   return deduped.slice(0, 5);
+}
+
+function confidenceToTopProblemSeverity(confidence: number | null): SystemTestsTopProblemItem["severity"] {
+  if (confidence == null || Number.isNaN(confidence)) return "medium";
+  if (confidence >= 0.85) return "high";
+  if (confidence >= 0.6) return "medium";
+  return "low";
+}
+
+/**
+ * Converts a summary fix opportunity into a top-issue row with embedded resolution preview
+ * (same Phase 10A fields as families list), for dashboard triage.
+ */
+export function fixOpportunityToTopProblemItem(opp: SystemTestFixOpportunity): SystemTestsTopProblemItem {
+  const lifecycleBonus = lifecycleStateRank(opp.lifecycle.lifecycleState) * 25;
+  return {
+    title: opp.title,
+    type: "pattern",
+    severity: confidenceToTopProblemSeverity(opp.confidence),
+    impactScore: 950 + lifecycleBonus + opp.failureCount * 4 + opp.affectedRunCount * 2,
+    summary: `${opp.failureCount} failure${opp.failureCount !== 1 ? "s" : ""} · ${opp.affectedRunCount} run${opp.affectedRunCount !== 1 ? "s" : ""} affected`,
+    familyId: opp.familyId,
+    familyTitle: opp.title,
+    resolutionPreview: fixOpportunityToResolutionPreview(opp),
+    operatorState: opp.operatorState,
+    lifecycle: opp.lifecycle,
+  };
+}
+
+/**
+ * Prepends high-signal fix opportunities (with previews) ahead of heuristic top problems,
+ * deduping pattern rows that share the same title as an opportunity.
+ */
+export function mergeFixOpportunitiesIntoTopProblems(
+  base: SystemTestsTopProblemItem[],
+  opportunities: SystemTestFixOpportunity[],
+  opts?: { maxOpportunities?: number; maxTotal?: number },
+): SystemTestsTopProblemItem[] {
+  const maxOpp = opts?.maxOpportunities ?? 3;
+  const maxTotal = opts?.maxTotal ?? 5;
+  const fromOpp = opportunities.slice(0, maxOpp).map((o) => fixOpportunityToTopProblemItem(o));
+  const titles = new Set(fromOpp.map((x) => x.title.toLowerCase().trim()));
+  const filteredBase = base.filter((b) => {
+    if (b.type !== "pattern") return true;
+    return !titles.has(b.title.toLowerCase().trim());
+  });
+  const merged = [...fromOpp, ...filteredBase];
+  merged.sort((a, b) => b.impactScore - a.impactScore);
+  return merged.slice(0, maxTotal);
 }
 
 function sortDurationByImpact(rows: SystemTestsDurationRegression[]): SystemTestsDurationRegression[] {

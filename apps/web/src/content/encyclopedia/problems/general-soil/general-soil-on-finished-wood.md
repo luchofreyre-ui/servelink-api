@@ -44,3 +44,14 @@ Area rugs without pad can trap grit at edges—lift and detail periodically.
 ## When to Call a Professional
 
 Call a professional when recoating intervals arrive, when finish type is uncertain, or when cupping suggests moisture—not soil alone.
+
+## Related Topics
+
+- [General Soil on Grout](/encyclopedia/problems/general-soil-on-grout)
+- [General Soil on Tile](/encyclopedia/problems/general-soil-on-tile)
+- [Embedded General Soil](/encyclopedia/problems/embedded-general-soil)
+- [General Soil Buildup](/encyclopedia/problems/general-soil-buildup)
+- [Tracked-In Soil on Floors](/encyclopedia/problems/tracked-in-soil-on-floors)
+- [Dust on Finished Wood](/encyclopedia/problems/dust-on-finished-wood)
+- [Haze on Finished Wood](/encyclopedia/problems/haze-on-finished-wood)
+- [Cloudy Glass vs Etched Glass](/encyclopedia/problems/cloudy-glass-vs-etched-glass)

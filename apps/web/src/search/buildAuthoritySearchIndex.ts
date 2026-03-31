@@ -3,6 +3,7 @@ import { getAllProblemPages } from "@/authority/data/authorityProblemPageData";
 import { getAllMethodPages } from "@/authority/data/authorityMethodPageData";
 import { getAllSurfacePages } from "@/authority/data/authoritySurfacePageData";
 import { getAllGuidePages } from "@/authority/data/authorityGuidePageData";
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import type { SiteSearchDocument, SearchDocumentType } from "@/types/search";
 
 function normalizeText(value: string): string {
@@ -77,7 +78,7 @@ export const buildAuthoritySearchIndex = cache(
         type: "method",
         title: page.title,
         description: page.summary,
-        href: `/methods/${page.slug}`,
+        href: preferEncyclopediaCanonicalHref(`/methods/${page.slug}`),
         keywords: [page.slug, "method"],
         bodyParts: [
           page.summary,

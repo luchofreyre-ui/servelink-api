@@ -1,10 +1,13 @@
-import type { BridgeMap } from "@/lib/encyclopedia/bridgeMap";
+import {
+  getBridgeItemsEligibleForCta,
+  type BridgeMap,
+} from "@/lib/encyclopedia/bridgeMap";
 
 export type LegacyBridgeKind = "problems" | "methods" | "surfaces";
 
 /**
- * Legacy → pipeline link for UI injection.
- * Only `bridgeNow` rows with a non-empty `pipelineHref` qualify (not redirectLater / keepForNow / review).
+ * Legacy → pipeline link for UI injection (no HTTP redirect).
+ * Uses `showBridgeCta` eligibility (paired URLs, pipeline owner, bridge or redirect-later treatment).
  */
 export function resolveBridgeForLegacyPage(
   kind: LegacyBridgeKind,
@@ -12,7 +15,9 @@ export function resolveBridgeForLegacyPage(
   bridgeMap: BridgeMap,
 ): { href: string } | null {
   const key = `${kind}:${slug}`;
-  const item = bridgeMap.bridgeNow.find((i) => i.topicKey === key);
+  const item = getBridgeItemsEligibleForCta(bridgeMap).find(
+    (i) => i.topicKey === key,
+  );
   if (!item?.pipelineHref) return null;
   return { href: item.pipelineHref };
 }

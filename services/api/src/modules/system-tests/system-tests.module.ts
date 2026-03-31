@@ -10,11 +10,13 @@ import { SystemTestIncidentActionsService } from "./system-test-incident-actions
 import { SystemTestIncidentAutomationService } from "./system-test-incident-automation.service";
 import { SystemTestIncidentLifecycleService } from "./system-test-incident-lifecycle.service";
 import { SystemTestsAdminController } from "./system-tests.admin.controller";
+import { SystemTestsFamilyResolutionModule } from "./system-tests-family-resolution.module";
 import { SystemTestsService } from "./system-tests.service";
 
 @Module({
   imports: [
     PrismaModule,
+    SystemTestsFamilyResolutionModule,
     SystemTestsFamiliesModule,
     forwardRef(() => SystemTestsIncidentsModule),
     forwardRef(() => SystemTestsIntelligenceModule),
@@ -32,6 +34,7 @@ import { SystemTestsService } from "./system-tests.service";
   ],
   exports: [
     SystemTestsService,
+    SystemTestsFamilyResolutionModule,
     SystemTestsIntelligenceModule,
     SystemTestIncidentActionsService,
     SystemTestIncidentLifecycleService,
