@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "why::sealed wood::yellow stains",
+      "title": "Why yellow stains Keeps Coming Back on sealed wood",
+      "slug": "why-yellow-stains-keeps-coming-back-on-sealed-wood",
+      "problem": "yellow stains",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::yellow stains",
+      "title": "How to Maintain sealed wood and Keep yellow stains Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-yellow-stains-under-control",
+      "problem": "yellow stains",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::yellow stains",
+      "title": "How to Recover After a Cleaning Mistake With yellow stains on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellow-stains-on-sealed-wood",
+      "problem": "yellow stains",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::orange stains",
+      "title": "What Causes orange stains on shower glass",
+      "slug": "what-causes-orange-stains-on-shower-glass",
+      "problem": "orange stains",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::orange stains",
+      "title": "How to Remove orange stains from shower glass",
+      "slug": "how-to-remove-orange-stains-from-shower-glass",
+      "problem": "orange stains",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::orange stains",
+      "title": "How to Prevent orange stains on shower glass",
+      "slug": "how-to-prevent-orange-stains-on-shower-glass",
+      "problem": "orange stains",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::orange stains",
+      "title": "How to Fix orange stains on shower glass",
+      "slug": "how-to-fix-orange-stains-on-shower-glass",
+      "problem": "orange stains",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::orange stains",
+      "title": "How to Clean orange stains from shower glass",
+      "slug": "how-to-clean-orange-stains-from-shower-glass",
+      "problem": "orange stains",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::orange stains",
+      "title": "How to Tell if orange stains on shower glass is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-shower-glass-is-permanent",
+      "problem": "orange stains",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::orange stains",
+      "title": "Why orange stains Keeps Coming Back on shower glass",
+      "slug": "why-orange-stains-keeps-coming-back-on-shower-glass",
+      "problem": "orange stains",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::orange stains",
+      "title": "How to Maintain shower glass and Keep orange stains Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-shower-glass",
+      "problem": "orange stains",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::orange stains",
+      "title": "What Causes orange stains on granite",
+      "slug": "what-causes-orange-stains-on-granite",
+      "problem": "orange stains",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::orange stains",
+      "title": "How to Remove orange stains from granite",
+      "slug": "how-to-remove-orange-stains-from-granite",
+      "problem": "orange stains",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::orange stains",
+      "title": "How to Prevent orange stains on granite",
+      "slug": "how-to-prevent-orange-stains-on-granite",
+      "problem": "orange stains",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::orange stains",
+      "title": "How to Fix orange stains on granite",
+      "slug": "how-to-fix-orange-stains-on-granite",
+      "problem": "orange stains",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::orange stains",
+      "title": "How to Clean orange stains from granite",
+      "slug": "how-to-clean-orange-stains-from-granite",
+      "problem": "orange stains",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::orange stains",
+      "title": "How to Tell if orange stains on granite is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-granite-is-permanent",
+      "problem": "orange stains",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::orange stains",
+      "title": "Why orange stains Keeps Coming Back on granite",
+      "slug": "why-orange-stains-keeps-coming-back-on-granite",
+      "problem": "orange stains",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::orange stains",
+      "title": "How to Maintain granite and Keep orange stains Under Control",
+      "slug": "how-to-maintain-granite-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-granite",
+      "problem": "orange stains",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::orange stains",
+      "title": "What Causes orange stains on marble",
+      "slug": "what-causes-orange-stains-on-marble",
+      "problem": "orange stains",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::orange stains",
+      "title": "How to Remove orange stains from marble",
+      "slug": "how-to-remove-orange-stains-from-marble",
+      "problem": "orange stains",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::orange stains",
+      "title": "How to Prevent orange stains on marble",
+      "slug": "how-to-prevent-orange-stains-on-marble",
+      "problem": "orange stains",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::orange stains",
+      "title": "How to Fix orange stains on marble",
+      "slug": "how-to-fix-orange-stains-on-marble",
+      "problem": "orange stains",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::orange stains",
+      "title": "How to Clean orange stains from marble",
+      "slug": "how-to-clean-orange-stains-from-marble",
+      "problem": "orange stains",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::orange stains",
+      "title": "How to Tell if orange stains on marble is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-marble-is-permanent",
+      "problem": "orange stains",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::orange stains",
+      "title": "Why orange stains Keeps Coming Back on marble",
+      "slug": "why-orange-stains-keeps-coming-back-on-marble",
+      "problem": "orange stains",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::orange stains",
+      "title": "How to Maintain marble and Keep orange stains Under Control",
+      "slug": "how-to-maintain-marble-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-marble",
+      "problem": "orange stains",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::orange stains",
+      "title": "What Causes orange stains on quartz",
+      "slug": "what-causes-orange-stains-on-quartz",
+      "problem": "orange stains",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::orange stains",
+      "title": "How to Remove orange stains from quartz",
+      "slug": "how-to-remove-orange-stains-from-quartz",
+      "problem": "orange stains",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::orange stains",
+      "title": "How to Prevent orange stains on quartz",
+      "slug": "how-to-prevent-orange-stains-on-quartz",
+      "problem": "orange stains",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::orange stains",
+      "title": "How to Fix orange stains on quartz",
+      "slug": "how-to-fix-orange-stains-on-quartz",
+      "problem": "orange stains",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::orange stains",
+      "title": "How to Clean orange stains from quartz",
+      "slug": "how-to-clean-orange-stains-from-quartz",
+      "problem": "orange stains",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::orange stains",
+      "title": "How to Tell if orange stains on quartz is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-quartz-is-permanent",
+      "problem": "orange stains",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::orange stains",
+      "title": "Why orange stains Keeps Coming Back on quartz",
+      "slug": "why-orange-stains-keeps-coming-back-on-quartz",
+      "problem": "orange stains",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::orange stains",
+      "title": "How to Maintain quartz and Keep orange stains Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-quartz",
+      "problem": "orange stains",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::orange stains",
+      "title": "What Causes orange stains on laminate",
+      "slug": "what-causes-orange-stains-on-laminate",
+      "problem": "orange stains",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::orange stains",
+      "title": "How to Remove orange stains from laminate",
+      "slug": "how-to-remove-orange-stains-from-laminate",
+      "problem": "orange stains",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::orange stains",
+      "title": "How to Prevent orange stains on laminate",
+      "slug": "how-to-prevent-orange-stains-on-laminate",
+      "problem": "orange stains",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::orange stains",
+      "title": "How to Fix orange stains on laminate",
+      "slug": "how-to-fix-orange-stains-on-laminate",
+      "problem": "orange stains",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::orange stains",
+      "title": "How to Clean orange stains from laminate",
+      "slug": "how-to-clean-orange-stains-from-laminate",
+      "problem": "orange stains",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::orange stains",
+      "title": "How to Tell if orange stains on laminate is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-laminate-is-permanent",
+      "problem": "orange stains",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::orange stains",
+      "title": "Why orange stains Keeps Coming Back on laminate",
+      "slug": "why-orange-stains-keeps-coming-back-on-laminate",
+      "problem": "orange stains",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::orange stains",
+      "title": "How to Maintain laminate and Keep orange stains Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-laminate",
+      "problem": "orange stains",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::orange stains",
+      "title": "What Causes orange stains on wood",
+      "slug": "what-causes-orange-stains-on-wood",
+      "problem": "orange stains",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::orange stains",
+      "title": "How to Remove orange stains from wood",
+      "slug": "how-to-remove-orange-stains-from-wood",
+      "problem": "orange stains",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::orange stains",
+      "title": "How to Prevent orange stains on wood",
+      "slug": "how-to-prevent-orange-stains-on-wood",
+      "problem": "orange stains",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::orange stains",
+      "title": "How to Fix orange stains on wood",
+      "slug": "how-to-fix-orange-stains-on-wood",
+      "problem": "orange stains",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::orange stains",
+      "title": "How to Clean orange stains from wood",
+      "slug": "how-to-clean-orange-stains-from-wood",
+      "problem": "orange stains",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::orange stains",
+      "title": "How to Tell if orange stains on wood is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-wood-is-permanent",
+      "problem": "orange stains",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::orange stains",
+      "title": "Why orange stains Keeps Coming Back on wood",
+      "slug": "why-orange-stains-keeps-coming-back-on-wood",
+      "problem": "orange stains",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::orange stains",
+      "title": "How to Maintain wood and Keep orange stains Under Control",
+      "slug": "how-to-maintain-wood-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-wood",
+      "problem": "orange stains",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::orange stains",
+      "title": "What Causes orange stains on grout",
+      "slug": "what-causes-orange-stains-on-grout",
+      "problem": "orange stains",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::orange stains",
+      "title": "How to Remove orange stains from grout",
+      "slug": "how-to-remove-orange-stains-from-grout",
+      "problem": "orange stains",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::orange stains",
+      "title": "How to Prevent orange stains on grout",
+      "slug": "how-to-prevent-orange-stains-on-grout",
+      "problem": "orange stains",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::orange stains",
+      "title": "How to Fix orange stains on grout",
+      "slug": "how-to-fix-orange-stains-on-grout",
+      "problem": "orange stains",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::orange stains",
+      "title": "How to Clean orange stains from grout",
+      "slug": "how-to-clean-orange-stains-from-grout",
+      "problem": "orange stains",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::orange stains",
+      "title": "How to Tell if orange stains on grout is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-grout-is-permanent",
+      "problem": "orange stains",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::orange stains",
+      "title": "Why orange stains Keeps Coming Back on grout",
+      "slug": "why-orange-stains-keeps-coming-back-on-grout",
+      "problem": "orange stains",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::orange stains",
+      "title": "How to Maintain grout and Keep orange stains Under Control",
+      "slug": "how-to-maintain-grout-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-grout",
+      "problem": "orange stains",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::orange stains",
+      "title": "What Causes orange stains on shower doors",
+      "slug": "what-causes-orange-stains-on-shower-doors",
+      "problem": "orange stains",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::orange stains",
+      "title": "How to Remove orange stains from shower doors",
+      "slug": "how-to-remove-orange-stains-from-shower-doors",
+      "problem": "orange stains",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::orange stains",
+      "title": "How to Prevent orange stains on shower doors",
+      "slug": "how-to-prevent-orange-stains-on-shower-doors",
+      "problem": "orange stains",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::orange stains",
+      "title": "How to Fix orange stains on shower doors",
+      "slug": "how-to-fix-orange-stains-on-shower-doors",
+      "problem": "orange stains",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::orange stains",
+      "title": "How to Clean orange stains from shower doors",
+      "slug": "how-to-clean-orange-stains-from-shower-doors",
+      "problem": "orange stains",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::orange stains",
+      "title": "How to Tell if orange stains on shower doors is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-shower-doors-is-permanent",
+      "problem": "orange stains",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::orange stains",
+      "title": "Why orange stains Keeps Coming Back on shower doors",
+      "slug": "why-orange-stains-keeps-coming-back-on-shower-doors",
+      "problem": "orange stains",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::orange stains",
+      "title": "How to Maintain shower doors and Keep orange stains Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-shower-doors",
+      "problem": "orange stains",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::orange stains",
+      "title": "What Causes orange stains on sealed stone",
+      "slug": "what-causes-orange-stains-on-sealed-stone",
+      "problem": "orange stains",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::orange stains",
+      "title": "How to Remove orange stains from sealed stone",
+      "slug": "how-to-remove-orange-stains-from-sealed-stone",
+      "problem": "orange stains",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::orange stains",
+      "title": "How to Prevent orange stains on sealed stone",
+      "slug": "how-to-prevent-orange-stains-on-sealed-stone",
+      "problem": "orange stains",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::orange stains",
+      "title": "How to Fix orange stains on sealed stone",
+      "slug": "how-to-fix-orange-stains-on-sealed-stone",
+      "problem": "orange stains",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::orange stains",
+      "title": "How to Clean orange stains from sealed stone",
+      "slug": "how-to-clean-orange-stains-from-sealed-stone",
+      "problem": "orange stains",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::orange stains",
+      "title": "How to Tell if orange stains on sealed stone is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-sealed-stone-is-permanent",
+      "problem": "orange stains",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::orange stains",
+      "title": "Why orange stains Keeps Coming Back on sealed stone",
+      "slug": "why-orange-stains-keeps-coming-back-on-sealed-stone",
+      "problem": "orange stains",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::orange stains",
+      "title": "How to Maintain sealed stone and Keep orange stains Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-sealed-stone",
+      "problem": "orange stains",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::orange stains",
+      "title": "What Causes orange stains on shower grout",
+      "slug": "what-causes-orange-stains-on-shower-grout",
+      "problem": "orange stains",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::orange stains",
+      "title": "How to Remove orange stains from shower grout",
+      "slug": "how-to-remove-orange-stains-from-shower-grout",
+      "problem": "orange stains",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::orange stains",
+      "title": "How to Prevent orange stains on shower grout",
+      "slug": "how-to-prevent-orange-stains-on-shower-grout",
+      "problem": "orange stains",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::orange stains",
+      "title": "How to Fix orange stains on shower grout",
+      "slug": "how-to-fix-orange-stains-on-shower-grout",
+      "problem": "orange stains",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::orange stains",
+      "title": "How to Clean orange stains from shower grout",
+      "slug": "how-to-clean-orange-stains-from-shower-grout",
+      "problem": "orange stains",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::orange stains",
+      "title": "How to Tell if orange stains on shower grout is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-shower-grout-is-permanent",
+      "problem": "orange stains",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::orange stains",
+      "title": "Why orange stains Keeps Coming Back on shower grout",
+      "slug": "why-orange-stains-keeps-coming-back-on-shower-grout",
+      "problem": "orange stains",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::orange stains",
+      "title": "How to Maintain shower grout and Keep orange stains Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-orange-stains-under-control",
+      "problem": "orange stains",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::orange stains",
+      "title": "How to Recover After a Cleaning Mistake With orange stains on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-orange-stains-on-shower-grout",
+      "problem": "orange stains",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::orange stains",
+      "title": "What Causes orange stains on tile grout",
+      "slug": "what-causes-orange-stains-on-tile-grout",
+      "problem": "orange stains",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::orange stains",
+      "title": "How to Remove orange stains from tile grout",
+      "slug": "how-to-remove-orange-stains-from-tile-grout",
+      "problem": "orange stains",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::orange stains",
+      "title": "How to Prevent orange stains on tile grout",
+      "slug": "how-to-prevent-orange-stains-on-tile-grout",
+      "problem": "orange stains",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::orange stains",
+      "title": "How to Fix orange stains on tile grout",
+      "slug": "how-to-fix-orange-stains-on-tile-grout",
+      "problem": "orange stains",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::orange stains",
+      "title": "How to Clean orange stains from tile grout",
+      "slug": "how-to-clean-orange-stains-from-tile-grout",
+      "problem": "orange stains",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::orange stains",
+      "title": "How to Tell if orange stains on tile grout is Permanent",
+      "slug": "how-to-tell-if-orange-stains-on-tile-grout-is-permanent",
+      "problem": "orange stains",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::orange stains",
+      "title": "Why orange stains Keeps Coming Back on tile grout",
+      "slug": "why-orange-stains-keeps-coming-back-on-tile-grout",
+      "problem": "orange stains",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

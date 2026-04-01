@@ -1,0 +1,204 @@
+{
+  "targets": [
+    {
+      "surface": "stovetops",
+      "problem": "bacteria buildup"
+    },
+    {
+      "surface": "stovetops",
+      "problem": "streaking"
+    },
+    {
+      "surface": "stovetops",
+      "problem": "smearing"
+    },
+    {
+      "surface": "stovetops",
+      "problem": "haze"
+    },
+    {
+      "surface": "stovetops",
+      "problem": "dullness"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "oil stains"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "food residue"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "protein residue"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "rust stains"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "tannin stains"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "mildew stains"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "bacteria buildup"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "etching"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "oxidation"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "corrosion"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "tarnish"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "heat damage"
+    },
+    {
+      "surface": "backsplashes",
+      "problem": "uneven finish"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "grease buildup"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "soap residue"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "hard water stains"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "limescale"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "mineral deposits"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "dust buildup"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "product residue"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "soap scum"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "water spots"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "yellowing"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "cooked-on residue"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "grease splatter"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "cooked-on grease"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "burnt residue"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "sticky residue"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "adhesive residue"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "wax buildup"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "calcium buildup"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "hard water film"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "mineral haze"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "scale deposits"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "white film"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "cloudy film"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "yellow stains"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "orange stains"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "brown stains"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "black stains"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "pink slime"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "dye transfer"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "biofilm"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "scratches"
+    },
+    {
+      "surface": "kitchen cabinets",
+      "problem": "scuff marks"
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "what-causes::sealed stone::fading",
+      "title": "What Causes fading on sealed stone",
+      "slug": "what-causes-fading-on-sealed-stone",
+      "problem": "fading",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::fading",
+      "title": "How to Remove fading from sealed stone",
+      "slug": "how-to-remove-fading-from-sealed-stone",
+      "problem": "fading",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::fading",
+      "title": "How to Prevent fading on sealed stone",
+      "slug": "how-to-prevent-fading-on-sealed-stone",
+      "problem": "fading",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::fading",
+      "title": "How to Fix fading on sealed stone",
+      "slug": "how-to-fix-fading-on-sealed-stone",
+      "problem": "fading",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::fading",
+      "title": "How to Clean fading from sealed stone",
+      "slug": "how-to-clean-fading-from-sealed-stone",
+      "problem": "fading",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::fading",
+      "title": "How to Tell if fading on sealed stone is Permanent",
+      "slug": "how-to-tell-if-fading-on-sealed-stone-is-permanent",
+      "problem": "fading",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::fading",
+      "title": "Why fading Keeps Coming Back on sealed stone",
+      "slug": "why-fading-keeps-coming-back-on-sealed-stone",
+      "problem": "fading",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::fading",
+      "title": "How to Maintain sealed stone and Keep fading Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-sealed-stone",
+      "problem": "fading",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::fading",
+      "title": "What Causes fading on shower grout",
+      "slug": "what-causes-fading-on-shower-grout",
+      "problem": "fading",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::fading",
+      "title": "How to Remove fading from shower grout",
+      "slug": "how-to-remove-fading-from-shower-grout",
+      "problem": "fading",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::fading",
+      "title": "How to Prevent fading on shower grout",
+      "slug": "how-to-prevent-fading-on-shower-grout",
+      "problem": "fading",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::fading",
+      "title": "How to Fix fading on shower grout",
+      "slug": "how-to-fix-fading-on-shower-grout",
+      "problem": "fading",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::fading",
+      "title": "How to Clean fading from shower grout",
+      "slug": "how-to-clean-fading-from-shower-grout",
+      "problem": "fading",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::fading",
+      "title": "How to Tell if fading on shower grout is Permanent",
+      "slug": "how-to-tell-if-fading-on-shower-grout-is-permanent",
+      "problem": "fading",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::fading",
+      "title": "Why fading Keeps Coming Back on shower grout",
+      "slug": "why-fading-keeps-coming-back-on-shower-grout",
+      "problem": "fading",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::fading",
+      "title": "How to Maintain shower grout and Keep fading Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-shower-grout",
+      "problem": "fading",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::fading",
+      "title": "What Causes fading on tile grout",
+      "slug": "what-causes-fading-on-tile-grout",
+      "problem": "fading",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::fading",
+      "title": "How to Remove fading from tile grout",
+      "slug": "how-to-remove-fading-from-tile-grout",
+      "problem": "fading",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::fading",
+      "title": "How to Prevent fading on tile grout",
+      "slug": "how-to-prevent-fading-on-tile-grout",
+      "problem": "fading",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::fading",
+      "title": "How to Fix fading on tile grout",
+      "slug": "how-to-fix-fading-on-tile-grout",
+      "problem": "fading",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::fading",
+      "title": "How to Clean fading from tile grout",
+      "slug": "how-to-clean-fading-from-tile-grout",
+      "problem": "fading",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::fading",
+      "title": "How to Tell if fading on tile grout is Permanent",
+      "slug": "how-to-tell-if-fading-on-tile-grout-is-permanent",
+      "problem": "fading",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::fading",
+      "title": "Why fading Keeps Coming Back on tile grout",
+      "slug": "why-fading-keeps-coming-back-on-tile-grout",
+      "problem": "fading",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::fading",
+      "title": "How to Maintain tile grout and Keep fading Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-tile-grout",
+      "problem": "fading",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::fading",
+      "title": "What Causes fading on caulking",
+      "slug": "what-causes-fading-on-caulking",
+      "problem": "fading",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::fading",
+      "title": "How to Remove fading from caulking",
+      "slug": "how-to-remove-fading-from-caulking",
+      "problem": "fading",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::fading",
+      "title": "How to Prevent fading on caulking",
+      "slug": "how-to-prevent-fading-on-caulking",
+      "problem": "fading",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::fading",
+      "title": "How to Fix fading on caulking",
+      "slug": "how-to-fix-fading-on-caulking",
+      "problem": "fading",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::fading",
+      "title": "How to Clean fading from caulking",
+      "slug": "how-to-clean-fading-from-caulking",
+      "problem": "fading",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::fading",
+      "title": "How to Tell if fading on caulking is Permanent",
+      "slug": "how-to-tell-if-fading-on-caulking-is-permanent",
+      "problem": "fading",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::fading",
+      "title": "Why fading Keeps Coming Back on caulking",
+      "slug": "why-fading-keeps-coming-back-on-caulking",
+      "problem": "fading",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::fading",
+      "title": "How to Maintain caulking and Keep fading Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-caulking",
+      "problem": "fading",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::fading",
+      "title": "What Causes fading on sealed granite",
+      "slug": "what-causes-fading-on-sealed-granite",
+      "problem": "fading",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::fading",
+      "title": "How to Remove fading from sealed granite",
+      "slug": "how-to-remove-fading-from-sealed-granite",
+      "problem": "fading",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::fading",
+      "title": "How to Prevent fading on sealed granite",
+      "slug": "how-to-prevent-fading-on-sealed-granite",
+      "problem": "fading",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::fading",
+      "title": "How to Fix fading on sealed granite",
+      "slug": "how-to-fix-fading-on-sealed-granite",
+      "problem": "fading",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::fading",
+      "title": "How to Clean fading from sealed granite",
+      "slug": "how-to-clean-fading-from-sealed-granite",
+      "problem": "fading",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::fading",
+      "title": "How to Tell if fading on sealed granite is Permanent",
+      "slug": "how-to-tell-if-fading-on-sealed-granite-is-permanent",
+      "problem": "fading",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::fading",
+      "title": "Why fading Keeps Coming Back on sealed granite",
+      "slug": "why-fading-keeps-coming-back-on-sealed-granite",
+      "problem": "fading",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::fading",
+      "title": "How to Maintain sealed granite and Keep fading Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-sealed-granite",
+      "problem": "fading",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::fading",
+      "title": "What Causes fading on sealed marble",
+      "slug": "what-causes-fading-on-sealed-marble",
+      "problem": "fading",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::fading",
+      "title": "How to Remove fading from sealed marble",
+      "slug": "how-to-remove-fading-from-sealed-marble",
+      "problem": "fading",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::fading",
+      "title": "How to Prevent fading on sealed marble",
+      "slug": "how-to-prevent-fading-on-sealed-marble",
+      "problem": "fading",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::fading",
+      "title": "How to Fix fading on sealed marble",
+      "slug": "how-to-fix-fading-on-sealed-marble",
+      "problem": "fading",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::fading",
+      "title": "How to Clean fading from sealed marble",
+      "slug": "how-to-clean-fading-from-sealed-marble",
+      "problem": "fading",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::fading",
+      "title": "How to Tell if fading on sealed marble is Permanent",
+      "slug": "how-to-tell-if-fading-on-sealed-marble-is-permanent",
+      "problem": "fading",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::fading",
+      "title": "Why fading Keeps Coming Back on sealed marble",
+      "slug": "why-fading-keeps-coming-back-on-sealed-marble",
+      "problem": "fading",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::fading",
+      "title": "How to Maintain sealed marble and Keep fading Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-sealed-marble",
+      "problem": "fading",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::fading",
+      "title": "What Causes fading on quartz countertops",
+      "slug": "what-causes-fading-on-quartz-countertops",
+      "problem": "fading",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::fading",
+      "title": "How to Remove fading from quartz countertops",
+      "slug": "how-to-remove-fading-from-quartz-countertops",
+      "problem": "fading",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::fading",
+      "title": "How to Prevent fading on quartz countertops",
+      "slug": "how-to-prevent-fading-on-quartz-countertops",
+      "problem": "fading",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::fading",
+      "title": "How to Fix fading on quartz countertops",
+      "slug": "how-to-fix-fading-on-quartz-countertops",
+      "problem": "fading",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::fading",
+      "title": "How to Clean fading from quartz countertops",
+      "slug": "how-to-clean-fading-from-quartz-countertops",
+      "problem": "fading",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::fading",
+      "title": "How to Tell if fading on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-fading-on-quartz-countertops-is-permanent",
+      "problem": "fading",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::fading",
+      "title": "Why fading Keeps Coming Back on quartz countertops",
+      "slug": "why-fading-keeps-coming-back-on-quartz-countertops",
+      "problem": "fading",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::fading",
+      "title": "How to Maintain quartz countertops and Keep fading Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-quartz-countertops",
+      "problem": "fading",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::fading",
+      "title": "What Causes fading on laminate counters",
+      "slug": "what-causes-fading-on-laminate-counters",
+      "problem": "fading",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::fading",
+      "title": "How to Remove fading from laminate counters",
+      "slug": "how-to-remove-fading-from-laminate-counters",
+      "problem": "fading",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::fading",
+      "title": "How to Prevent fading on laminate counters",
+      "slug": "how-to-prevent-fading-on-laminate-counters",
+      "problem": "fading",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::fading",
+      "title": "How to Fix fading on laminate counters",
+      "slug": "how-to-fix-fading-on-laminate-counters",
+      "problem": "fading",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::fading",
+      "title": "How to Clean fading from laminate counters",
+      "slug": "how-to-clean-fading-from-laminate-counters",
+      "problem": "fading",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::fading",
+      "title": "How to Tell if fading on laminate counters is Permanent",
+      "slug": "how-to-tell-if-fading-on-laminate-counters-is-permanent",
+      "problem": "fading",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::fading",
+      "title": "Why fading Keeps Coming Back on laminate counters",
+      "slug": "why-fading-keeps-coming-back-on-laminate-counters",
+      "problem": "fading",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::fading",
+      "title": "How to Maintain laminate counters and Keep fading Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-laminate-counters",
+      "problem": "fading",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::fading",
+      "title": "What Causes fading on butcher block",
+      "slug": "what-causes-fading-on-butcher-block",
+      "problem": "fading",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::fading",
+      "title": "How to Remove fading from butcher block",
+      "slug": "how-to-remove-fading-from-butcher-block",
+      "problem": "fading",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::fading",
+      "title": "How to Prevent fading on butcher block",
+      "slug": "how-to-prevent-fading-on-butcher-block",
+      "problem": "fading",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::fading",
+      "title": "How to Fix fading on butcher block",
+      "slug": "how-to-fix-fading-on-butcher-block",
+      "problem": "fading",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::fading",
+      "title": "How to Clean fading from butcher block",
+      "slug": "how-to-clean-fading-from-butcher-block",
+      "problem": "fading",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::fading",
+      "title": "How to Tell if fading on butcher block is Permanent",
+      "slug": "how-to-tell-if-fading-on-butcher-block-is-permanent",
+      "problem": "fading",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::fading",
+      "title": "Why fading Keeps Coming Back on butcher block",
+      "slug": "why-fading-keeps-coming-back-on-butcher-block",
+      "problem": "fading",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::fading",
+      "title": "How to Maintain butcher block and Keep fading Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-butcher-block",
+      "problem": "fading",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::fading",
+      "title": "What Causes fading on unfinished wood",
+      "slug": "what-causes-fading-on-unfinished-wood",
+      "problem": "fading",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::fading",
+      "title": "How to Remove fading from unfinished wood",
+      "slug": "how-to-remove-fading-from-unfinished-wood",
+      "problem": "fading",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::fading",
+      "title": "How to Prevent fading on unfinished wood",
+      "slug": "how-to-prevent-fading-on-unfinished-wood",
+      "problem": "fading",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::fading",
+      "title": "How to Fix fading on unfinished wood",
+      "slug": "how-to-fix-fading-on-unfinished-wood",
+      "problem": "fading",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::fading",
+      "title": "How to Clean fading from unfinished wood",
+      "slug": "how-to-clean-fading-from-unfinished-wood",
+      "problem": "fading",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::fading",
+      "title": "How to Tell if fading on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-fading-on-unfinished-wood-is-permanent",
+      "problem": "fading",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::fading",
+      "title": "Why fading Keeps Coming Back on unfinished wood",
+      "slug": "why-fading-keeps-coming-back-on-unfinished-wood",
+      "problem": "fading",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::fading",
+      "title": "How to Maintain unfinished wood and Keep fading Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-unfinished-wood",
+      "problem": "fading",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::fading",
+      "title": "What Causes fading on sealed wood",
+      "slug": "what-causes-fading-on-sealed-wood",
+      "problem": "fading",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::fading",
+      "title": "How to Remove fading from sealed wood",
+      "slug": "how-to-remove-fading-from-sealed-wood",
+      "problem": "fading",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::fading",
+      "title": "How to Prevent fading on sealed wood",
+      "slug": "how-to-prevent-fading-on-sealed-wood",
+      "problem": "fading",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::fading",
+      "title": "How to Fix fading on sealed wood",
+      "slug": "how-to-fix-fading-on-sealed-wood",
+      "problem": "fading",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::fading",
+      "title": "How to Clean fading from sealed wood",
+      "slug": "how-to-clean-fading-from-sealed-wood",
+      "problem": "fading",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::fading",
+      "title": "How to Tell if fading on sealed wood is Permanent",
+      "slug": "how-to-tell-if-fading-on-sealed-wood-is-permanent",
+      "problem": "fading",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::fading",
+      "title": "Why fading Keeps Coming Back on sealed wood",
+      "slug": "why-fading-keeps-coming-back-on-sealed-wood",
+      "problem": "fading",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::fading",
+      "title": "How to Maintain sealed wood and Keep fading Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-fading-under-control",
+      "problem": "fading",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::fading",
+      "title": "How to Recover After a Cleaning Mistake With fading on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-fading-on-sealed-wood",
+      "problem": "fading",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::discoloration",
+      "title": "What Causes discoloration on shower glass",
+      "slug": "what-causes-discoloration-on-shower-glass",
+      "problem": "discoloration",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

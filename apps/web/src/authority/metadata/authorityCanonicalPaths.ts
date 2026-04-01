@@ -18,7 +18,7 @@ export function getGuidesIndexCanonicalPath() {
   return "/guides";
 }
 
-export function getCompareHubCanonicalPath(type: "methods" | "surfaces" | "problems") {
+export function getCompareHubCanonicalPath(type: "methods" | "surfaces" | "problems" | "products") {
   return `/compare/${type}`;
 }
 
@@ -51,7 +51,7 @@ export function getSurfaceProblemComboCanonicalPath(surfaceSlug: string, problem
 }
 
 export function getComparisonCanonicalPath(
-  type: "methods" | "surfaces" | "problems",
+  type: "methods" | "surfaces" | "problems" | "products",
   comparisonSlug: string,
 ) {
   return `/compare/${type}/${comparisonSlug}`;

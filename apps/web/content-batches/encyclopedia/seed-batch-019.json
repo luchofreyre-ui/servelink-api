@@ -1,0 +1,11 @@
+{
+  "targets": [
+    { "surface": "garbage cans", "problem": "grease buildup" },
+    { "surface": "garbage cans", "problem": "soap residue" },
+    { "surface": "garbage cans", "problem": "dust buildup" },
+    { "surface": "garbage cans", "problem": "product residue" },
+    { "surface": "garbage cans", "problem": "soap scum" },
+    { "surface": "garbage cans", "problem": "grease splatter" },
+    { "surface": "garbage cans", "problem": "cooked-on grease" }
+  ]
+}

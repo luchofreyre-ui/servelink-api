@@ -1,5 +1,6 @@
 import { EncyclopediaLinkedGroups } from "./EncyclopediaLinkedGroups";
 import type { EncyclopediaDocument } from "@/lib/encyclopedia/types";
+import { ENCYCLOPEDIA_COMMON_MISTAKES } from "@/lib/encyclopedia/encyclopediaMisuseSnippets";
 
 interface EncyclopediaPageProps {
   document: EncyclopediaDocument;
@@ -36,6 +37,23 @@ export function EncyclopediaPage({ document }: EncyclopediaPageProps) {
           ))}
         </div>
       </article>
+
+      <section
+        className="mt-10 rounded-[28px] border border-amber-200/80 bg-amber-50/40 px-8 py-6"
+        aria-labelledby="ency-misuse-heading"
+      >
+        <h2
+          id="ency-misuse-heading"
+          className="font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]"
+        >
+          Common mistakes
+        </h2>
+        <ul className="mt-3 list-inside list-disc space-y-2 font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">
+          {ENCYCLOPEDIA_COMMON_MISTAKES.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
+      </section>
 
       <EncyclopediaLinkedGroups groups={document.linkedGroups} />
     </main>

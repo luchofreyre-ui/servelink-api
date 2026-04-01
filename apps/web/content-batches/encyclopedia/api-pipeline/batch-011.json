@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-remove::quartz countertops::product residue",
+      "title": "How to Remove product residue from quartz countertops",
+      "slug": "how-to-remove-product-residue-from-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::product residue",
+      "title": "How to Prevent product residue on quartz countertops",
+      "slug": "how-to-prevent-product-residue-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::product residue",
+      "title": "How to Fix product residue on quartz countertops",
+      "slug": "how-to-fix-product-residue-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::product residue",
+      "title": "How to Clean product residue from quartz countertops",
+      "slug": "how-to-clean-product-residue-from-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::product residue",
+      "title": "How to Tell if product residue on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-quartz-countertops-is-permanent",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::product residue",
+      "title": "Why product residue Keeps Coming Back on quartz countertops",
+      "slug": "why-product-residue-keeps-coming-back-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::product residue",
+      "title": "How to Maintain quartz countertops and Keep product residue Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::product residue",
+      "title": "What Causes product residue on laminate counters",
+      "slug": "what-causes-product-residue-on-laminate-counters",
+      "problem": "product residue",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::product residue",
+      "title": "How to Remove product residue from laminate counters",
+      "slug": "how-to-remove-product-residue-from-laminate-counters",
+      "problem": "product residue",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::product residue",
+      "title": "How to Prevent product residue on laminate counters",
+      "slug": "how-to-prevent-product-residue-on-laminate-counters",
+      "problem": "product residue",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::product residue",
+      "title": "How to Fix product residue on laminate counters",
+      "slug": "how-to-fix-product-residue-on-laminate-counters",
+      "problem": "product residue",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::product residue",
+      "title": "How to Clean product residue from laminate counters",
+      "slug": "how-to-clean-product-residue-from-laminate-counters",
+      "problem": "product residue",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::product residue",
+      "title": "How to Tell if product residue on laminate counters is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-laminate-counters-is-permanent",
+      "problem": "product residue",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::product residue",
+      "title": "Why product residue Keeps Coming Back on laminate counters",
+      "slug": "why-product-residue-keeps-coming-back-on-laminate-counters",
+      "problem": "product residue",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::product residue",
+      "title": "How to Maintain laminate counters and Keep product residue Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-laminate-counters",
+      "problem": "product residue",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::product residue",
+      "title": "What Causes product residue on butcher block",
+      "slug": "what-causes-product-residue-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::product residue",
+      "title": "How to Remove product residue from butcher block",
+      "slug": "how-to-remove-product-residue-from-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::product residue",
+      "title": "How to Prevent product residue on butcher block",
+      "slug": "how-to-prevent-product-residue-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::product residue",
+      "title": "How to Fix product residue on butcher block",
+      "slug": "how-to-fix-product-residue-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::product residue",
+      "title": "How to Clean product residue from butcher block",
+      "slug": "how-to-clean-product-residue-from-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::product residue",
+      "title": "How to Tell if product residue on butcher block is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-butcher-block-is-permanent",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::product residue",
+      "title": "Why product residue Keeps Coming Back on butcher block",
+      "slug": "why-product-residue-keeps-coming-back-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::product residue",
+      "title": "How to Maintain butcher block and Keep product residue Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-butcher-block",
+      "problem": "product residue",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::product residue",
+      "title": "What Causes product residue on unfinished wood",
+      "slug": "what-causes-product-residue-on-unfinished-wood",
+      "problem": "product residue",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::product residue",
+      "title": "How to Remove product residue from unfinished wood",
+      "slug": "how-to-remove-product-residue-from-unfinished-wood",
+      "problem": "product residue",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::product residue",
+      "title": "How to Prevent product residue on unfinished wood",
+      "slug": "how-to-prevent-product-residue-on-unfinished-wood",
+      "problem": "product residue",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::product residue",
+      "title": "How to Fix product residue on unfinished wood",
+      "slug": "how-to-fix-product-residue-on-unfinished-wood",
+      "problem": "product residue",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::product residue",
+      "title": "How to Clean product residue from unfinished wood",
+      "slug": "how-to-clean-product-residue-from-unfinished-wood",
+      "problem": "product residue",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::product residue",
+      "title": "How to Tell if product residue on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-unfinished-wood-is-permanent",
+      "problem": "product residue",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::product residue",
+      "title": "Why product residue Keeps Coming Back on unfinished wood",
+      "slug": "why-product-residue-keeps-coming-back-on-unfinished-wood",
+      "problem": "product residue",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::product residue",
+      "title": "How to Maintain unfinished wood and Keep product residue Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-unfinished-wood",
+      "problem": "product residue",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::product residue",
+      "title": "What Causes product residue on sealed wood",
+      "slug": "what-causes-product-residue-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::product residue",
+      "title": "How to Remove product residue from sealed wood",
+      "slug": "how-to-remove-product-residue-from-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::product residue",
+      "title": "How to Prevent product residue on sealed wood",
+      "slug": "how-to-prevent-product-residue-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::product residue",
+      "title": "How to Fix product residue on sealed wood",
+      "slug": "how-to-fix-product-residue-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::product residue",
+      "title": "How to Clean product residue from sealed wood",
+      "slug": "how-to-clean-product-residue-from-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::product residue",
+      "title": "How to Tell if product residue on sealed wood is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-sealed-wood-is-permanent",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::product residue",
+      "title": "Why product residue Keeps Coming Back on sealed wood",
+      "slug": "why-product-residue-keeps-coming-back-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::product residue",
+      "title": "How to Maintain sealed wood and Keep product residue Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-sealed-wood",
+      "problem": "product residue",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::garbage cans::product residue",
+      "title": "What Causes product residue on garbage cans",
+      "slug": "what-causes-product-residue-on-garbage-cans",
+      "problem": "product residue",
+      "surface": "garbage cans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::garbage cans::product residue",
+      "title": "How to Remove product residue from garbage cans",
+      "slug": "how-to-remove-product-residue-from-garbage-cans",
+      "problem": "product residue",
+      "surface": "garbage cans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::garbage cans::product residue",
+      "title": "How to Prevent product residue on garbage cans",
+      "slug": "how-to-prevent-product-residue-on-garbage-cans",
+      "problem": "product residue",
+      "surface": "garbage cans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::garbage cans::product residue",
+      "title": "How to Fix product residue on garbage cans",
+      "slug": "how-to-fix-product-residue-on-garbage-cans",
+      "problem": "product residue",
+      "surface": "garbage cans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::garbage cans::product residue",
+      "title": "How to Clean product residue from garbage cans",
+      "slug": "how-to-clean-product-residue-from-garbage-cans",
+      "problem": "product residue",
+      "surface": "garbage cans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::garbage cans::product residue",
+      "title": "How to Tell if product residue on garbage cans is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-garbage-cans-is-permanent",
+      "problem": "product residue",
+      "surface": "garbage cans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::garbage cans::product residue",
+      "title": "Why product residue Keeps Coming Back on garbage cans",
+      "slug": "why-product-residue-keeps-coming-back-on-garbage-cans",
+      "problem": "product residue",
+      "surface": "garbage cans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::garbage cans::product residue",
+      "title": "How to Maintain garbage cans and Keep product residue Under Control",
+      "slug": "how-to-maintain-garbage-cans-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "garbage cans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::garbage cans::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on garbage cans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-garbage-cans",
+      "problem": "product residue",
+      "surface": "garbage cans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::soap scum",
+      "title": "What Causes soap scum on shower glass",
+      "slug": "what-causes-soap-scum-on-shower-glass",
+      "problem": "soap scum",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::soap scum",
+      "title": "How to Remove soap scum from shower glass",
+      "slug": "how-to-remove-soap-scum-from-shower-glass",
+      "problem": "soap scum",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::soap scum",
+      "title": "How to Prevent soap scum on shower glass",
+      "slug": "how-to-prevent-soap-scum-on-shower-glass",
+      "problem": "soap scum",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::soap scum",
+      "title": "How to Fix soap scum on shower glass",
+      "slug": "how-to-fix-soap-scum-on-shower-glass",
+      "problem": "soap scum",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::soap scum",
+      "title": "How to Clean soap scum from shower glass",
+      "slug": "how-to-clean-soap-scum-from-shower-glass",
+      "problem": "soap scum",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::soap scum",
+      "title": "How to Tell if soap scum on shower glass is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-shower-glass-is-permanent",
+      "problem": "soap scum",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::soap scum",
+      "title": "Why soap scum Keeps Coming Back on shower glass",
+      "slug": "why-soap-scum-keeps-coming-back-on-shower-glass",
+      "problem": "soap scum",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::soap scum",
+      "title": "How to Maintain shower glass and Keep soap scum Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-shower-glass",
+      "problem": "soap scum",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::soap scum",
+      "title": "What Causes soap scum on granite",
+      "slug": "what-causes-soap-scum-on-granite",
+      "problem": "soap scum",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::soap scum",
+      "title": "How to Remove soap scum from granite",
+      "slug": "how-to-remove-soap-scum-from-granite",
+      "problem": "soap scum",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::soap scum",
+      "title": "How to Prevent soap scum on granite",
+      "slug": "how-to-prevent-soap-scum-on-granite",
+      "problem": "soap scum",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::soap scum",
+      "title": "How to Fix soap scum on granite",
+      "slug": "how-to-fix-soap-scum-on-granite",
+      "problem": "soap scum",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::soap scum",
+      "title": "How to Clean soap scum from granite",
+      "slug": "how-to-clean-soap-scum-from-granite",
+      "problem": "soap scum",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::soap scum",
+      "title": "How to Tell if soap scum on granite is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-granite-is-permanent",
+      "problem": "soap scum",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::soap scum",
+      "title": "Why soap scum Keeps Coming Back on granite",
+      "slug": "why-soap-scum-keeps-coming-back-on-granite",
+      "problem": "soap scum",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::soap scum",
+      "title": "How to Maintain granite and Keep soap scum Under Control",
+      "slug": "how-to-maintain-granite-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-granite",
+      "problem": "soap scum",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::soap scum",
+      "title": "What Causes soap scum on marble",
+      "slug": "what-causes-soap-scum-on-marble",
+      "problem": "soap scum",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::soap scum",
+      "title": "How to Remove soap scum from marble",
+      "slug": "how-to-remove-soap-scum-from-marble",
+      "problem": "soap scum",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::soap scum",
+      "title": "How to Prevent soap scum on marble",
+      "slug": "how-to-prevent-soap-scum-on-marble",
+      "problem": "soap scum",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::soap scum",
+      "title": "How to Fix soap scum on marble",
+      "slug": "how-to-fix-soap-scum-on-marble",
+      "problem": "soap scum",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::soap scum",
+      "title": "How to Clean soap scum from marble",
+      "slug": "how-to-clean-soap-scum-from-marble",
+      "problem": "soap scum",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::soap scum",
+      "title": "How to Tell if soap scum on marble is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-marble-is-permanent",
+      "problem": "soap scum",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::soap scum",
+      "title": "Why soap scum Keeps Coming Back on marble",
+      "slug": "why-soap-scum-keeps-coming-back-on-marble",
+      "problem": "soap scum",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::soap scum",
+      "title": "How to Maintain marble and Keep soap scum Under Control",
+      "slug": "how-to-maintain-marble-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-marble",
+      "problem": "soap scum",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::soap scum",
+      "title": "What Causes soap scum on quartz",
+      "slug": "what-causes-soap-scum-on-quartz",
+      "problem": "soap scum",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::soap scum",
+      "title": "How to Remove soap scum from quartz",
+      "slug": "how-to-remove-soap-scum-from-quartz",
+      "problem": "soap scum",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::soap scum",
+      "title": "How to Prevent soap scum on quartz",
+      "slug": "how-to-prevent-soap-scum-on-quartz",
+      "problem": "soap scum",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::soap scum",
+      "title": "How to Fix soap scum on quartz",
+      "slug": "how-to-fix-soap-scum-on-quartz",
+      "problem": "soap scum",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::soap scum",
+      "title": "How to Clean soap scum from quartz",
+      "slug": "how-to-clean-soap-scum-from-quartz",
+      "problem": "soap scum",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::soap scum",
+      "title": "How to Tell if soap scum on quartz is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-quartz-is-permanent",
+      "problem": "soap scum",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::soap scum",
+      "title": "Why soap scum Keeps Coming Back on quartz",
+      "slug": "why-soap-scum-keeps-coming-back-on-quartz",
+      "problem": "soap scum",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::soap scum",
+      "title": "How to Maintain quartz and Keep soap scum Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-quartz",
+      "problem": "soap scum",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::soap scum",
+      "title": "What Causes soap scum on laminate",
+      "slug": "what-causes-soap-scum-on-laminate",
+      "problem": "soap scum",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::soap scum",
+      "title": "How to Remove soap scum from laminate",
+      "slug": "how-to-remove-soap-scum-from-laminate",
+      "problem": "soap scum",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::soap scum",
+      "title": "How to Prevent soap scum on laminate",
+      "slug": "how-to-prevent-soap-scum-on-laminate",
+      "problem": "soap scum",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::soap scum",
+      "title": "How to Fix soap scum on laminate",
+      "slug": "how-to-fix-soap-scum-on-laminate",
+      "problem": "soap scum",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::soap scum",
+      "title": "How to Clean soap scum from laminate",
+      "slug": "how-to-clean-soap-scum-from-laminate",
+      "problem": "soap scum",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::soap scum",
+      "title": "How to Tell if soap scum on laminate is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-laminate-is-permanent",
+      "problem": "soap scum",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::soap scum",
+      "title": "Why soap scum Keeps Coming Back on laminate",
+      "slug": "why-soap-scum-keeps-coming-back-on-laminate",
+      "problem": "soap scum",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::soap scum",
+      "title": "How to Maintain laminate and Keep soap scum Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-laminate",
+      "problem": "soap scum",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::soap scum",
+      "title": "What Causes soap scum on wood",
+      "slug": "what-causes-soap-scum-on-wood",
+      "problem": "soap scum",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::soap scum",
+      "title": "How to Remove soap scum from wood",
+      "slug": "how-to-remove-soap-scum-from-wood",
+      "problem": "soap scum",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

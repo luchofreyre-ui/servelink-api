@@ -125,5 +125,13 @@ export function validateGeneratedSnapshot(
     }
   }
 
+  if (!snapshot.seo?.title || snapshot.seo.title.length < 10) {
+    errors.push("Missing or weak SEO title");
+  }
+
+  if (!snapshot.seo?.slug || !snapshot.seo.slug.includes("-")) {
+    errors.push("Invalid slug");
+  }
+
   return { valid: errors.length === 0, errors };
 }

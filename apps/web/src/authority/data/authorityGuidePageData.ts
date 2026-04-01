@@ -1,5 +1,7 @@
 import type { AuthorityGuidePageData } from "@/authority/types/authorityPageTypes";
 import { AUTHORITY_GUIDE_SLUGS, type AuthorityGuideSlug } from "@/authority/data/authorityTaxonomy";
+import { ANTI_PATTERN_GUIDES_BY_SLUG } from "@/authority/data/authorityAntiPatternGuidesData";
+import { BEST_CLEANERS_ENTRY_GUIDES_BY_SLUG } from "@/authority/data/authorityBestCleanersEntryGuidesData";
 import { CHEMICAL_USAGE_AND_SAFETY_GUIDE } from "@/authority/data/authorityChemicalSafetyGuideData";
 
 const M = (slug: string) => `/methods/${slug}`;
@@ -229,6 +231,8 @@ const GUIDES: Record<string, AuthorityGuidePageData> = {
   "how-to-remove-stains-safely": HOW_TO_REMOVE_STAINS_SAFELY_GUIDE,
   "why-cleaning-fails": WHY_CLEANING_FAILS_GUIDE,
   "when-cleaning-damages-surfaces": WHEN_CLEANING_DAMAGES_SURFACES_GUIDE,
+  ...BEST_CLEANERS_ENTRY_GUIDES_BY_SLUG,
+  ...ANTI_PATTERN_GUIDES_BY_SLUG,
 };
 
 export function getGuidePageBySlug(slug: string): AuthorityGuidePageData | undefined {

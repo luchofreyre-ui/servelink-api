@@ -188,6 +188,15 @@ export function buildAuthorityCompareProblemsIndexMetadata(): Metadata {
   });
 }
 
+export function buildAuthorityCompareProductsIndexMetadata(): Metadata {
+  return authorityPublicMetadata("compare_index", getCompareHubCanonicalPath("products"), {
+    title: "Compare Cleaning Products",
+    description:
+      "Side-by-side cleaning product comparisons: chemistry, dossier strengths, avoid cases, and safety notes from the Servelink library.",
+    type: "website",
+  });
+}
+
 export function buildAuthorityMethodComparisonDetailMetadata(page: AuthorityComparisonPageData): Metadata {
   return authorityPublicMetadata(
     "method_compare_detail",
@@ -214,6 +223,17 @@ export function buildAuthorityProblemComparisonDetailMetadata(page: AuthorityCom
   return authorityPublicMetadata(
     "problem_compare_detail",
     getComparisonCanonicalPath("problems", page.slug),
+    {
+      title: page.title,
+      description: page.description,
+    },
+  );
+}
+
+export function buildAuthorityProductComparisonDetailMetadata(page: AuthorityComparisonPageData): Metadata {
+  return authorityPublicMetadata(
+    "product_compare_detail",
+    getComparisonCanonicalPath("products", page.slug),
     {
       title: page.title,
       description: page.description,

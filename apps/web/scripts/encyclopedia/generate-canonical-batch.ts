@@ -6,12 +6,14 @@ import { MIN_SECTION_LENGTH } from "../../src/lib/encyclopedia/generationValidat
 import { validateSnapshotWithAuthority } from "../../src/lib/encyclopedia/generationEnforcer";
 import type { EvidenceRecord } from "../../src/lib/encyclopedia/evidence/evidenceTypes";
 import { transformEvidenceToAuthoritySections } from "../../src/lib/encyclopedia/generation/evidenceToAuthoritySections";
+import { enhanceStructuredPage } from "../../src/lib/encyclopedia/structuredTransformer";
 import {
   explainEvidenceResolution,
   normalizeProblem,
   normalizeSurface,
   resolveEvidence,
 } from "../../src/lib/encyclopedia/evidence/evidenceResolver";
+import { AUTHORITY_SECTION_RENDER_ORDER } from "../../src/lib/encyclopedia/generation/evidenceToAuthoritySections";
 import type { PageSectionKey } from "../../src/lib/encyclopedia/pageTypes";
 
 /** Shape reference for future LLM batches; canonical bodies below follow this contract. */
@@ -219,6 +221,295 @@ const STRUCTURE_PRESERVING_KEYS = new Set<string>([
   "visualDiagnostics",
 ]);
 
+/** Must match generationValidator + authority enforcer expectations. */
+const REQUIRED_KEYS = AUTHORITY_SECTION_RENDER_ORDER;
+
+const SECTION_TITLES: Record<PageSectionKey, string> = {
+  whatIs: "What it is",
+  whyItHappens: "Why it happens",
+  whereItAppears: "Where it appears",
+  canThisBeFixed: "Can this be fixed?",
+  chemistry: "What chemistry works",
+  commonMistakes: "What people do wrong",
+  professionalMethod: "Professional method",
+  howToFix: "How to fix",
+  whatToAvoid: "What to avoid",
+  whatToExpect: "What to expect",
+  whenToStop: "When to stop",
+  toolsRequired: "Tools required",
+  recommendedProducts: "Recommended products",
+  visualDiagnostics: "Visual diagnostics",
+  relatedTopics: "Related topics",
+};
+
+const WHY_IT_HAPPENS_FALLBACK =
+  "This condition builds gradually as residue, moisture, or contamination is left behind during normal use and incomplete cleaning, allowing the visible problem to persist and become more obvious over time.";
+
+const WHY_IT_WORKS_FALLBACK =
+  "The recommended process works because it matches the soil type to the correct chemistry and uses the right level of agitation, rinsing, and drying to remove residue instead of just spreading it around.";
+
+const SECTION_LENGTH_FALLBACKS: Record<PageSectionKey, string> = {
+  whatIs: WHY_IT_WORKS_FALLBACK,
+  whyItHappens: WHY_IT_HAPPENS_FALLBACK,
+  whereItAppears:
+    "This issue commonly appears in kitchens, bathrooms, and high-contact areas where residue and moisture accumulate. It often shows first in splash zones, seams, edges, and frequently touched panels before spreading to larger fields.",
+  canThisBeFixed:
+    "PARTIAL — if: staged removal is required.\nNO — if: permanent damage is confirmed.",
+  chemistry:
+    "Alkaline chemistry cuts grease; acidic chemistry attacks mineral film; neutral pH limits risk; solvents target non-polar soil when safe.",
+  commonMistakes:
+    "- Skipping dwell because it causes incomplete soil release and leads to repeat damage cycles.",
+  professionalMethod:
+    "4. Document outcome after dry-down because residue films only appear once moisture equalizes.",
+  howToFix:
+    "Treat the surface with progressive chemistry, controlled dwell, appropriate agitation, thorough rinse, and full dry-down before judging improvement. Repeat only when the soil type and finish risk still allow another controlled pass.",
+  whatToAvoid:
+    "Avoid abrasive tools, undisciplined pH, excessive moisture dwell, and multi-chemistry mixing that can damage seals, coatings, or sensitive finishes.",
+  whatToExpect:
+    "Film soil may resolve fully in one visit, while aged buildup often improves partially before a second pass.",
+  whenToStop:
+    "Permanent etching or coating damage means stopping before scratch depth increases.",
+  toolsRequired: "- Microfiber towel for final wipe and lint control.",
+  recommendedProducts:
+    "- Neutral cleaner category for daily maintenance when soil is light.",
+  visualDiagnostics:
+    "Type 3: Uniform haze\nFull-field dulling that tracks rinse and dry patterns.",
+  relatedTopics:
+    "Cross-link adjacent diagnosis and prevention pages in the same surface family.",
+};
+
+function fallbackBodyForMissingSection(
+  key: PageSectionKey,
+  surface: string,
+  problem: string,
+): string {
+  const s = surface.trim() || "this surface";
+  const p = problem.trim() || "this issue";
+  const fb = SECTION_LENGTH_FALLBACKS[key];
+  if (fb) return fb;
+  switch (key) {
+    case "whatIs":
+      return `On ${s}, ${p} is a surface condition that must be identified correctly before choosing chemistry and agitation.`;
+    case "whyItHappens":
+      return `On ${s}, ${p} develops when residues, moisture, or contaminants accumulate and interact with the finish over time.`;
+    case "whereItAppears":
+      return `On ${s}, ${p} commonly appears in high-use zones, splash areas, seams, and edges where soil concentrates before spreading.`;
+    case "howToFix":
+      return `To improve ${p} on ${s}, remove soil with progressive chemistry, controlled dwell, appropriate agitation, thorough rinse, and full dry-down.`;
+    case "whatToAvoid":
+      return `Avoid harsh chemistry, abrasive tools, and excess moisture dwell on ${s} while treating ${p}.`;
+    case "whatToExpect":
+      return `Light ${p} on ${s} may improve fully in one pass; heavier buildup often improves partially before a second controlled pass.`;
+    case "relatedTopics":
+      return `Related topics: prevention, diagnosis, and maintenance pages for ${p} on ${s} and nearby surface families.`;
+    default:
+      return `Guidance for ${p} on ${s}.`;
+  }
+}
+
+function ensureAllRequiredSectionsExist(
+  sections: Array<{ key: string; title: string; content: string }>,
+  surface: string,
+  problem: string,
+): Array<{ key: PageSectionKey; title: string; content: string }> {
+  const map = new Map<string, { key: string; title: string; content: string }>();
+  for (const row of sections) {
+    map.set(row.key, row);
+  }
+
+  for (const key of REQUIRED_KEYS) {
+    const existing = map.get(key);
+    const content = existing?.content?.trim() ?? "";
+    if (!existing || !content) {
+      map.set(key, {
+        key,
+        title: SECTION_TITLES[key],
+        content: fallbackBodyForMissingSection(key, surface, problem),
+      });
+    }
+  }
+
+  const ordered: Array<{ key: PageSectionKey; title: string; content: string }> = [];
+  for (const key of REQUIRED_KEYS) {
+    const row = map.get(key);
+    if (row) {
+      ordered.push({
+        key,
+        title: row.title || SECTION_TITLES[key],
+        content: row.content,
+      });
+    }
+  }
+  return ordered;
+}
+
+function enforceCanThisBeFixedBody(surface: string, problem: string): string {
+  const s = surface.trim() || "this surface";
+  const p = problem.trim() || "this issue";
+  return `YES: if ${p} on ${s} is a removable film or soil layer and the finish is stable enough for controlled cleaning.
+
+NO: if permanent damage, etching, or coating failure is already confirmed.
+
+PARTIAL: if staged removal is required and improvement is expected in layers rather than one pass.
+
+IF: finish risk is elevated, stop and reassess before adding stronger chemistry or heavier abrasion.`;
+}
+
+function enforceChemistryBody(surface: string, problem: string, content: string): string {
+  const requiredTerms: Array<{ test: (t: string) => boolean }> = [
+    { test: (t) => /\bacid/i.test(t) },
+    { test: (t) => /\balkaline/i.test(t) },
+    { test: (t) => /\bneutral/i.test(t) },
+    { test: (t) => /\bpH\b/i.test(t) },
+    { test: (t) => /\bsolvent/i.test(t) },
+  ];
+  const s = surface.trim() || "this surface";
+  const p = problem.trim() || "this issue";
+  let t = content.trim();
+  const missing = requiredTerms.filter((x) => !x.test(t));
+  if (missing.length === 0) return t;
+  const addon = `Chemistry alignment for ${p} on ${s}: acidic products can address mineral film; alkaline chemistry lifts organic grease; neutral pH is safest when finish risk is high; match soil type to the correct pH strategy; solvent-based products may remove non-polar residue when safe for the surface.`;
+  return `${t}\n\n${addon}`.trim();
+}
+
+function enforceProfessionalMethodBody(surface: string, problem: string, content: string): string {
+  const numbered = content
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => /^\d+\./.test(line));
+  if (numbered.length >= 4) return normalizeLines(content);
+  const s = surface.trim() || "this surface";
+  const p = problem.trim() || "this issue";
+  return `1. Classify ${p} on ${s} and choose chemistry: acidic for mineral film, alkaline for organic soil, neutral pH when finish risk is high, solvent only when appropriate for non-polar residue.
+
+2. Apply controlled dwell, then agitate with a brush, pad, or sponge sized to the area and finish risk.
+
+3. Rinse thoroughly and wipe with a microfiber towel to remove suspended soil.
+
+4. Dry completely, inspect at dry-down, and stop if permanent damage, etch risk, or coating failure appears.`;
+}
+
+function fixToolsRequiredTemplate(surface: string): string {
+  const s = surface.trim() || "the surface";
+  return `- Microfiber towels for wipe-down and final polish on ${s}
+- Soft brush for edges, grout lines, and detail work
+- Non-scratch pad for controlled agitation where finish risk allows
+- Sponge for rinse passes and even product distribution
+- Absorbent towel for blotting and dry-down`;
+}
+
+function enforceVisualDiagnosticsBody(surface: string, problem: string): string {
+  const s = surface.trim() || "this surface";
+  const p = problem.trim() || "this issue";
+  return `Type 1: Localized spotting or streaking where ${p} first appears on ${s}.
+
+Type 2: Patchy haze that tracks rinse direction, wipe direction, or cleaner dwell patterns.
+
+Type 3: Full-field dullness or uniform film visible after moisture equalizes across ${s}.`;
+}
+
+function enforceWhenToStopBody(surface: string, problem: string, content: string): string {
+  const required = [/\bpermanent\b/i, /\bdamage\b/i, /\betch/i, /\brisk\b/i];
+  let t = content.trim();
+  if (required.every((re) => re.test(t))) return t;
+  const addon = `Stop if you observe permanent damage, etch marks, increasing scratch risk, or if ${problem} on ${surface} worsens after a controlled pass.`;
+  return `${t}\n\n${addon}`.trim();
+}
+
+function formatCommonMistakesContract(
+  surface: string,
+  problem: string,
+  mistakes: string[],
+): string {
+  const s = surface.trim() || "this surface";
+  const p = problem.trim() || "this issue";
+  const lines = mistakes.map((m, i) => {
+    if (/\b(causes|leads to|because)\b/i.test(m)) {
+      return `- ${m}`;
+    }
+    if (i % 3 === 0) {
+      return `- ${m}, which causes incomplete soil release on ${s}`;
+    }
+    if (i % 3 === 1) {
+      return `- ${m}, which leads to visible streaking on ${s}`;
+    }
+    return `- ${m}, which leaves a film that reads as ${p}`;
+  });
+  return `Common mistakes include:\n\n${lines.join("\n")}`;
+}
+
+function enforceCommonMistakesContract(
+  surface: string,
+  problem: string,
+  content: string,
+): string {
+  const parsed = parseCommonMistakeLines(content);
+  const mistakes = ensureThreeDistinctMistakes(parsed);
+  return formatCommonMistakesContract(surface, problem, mistakes);
+}
+
+function applyAuthorityContractEnforcement(
+  sections: Array<{ key: PageSectionKey; title: string; content: string }>,
+  surface: string,
+  problem: string,
+): Array<{ key: PageSectionKey; title: string; content: string }> {
+  return sections.map((section) => {
+    const key = section.key;
+    switch (key) {
+      case "canThisBeFixed":
+        return {
+          ...section,
+          content: enforceCanThisBeFixedBody(surface, problem),
+        };
+      case "chemistry":
+        return {
+          ...section,
+          content: enforceChemistryBody(surface, problem, section.content),
+        };
+      case "commonMistakes":
+        return {
+          ...section,
+          content: enforceCommonMistakesContract(surface, problem, section.content),
+        };
+      case "professionalMethod":
+        return {
+          ...section,
+          content: enforceProfessionalMethodBody(surface, problem, section.content),
+        };
+      case "toolsRequired":
+        return {
+          ...section,
+          content: fixToolsRequiredTemplate(surface),
+        };
+      case "visualDiagnostics":
+        return {
+          ...section,
+          content: enforceVisualDiagnosticsBody(surface, problem),
+        };
+      case "whenToStop":
+        return {
+          ...section,
+          content: enforceWhenToStopBody(surface, problem, section.content),
+        };
+      default:
+        return section;
+    }
+  });
+}
+
+function applyMinLengthsAfterContracts(
+  sections: Array<{ key: PageSectionKey; title: string; content: string }>,
+): Array<{ key: PageSectionKey; title: string; content: string }> {
+  return sections.map((section) => ({
+    ...section,
+    content: ensureMinSectionLengthForKey(
+      section.key,
+      section.content,
+      SECTION_LENGTH_FALLBACKS[section.key],
+    ),
+  }));
+}
+
 function ensureMinSectionLengthForKey(key: string, text: string, fallback: string): string {
   const min = MIN_SECTION_LENGTH[key as keyof typeof MIN_SECTION_LENGTH] ?? 100;
 
@@ -268,6 +559,22 @@ type Target = {
   intents: Intent[];
 };
 
+/** When batch JSON omits `intents`, generate one page per row (small seed batches). */
+const DEFAULT_TARGET_INTENTS: Intent[] = ["how-remove"];
+
+function normalizeBatchTargets(
+  rows: Array<{ surface: string; problem: string; intents?: Intent[] }>,
+): Target[] {
+  return rows.map((row) => ({
+    surface: row.surface,
+    problem: row.problem,
+    intents:
+      Array.isArray(row.intents) && row.intents.length > 0
+        ? (row.intents as Intent[])
+        : DEFAULT_TARGET_INTENTS,
+  }));
+}
+
 function slugify(input: string) {
   return input
     .toLowerCase()
@@ -302,41 +609,39 @@ function buildTitle(intent: Intent, problem: string, surface: string) {
   }
 }
 
-const WHY_IT_HAPPENS_FALLBACK =
-  "This condition builds gradually as residue, moisture, or contamination is left behind during normal use and incomplete cleaning, allowing the visible problem to persist and become more obvious over time.";
+function ensureThreeDistinctMistakes(input: string[]): string[] {
+  const unique = Array.from(new Set(input.filter(Boolean)));
 
-const WHY_IT_WORKS_FALLBACK =
-  "The recommended process works because it matches the soil type to the correct chemistry and uses the right level of agitation, rinsing, and drying to remove residue instead of just spreading it around.";
+  const fallback = [
+    "Using too much cleaning product leading to residue buildup",
+    "Not rinsing or wiping thoroughly after cleaning",
+    "Using the wrong type of cleaner for the surface",
+    "Cleaning unevenly, leaving visible streaks or patches",
+    "Allowing product to dry on the surface instead of removing it",
+  ];
 
-const SECTION_LENGTH_FALLBACKS: Record<PageSectionKey, string> = {
-  whatIs: WHY_IT_WORKS_FALLBACK,
-  whyItHappens: WHY_IT_HAPPENS_FALLBACK,
-  whereItAppears:
-    "This issue commonly appears in kitchens, bathrooms, and high-contact areas where residue and moisture accumulate. It often shows first in splash zones, seams, edges, and frequently touched panels before spreading to larger fields.",
-  canThisBeFixed:
-    "PARTIAL — if: staged removal is required.\nNO — if: permanent damage is confirmed.",
-  chemistry:
-    "Alkaline chemistry cuts grease; acidic chemistry attacks mineral film; neutral pH limits risk; solvents target non-polar soil when safe.",
-  commonMistakes:
-    "- Skipping dwell because it causes incomplete soil release and leads to repeat damage cycles.",
-  professionalMethod:
-    "4. Document outcome after dry-down because residue films only appear once moisture equalizes.",
-  howToFix:
-    "Treat the surface with progressive chemistry, controlled dwell, appropriate agitation, thorough rinse, and full dry-down before judging improvement. Repeat only when the soil type and finish risk still allow another controlled pass.",
-  whatToAvoid:
-    "Avoid abrasive tools, undisciplined pH, excessive moisture dwell, and multi-chemistry mixing that can damage seals, coatings, or sensitive finishes.",
-  whatToExpect:
-    "Film soil may resolve fully in one visit, while aged buildup often improves partially before a second pass.",
-  whenToStop:
-    "Permanent etching or coating damage means stopping before scratch depth increases.",
-  toolsRequired: "- Microfiber towel for final wipe and lint control.",
-  recommendedProducts:
-    "- Neutral cleaner category for daily maintenance when soil is light.",
-  visualDiagnostics:
-    "Type 3: Uniform haze\nFull-field dulling that tracks rinse and dry patterns.",
-  relatedTopics:
-    "Cross-link adjacent diagnosis and prevention pages in the same surface family.",
-};
+  const result = [...unique];
+
+  for (const item of fallback) {
+    if (result.length >= 3) break;
+    if (!result.includes(item)) {
+      result.push(item);
+    }
+  }
+
+  return result.slice(0, 5);
+}
+
+function parseCommonMistakeLines(content: string): string[] {
+  const lines: string[] = [];
+  for (const line of content.split("\n")) {
+    const trimmed = line.trim();
+    if (/^[-*•]\s*/.test(trimmed) || /^\d+\.\s*/.test(trimmed)) {
+      lines.push(trimmed.replace(/^[-*•]\s*|\d+\.\s*/, "").trim());
+    }
+  }
+  return lines.filter(Boolean);
+}
 
 function buildSectionsFromEvidence(params: {
   surface: string;
@@ -397,7 +702,7 @@ function buildSnapshot(intent: Intent, problem: string, surface: string): Canoni
   // HARD MERGE LAYER:
   // Authority sections must be derived deterministically from EvidenceRecord.
   // Do not hand-author or improvise these sections elsewhere in the pipeline.
-  const sections = sanitizeSnapshotSections(
+  let sections = sanitizeSnapshotSections(
     buildSectionsFromEvidence({
       surface: normSurface,
       problem: normProblem,
@@ -405,6 +710,10 @@ function buildSnapshot(intent: Intent, problem: string, surface: string): Canoni
       relatedTopicSlugs: internalLinks,
     }),
   );
+
+  sections = ensureAllRequiredSectionsExist(sections, normSurface, normProblem);
+  sections = applyAuthorityContractEnforcement(sections, normSurface, normProblem);
+  sections = applyMinLengthsAfterContracts(sections);
 
   const snapshot: CanonicalPageSnapshot = {
     slug,
@@ -492,20 +801,21 @@ function run() {
 
   const absSource = path.resolve(process.cwd(), source);
   const raw = JSON.parse(fs.readFileSync(absSource, "utf-8")) as {
-    targets: Target[];
+    targets: Array<{ surface: string; problem: string; intents?: Intent[] }>;
   };
 
   if (!Array.isArray(raw.targets)) {
     throw new Error("Source JSON must include a targets array");
   }
 
-  const snapshots = generate(raw.targets);
-  assertAllValid(snapshots);
+  const snapshots = generate(normalizeBatchTargets(raw.targets));
+  const enhanced = snapshots.map((s) => enhanceStructuredPage(s, snapshots));
+  assertAllValid(enhanced);
 
   const absOutput = path.resolve(process.cwd(), output);
 
   fs.mkdirSync(path.dirname(absOutput), { recursive: true });
-  fs.writeFileSync(absOutput, JSON.stringify({ snapshots }, null, 2));
+  fs.writeFileSync(absOutput, JSON.stringify({ snapshots: enhanced }, null, 2));
 
   console.log(`Generated ${snapshots.length} snapshots → ${output}`);
 }

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-clean::shower doors::dye transfer",
+      "title": "How to Clean dye transfer from shower doors",
+      "slug": "how-to-clean-dye-transfer-from-shower-doors",
+      "problem": "dye transfer",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::dye transfer",
+      "title": "How to Tell if dye transfer on shower doors is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-shower-doors-is-permanent",
+      "problem": "dye transfer",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on shower doors",
+      "slug": "why-dye-transfer-keeps-coming-back-on-shower-doors",
+      "problem": "dye transfer",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::dye transfer",
+      "title": "How to Maintain shower doors and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-shower-doors",
+      "problem": "dye transfer",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::dye transfer",
+      "title": "What Causes dye transfer on sealed stone",
+      "slug": "what-causes-dye-transfer-on-sealed-stone",
+      "problem": "dye transfer",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::dye transfer",
+      "title": "How to Remove dye transfer from sealed stone",
+      "slug": "how-to-remove-dye-transfer-from-sealed-stone",
+      "problem": "dye transfer",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::dye transfer",
+      "title": "How to Prevent dye transfer on sealed stone",
+      "slug": "how-to-prevent-dye-transfer-on-sealed-stone",
+      "problem": "dye transfer",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::dye transfer",
+      "title": "How to Fix dye transfer on sealed stone",
+      "slug": "how-to-fix-dye-transfer-on-sealed-stone",
+      "problem": "dye transfer",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::dye transfer",
+      "title": "How to Clean dye transfer from sealed stone",
+      "slug": "how-to-clean-dye-transfer-from-sealed-stone",
+      "problem": "dye transfer",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::dye transfer",
+      "title": "How to Tell if dye transfer on sealed stone is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-sealed-stone-is-permanent",
+      "problem": "dye transfer",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on sealed stone",
+      "slug": "why-dye-transfer-keeps-coming-back-on-sealed-stone",
+      "problem": "dye transfer",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::dye transfer",
+      "title": "How to Maintain sealed stone and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-sealed-stone",
+      "problem": "dye transfer",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::dye transfer",
+      "title": "What Causes dye transfer on shower grout",
+      "slug": "what-causes-dye-transfer-on-shower-grout",
+      "problem": "dye transfer",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::dye transfer",
+      "title": "How to Remove dye transfer from shower grout",
+      "slug": "how-to-remove-dye-transfer-from-shower-grout",
+      "problem": "dye transfer",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::dye transfer",
+      "title": "How to Prevent dye transfer on shower grout",
+      "slug": "how-to-prevent-dye-transfer-on-shower-grout",
+      "problem": "dye transfer",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::dye transfer",
+      "title": "How to Fix dye transfer on shower grout",
+      "slug": "how-to-fix-dye-transfer-on-shower-grout",
+      "problem": "dye transfer",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::dye transfer",
+      "title": "How to Clean dye transfer from shower grout",
+      "slug": "how-to-clean-dye-transfer-from-shower-grout",
+      "problem": "dye transfer",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::dye transfer",
+      "title": "How to Tell if dye transfer on shower grout is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-shower-grout-is-permanent",
+      "problem": "dye transfer",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on shower grout",
+      "slug": "why-dye-transfer-keeps-coming-back-on-shower-grout",
+      "problem": "dye transfer",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::dye transfer",
+      "title": "How to Maintain shower grout and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-shower-grout",
+      "problem": "dye transfer",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::dye transfer",
+      "title": "What Causes dye transfer on tile grout",
+      "slug": "what-causes-dye-transfer-on-tile-grout",
+      "problem": "dye transfer",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::dye transfer",
+      "title": "How to Remove dye transfer from tile grout",
+      "slug": "how-to-remove-dye-transfer-from-tile-grout",
+      "problem": "dye transfer",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::dye transfer",
+      "title": "How to Prevent dye transfer on tile grout",
+      "slug": "how-to-prevent-dye-transfer-on-tile-grout",
+      "problem": "dye transfer",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::dye transfer",
+      "title": "How to Fix dye transfer on tile grout",
+      "slug": "how-to-fix-dye-transfer-on-tile-grout",
+      "problem": "dye transfer",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::dye transfer",
+      "title": "How to Clean dye transfer from tile grout",
+      "slug": "how-to-clean-dye-transfer-from-tile-grout",
+      "problem": "dye transfer",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::dye transfer",
+      "title": "How to Tell if dye transfer on tile grout is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-tile-grout-is-permanent",
+      "problem": "dye transfer",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on tile grout",
+      "slug": "why-dye-transfer-keeps-coming-back-on-tile-grout",
+      "problem": "dye transfer",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::dye transfer",
+      "title": "How to Maintain tile grout and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-tile-grout",
+      "problem": "dye transfer",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::dye transfer",
+      "title": "What Causes dye transfer on caulking",
+      "slug": "what-causes-dye-transfer-on-caulking",
+      "problem": "dye transfer",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::dye transfer",
+      "title": "How to Remove dye transfer from caulking",
+      "slug": "how-to-remove-dye-transfer-from-caulking",
+      "problem": "dye transfer",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::dye transfer",
+      "title": "How to Prevent dye transfer on caulking",
+      "slug": "how-to-prevent-dye-transfer-on-caulking",
+      "problem": "dye transfer",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::dye transfer",
+      "title": "How to Fix dye transfer on caulking",
+      "slug": "how-to-fix-dye-transfer-on-caulking",
+      "problem": "dye transfer",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::dye transfer",
+      "title": "How to Clean dye transfer from caulking",
+      "slug": "how-to-clean-dye-transfer-from-caulking",
+      "problem": "dye transfer",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::dye transfer",
+      "title": "How to Tell if dye transfer on caulking is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-caulking-is-permanent",
+      "problem": "dye transfer",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on caulking",
+      "slug": "why-dye-transfer-keeps-coming-back-on-caulking",
+      "problem": "dye transfer",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::dye transfer",
+      "title": "How to Maintain caulking and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-caulking",
+      "problem": "dye transfer",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::dye transfer",
+      "title": "What Causes dye transfer on sealed granite",
+      "slug": "what-causes-dye-transfer-on-sealed-granite",
+      "problem": "dye transfer",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::dye transfer",
+      "title": "How to Remove dye transfer from sealed granite",
+      "slug": "how-to-remove-dye-transfer-from-sealed-granite",
+      "problem": "dye transfer",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::dye transfer",
+      "title": "How to Prevent dye transfer on sealed granite",
+      "slug": "how-to-prevent-dye-transfer-on-sealed-granite",
+      "problem": "dye transfer",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::dye transfer",
+      "title": "How to Fix dye transfer on sealed granite",
+      "slug": "how-to-fix-dye-transfer-on-sealed-granite",
+      "problem": "dye transfer",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::dye transfer",
+      "title": "How to Clean dye transfer from sealed granite",
+      "slug": "how-to-clean-dye-transfer-from-sealed-granite",
+      "problem": "dye transfer",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::dye transfer",
+      "title": "How to Tell if dye transfer on sealed granite is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-sealed-granite-is-permanent",
+      "problem": "dye transfer",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on sealed granite",
+      "slug": "why-dye-transfer-keeps-coming-back-on-sealed-granite",
+      "problem": "dye transfer",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::dye transfer",
+      "title": "How to Maintain sealed granite and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-sealed-granite",
+      "problem": "dye transfer",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::dye transfer",
+      "title": "What Causes dye transfer on sealed marble",
+      "slug": "what-causes-dye-transfer-on-sealed-marble",
+      "problem": "dye transfer",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::dye transfer",
+      "title": "How to Remove dye transfer from sealed marble",
+      "slug": "how-to-remove-dye-transfer-from-sealed-marble",
+      "problem": "dye transfer",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::dye transfer",
+      "title": "How to Prevent dye transfer on sealed marble",
+      "slug": "how-to-prevent-dye-transfer-on-sealed-marble",
+      "problem": "dye transfer",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::dye transfer",
+      "title": "How to Fix dye transfer on sealed marble",
+      "slug": "how-to-fix-dye-transfer-on-sealed-marble",
+      "problem": "dye transfer",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::dye transfer",
+      "title": "How to Clean dye transfer from sealed marble",
+      "slug": "how-to-clean-dye-transfer-from-sealed-marble",
+      "problem": "dye transfer",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::dye transfer",
+      "title": "How to Tell if dye transfer on sealed marble is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-sealed-marble-is-permanent",
+      "problem": "dye transfer",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on sealed marble",
+      "slug": "why-dye-transfer-keeps-coming-back-on-sealed-marble",
+      "problem": "dye transfer",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::dye transfer",
+      "title": "How to Maintain sealed marble and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-sealed-marble",
+      "problem": "dye transfer",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::dye transfer",
+      "title": "What Causes dye transfer on quartz countertops",
+      "slug": "what-causes-dye-transfer-on-quartz-countertops",
+      "problem": "dye transfer",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::dye transfer",
+      "title": "How to Remove dye transfer from quartz countertops",
+      "slug": "how-to-remove-dye-transfer-from-quartz-countertops",
+      "problem": "dye transfer",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::dye transfer",
+      "title": "How to Prevent dye transfer on quartz countertops",
+      "slug": "how-to-prevent-dye-transfer-on-quartz-countertops",
+      "problem": "dye transfer",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::dye transfer",
+      "title": "How to Fix dye transfer on quartz countertops",
+      "slug": "how-to-fix-dye-transfer-on-quartz-countertops",
+      "problem": "dye transfer",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::dye transfer",
+      "title": "How to Clean dye transfer from quartz countertops",
+      "slug": "how-to-clean-dye-transfer-from-quartz-countertops",
+      "problem": "dye transfer",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::dye transfer",
+      "title": "How to Tell if dye transfer on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-quartz-countertops-is-permanent",
+      "problem": "dye transfer",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on quartz countertops",
+      "slug": "why-dye-transfer-keeps-coming-back-on-quartz-countertops",
+      "problem": "dye transfer",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::dye transfer",
+      "title": "How to Maintain quartz countertops and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-quartz-countertops",
+      "problem": "dye transfer",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::dye transfer",
+      "title": "What Causes dye transfer on laminate counters",
+      "slug": "what-causes-dye-transfer-on-laminate-counters",
+      "problem": "dye transfer",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::dye transfer",
+      "title": "How to Remove dye transfer from laminate counters",
+      "slug": "how-to-remove-dye-transfer-from-laminate-counters",
+      "problem": "dye transfer",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::dye transfer",
+      "title": "How to Prevent dye transfer on laminate counters",
+      "slug": "how-to-prevent-dye-transfer-on-laminate-counters",
+      "problem": "dye transfer",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::dye transfer",
+      "title": "How to Fix dye transfer on laminate counters",
+      "slug": "how-to-fix-dye-transfer-on-laminate-counters",
+      "problem": "dye transfer",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::dye transfer",
+      "title": "How to Clean dye transfer from laminate counters",
+      "slug": "how-to-clean-dye-transfer-from-laminate-counters",
+      "problem": "dye transfer",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::dye transfer",
+      "title": "How to Tell if dye transfer on laminate counters is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-laminate-counters-is-permanent",
+      "problem": "dye transfer",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on laminate counters",
+      "slug": "why-dye-transfer-keeps-coming-back-on-laminate-counters",
+      "problem": "dye transfer",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::dye transfer",
+      "title": "How to Maintain laminate counters and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-laminate-counters",
+      "problem": "dye transfer",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::dye transfer",
+      "title": "What Causes dye transfer on butcher block",
+      "slug": "what-causes-dye-transfer-on-butcher-block",
+      "problem": "dye transfer",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::dye transfer",
+      "title": "How to Remove dye transfer from butcher block",
+      "slug": "how-to-remove-dye-transfer-from-butcher-block",
+      "problem": "dye transfer",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::dye transfer",
+      "title": "How to Prevent dye transfer on butcher block",
+      "slug": "how-to-prevent-dye-transfer-on-butcher-block",
+      "problem": "dye transfer",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::dye transfer",
+      "title": "How to Fix dye transfer on butcher block",
+      "slug": "how-to-fix-dye-transfer-on-butcher-block",
+      "problem": "dye transfer",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::dye transfer",
+      "title": "How to Clean dye transfer from butcher block",
+      "slug": "how-to-clean-dye-transfer-from-butcher-block",
+      "problem": "dye transfer",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::dye transfer",
+      "title": "How to Tell if dye transfer on butcher block is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-butcher-block-is-permanent",
+      "problem": "dye transfer",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on butcher block",
+      "slug": "why-dye-transfer-keeps-coming-back-on-butcher-block",
+      "problem": "dye transfer",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::dye transfer",
+      "title": "How to Maintain butcher block and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-butcher-block",
+      "problem": "dye transfer",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::dye transfer",
+      "title": "What Causes dye transfer on unfinished wood",
+      "slug": "what-causes-dye-transfer-on-unfinished-wood",
+      "problem": "dye transfer",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::dye transfer",
+      "title": "How to Remove dye transfer from unfinished wood",
+      "slug": "how-to-remove-dye-transfer-from-unfinished-wood",
+      "problem": "dye transfer",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::dye transfer",
+      "title": "How to Prevent dye transfer on unfinished wood",
+      "slug": "how-to-prevent-dye-transfer-on-unfinished-wood",
+      "problem": "dye transfer",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::dye transfer",
+      "title": "How to Fix dye transfer on unfinished wood",
+      "slug": "how-to-fix-dye-transfer-on-unfinished-wood",
+      "problem": "dye transfer",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::dye transfer",
+      "title": "How to Clean dye transfer from unfinished wood",
+      "slug": "how-to-clean-dye-transfer-from-unfinished-wood",
+      "problem": "dye transfer",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::dye transfer",
+      "title": "How to Tell if dye transfer on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-unfinished-wood-is-permanent",
+      "problem": "dye transfer",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on unfinished wood",
+      "slug": "why-dye-transfer-keeps-coming-back-on-unfinished-wood",
+      "problem": "dye transfer",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::dye transfer",
+      "title": "How to Maintain unfinished wood and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-unfinished-wood",
+      "problem": "dye transfer",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::dye transfer",
+      "title": "What Causes dye transfer on sealed wood",
+      "slug": "what-causes-dye-transfer-on-sealed-wood",
+      "problem": "dye transfer",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::dye transfer",
+      "title": "How to Remove dye transfer from sealed wood",
+      "slug": "how-to-remove-dye-transfer-from-sealed-wood",
+      "problem": "dye transfer",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::dye transfer",
+      "title": "How to Prevent dye transfer on sealed wood",
+      "slug": "how-to-prevent-dye-transfer-on-sealed-wood",
+      "problem": "dye transfer",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::dye transfer",
+      "title": "How to Fix dye transfer on sealed wood",
+      "slug": "how-to-fix-dye-transfer-on-sealed-wood",
+      "problem": "dye transfer",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::dye transfer",
+      "title": "How to Clean dye transfer from sealed wood",
+      "slug": "how-to-clean-dye-transfer-from-sealed-wood",
+      "problem": "dye transfer",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-fix::sealed granite::cooked-on grease",
+      "title": "How to Fix cooked-on grease on sealed granite",
+      "slug": "how-to-fix-cooked-on-grease-on-sealed-granite",
+      "problem": "cooked-on grease",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::cooked-on grease",
+      "title": "How to Clean cooked-on grease from sealed granite",
+      "slug": "how-to-clean-cooked-on-grease-from-sealed-granite",
+      "problem": "cooked-on grease",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::cooked-on grease",
+      "title": "How to Tell if cooked-on grease on sealed granite is Permanent",
+      "slug": "how-to-tell-if-cooked-on-grease-on-sealed-granite-is-permanent",
+      "problem": "cooked-on grease",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::cooked-on grease",
+      "title": "Why cooked-on grease Keeps Coming Back on sealed granite",
+      "slug": "why-cooked-on-grease-keeps-coming-back-on-sealed-granite",
+      "problem": "cooked-on grease",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::cooked-on grease",
+      "title": "How to Maintain sealed granite and Keep cooked-on grease Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-cooked-on-grease-under-control",
+      "problem": "cooked-on grease",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::cooked-on grease",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on grease on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-grease-on-sealed-granite",
+      "problem": "cooked-on grease",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::cooked-on grease",
+      "title": "What Causes cooked-on grease on sealed marble",
+      "slug": "what-causes-cooked-on-grease-on-sealed-marble",
+      "problem": "cooked-on grease",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::cooked-on grease",
+      "title": "How to Remove cooked-on grease from sealed marble",
+      "slug": "how-to-remove-cooked-on-grease-from-sealed-marble",
+      "problem": "cooked-on grease",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::cooked-on grease",
+      "title": "How to Prevent cooked-on grease on sealed marble",
+      "slug": "how-to-prevent-cooked-on-grease-on-sealed-marble",
+      "problem": "cooked-on grease",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::cooked-on grease",
+      "title": "How to Fix cooked-on grease on sealed marble",
+      "slug": "how-to-fix-cooked-on-grease-on-sealed-marble",
+      "problem": "cooked-on grease",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::cooked-on grease",
+      "title": "How to Clean cooked-on grease from sealed marble",
+      "slug": "how-to-clean-cooked-on-grease-from-sealed-marble",
+      "problem": "cooked-on grease",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::cooked-on grease",
+      "title": "How to Tell if cooked-on grease on sealed marble is Permanent",
+      "slug": "how-to-tell-if-cooked-on-grease-on-sealed-marble-is-permanent",
+      "problem": "cooked-on grease",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::cooked-on grease",
+      "title": "Why cooked-on grease Keeps Coming Back on sealed marble",
+      "slug": "why-cooked-on-grease-keeps-coming-back-on-sealed-marble",
+      "problem": "cooked-on grease",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::cooked-on grease",
+      "title": "How to Maintain sealed marble and Keep cooked-on grease Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-cooked-on-grease-under-control",
+      "problem": "cooked-on grease",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::cooked-on grease",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on grease on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-grease-on-sealed-marble",
+      "problem": "cooked-on grease",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::cooked-on grease",
+      "title": "What Causes cooked-on grease on quartz countertops",
+      "slug": "what-causes-cooked-on-grease-on-quartz-countertops",
+      "problem": "cooked-on grease",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::cooked-on grease",
+      "title": "How to Remove cooked-on grease from quartz countertops",
+      "slug": "how-to-remove-cooked-on-grease-from-quartz-countertops",
+      "problem": "cooked-on grease",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::cooked-on grease",
+      "title": "How to Prevent cooked-on grease on quartz countertops",
+      "slug": "how-to-prevent-cooked-on-grease-on-quartz-countertops",
+      "problem": "cooked-on grease",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::cooked-on grease",
+      "title": "How to Fix cooked-on grease on quartz countertops",
+      "slug": "how-to-fix-cooked-on-grease-on-quartz-countertops",
+      "problem": "cooked-on grease",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::cooked-on grease",
+      "title": "How to Clean cooked-on grease from quartz countertops",
+      "slug": "how-to-clean-cooked-on-grease-from-quartz-countertops",
+      "problem": "cooked-on grease",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::cooked-on grease",
+      "title": "How to Tell if cooked-on grease on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-cooked-on-grease-on-quartz-countertops-is-permanent",
+      "problem": "cooked-on grease",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::cooked-on grease",
+      "title": "Why cooked-on grease Keeps Coming Back on quartz countertops",
+      "slug": "why-cooked-on-grease-keeps-coming-back-on-quartz-countertops",
+      "problem": "cooked-on grease",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::cooked-on grease",
+      "title": "How to Maintain quartz countertops and Keep cooked-on grease Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-cooked-on-grease-under-control",
+      "problem": "cooked-on grease",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::cooked-on grease",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on grease on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-grease-on-quartz-countertops",
+      "problem": "cooked-on grease",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::cooked-on grease",
+      "title": "What Causes cooked-on grease on laminate counters",
+      "slug": "what-causes-cooked-on-grease-on-laminate-counters",
+      "problem": "cooked-on grease",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::cooked-on grease",
+      "title": "How to Remove cooked-on grease from laminate counters",
+      "slug": "how-to-remove-cooked-on-grease-from-laminate-counters",
+      "problem": "cooked-on grease",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::cooked-on grease",
+      "title": "How to Prevent cooked-on grease on laminate counters",
+      "slug": "how-to-prevent-cooked-on-grease-on-laminate-counters",
+      "problem": "cooked-on grease",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::cooked-on grease",
+      "title": "How to Fix cooked-on grease on laminate counters",
+      "slug": "how-to-fix-cooked-on-grease-on-laminate-counters",
+      "problem": "cooked-on grease",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::cooked-on grease",
+      "title": "How to Clean cooked-on grease from laminate counters",
+      "slug": "how-to-clean-cooked-on-grease-from-laminate-counters",
+      "problem": "cooked-on grease",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::cooked-on grease",
+      "title": "How to Tell if cooked-on grease on laminate counters is Permanent",
+      "slug": "how-to-tell-if-cooked-on-grease-on-laminate-counters-is-permanent",
+      "problem": "cooked-on grease",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::cooked-on grease",
+      "title": "Why cooked-on grease Keeps Coming Back on laminate counters",
+      "slug": "why-cooked-on-grease-keeps-coming-back-on-laminate-counters",
+      "problem": "cooked-on grease",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::cooked-on grease",
+      "title": "How to Maintain laminate counters and Keep cooked-on grease Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-cooked-on-grease-under-control",
+      "problem": "cooked-on grease",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::cooked-on grease",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on grease on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-grease-on-laminate-counters",
+      "problem": "cooked-on grease",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::garbage cans::cooked-on grease",
+      "title": "What Causes cooked-on grease on garbage cans",
+      "slug": "what-causes-cooked-on-grease-on-garbage-cans",
+      "problem": "cooked-on grease",
+      "surface": "garbage cans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::garbage cans::cooked-on grease",
+      "title": "How to Remove cooked-on grease from garbage cans",
+      "slug": "how-to-remove-cooked-on-grease-from-garbage-cans",
+      "problem": "cooked-on grease",
+      "surface": "garbage cans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::garbage cans::cooked-on grease",
+      "title": "How to Prevent cooked-on grease on garbage cans",
+      "slug": "how-to-prevent-cooked-on-grease-on-garbage-cans",
+      "problem": "cooked-on grease",
+      "surface": "garbage cans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::garbage cans::cooked-on grease",
+      "title": "How to Fix cooked-on grease on garbage cans",
+      "slug": "how-to-fix-cooked-on-grease-on-garbage-cans",
+      "problem": "cooked-on grease",
+      "surface": "garbage cans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::garbage cans::cooked-on grease",
+      "title": "How to Clean cooked-on grease from garbage cans",
+      "slug": "how-to-clean-cooked-on-grease-from-garbage-cans",
+      "problem": "cooked-on grease",
+      "surface": "garbage cans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::garbage cans::cooked-on grease",
+      "title": "How to Tell if cooked-on grease on garbage cans is Permanent",
+      "slug": "how-to-tell-if-cooked-on-grease-on-garbage-cans-is-permanent",
+      "problem": "cooked-on grease",
+      "surface": "garbage cans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::garbage cans::cooked-on grease",
+      "title": "Why cooked-on grease Keeps Coming Back on garbage cans",
+      "slug": "why-cooked-on-grease-keeps-coming-back-on-garbage-cans",
+      "problem": "cooked-on grease",
+      "surface": "garbage cans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::garbage cans::cooked-on grease",
+      "title": "How to Maintain garbage cans and Keep cooked-on grease Under Control",
+      "slug": "how-to-maintain-garbage-cans-and-keep-cooked-on-grease-under-control",
+      "problem": "cooked-on grease",
+      "surface": "garbage cans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::garbage cans::cooked-on grease",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on grease on garbage cans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-grease-on-garbage-cans",
+      "problem": "cooked-on grease",
+      "surface": "garbage cans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::burnt residue",
+      "title": "What Causes burnt residue on backsplashes",
+      "slug": "what-causes-burnt-residue-on-backsplashes",
+      "problem": "burnt residue",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::burnt residue",
+      "title": "How to Remove burnt residue from backsplashes",
+      "slug": "how-to-remove-burnt-residue-from-backsplashes",
+      "problem": "burnt residue",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::burnt residue",
+      "title": "How to Prevent burnt residue on backsplashes",
+      "slug": "how-to-prevent-burnt-residue-on-backsplashes",
+      "problem": "burnt residue",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::burnt residue",
+      "title": "How to Fix burnt residue on backsplashes",
+      "slug": "how-to-fix-burnt-residue-on-backsplashes",
+      "problem": "burnt residue",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::burnt residue",
+      "title": "How to Clean burnt residue from backsplashes",
+      "slug": "how-to-clean-burnt-residue-from-backsplashes",
+      "problem": "burnt residue",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::burnt residue",
+      "title": "How to Tell if burnt residue on backsplashes is Permanent",
+      "slug": "how-to-tell-if-burnt-residue-on-backsplashes-is-permanent",
+      "problem": "burnt residue",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::burnt residue",
+      "title": "Why burnt residue Keeps Coming Back on backsplashes",
+      "slug": "why-burnt-residue-keeps-coming-back-on-backsplashes",
+      "problem": "burnt residue",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::burnt residue",
+      "title": "How to Maintain backsplashes and Keep burnt residue Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-burnt-residue-under-control",
+      "problem": "burnt residue",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::burnt residue",
+      "title": "How to Recover After a Cleaning Mistake With burnt residue on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burnt-residue-on-backsplashes",
+      "problem": "burnt residue",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::burnt residue",
+      "title": "What Causes burnt residue on tile floors",
+      "slug": "what-causes-burnt-residue-on-tile-floors",
+      "problem": "burnt residue",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::burnt residue",
+      "title": "How to Remove burnt residue from tile floors",
+      "slug": "how-to-remove-burnt-residue-from-tile-floors",
+      "problem": "burnt residue",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::burnt residue",
+      "title": "How to Prevent burnt residue on tile floors",
+      "slug": "how-to-prevent-burnt-residue-on-tile-floors",
+      "problem": "burnt residue",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::burnt residue",
+      "title": "How to Fix burnt residue on tile floors",
+      "slug": "how-to-fix-burnt-residue-on-tile-floors",
+      "problem": "burnt residue",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::burnt residue",
+      "title": "How to Clean burnt residue from tile floors",
+      "slug": "how-to-clean-burnt-residue-from-tile-floors",
+      "problem": "burnt residue",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::burnt residue",
+      "title": "How to Tell if burnt residue on tile floors is Permanent",
+      "slug": "how-to-tell-if-burnt-residue-on-tile-floors-is-permanent",
+      "problem": "burnt residue",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::burnt residue",
+      "title": "Why burnt residue Keeps Coming Back on tile floors",
+      "slug": "why-burnt-residue-keeps-coming-back-on-tile-floors",
+      "problem": "burnt residue",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::burnt residue",
+      "title": "How to Maintain tile floors and Keep burnt residue Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-burnt-residue-under-control",
+      "problem": "burnt residue",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::burnt residue",
+      "title": "How to Recover After a Cleaning Mistake With burnt residue on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burnt-residue-on-tile-floors",
+      "problem": "burnt residue",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtubs::burnt residue",
+      "title": "What Causes burnt residue on bathtubs",
+      "slug": "what-causes-burnt-residue-on-bathtubs",
+      "problem": "burnt residue",
+      "surface": "bathtubs",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtubs::burnt residue",
+      "title": "How to Remove burnt residue from bathtubs",
+      "slug": "how-to-remove-burnt-residue-from-bathtubs",
+      "problem": "burnt residue",
+      "surface": "bathtubs",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtubs::burnt residue",
+      "title": "How to Prevent burnt residue on bathtubs",
+      "slug": "how-to-prevent-burnt-residue-on-bathtubs",
+      "problem": "burnt residue",
+      "surface": "bathtubs",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtubs::burnt residue",
+      "title": "How to Fix burnt residue on bathtubs",
+      "slug": "how-to-fix-burnt-residue-on-bathtubs",
+      "problem": "burnt residue",
+      "surface": "bathtubs",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtubs::burnt residue",
+      "title": "How to Clean burnt residue from bathtubs",
+      "slug": "how-to-clean-burnt-residue-from-bathtubs",
+      "problem": "burnt residue",
+      "surface": "bathtubs",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtubs::burnt residue",
+      "title": "How to Tell if burnt residue on bathtubs is Permanent",
+      "slug": "how-to-tell-if-burnt-residue-on-bathtubs-is-permanent",
+      "problem": "burnt residue",
+      "surface": "bathtubs",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtubs::burnt residue",
+      "title": "Why burnt residue Keeps Coming Back on bathtubs",
+      "slug": "why-burnt-residue-keeps-coming-back-on-bathtubs",
+      "problem": "burnt residue",
+      "surface": "bathtubs",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtubs::burnt residue",
+      "title": "How to Maintain bathtubs and Keep burnt residue Under Control",
+      "slug": "how-to-maintain-bathtubs-and-keep-burnt-residue-under-control",
+      "problem": "burnt residue",
+      "surface": "bathtubs",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtubs::burnt residue",
+      "title": "How to Recover After a Cleaning Mistake With burnt residue on bathtubs",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burnt-residue-on-bathtubs",
+      "problem": "burnt residue",
+      "surface": "bathtubs",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::glass cooktops::burnt residue",
+      "title": "What Causes burnt residue on glass cooktops",
+      "slug": "what-causes-burnt-residue-on-glass-cooktops",
+      "problem": "burnt residue",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::glass cooktops::burnt residue",
+      "title": "How to Remove burnt residue from glass cooktops",
+      "slug": "how-to-remove-burnt-residue-from-glass-cooktops",
+      "problem": "burnt residue",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::glass cooktops::burnt residue",
+      "title": "How to Prevent burnt residue on glass cooktops",
+      "slug": "how-to-prevent-burnt-residue-on-glass-cooktops",
+      "problem": "burnt residue",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::glass cooktops::burnt residue",
+      "title": "How to Fix burnt residue on glass cooktops",
+      "slug": "how-to-fix-burnt-residue-on-glass-cooktops",
+      "problem": "burnt residue",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::glass cooktops::burnt residue",
+      "title": "How to Clean burnt residue from glass cooktops",
+      "slug": "how-to-clean-burnt-residue-from-glass-cooktops",
+      "problem": "burnt residue",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::glass cooktops::burnt residue",
+      "title": "How to Tell if burnt residue on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-burnt-residue-on-glass-cooktops-is-permanent",
+      "problem": "burnt residue",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::glass cooktops::burnt residue",
+      "title": "Why burnt residue Keeps Coming Back on glass cooktops",
+      "slug": "why-burnt-residue-keeps-coming-back-on-glass-cooktops",
+      "problem": "burnt residue",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::glass cooktops::burnt residue",
+      "title": "How to Maintain glass cooktops and Keep burnt residue Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-burnt-residue-under-control",
+      "problem": "burnt residue",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::glass cooktops::burnt residue",
+      "title": "How to Recover After a Cleaning Mistake With burnt residue on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burnt-residue-on-glass-cooktops",
+      "problem": "burnt residue",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::burnt residue",
+      "title": "What Causes burnt residue on shower pans",
+      "slug": "what-causes-burnt-residue-on-shower-pans",
+      "problem": "burnt residue",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::burnt residue",
+      "title": "How to Remove burnt residue from shower pans",
+      "slug": "how-to-remove-burnt-residue-from-shower-pans",
+      "problem": "burnt residue",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::burnt residue",
+      "title": "How to Prevent burnt residue on shower pans",
+      "slug": "how-to-prevent-burnt-residue-on-shower-pans",
+      "problem": "burnt residue",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::burnt residue",
+      "title": "How to Fix burnt residue on shower pans",
+      "slug": "how-to-fix-burnt-residue-on-shower-pans",
+      "problem": "burnt residue",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::burnt residue",
+      "title": "How to Clean burnt residue from shower pans",
+      "slug": "how-to-clean-burnt-residue-from-shower-pans",
+      "problem": "burnt residue",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::burnt residue",
+      "title": "How to Tell if burnt residue on shower pans is Permanent",
+      "slug": "how-to-tell-if-burnt-residue-on-shower-pans-is-permanent",
+      "problem": "burnt residue",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::burnt residue",
+      "title": "Why burnt residue Keeps Coming Back on shower pans",
+      "slug": "why-burnt-residue-keeps-coming-back-on-shower-pans",
+      "problem": "burnt residue",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::burnt residue",
+      "title": "How to Maintain shower pans and Keep burnt residue Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-burnt-residue-under-control",
+      "problem": "burnt residue",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::burnt residue",
+      "title": "How to Recover After a Cleaning Mistake With burnt residue on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burnt-residue-on-shower-pans",
+      "problem": "burnt residue",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::burnt residue",
+      "title": "What Causes burnt residue on bathtub surrounds",
+      "slug": "what-causes-burnt-residue-on-bathtub-surrounds",
+      "problem": "burnt residue",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::burnt residue",
+      "title": "How to Remove burnt residue from bathtub surrounds",
+      "slug": "how-to-remove-burnt-residue-from-bathtub-surrounds",
+      "problem": "burnt residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::burnt residue",
+      "title": "How to Prevent burnt residue on bathtub surrounds",
+      "slug": "how-to-prevent-burnt-residue-on-bathtub-surrounds",
+      "problem": "burnt residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::burnt residue",
+      "title": "How to Fix burnt residue on bathtub surrounds",
+      "slug": "how-to-fix-burnt-residue-on-bathtub-surrounds",
+      "problem": "burnt residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::burnt residue",
+      "title": "How to Clean burnt residue from bathtub surrounds",
+      "slug": "how-to-clean-burnt-residue-from-bathtub-surrounds",
+      "problem": "burnt residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::burnt residue",
+      "title": "How to Tell if burnt residue on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-burnt-residue-on-bathtub-surrounds-is-permanent",
+      "problem": "burnt residue",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::burnt residue",
+      "title": "Why burnt residue Keeps Coming Back on bathtub surrounds",
+      "slug": "why-burnt-residue-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "burnt residue",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::burnt residue",
+      "title": "How to Maintain bathtub surrounds and Keep burnt residue Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-burnt-residue-under-control",
+      "problem": "burnt residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::burnt residue",
+      "title": "How to Recover After a Cleaning Mistake With burnt residue on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burnt-residue-on-bathtub-surrounds",
+      "problem": "burnt residue",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::burnt residue",
+      "title": "What Causes burnt residue on ceramic tile",
+      "slug": "what-causes-burnt-residue-on-ceramic-tile",
+      "problem": "burnt residue",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::burnt residue",
+      "title": "How to Remove burnt residue from ceramic tile",
+      "slug": "how-to-remove-burnt-residue-from-ceramic-tile",
+      "problem": "burnt residue",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::burnt residue",
+      "title": "How to Prevent burnt residue on ceramic tile",
+      "slug": "how-to-prevent-burnt-residue-on-ceramic-tile",
+      "problem": "burnt residue",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::burnt residue",
+      "title": "How to Fix burnt residue on ceramic tile",
+      "slug": "how-to-fix-burnt-residue-on-ceramic-tile",
+      "problem": "burnt residue",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-remove::shower glass::discoloration",
+      "title": "How to Remove discoloration from shower glass",
+      "slug": "how-to-remove-discoloration-from-shower-glass",
+      "problem": "discoloration",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::discoloration",
+      "title": "How to Prevent discoloration on shower glass",
+      "slug": "how-to-prevent-discoloration-on-shower-glass",
+      "problem": "discoloration",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::discoloration",
+      "title": "How to Fix discoloration on shower glass",
+      "slug": "how-to-fix-discoloration-on-shower-glass",
+      "problem": "discoloration",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::discoloration",
+      "title": "How to Clean discoloration from shower glass",
+      "slug": "how-to-clean-discoloration-from-shower-glass",
+      "problem": "discoloration",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::discoloration",
+      "title": "How to Tell if discoloration on shower glass is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-shower-glass-is-permanent",
+      "problem": "discoloration",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::discoloration",
+      "title": "Why discoloration Keeps Coming Back on shower glass",
+      "slug": "why-discoloration-keeps-coming-back-on-shower-glass",
+      "problem": "discoloration",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::discoloration",
+      "title": "How to Maintain shower glass and Keep discoloration Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-shower-glass",
+      "problem": "discoloration",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::discoloration",
+      "title": "What Causes discoloration on granite",
+      "slug": "what-causes-discoloration-on-granite",
+      "problem": "discoloration",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::discoloration",
+      "title": "How to Remove discoloration from granite",
+      "slug": "how-to-remove-discoloration-from-granite",
+      "problem": "discoloration",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::discoloration",
+      "title": "How to Prevent discoloration on granite",
+      "slug": "how-to-prevent-discoloration-on-granite",
+      "problem": "discoloration",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::discoloration",
+      "title": "How to Fix discoloration on granite",
+      "slug": "how-to-fix-discoloration-on-granite",
+      "problem": "discoloration",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::discoloration",
+      "title": "How to Clean discoloration from granite",
+      "slug": "how-to-clean-discoloration-from-granite",
+      "problem": "discoloration",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::discoloration",
+      "title": "How to Tell if discoloration on granite is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-granite-is-permanent",
+      "problem": "discoloration",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::discoloration",
+      "title": "Why discoloration Keeps Coming Back on granite",
+      "slug": "why-discoloration-keeps-coming-back-on-granite",
+      "problem": "discoloration",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::discoloration",
+      "title": "How to Maintain granite and Keep discoloration Under Control",
+      "slug": "how-to-maintain-granite-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-granite",
+      "problem": "discoloration",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::discoloration",
+      "title": "What Causes discoloration on marble",
+      "slug": "what-causes-discoloration-on-marble",
+      "problem": "discoloration",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::discoloration",
+      "title": "How to Remove discoloration from marble",
+      "slug": "how-to-remove-discoloration-from-marble",
+      "problem": "discoloration",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::discoloration",
+      "title": "How to Prevent discoloration on marble",
+      "slug": "how-to-prevent-discoloration-on-marble",
+      "problem": "discoloration",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::discoloration",
+      "title": "How to Fix discoloration on marble",
+      "slug": "how-to-fix-discoloration-on-marble",
+      "problem": "discoloration",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::discoloration",
+      "title": "How to Clean discoloration from marble",
+      "slug": "how-to-clean-discoloration-from-marble",
+      "problem": "discoloration",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::discoloration",
+      "title": "How to Tell if discoloration on marble is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-marble-is-permanent",
+      "problem": "discoloration",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::discoloration",
+      "title": "Why discoloration Keeps Coming Back on marble",
+      "slug": "why-discoloration-keeps-coming-back-on-marble",
+      "problem": "discoloration",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::discoloration",
+      "title": "How to Maintain marble and Keep discoloration Under Control",
+      "slug": "how-to-maintain-marble-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-marble",
+      "problem": "discoloration",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::discoloration",
+      "title": "What Causes discoloration on quartz",
+      "slug": "what-causes-discoloration-on-quartz",
+      "problem": "discoloration",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::discoloration",
+      "title": "How to Remove discoloration from quartz",
+      "slug": "how-to-remove-discoloration-from-quartz",
+      "problem": "discoloration",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::discoloration",
+      "title": "How to Prevent discoloration on quartz",
+      "slug": "how-to-prevent-discoloration-on-quartz",
+      "problem": "discoloration",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::discoloration",
+      "title": "How to Fix discoloration on quartz",
+      "slug": "how-to-fix-discoloration-on-quartz",
+      "problem": "discoloration",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::discoloration",
+      "title": "How to Clean discoloration from quartz",
+      "slug": "how-to-clean-discoloration-from-quartz",
+      "problem": "discoloration",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::discoloration",
+      "title": "How to Tell if discoloration on quartz is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-quartz-is-permanent",
+      "problem": "discoloration",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::discoloration",
+      "title": "Why discoloration Keeps Coming Back on quartz",
+      "slug": "why-discoloration-keeps-coming-back-on-quartz",
+      "problem": "discoloration",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::discoloration",
+      "title": "How to Maintain quartz and Keep discoloration Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-quartz",
+      "problem": "discoloration",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::discoloration",
+      "title": "What Causes discoloration on laminate",
+      "slug": "what-causes-discoloration-on-laminate",
+      "problem": "discoloration",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::discoloration",
+      "title": "How to Remove discoloration from laminate",
+      "slug": "how-to-remove-discoloration-from-laminate",
+      "problem": "discoloration",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::discoloration",
+      "title": "How to Prevent discoloration on laminate",
+      "slug": "how-to-prevent-discoloration-on-laminate",
+      "problem": "discoloration",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::discoloration",
+      "title": "How to Fix discoloration on laminate",
+      "slug": "how-to-fix-discoloration-on-laminate",
+      "problem": "discoloration",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::discoloration",
+      "title": "How to Clean discoloration from laminate",
+      "slug": "how-to-clean-discoloration-from-laminate",
+      "problem": "discoloration",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::discoloration",
+      "title": "How to Tell if discoloration on laminate is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-laminate-is-permanent",
+      "problem": "discoloration",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::discoloration",
+      "title": "Why discoloration Keeps Coming Back on laminate",
+      "slug": "why-discoloration-keeps-coming-back-on-laminate",
+      "problem": "discoloration",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::discoloration",
+      "title": "How to Maintain laminate and Keep discoloration Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-laminate",
+      "problem": "discoloration",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::discoloration",
+      "title": "What Causes discoloration on wood",
+      "slug": "what-causes-discoloration-on-wood",
+      "problem": "discoloration",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::discoloration",
+      "title": "How to Remove discoloration from wood",
+      "slug": "how-to-remove-discoloration-from-wood",
+      "problem": "discoloration",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::discoloration",
+      "title": "How to Prevent discoloration on wood",
+      "slug": "how-to-prevent-discoloration-on-wood",
+      "problem": "discoloration",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::discoloration",
+      "title": "How to Fix discoloration on wood",
+      "slug": "how-to-fix-discoloration-on-wood",
+      "problem": "discoloration",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::discoloration",
+      "title": "How to Clean discoloration from wood",
+      "slug": "how-to-clean-discoloration-from-wood",
+      "problem": "discoloration",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::discoloration",
+      "title": "How to Tell if discoloration on wood is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-wood-is-permanent",
+      "problem": "discoloration",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::discoloration",
+      "title": "Why discoloration Keeps Coming Back on wood",
+      "slug": "why-discoloration-keeps-coming-back-on-wood",
+      "problem": "discoloration",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::discoloration",
+      "title": "How to Maintain wood and Keep discoloration Under Control",
+      "slug": "how-to-maintain-wood-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-wood",
+      "problem": "discoloration",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::discoloration",
+      "title": "What Causes discoloration on grout",
+      "slug": "what-causes-discoloration-on-grout",
+      "problem": "discoloration",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::discoloration",
+      "title": "How to Remove discoloration from grout",
+      "slug": "how-to-remove-discoloration-from-grout",
+      "problem": "discoloration",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::discoloration",
+      "title": "How to Prevent discoloration on grout",
+      "slug": "how-to-prevent-discoloration-on-grout",
+      "problem": "discoloration",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::discoloration",
+      "title": "How to Fix discoloration on grout",
+      "slug": "how-to-fix-discoloration-on-grout",
+      "problem": "discoloration",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::discoloration",
+      "title": "How to Clean discoloration from grout",
+      "slug": "how-to-clean-discoloration-from-grout",
+      "problem": "discoloration",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::discoloration",
+      "title": "How to Tell if discoloration on grout is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-grout-is-permanent",
+      "problem": "discoloration",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::discoloration",
+      "title": "Why discoloration Keeps Coming Back on grout",
+      "slug": "why-discoloration-keeps-coming-back-on-grout",
+      "problem": "discoloration",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::discoloration",
+      "title": "How to Maintain grout and Keep discoloration Under Control",
+      "slug": "how-to-maintain-grout-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-grout",
+      "problem": "discoloration",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::discoloration",
+      "title": "What Causes discoloration on shower doors",
+      "slug": "what-causes-discoloration-on-shower-doors",
+      "problem": "discoloration",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::discoloration",
+      "title": "How to Remove discoloration from shower doors",
+      "slug": "how-to-remove-discoloration-from-shower-doors",
+      "problem": "discoloration",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::discoloration",
+      "title": "How to Prevent discoloration on shower doors",
+      "slug": "how-to-prevent-discoloration-on-shower-doors",
+      "problem": "discoloration",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::discoloration",
+      "title": "How to Fix discoloration on shower doors",
+      "slug": "how-to-fix-discoloration-on-shower-doors",
+      "problem": "discoloration",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::discoloration",
+      "title": "How to Clean discoloration from shower doors",
+      "slug": "how-to-clean-discoloration-from-shower-doors",
+      "problem": "discoloration",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::discoloration",
+      "title": "How to Tell if discoloration on shower doors is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-shower-doors-is-permanent",
+      "problem": "discoloration",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::discoloration",
+      "title": "Why discoloration Keeps Coming Back on shower doors",
+      "slug": "why-discoloration-keeps-coming-back-on-shower-doors",
+      "problem": "discoloration",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::discoloration",
+      "title": "How to Maintain shower doors and Keep discoloration Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-shower-doors",
+      "problem": "discoloration",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::discoloration",
+      "title": "What Causes discoloration on sealed stone",
+      "slug": "what-causes-discoloration-on-sealed-stone",
+      "problem": "discoloration",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::discoloration",
+      "title": "How to Remove discoloration from sealed stone",
+      "slug": "how-to-remove-discoloration-from-sealed-stone",
+      "problem": "discoloration",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::discoloration",
+      "title": "How to Prevent discoloration on sealed stone",
+      "slug": "how-to-prevent-discoloration-on-sealed-stone",
+      "problem": "discoloration",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::discoloration",
+      "title": "How to Fix discoloration on sealed stone",
+      "slug": "how-to-fix-discoloration-on-sealed-stone",
+      "problem": "discoloration",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::discoloration",
+      "title": "How to Clean discoloration from sealed stone",
+      "slug": "how-to-clean-discoloration-from-sealed-stone",
+      "problem": "discoloration",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::discoloration",
+      "title": "How to Tell if discoloration on sealed stone is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-sealed-stone-is-permanent",
+      "problem": "discoloration",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::discoloration",
+      "title": "Why discoloration Keeps Coming Back on sealed stone",
+      "slug": "why-discoloration-keeps-coming-back-on-sealed-stone",
+      "problem": "discoloration",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::discoloration",
+      "title": "How to Maintain sealed stone and Keep discoloration Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-sealed-stone",
+      "problem": "discoloration",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::discoloration",
+      "title": "What Causes discoloration on shower grout",
+      "slug": "what-causes-discoloration-on-shower-grout",
+      "problem": "discoloration",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::discoloration",
+      "title": "How to Remove discoloration from shower grout",
+      "slug": "how-to-remove-discoloration-from-shower-grout",
+      "problem": "discoloration",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::discoloration",
+      "title": "How to Prevent discoloration on shower grout",
+      "slug": "how-to-prevent-discoloration-on-shower-grout",
+      "problem": "discoloration",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::discoloration",
+      "title": "How to Fix discoloration on shower grout",
+      "slug": "how-to-fix-discoloration-on-shower-grout",
+      "problem": "discoloration",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::discoloration",
+      "title": "How to Clean discoloration from shower grout",
+      "slug": "how-to-clean-discoloration-from-shower-grout",
+      "problem": "discoloration",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::discoloration",
+      "title": "How to Tell if discoloration on shower grout is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-shower-grout-is-permanent",
+      "problem": "discoloration",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::discoloration",
+      "title": "Why discoloration Keeps Coming Back on shower grout",
+      "slug": "why-discoloration-keeps-coming-back-on-shower-grout",
+      "problem": "discoloration",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::discoloration",
+      "title": "How to Maintain shower grout and Keep discoloration Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-shower-grout",
+      "problem": "discoloration",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::discoloration",
+      "title": "What Causes discoloration on tile grout",
+      "slug": "what-causes-discoloration-on-tile-grout",
+      "problem": "discoloration",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::discoloration",
+      "title": "How to Remove discoloration from tile grout",
+      "slug": "how-to-remove-discoloration-from-tile-grout",
+      "problem": "discoloration",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::discoloration",
+      "title": "How to Prevent discoloration on tile grout",
+      "slug": "how-to-prevent-discoloration-on-tile-grout",
+      "problem": "discoloration",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::discoloration",
+      "title": "How to Fix discoloration on tile grout",
+      "slug": "how-to-fix-discoloration-on-tile-grout",
+      "problem": "discoloration",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::discoloration",
+      "title": "How to Clean discoloration from tile grout",
+      "slug": "how-to-clean-discoloration-from-tile-grout",
+      "problem": "discoloration",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::discoloration",
+      "title": "How to Tell if discoloration on tile grout is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-tile-grout-is-permanent",
+      "problem": "discoloration",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::discoloration",
+      "title": "Why discoloration Keeps Coming Back on tile grout",
+      "slug": "why-discoloration-keeps-coming-back-on-tile-grout",
+      "problem": "discoloration",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::discoloration",
+      "title": "How to Maintain tile grout and Keep discoloration Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-tile-grout",
+      "problem": "discoloration",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::discoloration",
+      "title": "What Causes discoloration on caulking",
+      "slug": "what-causes-discoloration-on-caulking",
+      "problem": "discoloration",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::discoloration",
+      "title": "How to Remove discoloration from caulking",
+      "slug": "how-to-remove-discoloration-from-caulking",
+      "problem": "discoloration",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

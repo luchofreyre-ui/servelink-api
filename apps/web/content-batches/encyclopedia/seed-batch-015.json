@@ -1,0 +1,29 @@
+{
+  "targets": [
+    { "surface": "glass", "problem": "oil stains" },
+    { "surface": "glass", "problem": "food residue" },
+    { "surface": "glass", "problem": "protein residue" },
+    { "surface": "glass", "problem": "rust stains" },
+    { "surface": "glass", "problem": "tannin stains" },
+    { "surface": "glass", "problem": "bacteria buildup" },
+    { "surface": "glass", "problem": "etching" },
+    { "surface": "glass", "problem": "oxidation" },
+    { "surface": "glass", "problem": "corrosion" },
+    { "surface": "glass", "problem": "tarnish" },
+    { "surface": "glass", "problem": "heat damage" },
+    { "surface": "glass", "problem": "uneven finish" },
+
+    { "surface": "laminate", "problem": "oil stains" },
+    { "surface": "laminate", "problem": "food residue" },
+    { "surface": "laminate", "problem": "protein residue" },
+    { "surface": "laminate", "problem": "rust stains" },
+    { "surface": "laminate", "problem": "tannin stains" },
+    { "surface": "laminate", "problem": "bacteria buildup" },
+    { "surface": "laminate", "problem": "etching" },
+    { "surface": "laminate", "problem": "oxidation" },
+    { "surface": "laminate", "problem": "corrosion" },
+    { "surface": "laminate", "problem": "tarnish" },
+    { "surface": "laminate", "problem": "heat damage" },
+    { "surface": "laminate", "problem": "uneven finish" }
+  ]
+}

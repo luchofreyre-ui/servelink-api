@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-remove::granite::white film",
+      "title": "How to Remove white film from granite",
+      "slug": "how-to-remove-white-film-from-granite",
+      "problem": "white film",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::white film",
+      "title": "How to Prevent white film on granite",
+      "slug": "how-to-prevent-white-film-on-granite",
+      "problem": "white film",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::white film",
+      "title": "How to Fix white film on granite",
+      "slug": "how-to-fix-white-film-on-granite",
+      "problem": "white film",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::white film",
+      "title": "How to Clean white film from granite",
+      "slug": "how-to-clean-white-film-from-granite",
+      "problem": "white film",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::white film",
+      "title": "How to Tell if white film on granite is Permanent",
+      "slug": "how-to-tell-if-white-film-on-granite-is-permanent",
+      "problem": "white film",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::white film",
+      "title": "Why white film Keeps Coming Back on granite",
+      "slug": "why-white-film-keeps-coming-back-on-granite",
+      "problem": "white film",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::white film",
+      "title": "How to Maintain granite and Keep white film Under Control",
+      "slug": "how-to-maintain-granite-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-granite",
+      "problem": "white film",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::white film",
+      "title": "What Causes white film on marble",
+      "slug": "what-causes-white-film-on-marble",
+      "problem": "white film",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::white film",
+      "title": "How to Remove white film from marble",
+      "slug": "how-to-remove-white-film-from-marble",
+      "problem": "white film",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::white film",
+      "title": "How to Prevent white film on marble",
+      "slug": "how-to-prevent-white-film-on-marble",
+      "problem": "white film",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::white film",
+      "title": "How to Fix white film on marble",
+      "slug": "how-to-fix-white-film-on-marble",
+      "problem": "white film",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::white film",
+      "title": "How to Clean white film from marble",
+      "slug": "how-to-clean-white-film-from-marble",
+      "problem": "white film",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::white film",
+      "title": "How to Tell if white film on marble is Permanent",
+      "slug": "how-to-tell-if-white-film-on-marble-is-permanent",
+      "problem": "white film",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::white film",
+      "title": "Why white film Keeps Coming Back on marble",
+      "slug": "why-white-film-keeps-coming-back-on-marble",
+      "problem": "white film",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::white film",
+      "title": "How to Maintain marble and Keep white film Under Control",
+      "slug": "how-to-maintain-marble-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-marble",
+      "problem": "white film",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::white film",
+      "title": "What Causes white film on quartz",
+      "slug": "what-causes-white-film-on-quartz",
+      "problem": "white film",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::white film",
+      "title": "How to Remove white film from quartz",
+      "slug": "how-to-remove-white-film-from-quartz",
+      "problem": "white film",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::white film",
+      "title": "How to Prevent white film on quartz",
+      "slug": "how-to-prevent-white-film-on-quartz",
+      "problem": "white film",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::white film",
+      "title": "How to Fix white film on quartz",
+      "slug": "how-to-fix-white-film-on-quartz",
+      "problem": "white film",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::white film",
+      "title": "How to Clean white film from quartz",
+      "slug": "how-to-clean-white-film-from-quartz",
+      "problem": "white film",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::white film",
+      "title": "How to Tell if white film on quartz is Permanent",
+      "slug": "how-to-tell-if-white-film-on-quartz-is-permanent",
+      "problem": "white film",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::white film",
+      "title": "Why white film Keeps Coming Back on quartz",
+      "slug": "why-white-film-keeps-coming-back-on-quartz",
+      "problem": "white film",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::white film",
+      "title": "How to Maintain quartz and Keep white film Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-quartz",
+      "problem": "white film",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::white film",
+      "title": "What Causes white film on laminate",
+      "slug": "what-causes-white-film-on-laminate",
+      "problem": "white film",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::white film",
+      "title": "How to Remove white film from laminate",
+      "slug": "how-to-remove-white-film-from-laminate",
+      "problem": "white film",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::white film",
+      "title": "How to Prevent white film on laminate",
+      "slug": "how-to-prevent-white-film-on-laminate",
+      "problem": "white film",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::white film",
+      "title": "How to Fix white film on laminate",
+      "slug": "how-to-fix-white-film-on-laminate",
+      "problem": "white film",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::white film",
+      "title": "How to Clean white film from laminate",
+      "slug": "how-to-clean-white-film-from-laminate",
+      "problem": "white film",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::white film",
+      "title": "How to Tell if white film on laminate is Permanent",
+      "slug": "how-to-tell-if-white-film-on-laminate-is-permanent",
+      "problem": "white film",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::white film",
+      "title": "Why white film Keeps Coming Back on laminate",
+      "slug": "why-white-film-keeps-coming-back-on-laminate",
+      "problem": "white film",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::white film",
+      "title": "How to Maintain laminate and Keep white film Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-laminate",
+      "problem": "white film",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::white film",
+      "title": "What Causes white film on wood",
+      "slug": "what-causes-white-film-on-wood",
+      "problem": "white film",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::white film",
+      "title": "How to Remove white film from wood",
+      "slug": "how-to-remove-white-film-from-wood",
+      "problem": "white film",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::white film",
+      "title": "How to Prevent white film on wood",
+      "slug": "how-to-prevent-white-film-on-wood",
+      "problem": "white film",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::white film",
+      "title": "How to Fix white film on wood",
+      "slug": "how-to-fix-white-film-on-wood",
+      "problem": "white film",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::white film",
+      "title": "How to Clean white film from wood",
+      "slug": "how-to-clean-white-film-from-wood",
+      "problem": "white film",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::white film",
+      "title": "How to Tell if white film on wood is Permanent",
+      "slug": "how-to-tell-if-white-film-on-wood-is-permanent",
+      "problem": "white film",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::white film",
+      "title": "Why white film Keeps Coming Back on wood",
+      "slug": "why-white-film-keeps-coming-back-on-wood",
+      "problem": "white film",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::white film",
+      "title": "How to Maintain wood and Keep white film Under Control",
+      "slug": "how-to-maintain-wood-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-wood",
+      "problem": "white film",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::white film",
+      "title": "What Causes white film on grout",
+      "slug": "what-causes-white-film-on-grout",
+      "problem": "white film",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::white film",
+      "title": "How to Remove white film from grout",
+      "slug": "how-to-remove-white-film-from-grout",
+      "problem": "white film",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::white film",
+      "title": "How to Prevent white film on grout",
+      "slug": "how-to-prevent-white-film-on-grout",
+      "problem": "white film",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::white film",
+      "title": "How to Fix white film on grout",
+      "slug": "how-to-fix-white-film-on-grout",
+      "problem": "white film",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::white film",
+      "title": "How to Clean white film from grout",
+      "slug": "how-to-clean-white-film-from-grout",
+      "problem": "white film",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::white film",
+      "title": "How to Tell if white film on grout is Permanent",
+      "slug": "how-to-tell-if-white-film-on-grout-is-permanent",
+      "problem": "white film",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::white film",
+      "title": "Why white film Keeps Coming Back on grout",
+      "slug": "why-white-film-keeps-coming-back-on-grout",
+      "problem": "white film",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::white film",
+      "title": "How to Maintain grout and Keep white film Under Control",
+      "slug": "how-to-maintain-grout-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-grout",
+      "problem": "white film",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::white film",
+      "title": "What Causes white film on shower doors",
+      "slug": "what-causes-white-film-on-shower-doors",
+      "problem": "white film",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::white film",
+      "title": "How to Remove white film from shower doors",
+      "slug": "how-to-remove-white-film-from-shower-doors",
+      "problem": "white film",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::white film",
+      "title": "How to Prevent white film on shower doors",
+      "slug": "how-to-prevent-white-film-on-shower-doors",
+      "problem": "white film",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::white film",
+      "title": "How to Fix white film on shower doors",
+      "slug": "how-to-fix-white-film-on-shower-doors",
+      "problem": "white film",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::white film",
+      "title": "How to Clean white film from shower doors",
+      "slug": "how-to-clean-white-film-from-shower-doors",
+      "problem": "white film",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::white film",
+      "title": "How to Tell if white film on shower doors is Permanent",
+      "slug": "how-to-tell-if-white-film-on-shower-doors-is-permanent",
+      "problem": "white film",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::white film",
+      "title": "Why white film Keeps Coming Back on shower doors",
+      "slug": "why-white-film-keeps-coming-back-on-shower-doors",
+      "problem": "white film",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::white film",
+      "title": "How to Maintain shower doors and Keep white film Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-shower-doors",
+      "problem": "white film",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::white film",
+      "title": "What Causes white film on sealed stone",
+      "slug": "what-causes-white-film-on-sealed-stone",
+      "problem": "white film",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::white film",
+      "title": "How to Remove white film from sealed stone",
+      "slug": "how-to-remove-white-film-from-sealed-stone",
+      "problem": "white film",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::white film",
+      "title": "How to Prevent white film on sealed stone",
+      "slug": "how-to-prevent-white-film-on-sealed-stone",
+      "problem": "white film",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::white film",
+      "title": "How to Fix white film on sealed stone",
+      "slug": "how-to-fix-white-film-on-sealed-stone",
+      "problem": "white film",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::white film",
+      "title": "How to Clean white film from sealed stone",
+      "slug": "how-to-clean-white-film-from-sealed-stone",
+      "problem": "white film",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::white film",
+      "title": "How to Tell if white film on sealed stone is Permanent",
+      "slug": "how-to-tell-if-white-film-on-sealed-stone-is-permanent",
+      "problem": "white film",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::white film",
+      "title": "Why white film Keeps Coming Back on sealed stone",
+      "slug": "why-white-film-keeps-coming-back-on-sealed-stone",
+      "problem": "white film",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::white film",
+      "title": "How to Maintain sealed stone and Keep white film Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-sealed-stone",
+      "problem": "white film",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::white film",
+      "title": "What Causes white film on shower grout",
+      "slug": "what-causes-white-film-on-shower-grout",
+      "problem": "white film",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::white film",
+      "title": "How to Remove white film from shower grout",
+      "slug": "how-to-remove-white-film-from-shower-grout",
+      "problem": "white film",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::white film",
+      "title": "How to Prevent white film on shower grout",
+      "slug": "how-to-prevent-white-film-on-shower-grout",
+      "problem": "white film",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::white film",
+      "title": "How to Fix white film on shower grout",
+      "slug": "how-to-fix-white-film-on-shower-grout",
+      "problem": "white film",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::white film",
+      "title": "How to Clean white film from shower grout",
+      "slug": "how-to-clean-white-film-from-shower-grout",
+      "problem": "white film",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::white film",
+      "title": "How to Tell if white film on shower grout is Permanent",
+      "slug": "how-to-tell-if-white-film-on-shower-grout-is-permanent",
+      "problem": "white film",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::white film",
+      "title": "Why white film Keeps Coming Back on shower grout",
+      "slug": "why-white-film-keeps-coming-back-on-shower-grout",
+      "problem": "white film",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::white film",
+      "title": "How to Maintain shower grout and Keep white film Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-shower-grout",
+      "problem": "white film",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::white film",
+      "title": "What Causes white film on tile grout",
+      "slug": "what-causes-white-film-on-tile-grout",
+      "problem": "white film",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::white film",
+      "title": "How to Remove white film from tile grout",
+      "slug": "how-to-remove-white-film-from-tile-grout",
+      "problem": "white film",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::white film",
+      "title": "How to Prevent white film on tile grout",
+      "slug": "how-to-prevent-white-film-on-tile-grout",
+      "problem": "white film",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::white film",
+      "title": "How to Fix white film on tile grout",
+      "slug": "how-to-fix-white-film-on-tile-grout",
+      "problem": "white film",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::white film",
+      "title": "How to Clean white film from tile grout",
+      "slug": "how-to-clean-white-film-from-tile-grout",
+      "problem": "white film",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::white film",
+      "title": "How to Tell if white film on tile grout is Permanent",
+      "slug": "how-to-tell-if-white-film-on-tile-grout-is-permanent",
+      "problem": "white film",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::white film",
+      "title": "Why white film Keeps Coming Back on tile grout",
+      "slug": "why-white-film-keeps-coming-back-on-tile-grout",
+      "problem": "white film",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::white film",
+      "title": "How to Maintain tile grout and Keep white film Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-tile-grout",
+      "problem": "white film",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::white film",
+      "title": "What Causes white film on caulking",
+      "slug": "what-causes-white-film-on-caulking",
+      "problem": "white film",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::white film",
+      "title": "How to Remove white film from caulking",
+      "slug": "how-to-remove-white-film-from-caulking",
+      "problem": "white film",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::white film",
+      "title": "How to Prevent white film on caulking",
+      "slug": "how-to-prevent-white-film-on-caulking",
+      "problem": "white film",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::white film",
+      "title": "How to Fix white film on caulking",
+      "slug": "how-to-fix-white-film-on-caulking",
+      "problem": "white film",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::white film",
+      "title": "How to Clean white film from caulking",
+      "slug": "how-to-clean-white-film-from-caulking",
+      "problem": "white film",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::white film",
+      "title": "How to Tell if white film on caulking is Permanent",
+      "slug": "how-to-tell-if-white-film-on-caulking-is-permanent",
+      "problem": "white film",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::white film",
+      "title": "Why white film Keeps Coming Back on caulking",
+      "slug": "why-white-film-keeps-coming-back-on-caulking",
+      "problem": "white film",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::white film",
+      "title": "How to Maintain caulking and Keep white film Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-caulking",
+      "problem": "white film",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::white film",
+      "title": "What Causes white film on sealed granite",
+      "slug": "what-causes-white-film-on-sealed-granite",
+      "problem": "white film",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::white film",
+      "title": "How to Remove white film from sealed granite",
+      "slug": "how-to-remove-white-film-from-sealed-granite",
+      "problem": "white film",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

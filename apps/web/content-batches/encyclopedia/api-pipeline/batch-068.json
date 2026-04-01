@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-clean::sealed stone::streaking",
+      "title": "How to Clean streaking from sealed stone",
+      "slug": "how-to-clean-streaking-from-sealed-stone",
+      "problem": "streaking",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::streaking",
+      "title": "How to Tell if streaking on sealed stone is Permanent",
+      "slug": "how-to-tell-if-streaking-on-sealed-stone-is-permanent",
+      "problem": "streaking",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::streaking",
+      "title": "Why streaking Keeps Coming Back on sealed stone",
+      "slug": "why-streaking-keeps-coming-back-on-sealed-stone",
+      "problem": "streaking",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::streaking",
+      "title": "How to Maintain sealed stone and Keep streaking Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-sealed-stone",
+      "problem": "streaking",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::streaking",
+      "title": "What Causes streaking on shower grout",
+      "slug": "what-causes-streaking-on-shower-grout",
+      "problem": "streaking",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::streaking",
+      "title": "How to Remove streaking from shower grout",
+      "slug": "how-to-remove-streaking-from-shower-grout",
+      "problem": "streaking",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::streaking",
+      "title": "How to Prevent streaking on shower grout",
+      "slug": "how-to-prevent-streaking-on-shower-grout",
+      "problem": "streaking",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::streaking",
+      "title": "How to Fix streaking on shower grout",
+      "slug": "how-to-fix-streaking-on-shower-grout",
+      "problem": "streaking",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::streaking",
+      "title": "How to Clean streaking from shower grout",
+      "slug": "how-to-clean-streaking-from-shower-grout",
+      "problem": "streaking",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::streaking",
+      "title": "How to Tell if streaking on shower grout is Permanent",
+      "slug": "how-to-tell-if-streaking-on-shower-grout-is-permanent",
+      "problem": "streaking",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::streaking",
+      "title": "Why streaking Keeps Coming Back on shower grout",
+      "slug": "why-streaking-keeps-coming-back-on-shower-grout",
+      "problem": "streaking",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::streaking",
+      "title": "How to Maintain shower grout and Keep streaking Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-shower-grout",
+      "problem": "streaking",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::streaking",
+      "title": "What Causes streaking on tile grout",
+      "slug": "what-causes-streaking-on-tile-grout",
+      "problem": "streaking",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::streaking",
+      "title": "How to Remove streaking from tile grout",
+      "slug": "how-to-remove-streaking-from-tile-grout",
+      "problem": "streaking",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::streaking",
+      "title": "How to Prevent streaking on tile grout",
+      "slug": "how-to-prevent-streaking-on-tile-grout",
+      "problem": "streaking",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::streaking",
+      "title": "How to Fix streaking on tile grout",
+      "slug": "how-to-fix-streaking-on-tile-grout",
+      "problem": "streaking",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::streaking",
+      "title": "How to Clean streaking from tile grout",
+      "slug": "how-to-clean-streaking-from-tile-grout",
+      "problem": "streaking",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::streaking",
+      "title": "How to Tell if streaking on tile grout is Permanent",
+      "slug": "how-to-tell-if-streaking-on-tile-grout-is-permanent",
+      "problem": "streaking",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::streaking",
+      "title": "Why streaking Keeps Coming Back on tile grout",
+      "slug": "why-streaking-keeps-coming-back-on-tile-grout",
+      "problem": "streaking",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::streaking",
+      "title": "How to Maintain tile grout and Keep streaking Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-tile-grout",
+      "problem": "streaking",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::streaking",
+      "title": "What Causes streaking on caulking",
+      "slug": "what-causes-streaking-on-caulking",
+      "problem": "streaking",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::streaking",
+      "title": "How to Remove streaking from caulking",
+      "slug": "how-to-remove-streaking-from-caulking",
+      "problem": "streaking",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::streaking",
+      "title": "How to Prevent streaking on caulking",
+      "slug": "how-to-prevent-streaking-on-caulking",
+      "problem": "streaking",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::streaking",
+      "title": "How to Fix streaking on caulking",
+      "slug": "how-to-fix-streaking-on-caulking",
+      "problem": "streaking",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::streaking",
+      "title": "How to Clean streaking from caulking",
+      "slug": "how-to-clean-streaking-from-caulking",
+      "problem": "streaking",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::streaking",
+      "title": "How to Tell if streaking on caulking is Permanent",
+      "slug": "how-to-tell-if-streaking-on-caulking-is-permanent",
+      "problem": "streaking",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::streaking",
+      "title": "Why streaking Keeps Coming Back on caulking",
+      "slug": "why-streaking-keeps-coming-back-on-caulking",
+      "problem": "streaking",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::streaking",
+      "title": "How to Maintain caulking and Keep streaking Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-caulking",
+      "problem": "streaking",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::streaking",
+      "title": "What Causes streaking on shower pans",
+      "slug": "what-causes-streaking-on-shower-pans",
+      "problem": "streaking",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::streaking",
+      "title": "How to Remove streaking from shower pans",
+      "slug": "how-to-remove-streaking-from-shower-pans",
+      "problem": "streaking",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::streaking",
+      "title": "How to Prevent streaking on shower pans",
+      "slug": "how-to-prevent-streaking-on-shower-pans",
+      "problem": "streaking",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::streaking",
+      "title": "How to Fix streaking on shower pans",
+      "slug": "how-to-fix-streaking-on-shower-pans",
+      "problem": "streaking",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::streaking",
+      "title": "How to Clean streaking from shower pans",
+      "slug": "how-to-clean-streaking-from-shower-pans",
+      "problem": "streaking",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::streaking",
+      "title": "How to Tell if streaking on shower pans is Permanent",
+      "slug": "how-to-tell-if-streaking-on-shower-pans-is-permanent",
+      "problem": "streaking",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::streaking",
+      "title": "Why streaking Keeps Coming Back on shower pans",
+      "slug": "why-streaking-keeps-coming-back-on-shower-pans",
+      "problem": "streaking",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::streaking",
+      "title": "How to Maintain shower pans and Keep streaking Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-shower-pans",
+      "problem": "streaking",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::streaking",
+      "title": "What Causes streaking on bathtub surrounds",
+      "slug": "what-causes-streaking-on-bathtub-surrounds",
+      "problem": "streaking",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::streaking",
+      "title": "How to Remove streaking from bathtub surrounds",
+      "slug": "how-to-remove-streaking-from-bathtub-surrounds",
+      "problem": "streaking",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::streaking",
+      "title": "How to Prevent streaking on bathtub surrounds",
+      "slug": "how-to-prevent-streaking-on-bathtub-surrounds",
+      "problem": "streaking",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::streaking",
+      "title": "How to Fix streaking on bathtub surrounds",
+      "slug": "how-to-fix-streaking-on-bathtub-surrounds",
+      "problem": "streaking",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::streaking",
+      "title": "How to Clean streaking from bathtub surrounds",
+      "slug": "how-to-clean-streaking-from-bathtub-surrounds",
+      "problem": "streaking",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::streaking",
+      "title": "How to Tell if streaking on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-streaking-on-bathtub-surrounds-is-permanent",
+      "problem": "streaking",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::streaking",
+      "title": "Why streaking Keeps Coming Back on bathtub surrounds",
+      "slug": "why-streaking-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "streaking",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::streaking",
+      "title": "How to Maintain bathtub surrounds and Keep streaking Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-bathtub-surrounds",
+      "problem": "streaking",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::streaking",
+      "title": "What Causes streaking on ceramic tile",
+      "slug": "what-causes-streaking-on-ceramic-tile",
+      "problem": "streaking",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::streaking",
+      "title": "How to Remove streaking from ceramic tile",
+      "slug": "how-to-remove-streaking-from-ceramic-tile",
+      "problem": "streaking",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::streaking",
+      "title": "How to Prevent streaking on ceramic tile",
+      "slug": "how-to-prevent-streaking-on-ceramic-tile",
+      "problem": "streaking",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::streaking",
+      "title": "How to Fix streaking on ceramic tile",
+      "slug": "how-to-fix-streaking-on-ceramic-tile",
+      "problem": "streaking",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::streaking",
+      "title": "How to Clean streaking from ceramic tile",
+      "slug": "how-to-clean-streaking-from-ceramic-tile",
+      "problem": "streaking",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::streaking",
+      "title": "How to Tell if streaking on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-streaking-on-ceramic-tile-is-permanent",
+      "problem": "streaking",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::streaking",
+      "title": "Why streaking Keeps Coming Back on ceramic tile",
+      "slug": "why-streaking-keeps-coming-back-on-ceramic-tile",
+      "problem": "streaking",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::streaking",
+      "title": "How to Maintain ceramic tile and Keep streaking Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-ceramic-tile",
+      "problem": "streaking",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::streaking",
+      "title": "What Causes streaking on porcelain tile",
+      "slug": "what-causes-streaking-on-porcelain-tile",
+      "problem": "streaking",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::streaking",
+      "title": "How to Remove streaking from porcelain tile",
+      "slug": "how-to-remove-streaking-from-porcelain-tile",
+      "problem": "streaking",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::streaking",
+      "title": "How to Prevent streaking on porcelain tile",
+      "slug": "how-to-prevent-streaking-on-porcelain-tile",
+      "problem": "streaking",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::streaking",
+      "title": "How to Fix streaking on porcelain tile",
+      "slug": "how-to-fix-streaking-on-porcelain-tile",
+      "problem": "streaking",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::streaking",
+      "title": "How to Clean streaking from porcelain tile",
+      "slug": "how-to-clean-streaking-from-porcelain-tile",
+      "problem": "streaking",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::streaking",
+      "title": "How to Tell if streaking on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-streaking-on-porcelain-tile-is-permanent",
+      "problem": "streaking",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::streaking",
+      "title": "Why streaking Keeps Coming Back on porcelain tile",
+      "slug": "why-streaking-keeps-coming-back-on-porcelain-tile",
+      "problem": "streaking",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::streaking",
+      "title": "How to Maintain porcelain tile and Keep streaking Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-porcelain-tile",
+      "problem": "streaking",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::streaking",
+      "title": "What Causes streaking on sealed granite",
+      "slug": "what-causes-streaking-on-sealed-granite",
+      "problem": "streaking",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::streaking",
+      "title": "How to Remove streaking from sealed granite",
+      "slug": "how-to-remove-streaking-from-sealed-granite",
+      "problem": "streaking",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::streaking",
+      "title": "How to Prevent streaking on sealed granite",
+      "slug": "how-to-prevent-streaking-on-sealed-granite",
+      "problem": "streaking",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::streaking",
+      "title": "How to Fix streaking on sealed granite",
+      "slug": "how-to-fix-streaking-on-sealed-granite",
+      "problem": "streaking",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::streaking",
+      "title": "How to Clean streaking from sealed granite",
+      "slug": "how-to-clean-streaking-from-sealed-granite",
+      "problem": "streaking",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::streaking",
+      "title": "How to Tell if streaking on sealed granite is Permanent",
+      "slug": "how-to-tell-if-streaking-on-sealed-granite-is-permanent",
+      "problem": "streaking",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::streaking",
+      "title": "Why streaking Keeps Coming Back on sealed granite",
+      "slug": "why-streaking-keeps-coming-back-on-sealed-granite",
+      "problem": "streaking",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::streaking",
+      "title": "How to Maintain sealed granite and Keep streaking Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-sealed-granite",
+      "problem": "streaking",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::streaking",
+      "title": "What Causes streaking on sealed marble",
+      "slug": "what-causes-streaking-on-sealed-marble",
+      "problem": "streaking",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::streaking",
+      "title": "How to Remove streaking from sealed marble",
+      "slug": "how-to-remove-streaking-from-sealed-marble",
+      "problem": "streaking",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::streaking",
+      "title": "How to Prevent streaking on sealed marble",
+      "slug": "how-to-prevent-streaking-on-sealed-marble",
+      "problem": "streaking",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::streaking",
+      "title": "How to Fix streaking on sealed marble",
+      "slug": "how-to-fix-streaking-on-sealed-marble",
+      "problem": "streaking",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::streaking",
+      "title": "How to Clean streaking from sealed marble",
+      "slug": "how-to-clean-streaking-from-sealed-marble",
+      "problem": "streaking",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::streaking",
+      "title": "How to Tell if streaking on sealed marble is Permanent",
+      "slug": "how-to-tell-if-streaking-on-sealed-marble-is-permanent",
+      "problem": "streaking",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::streaking",
+      "title": "Why streaking Keeps Coming Back on sealed marble",
+      "slug": "why-streaking-keeps-coming-back-on-sealed-marble",
+      "problem": "streaking",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::streaking",
+      "title": "How to Maintain sealed marble and Keep streaking Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-sealed-marble",
+      "problem": "streaking",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::streaking",
+      "title": "What Causes streaking on quartz countertops",
+      "slug": "what-causes-streaking-on-quartz-countertops",
+      "problem": "streaking",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::streaking",
+      "title": "How to Remove streaking from quartz countertops",
+      "slug": "how-to-remove-streaking-from-quartz-countertops",
+      "problem": "streaking",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::streaking",
+      "title": "How to Prevent streaking on quartz countertops",
+      "slug": "how-to-prevent-streaking-on-quartz-countertops",
+      "problem": "streaking",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::streaking",
+      "title": "How to Fix streaking on quartz countertops",
+      "slug": "how-to-fix-streaking-on-quartz-countertops",
+      "problem": "streaking",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::streaking",
+      "title": "How to Clean streaking from quartz countertops",
+      "slug": "how-to-clean-streaking-from-quartz-countertops",
+      "problem": "streaking",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::streaking",
+      "title": "How to Tell if streaking on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-streaking-on-quartz-countertops-is-permanent",
+      "problem": "streaking",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::streaking",
+      "title": "Why streaking Keeps Coming Back on quartz countertops",
+      "slug": "why-streaking-keeps-coming-back-on-quartz-countertops",
+      "problem": "streaking",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::streaking",
+      "title": "How to Maintain quartz countertops and Keep streaking Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-quartz-countertops",
+      "problem": "streaking",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::streaking",
+      "title": "What Causes streaking on butcher block",
+      "slug": "what-causes-streaking-on-butcher-block",
+      "problem": "streaking",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::streaking",
+      "title": "How to Remove streaking from butcher block",
+      "slug": "how-to-remove-streaking-from-butcher-block",
+      "problem": "streaking",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::streaking",
+      "title": "How to Prevent streaking on butcher block",
+      "slug": "how-to-prevent-streaking-on-butcher-block",
+      "problem": "streaking",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::streaking",
+      "title": "How to Fix streaking on butcher block",
+      "slug": "how-to-fix-streaking-on-butcher-block",
+      "problem": "streaking",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::streaking",
+      "title": "How to Clean streaking from butcher block",
+      "slug": "how-to-clean-streaking-from-butcher-block",
+      "problem": "streaking",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

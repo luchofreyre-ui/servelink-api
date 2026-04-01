@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "mistake-recovery::grout::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-grout",
+      "problem": "adhesive residue",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::glass cooktops::adhesive residue",
+      "title": "What Causes adhesive residue on glass cooktops",
+      "slug": "what-causes-adhesive-residue-on-glass-cooktops",
+      "problem": "adhesive residue",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::glass cooktops::adhesive residue",
+      "title": "How to Remove adhesive residue from glass cooktops",
+      "slug": "how-to-remove-adhesive-residue-from-glass-cooktops",
+      "problem": "adhesive residue",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::glass cooktops::adhesive residue",
+      "title": "How to Prevent adhesive residue on glass cooktops",
+      "slug": "how-to-prevent-adhesive-residue-on-glass-cooktops",
+      "problem": "adhesive residue",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::glass cooktops::adhesive residue",
+      "title": "How to Fix adhesive residue on glass cooktops",
+      "slug": "how-to-fix-adhesive-residue-on-glass-cooktops",
+      "problem": "adhesive residue",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::glass cooktops::adhesive residue",
+      "title": "How to Clean adhesive residue from glass cooktops",
+      "slug": "how-to-clean-adhesive-residue-from-glass-cooktops",
+      "problem": "adhesive residue",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::glass cooktops::adhesive residue",
+      "title": "How to Tell if adhesive residue on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-glass-cooktops-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::glass cooktops::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on glass cooktops",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-glass-cooktops",
+      "problem": "adhesive residue",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::glass cooktops::adhesive residue",
+      "title": "How to Maintain glass cooktops and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::glass cooktops::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-glass-cooktops",
+      "problem": "adhesive residue",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted cabinets::adhesive residue",
+      "title": "What Causes adhesive residue on painted cabinets",
+      "slug": "what-causes-adhesive-residue-on-painted-cabinets",
+      "problem": "adhesive residue",
+      "surface": "painted cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted cabinets::adhesive residue",
+      "title": "How to Remove adhesive residue from painted cabinets",
+      "slug": "how-to-remove-adhesive-residue-from-painted-cabinets",
+      "problem": "adhesive residue",
+      "surface": "painted cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted cabinets::adhesive residue",
+      "title": "How to Prevent adhesive residue on painted cabinets",
+      "slug": "how-to-prevent-adhesive-residue-on-painted-cabinets",
+      "problem": "adhesive residue",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted cabinets::adhesive residue",
+      "title": "How to Fix adhesive residue on painted cabinets",
+      "slug": "how-to-fix-adhesive-residue-on-painted-cabinets",
+      "problem": "adhesive residue",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted cabinets::adhesive residue",
+      "title": "How to Clean adhesive residue from painted cabinets",
+      "slug": "how-to-clean-adhesive-residue-from-painted-cabinets",
+      "problem": "adhesive residue",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted cabinets::adhesive residue",
+      "title": "How to Tell if adhesive residue on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-painted-cabinets-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted cabinets::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on painted cabinets",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-painted-cabinets",
+      "problem": "adhesive residue",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted cabinets::adhesive residue",
+      "title": "How to Maintain painted cabinets and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted cabinets::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-painted-cabinets",
+      "problem": "adhesive residue",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::adhesive residue",
+      "title": "What Causes adhesive residue on sealed stone",
+      "slug": "what-causes-adhesive-residue-on-sealed-stone",
+      "problem": "adhesive residue",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::adhesive residue",
+      "title": "How to Remove adhesive residue from sealed stone",
+      "slug": "how-to-remove-adhesive-residue-from-sealed-stone",
+      "problem": "adhesive residue",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::adhesive residue",
+      "title": "How to Prevent adhesive residue on sealed stone",
+      "slug": "how-to-prevent-adhesive-residue-on-sealed-stone",
+      "problem": "adhesive residue",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::adhesive residue",
+      "title": "How to Fix adhesive residue on sealed stone",
+      "slug": "how-to-fix-adhesive-residue-on-sealed-stone",
+      "problem": "adhesive residue",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::adhesive residue",
+      "title": "How to Clean adhesive residue from sealed stone",
+      "slug": "how-to-clean-adhesive-residue-from-sealed-stone",
+      "problem": "adhesive residue",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::adhesive residue",
+      "title": "How to Tell if adhesive residue on sealed stone is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-sealed-stone-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on sealed stone",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-sealed-stone",
+      "problem": "adhesive residue",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::adhesive residue",
+      "title": "How to Maintain sealed stone and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-sealed-stone",
+      "problem": "adhesive residue",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::adhesive residue",
+      "title": "What Causes adhesive residue on shower grout",
+      "slug": "what-causes-adhesive-residue-on-shower-grout",
+      "problem": "adhesive residue",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::adhesive residue",
+      "title": "How to Remove adhesive residue from shower grout",
+      "slug": "how-to-remove-adhesive-residue-from-shower-grout",
+      "problem": "adhesive residue",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::adhesive residue",
+      "title": "How to Prevent adhesive residue on shower grout",
+      "slug": "how-to-prevent-adhesive-residue-on-shower-grout",
+      "problem": "adhesive residue",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::adhesive residue",
+      "title": "How to Fix adhesive residue on shower grout",
+      "slug": "how-to-fix-adhesive-residue-on-shower-grout",
+      "problem": "adhesive residue",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::adhesive residue",
+      "title": "How to Clean adhesive residue from shower grout",
+      "slug": "how-to-clean-adhesive-residue-from-shower-grout",
+      "problem": "adhesive residue",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::adhesive residue",
+      "title": "How to Tell if adhesive residue on shower grout is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-shower-grout-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on shower grout",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-shower-grout",
+      "problem": "adhesive residue",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::adhesive residue",
+      "title": "How to Maintain shower grout and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-shower-grout",
+      "problem": "adhesive residue",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::adhesive residue",
+      "title": "What Causes adhesive residue on tile grout",
+      "slug": "what-causes-adhesive-residue-on-tile-grout",
+      "problem": "adhesive residue",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::adhesive residue",
+      "title": "How to Remove adhesive residue from tile grout",
+      "slug": "how-to-remove-adhesive-residue-from-tile-grout",
+      "problem": "adhesive residue",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::adhesive residue",
+      "title": "How to Prevent adhesive residue on tile grout",
+      "slug": "how-to-prevent-adhesive-residue-on-tile-grout",
+      "problem": "adhesive residue",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::adhesive residue",
+      "title": "How to Fix adhesive residue on tile grout",
+      "slug": "how-to-fix-adhesive-residue-on-tile-grout",
+      "problem": "adhesive residue",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::adhesive residue",
+      "title": "How to Clean adhesive residue from tile grout",
+      "slug": "how-to-clean-adhesive-residue-from-tile-grout",
+      "problem": "adhesive residue",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::adhesive residue",
+      "title": "How to Tell if adhesive residue on tile grout is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-tile-grout-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on tile grout",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-tile-grout",
+      "problem": "adhesive residue",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::adhesive residue",
+      "title": "How to Maintain tile grout and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-tile-grout",
+      "problem": "adhesive residue",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::adhesive residue",
+      "title": "What Causes adhesive residue on caulking",
+      "slug": "what-causes-adhesive-residue-on-caulking",
+      "problem": "adhesive residue",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::adhesive residue",
+      "title": "How to Remove adhesive residue from caulking",
+      "slug": "how-to-remove-adhesive-residue-from-caulking",
+      "problem": "adhesive residue",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::adhesive residue",
+      "title": "How to Prevent adhesive residue on caulking",
+      "slug": "how-to-prevent-adhesive-residue-on-caulking",
+      "problem": "adhesive residue",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::adhesive residue",
+      "title": "How to Fix adhesive residue on caulking",
+      "slug": "how-to-fix-adhesive-residue-on-caulking",
+      "problem": "adhesive residue",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::adhesive residue",
+      "title": "How to Clean adhesive residue from caulking",
+      "slug": "how-to-clean-adhesive-residue-from-caulking",
+      "problem": "adhesive residue",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::adhesive residue",
+      "title": "How to Tell if adhesive residue on caulking is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-caulking-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on caulking",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-caulking",
+      "problem": "adhesive residue",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::adhesive residue",
+      "title": "How to Maintain caulking and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-caulking",
+      "problem": "adhesive residue",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::adhesive residue",
+      "title": "What Causes adhesive residue on shower pans",
+      "slug": "what-causes-adhesive-residue-on-shower-pans",
+      "problem": "adhesive residue",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::adhesive residue",
+      "title": "How to Remove adhesive residue from shower pans",
+      "slug": "how-to-remove-adhesive-residue-from-shower-pans",
+      "problem": "adhesive residue",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::adhesive residue",
+      "title": "How to Prevent adhesive residue on shower pans",
+      "slug": "how-to-prevent-adhesive-residue-on-shower-pans",
+      "problem": "adhesive residue",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::adhesive residue",
+      "title": "How to Fix adhesive residue on shower pans",
+      "slug": "how-to-fix-adhesive-residue-on-shower-pans",
+      "problem": "adhesive residue",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::adhesive residue",
+      "title": "How to Clean adhesive residue from shower pans",
+      "slug": "how-to-clean-adhesive-residue-from-shower-pans",
+      "problem": "adhesive residue",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::adhesive residue",
+      "title": "How to Tell if adhesive residue on shower pans is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-shower-pans-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on shower pans",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-shower-pans",
+      "problem": "adhesive residue",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::adhesive residue",
+      "title": "How to Maintain shower pans and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-shower-pans",
+      "problem": "adhesive residue",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::adhesive residue",
+      "title": "What Causes adhesive residue on bathtub surrounds",
+      "slug": "what-causes-adhesive-residue-on-bathtub-surrounds",
+      "problem": "adhesive residue",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::adhesive residue",
+      "title": "How to Remove adhesive residue from bathtub surrounds",
+      "slug": "how-to-remove-adhesive-residue-from-bathtub-surrounds",
+      "problem": "adhesive residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::adhesive residue",
+      "title": "How to Prevent adhesive residue on bathtub surrounds",
+      "slug": "how-to-prevent-adhesive-residue-on-bathtub-surrounds",
+      "problem": "adhesive residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::adhesive residue",
+      "title": "How to Fix adhesive residue on bathtub surrounds",
+      "slug": "how-to-fix-adhesive-residue-on-bathtub-surrounds",
+      "problem": "adhesive residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::adhesive residue",
+      "title": "How to Clean adhesive residue from bathtub surrounds",
+      "slug": "how-to-clean-adhesive-residue-from-bathtub-surrounds",
+      "problem": "adhesive residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::adhesive residue",
+      "title": "How to Tell if adhesive residue on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-bathtub-surrounds-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on bathtub surrounds",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "adhesive residue",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::adhesive residue",
+      "title": "How to Maintain bathtub surrounds and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-bathtub-surrounds",
+      "problem": "adhesive residue",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::adhesive residue",
+      "title": "What Causes adhesive residue on ceramic tile",
+      "slug": "what-causes-adhesive-residue-on-ceramic-tile",
+      "problem": "adhesive residue",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::adhesive residue",
+      "title": "How to Remove adhesive residue from ceramic tile",
+      "slug": "how-to-remove-adhesive-residue-from-ceramic-tile",
+      "problem": "adhesive residue",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::adhesive residue",
+      "title": "How to Prevent adhesive residue on ceramic tile",
+      "slug": "how-to-prevent-adhesive-residue-on-ceramic-tile",
+      "problem": "adhesive residue",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::adhesive residue",
+      "title": "How to Fix adhesive residue on ceramic tile",
+      "slug": "how-to-fix-adhesive-residue-on-ceramic-tile",
+      "problem": "adhesive residue",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::adhesive residue",
+      "title": "How to Clean adhesive residue from ceramic tile",
+      "slug": "how-to-clean-adhesive-residue-from-ceramic-tile",
+      "problem": "adhesive residue",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::adhesive residue",
+      "title": "How to Tell if adhesive residue on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-ceramic-tile-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on ceramic tile",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-ceramic-tile",
+      "problem": "adhesive residue",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::adhesive residue",
+      "title": "How to Maintain ceramic tile and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-ceramic-tile",
+      "problem": "adhesive residue",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::adhesive residue",
+      "title": "What Causes adhesive residue on porcelain tile",
+      "slug": "what-causes-adhesive-residue-on-porcelain-tile",
+      "problem": "adhesive residue",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::adhesive residue",
+      "title": "How to Remove adhesive residue from porcelain tile",
+      "slug": "how-to-remove-adhesive-residue-from-porcelain-tile",
+      "problem": "adhesive residue",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::adhesive residue",
+      "title": "How to Prevent adhesive residue on porcelain tile",
+      "slug": "how-to-prevent-adhesive-residue-on-porcelain-tile",
+      "problem": "adhesive residue",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::adhesive residue",
+      "title": "How to Fix adhesive residue on porcelain tile",
+      "slug": "how-to-fix-adhesive-residue-on-porcelain-tile",
+      "problem": "adhesive residue",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::adhesive residue",
+      "title": "How to Clean adhesive residue from porcelain tile",
+      "slug": "how-to-clean-adhesive-residue-from-porcelain-tile",
+      "problem": "adhesive residue",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::adhesive residue",
+      "title": "How to Tell if adhesive residue on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-porcelain-tile-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on porcelain tile",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-porcelain-tile",
+      "problem": "adhesive residue",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::adhesive residue",
+      "title": "How to Maintain porcelain tile and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-porcelain-tile",
+      "problem": "adhesive residue",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::adhesive residue",
+      "title": "What Causes adhesive residue on sealed granite",
+      "slug": "what-causes-adhesive-residue-on-sealed-granite",
+      "problem": "adhesive residue",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::adhesive residue",
+      "title": "How to Remove adhesive residue from sealed granite",
+      "slug": "how-to-remove-adhesive-residue-from-sealed-granite",
+      "problem": "adhesive residue",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::adhesive residue",
+      "title": "How to Prevent adhesive residue on sealed granite",
+      "slug": "how-to-prevent-adhesive-residue-on-sealed-granite",
+      "problem": "adhesive residue",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::adhesive residue",
+      "title": "How to Fix adhesive residue on sealed granite",
+      "slug": "how-to-fix-adhesive-residue-on-sealed-granite",
+      "problem": "adhesive residue",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::adhesive residue",
+      "title": "How to Clean adhesive residue from sealed granite",
+      "slug": "how-to-clean-adhesive-residue-from-sealed-granite",
+      "problem": "adhesive residue",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::adhesive residue",
+      "title": "How to Tell if adhesive residue on sealed granite is Permanent",
+      "slug": "how-to-tell-if-adhesive-residue-on-sealed-granite-is-permanent",
+      "problem": "adhesive residue",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::adhesive residue",
+      "title": "Why adhesive residue Keeps Coming Back on sealed granite",
+      "slug": "why-adhesive-residue-keeps-coming-back-on-sealed-granite",
+      "problem": "adhesive residue",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::adhesive residue",
+      "title": "How to Maintain sealed granite and Keep adhesive residue Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-adhesive-residue-under-control",
+      "problem": "adhesive residue",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::adhesive residue",
+      "title": "How to Recover After a Cleaning Mistake With adhesive residue on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-adhesive-residue-on-sealed-granite",
+      "problem": "adhesive residue",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

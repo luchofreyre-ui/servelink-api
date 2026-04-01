@@ -1,53 +1,1003 @@
 {
   "pages": [
     {
-      "id": "P-PL-NN-00701",
-      "title": "How to Clean uneven finish from dryers",
-      "slug": "how-to-clean-uneven-finish-from-dryers",
-      "problem": "uneven finish",
-      "surface": "dryers",
-      "intent": "how-clean",
-      "riskLevel": "medium",
-      "status": "draft"
-    },
-    {
-      "id": "P-PL-NN-00702",
-      "title": "How to Tell if uneven finish on dryers is Permanent",
-      "slug": "how-to-tell-if-uneven-finish-on-dryers-is-permanent",
-      "problem": "uneven finish",
-      "surface": "dryers",
-      "intent": "diagnosis",
-      "riskLevel": "high",
-      "status": "draft"
-    },
-    {
-      "id": "P-PL-NN-00703",
-      "title": "Why uneven finish Keeps Coming Back on dryers",
-      "slug": "why-uneven-finish-keeps-coming-back-on-dryers",
-      "problem": "uneven finish",
-      "surface": "dryers",
-      "intent": "why",
-      "riskLevel": "low",
-      "status": "draft"
-    },
-    {
-      "id": "P-PL-NN-00704",
-      "title": "How to Maintain dryers and Keep uneven finish Under Control",
-      "slug": "how-to-maintain-dryers-and-keep-uneven-finish-under-control",
-      "problem": "uneven finish",
-      "surface": "dryers",
+      "id": "how-maintain::unfinished wood::mineral deposits",
+      "title": "How to Maintain unfinished wood and Keep mineral deposits Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-mineral-deposits-under-control",
+      "problem": "mineral deposits",
+      "surface": "unfinished wood",
       "intent": "how-maintain",
       "riskLevel": "medium",
       "status": "draft"
     },
     {
-      "id": "P-PL-NN-00705",
-      "title": "How to Recover After a Cleaning Mistake With uneven finish on dryers",
-      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-dryers",
-      "problem": "uneven finish",
-      "surface": "dryers",
+      "id": "mistake-recovery::unfinished wood::mineral deposits",
+      "title": "How to Recover After a Cleaning Mistake With mineral deposits on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-deposits-on-unfinished-wood",
+      "problem": "mineral deposits",
+      "surface": "unfinished wood",
       "intent": "mistake-recovery",
-      "riskLevel": "high",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::mineral deposits",
+      "title": "What Causes mineral deposits on sealed wood",
+      "slug": "what-causes-mineral-deposits-on-sealed-wood",
+      "problem": "mineral deposits",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::mineral deposits",
+      "title": "How to Remove mineral deposits from sealed wood",
+      "slug": "how-to-remove-mineral-deposits-from-sealed-wood",
+      "problem": "mineral deposits",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::mineral deposits",
+      "title": "How to Prevent mineral deposits on sealed wood",
+      "slug": "how-to-prevent-mineral-deposits-on-sealed-wood",
+      "problem": "mineral deposits",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::mineral deposits",
+      "title": "How to Fix mineral deposits on sealed wood",
+      "slug": "how-to-fix-mineral-deposits-on-sealed-wood",
+      "problem": "mineral deposits",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::mineral deposits",
+      "title": "How to Clean mineral deposits from sealed wood",
+      "slug": "how-to-clean-mineral-deposits-from-sealed-wood",
+      "problem": "mineral deposits",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::mineral deposits",
+      "title": "How to Tell if mineral deposits on sealed wood is Permanent",
+      "slug": "how-to-tell-if-mineral-deposits-on-sealed-wood-is-permanent",
+      "problem": "mineral deposits",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::mineral deposits",
+      "title": "Why mineral deposits Keeps Coming Back on sealed wood",
+      "slug": "why-mineral-deposits-keeps-coming-back-on-sealed-wood",
+      "problem": "mineral deposits",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::mineral deposits",
+      "title": "How to Maintain sealed wood and Keep mineral deposits Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-mineral-deposits-under-control",
+      "problem": "mineral deposits",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::mineral deposits",
+      "title": "How to Recover After a Cleaning Mistake With mineral deposits on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-deposits-on-sealed-wood",
+      "problem": "mineral deposits",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::dust buildup",
+      "title": "What Causes dust buildup on shower glass",
+      "slug": "what-causes-dust-buildup-on-shower-glass",
+      "problem": "dust buildup",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::dust buildup",
+      "title": "How to Remove dust buildup from shower glass",
+      "slug": "how-to-remove-dust-buildup-from-shower-glass",
+      "problem": "dust buildup",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::dust buildup",
+      "title": "How to Prevent dust buildup on shower glass",
+      "slug": "how-to-prevent-dust-buildup-on-shower-glass",
+      "problem": "dust buildup",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::dust buildup",
+      "title": "How to Fix dust buildup on shower glass",
+      "slug": "how-to-fix-dust-buildup-on-shower-glass",
+      "problem": "dust buildup",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::dust buildup",
+      "title": "How to Clean dust buildup from shower glass",
+      "slug": "how-to-clean-dust-buildup-from-shower-glass",
+      "problem": "dust buildup",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::dust buildup",
+      "title": "How to Tell if dust buildup on shower glass is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-shower-glass-is-permanent",
+      "problem": "dust buildup",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on shower glass",
+      "slug": "why-dust-buildup-keeps-coming-back-on-shower-glass",
+      "problem": "dust buildup",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::dust buildup",
+      "title": "How to Maintain shower glass and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::dust buildup",
+      "title": "How to Recover After a Cleaning Mistake With dust buildup on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dust-buildup-on-shower-glass",
+      "problem": "dust buildup",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::dust buildup",
+      "title": "What Causes dust buildup on granite",
+      "slug": "what-causes-dust-buildup-on-granite",
+      "problem": "dust buildup",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::dust buildup",
+      "title": "How to Remove dust buildup from granite",
+      "slug": "how-to-remove-dust-buildup-from-granite",
+      "problem": "dust buildup",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::dust buildup",
+      "title": "How to Prevent dust buildup on granite",
+      "slug": "how-to-prevent-dust-buildup-on-granite",
+      "problem": "dust buildup",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::dust buildup",
+      "title": "How to Fix dust buildup on granite",
+      "slug": "how-to-fix-dust-buildup-on-granite",
+      "problem": "dust buildup",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::dust buildup",
+      "title": "How to Clean dust buildup from granite",
+      "slug": "how-to-clean-dust-buildup-from-granite",
+      "problem": "dust buildup",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::dust buildup",
+      "title": "How to Tell if dust buildup on granite is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-granite-is-permanent",
+      "problem": "dust buildup",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on granite",
+      "slug": "why-dust-buildup-keeps-coming-back-on-granite",
+      "problem": "dust buildup",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::dust buildup",
+      "title": "How to Maintain granite and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-granite-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::dust buildup",
+      "title": "How to Recover After a Cleaning Mistake With dust buildup on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dust-buildup-on-granite",
+      "problem": "dust buildup",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::dust buildup",
+      "title": "What Causes dust buildup on marble",
+      "slug": "what-causes-dust-buildup-on-marble",
+      "problem": "dust buildup",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::dust buildup",
+      "title": "How to Remove dust buildup from marble",
+      "slug": "how-to-remove-dust-buildup-from-marble",
+      "problem": "dust buildup",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::dust buildup",
+      "title": "How to Prevent dust buildup on marble",
+      "slug": "how-to-prevent-dust-buildup-on-marble",
+      "problem": "dust buildup",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::dust buildup",
+      "title": "How to Fix dust buildup on marble",
+      "slug": "how-to-fix-dust-buildup-on-marble",
+      "problem": "dust buildup",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::dust buildup",
+      "title": "How to Clean dust buildup from marble",
+      "slug": "how-to-clean-dust-buildup-from-marble",
+      "problem": "dust buildup",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::dust buildup",
+      "title": "How to Tell if dust buildup on marble is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-marble-is-permanent",
+      "problem": "dust buildup",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on marble",
+      "slug": "why-dust-buildup-keeps-coming-back-on-marble",
+      "problem": "dust buildup",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::dust buildup",
+      "title": "How to Maintain marble and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-marble-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::dust buildup",
+      "title": "How to Recover After a Cleaning Mistake With dust buildup on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dust-buildup-on-marble",
+      "problem": "dust buildup",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::dust buildup",
+      "title": "What Causes dust buildup on quartz",
+      "slug": "what-causes-dust-buildup-on-quartz",
+      "problem": "dust buildup",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::dust buildup",
+      "title": "How to Remove dust buildup from quartz",
+      "slug": "how-to-remove-dust-buildup-from-quartz",
+      "problem": "dust buildup",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::dust buildup",
+      "title": "How to Prevent dust buildup on quartz",
+      "slug": "how-to-prevent-dust-buildup-on-quartz",
+      "problem": "dust buildup",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::dust buildup",
+      "title": "How to Fix dust buildup on quartz",
+      "slug": "how-to-fix-dust-buildup-on-quartz",
+      "problem": "dust buildup",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::dust buildup",
+      "title": "How to Clean dust buildup from quartz",
+      "slug": "how-to-clean-dust-buildup-from-quartz",
+      "problem": "dust buildup",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::dust buildup",
+      "title": "How to Tell if dust buildup on quartz is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-quartz-is-permanent",
+      "problem": "dust buildup",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on quartz",
+      "slug": "why-dust-buildup-keeps-coming-back-on-quartz",
+      "problem": "dust buildup",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::dust buildup",
+      "title": "How to Maintain quartz and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::dust buildup",
+      "title": "How to Recover After a Cleaning Mistake With dust buildup on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dust-buildup-on-quartz",
+      "problem": "dust buildup",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::dust buildup",
+      "title": "What Causes dust buildup on wood",
+      "slug": "what-causes-dust-buildup-on-wood",
+      "problem": "dust buildup",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::dust buildup",
+      "title": "How to Remove dust buildup from wood",
+      "slug": "how-to-remove-dust-buildup-from-wood",
+      "problem": "dust buildup",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::dust buildup",
+      "title": "How to Prevent dust buildup on wood",
+      "slug": "how-to-prevent-dust-buildup-on-wood",
+      "problem": "dust buildup",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::dust buildup",
+      "title": "How to Fix dust buildup on wood",
+      "slug": "how-to-fix-dust-buildup-on-wood",
+      "problem": "dust buildup",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::dust buildup",
+      "title": "How to Clean dust buildup from wood",
+      "slug": "how-to-clean-dust-buildup-from-wood",
+      "problem": "dust buildup",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::dust buildup",
+      "title": "How to Tell if dust buildup on wood is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-wood-is-permanent",
+      "problem": "dust buildup",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on wood",
+      "slug": "why-dust-buildup-keeps-coming-back-on-wood",
+      "problem": "dust buildup",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::dust buildup",
+      "title": "How to Maintain wood and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-wood-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::dust buildup",
+      "title": "How to Recover After a Cleaning Mistake With dust buildup on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dust-buildup-on-wood",
+      "problem": "dust buildup",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::dust buildup",
+      "title": "What Causes dust buildup on grout",
+      "slug": "what-causes-dust-buildup-on-grout",
+      "problem": "dust buildup",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::dust buildup",
+      "title": "How to Remove dust buildup from grout",
+      "slug": "how-to-remove-dust-buildup-from-grout",
+      "problem": "dust buildup",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::dust buildup",
+      "title": "How to Prevent dust buildup on grout",
+      "slug": "how-to-prevent-dust-buildup-on-grout",
+      "problem": "dust buildup",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::dust buildup",
+      "title": "How to Fix dust buildup on grout",
+      "slug": "how-to-fix-dust-buildup-on-grout",
+      "problem": "dust buildup",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::dust buildup",
+      "title": "How to Clean dust buildup from grout",
+      "slug": "how-to-clean-dust-buildup-from-grout",
+      "problem": "dust buildup",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::dust buildup",
+      "title": "How to Tell if dust buildup on grout is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-grout-is-permanent",
+      "problem": "dust buildup",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on grout",
+      "slug": "why-dust-buildup-keeps-coming-back-on-grout",
+      "problem": "dust buildup",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::dust buildup",
+      "title": "How to Maintain grout and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-grout-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::dust buildup",
+      "title": "How to Recover After a Cleaning Mistake With dust buildup on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dust-buildup-on-grout",
+      "problem": "dust buildup",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::dust buildup",
+      "title": "What Causes dust buildup on shower doors",
+      "slug": "what-causes-dust-buildup-on-shower-doors",
+      "problem": "dust buildup",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::dust buildup",
+      "title": "How to Remove dust buildup from shower doors",
+      "slug": "how-to-remove-dust-buildup-from-shower-doors",
+      "problem": "dust buildup",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::dust buildup",
+      "title": "How to Prevent dust buildup on shower doors",
+      "slug": "how-to-prevent-dust-buildup-on-shower-doors",
+      "problem": "dust buildup",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::dust buildup",
+      "title": "How to Fix dust buildup on shower doors",
+      "slug": "how-to-fix-dust-buildup-on-shower-doors",
+      "problem": "dust buildup",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::dust buildup",
+      "title": "How to Clean dust buildup from shower doors",
+      "slug": "how-to-clean-dust-buildup-from-shower-doors",
+      "problem": "dust buildup",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::dust buildup",
+      "title": "How to Tell if dust buildup on shower doors is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-shower-doors-is-permanent",
+      "problem": "dust buildup",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on shower doors",
+      "slug": "why-dust-buildup-keeps-coming-back-on-shower-doors",
+      "problem": "dust buildup",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::dust buildup",
+      "title": "How to Maintain shower doors and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::dust buildup",
+      "title": "How to Recover After a Cleaning Mistake With dust buildup on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dust-buildup-on-shower-doors",
+      "problem": "dust buildup",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::dust buildup",
+      "title": "What Causes dust buildup on sealed stone",
+      "slug": "what-causes-dust-buildup-on-sealed-stone",
+      "problem": "dust buildup",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::dust buildup",
+      "title": "How to Remove dust buildup from sealed stone",
+      "slug": "how-to-remove-dust-buildup-from-sealed-stone",
+      "problem": "dust buildup",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::dust buildup",
+      "title": "How to Prevent dust buildup on sealed stone",
+      "slug": "how-to-prevent-dust-buildup-on-sealed-stone",
+      "problem": "dust buildup",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::dust buildup",
+      "title": "How to Fix dust buildup on sealed stone",
+      "slug": "how-to-fix-dust-buildup-on-sealed-stone",
+      "problem": "dust buildup",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::dust buildup",
+      "title": "How to Clean dust buildup from sealed stone",
+      "slug": "how-to-clean-dust-buildup-from-sealed-stone",
+      "problem": "dust buildup",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::dust buildup",
+      "title": "How to Tell if dust buildup on sealed stone is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-sealed-stone-is-permanent",
+      "problem": "dust buildup",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on sealed stone",
+      "slug": "why-dust-buildup-keeps-coming-back-on-sealed-stone",
+      "problem": "dust buildup",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::dust buildup",
+      "title": "How to Maintain sealed stone and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::dust buildup",
+      "title": "How to Recover After a Cleaning Mistake With dust buildup on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dust-buildup-on-sealed-stone",
+      "problem": "dust buildup",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::dust buildup",
+      "title": "What Causes dust buildup on shower grout",
+      "slug": "what-causes-dust-buildup-on-shower-grout",
+      "problem": "dust buildup",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::dust buildup",
+      "title": "How to Remove dust buildup from shower grout",
+      "slug": "how-to-remove-dust-buildup-from-shower-grout",
+      "problem": "dust buildup",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::dust buildup",
+      "title": "How to Prevent dust buildup on shower grout",
+      "slug": "how-to-prevent-dust-buildup-on-shower-grout",
+      "problem": "dust buildup",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::dust buildup",
+      "title": "How to Fix dust buildup on shower grout",
+      "slug": "how-to-fix-dust-buildup-on-shower-grout",
+      "problem": "dust buildup",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::dust buildup",
+      "title": "How to Clean dust buildup from shower grout",
+      "slug": "how-to-clean-dust-buildup-from-shower-grout",
+      "problem": "dust buildup",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::dust buildup",
+      "title": "How to Tell if dust buildup on shower grout is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-shower-grout-is-permanent",
+      "problem": "dust buildup",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on shower grout",
+      "slug": "why-dust-buildup-keeps-coming-back-on-shower-grout",
+      "problem": "dust buildup",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::dust buildup",
+      "title": "How to Maintain shower grout and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::dust buildup",
+      "title": "How to Recover After a Cleaning Mistake With dust buildup on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dust-buildup-on-shower-grout",
+      "problem": "dust buildup",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::dust buildup",
+      "title": "What Causes dust buildup on tile grout",
+      "slug": "what-causes-dust-buildup-on-tile-grout",
+      "problem": "dust buildup",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::dust buildup",
+      "title": "How to Remove dust buildup from tile grout",
+      "slug": "how-to-remove-dust-buildup-from-tile-grout",
+      "problem": "dust buildup",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::dust buildup",
+      "title": "How to Prevent dust buildup on tile grout",
+      "slug": "how-to-prevent-dust-buildup-on-tile-grout",
+      "problem": "dust buildup",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::dust buildup",
+      "title": "How to Fix dust buildup on tile grout",
+      "slug": "how-to-fix-dust-buildup-on-tile-grout",
+      "problem": "dust buildup",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::dust buildup",
+      "title": "How to Clean dust buildup from tile grout",
+      "slug": "how-to-clean-dust-buildup-from-tile-grout",
+      "problem": "dust buildup",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::dust buildup",
+      "title": "How to Tell if dust buildup on tile grout is Permanent",
+      "slug": "how-to-tell-if-dust-buildup-on-tile-grout-is-permanent",
+      "problem": "dust buildup",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::dust buildup",
+      "title": "Why dust buildup Keeps Coming Back on tile grout",
+      "slug": "why-dust-buildup-keeps-coming-back-on-tile-grout",
+      "problem": "dust buildup",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::dust buildup",
+      "title": "How to Maintain tile grout and Keep dust buildup Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-dust-buildup-under-control",
+      "problem": "dust buildup",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
       "status": "draft"
     }
   ]

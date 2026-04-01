@@ -15,6 +15,11 @@ export type CanonicalPageSnapshot = {
   sections: Array<{ key: string; title: string; content: string }>;
   advancedNotes?: string;
   internalLinks?: string[];
+  seo?: {
+    title: string;
+    slug: string;
+    metaDescription: string;
+  };
 };
 
 export type IngestGeneratedBatchOptions = {

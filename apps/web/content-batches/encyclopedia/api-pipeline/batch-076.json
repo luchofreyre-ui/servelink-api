@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-fix::quartz::dullness",
+      "title": "How to Fix dullness on quartz",
+      "slug": "how-to-fix-dullness-on-quartz",
+      "problem": "dullness",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::dullness",
+      "title": "How to Clean dullness from quartz",
+      "slug": "how-to-clean-dullness-from-quartz",
+      "problem": "dullness",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::dullness",
+      "title": "How to Tell if dullness on quartz is Permanent",
+      "slug": "how-to-tell-if-dullness-on-quartz-is-permanent",
+      "problem": "dullness",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::dullness",
+      "title": "Why dullness Keeps Coming Back on quartz",
+      "slug": "why-dullness-keeps-coming-back-on-quartz",
+      "problem": "dullness",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::dullness",
+      "title": "How to Maintain quartz and Keep dullness Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-quartz",
+      "problem": "dullness",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::dullness",
+      "title": "What Causes dullness on wood",
+      "slug": "what-causes-dullness-on-wood",
+      "problem": "dullness",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::dullness",
+      "title": "How to Remove dullness from wood",
+      "slug": "how-to-remove-dullness-from-wood",
+      "problem": "dullness",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::dullness",
+      "title": "How to Prevent dullness on wood",
+      "slug": "how-to-prevent-dullness-on-wood",
+      "problem": "dullness",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::dullness",
+      "title": "How to Fix dullness on wood",
+      "slug": "how-to-fix-dullness-on-wood",
+      "problem": "dullness",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::dullness",
+      "title": "How to Clean dullness from wood",
+      "slug": "how-to-clean-dullness-from-wood",
+      "problem": "dullness",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::dullness",
+      "title": "How to Tell if dullness on wood is Permanent",
+      "slug": "how-to-tell-if-dullness-on-wood-is-permanent",
+      "problem": "dullness",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::dullness",
+      "title": "Why dullness Keeps Coming Back on wood",
+      "slug": "why-dullness-keeps-coming-back-on-wood",
+      "problem": "dullness",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::dullness",
+      "title": "How to Maintain wood and Keep dullness Under Control",
+      "slug": "how-to-maintain-wood-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-wood",
+      "problem": "dullness",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted walls::dullness",
+      "title": "What Causes dullness on painted walls",
+      "slug": "what-causes-dullness-on-painted-walls",
+      "problem": "dullness",
+      "surface": "painted walls",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted walls::dullness",
+      "title": "How to Remove dullness from painted walls",
+      "slug": "how-to-remove-dullness-from-painted-walls",
+      "problem": "dullness",
+      "surface": "painted walls",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted walls::dullness",
+      "title": "How to Prevent dullness on painted walls",
+      "slug": "how-to-prevent-dullness-on-painted-walls",
+      "problem": "dullness",
+      "surface": "painted walls",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted walls::dullness",
+      "title": "How to Fix dullness on painted walls",
+      "slug": "how-to-fix-dullness-on-painted-walls",
+      "problem": "dullness",
+      "surface": "painted walls",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted walls::dullness",
+      "title": "How to Clean dullness from painted walls",
+      "slug": "how-to-clean-dullness-from-painted-walls",
+      "problem": "dullness",
+      "surface": "painted walls",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted walls::dullness",
+      "title": "How to Tell if dullness on painted walls is Permanent",
+      "slug": "how-to-tell-if-dullness-on-painted-walls-is-permanent",
+      "problem": "dullness",
+      "surface": "painted walls",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted walls::dullness",
+      "title": "Why dullness Keeps Coming Back on painted walls",
+      "slug": "why-dullness-keeps-coming-back-on-painted-walls",
+      "problem": "dullness",
+      "surface": "painted walls",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted walls::dullness",
+      "title": "How to Maintain painted walls and Keep dullness Under Control",
+      "slug": "how-to-maintain-painted-walls-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "painted walls",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted walls::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on painted walls",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-painted-walls",
+      "problem": "dullness",
+      "surface": "painted walls",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::dullness",
+      "title": "What Causes dullness on grout",
+      "slug": "what-causes-dullness-on-grout",
+      "problem": "dullness",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::dullness",
+      "title": "How to Remove dullness from grout",
+      "slug": "how-to-remove-dullness-from-grout",
+      "problem": "dullness",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::dullness",
+      "title": "How to Prevent dullness on grout",
+      "slug": "how-to-prevent-dullness-on-grout",
+      "problem": "dullness",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::dullness",
+      "title": "How to Fix dullness on grout",
+      "slug": "how-to-fix-dullness-on-grout",
+      "problem": "dullness",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::dullness",
+      "title": "How to Clean dullness from grout",
+      "slug": "how-to-clean-dullness-from-grout",
+      "problem": "dullness",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::dullness",
+      "title": "How to Tell if dullness on grout is Permanent",
+      "slug": "how-to-tell-if-dullness-on-grout-is-permanent",
+      "problem": "dullness",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::dullness",
+      "title": "Why dullness Keeps Coming Back on grout",
+      "slug": "why-dullness-keeps-coming-back-on-grout",
+      "problem": "dullness",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::dullness",
+      "title": "How to Maintain grout and Keep dullness Under Control",
+      "slug": "how-to-maintain-grout-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-grout",
+      "problem": "dullness",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::glass cooktops::dullness",
+      "title": "What Causes dullness on glass cooktops",
+      "slug": "what-causes-dullness-on-glass-cooktops",
+      "problem": "dullness",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::glass cooktops::dullness",
+      "title": "How to Remove dullness from glass cooktops",
+      "slug": "how-to-remove-dullness-from-glass-cooktops",
+      "problem": "dullness",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::glass cooktops::dullness",
+      "title": "How to Prevent dullness on glass cooktops",
+      "slug": "how-to-prevent-dullness-on-glass-cooktops",
+      "problem": "dullness",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::glass cooktops::dullness",
+      "title": "How to Fix dullness on glass cooktops",
+      "slug": "how-to-fix-dullness-on-glass-cooktops",
+      "problem": "dullness",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::glass cooktops::dullness",
+      "title": "How to Clean dullness from glass cooktops",
+      "slug": "how-to-clean-dullness-from-glass-cooktops",
+      "problem": "dullness",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::glass cooktops::dullness",
+      "title": "How to Tell if dullness on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-dullness-on-glass-cooktops-is-permanent",
+      "problem": "dullness",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::glass cooktops::dullness",
+      "title": "Why dullness Keeps Coming Back on glass cooktops",
+      "slug": "why-dullness-keeps-coming-back-on-glass-cooktops",
+      "problem": "dullness",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::glass cooktops::dullness",
+      "title": "How to Maintain glass cooktops and Keep dullness Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::glass cooktops::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-glass-cooktops",
+      "problem": "dullness",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::dullness",
+      "title": "What Causes dullness on shower doors",
+      "slug": "what-causes-dullness-on-shower-doors",
+      "problem": "dullness",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::dullness",
+      "title": "How to Remove dullness from shower doors",
+      "slug": "how-to-remove-dullness-from-shower-doors",
+      "problem": "dullness",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::dullness",
+      "title": "How to Prevent dullness on shower doors",
+      "slug": "how-to-prevent-dullness-on-shower-doors",
+      "problem": "dullness",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::dullness",
+      "title": "How to Fix dullness on shower doors",
+      "slug": "how-to-fix-dullness-on-shower-doors",
+      "problem": "dullness",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::dullness",
+      "title": "How to Clean dullness from shower doors",
+      "slug": "how-to-clean-dullness-from-shower-doors",
+      "problem": "dullness",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::dullness",
+      "title": "How to Tell if dullness on shower doors is Permanent",
+      "slug": "how-to-tell-if-dullness-on-shower-doors-is-permanent",
+      "problem": "dullness",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::dullness",
+      "title": "Why dullness Keeps Coming Back on shower doors",
+      "slug": "why-dullness-keeps-coming-back-on-shower-doors",
+      "problem": "dullness",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::dullness",
+      "title": "How to Maintain shower doors and Keep dullness Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-shower-doors",
+      "problem": "dullness",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted cabinets::dullness",
+      "title": "What Causes dullness on painted cabinets",
+      "slug": "what-causes-dullness-on-painted-cabinets",
+      "problem": "dullness",
+      "surface": "painted cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted cabinets::dullness",
+      "title": "How to Remove dullness from painted cabinets",
+      "slug": "how-to-remove-dullness-from-painted-cabinets",
+      "problem": "dullness",
+      "surface": "painted cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted cabinets::dullness",
+      "title": "How to Prevent dullness on painted cabinets",
+      "slug": "how-to-prevent-dullness-on-painted-cabinets",
+      "problem": "dullness",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted cabinets::dullness",
+      "title": "How to Fix dullness on painted cabinets",
+      "slug": "how-to-fix-dullness-on-painted-cabinets",
+      "problem": "dullness",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted cabinets::dullness",
+      "title": "How to Clean dullness from painted cabinets",
+      "slug": "how-to-clean-dullness-from-painted-cabinets",
+      "problem": "dullness",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted cabinets::dullness",
+      "title": "How to Tell if dullness on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-dullness-on-painted-cabinets-is-permanent",
+      "problem": "dullness",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted cabinets::dullness",
+      "title": "Why dullness Keeps Coming Back on painted cabinets",
+      "slug": "why-dullness-keeps-coming-back-on-painted-cabinets",
+      "problem": "dullness",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted cabinets::dullness",
+      "title": "How to Maintain painted cabinets and Keep dullness Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted cabinets::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-painted-cabinets",
+      "problem": "dullness",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::dullness",
+      "title": "What Causes dullness on sealed stone",
+      "slug": "what-causes-dullness-on-sealed-stone",
+      "problem": "dullness",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::dullness",
+      "title": "How to Remove dullness from sealed stone",
+      "slug": "how-to-remove-dullness-from-sealed-stone",
+      "problem": "dullness",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::dullness",
+      "title": "How to Prevent dullness on sealed stone",
+      "slug": "how-to-prevent-dullness-on-sealed-stone",
+      "problem": "dullness",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::dullness",
+      "title": "How to Fix dullness on sealed stone",
+      "slug": "how-to-fix-dullness-on-sealed-stone",
+      "problem": "dullness",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::dullness",
+      "title": "How to Clean dullness from sealed stone",
+      "slug": "how-to-clean-dullness-from-sealed-stone",
+      "problem": "dullness",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::dullness",
+      "title": "How to Tell if dullness on sealed stone is Permanent",
+      "slug": "how-to-tell-if-dullness-on-sealed-stone-is-permanent",
+      "problem": "dullness",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::dullness",
+      "title": "Why dullness Keeps Coming Back on sealed stone",
+      "slug": "why-dullness-keeps-coming-back-on-sealed-stone",
+      "problem": "dullness",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::dullness",
+      "title": "How to Maintain sealed stone and Keep dullness Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-sealed-stone",
+      "problem": "dullness",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::dullness",
+      "title": "What Causes dullness on shower grout",
+      "slug": "what-causes-dullness-on-shower-grout",
+      "problem": "dullness",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::dullness",
+      "title": "How to Remove dullness from shower grout",
+      "slug": "how-to-remove-dullness-from-shower-grout",
+      "problem": "dullness",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::dullness",
+      "title": "How to Prevent dullness on shower grout",
+      "slug": "how-to-prevent-dullness-on-shower-grout",
+      "problem": "dullness",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::dullness",
+      "title": "How to Fix dullness on shower grout",
+      "slug": "how-to-fix-dullness-on-shower-grout",
+      "problem": "dullness",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::dullness",
+      "title": "How to Clean dullness from shower grout",
+      "slug": "how-to-clean-dullness-from-shower-grout",
+      "problem": "dullness",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::dullness",
+      "title": "How to Tell if dullness on shower grout is Permanent",
+      "slug": "how-to-tell-if-dullness-on-shower-grout-is-permanent",
+      "problem": "dullness",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::dullness",
+      "title": "Why dullness Keeps Coming Back on shower grout",
+      "slug": "why-dullness-keeps-coming-back-on-shower-grout",
+      "problem": "dullness",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::dullness",
+      "title": "How to Maintain shower grout and Keep dullness Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-shower-grout",
+      "problem": "dullness",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::dullness",
+      "title": "What Causes dullness on tile grout",
+      "slug": "what-causes-dullness-on-tile-grout",
+      "problem": "dullness",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::dullness",
+      "title": "How to Remove dullness from tile grout",
+      "slug": "how-to-remove-dullness-from-tile-grout",
+      "problem": "dullness",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::dullness",
+      "title": "How to Prevent dullness on tile grout",
+      "slug": "how-to-prevent-dullness-on-tile-grout",
+      "problem": "dullness",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::dullness",
+      "title": "How to Fix dullness on tile grout",
+      "slug": "how-to-fix-dullness-on-tile-grout",
+      "problem": "dullness",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::dullness",
+      "title": "How to Clean dullness from tile grout",
+      "slug": "how-to-clean-dullness-from-tile-grout",
+      "problem": "dullness",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::dullness",
+      "title": "How to Tell if dullness on tile grout is Permanent",
+      "slug": "how-to-tell-if-dullness-on-tile-grout-is-permanent",
+      "problem": "dullness",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::dullness",
+      "title": "Why dullness Keeps Coming Back on tile grout",
+      "slug": "why-dullness-keeps-coming-back-on-tile-grout",
+      "problem": "dullness",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::dullness",
+      "title": "How to Maintain tile grout and Keep dullness Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-tile-grout",
+      "problem": "dullness",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::dullness",
+      "title": "What Causes dullness on caulking",
+      "slug": "what-causes-dullness-on-caulking",
+      "problem": "dullness",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::dullness",
+      "title": "How to Remove dullness from caulking",
+      "slug": "how-to-remove-dullness-from-caulking",
+      "problem": "dullness",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::dullness",
+      "title": "How to Prevent dullness on caulking",
+      "slug": "how-to-prevent-dullness-on-caulking",
+      "problem": "dullness",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::dullness",
+      "title": "How to Fix dullness on caulking",
+      "slug": "how-to-fix-dullness-on-caulking",
+      "problem": "dullness",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::dullness",
+      "title": "How to Clean dullness from caulking",
+      "slug": "how-to-clean-dullness-from-caulking",
+      "problem": "dullness",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::dullness",
+      "title": "How to Tell if dullness on caulking is Permanent",
+      "slug": "how-to-tell-if-dullness-on-caulking-is-permanent",
+      "problem": "dullness",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::dullness",
+      "title": "Why dullness Keeps Coming Back on caulking",
+      "slug": "why-dullness-keeps-coming-back-on-caulking",
+      "problem": "dullness",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::dullness",
+      "title": "How to Maintain caulking and Keep dullness Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-caulking",
+      "problem": "dullness",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::dullness",
+      "title": "What Causes dullness on shower pans",
+      "slug": "what-causes-dullness-on-shower-pans",
+      "problem": "dullness",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::dullness",
+      "title": "How to Remove dullness from shower pans",
+      "slug": "how-to-remove-dullness-from-shower-pans",
+      "problem": "dullness",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::dullness",
+      "title": "How to Prevent dullness on shower pans",
+      "slug": "how-to-prevent-dullness-on-shower-pans",
+      "problem": "dullness",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::dullness",
+      "title": "How to Fix dullness on shower pans",
+      "slug": "how-to-fix-dullness-on-shower-pans",
+      "problem": "dullness",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

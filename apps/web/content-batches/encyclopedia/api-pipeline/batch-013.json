@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-fix::butcher block::soap scum",
+      "title": "How to Fix soap scum on butcher block",
+      "slug": "how-to-fix-soap-scum-on-butcher-block",
+      "problem": "soap scum",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::soap scum",
+      "title": "How to Clean soap scum from butcher block",
+      "slug": "how-to-clean-soap-scum-from-butcher-block",
+      "problem": "soap scum",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::soap scum",
+      "title": "How to Tell if soap scum on butcher block is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-butcher-block-is-permanent",
+      "problem": "soap scum",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::soap scum",
+      "title": "Why soap scum Keeps Coming Back on butcher block",
+      "slug": "why-soap-scum-keeps-coming-back-on-butcher-block",
+      "problem": "soap scum",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::soap scum",
+      "title": "How to Maintain butcher block and Keep soap scum Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-butcher-block",
+      "problem": "soap scum",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::soap scum",
+      "title": "What Causes soap scum on unfinished wood",
+      "slug": "what-causes-soap-scum-on-unfinished-wood",
+      "problem": "soap scum",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::soap scum",
+      "title": "How to Remove soap scum from unfinished wood",
+      "slug": "how-to-remove-soap-scum-from-unfinished-wood",
+      "problem": "soap scum",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::soap scum",
+      "title": "How to Prevent soap scum on unfinished wood",
+      "slug": "how-to-prevent-soap-scum-on-unfinished-wood",
+      "problem": "soap scum",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::soap scum",
+      "title": "How to Fix soap scum on unfinished wood",
+      "slug": "how-to-fix-soap-scum-on-unfinished-wood",
+      "problem": "soap scum",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::soap scum",
+      "title": "How to Clean soap scum from unfinished wood",
+      "slug": "how-to-clean-soap-scum-from-unfinished-wood",
+      "problem": "soap scum",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::soap scum",
+      "title": "How to Tell if soap scum on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-unfinished-wood-is-permanent",
+      "problem": "soap scum",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::soap scum",
+      "title": "Why soap scum Keeps Coming Back on unfinished wood",
+      "slug": "why-soap-scum-keeps-coming-back-on-unfinished-wood",
+      "problem": "soap scum",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::soap scum",
+      "title": "How to Maintain unfinished wood and Keep soap scum Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-unfinished-wood",
+      "problem": "soap scum",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::soap scum",
+      "title": "What Causes soap scum on sealed wood",
+      "slug": "what-causes-soap-scum-on-sealed-wood",
+      "problem": "soap scum",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::soap scum",
+      "title": "How to Remove soap scum from sealed wood",
+      "slug": "how-to-remove-soap-scum-from-sealed-wood",
+      "problem": "soap scum",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::soap scum",
+      "title": "How to Prevent soap scum on sealed wood",
+      "slug": "how-to-prevent-soap-scum-on-sealed-wood",
+      "problem": "soap scum",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::soap scum",
+      "title": "How to Fix soap scum on sealed wood",
+      "slug": "how-to-fix-soap-scum-on-sealed-wood",
+      "problem": "soap scum",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::soap scum",
+      "title": "How to Clean soap scum from sealed wood",
+      "slug": "how-to-clean-soap-scum-from-sealed-wood",
+      "problem": "soap scum",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::soap scum",
+      "title": "How to Tell if soap scum on sealed wood is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-sealed-wood-is-permanent",
+      "problem": "soap scum",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::soap scum",
+      "title": "Why soap scum Keeps Coming Back on sealed wood",
+      "slug": "why-soap-scum-keeps-coming-back-on-sealed-wood",
+      "problem": "soap scum",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::soap scum",
+      "title": "How to Maintain sealed wood and Keep soap scum Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-sealed-wood",
+      "problem": "soap scum",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::garbage cans::soap scum",
+      "title": "What Causes soap scum on garbage cans",
+      "slug": "what-causes-soap-scum-on-garbage-cans",
+      "problem": "soap scum",
+      "surface": "garbage cans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::garbage cans::soap scum",
+      "title": "How to Remove soap scum from garbage cans",
+      "slug": "how-to-remove-soap-scum-from-garbage-cans",
+      "problem": "soap scum",
+      "surface": "garbage cans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::garbage cans::soap scum",
+      "title": "How to Prevent soap scum on garbage cans",
+      "slug": "how-to-prevent-soap-scum-on-garbage-cans",
+      "problem": "soap scum",
+      "surface": "garbage cans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::garbage cans::soap scum",
+      "title": "How to Fix soap scum on garbage cans",
+      "slug": "how-to-fix-soap-scum-on-garbage-cans",
+      "problem": "soap scum",
+      "surface": "garbage cans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::garbage cans::soap scum",
+      "title": "How to Clean soap scum from garbage cans",
+      "slug": "how-to-clean-soap-scum-from-garbage-cans",
+      "problem": "soap scum",
+      "surface": "garbage cans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::garbage cans::soap scum",
+      "title": "How to Tell if soap scum on garbage cans is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-garbage-cans-is-permanent",
+      "problem": "soap scum",
+      "surface": "garbage cans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::garbage cans::soap scum",
+      "title": "Why soap scum Keeps Coming Back on garbage cans",
+      "slug": "why-soap-scum-keeps-coming-back-on-garbage-cans",
+      "problem": "soap scum",
+      "surface": "garbage cans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::garbage cans::soap scum",
+      "title": "How to Maintain garbage cans and Keep soap scum Under Control",
+      "slug": "how-to-maintain-garbage-cans-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "garbage cans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::garbage cans::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on garbage cans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-garbage-cans",
+      "problem": "soap scum",
+      "surface": "garbage cans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::water spots",
+      "title": "What Causes water spots on shower glass",
+      "slug": "what-causes-water-spots-on-shower-glass",
+      "problem": "water spots",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::water spots",
+      "title": "How to Remove water spots from shower glass",
+      "slug": "how-to-remove-water-spots-from-shower-glass",
+      "problem": "water spots",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::water spots",
+      "title": "How to Prevent water spots on shower glass",
+      "slug": "how-to-prevent-water-spots-on-shower-glass",
+      "problem": "water spots",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::water spots",
+      "title": "How to Fix water spots on shower glass",
+      "slug": "how-to-fix-water-spots-on-shower-glass",
+      "problem": "water spots",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::water spots",
+      "title": "How to Clean water spots from shower glass",
+      "slug": "how-to-clean-water-spots-from-shower-glass",
+      "problem": "water spots",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::water spots",
+      "title": "How to Tell if water spots on shower glass is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-shower-glass-is-permanent",
+      "problem": "water spots",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::water spots",
+      "title": "Why water spots Keeps Coming Back on shower glass",
+      "slug": "why-water-spots-keeps-coming-back-on-shower-glass",
+      "problem": "water spots",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::water spots",
+      "title": "How to Maintain shower glass and Keep water spots Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-shower-glass",
+      "problem": "water spots",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::water spots",
+      "title": "What Causes water spots on granite",
+      "slug": "what-causes-water-spots-on-granite",
+      "problem": "water spots",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::water spots",
+      "title": "How to Remove water spots from granite",
+      "slug": "how-to-remove-water-spots-from-granite",
+      "problem": "water spots",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::water spots",
+      "title": "How to Prevent water spots on granite",
+      "slug": "how-to-prevent-water-spots-on-granite",
+      "problem": "water spots",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::water spots",
+      "title": "How to Fix water spots on granite",
+      "slug": "how-to-fix-water-spots-on-granite",
+      "problem": "water spots",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::water spots",
+      "title": "How to Clean water spots from granite",
+      "slug": "how-to-clean-water-spots-from-granite",
+      "problem": "water spots",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::water spots",
+      "title": "How to Tell if water spots on granite is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-granite-is-permanent",
+      "problem": "water spots",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::water spots",
+      "title": "Why water spots Keeps Coming Back on granite",
+      "slug": "why-water-spots-keeps-coming-back-on-granite",
+      "problem": "water spots",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::water spots",
+      "title": "How to Maintain granite and Keep water spots Under Control",
+      "slug": "how-to-maintain-granite-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-granite",
+      "problem": "water spots",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::water spots",
+      "title": "What Causes water spots on marble",
+      "slug": "what-causes-water-spots-on-marble",
+      "problem": "water spots",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::water spots",
+      "title": "How to Remove water spots from marble",
+      "slug": "how-to-remove-water-spots-from-marble",
+      "problem": "water spots",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::water spots",
+      "title": "How to Prevent water spots on marble",
+      "slug": "how-to-prevent-water-spots-on-marble",
+      "problem": "water spots",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::water spots",
+      "title": "How to Fix water spots on marble",
+      "slug": "how-to-fix-water-spots-on-marble",
+      "problem": "water spots",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::water spots",
+      "title": "How to Clean water spots from marble",
+      "slug": "how-to-clean-water-spots-from-marble",
+      "problem": "water spots",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::water spots",
+      "title": "How to Tell if water spots on marble is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-marble-is-permanent",
+      "problem": "water spots",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::water spots",
+      "title": "Why water spots Keeps Coming Back on marble",
+      "slug": "why-water-spots-keeps-coming-back-on-marble",
+      "problem": "water spots",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::water spots",
+      "title": "How to Maintain marble and Keep water spots Under Control",
+      "slug": "how-to-maintain-marble-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-marble",
+      "problem": "water spots",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::water spots",
+      "title": "What Causes water spots on quartz",
+      "slug": "what-causes-water-spots-on-quartz",
+      "problem": "water spots",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::water spots",
+      "title": "How to Remove water spots from quartz",
+      "slug": "how-to-remove-water-spots-from-quartz",
+      "problem": "water spots",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::water spots",
+      "title": "How to Prevent water spots on quartz",
+      "slug": "how-to-prevent-water-spots-on-quartz",
+      "problem": "water spots",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::water spots",
+      "title": "How to Fix water spots on quartz",
+      "slug": "how-to-fix-water-spots-on-quartz",
+      "problem": "water spots",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::water spots",
+      "title": "How to Clean water spots from quartz",
+      "slug": "how-to-clean-water-spots-from-quartz",
+      "problem": "water spots",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::water spots",
+      "title": "How to Tell if water spots on quartz is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-quartz-is-permanent",
+      "problem": "water spots",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::water spots",
+      "title": "Why water spots Keeps Coming Back on quartz",
+      "slug": "why-water-spots-keeps-coming-back-on-quartz",
+      "problem": "water spots",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::water spots",
+      "title": "How to Maintain quartz and Keep water spots Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-quartz",
+      "problem": "water spots",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::water spots",
+      "title": "What Causes water spots on laminate",
+      "slug": "what-causes-water-spots-on-laminate",
+      "problem": "water spots",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::water spots",
+      "title": "How to Remove water spots from laminate",
+      "slug": "how-to-remove-water-spots-from-laminate",
+      "problem": "water spots",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::water spots",
+      "title": "How to Prevent water spots on laminate",
+      "slug": "how-to-prevent-water-spots-on-laminate",
+      "problem": "water spots",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::water spots",
+      "title": "How to Fix water spots on laminate",
+      "slug": "how-to-fix-water-spots-on-laminate",
+      "problem": "water spots",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::water spots",
+      "title": "How to Clean water spots from laminate",
+      "slug": "how-to-clean-water-spots-from-laminate",
+      "problem": "water spots",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::water spots",
+      "title": "How to Tell if water spots on laminate is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-laminate-is-permanent",
+      "problem": "water spots",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::water spots",
+      "title": "Why water spots Keeps Coming Back on laminate",
+      "slug": "why-water-spots-keeps-coming-back-on-laminate",
+      "problem": "water spots",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::water spots",
+      "title": "How to Maintain laminate and Keep water spots Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-laminate",
+      "problem": "water spots",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::water spots",
+      "title": "What Causes water spots on wood",
+      "slug": "what-causes-water-spots-on-wood",
+      "problem": "water spots",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::water spots",
+      "title": "How to Remove water spots from wood",
+      "slug": "how-to-remove-water-spots-from-wood",
+      "problem": "water spots",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::water spots",
+      "title": "How to Prevent water spots on wood",
+      "slug": "how-to-prevent-water-spots-on-wood",
+      "problem": "water spots",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::water spots",
+      "title": "How to Fix water spots on wood",
+      "slug": "how-to-fix-water-spots-on-wood",
+      "problem": "water spots",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::water spots",
+      "title": "How to Clean water spots from wood",
+      "slug": "how-to-clean-water-spots-from-wood",
+      "problem": "water spots",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::water spots",
+      "title": "How to Tell if water spots on wood is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-wood-is-permanent",
+      "problem": "water spots",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::water spots",
+      "title": "Why water spots Keeps Coming Back on wood",
+      "slug": "why-water-spots-keeps-coming-back-on-wood",
+      "problem": "water spots",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::water spots",
+      "title": "How to Maintain wood and Keep water spots Under Control",
+      "slug": "how-to-maintain-wood-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-wood",
+      "problem": "water spots",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::water spots",
+      "title": "What Causes water spots on grout",
+      "slug": "what-causes-water-spots-on-grout",
+      "problem": "water spots",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::water spots",
+      "title": "How to Remove water spots from grout",
+      "slug": "how-to-remove-water-spots-from-grout",
+      "problem": "water spots",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::water spots",
+      "title": "How to Prevent water spots on grout",
+      "slug": "how-to-prevent-water-spots-on-grout",
+      "problem": "water spots",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::water spots",
+      "title": "How to Fix water spots on grout",
+      "slug": "how-to-fix-water-spots-on-grout",
+      "problem": "water spots",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::water spots",
+      "title": "How to Clean water spots from grout",
+      "slug": "how-to-clean-water-spots-from-grout",
+      "problem": "water spots",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::water spots",
+      "title": "How to Tell if water spots on grout is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-grout-is-permanent",
+      "problem": "water spots",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::water spots",
+      "title": "Why water spots Keeps Coming Back on grout",
+      "slug": "why-water-spots-keeps-coming-back-on-grout",
+      "problem": "water spots",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::water spots",
+      "title": "How to Maintain grout and Keep water spots Under Control",
+      "slug": "how-to-maintain-grout-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-grout",
+      "problem": "water spots",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::water spots",
+      "title": "What Causes water spots on shower doors",
+      "slug": "what-causes-water-spots-on-shower-doors",
+      "problem": "water spots",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::water spots",
+      "title": "How to Remove water spots from shower doors",
+      "slug": "how-to-remove-water-spots-from-shower-doors",
+      "problem": "water spots",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::water spots",
+      "title": "How to Prevent water spots on shower doors",
+      "slug": "how-to-prevent-water-spots-on-shower-doors",
+      "problem": "water spots",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::water spots",
+      "title": "How to Fix water spots on shower doors",
+      "slug": "how-to-fix-water-spots-on-shower-doors",
+      "problem": "water spots",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

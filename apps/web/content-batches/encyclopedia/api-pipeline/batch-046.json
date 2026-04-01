@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "what-causes::quartz countertops::brown stains",
+      "title": "What Causes brown stains on quartz countertops",
+      "slug": "what-causes-brown-stains-on-quartz-countertops",
+      "problem": "brown stains",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::brown stains",
+      "title": "How to Remove brown stains from quartz countertops",
+      "slug": "how-to-remove-brown-stains-from-quartz-countertops",
+      "problem": "brown stains",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::brown stains",
+      "title": "How to Prevent brown stains on quartz countertops",
+      "slug": "how-to-prevent-brown-stains-on-quartz-countertops",
+      "problem": "brown stains",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::brown stains",
+      "title": "How to Fix brown stains on quartz countertops",
+      "slug": "how-to-fix-brown-stains-on-quartz-countertops",
+      "problem": "brown stains",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::brown stains",
+      "title": "How to Clean brown stains from quartz countertops",
+      "slug": "how-to-clean-brown-stains-from-quartz-countertops",
+      "problem": "brown stains",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::brown stains",
+      "title": "How to Tell if brown stains on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-quartz-countertops-is-permanent",
+      "problem": "brown stains",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::brown stains",
+      "title": "Why brown stains Keeps Coming Back on quartz countertops",
+      "slug": "why-brown-stains-keeps-coming-back-on-quartz-countertops",
+      "problem": "brown stains",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::brown stains",
+      "title": "How to Maintain quartz countertops and Keep brown stains Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-quartz-countertops",
+      "problem": "brown stains",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::brown stains",
+      "title": "What Causes brown stains on laminate counters",
+      "slug": "what-causes-brown-stains-on-laminate-counters",
+      "problem": "brown stains",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::brown stains",
+      "title": "How to Remove brown stains from laminate counters",
+      "slug": "how-to-remove-brown-stains-from-laminate-counters",
+      "problem": "brown stains",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::brown stains",
+      "title": "How to Prevent brown stains on laminate counters",
+      "slug": "how-to-prevent-brown-stains-on-laminate-counters",
+      "problem": "brown stains",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::brown stains",
+      "title": "How to Fix brown stains on laminate counters",
+      "slug": "how-to-fix-brown-stains-on-laminate-counters",
+      "problem": "brown stains",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::brown stains",
+      "title": "How to Clean brown stains from laminate counters",
+      "slug": "how-to-clean-brown-stains-from-laminate-counters",
+      "problem": "brown stains",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::brown stains",
+      "title": "How to Tell if brown stains on laminate counters is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-laminate-counters-is-permanent",
+      "problem": "brown stains",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::brown stains",
+      "title": "Why brown stains Keeps Coming Back on laminate counters",
+      "slug": "why-brown-stains-keeps-coming-back-on-laminate-counters",
+      "problem": "brown stains",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::brown stains",
+      "title": "How to Maintain laminate counters and Keep brown stains Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-laminate-counters",
+      "problem": "brown stains",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::brown stains",
+      "title": "What Causes brown stains on butcher block",
+      "slug": "what-causes-brown-stains-on-butcher-block",
+      "problem": "brown stains",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::brown stains",
+      "title": "How to Remove brown stains from butcher block",
+      "slug": "how-to-remove-brown-stains-from-butcher-block",
+      "problem": "brown stains",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::brown stains",
+      "title": "How to Prevent brown stains on butcher block",
+      "slug": "how-to-prevent-brown-stains-on-butcher-block",
+      "problem": "brown stains",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::brown stains",
+      "title": "How to Fix brown stains on butcher block",
+      "slug": "how-to-fix-brown-stains-on-butcher-block",
+      "problem": "brown stains",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::brown stains",
+      "title": "How to Clean brown stains from butcher block",
+      "slug": "how-to-clean-brown-stains-from-butcher-block",
+      "problem": "brown stains",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::brown stains",
+      "title": "How to Tell if brown stains on butcher block is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-butcher-block-is-permanent",
+      "problem": "brown stains",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::brown stains",
+      "title": "Why brown stains Keeps Coming Back on butcher block",
+      "slug": "why-brown-stains-keeps-coming-back-on-butcher-block",
+      "problem": "brown stains",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::brown stains",
+      "title": "How to Maintain butcher block and Keep brown stains Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-butcher-block",
+      "problem": "brown stains",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::brown stains",
+      "title": "What Causes brown stains on unfinished wood",
+      "slug": "what-causes-brown-stains-on-unfinished-wood",
+      "problem": "brown stains",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::brown stains",
+      "title": "How to Remove brown stains from unfinished wood",
+      "slug": "how-to-remove-brown-stains-from-unfinished-wood",
+      "problem": "brown stains",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::brown stains",
+      "title": "How to Prevent brown stains on unfinished wood",
+      "slug": "how-to-prevent-brown-stains-on-unfinished-wood",
+      "problem": "brown stains",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::brown stains",
+      "title": "How to Fix brown stains on unfinished wood",
+      "slug": "how-to-fix-brown-stains-on-unfinished-wood",
+      "problem": "brown stains",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::brown stains",
+      "title": "How to Clean brown stains from unfinished wood",
+      "slug": "how-to-clean-brown-stains-from-unfinished-wood",
+      "problem": "brown stains",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::brown stains",
+      "title": "How to Tell if brown stains on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-unfinished-wood-is-permanent",
+      "problem": "brown stains",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::brown stains",
+      "title": "Why brown stains Keeps Coming Back on unfinished wood",
+      "slug": "why-brown-stains-keeps-coming-back-on-unfinished-wood",
+      "problem": "brown stains",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::brown stains",
+      "title": "How to Maintain unfinished wood and Keep brown stains Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-unfinished-wood",
+      "problem": "brown stains",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::brown stains",
+      "title": "What Causes brown stains on sealed wood",
+      "slug": "what-causes-brown-stains-on-sealed-wood",
+      "problem": "brown stains",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::brown stains",
+      "title": "How to Remove brown stains from sealed wood",
+      "slug": "how-to-remove-brown-stains-from-sealed-wood",
+      "problem": "brown stains",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::brown stains",
+      "title": "How to Prevent brown stains on sealed wood",
+      "slug": "how-to-prevent-brown-stains-on-sealed-wood",
+      "problem": "brown stains",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::brown stains",
+      "title": "How to Fix brown stains on sealed wood",
+      "slug": "how-to-fix-brown-stains-on-sealed-wood",
+      "problem": "brown stains",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::brown stains",
+      "title": "How to Clean brown stains from sealed wood",
+      "slug": "how-to-clean-brown-stains-from-sealed-wood",
+      "problem": "brown stains",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::brown stains",
+      "title": "How to Tell if brown stains on sealed wood is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-sealed-wood-is-permanent",
+      "problem": "brown stains",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::brown stains",
+      "title": "Why brown stains Keeps Coming Back on sealed wood",
+      "slug": "why-brown-stains-keeps-coming-back-on-sealed-wood",
+      "problem": "brown stains",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::brown stains",
+      "title": "How to Maintain sealed wood and Keep brown stains Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-sealed-wood",
+      "problem": "brown stains",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::black stains",
+      "title": "What Causes black stains on shower glass",
+      "slug": "what-causes-black-stains-on-shower-glass",
+      "problem": "black stains",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::black stains",
+      "title": "How to Remove black stains from shower glass",
+      "slug": "how-to-remove-black-stains-from-shower-glass",
+      "problem": "black stains",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::black stains",
+      "title": "How to Prevent black stains on shower glass",
+      "slug": "how-to-prevent-black-stains-on-shower-glass",
+      "problem": "black stains",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::black stains",
+      "title": "How to Fix black stains on shower glass",
+      "slug": "how-to-fix-black-stains-on-shower-glass",
+      "problem": "black stains",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::black stains",
+      "title": "How to Clean black stains from shower glass",
+      "slug": "how-to-clean-black-stains-from-shower-glass",
+      "problem": "black stains",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::black stains",
+      "title": "How to Tell if black stains on shower glass is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-shower-glass-is-permanent",
+      "problem": "black stains",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::black stains",
+      "title": "Why black stains Keeps Coming Back on shower glass",
+      "slug": "why-black-stains-keeps-coming-back-on-shower-glass",
+      "problem": "black stains",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::black stains",
+      "title": "How to Maintain shower glass and Keep black stains Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-shower-glass",
+      "problem": "black stains",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::black stains",
+      "title": "What Causes black stains on granite",
+      "slug": "what-causes-black-stains-on-granite",
+      "problem": "black stains",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::black stains",
+      "title": "How to Remove black stains from granite",
+      "slug": "how-to-remove-black-stains-from-granite",
+      "problem": "black stains",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::black stains",
+      "title": "How to Prevent black stains on granite",
+      "slug": "how-to-prevent-black-stains-on-granite",
+      "problem": "black stains",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::black stains",
+      "title": "How to Fix black stains on granite",
+      "slug": "how-to-fix-black-stains-on-granite",
+      "problem": "black stains",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::black stains",
+      "title": "How to Clean black stains from granite",
+      "slug": "how-to-clean-black-stains-from-granite",
+      "problem": "black stains",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::black stains",
+      "title": "How to Tell if black stains on granite is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-granite-is-permanent",
+      "problem": "black stains",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::black stains",
+      "title": "Why black stains Keeps Coming Back on granite",
+      "slug": "why-black-stains-keeps-coming-back-on-granite",
+      "problem": "black stains",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::black stains",
+      "title": "How to Maintain granite and Keep black stains Under Control",
+      "slug": "how-to-maintain-granite-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-granite",
+      "problem": "black stains",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::black stains",
+      "title": "What Causes black stains on marble",
+      "slug": "what-causes-black-stains-on-marble",
+      "problem": "black stains",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::black stains",
+      "title": "How to Remove black stains from marble",
+      "slug": "how-to-remove-black-stains-from-marble",
+      "problem": "black stains",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::black stains",
+      "title": "How to Prevent black stains on marble",
+      "slug": "how-to-prevent-black-stains-on-marble",
+      "problem": "black stains",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::black stains",
+      "title": "How to Fix black stains on marble",
+      "slug": "how-to-fix-black-stains-on-marble",
+      "problem": "black stains",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::black stains",
+      "title": "How to Clean black stains from marble",
+      "slug": "how-to-clean-black-stains-from-marble",
+      "problem": "black stains",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::black stains",
+      "title": "How to Tell if black stains on marble is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-marble-is-permanent",
+      "problem": "black stains",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::black stains",
+      "title": "Why black stains Keeps Coming Back on marble",
+      "slug": "why-black-stains-keeps-coming-back-on-marble",
+      "problem": "black stains",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::black stains",
+      "title": "How to Maintain marble and Keep black stains Under Control",
+      "slug": "how-to-maintain-marble-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-marble",
+      "problem": "black stains",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::black stains",
+      "title": "What Causes black stains on quartz",
+      "slug": "what-causes-black-stains-on-quartz",
+      "problem": "black stains",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::black stains",
+      "title": "How to Remove black stains from quartz",
+      "slug": "how-to-remove-black-stains-from-quartz",
+      "problem": "black stains",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::black stains",
+      "title": "How to Prevent black stains on quartz",
+      "slug": "how-to-prevent-black-stains-on-quartz",
+      "problem": "black stains",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::black stains",
+      "title": "How to Fix black stains on quartz",
+      "slug": "how-to-fix-black-stains-on-quartz",
+      "problem": "black stains",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::black stains",
+      "title": "How to Clean black stains from quartz",
+      "slug": "how-to-clean-black-stains-from-quartz",
+      "problem": "black stains",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::black stains",
+      "title": "How to Tell if black stains on quartz is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-quartz-is-permanent",
+      "problem": "black stains",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::black stains",
+      "title": "Why black stains Keeps Coming Back on quartz",
+      "slug": "why-black-stains-keeps-coming-back-on-quartz",
+      "problem": "black stains",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::black stains",
+      "title": "How to Maintain quartz and Keep black stains Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-quartz",
+      "problem": "black stains",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::black stains",
+      "title": "What Causes black stains on laminate",
+      "slug": "what-causes-black-stains-on-laminate",
+      "problem": "black stains",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::black stains",
+      "title": "How to Remove black stains from laminate",
+      "slug": "how-to-remove-black-stains-from-laminate",
+      "problem": "black stains",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::black stains",
+      "title": "How to Prevent black stains on laminate",
+      "slug": "how-to-prevent-black-stains-on-laminate",
+      "problem": "black stains",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::black stains",
+      "title": "How to Fix black stains on laminate",
+      "slug": "how-to-fix-black-stains-on-laminate",
+      "problem": "black stains",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::black stains",
+      "title": "How to Clean black stains from laminate",
+      "slug": "how-to-clean-black-stains-from-laminate",
+      "problem": "black stains",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::black stains",
+      "title": "How to Tell if black stains on laminate is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-laminate-is-permanent",
+      "problem": "black stains",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::black stains",
+      "title": "Why black stains Keeps Coming Back on laminate",
+      "slug": "why-black-stains-keeps-coming-back-on-laminate",
+      "problem": "black stains",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::black stains",
+      "title": "How to Maintain laminate and Keep black stains Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-laminate",
+      "problem": "black stains",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::black stains",
+      "title": "What Causes black stains on wood",
+      "slug": "what-causes-black-stains-on-wood",
+      "problem": "black stains",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::black stains",
+      "title": "How to Remove black stains from wood",
+      "slug": "how-to-remove-black-stains-from-wood",
+      "problem": "black stains",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::black stains",
+      "title": "How to Prevent black stains on wood",
+      "slug": "how-to-prevent-black-stains-on-wood",
+      "problem": "black stains",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::black stains",
+      "title": "How to Fix black stains on wood",
+      "slug": "how-to-fix-black-stains-on-wood",
+      "problem": "black stains",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::black stains",
+      "title": "How to Clean black stains from wood",
+      "slug": "how-to-clean-black-stains-from-wood",
+      "problem": "black stains",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::black stains",
+      "title": "How to Tell if black stains on wood is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-wood-is-permanent",
+      "problem": "black stains",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::black stains",
+      "title": "Why black stains Keeps Coming Back on wood",
+      "slug": "why-black-stains-keeps-coming-back-on-wood",
+      "problem": "black stains",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::black stains",
+      "title": "How to Maintain wood and Keep black stains Under Control",
+      "slug": "how-to-maintain-wood-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-wood",
+      "problem": "black stains",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::black stains",
+      "title": "What Causes black stains on grout",
+      "slug": "what-causes-black-stains-on-grout",
+      "problem": "black stains",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-maintain::laminate::burn marks",
+      "title": "How to Maintain laminate and Keep burn marks Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-laminate",
+      "problem": "burn marks",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::burn marks",
+      "title": "What Causes burn marks on wood",
+      "slug": "what-causes-burn-marks-on-wood",
+      "problem": "burn marks",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::burn marks",
+      "title": "How to Remove burn marks from wood",
+      "slug": "how-to-remove-burn-marks-from-wood",
+      "problem": "burn marks",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::burn marks",
+      "title": "How to Prevent burn marks on wood",
+      "slug": "how-to-prevent-burn-marks-on-wood",
+      "problem": "burn marks",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::burn marks",
+      "title": "How to Fix burn marks on wood",
+      "slug": "how-to-fix-burn-marks-on-wood",
+      "problem": "burn marks",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::burn marks",
+      "title": "How to Clean burn marks from wood",
+      "slug": "how-to-clean-burn-marks-from-wood",
+      "problem": "burn marks",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::burn marks",
+      "title": "How to Tell if burn marks on wood is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-wood-is-permanent",
+      "problem": "burn marks",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::burn marks",
+      "title": "Why burn marks Keeps Coming Back on wood",
+      "slug": "why-burn-marks-keeps-coming-back-on-wood",
+      "problem": "burn marks",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::burn marks",
+      "title": "How to Maintain wood and Keep burn marks Under Control",
+      "slug": "how-to-maintain-wood-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-wood",
+      "problem": "burn marks",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::burn marks",
+      "title": "What Causes burn marks on grout",
+      "slug": "what-causes-burn-marks-on-grout",
+      "problem": "burn marks",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::burn marks",
+      "title": "How to Remove burn marks from grout",
+      "slug": "how-to-remove-burn-marks-from-grout",
+      "problem": "burn marks",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::burn marks",
+      "title": "How to Prevent burn marks on grout",
+      "slug": "how-to-prevent-burn-marks-on-grout",
+      "problem": "burn marks",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::burn marks",
+      "title": "How to Fix burn marks on grout",
+      "slug": "how-to-fix-burn-marks-on-grout",
+      "problem": "burn marks",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::burn marks",
+      "title": "How to Clean burn marks from grout",
+      "slug": "how-to-clean-burn-marks-from-grout",
+      "problem": "burn marks",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::burn marks",
+      "title": "How to Tell if burn marks on grout is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-grout-is-permanent",
+      "problem": "burn marks",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::burn marks",
+      "title": "Why burn marks Keeps Coming Back on grout",
+      "slug": "why-burn-marks-keeps-coming-back-on-grout",
+      "problem": "burn marks",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::burn marks",
+      "title": "How to Maintain grout and Keep burn marks Under Control",
+      "slug": "how-to-maintain-grout-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-grout",
+      "problem": "burn marks",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::burn marks",
+      "title": "What Causes burn marks on shower doors",
+      "slug": "what-causes-burn-marks-on-shower-doors",
+      "problem": "burn marks",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::burn marks",
+      "title": "How to Remove burn marks from shower doors",
+      "slug": "how-to-remove-burn-marks-from-shower-doors",
+      "problem": "burn marks",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::burn marks",
+      "title": "How to Prevent burn marks on shower doors",
+      "slug": "how-to-prevent-burn-marks-on-shower-doors",
+      "problem": "burn marks",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::burn marks",
+      "title": "How to Fix burn marks on shower doors",
+      "slug": "how-to-fix-burn-marks-on-shower-doors",
+      "problem": "burn marks",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::burn marks",
+      "title": "How to Clean burn marks from shower doors",
+      "slug": "how-to-clean-burn-marks-from-shower-doors",
+      "problem": "burn marks",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::burn marks",
+      "title": "How to Tell if burn marks on shower doors is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-shower-doors-is-permanent",
+      "problem": "burn marks",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::burn marks",
+      "title": "Why burn marks Keeps Coming Back on shower doors",
+      "slug": "why-burn-marks-keeps-coming-back-on-shower-doors",
+      "problem": "burn marks",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::burn marks",
+      "title": "How to Maintain shower doors and Keep burn marks Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-shower-doors",
+      "problem": "burn marks",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::burn marks",
+      "title": "What Causes burn marks on sealed stone",
+      "slug": "what-causes-burn-marks-on-sealed-stone",
+      "problem": "burn marks",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::burn marks",
+      "title": "How to Remove burn marks from sealed stone",
+      "slug": "how-to-remove-burn-marks-from-sealed-stone",
+      "problem": "burn marks",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::burn marks",
+      "title": "How to Prevent burn marks on sealed stone",
+      "slug": "how-to-prevent-burn-marks-on-sealed-stone",
+      "problem": "burn marks",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::burn marks",
+      "title": "How to Fix burn marks on sealed stone",
+      "slug": "how-to-fix-burn-marks-on-sealed-stone",
+      "problem": "burn marks",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::burn marks",
+      "title": "How to Clean burn marks from sealed stone",
+      "slug": "how-to-clean-burn-marks-from-sealed-stone",
+      "problem": "burn marks",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::burn marks",
+      "title": "How to Tell if burn marks on sealed stone is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-sealed-stone-is-permanent",
+      "problem": "burn marks",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::burn marks",
+      "title": "Why burn marks Keeps Coming Back on sealed stone",
+      "slug": "why-burn-marks-keeps-coming-back-on-sealed-stone",
+      "problem": "burn marks",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::burn marks",
+      "title": "How to Maintain sealed stone and Keep burn marks Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-sealed-stone",
+      "problem": "burn marks",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::burn marks",
+      "title": "What Causes burn marks on shower grout",
+      "slug": "what-causes-burn-marks-on-shower-grout",
+      "problem": "burn marks",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::burn marks",
+      "title": "How to Remove burn marks from shower grout",
+      "slug": "how-to-remove-burn-marks-from-shower-grout",
+      "problem": "burn marks",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::burn marks",
+      "title": "How to Prevent burn marks on shower grout",
+      "slug": "how-to-prevent-burn-marks-on-shower-grout",
+      "problem": "burn marks",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::burn marks",
+      "title": "How to Fix burn marks on shower grout",
+      "slug": "how-to-fix-burn-marks-on-shower-grout",
+      "problem": "burn marks",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::burn marks",
+      "title": "How to Clean burn marks from shower grout",
+      "slug": "how-to-clean-burn-marks-from-shower-grout",
+      "problem": "burn marks",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::burn marks",
+      "title": "How to Tell if burn marks on shower grout is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-shower-grout-is-permanent",
+      "problem": "burn marks",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::burn marks",
+      "title": "Why burn marks Keeps Coming Back on shower grout",
+      "slug": "why-burn-marks-keeps-coming-back-on-shower-grout",
+      "problem": "burn marks",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::burn marks",
+      "title": "How to Maintain shower grout and Keep burn marks Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-shower-grout",
+      "problem": "burn marks",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::burn marks",
+      "title": "What Causes burn marks on tile grout",
+      "slug": "what-causes-burn-marks-on-tile-grout",
+      "problem": "burn marks",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::burn marks",
+      "title": "How to Remove burn marks from tile grout",
+      "slug": "how-to-remove-burn-marks-from-tile-grout",
+      "problem": "burn marks",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::burn marks",
+      "title": "How to Prevent burn marks on tile grout",
+      "slug": "how-to-prevent-burn-marks-on-tile-grout",
+      "problem": "burn marks",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::burn marks",
+      "title": "How to Fix burn marks on tile grout",
+      "slug": "how-to-fix-burn-marks-on-tile-grout",
+      "problem": "burn marks",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::burn marks",
+      "title": "How to Clean burn marks from tile grout",
+      "slug": "how-to-clean-burn-marks-from-tile-grout",
+      "problem": "burn marks",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::burn marks",
+      "title": "How to Tell if burn marks on tile grout is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-tile-grout-is-permanent",
+      "problem": "burn marks",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::burn marks",
+      "title": "Why burn marks Keeps Coming Back on tile grout",
+      "slug": "why-burn-marks-keeps-coming-back-on-tile-grout",
+      "problem": "burn marks",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::burn marks",
+      "title": "How to Maintain tile grout and Keep burn marks Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-tile-grout",
+      "problem": "burn marks",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::burn marks",
+      "title": "What Causes burn marks on caulking",
+      "slug": "what-causes-burn-marks-on-caulking",
+      "problem": "burn marks",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::burn marks",
+      "title": "How to Remove burn marks from caulking",
+      "slug": "how-to-remove-burn-marks-from-caulking",
+      "problem": "burn marks",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::burn marks",
+      "title": "How to Prevent burn marks on caulking",
+      "slug": "how-to-prevent-burn-marks-on-caulking",
+      "problem": "burn marks",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::burn marks",
+      "title": "How to Fix burn marks on caulking",
+      "slug": "how-to-fix-burn-marks-on-caulking",
+      "problem": "burn marks",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::burn marks",
+      "title": "How to Clean burn marks from caulking",
+      "slug": "how-to-clean-burn-marks-from-caulking",
+      "problem": "burn marks",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::burn marks",
+      "title": "How to Tell if burn marks on caulking is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-caulking-is-permanent",
+      "problem": "burn marks",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::burn marks",
+      "title": "Why burn marks Keeps Coming Back on caulking",
+      "slug": "why-burn-marks-keeps-coming-back-on-caulking",
+      "problem": "burn marks",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::burn marks",
+      "title": "How to Maintain caulking and Keep burn marks Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-caulking",
+      "problem": "burn marks",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::burn marks",
+      "title": "What Causes burn marks on sealed granite",
+      "slug": "what-causes-burn-marks-on-sealed-granite",
+      "problem": "burn marks",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::burn marks",
+      "title": "How to Remove burn marks from sealed granite",
+      "slug": "how-to-remove-burn-marks-from-sealed-granite",
+      "problem": "burn marks",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::burn marks",
+      "title": "How to Prevent burn marks on sealed granite",
+      "slug": "how-to-prevent-burn-marks-on-sealed-granite",
+      "problem": "burn marks",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::burn marks",
+      "title": "How to Fix burn marks on sealed granite",
+      "slug": "how-to-fix-burn-marks-on-sealed-granite",
+      "problem": "burn marks",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::burn marks",
+      "title": "How to Clean burn marks from sealed granite",
+      "slug": "how-to-clean-burn-marks-from-sealed-granite",
+      "problem": "burn marks",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::burn marks",
+      "title": "How to Tell if burn marks on sealed granite is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-sealed-granite-is-permanent",
+      "problem": "burn marks",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::burn marks",
+      "title": "Why burn marks Keeps Coming Back on sealed granite",
+      "slug": "why-burn-marks-keeps-coming-back-on-sealed-granite",
+      "problem": "burn marks",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::burn marks",
+      "title": "How to Maintain sealed granite and Keep burn marks Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-sealed-granite",
+      "problem": "burn marks",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::burn marks",
+      "title": "What Causes burn marks on sealed marble",
+      "slug": "what-causes-burn-marks-on-sealed-marble",
+      "problem": "burn marks",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::burn marks",
+      "title": "How to Remove burn marks from sealed marble",
+      "slug": "how-to-remove-burn-marks-from-sealed-marble",
+      "problem": "burn marks",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::burn marks",
+      "title": "How to Prevent burn marks on sealed marble",
+      "slug": "how-to-prevent-burn-marks-on-sealed-marble",
+      "problem": "burn marks",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::burn marks",
+      "title": "How to Fix burn marks on sealed marble",
+      "slug": "how-to-fix-burn-marks-on-sealed-marble",
+      "problem": "burn marks",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::burn marks",
+      "title": "How to Clean burn marks from sealed marble",
+      "slug": "how-to-clean-burn-marks-from-sealed-marble",
+      "problem": "burn marks",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::burn marks",
+      "title": "How to Tell if burn marks on sealed marble is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-sealed-marble-is-permanent",
+      "problem": "burn marks",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::burn marks",
+      "title": "Why burn marks Keeps Coming Back on sealed marble",
+      "slug": "why-burn-marks-keeps-coming-back-on-sealed-marble",
+      "problem": "burn marks",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::burn marks",
+      "title": "How to Maintain sealed marble and Keep burn marks Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-sealed-marble",
+      "problem": "burn marks",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::burn marks",
+      "title": "What Causes burn marks on quartz countertops",
+      "slug": "what-causes-burn-marks-on-quartz-countertops",
+      "problem": "burn marks",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::burn marks",
+      "title": "How to Remove burn marks from quartz countertops",
+      "slug": "how-to-remove-burn-marks-from-quartz-countertops",
+      "problem": "burn marks",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::burn marks",
+      "title": "How to Prevent burn marks on quartz countertops",
+      "slug": "how-to-prevent-burn-marks-on-quartz-countertops",
+      "problem": "burn marks",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::burn marks",
+      "title": "How to Fix burn marks on quartz countertops",
+      "slug": "how-to-fix-burn-marks-on-quartz-countertops",
+      "problem": "burn marks",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::burn marks",
+      "title": "How to Clean burn marks from quartz countertops",
+      "slug": "how-to-clean-burn-marks-from-quartz-countertops",
+      "problem": "burn marks",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::burn marks",
+      "title": "How to Tell if burn marks on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-quartz-countertops-is-permanent",
+      "problem": "burn marks",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::burn marks",
+      "title": "Why burn marks Keeps Coming Back on quartz countertops",
+      "slug": "why-burn-marks-keeps-coming-back-on-quartz-countertops",
+      "problem": "burn marks",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::burn marks",
+      "title": "How to Maintain quartz countertops and Keep burn marks Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-quartz-countertops",
+      "problem": "burn marks",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::burn marks",
+      "title": "What Causes burn marks on laminate counters",
+      "slug": "what-causes-burn-marks-on-laminate-counters",
+      "problem": "burn marks",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::burn marks",
+      "title": "How to Remove burn marks from laminate counters",
+      "slug": "how-to-remove-burn-marks-from-laminate-counters",
+      "problem": "burn marks",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::burn marks",
+      "title": "How to Prevent burn marks on laminate counters",
+      "slug": "how-to-prevent-burn-marks-on-laminate-counters",
+      "problem": "burn marks",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::burn marks",
+      "title": "How to Fix burn marks on laminate counters",
+      "slug": "how-to-fix-burn-marks-on-laminate-counters",
+      "problem": "burn marks",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::burn marks",
+      "title": "How to Clean burn marks from laminate counters",
+      "slug": "how-to-clean-burn-marks-from-laminate-counters",
+      "problem": "burn marks",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::burn marks",
+      "title": "How to Tell if burn marks on laminate counters is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-laminate-counters-is-permanent",
+      "problem": "burn marks",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::burn marks",
+      "title": "Why burn marks Keeps Coming Back on laminate counters",
+      "slug": "why-burn-marks-keeps-coming-back-on-laminate-counters",
+      "problem": "burn marks",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::burn marks",
+      "title": "How to Maintain laminate counters and Keep burn marks Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

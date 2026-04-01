@@ -15,6 +15,7 @@ export type AuthorityPageFamily =
   | "method_compare_detail"
   | "surface_compare_detail"
   | "problem_compare_detail"
+  | "product_compare_detail"
   | "cluster_detail";
 
 export interface AuthoritySeoPolicy {

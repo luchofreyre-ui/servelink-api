@@ -17,6 +17,51 @@ function limit<T>(items: T[], max = 6): T[] {
   return items.slice(0, max);
 }
 
+/** Maps a problem hub to the closest “best cleaners for …” entry guide, when unambiguous. */
+export function entryClusterGuideForProblem(problemSlug: string): string | null {
+  const appliances = new Set(["appliance-grime", "burnt-residue", "appliance-buildup"]);
+  if (appliances.has(problemSlug)) {
+    return "best-cleaners-for-appliances";
+  }
+  const bath = new Set([
+    "soap-scum",
+    "hard-water-deposits",
+    "light-mildew",
+    "soap-film",
+    "biofilm-buildup",
+    "mold-growth",
+    "limescale-buildup",
+    "water-spotting",
+    "musty-odor",
+    "bathroom-buildup",
+    "mineral-film",
+    "mirror-haze",
+    "glass-cloudiness",
+  ]);
+  if (bath.has(problemSlug)) return "best-cleaners-for-bathrooms";
+  const kitchen = new Set([
+    "grease-buildup",
+    "cooked-on-grease",
+    "fingerprints-and-smudges",
+    "stuck-on-residue",
+    "greasy-grime",
+    "kitchen-grease-film",
+    "cabinet-grime",
+    "countertop-residue",
+    "exhaust-hood-film",
+    "sink-ring-stains",
+  ]);
+  if (kitchen.has(problemSlug)) return "best-cleaners-for-kitchens";
+  const floor = new Set([
+    "floor-residue-buildup",
+    "scuff-marks",
+    "floor-buildup",
+    "film-buildup",
+  ]);
+  if (floor.has(problemSlug)) return "best-cleaners-for-floors";
+  return null;
+}
+
 export function buildMethodBreadcrumbs(methodSlug: string): AuthorityBreadcrumbItem[] {
   const method = getMethodPageBySlug(methodSlug);
   if (!method) return [];
@@ -184,15 +229,68 @@ export function buildProblemSeeAlso(problemSlug: string): AuthoritySeeAlsoGroup[
       })),
   );
 
+  const entrySlug = entryClusterGuideForProblem(problemSlug);
+  const entryGuide = entrySlug ? getGuidePageBySlug(entrySlug) : undefined;
+  const guideAndCompareLinks = [
+    ...(entryGuide && entrySlug
+      ? [
+          {
+            title: entryGuide.title,
+            href: `/guides/${entrySlug}`,
+            description: entryGuide.summary,
+          },
+        ]
+      : []),
+    {
+      title: "Why cleaning fails",
+      href: "/guides/why-cleaning-fails",
+      description: "Understand mismatch patterns before escalating chemistry.",
+    },
+    {
+      title: "Chemical usage & safety",
+      href: "/guides/chemical-usage-and-safety",
+      description: "Label-first rules, ventilation, and mixing cautions.",
+    },
+    {
+      title: "Compare cleaning products",
+      href: "/compare/products",
+      description: "SKU comparisons on overlapping scenarios.",
+    },
+    {
+      title: "Compare methods",
+      href: "/compare/methods",
+      description: "When entire method families diverge in risk and fit.",
+    },
+    {
+      title: "Compare problems",
+      href: "/compare/problems",
+      description: "Disambiguate look-alike contamination types.",
+    },
+  ];
+
   return [
     ...(methodLinks.length ? [{ title: "Methods used for this problem", links: methodLinks }] : []),
     ...(surfaceLinks.length ? [{ title: "Surfaces where this problem appears", links: surfaceLinks }] : []),
+    { title: "Guides & comparison hubs", links: guideAndCompareLinks },
   ];
 }
 
 export function buildGuideSeeAlso(guideSlug: string): AuthoritySeeAlsoGroup[] {
   const guide = getGuidePageBySlug(guideSlug);
   if (!guide) return [];
+
+  const comparisonLinks = limit(
+    (guide.linkGroups ?? [])
+      .filter((g) => /comparison/i.test(g.title))
+      .flatMap((g) => g.links)
+      .filter((l) => l.href.includes("/compare/"))
+      .map((l) => ({
+        title: l.title,
+        href: l.href,
+        description: l.summary,
+      })),
+    5,
+  );
 
   const relatedMethods = limit(
     (guide.relatedMethods ?? []).map((m) => ({
@@ -222,5 +320,6 @@ export function buildGuideSeeAlso(guideSlug: string): AuthoritySeeAlsoGroup[] {
     ...(relatedMethods.length ? [{ title: "Related methods", links: relatedMethods }] : []),
     ...(relatedSurfaces.length ? [{ title: "Related surfaces", links: relatedSurfaces }] : []),
     ...(relatedProblems.length ? [{ title: "Related problems", links: relatedProblems }] : []),
+    ...(comparisonLinks.length ? [{ title: "Related comparisons", links: comparisonLinks }] : []),
   ];
 }

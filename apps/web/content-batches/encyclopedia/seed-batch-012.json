@@ -1,0 +1,17 @@
+{
+  "targets": [
+    { "surface": "hardwood", "problem": "soap residue" },
+    { "surface": "hardwood", "problem": "sticky residue" },
+    { "surface": "hardwood", "problem": "hard water film" },
+    { "surface": "hardwood", "problem": "mineral deposits" },
+    { "surface": "hardwood", "problem": "burnt residue" },
+    { "surface": "hardwood", "problem": "scuff marks" },
+    { "surface": "grout", "problem": "soap residue" },
+    { "surface": "grout", "problem": "sticky residue" },
+    { "surface": "grout", "problem": "hard water film" },
+    { "surface": "grout", "problem": "mineral deposits" },
+    { "surface": "grout", "problem": "burnt residue" },
+    { "surface": "grout", "problem": "scuff marks" },
+    { "surface": "grout", "problem": "odor retention" }
+  ]
+}

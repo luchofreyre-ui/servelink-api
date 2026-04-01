@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-prevent::shower grout::odor buildup",
+      "title": "How to Prevent odor buildup on shower grout",
+      "slug": "how-to-prevent-odor-buildup-on-shower-grout",
+      "problem": "odor buildup",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::odor buildup",
+      "title": "How to Fix odor buildup on shower grout",
+      "slug": "how-to-fix-odor-buildup-on-shower-grout",
+      "problem": "odor buildup",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::odor buildup",
+      "title": "How to Clean odor buildup from shower grout",
+      "slug": "how-to-clean-odor-buildup-from-shower-grout",
+      "problem": "odor buildup",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::odor buildup",
+      "title": "How to Tell if odor buildup on shower grout is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-shower-grout-is-permanent",
+      "problem": "odor buildup",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on shower grout",
+      "slug": "why-odor-buildup-keeps-coming-back-on-shower-grout",
+      "problem": "odor buildup",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::odor buildup",
+      "title": "How to Maintain shower grout and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-shower-grout",
+      "problem": "odor buildup",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::odor buildup",
+      "title": "What Causes odor buildup on tile grout",
+      "slug": "what-causes-odor-buildup-on-tile-grout",
+      "problem": "odor buildup",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::odor buildup",
+      "title": "How to Remove odor buildup from tile grout",
+      "slug": "how-to-remove-odor-buildup-from-tile-grout",
+      "problem": "odor buildup",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::odor buildup",
+      "title": "How to Prevent odor buildup on tile grout",
+      "slug": "how-to-prevent-odor-buildup-on-tile-grout",
+      "problem": "odor buildup",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::odor buildup",
+      "title": "How to Fix odor buildup on tile grout",
+      "slug": "how-to-fix-odor-buildup-on-tile-grout",
+      "problem": "odor buildup",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::odor buildup",
+      "title": "How to Clean odor buildup from tile grout",
+      "slug": "how-to-clean-odor-buildup-from-tile-grout",
+      "problem": "odor buildup",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::odor buildup",
+      "title": "How to Tell if odor buildup on tile grout is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-tile-grout-is-permanent",
+      "problem": "odor buildup",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on tile grout",
+      "slug": "why-odor-buildup-keeps-coming-back-on-tile-grout",
+      "problem": "odor buildup",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::odor buildup",
+      "title": "How to Maintain tile grout and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-tile-grout",
+      "problem": "odor buildup",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::odor buildup",
+      "title": "What Causes odor buildup on caulking",
+      "slug": "what-causes-odor-buildup-on-caulking",
+      "problem": "odor buildup",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::odor buildup",
+      "title": "How to Remove odor buildup from caulking",
+      "slug": "how-to-remove-odor-buildup-from-caulking",
+      "problem": "odor buildup",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::odor buildup",
+      "title": "How to Prevent odor buildup on caulking",
+      "slug": "how-to-prevent-odor-buildup-on-caulking",
+      "problem": "odor buildup",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::odor buildup",
+      "title": "How to Fix odor buildup on caulking",
+      "slug": "how-to-fix-odor-buildup-on-caulking",
+      "problem": "odor buildup",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::odor buildup",
+      "title": "How to Clean odor buildup from caulking",
+      "slug": "how-to-clean-odor-buildup-from-caulking",
+      "problem": "odor buildup",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::odor buildup",
+      "title": "How to Tell if odor buildup on caulking is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-caulking-is-permanent",
+      "problem": "odor buildup",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on caulking",
+      "slug": "why-odor-buildup-keeps-coming-back-on-caulking",
+      "problem": "odor buildup",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::odor buildup",
+      "title": "How to Maintain caulking and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-caulking",
+      "problem": "odor buildup",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::odor buildup",
+      "title": "What Causes odor buildup on shower pans",
+      "slug": "what-causes-odor-buildup-on-shower-pans",
+      "problem": "odor buildup",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::odor buildup",
+      "title": "How to Remove odor buildup from shower pans",
+      "slug": "how-to-remove-odor-buildup-from-shower-pans",
+      "problem": "odor buildup",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::odor buildup",
+      "title": "How to Prevent odor buildup on shower pans",
+      "slug": "how-to-prevent-odor-buildup-on-shower-pans",
+      "problem": "odor buildup",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::odor buildup",
+      "title": "How to Fix odor buildup on shower pans",
+      "slug": "how-to-fix-odor-buildup-on-shower-pans",
+      "problem": "odor buildup",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::odor buildup",
+      "title": "How to Clean odor buildup from shower pans",
+      "slug": "how-to-clean-odor-buildup-from-shower-pans",
+      "problem": "odor buildup",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::odor buildup",
+      "title": "How to Tell if odor buildup on shower pans is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-shower-pans-is-permanent",
+      "problem": "odor buildup",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on shower pans",
+      "slug": "why-odor-buildup-keeps-coming-back-on-shower-pans",
+      "problem": "odor buildup",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::odor buildup",
+      "title": "How to Maintain shower pans and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-shower-pans",
+      "problem": "odor buildup",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::odor buildup",
+      "title": "What Causes odor buildup on bathtub surrounds",
+      "slug": "what-causes-odor-buildup-on-bathtub-surrounds",
+      "problem": "odor buildup",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::odor buildup",
+      "title": "How to Remove odor buildup from bathtub surrounds",
+      "slug": "how-to-remove-odor-buildup-from-bathtub-surrounds",
+      "problem": "odor buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::odor buildup",
+      "title": "How to Prevent odor buildup on bathtub surrounds",
+      "slug": "how-to-prevent-odor-buildup-on-bathtub-surrounds",
+      "problem": "odor buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::odor buildup",
+      "title": "How to Fix odor buildup on bathtub surrounds",
+      "slug": "how-to-fix-odor-buildup-on-bathtub-surrounds",
+      "problem": "odor buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::odor buildup",
+      "title": "How to Clean odor buildup from bathtub surrounds",
+      "slug": "how-to-clean-odor-buildup-from-bathtub-surrounds",
+      "problem": "odor buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::odor buildup",
+      "title": "How to Tell if odor buildup on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-bathtub-surrounds-is-permanent",
+      "problem": "odor buildup",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on bathtub surrounds",
+      "slug": "why-odor-buildup-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "odor buildup",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::odor buildup",
+      "title": "How to Maintain bathtub surrounds and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-bathtub-surrounds",
+      "problem": "odor buildup",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::odor buildup",
+      "title": "What Causes odor buildup on ceramic tile",
+      "slug": "what-causes-odor-buildup-on-ceramic-tile",
+      "problem": "odor buildup",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::odor buildup",
+      "title": "How to Remove odor buildup from ceramic tile",
+      "slug": "how-to-remove-odor-buildup-from-ceramic-tile",
+      "problem": "odor buildup",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::odor buildup",
+      "title": "How to Prevent odor buildup on ceramic tile",
+      "slug": "how-to-prevent-odor-buildup-on-ceramic-tile",
+      "problem": "odor buildup",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::odor buildup",
+      "title": "How to Fix odor buildup on ceramic tile",
+      "slug": "how-to-fix-odor-buildup-on-ceramic-tile",
+      "problem": "odor buildup",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::odor buildup",
+      "title": "How to Clean odor buildup from ceramic tile",
+      "slug": "how-to-clean-odor-buildup-from-ceramic-tile",
+      "problem": "odor buildup",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::odor buildup",
+      "title": "How to Tell if odor buildup on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-ceramic-tile-is-permanent",
+      "problem": "odor buildup",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on ceramic tile",
+      "slug": "why-odor-buildup-keeps-coming-back-on-ceramic-tile",
+      "problem": "odor buildup",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::odor buildup",
+      "title": "How to Maintain ceramic tile and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-ceramic-tile",
+      "problem": "odor buildup",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::odor buildup",
+      "title": "What Causes odor buildup on porcelain tile",
+      "slug": "what-causes-odor-buildup-on-porcelain-tile",
+      "problem": "odor buildup",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::odor buildup",
+      "title": "How to Remove odor buildup from porcelain tile",
+      "slug": "how-to-remove-odor-buildup-from-porcelain-tile",
+      "problem": "odor buildup",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::odor buildup",
+      "title": "How to Prevent odor buildup on porcelain tile",
+      "slug": "how-to-prevent-odor-buildup-on-porcelain-tile",
+      "problem": "odor buildup",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::odor buildup",
+      "title": "How to Fix odor buildup on porcelain tile",
+      "slug": "how-to-fix-odor-buildup-on-porcelain-tile",
+      "problem": "odor buildup",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::odor buildup",
+      "title": "How to Clean odor buildup from porcelain tile",
+      "slug": "how-to-clean-odor-buildup-from-porcelain-tile",
+      "problem": "odor buildup",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::odor buildup",
+      "title": "How to Tell if odor buildup on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-porcelain-tile-is-permanent",
+      "problem": "odor buildup",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on porcelain tile",
+      "slug": "why-odor-buildup-keeps-coming-back-on-porcelain-tile",
+      "problem": "odor buildup",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::odor buildup",
+      "title": "How to Maintain porcelain tile and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-porcelain-tile",
+      "problem": "odor buildup",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::odor buildup",
+      "title": "What Causes odor buildup on sealed granite",
+      "slug": "what-causes-odor-buildup-on-sealed-granite",
+      "problem": "odor buildup",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::odor buildup",
+      "title": "How to Remove odor buildup from sealed granite",
+      "slug": "how-to-remove-odor-buildup-from-sealed-granite",
+      "problem": "odor buildup",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::odor buildup",
+      "title": "How to Prevent odor buildup on sealed granite",
+      "slug": "how-to-prevent-odor-buildup-on-sealed-granite",
+      "problem": "odor buildup",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::odor buildup",
+      "title": "How to Fix odor buildup on sealed granite",
+      "slug": "how-to-fix-odor-buildup-on-sealed-granite",
+      "problem": "odor buildup",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::odor buildup",
+      "title": "How to Clean odor buildup from sealed granite",
+      "slug": "how-to-clean-odor-buildup-from-sealed-granite",
+      "problem": "odor buildup",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::odor buildup",
+      "title": "How to Tell if odor buildup on sealed granite is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-sealed-granite-is-permanent",
+      "problem": "odor buildup",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on sealed granite",
+      "slug": "why-odor-buildup-keeps-coming-back-on-sealed-granite",
+      "problem": "odor buildup",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::odor buildup",
+      "title": "How to Maintain sealed granite and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-sealed-granite",
+      "problem": "odor buildup",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::odor buildup",
+      "title": "What Causes odor buildup on sealed marble",
+      "slug": "what-causes-odor-buildup-on-sealed-marble",
+      "problem": "odor buildup",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::odor buildup",
+      "title": "How to Remove odor buildup from sealed marble",
+      "slug": "how-to-remove-odor-buildup-from-sealed-marble",
+      "problem": "odor buildup",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::odor buildup",
+      "title": "How to Prevent odor buildup on sealed marble",
+      "slug": "how-to-prevent-odor-buildup-on-sealed-marble",
+      "problem": "odor buildup",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::odor buildup",
+      "title": "How to Fix odor buildup on sealed marble",
+      "slug": "how-to-fix-odor-buildup-on-sealed-marble",
+      "problem": "odor buildup",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::odor buildup",
+      "title": "How to Clean odor buildup from sealed marble",
+      "slug": "how-to-clean-odor-buildup-from-sealed-marble",
+      "problem": "odor buildup",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::odor buildup",
+      "title": "How to Tell if odor buildup on sealed marble is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-sealed-marble-is-permanent",
+      "problem": "odor buildup",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on sealed marble",
+      "slug": "why-odor-buildup-keeps-coming-back-on-sealed-marble",
+      "problem": "odor buildup",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::odor buildup",
+      "title": "How to Maintain sealed marble and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-sealed-marble",
+      "problem": "odor buildup",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::odor buildup",
+      "title": "What Causes odor buildup on quartz countertops",
+      "slug": "what-causes-odor-buildup-on-quartz-countertops",
+      "problem": "odor buildup",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::odor buildup",
+      "title": "How to Remove odor buildup from quartz countertops",
+      "slug": "how-to-remove-odor-buildup-from-quartz-countertops",
+      "problem": "odor buildup",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::odor buildup",
+      "title": "How to Prevent odor buildup on quartz countertops",
+      "slug": "how-to-prevent-odor-buildup-on-quartz-countertops",
+      "problem": "odor buildup",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::odor buildup",
+      "title": "How to Fix odor buildup on quartz countertops",
+      "slug": "how-to-fix-odor-buildup-on-quartz-countertops",
+      "problem": "odor buildup",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::odor buildup",
+      "title": "How to Clean odor buildup from quartz countertops",
+      "slug": "how-to-clean-odor-buildup-from-quartz-countertops",
+      "problem": "odor buildup",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::odor buildup",
+      "title": "How to Tell if odor buildup on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-quartz-countertops-is-permanent",
+      "problem": "odor buildup",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on quartz countertops",
+      "slug": "why-odor-buildup-keeps-coming-back-on-quartz-countertops",
+      "problem": "odor buildup",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::odor buildup",
+      "title": "How to Maintain quartz countertops and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-quartz-countertops",
+      "problem": "odor buildup",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::odor buildup",
+      "title": "What Causes odor buildup on laminate counters",
+      "slug": "what-causes-odor-buildup-on-laminate-counters",
+      "problem": "odor buildup",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::odor buildup",
+      "title": "How to Remove odor buildup from laminate counters",
+      "slug": "how-to-remove-odor-buildup-from-laminate-counters",
+      "problem": "odor buildup",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::odor buildup",
+      "title": "How to Prevent odor buildup on laminate counters",
+      "slug": "how-to-prevent-odor-buildup-on-laminate-counters",
+      "problem": "odor buildup",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::odor buildup",
+      "title": "How to Fix odor buildup on laminate counters",
+      "slug": "how-to-fix-odor-buildup-on-laminate-counters",
+      "problem": "odor buildup",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::odor buildup",
+      "title": "How to Clean odor buildup from laminate counters",
+      "slug": "how-to-clean-odor-buildup-from-laminate-counters",
+      "problem": "odor buildup",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::odor buildup",
+      "title": "How to Tell if odor buildup on laminate counters is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-laminate-counters-is-permanent",
+      "problem": "odor buildup",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on laminate counters",
+      "slug": "why-odor-buildup-keeps-coming-back-on-laminate-counters",
+      "problem": "odor buildup",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::odor buildup",
+      "title": "How to Maintain laminate counters and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-laminate-counters",
+      "problem": "odor buildup",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::odor buildup",
+      "title": "What Causes odor buildup on butcher block",
+      "slug": "what-causes-odor-buildup-on-butcher-block",
+      "problem": "odor buildup",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::odor buildup",
+      "title": "How to Remove odor buildup from butcher block",
+      "slug": "how-to-remove-odor-buildup-from-butcher-block",
+      "problem": "odor buildup",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::odor buildup",
+      "title": "How to Prevent odor buildup on butcher block",
+      "slug": "how-to-prevent-odor-buildup-on-butcher-block",
+      "problem": "odor buildup",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

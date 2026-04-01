@@ -1,5 +1,7 @@
 import type { CanonicalPageSnapshot } from "./encyclopediaPipelineTypes";
 import type { StructuredArticle, StructuredSection } from "./structuredTypes";
+import { buildSeo } from "./seo/seoBuilder";
+import { buildInternalLinks } from "./linking/internalLinkBuilder";
 
 function structuredSectionSortRank(s: StructuredSection): number {
   if (s.kind === "meta_grid") return 0;
@@ -227,5 +229,73 @@ export function transformSnapshotToStructured(
     title: snapshot.title,
     slug: snapshot.slug,
     sections,
+    internalLinks: normalizeUniqueInternalLinkSlugs(snapshot.internalLinks).map((slug) => ({
+      title: slug.replace(/-/g, " "),
+      slug,
+    })),
+  };
+}
+
+function sectionRecordFromSnapshot(snapshot: CanonicalPageSnapshot): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const s of snapshot.sections ?? []) {
+    if (typeof s?.key === "string") {
+      out[s.key] = String(s.content ?? "");
+    }
+  }
+  return out;
+}
+
+export function enhanceStructuredPage(snapshot: any, allPages: any[]) {
+  const sections = snapshot?.sections && !Array.isArray(snapshot.sections) ? snapshot.sections : {};
+  const resolvedSections =
+    snapshot?.sections && Array.isArray(snapshot.sections)
+      ? sectionRecordFromSnapshot(snapshot as CanonicalPageSnapshot)
+      : (sections as Record<string, string>);
+
+  const seo = buildSeo({
+    surface: snapshot.surface,
+    problem: snapshot.problem,
+    intent: snapshot.intent,
+    sections: resolvedSections,
+  });
+
+  const pages = (allPages ?? []).map((p: any) => {
+    const pSeo =
+      p?.seo && typeof p.seo === "object" && typeof p.seo.slug === "string"
+        ? p.seo
+        : buildSeo({
+            surface: p.surface,
+            problem: p.problem,
+            intent: p.intent,
+            sections: p?.sections && Array.isArray(p.sections) ? sectionRecordFromSnapshot(p) : {},
+          });
+
+    return {
+      surface: p.surface,
+      problem: p.problem,
+      intent: p.intent,
+      slug: pSeo.slug,
+    };
+  });
+
+  const links = buildInternalLinks(
+    {
+      surface: snapshot.surface,
+      problem: snapshot.problem,
+      intent: snapshot.intent,
+      slug: seo.slug,
+    },
+    pages,
+  );
+
+  return {
+    ...snapshot,
+    seo,
+    internalLinks: links.map((l) => l.slug),
+    internalLinkEntries: links.map((l) => ({
+      title: `${l.problem} on ${l.surface}`,
+      slug: l.slug,
+    })),
   };
 }

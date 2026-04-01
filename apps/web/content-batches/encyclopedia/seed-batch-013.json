@@ -1,0 +1,17 @@
+{
+  "targets": [
+    { "surface": "hardwood", "problem": "oil stains" },
+    { "surface": "hardwood", "problem": "food residue" },
+    { "surface": "hardwood", "problem": "protein residue" },
+    { "surface": "hardwood", "problem": "mold growth" },
+    { "surface": "hardwood", "problem": "mildew stains" },
+
+    { "surface": "grout", "problem": "oil stains" },
+    { "surface": "grout", "problem": "food residue" },
+    { "surface": "grout", "problem": "protein residue" },
+    { "surface": "grout", "problem": "rust stains" },
+    { "surface": "grout", "problem": "tannin stains" },
+    { "surface": "grout", "problem": "mold growth" },
+    { "surface": "grout", "problem": "mildew stains" }
+  ]
+}

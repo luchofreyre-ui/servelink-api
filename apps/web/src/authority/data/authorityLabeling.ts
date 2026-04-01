@@ -2,6 +2,7 @@ import { getGuidePageBySlug } from "./authorityGuidePageData";
 import { getMethodPageBySlug } from "./authorityMethodPageData";
 import { getProblemPageBySlug } from "./authorityProblemPageData";
 import { getSurfacePageBySlug } from "./authoritySurfacePageData";
+import { getProductBySlug } from "@/lib/products/productRegistry";
 
 function humanizeSlug(slug: string): string {
   return slug
@@ -16,6 +17,7 @@ export function getAuthorityEntityLabel(slug: string): string {
     getSurfacePageBySlug(slug)?.title ??
     getProblemPageBySlug(slug)?.title ??
     getGuidePageBySlug(slug)?.title ??
+    getProductBySlug(slug)?.name ??
     humanizeSlug(slug)
   );
 }

@@ -1,0 +1,31 @@
+{
+  "targets": [
+    { "surface": "granite", "problem": "scratches" },
+    { "surface": "granite", "problem": "scuff marks" },
+    { "surface": "marble", "problem": "scratches" },
+    { "surface": "marble", "problem": "scuff marks" },
+    { "surface": "quartz", "problem": "scratches" },
+    { "surface": "quartz", "problem": "scuff marks" },
+
+    { "surface": "laminate", "problem": "soap residue" },
+    { "surface": "laminate", "problem": "hard water stains" },
+    { "surface": "laminate", "problem": "product residue" },
+    { "surface": "laminate", "problem": "soap scum" },
+    { "surface": "laminate", "problem": "water spots" },
+    { "surface": "laminate", "problem": "sticky residue" },
+    { "surface": "laminate", "problem": "adhesive residue" },
+    { "surface": "laminate", "problem": "wax buildup" },
+    { "surface": "laminate", "problem": "hard water film" },
+    { "surface": "laminate", "problem": "mineral haze" },
+    { "surface": "laminate", "problem": "white film" },
+    { "surface": "laminate", "problem": "cloudy film" },
+
+    { "surface": "wood", "problem": "dust buildup" },
+    { "surface": "grout", "problem": "dust buildup" },
+    { "surface": "sealed stone", "problem": "scratches" },
+    { "surface": "sealed stone", "problem": "scuff marks" },
+    { "surface": "shower grout", "problem": "dust buildup" },
+    { "surface": "tile grout", "problem": "dust buildup" },
+    { "surface": "caulking", "problem": "dust buildup" }
+  ]
+}

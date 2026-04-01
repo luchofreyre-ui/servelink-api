@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-maintain::grout::mold growth",
+      "title": "How to Maintain grout and Keep mold growth Under Control",
+      "slug": "how-to-maintain-grout-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-grout",
+      "problem": "mold growth",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::glass cooktops::mold growth",
+      "title": "What Causes mold growth on glass cooktops",
+      "slug": "what-causes-mold-growth-on-glass-cooktops",
+      "problem": "mold growth",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::glass cooktops::mold growth",
+      "title": "How to Remove mold growth from glass cooktops",
+      "slug": "how-to-remove-mold-growth-from-glass-cooktops",
+      "problem": "mold growth",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::glass cooktops::mold growth",
+      "title": "How to Prevent mold growth on glass cooktops",
+      "slug": "how-to-prevent-mold-growth-on-glass-cooktops",
+      "problem": "mold growth",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::glass cooktops::mold growth",
+      "title": "How to Fix mold growth on glass cooktops",
+      "slug": "how-to-fix-mold-growth-on-glass-cooktops",
+      "problem": "mold growth",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::glass cooktops::mold growth",
+      "title": "How to Clean mold growth from glass cooktops",
+      "slug": "how-to-clean-mold-growth-from-glass-cooktops",
+      "problem": "mold growth",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::glass cooktops::mold growth",
+      "title": "How to Tell if mold growth on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-glass-cooktops-is-permanent",
+      "problem": "mold growth",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::glass cooktops::mold growth",
+      "title": "Why mold growth Keeps Coming Back on glass cooktops",
+      "slug": "why-mold-growth-keeps-coming-back-on-glass-cooktops",
+      "problem": "mold growth",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::glass cooktops::mold growth",
+      "title": "How to Maintain glass cooktops and Keep mold growth Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::glass cooktops::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-glass-cooktops",
+      "problem": "mold growth",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted cabinets::mold growth",
+      "title": "What Causes mold growth on painted cabinets",
+      "slug": "what-causes-mold-growth-on-painted-cabinets",
+      "problem": "mold growth",
+      "surface": "painted cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted cabinets::mold growth",
+      "title": "How to Remove mold growth from painted cabinets",
+      "slug": "how-to-remove-mold-growth-from-painted-cabinets",
+      "problem": "mold growth",
+      "surface": "painted cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted cabinets::mold growth",
+      "title": "How to Prevent mold growth on painted cabinets",
+      "slug": "how-to-prevent-mold-growth-on-painted-cabinets",
+      "problem": "mold growth",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted cabinets::mold growth",
+      "title": "How to Fix mold growth on painted cabinets",
+      "slug": "how-to-fix-mold-growth-on-painted-cabinets",
+      "problem": "mold growth",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted cabinets::mold growth",
+      "title": "How to Clean mold growth from painted cabinets",
+      "slug": "how-to-clean-mold-growth-from-painted-cabinets",
+      "problem": "mold growth",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted cabinets::mold growth",
+      "title": "How to Tell if mold growth on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-painted-cabinets-is-permanent",
+      "problem": "mold growth",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted cabinets::mold growth",
+      "title": "Why mold growth Keeps Coming Back on painted cabinets",
+      "slug": "why-mold-growth-keeps-coming-back-on-painted-cabinets",
+      "problem": "mold growth",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted cabinets::mold growth",
+      "title": "How to Maintain painted cabinets and Keep mold growth Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted cabinets::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-painted-cabinets",
+      "problem": "mold growth",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::mold growth",
+      "title": "What Causes mold growth on sealed stone",
+      "slug": "what-causes-mold-growth-on-sealed-stone",
+      "problem": "mold growth",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::mold growth",
+      "title": "How to Remove mold growth from sealed stone",
+      "slug": "how-to-remove-mold-growth-from-sealed-stone",
+      "problem": "mold growth",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::mold growth",
+      "title": "How to Prevent mold growth on sealed stone",
+      "slug": "how-to-prevent-mold-growth-on-sealed-stone",
+      "problem": "mold growth",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::mold growth",
+      "title": "How to Fix mold growth on sealed stone",
+      "slug": "how-to-fix-mold-growth-on-sealed-stone",
+      "problem": "mold growth",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::mold growth",
+      "title": "How to Clean mold growth from sealed stone",
+      "slug": "how-to-clean-mold-growth-from-sealed-stone",
+      "problem": "mold growth",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::mold growth",
+      "title": "How to Tell if mold growth on sealed stone is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-sealed-stone-is-permanent",
+      "problem": "mold growth",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::mold growth",
+      "title": "Why mold growth Keeps Coming Back on sealed stone",
+      "slug": "why-mold-growth-keeps-coming-back-on-sealed-stone",
+      "problem": "mold growth",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::mold growth",
+      "title": "How to Maintain sealed stone and Keep mold growth Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-sealed-stone",
+      "problem": "mold growth",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::mold growth",
+      "title": "What Causes mold growth on shower grout",
+      "slug": "what-causes-mold-growth-on-shower-grout",
+      "problem": "mold growth",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::mold growth",
+      "title": "How to Remove mold growth from shower grout",
+      "slug": "how-to-remove-mold-growth-from-shower-grout",
+      "problem": "mold growth",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::mold growth",
+      "title": "How to Prevent mold growth on shower grout",
+      "slug": "how-to-prevent-mold-growth-on-shower-grout",
+      "problem": "mold growth",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::mold growth",
+      "title": "How to Fix mold growth on shower grout",
+      "slug": "how-to-fix-mold-growth-on-shower-grout",
+      "problem": "mold growth",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::mold growth",
+      "title": "How to Clean mold growth from shower grout",
+      "slug": "how-to-clean-mold-growth-from-shower-grout",
+      "problem": "mold growth",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::mold growth",
+      "title": "How to Tell if mold growth on shower grout is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-shower-grout-is-permanent",
+      "problem": "mold growth",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::mold growth",
+      "title": "Why mold growth Keeps Coming Back on shower grout",
+      "slug": "why-mold-growth-keeps-coming-back-on-shower-grout",
+      "problem": "mold growth",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::mold growth",
+      "title": "How to Maintain shower grout and Keep mold growth Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-shower-grout",
+      "problem": "mold growth",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::mold growth",
+      "title": "What Causes mold growth on tile grout",
+      "slug": "what-causes-mold-growth-on-tile-grout",
+      "problem": "mold growth",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::mold growth",
+      "title": "How to Remove mold growth from tile grout",
+      "slug": "how-to-remove-mold-growth-from-tile-grout",
+      "problem": "mold growth",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::mold growth",
+      "title": "How to Prevent mold growth on tile grout",
+      "slug": "how-to-prevent-mold-growth-on-tile-grout",
+      "problem": "mold growth",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::mold growth",
+      "title": "How to Fix mold growth on tile grout",
+      "slug": "how-to-fix-mold-growth-on-tile-grout",
+      "problem": "mold growth",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::mold growth",
+      "title": "How to Clean mold growth from tile grout",
+      "slug": "how-to-clean-mold-growth-from-tile-grout",
+      "problem": "mold growth",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::mold growth",
+      "title": "How to Tell if mold growth on tile grout is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-tile-grout-is-permanent",
+      "problem": "mold growth",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::mold growth",
+      "title": "Why mold growth Keeps Coming Back on tile grout",
+      "slug": "why-mold-growth-keeps-coming-back-on-tile-grout",
+      "problem": "mold growth",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::mold growth",
+      "title": "How to Maintain tile grout and Keep mold growth Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-tile-grout",
+      "problem": "mold growth",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::mold growth",
+      "title": "What Causes mold growth on caulking",
+      "slug": "what-causes-mold-growth-on-caulking",
+      "problem": "mold growth",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::mold growth",
+      "title": "How to Remove mold growth from caulking",
+      "slug": "how-to-remove-mold-growth-from-caulking",
+      "problem": "mold growth",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::mold growth",
+      "title": "How to Prevent mold growth on caulking",
+      "slug": "how-to-prevent-mold-growth-on-caulking",
+      "problem": "mold growth",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::mold growth",
+      "title": "How to Fix mold growth on caulking",
+      "slug": "how-to-fix-mold-growth-on-caulking",
+      "problem": "mold growth",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::mold growth",
+      "title": "How to Clean mold growth from caulking",
+      "slug": "how-to-clean-mold-growth-from-caulking",
+      "problem": "mold growth",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::mold growth",
+      "title": "How to Tell if mold growth on caulking is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-caulking-is-permanent",
+      "problem": "mold growth",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::mold growth",
+      "title": "Why mold growth Keeps Coming Back on caulking",
+      "slug": "why-mold-growth-keeps-coming-back-on-caulking",
+      "problem": "mold growth",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::mold growth",
+      "title": "How to Maintain caulking and Keep mold growth Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-caulking",
+      "problem": "mold growth",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::mold growth",
+      "title": "What Causes mold growth on shower pans",
+      "slug": "what-causes-mold-growth-on-shower-pans",
+      "problem": "mold growth",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::mold growth",
+      "title": "How to Remove mold growth from shower pans",
+      "slug": "how-to-remove-mold-growth-from-shower-pans",
+      "problem": "mold growth",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::mold growth",
+      "title": "How to Prevent mold growth on shower pans",
+      "slug": "how-to-prevent-mold-growth-on-shower-pans",
+      "problem": "mold growth",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::mold growth",
+      "title": "How to Fix mold growth on shower pans",
+      "slug": "how-to-fix-mold-growth-on-shower-pans",
+      "problem": "mold growth",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::mold growth",
+      "title": "How to Clean mold growth from shower pans",
+      "slug": "how-to-clean-mold-growth-from-shower-pans",
+      "problem": "mold growth",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::mold growth",
+      "title": "How to Tell if mold growth on shower pans is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-shower-pans-is-permanent",
+      "problem": "mold growth",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::mold growth",
+      "title": "Why mold growth Keeps Coming Back on shower pans",
+      "slug": "why-mold-growth-keeps-coming-back-on-shower-pans",
+      "problem": "mold growth",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::mold growth",
+      "title": "How to Maintain shower pans and Keep mold growth Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-shower-pans",
+      "problem": "mold growth",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::mold growth",
+      "title": "What Causes mold growth on bathtub surrounds",
+      "slug": "what-causes-mold-growth-on-bathtub-surrounds",
+      "problem": "mold growth",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::mold growth",
+      "title": "How to Remove mold growth from bathtub surrounds",
+      "slug": "how-to-remove-mold-growth-from-bathtub-surrounds",
+      "problem": "mold growth",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::mold growth",
+      "title": "How to Prevent mold growth on bathtub surrounds",
+      "slug": "how-to-prevent-mold-growth-on-bathtub-surrounds",
+      "problem": "mold growth",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::mold growth",
+      "title": "How to Fix mold growth on bathtub surrounds",
+      "slug": "how-to-fix-mold-growth-on-bathtub-surrounds",
+      "problem": "mold growth",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::mold growth",
+      "title": "How to Clean mold growth from bathtub surrounds",
+      "slug": "how-to-clean-mold-growth-from-bathtub-surrounds",
+      "problem": "mold growth",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::mold growth",
+      "title": "How to Tell if mold growth on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-bathtub-surrounds-is-permanent",
+      "problem": "mold growth",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::mold growth",
+      "title": "Why mold growth Keeps Coming Back on bathtub surrounds",
+      "slug": "why-mold-growth-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "mold growth",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::mold growth",
+      "title": "How to Maintain bathtub surrounds and Keep mold growth Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-bathtub-surrounds",
+      "problem": "mold growth",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::mold growth",
+      "title": "What Causes mold growth on ceramic tile",
+      "slug": "what-causes-mold-growth-on-ceramic-tile",
+      "problem": "mold growth",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::mold growth",
+      "title": "How to Remove mold growth from ceramic tile",
+      "slug": "how-to-remove-mold-growth-from-ceramic-tile",
+      "problem": "mold growth",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::mold growth",
+      "title": "How to Prevent mold growth on ceramic tile",
+      "slug": "how-to-prevent-mold-growth-on-ceramic-tile",
+      "problem": "mold growth",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::mold growth",
+      "title": "How to Fix mold growth on ceramic tile",
+      "slug": "how-to-fix-mold-growth-on-ceramic-tile",
+      "problem": "mold growth",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::mold growth",
+      "title": "How to Clean mold growth from ceramic tile",
+      "slug": "how-to-clean-mold-growth-from-ceramic-tile",
+      "problem": "mold growth",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::mold growth",
+      "title": "How to Tell if mold growth on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-ceramic-tile-is-permanent",
+      "problem": "mold growth",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::mold growth",
+      "title": "Why mold growth Keeps Coming Back on ceramic tile",
+      "slug": "why-mold-growth-keeps-coming-back-on-ceramic-tile",
+      "problem": "mold growth",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::mold growth",
+      "title": "How to Maintain ceramic tile and Keep mold growth Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-ceramic-tile",
+      "problem": "mold growth",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::mold growth",
+      "title": "What Causes mold growth on porcelain tile",
+      "slug": "what-causes-mold-growth-on-porcelain-tile",
+      "problem": "mold growth",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::mold growth",
+      "title": "How to Remove mold growth from porcelain tile",
+      "slug": "how-to-remove-mold-growth-from-porcelain-tile",
+      "problem": "mold growth",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::mold growth",
+      "title": "How to Prevent mold growth on porcelain tile",
+      "slug": "how-to-prevent-mold-growth-on-porcelain-tile",
+      "problem": "mold growth",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::mold growth",
+      "title": "How to Fix mold growth on porcelain tile",
+      "slug": "how-to-fix-mold-growth-on-porcelain-tile",
+      "problem": "mold growth",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::mold growth",
+      "title": "How to Clean mold growth from porcelain tile",
+      "slug": "how-to-clean-mold-growth-from-porcelain-tile",
+      "problem": "mold growth",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::mold growth",
+      "title": "How to Tell if mold growth on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-porcelain-tile-is-permanent",
+      "problem": "mold growth",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::mold growth",
+      "title": "Why mold growth Keeps Coming Back on porcelain tile",
+      "slug": "why-mold-growth-keeps-coming-back-on-porcelain-tile",
+      "problem": "mold growth",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::mold growth",
+      "title": "How to Maintain porcelain tile and Keep mold growth Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-porcelain-tile",
+      "problem": "mold growth",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::mold growth",
+      "title": "What Causes mold growth on sealed granite",
+      "slug": "what-causes-mold-growth-on-sealed-granite",
+      "problem": "mold growth",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::mold growth",
+      "title": "How to Remove mold growth from sealed granite",
+      "slug": "how-to-remove-mold-growth-from-sealed-granite",
+      "problem": "mold growth",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::mold growth",
+      "title": "How to Prevent mold growth on sealed granite",
+      "slug": "how-to-prevent-mold-growth-on-sealed-granite",
+      "problem": "mold growth",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::mold growth",
+      "title": "How to Fix mold growth on sealed granite",
+      "slug": "how-to-fix-mold-growth-on-sealed-granite",
+      "problem": "mold growth",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::mold growth",
+      "title": "How to Clean mold growth from sealed granite",
+      "slug": "how-to-clean-mold-growth-from-sealed-granite",
+      "problem": "mold growth",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::mold growth",
+      "title": "How to Tell if mold growth on sealed granite is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-sealed-granite-is-permanent",
+      "problem": "mold growth",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::mold growth",
+      "title": "Why mold growth Keeps Coming Back on sealed granite",
+      "slug": "why-mold-growth-keeps-coming-back-on-sealed-granite",
+      "problem": "mold growth",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::mold growth",
+      "title": "How to Maintain sealed granite and Keep mold growth Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

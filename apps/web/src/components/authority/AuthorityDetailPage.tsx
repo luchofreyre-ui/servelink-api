@@ -52,6 +52,7 @@ import {
 import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { getBuiltBridgeMap } from "@/lib/encyclopedia/bridgeMap";
 import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
+import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 
 function MethodBody({ data }: { data: AuthorityMethodPageData }) {
   return (
@@ -269,6 +270,7 @@ export function AuthorityDetailPage(props: {
       <main className="mx-auto max-w-3xl px-6 py-16 md:px-8">
         <AuthorityBreadcrumbs items={crumbs} />
         <AuthorityHero eyebrow={eyebrow} title={data.title} description={data.summary} />
+        <AuthorityTopicalCrossLinks pageKey={`${variant}-${data.slug}`} />
         <div className="space-y-0">
           {variant === "method" ? <MethodBody data={data as AuthorityMethodPageData} /> : null}
           {variant === "surface" ? <SurfaceBody data={data as AuthoritySurfacePageData} /> : null}

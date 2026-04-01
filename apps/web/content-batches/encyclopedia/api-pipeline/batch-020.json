@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-remove::tile floors::cooked-on residue",
+      "title": "How to Remove cooked-on residue from tile floors",
+      "slug": "how-to-remove-cooked-on-residue-from-tile-floors",
+      "problem": "cooked-on residue",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::cooked-on residue",
+      "title": "How to Prevent cooked-on residue on tile floors",
+      "slug": "how-to-prevent-cooked-on-residue-on-tile-floors",
+      "problem": "cooked-on residue",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::cooked-on residue",
+      "title": "How to Fix cooked-on residue on tile floors",
+      "slug": "how-to-fix-cooked-on-residue-on-tile-floors",
+      "problem": "cooked-on residue",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::cooked-on residue",
+      "title": "How to Clean cooked-on residue from tile floors",
+      "slug": "how-to-clean-cooked-on-residue-from-tile-floors",
+      "problem": "cooked-on residue",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::cooked-on residue",
+      "title": "How to Tell if cooked-on residue on tile floors is Permanent",
+      "slug": "how-to-tell-if-cooked-on-residue-on-tile-floors-is-permanent",
+      "problem": "cooked-on residue",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::cooked-on residue",
+      "title": "Why cooked-on residue Keeps Coming Back on tile floors",
+      "slug": "why-cooked-on-residue-keeps-coming-back-on-tile-floors",
+      "problem": "cooked-on residue",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::cooked-on residue",
+      "title": "How to Maintain tile floors and Keep cooked-on residue Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-cooked-on-residue-under-control",
+      "problem": "cooked-on residue",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::cooked-on residue",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on residue on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-residue-on-tile-floors",
+      "problem": "cooked-on residue",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtubs::cooked-on residue",
+      "title": "What Causes cooked-on residue on bathtubs",
+      "slug": "what-causes-cooked-on-residue-on-bathtubs",
+      "problem": "cooked-on residue",
+      "surface": "bathtubs",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtubs::cooked-on residue",
+      "title": "How to Remove cooked-on residue from bathtubs",
+      "slug": "how-to-remove-cooked-on-residue-from-bathtubs",
+      "problem": "cooked-on residue",
+      "surface": "bathtubs",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtubs::cooked-on residue",
+      "title": "How to Prevent cooked-on residue on bathtubs",
+      "slug": "how-to-prevent-cooked-on-residue-on-bathtubs",
+      "problem": "cooked-on residue",
+      "surface": "bathtubs",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtubs::cooked-on residue",
+      "title": "How to Fix cooked-on residue on bathtubs",
+      "slug": "how-to-fix-cooked-on-residue-on-bathtubs",
+      "problem": "cooked-on residue",
+      "surface": "bathtubs",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtubs::cooked-on residue",
+      "title": "How to Clean cooked-on residue from bathtubs",
+      "slug": "how-to-clean-cooked-on-residue-from-bathtubs",
+      "problem": "cooked-on residue",
+      "surface": "bathtubs",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtubs::cooked-on residue",
+      "title": "How to Tell if cooked-on residue on bathtubs is Permanent",
+      "slug": "how-to-tell-if-cooked-on-residue-on-bathtubs-is-permanent",
+      "problem": "cooked-on residue",
+      "surface": "bathtubs",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtubs::cooked-on residue",
+      "title": "Why cooked-on residue Keeps Coming Back on bathtubs",
+      "slug": "why-cooked-on-residue-keeps-coming-back-on-bathtubs",
+      "problem": "cooked-on residue",
+      "surface": "bathtubs",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtubs::cooked-on residue",
+      "title": "How to Maintain bathtubs and Keep cooked-on residue Under Control",
+      "slug": "how-to-maintain-bathtubs-and-keep-cooked-on-residue-under-control",
+      "problem": "cooked-on residue",
+      "surface": "bathtubs",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtubs::cooked-on residue",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on residue on bathtubs",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-residue-on-bathtubs",
+      "problem": "cooked-on residue",
+      "surface": "bathtubs",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::glass cooktops::cooked-on residue",
+      "title": "What Causes cooked-on residue on glass cooktops",
+      "slug": "what-causes-cooked-on-residue-on-glass-cooktops",
+      "problem": "cooked-on residue",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::glass cooktops::cooked-on residue",
+      "title": "How to Remove cooked-on residue from glass cooktops",
+      "slug": "how-to-remove-cooked-on-residue-from-glass-cooktops",
+      "problem": "cooked-on residue",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::glass cooktops::cooked-on residue",
+      "title": "How to Prevent cooked-on residue on glass cooktops",
+      "slug": "how-to-prevent-cooked-on-residue-on-glass-cooktops",
+      "problem": "cooked-on residue",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::glass cooktops::cooked-on residue",
+      "title": "How to Fix cooked-on residue on glass cooktops",
+      "slug": "how-to-fix-cooked-on-residue-on-glass-cooktops",
+      "problem": "cooked-on residue",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::glass cooktops::cooked-on residue",
+      "title": "How to Clean cooked-on residue from glass cooktops",
+      "slug": "how-to-clean-cooked-on-residue-from-glass-cooktops",
+      "problem": "cooked-on residue",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::glass cooktops::cooked-on residue",
+      "title": "How to Tell if cooked-on residue on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-cooked-on-residue-on-glass-cooktops-is-permanent",
+      "problem": "cooked-on residue",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::glass cooktops::cooked-on residue",
+      "title": "Why cooked-on residue Keeps Coming Back on glass cooktops",
+      "slug": "why-cooked-on-residue-keeps-coming-back-on-glass-cooktops",
+      "problem": "cooked-on residue",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::glass cooktops::cooked-on residue",
+      "title": "How to Maintain glass cooktops and Keep cooked-on residue Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-cooked-on-residue-under-control",
+      "problem": "cooked-on residue",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::glass cooktops::cooked-on residue",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on residue on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-residue-on-glass-cooktops",
+      "problem": "cooked-on residue",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::cooked-on residue",
+      "title": "What Causes cooked-on residue on shower pans",
+      "slug": "what-causes-cooked-on-residue-on-shower-pans",
+      "problem": "cooked-on residue",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::cooked-on residue",
+      "title": "How to Remove cooked-on residue from shower pans",
+      "slug": "how-to-remove-cooked-on-residue-from-shower-pans",
+      "problem": "cooked-on residue",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::cooked-on residue",
+      "title": "How to Prevent cooked-on residue on shower pans",
+      "slug": "how-to-prevent-cooked-on-residue-on-shower-pans",
+      "problem": "cooked-on residue",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::cooked-on residue",
+      "title": "How to Fix cooked-on residue on shower pans",
+      "slug": "how-to-fix-cooked-on-residue-on-shower-pans",
+      "problem": "cooked-on residue",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::cooked-on residue",
+      "title": "How to Clean cooked-on residue from shower pans",
+      "slug": "how-to-clean-cooked-on-residue-from-shower-pans",
+      "problem": "cooked-on residue",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::cooked-on residue",
+      "title": "How to Tell if cooked-on residue on shower pans is Permanent",
+      "slug": "how-to-tell-if-cooked-on-residue-on-shower-pans-is-permanent",
+      "problem": "cooked-on residue",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::cooked-on residue",
+      "title": "Why cooked-on residue Keeps Coming Back on shower pans",
+      "slug": "why-cooked-on-residue-keeps-coming-back-on-shower-pans",
+      "problem": "cooked-on residue",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::cooked-on residue",
+      "title": "How to Maintain shower pans and Keep cooked-on residue Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-cooked-on-residue-under-control",
+      "problem": "cooked-on residue",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::cooked-on residue",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on residue on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-residue-on-shower-pans",
+      "problem": "cooked-on residue",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::cooked-on residue",
+      "title": "What Causes cooked-on residue on bathtub surrounds",
+      "slug": "what-causes-cooked-on-residue-on-bathtub-surrounds",
+      "problem": "cooked-on residue",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::cooked-on residue",
+      "title": "How to Remove cooked-on residue from bathtub surrounds",
+      "slug": "how-to-remove-cooked-on-residue-from-bathtub-surrounds",
+      "problem": "cooked-on residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::cooked-on residue",
+      "title": "How to Prevent cooked-on residue on bathtub surrounds",
+      "slug": "how-to-prevent-cooked-on-residue-on-bathtub-surrounds",
+      "problem": "cooked-on residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::cooked-on residue",
+      "title": "How to Fix cooked-on residue on bathtub surrounds",
+      "slug": "how-to-fix-cooked-on-residue-on-bathtub-surrounds",
+      "problem": "cooked-on residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::cooked-on residue",
+      "title": "How to Clean cooked-on residue from bathtub surrounds",
+      "slug": "how-to-clean-cooked-on-residue-from-bathtub-surrounds",
+      "problem": "cooked-on residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::cooked-on residue",
+      "title": "How to Tell if cooked-on residue on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-cooked-on-residue-on-bathtub-surrounds-is-permanent",
+      "problem": "cooked-on residue",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::cooked-on residue",
+      "title": "Why cooked-on residue Keeps Coming Back on bathtub surrounds",
+      "slug": "why-cooked-on-residue-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "cooked-on residue",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::cooked-on residue",
+      "title": "How to Maintain bathtub surrounds and Keep cooked-on residue Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-cooked-on-residue-under-control",
+      "problem": "cooked-on residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::cooked-on residue",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on residue on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-residue-on-bathtub-surrounds",
+      "problem": "cooked-on residue",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::cooked-on residue",
+      "title": "What Causes cooked-on residue on ceramic tile",
+      "slug": "what-causes-cooked-on-residue-on-ceramic-tile",
+      "problem": "cooked-on residue",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::cooked-on residue",
+      "title": "How to Remove cooked-on residue from ceramic tile",
+      "slug": "how-to-remove-cooked-on-residue-from-ceramic-tile",
+      "problem": "cooked-on residue",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::cooked-on residue",
+      "title": "How to Prevent cooked-on residue on ceramic tile",
+      "slug": "how-to-prevent-cooked-on-residue-on-ceramic-tile",
+      "problem": "cooked-on residue",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::cooked-on residue",
+      "title": "How to Fix cooked-on residue on ceramic tile",
+      "slug": "how-to-fix-cooked-on-residue-on-ceramic-tile",
+      "problem": "cooked-on residue",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::cooked-on residue",
+      "title": "How to Clean cooked-on residue from ceramic tile",
+      "slug": "how-to-clean-cooked-on-residue-from-ceramic-tile",
+      "problem": "cooked-on residue",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::cooked-on residue",
+      "title": "How to Tell if cooked-on residue on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-cooked-on-residue-on-ceramic-tile-is-permanent",
+      "problem": "cooked-on residue",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::cooked-on residue",
+      "title": "Why cooked-on residue Keeps Coming Back on ceramic tile",
+      "slug": "why-cooked-on-residue-keeps-coming-back-on-ceramic-tile",
+      "problem": "cooked-on residue",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::cooked-on residue",
+      "title": "How to Maintain ceramic tile and Keep cooked-on residue Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-cooked-on-residue-under-control",
+      "problem": "cooked-on residue",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::cooked-on residue",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on residue on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-residue-on-ceramic-tile",
+      "problem": "cooked-on residue",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::cooked-on residue",
+      "title": "What Causes cooked-on residue on porcelain tile",
+      "slug": "what-causes-cooked-on-residue-on-porcelain-tile",
+      "problem": "cooked-on residue",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::cooked-on residue",
+      "title": "How to Remove cooked-on residue from porcelain tile",
+      "slug": "how-to-remove-cooked-on-residue-from-porcelain-tile",
+      "problem": "cooked-on residue",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::cooked-on residue",
+      "title": "How to Prevent cooked-on residue on porcelain tile",
+      "slug": "how-to-prevent-cooked-on-residue-on-porcelain-tile",
+      "problem": "cooked-on residue",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::cooked-on residue",
+      "title": "How to Fix cooked-on residue on porcelain tile",
+      "slug": "how-to-fix-cooked-on-residue-on-porcelain-tile",
+      "problem": "cooked-on residue",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::cooked-on residue",
+      "title": "How to Clean cooked-on residue from porcelain tile",
+      "slug": "how-to-clean-cooked-on-residue-from-porcelain-tile",
+      "problem": "cooked-on residue",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::cooked-on residue",
+      "title": "How to Tell if cooked-on residue on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-cooked-on-residue-on-porcelain-tile-is-permanent",
+      "problem": "cooked-on residue",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::cooked-on residue",
+      "title": "Why cooked-on residue Keeps Coming Back on porcelain tile",
+      "slug": "why-cooked-on-residue-keeps-coming-back-on-porcelain-tile",
+      "problem": "cooked-on residue",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::cooked-on residue",
+      "title": "How to Maintain porcelain tile and Keep cooked-on residue Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-cooked-on-residue-under-control",
+      "problem": "cooked-on residue",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::cooked-on residue",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on residue on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-residue-on-porcelain-tile",
+      "problem": "cooked-on residue",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::grease splatter",
+      "title": "What Causes grease splatter on granite",
+      "slug": "what-causes-grease-splatter-on-granite",
+      "problem": "grease splatter",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::grease splatter",
+      "title": "How to Remove grease splatter from granite",
+      "slug": "how-to-remove-grease-splatter-from-granite",
+      "problem": "grease splatter",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::grease splatter",
+      "title": "How to Prevent grease splatter on granite",
+      "slug": "how-to-prevent-grease-splatter-on-granite",
+      "problem": "grease splatter",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::grease splatter",
+      "title": "How to Fix grease splatter on granite",
+      "slug": "how-to-fix-grease-splatter-on-granite",
+      "problem": "grease splatter",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::grease splatter",
+      "title": "How to Clean grease splatter from granite",
+      "slug": "how-to-clean-grease-splatter-from-granite",
+      "problem": "grease splatter",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::grease splatter",
+      "title": "How to Tell if grease splatter on granite is Permanent",
+      "slug": "how-to-tell-if-grease-splatter-on-granite-is-permanent",
+      "problem": "grease splatter",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::grease splatter",
+      "title": "Why grease splatter Keeps Coming Back on granite",
+      "slug": "why-grease-splatter-keeps-coming-back-on-granite",
+      "problem": "grease splatter",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::grease splatter",
+      "title": "How to Maintain granite and Keep grease splatter Under Control",
+      "slug": "how-to-maintain-granite-and-keep-grease-splatter-under-control",
+      "problem": "grease splatter",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::grease splatter",
+      "title": "How to Recover After a Cleaning Mistake With grease splatter on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-grease-splatter-on-granite",
+      "problem": "grease splatter",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::grease splatter",
+      "title": "What Causes grease splatter on marble",
+      "slug": "what-causes-grease-splatter-on-marble",
+      "problem": "grease splatter",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::grease splatter",
+      "title": "How to Remove grease splatter from marble",
+      "slug": "how-to-remove-grease-splatter-from-marble",
+      "problem": "grease splatter",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::grease splatter",
+      "title": "How to Prevent grease splatter on marble",
+      "slug": "how-to-prevent-grease-splatter-on-marble",
+      "problem": "grease splatter",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::grease splatter",
+      "title": "How to Fix grease splatter on marble",
+      "slug": "how-to-fix-grease-splatter-on-marble",
+      "problem": "grease splatter",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::grease splatter",
+      "title": "How to Clean grease splatter from marble",
+      "slug": "how-to-clean-grease-splatter-from-marble",
+      "problem": "grease splatter",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::grease splatter",
+      "title": "How to Tell if grease splatter on marble is Permanent",
+      "slug": "how-to-tell-if-grease-splatter-on-marble-is-permanent",
+      "problem": "grease splatter",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::grease splatter",
+      "title": "Why grease splatter Keeps Coming Back on marble",
+      "slug": "why-grease-splatter-keeps-coming-back-on-marble",
+      "problem": "grease splatter",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::grease splatter",
+      "title": "How to Maintain marble and Keep grease splatter Under Control",
+      "slug": "how-to-maintain-marble-and-keep-grease-splatter-under-control",
+      "problem": "grease splatter",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::grease splatter",
+      "title": "How to Recover After a Cleaning Mistake With grease splatter on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-grease-splatter-on-marble",
+      "problem": "grease splatter",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::grease splatter",
+      "title": "What Causes grease splatter on quartz",
+      "slug": "what-causes-grease-splatter-on-quartz",
+      "problem": "grease splatter",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::grease splatter",
+      "title": "How to Remove grease splatter from quartz",
+      "slug": "how-to-remove-grease-splatter-from-quartz",
+      "problem": "grease splatter",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::grease splatter",
+      "title": "How to Prevent grease splatter on quartz",
+      "slug": "how-to-prevent-grease-splatter-on-quartz",
+      "problem": "grease splatter",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::grease splatter",
+      "title": "How to Fix grease splatter on quartz",
+      "slug": "how-to-fix-grease-splatter-on-quartz",
+      "problem": "grease splatter",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::grease splatter",
+      "title": "How to Clean grease splatter from quartz",
+      "slug": "how-to-clean-grease-splatter-from-quartz",
+      "problem": "grease splatter",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::grease splatter",
+      "title": "How to Tell if grease splatter on quartz is Permanent",
+      "slug": "how-to-tell-if-grease-splatter-on-quartz-is-permanent",
+      "problem": "grease splatter",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::grease splatter",
+      "title": "Why grease splatter Keeps Coming Back on quartz",
+      "slug": "why-grease-splatter-keeps-coming-back-on-quartz",
+      "problem": "grease splatter",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::grease splatter",
+      "title": "How to Maintain quartz and Keep grease splatter Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-grease-splatter-under-control",
+      "problem": "grease splatter",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::grease splatter",
+      "title": "How to Recover After a Cleaning Mistake With grease splatter on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-grease-splatter-on-quartz",
+      "problem": "grease splatter",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::grease splatter",
+      "title": "What Causes grease splatter on laminate",
+      "slug": "what-causes-grease-splatter-on-laminate",
+      "problem": "grease splatter",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::grease splatter",
+      "title": "How to Remove grease splatter from laminate",
+      "slug": "how-to-remove-grease-splatter-from-laminate",
+      "problem": "grease splatter",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::grease splatter",
+      "title": "How to Prevent grease splatter on laminate",
+      "slug": "how-to-prevent-grease-splatter-on-laminate",
+      "problem": "grease splatter",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::grease splatter",
+      "title": "How to Fix grease splatter on laminate",
+      "slug": "how-to-fix-grease-splatter-on-laminate",
+      "problem": "grease splatter",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::grease splatter",
+      "title": "How to Clean grease splatter from laminate",
+      "slug": "how-to-clean-grease-splatter-from-laminate",
+      "problem": "grease splatter",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::grease splatter",
+      "title": "How to Tell if grease splatter on laminate is Permanent",
+      "slug": "how-to-tell-if-grease-splatter-on-laminate-is-permanent",
+      "problem": "grease splatter",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::grease splatter",
+      "title": "Why grease splatter Keeps Coming Back on laminate",
+      "slug": "why-grease-splatter-keeps-coming-back-on-laminate",
+      "problem": "grease splatter",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::grease splatter",
+      "title": "How to Maintain laminate and Keep grease splatter Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-grease-splatter-under-control",
+      "problem": "grease splatter",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::grease splatter",
+      "title": "How to Recover After a Cleaning Mistake With grease splatter on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-grease-splatter-on-laminate",
+      "problem": "grease splatter",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::grease splatter",
+      "title": "What Causes grease splatter on sealed stone",
+      "slug": "what-causes-grease-splatter-on-sealed-stone",
+      "problem": "grease splatter",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::grease splatter",
+      "title": "How to Remove grease splatter from sealed stone",
+      "slug": "how-to-remove-grease-splatter-from-sealed-stone",
+      "problem": "grease splatter",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

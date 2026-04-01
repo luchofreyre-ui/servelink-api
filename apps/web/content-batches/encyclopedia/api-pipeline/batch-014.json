@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-clean::shower doors::water spots",
+      "title": "How to Clean water spots from shower doors",
+      "slug": "how-to-clean-water-spots-from-shower-doors",
+      "problem": "water spots",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::water spots",
+      "title": "How to Tell if water spots on shower doors is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-shower-doors-is-permanent",
+      "problem": "water spots",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::water spots",
+      "title": "Why water spots Keeps Coming Back on shower doors",
+      "slug": "why-water-spots-keeps-coming-back-on-shower-doors",
+      "problem": "water spots",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::water spots",
+      "title": "How to Maintain shower doors and Keep water spots Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-shower-doors",
+      "problem": "water spots",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::water spots",
+      "title": "What Causes water spots on sealed stone",
+      "slug": "what-causes-water-spots-on-sealed-stone",
+      "problem": "water spots",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::water spots",
+      "title": "How to Remove water spots from sealed stone",
+      "slug": "how-to-remove-water-spots-from-sealed-stone",
+      "problem": "water spots",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::water spots",
+      "title": "How to Prevent water spots on sealed stone",
+      "slug": "how-to-prevent-water-spots-on-sealed-stone",
+      "problem": "water spots",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::water spots",
+      "title": "How to Fix water spots on sealed stone",
+      "slug": "how-to-fix-water-spots-on-sealed-stone",
+      "problem": "water spots",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::water spots",
+      "title": "How to Clean water spots from sealed stone",
+      "slug": "how-to-clean-water-spots-from-sealed-stone",
+      "problem": "water spots",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::water spots",
+      "title": "How to Tell if water spots on sealed stone is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-sealed-stone-is-permanent",
+      "problem": "water spots",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::water spots",
+      "title": "Why water spots Keeps Coming Back on sealed stone",
+      "slug": "why-water-spots-keeps-coming-back-on-sealed-stone",
+      "problem": "water spots",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::water spots",
+      "title": "How to Maintain sealed stone and Keep water spots Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-sealed-stone",
+      "problem": "water spots",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::water spots",
+      "title": "What Causes water spots on shower grout",
+      "slug": "what-causes-water-spots-on-shower-grout",
+      "problem": "water spots",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::water spots",
+      "title": "How to Remove water spots from shower grout",
+      "slug": "how-to-remove-water-spots-from-shower-grout",
+      "problem": "water spots",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::water spots",
+      "title": "How to Prevent water spots on shower grout",
+      "slug": "how-to-prevent-water-spots-on-shower-grout",
+      "problem": "water spots",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::water spots",
+      "title": "How to Fix water spots on shower grout",
+      "slug": "how-to-fix-water-spots-on-shower-grout",
+      "problem": "water spots",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::water spots",
+      "title": "How to Clean water spots from shower grout",
+      "slug": "how-to-clean-water-spots-from-shower-grout",
+      "problem": "water spots",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::water spots",
+      "title": "How to Tell if water spots on shower grout is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-shower-grout-is-permanent",
+      "problem": "water spots",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::water spots",
+      "title": "Why water spots Keeps Coming Back on shower grout",
+      "slug": "why-water-spots-keeps-coming-back-on-shower-grout",
+      "problem": "water spots",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::water spots",
+      "title": "How to Maintain shower grout and Keep water spots Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-shower-grout",
+      "problem": "water spots",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::water spots",
+      "title": "What Causes water spots on tile grout",
+      "slug": "what-causes-water-spots-on-tile-grout",
+      "problem": "water spots",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::water spots",
+      "title": "How to Remove water spots from tile grout",
+      "slug": "how-to-remove-water-spots-from-tile-grout",
+      "problem": "water spots",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::water spots",
+      "title": "How to Prevent water spots on tile grout",
+      "slug": "how-to-prevent-water-spots-on-tile-grout",
+      "problem": "water spots",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::water spots",
+      "title": "How to Fix water spots on tile grout",
+      "slug": "how-to-fix-water-spots-on-tile-grout",
+      "problem": "water spots",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::water spots",
+      "title": "How to Clean water spots from tile grout",
+      "slug": "how-to-clean-water-spots-from-tile-grout",
+      "problem": "water spots",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::water spots",
+      "title": "How to Tell if water spots on tile grout is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-tile-grout-is-permanent",
+      "problem": "water spots",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::water spots",
+      "title": "Why water spots Keeps Coming Back on tile grout",
+      "slug": "why-water-spots-keeps-coming-back-on-tile-grout",
+      "problem": "water spots",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::water spots",
+      "title": "How to Maintain tile grout and Keep water spots Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-tile-grout",
+      "problem": "water spots",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::water spots",
+      "title": "What Causes water spots on caulking",
+      "slug": "what-causes-water-spots-on-caulking",
+      "problem": "water spots",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::water spots",
+      "title": "How to Remove water spots from caulking",
+      "slug": "how-to-remove-water-spots-from-caulking",
+      "problem": "water spots",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::water spots",
+      "title": "How to Prevent water spots on caulking",
+      "slug": "how-to-prevent-water-spots-on-caulking",
+      "problem": "water spots",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::water spots",
+      "title": "How to Fix water spots on caulking",
+      "slug": "how-to-fix-water-spots-on-caulking",
+      "problem": "water spots",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::water spots",
+      "title": "How to Clean water spots from caulking",
+      "slug": "how-to-clean-water-spots-from-caulking",
+      "problem": "water spots",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::water spots",
+      "title": "How to Tell if water spots on caulking is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-caulking-is-permanent",
+      "problem": "water spots",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::water spots",
+      "title": "Why water spots Keeps Coming Back on caulking",
+      "slug": "why-water-spots-keeps-coming-back-on-caulking",
+      "problem": "water spots",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::water spots",
+      "title": "How to Maintain caulking and Keep water spots Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-caulking",
+      "problem": "water spots",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::water spots",
+      "title": "What Causes water spots on sealed granite",
+      "slug": "what-causes-water-spots-on-sealed-granite",
+      "problem": "water spots",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::water spots",
+      "title": "How to Remove water spots from sealed granite",
+      "slug": "how-to-remove-water-spots-from-sealed-granite",
+      "problem": "water spots",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::water spots",
+      "title": "How to Prevent water spots on sealed granite",
+      "slug": "how-to-prevent-water-spots-on-sealed-granite",
+      "problem": "water spots",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::water spots",
+      "title": "How to Fix water spots on sealed granite",
+      "slug": "how-to-fix-water-spots-on-sealed-granite",
+      "problem": "water spots",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::water spots",
+      "title": "How to Clean water spots from sealed granite",
+      "slug": "how-to-clean-water-spots-from-sealed-granite",
+      "problem": "water spots",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::water spots",
+      "title": "How to Tell if water spots on sealed granite is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-sealed-granite-is-permanent",
+      "problem": "water spots",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::water spots",
+      "title": "Why water spots Keeps Coming Back on sealed granite",
+      "slug": "why-water-spots-keeps-coming-back-on-sealed-granite",
+      "problem": "water spots",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::water spots",
+      "title": "How to Maintain sealed granite and Keep water spots Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-sealed-granite",
+      "problem": "water spots",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::water spots",
+      "title": "What Causes water spots on sealed marble",
+      "slug": "what-causes-water-spots-on-sealed-marble",
+      "problem": "water spots",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::water spots",
+      "title": "How to Remove water spots from sealed marble",
+      "slug": "how-to-remove-water-spots-from-sealed-marble",
+      "problem": "water spots",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::water spots",
+      "title": "How to Prevent water spots on sealed marble",
+      "slug": "how-to-prevent-water-spots-on-sealed-marble",
+      "problem": "water spots",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::water spots",
+      "title": "How to Fix water spots on sealed marble",
+      "slug": "how-to-fix-water-spots-on-sealed-marble",
+      "problem": "water spots",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::water spots",
+      "title": "How to Clean water spots from sealed marble",
+      "slug": "how-to-clean-water-spots-from-sealed-marble",
+      "problem": "water spots",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::water spots",
+      "title": "How to Tell if water spots on sealed marble is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-sealed-marble-is-permanent",
+      "problem": "water spots",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::water spots",
+      "title": "Why water spots Keeps Coming Back on sealed marble",
+      "slug": "why-water-spots-keeps-coming-back-on-sealed-marble",
+      "problem": "water spots",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::water spots",
+      "title": "How to Maintain sealed marble and Keep water spots Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-sealed-marble",
+      "problem": "water spots",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::water spots",
+      "title": "What Causes water spots on quartz countertops",
+      "slug": "what-causes-water-spots-on-quartz-countertops",
+      "problem": "water spots",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::water spots",
+      "title": "How to Remove water spots from quartz countertops",
+      "slug": "how-to-remove-water-spots-from-quartz-countertops",
+      "problem": "water spots",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::water spots",
+      "title": "How to Prevent water spots on quartz countertops",
+      "slug": "how-to-prevent-water-spots-on-quartz-countertops",
+      "problem": "water spots",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::water spots",
+      "title": "How to Fix water spots on quartz countertops",
+      "slug": "how-to-fix-water-spots-on-quartz-countertops",
+      "problem": "water spots",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::water spots",
+      "title": "How to Clean water spots from quartz countertops",
+      "slug": "how-to-clean-water-spots-from-quartz-countertops",
+      "problem": "water spots",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::water spots",
+      "title": "How to Tell if water spots on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-quartz-countertops-is-permanent",
+      "problem": "water spots",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::water spots",
+      "title": "Why water spots Keeps Coming Back on quartz countertops",
+      "slug": "why-water-spots-keeps-coming-back-on-quartz-countertops",
+      "problem": "water spots",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::water spots",
+      "title": "How to Maintain quartz countertops and Keep water spots Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-quartz-countertops",
+      "problem": "water spots",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::water spots",
+      "title": "What Causes water spots on laminate counters",
+      "slug": "what-causes-water-spots-on-laminate-counters",
+      "problem": "water spots",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::water spots",
+      "title": "How to Remove water spots from laminate counters",
+      "slug": "how-to-remove-water-spots-from-laminate-counters",
+      "problem": "water spots",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::water spots",
+      "title": "How to Prevent water spots on laminate counters",
+      "slug": "how-to-prevent-water-spots-on-laminate-counters",
+      "problem": "water spots",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::water spots",
+      "title": "How to Fix water spots on laminate counters",
+      "slug": "how-to-fix-water-spots-on-laminate-counters",
+      "problem": "water spots",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::water spots",
+      "title": "How to Clean water spots from laminate counters",
+      "slug": "how-to-clean-water-spots-from-laminate-counters",
+      "problem": "water spots",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::water spots",
+      "title": "How to Tell if water spots on laminate counters is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-laminate-counters-is-permanent",
+      "problem": "water spots",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::water spots",
+      "title": "Why water spots Keeps Coming Back on laminate counters",
+      "slug": "why-water-spots-keeps-coming-back-on-laminate-counters",
+      "problem": "water spots",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::water spots",
+      "title": "How to Maintain laminate counters and Keep water spots Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-laminate-counters",
+      "problem": "water spots",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::water spots",
+      "title": "What Causes water spots on butcher block",
+      "slug": "what-causes-water-spots-on-butcher-block",
+      "problem": "water spots",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::water spots",
+      "title": "How to Remove water spots from butcher block",
+      "slug": "how-to-remove-water-spots-from-butcher-block",
+      "problem": "water spots",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::water spots",
+      "title": "How to Prevent water spots on butcher block",
+      "slug": "how-to-prevent-water-spots-on-butcher-block",
+      "problem": "water spots",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::water spots",
+      "title": "How to Fix water spots on butcher block",
+      "slug": "how-to-fix-water-spots-on-butcher-block",
+      "problem": "water spots",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::water spots",
+      "title": "How to Clean water spots from butcher block",
+      "slug": "how-to-clean-water-spots-from-butcher-block",
+      "problem": "water spots",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::water spots",
+      "title": "How to Tell if water spots on butcher block is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-butcher-block-is-permanent",
+      "problem": "water spots",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::water spots",
+      "title": "Why water spots Keeps Coming Back on butcher block",
+      "slug": "why-water-spots-keeps-coming-back-on-butcher-block",
+      "problem": "water spots",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::water spots",
+      "title": "How to Maintain butcher block and Keep water spots Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-butcher-block",
+      "problem": "water spots",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::water spots",
+      "title": "What Causes water spots on unfinished wood",
+      "slug": "what-causes-water-spots-on-unfinished-wood",
+      "problem": "water spots",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::water spots",
+      "title": "How to Remove water spots from unfinished wood",
+      "slug": "how-to-remove-water-spots-from-unfinished-wood",
+      "problem": "water spots",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::water spots",
+      "title": "How to Prevent water spots on unfinished wood",
+      "slug": "how-to-prevent-water-spots-on-unfinished-wood",
+      "problem": "water spots",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::water spots",
+      "title": "How to Fix water spots on unfinished wood",
+      "slug": "how-to-fix-water-spots-on-unfinished-wood",
+      "problem": "water spots",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::water spots",
+      "title": "How to Clean water spots from unfinished wood",
+      "slug": "how-to-clean-water-spots-from-unfinished-wood",
+      "problem": "water spots",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::water spots",
+      "title": "How to Tell if water spots on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-unfinished-wood-is-permanent",
+      "problem": "water spots",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::water spots",
+      "title": "Why water spots Keeps Coming Back on unfinished wood",
+      "slug": "why-water-spots-keeps-coming-back-on-unfinished-wood",
+      "problem": "water spots",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::water spots",
+      "title": "How to Maintain unfinished wood and Keep water spots Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-unfinished-wood",
+      "problem": "water spots",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::water spots",
+      "title": "What Causes water spots on sealed wood",
+      "slug": "what-causes-water-spots-on-sealed-wood",
+      "problem": "water spots",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::water spots",
+      "title": "How to Remove water spots from sealed wood",
+      "slug": "how-to-remove-water-spots-from-sealed-wood",
+      "problem": "water spots",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::water spots",
+      "title": "How to Prevent water spots on sealed wood",
+      "slug": "how-to-prevent-water-spots-on-sealed-wood",
+      "problem": "water spots",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::water spots",
+      "title": "How to Fix water spots on sealed wood",
+      "slug": "how-to-fix-water-spots-on-sealed-wood",
+      "problem": "water spots",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::water spots",
+      "title": "How to Clean water spots from sealed wood",
+      "slug": "how-to-clean-water-spots-from-sealed-wood",
+      "problem": "water spots",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

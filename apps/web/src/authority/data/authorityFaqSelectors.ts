@@ -160,9 +160,25 @@ export function buildProblemFaqBlock(problemSlug: string): AuthorityFaqBlock | n
       question: `Why does ${problem.title.toLowerCase()} come back after cleaning?`,
       answer: `${problem.title} often returns when the contamination type was misread, the surface was not fully finished, residue was left behind, or the underlying source of the problem was not addressed.`,
     },
+    ...(linkedSurfaces[0] && linkedMethods[0]
+      ? [
+          {
+            question: `Can I use ${linkedMethods[0]!.title} on ${linkedSurfaces[0]!.title.toLowerCase()} for ${problem.title.toLowerCase()}?`,
+            answer: `Only when that exact method–surface–problem triangle exists in the authority graph and the label allows it. If either relationship is missing, treat it as untested for your finish and read manufacturer guidance.`,
+          },
+        ]
+      : []),
+    {
+      question: `What happens if I mix two different cleaners while fixing ${problem.title.toLowerCase()}?`,
+      answer: `Mixing can create fumes, neutralize active ingredients, or leave unpredictable residue. Use one chemistry pass, rinse when switching families, ventilate, and follow label do-not-mix warnings.`,
+    },
+    {
+      question: `Why does a popular product still fail on ${problem.title.toLowerCase()}?`,
+      answer: `Usually the product lane does not match the soil class, the surface is outside its labeled range, or residue and technique—not raw strength—are the limiting factor.`,
+    },
   ]);
 
-  return items.length ? { title: "Problem FAQ", items: items.slice(0, 4) } : null;
+  return items.length ? { title: "Problem FAQ", items: items.slice(0, 6) } : null;
 }
 
 export function buildGuideFaqBlock(guideSlug: string): AuthorityFaqBlock | null {
@@ -174,7 +190,7 @@ export function buildGuideFaqBlock(guideSlug: string): AuthorityFaqBlock | null 
     ? getProblemPageBySlug(firstRelatedProblemSlug)?.title.toLowerCase()
     : null;
 
-  const items = uniqueByQuestion([
+  const base = uniqueByQuestion([
     {
       question: `Who is this guide for?`,
       answer: `${guide.title} is for readers trying to understand how cleaning methods, surface risks, and contamination types connect in a structured way.`,
@@ -197,7 +213,43 @@ export function buildGuideFaqBlock(guideSlug: string): AuthorityFaqBlock | null 
     },
   ]);
 
-  return items.length ? { title: "Guide FAQ", items: items.slice(0, 4) } : null;
+  const antiPatternExtras =
+    guide.category === "anti_pattern"
+      ? uniqueByQuestion([
+          {
+            question: `Why does the obvious fix fail in this anti-pattern?`,
+            answer: `The guide explains a mismatch between what people reach for and what the contamination and surface actually need. Fixing the label story without fixing the problem definition keeps failure visible.`,
+          },
+          {
+            question: `Can I combine products to get “the best of both” here?`,
+            answer: `Only when labels explicitly allow it. Otherwise you risk fumes, neutralized chemistry, or residue that reads as a new stain. Finish one lane, rinse, then reassess.`,
+          },
+          {
+            question: `What should I read next after this anti-pattern?`,
+            answer: `Open the linked problem hub that matches what you see, then a method or surface playbook. Comparisons help when two bottles look interchangeable but split on scenarios.`,
+          },
+        ])
+      : [];
+
+  const entryClusterExtras = guide.slug.startsWith("best-cleaners-for-")
+    ? uniqueByQuestion([
+        {
+          question: `Is there one best bottle for this whole room?`,
+          answer: `Usually no. Rooms host multiple soil classes; this page is a router to problem hubs, comparisons, and playbooks so you match chemistry to what is actually on the surface.`,
+        },
+        {
+          question: `Where should I click first—problem, product, or comparison?`,
+          answer: `Start from the symptom on a problem hub when you are unsure of soil type. Use product comparisons when two SKUs look similar. Use playbooks when you already know surface + problem.`,
+        },
+        {
+          question: `Can I use bathroom chemistry in the kitchen (or vice versa)?`,
+          answer: `Only when labels and surface classes agree. Acid-class bath products and heavy kitchen degreasers carry different finish risks—treat cross-room reuse as a label decision, not a shortcut.`,
+        },
+      ])
+    : [];
+
+  const items = uniqueByQuestion([...base, ...antiPatternExtras, ...entryClusterExtras]);
+  return items.length ? { title: "Guide FAQ", items: items.slice(0, 6) } : null;
 }
 
 export function buildMethodComboFaqBlock(

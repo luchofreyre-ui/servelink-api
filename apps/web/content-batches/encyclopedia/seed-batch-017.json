@@ -1,0 +1,30 @@
+{
+  "targets": [
+    { "surface": "shower glass", "problem": "soap residue" },
+    { "surface": "shower glass", "problem": "hard water stains" },
+    { "surface": "shower glass", "problem": "dust buildup" },
+    { "surface": "shower glass", "problem": "product residue" },
+    { "surface": "shower glass", "problem": "soap scum" },
+    { "surface": "shower glass", "problem": "water spots" },
+    { "surface": "shower glass", "problem": "hard water film" },
+    { "surface": "shower glass", "problem": "mineral haze" },
+    { "surface": "shower glass", "problem": "white film" },
+    { "surface": "shower glass", "problem": "cloudy film" },
+
+    { "surface": "granite", "problem": "soap residue" },
+    { "surface": "granite", "problem": "hard water stains" },
+    { "surface": "granite", "problem": "limescale" },
+    { "surface": "granite", "problem": "mineral deposits" },
+    { "surface": "granite", "problem": "dust buildup" },
+    { "surface": "granite", "problem": "product residue" },
+    { "surface": "granite", "problem": "soap scum" },
+    { "surface": "granite", "problem": "water spots" },
+    { "surface": "granite", "problem": "cooked-on residue" },
+    { "surface": "granite", "problem": "burnt residue" },
+    { "surface": "granite", "problem": "sticky residue" },
+    { "surface": "granite", "problem": "adhesive residue" },
+    { "surface": "granite", "problem": "wax buildup" },
+    { "surface": "granite", "problem": "calcium buildup" },
+    { "surface": "granite", "problem": "hard water film" }
+  ]
+}

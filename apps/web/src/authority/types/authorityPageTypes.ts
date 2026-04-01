@@ -83,6 +83,8 @@ export type AuthorityProblemPageData = {
   title: string;
   description: string;
   summary: string;
+  /** Featured-snippet style direct answer; falls back to a trimmed “what it usually is” if omitted. */
+  quickAnswer?: string;
   category: AuthorityProblemCategory;
   symptoms: string[];
   causes: string[];
@@ -99,17 +101,33 @@ export type AuthorityProblemPageData = {
   relatedProblems: AuthorityProblemSummary[];
   relatedMethods: AuthorityEntitySummary[];
   relatedSurfaces: AuthorityEntitySummary[];
+  /** When set, drives “best products” scenarios instead of only graph surface slugs. */
+  productScenarios?: { problem: string; surface: string }[];
+  /** Quick routing at the top of the problem hub. */
+  decisionShortcuts?: { label: string; body: string; productSlugs?: string[] }[];
+  /** Extra “best by surface” lines (e.g. cooktops not in the authority surface graph). */
+  bestBySurfaceExtras?: { line: string; href?: string }[];
 };
 
 export type AuthorityComparisonType =
   | "method_comparison"
   | "surface_comparison"
-  | "problem_comparison";
+  | "problem_comparison"
+  | "product_comparison";
 
 export interface AuthorityComparisonRow {
   label: string;
   leftValue: string;
   rightValue: string;
+}
+
+export interface AuthorityProductScenarioWinner {
+  scenarioLabel: string;
+  playbookHref: string;
+  winnerSlug: string;
+  winnerName: string;
+  runnerUp?: string;
+  note?: string;
 }
 
 export interface AuthorityComparisonPageData {
@@ -122,12 +140,33 @@ export interface AuthorityComparisonPageData {
   title: string;
   description: string;
   intro: string;
+  /** 1–2 sentence direct answer for snippets and summaries. */
+  quickAnswer?: string;
 
   rows: AuthorityComparisonRow[];
 
   relatedMethods?: string[];
   relatedSurfaces?: string[];
   relatedProblems?: string[];
+
+  /** Product vs product: who wins on shared playbook scenarios. */
+  productScenarioWinners?: AuthorityProductScenarioWinner[];
+
+  /** When each SKU is the right tool—and when neither is. */
+  notInterchangeable?: {
+    leftWins: string;
+    rightWins: string;
+    bothFail: string;
+  };
+
+  /** Fast routing without re-reading the full table. */
+  quickDecision?: string[];
+
+  /** Typical misuse pattern (expert framing). */
+  commonMistake?: string;
+
+  /** When to leave this comparison and pick a third chemistry or problem hub. */
+  whenNeitherWorks?: string;
 }
 
 export type AuthorityClusterType = "problem_category" | "method_family" | "surface_risk";
@@ -155,7 +194,8 @@ export type AuthorityGuideCategory =
   | "surface_protection"
   | "stain_removal"
   | "chemical_safety"
-  | "foundations";
+  | "foundations"
+  | "anti_pattern";
 
 export type AuthorityGuideSection = {
   id: string;
@@ -177,6 +217,8 @@ export type AuthorityGuidePageData = {
   description?: string;
   category?: AuthorityGuideCategory;
   intro?: string;
+  /** Optional snippet-first answer; anti-pattern pages use intro/summary as fallback when unset. */
+  quickAnswer?: string;
   sections: AuthorityGuideSection[];
   relatedMethods: AuthorityEntitySummary[];
   relatedSurfaces: AuthorityEntitySummary[];

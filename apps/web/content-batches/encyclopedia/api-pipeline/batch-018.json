@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "mistake-recovery::shower doors::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-shower-doors",
+      "problem": "odor retention",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted cabinets::odor retention",
+      "title": "What Causes odor retention on painted cabinets",
+      "slug": "what-causes-odor-retention-on-painted-cabinets",
+      "problem": "odor retention",
+      "surface": "painted cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted cabinets::odor retention",
+      "title": "How to Remove odor retention from painted cabinets",
+      "slug": "how-to-remove-odor-retention-from-painted-cabinets",
+      "problem": "odor retention",
+      "surface": "painted cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted cabinets::odor retention",
+      "title": "How to Prevent odor retention on painted cabinets",
+      "slug": "how-to-prevent-odor-retention-on-painted-cabinets",
+      "problem": "odor retention",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted cabinets::odor retention",
+      "title": "How to Fix odor retention on painted cabinets",
+      "slug": "how-to-fix-odor-retention-on-painted-cabinets",
+      "problem": "odor retention",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted cabinets::odor retention",
+      "title": "How to Clean odor retention from painted cabinets",
+      "slug": "how-to-clean-odor-retention-from-painted-cabinets",
+      "problem": "odor retention",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted cabinets::odor retention",
+      "title": "How to Tell if odor retention on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-painted-cabinets-is-permanent",
+      "problem": "odor retention",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted cabinets::odor retention",
+      "title": "Why odor retention Keeps Coming Back on painted cabinets",
+      "slug": "why-odor-retention-keeps-coming-back-on-painted-cabinets",
+      "problem": "odor retention",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted cabinets::odor retention",
+      "title": "How to Maintain painted cabinets and Keep odor retention Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted cabinets::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-painted-cabinets",
+      "problem": "odor retention",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::odor retention",
+      "title": "What Causes odor retention on sealed stone",
+      "slug": "what-causes-odor-retention-on-sealed-stone",
+      "problem": "odor retention",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::odor retention",
+      "title": "How to Remove odor retention from sealed stone",
+      "slug": "how-to-remove-odor-retention-from-sealed-stone",
+      "problem": "odor retention",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::odor retention",
+      "title": "How to Prevent odor retention on sealed stone",
+      "slug": "how-to-prevent-odor-retention-on-sealed-stone",
+      "problem": "odor retention",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::odor retention",
+      "title": "How to Fix odor retention on sealed stone",
+      "slug": "how-to-fix-odor-retention-on-sealed-stone",
+      "problem": "odor retention",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::odor retention",
+      "title": "How to Clean odor retention from sealed stone",
+      "slug": "how-to-clean-odor-retention-from-sealed-stone",
+      "problem": "odor retention",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::odor retention",
+      "title": "How to Tell if odor retention on sealed stone is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-sealed-stone-is-permanent",
+      "problem": "odor retention",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::odor retention",
+      "title": "Why odor retention Keeps Coming Back on sealed stone",
+      "slug": "why-odor-retention-keeps-coming-back-on-sealed-stone",
+      "problem": "odor retention",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::odor retention",
+      "title": "How to Maintain sealed stone and Keep odor retention Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-sealed-stone",
+      "problem": "odor retention",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::odor retention",
+      "title": "What Causes odor retention on shower grout",
+      "slug": "what-causes-odor-retention-on-shower-grout",
+      "problem": "odor retention",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::odor retention",
+      "title": "How to Remove odor retention from shower grout",
+      "slug": "how-to-remove-odor-retention-from-shower-grout",
+      "problem": "odor retention",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::odor retention",
+      "title": "How to Prevent odor retention on shower grout",
+      "slug": "how-to-prevent-odor-retention-on-shower-grout",
+      "problem": "odor retention",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::odor retention",
+      "title": "How to Fix odor retention on shower grout",
+      "slug": "how-to-fix-odor-retention-on-shower-grout",
+      "problem": "odor retention",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::odor retention",
+      "title": "How to Clean odor retention from shower grout",
+      "slug": "how-to-clean-odor-retention-from-shower-grout",
+      "problem": "odor retention",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::odor retention",
+      "title": "How to Tell if odor retention on shower grout is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-shower-grout-is-permanent",
+      "problem": "odor retention",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::odor retention",
+      "title": "Why odor retention Keeps Coming Back on shower grout",
+      "slug": "why-odor-retention-keeps-coming-back-on-shower-grout",
+      "problem": "odor retention",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::odor retention",
+      "title": "How to Maintain shower grout and Keep odor retention Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-shower-grout",
+      "problem": "odor retention",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::odor retention",
+      "title": "What Causes odor retention on tile grout",
+      "slug": "what-causes-odor-retention-on-tile-grout",
+      "problem": "odor retention",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::odor retention",
+      "title": "How to Remove odor retention from tile grout",
+      "slug": "how-to-remove-odor-retention-from-tile-grout",
+      "problem": "odor retention",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::odor retention",
+      "title": "How to Prevent odor retention on tile grout",
+      "slug": "how-to-prevent-odor-retention-on-tile-grout",
+      "problem": "odor retention",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::odor retention",
+      "title": "How to Fix odor retention on tile grout",
+      "slug": "how-to-fix-odor-retention-on-tile-grout",
+      "problem": "odor retention",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::odor retention",
+      "title": "How to Clean odor retention from tile grout",
+      "slug": "how-to-clean-odor-retention-from-tile-grout",
+      "problem": "odor retention",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::odor retention",
+      "title": "How to Tell if odor retention on tile grout is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-tile-grout-is-permanent",
+      "problem": "odor retention",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::odor retention",
+      "title": "Why odor retention Keeps Coming Back on tile grout",
+      "slug": "why-odor-retention-keeps-coming-back-on-tile-grout",
+      "problem": "odor retention",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::odor retention",
+      "title": "How to Maintain tile grout and Keep odor retention Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-tile-grout",
+      "problem": "odor retention",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::odor retention",
+      "title": "What Causes odor retention on caulking",
+      "slug": "what-causes-odor-retention-on-caulking",
+      "problem": "odor retention",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::odor retention",
+      "title": "How to Remove odor retention from caulking",
+      "slug": "how-to-remove-odor-retention-from-caulking",
+      "problem": "odor retention",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::odor retention",
+      "title": "How to Prevent odor retention on caulking",
+      "slug": "how-to-prevent-odor-retention-on-caulking",
+      "problem": "odor retention",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::odor retention",
+      "title": "How to Fix odor retention on caulking",
+      "slug": "how-to-fix-odor-retention-on-caulking",
+      "problem": "odor retention",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::odor retention",
+      "title": "How to Clean odor retention from caulking",
+      "slug": "how-to-clean-odor-retention-from-caulking",
+      "problem": "odor retention",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::odor retention",
+      "title": "How to Tell if odor retention on caulking is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-caulking-is-permanent",
+      "problem": "odor retention",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::odor retention",
+      "title": "Why odor retention Keeps Coming Back on caulking",
+      "slug": "why-odor-retention-keeps-coming-back-on-caulking",
+      "problem": "odor retention",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::odor retention",
+      "title": "How to Maintain caulking and Keep odor retention Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-caulking",
+      "problem": "odor retention",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::odor retention",
+      "title": "What Causes odor retention on shower pans",
+      "slug": "what-causes-odor-retention-on-shower-pans",
+      "problem": "odor retention",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::odor retention",
+      "title": "How to Remove odor retention from shower pans",
+      "slug": "how-to-remove-odor-retention-from-shower-pans",
+      "problem": "odor retention",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::odor retention",
+      "title": "How to Prevent odor retention on shower pans",
+      "slug": "how-to-prevent-odor-retention-on-shower-pans",
+      "problem": "odor retention",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::odor retention",
+      "title": "How to Fix odor retention on shower pans",
+      "slug": "how-to-fix-odor-retention-on-shower-pans",
+      "problem": "odor retention",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::odor retention",
+      "title": "How to Clean odor retention from shower pans",
+      "slug": "how-to-clean-odor-retention-from-shower-pans",
+      "problem": "odor retention",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::odor retention",
+      "title": "How to Tell if odor retention on shower pans is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-shower-pans-is-permanent",
+      "problem": "odor retention",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::odor retention",
+      "title": "Why odor retention Keeps Coming Back on shower pans",
+      "slug": "why-odor-retention-keeps-coming-back-on-shower-pans",
+      "problem": "odor retention",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::odor retention",
+      "title": "How to Maintain shower pans and Keep odor retention Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-shower-pans",
+      "problem": "odor retention",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::odor retention",
+      "title": "What Causes odor retention on bathtub surrounds",
+      "slug": "what-causes-odor-retention-on-bathtub-surrounds",
+      "problem": "odor retention",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::odor retention",
+      "title": "How to Remove odor retention from bathtub surrounds",
+      "slug": "how-to-remove-odor-retention-from-bathtub-surrounds",
+      "problem": "odor retention",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::odor retention",
+      "title": "How to Prevent odor retention on bathtub surrounds",
+      "slug": "how-to-prevent-odor-retention-on-bathtub-surrounds",
+      "problem": "odor retention",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::odor retention",
+      "title": "How to Fix odor retention on bathtub surrounds",
+      "slug": "how-to-fix-odor-retention-on-bathtub-surrounds",
+      "problem": "odor retention",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::odor retention",
+      "title": "How to Clean odor retention from bathtub surrounds",
+      "slug": "how-to-clean-odor-retention-from-bathtub-surrounds",
+      "problem": "odor retention",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::odor retention",
+      "title": "How to Tell if odor retention on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-bathtub-surrounds-is-permanent",
+      "problem": "odor retention",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::odor retention",
+      "title": "Why odor retention Keeps Coming Back on bathtub surrounds",
+      "slug": "why-odor-retention-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "odor retention",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::odor retention",
+      "title": "How to Maintain bathtub surrounds and Keep odor retention Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-bathtub-surrounds",
+      "problem": "odor retention",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::odor retention",
+      "title": "What Causes odor retention on ceramic tile",
+      "slug": "what-causes-odor-retention-on-ceramic-tile",
+      "problem": "odor retention",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::odor retention",
+      "title": "How to Remove odor retention from ceramic tile",
+      "slug": "how-to-remove-odor-retention-from-ceramic-tile",
+      "problem": "odor retention",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::odor retention",
+      "title": "How to Prevent odor retention on ceramic tile",
+      "slug": "how-to-prevent-odor-retention-on-ceramic-tile",
+      "problem": "odor retention",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::odor retention",
+      "title": "How to Fix odor retention on ceramic tile",
+      "slug": "how-to-fix-odor-retention-on-ceramic-tile",
+      "problem": "odor retention",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::odor retention",
+      "title": "How to Clean odor retention from ceramic tile",
+      "slug": "how-to-clean-odor-retention-from-ceramic-tile",
+      "problem": "odor retention",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::odor retention",
+      "title": "How to Tell if odor retention on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-ceramic-tile-is-permanent",
+      "problem": "odor retention",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::odor retention",
+      "title": "Why odor retention Keeps Coming Back on ceramic tile",
+      "slug": "why-odor-retention-keeps-coming-back-on-ceramic-tile",
+      "problem": "odor retention",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::odor retention",
+      "title": "How to Maintain ceramic tile and Keep odor retention Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-ceramic-tile",
+      "problem": "odor retention",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::odor retention",
+      "title": "What Causes odor retention on porcelain tile",
+      "slug": "what-causes-odor-retention-on-porcelain-tile",
+      "problem": "odor retention",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::odor retention",
+      "title": "How to Remove odor retention from porcelain tile",
+      "slug": "how-to-remove-odor-retention-from-porcelain-tile",
+      "problem": "odor retention",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::odor retention",
+      "title": "How to Prevent odor retention on porcelain tile",
+      "slug": "how-to-prevent-odor-retention-on-porcelain-tile",
+      "problem": "odor retention",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::odor retention",
+      "title": "How to Fix odor retention on porcelain tile",
+      "slug": "how-to-fix-odor-retention-on-porcelain-tile",
+      "problem": "odor retention",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::odor retention",
+      "title": "How to Clean odor retention from porcelain tile",
+      "slug": "how-to-clean-odor-retention-from-porcelain-tile",
+      "problem": "odor retention",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::odor retention",
+      "title": "How to Tell if odor retention on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-porcelain-tile-is-permanent",
+      "problem": "odor retention",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::odor retention",
+      "title": "Why odor retention Keeps Coming Back on porcelain tile",
+      "slug": "why-odor-retention-keeps-coming-back-on-porcelain-tile",
+      "problem": "odor retention",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::odor retention",
+      "title": "How to Maintain porcelain tile and Keep odor retention Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-porcelain-tile",
+      "problem": "odor retention",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::odor retention",
+      "title": "What Causes odor retention on sealed granite",
+      "slug": "what-causes-odor-retention-on-sealed-granite",
+      "problem": "odor retention",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::odor retention",
+      "title": "How to Remove odor retention from sealed granite",
+      "slug": "how-to-remove-odor-retention-from-sealed-granite",
+      "problem": "odor retention",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::odor retention",
+      "title": "How to Prevent odor retention on sealed granite",
+      "slug": "how-to-prevent-odor-retention-on-sealed-granite",
+      "problem": "odor retention",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::odor retention",
+      "title": "How to Fix odor retention on sealed granite",
+      "slug": "how-to-fix-odor-retention-on-sealed-granite",
+      "problem": "odor retention",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::odor retention",
+      "title": "How to Clean odor retention from sealed granite",
+      "slug": "how-to-clean-odor-retention-from-sealed-granite",
+      "problem": "odor retention",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::odor retention",
+      "title": "How to Tell if odor retention on sealed granite is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-sealed-granite-is-permanent",
+      "problem": "odor retention",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::odor retention",
+      "title": "Why odor retention Keeps Coming Back on sealed granite",
+      "slug": "why-odor-retention-keeps-coming-back-on-sealed-granite",
+      "problem": "odor retention",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::odor retention",
+      "title": "How to Maintain sealed granite and Keep odor retention Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-sealed-granite",
+      "problem": "odor retention",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::odor retention",
+      "title": "What Causes odor retention on sealed marble",
+      "slug": "what-causes-odor-retention-on-sealed-marble",
+      "problem": "odor retention",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::odor retention",
+      "title": "How to Remove odor retention from sealed marble",
+      "slug": "how-to-remove-odor-retention-from-sealed-marble",
+      "problem": "odor retention",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::odor retention",
+      "title": "How to Prevent odor retention on sealed marble",
+      "slug": "how-to-prevent-odor-retention-on-sealed-marble",
+      "problem": "odor retention",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::odor retention",
+      "title": "How to Fix odor retention on sealed marble",
+      "slug": "how-to-fix-odor-retention-on-sealed-marble",
+      "problem": "odor retention",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::odor retention",
+      "title": "How to Clean odor retention from sealed marble",
+      "slug": "how-to-clean-odor-retention-from-sealed-marble",
+      "problem": "odor retention",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::odor retention",
+      "title": "How to Tell if odor retention on sealed marble is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-sealed-marble-is-permanent",
+      "problem": "odor retention",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::odor retention",
+      "title": "Why odor retention Keeps Coming Back on sealed marble",
+      "slug": "why-odor-retention-keeps-coming-back-on-sealed-marble",
+      "problem": "odor retention",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::odor retention",
+      "title": "How to Maintain sealed marble and Keep odor retention Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-sealed-marble",
+      "problem": "odor retention",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

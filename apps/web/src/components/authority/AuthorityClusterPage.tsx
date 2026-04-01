@@ -29,6 +29,7 @@ import { AuthorityHero } from "./AuthorityHero";
 import { AuthorityJsonLd } from "./AuthorityJsonLd";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
+import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 
 function buildClusterEyebrow(type: AuthorityClusterPageData["type"]) {
   switch (type) {
@@ -160,6 +161,7 @@ export function AuthorityClusterPage({ data }: { data: AuthorityClusterPageData 
           title={data.title}
           description={data.description}
         />
+        <AuthorityTopicalCrossLinks pageKey={`cluster-${data.slug}`} />
 
         <AuthoritySection title="Overview">
           <p>{data.intro}</p>

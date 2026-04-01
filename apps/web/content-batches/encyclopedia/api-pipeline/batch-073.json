@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "what-causes::marble::haze",
+      "title": "What Causes haze on marble",
+      "slug": "what-causes-haze-on-marble",
+      "problem": "haze",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::haze",
+      "title": "How to Remove haze from marble",
+      "slug": "how-to-remove-haze-from-marble",
+      "problem": "haze",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::haze",
+      "title": "How to Prevent haze on marble",
+      "slug": "how-to-prevent-haze-on-marble",
+      "problem": "haze",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::haze",
+      "title": "How to Fix haze on marble",
+      "slug": "how-to-fix-haze-on-marble",
+      "problem": "haze",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::haze",
+      "title": "How to Clean haze from marble",
+      "slug": "how-to-clean-haze-from-marble",
+      "problem": "haze",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::haze",
+      "title": "How to Tell if haze on marble is Permanent",
+      "slug": "how-to-tell-if-haze-on-marble-is-permanent",
+      "problem": "haze",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::haze",
+      "title": "Why haze Keeps Coming Back on marble",
+      "slug": "why-haze-keeps-coming-back-on-marble",
+      "problem": "haze",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::haze",
+      "title": "How to Maintain marble and Keep haze Under Control",
+      "slug": "how-to-maintain-marble-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-marble",
+      "problem": "haze",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::haze",
+      "title": "What Causes haze on quartz",
+      "slug": "what-causes-haze-on-quartz",
+      "problem": "haze",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::haze",
+      "title": "How to Remove haze from quartz",
+      "slug": "how-to-remove-haze-from-quartz",
+      "problem": "haze",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::haze",
+      "title": "How to Prevent haze on quartz",
+      "slug": "how-to-prevent-haze-on-quartz",
+      "problem": "haze",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::haze",
+      "title": "How to Fix haze on quartz",
+      "slug": "how-to-fix-haze-on-quartz",
+      "problem": "haze",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::haze",
+      "title": "How to Clean haze from quartz",
+      "slug": "how-to-clean-haze-from-quartz",
+      "problem": "haze",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::haze",
+      "title": "How to Tell if haze on quartz is Permanent",
+      "slug": "how-to-tell-if-haze-on-quartz-is-permanent",
+      "problem": "haze",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::haze",
+      "title": "Why haze Keeps Coming Back on quartz",
+      "slug": "why-haze-keeps-coming-back-on-quartz",
+      "problem": "haze",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::haze",
+      "title": "How to Maintain quartz and Keep haze Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-quartz",
+      "problem": "haze",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::haze",
+      "title": "What Causes haze on wood",
+      "slug": "what-causes-haze-on-wood",
+      "problem": "haze",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::haze",
+      "title": "How to Remove haze from wood",
+      "slug": "how-to-remove-haze-from-wood",
+      "problem": "haze",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::haze",
+      "title": "How to Prevent haze on wood",
+      "slug": "how-to-prevent-haze-on-wood",
+      "problem": "haze",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::haze",
+      "title": "How to Fix haze on wood",
+      "slug": "how-to-fix-haze-on-wood",
+      "problem": "haze",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::haze",
+      "title": "How to Clean haze from wood",
+      "slug": "how-to-clean-haze-from-wood",
+      "problem": "haze",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::haze",
+      "title": "How to Tell if haze on wood is Permanent",
+      "slug": "how-to-tell-if-haze-on-wood-is-permanent",
+      "problem": "haze",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::haze",
+      "title": "Why haze Keeps Coming Back on wood",
+      "slug": "why-haze-keeps-coming-back-on-wood",
+      "problem": "haze",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::haze",
+      "title": "How to Maintain wood and Keep haze Under Control",
+      "slug": "how-to-maintain-wood-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-wood",
+      "problem": "haze",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted walls::haze",
+      "title": "What Causes haze on painted walls",
+      "slug": "what-causes-haze-on-painted-walls",
+      "problem": "haze",
+      "surface": "painted walls",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted walls::haze",
+      "title": "How to Remove haze from painted walls",
+      "slug": "how-to-remove-haze-from-painted-walls",
+      "problem": "haze",
+      "surface": "painted walls",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted walls::haze",
+      "title": "How to Prevent haze on painted walls",
+      "slug": "how-to-prevent-haze-on-painted-walls",
+      "problem": "haze",
+      "surface": "painted walls",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted walls::haze",
+      "title": "How to Fix haze on painted walls",
+      "slug": "how-to-fix-haze-on-painted-walls",
+      "problem": "haze",
+      "surface": "painted walls",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted walls::haze",
+      "title": "How to Clean haze from painted walls",
+      "slug": "how-to-clean-haze-from-painted-walls",
+      "problem": "haze",
+      "surface": "painted walls",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted walls::haze",
+      "title": "How to Tell if haze on painted walls is Permanent",
+      "slug": "how-to-tell-if-haze-on-painted-walls-is-permanent",
+      "problem": "haze",
+      "surface": "painted walls",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted walls::haze",
+      "title": "Why haze Keeps Coming Back on painted walls",
+      "slug": "why-haze-keeps-coming-back-on-painted-walls",
+      "problem": "haze",
+      "surface": "painted walls",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted walls::haze",
+      "title": "How to Maintain painted walls and Keep haze Under Control",
+      "slug": "how-to-maintain-painted-walls-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "painted walls",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted walls::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on painted walls",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-painted-walls",
+      "problem": "haze",
+      "surface": "painted walls",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::haze",
+      "title": "What Causes haze on grout",
+      "slug": "what-causes-haze-on-grout",
+      "problem": "haze",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::haze",
+      "title": "How to Remove haze from grout",
+      "slug": "how-to-remove-haze-from-grout",
+      "problem": "haze",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::haze",
+      "title": "How to Prevent haze on grout",
+      "slug": "how-to-prevent-haze-on-grout",
+      "problem": "haze",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::haze",
+      "title": "How to Fix haze on grout",
+      "slug": "how-to-fix-haze-on-grout",
+      "problem": "haze",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::haze",
+      "title": "How to Clean haze from grout",
+      "slug": "how-to-clean-haze-from-grout",
+      "problem": "haze",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::haze",
+      "title": "How to Tell if haze on grout is Permanent",
+      "slug": "how-to-tell-if-haze-on-grout-is-permanent",
+      "problem": "haze",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::haze",
+      "title": "Why haze Keeps Coming Back on grout",
+      "slug": "why-haze-keeps-coming-back-on-grout",
+      "problem": "haze",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::haze",
+      "title": "How to Maintain grout and Keep haze Under Control",
+      "slug": "how-to-maintain-grout-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-grout",
+      "problem": "haze",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::glass cooktops::haze",
+      "title": "What Causes haze on glass cooktops",
+      "slug": "what-causes-haze-on-glass-cooktops",
+      "problem": "haze",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::glass cooktops::haze",
+      "title": "How to Remove haze from glass cooktops",
+      "slug": "how-to-remove-haze-from-glass-cooktops",
+      "problem": "haze",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::glass cooktops::haze",
+      "title": "How to Prevent haze on glass cooktops",
+      "slug": "how-to-prevent-haze-on-glass-cooktops",
+      "problem": "haze",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::glass cooktops::haze",
+      "title": "How to Fix haze on glass cooktops",
+      "slug": "how-to-fix-haze-on-glass-cooktops",
+      "problem": "haze",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::glass cooktops::haze",
+      "title": "How to Clean haze from glass cooktops",
+      "slug": "how-to-clean-haze-from-glass-cooktops",
+      "problem": "haze",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::glass cooktops::haze",
+      "title": "How to Tell if haze on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-haze-on-glass-cooktops-is-permanent",
+      "problem": "haze",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::glass cooktops::haze",
+      "title": "Why haze Keeps Coming Back on glass cooktops",
+      "slug": "why-haze-keeps-coming-back-on-glass-cooktops",
+      "problem": "haze",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::glass cooktops::haze",
+      "title": "How to Maintain glass cooktops and Keep haze Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::glass cooktops::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-glass-cooktops",
+      "problem": "haze",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::haze",
+      "title": "What Causes haze on shower doors",
+      "slug": "what-causes-haze-on-shower-doors",
+      "problem": "haze",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::haze",
+      "title": "How to Remove haze from shower doors",
+      "slug": "how-to-remove-haze-from-shower-doors",
+      "problem": "haze",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::haze",
+      "title": "How to Prevent haze on shower doors",
+      "slug": "how-to-prevent-haze-on-shower-doors",
+      "problem": "haze",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::haze",
+      "title": "How to Fix haze on shower doors",
+      "slug": "how-to-fix-haze-on-shower-doors",
+      "problem": "haze",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::haze",
+      "title": "How to Clean haze from shower doors",
+      "slug": "how-to-clean-haze-from-shower-doors",
+      "problem": "haze",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::haze",
+      "title": "How to Tell if haze on shower doors is Permanent",
+      "slug": "how-to-tell-if-haze-on-shower-doors-is-permanent",
+      "problem": "haze",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::haze",
+      "title": "Why haze Keeps Coming Back on shower doors",
+      "slug": "why-haze-keeps-coming-back-on-shower-doors",
+      "problem": "haze",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::haze",
+      "title": "How to Maintain shower doors and Keep haze Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-shower-doors",
+      "problem": "haze",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted cabinets::haze",
+      "title": "What Causes haze on painted cabinets",
+      "slug": "what-causes-haze-on-painted-cabinets",
+      "problem": "haze",
+      "surface": "painted cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted cabinets::haze",
+      "title": "How to Remove haze from painted cabinets",
+      "slug": "how-to-remove-haze-from-painted-cabinets",
+      "problem": "haze",
+      "surface": "painted cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted cabinets::haze",
+      "title": "How to Prevent haze on painted cabinets",
+      "slug": "how-to-prevent-haze-on-painted-cabinets",
+      "problem": "haze",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted cabinets::haze",
+      "title": "How to Fix haze on painted cabinets",
+      "slug": "how-to-fix-haze-on-painted-cabinets",
+      "problem": "haze",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted cabinets::haze",
+      "title": "How to Clean haze from painted cabinets",
+      "slug": "how-to-clean-haze-from-painted-cabinets",
+      "problem": "haze",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted cabinets::haze",
+      "title": "How to Tell if haze on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-haze-on-painted-cabinets-is-permanent",
+      "problem": "haze",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted cabinets::haze",
+      "title": "Why haze Keeps Coming Back on painted cabinets",
+      "slug": "why-haze-keeps-coming-back-on-painted-cabinets",
+      "problem": "haze",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted cabinets::haze",
+      "title": "How to Maintain painted cabinets and Keep haze Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted cabinets::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-painted-cabinets",
+      "problem": "haze",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::haze",
+      "title": "What Causes haze on sealed stone",
+      "slug": "what-causes-haze-on-sealed-stone",
+      "problem": "haze",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::haze",
+      "title": "How to Remove haze from sealed stone",
+      "slug": "how-to-remove-haze-from-sealed-stone",
+      "problem": "haze",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::haze",
+      "title": "How to Prevent haze on sealed stone",
+      "slug": "how-to-prevent-haze-on-sealed-stone",
+      "problem": "haze",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::haze",
+      "title": "How to Fix haze on sealed stone",
+      "slug": "how-to-fix-haze-on-sealed-stone",
+      "problem": "haze",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::haze",
+      "title": "How to Clean haze from sealed stone",
+      "slug": "how-to-clean-haze-from-sealed-stone",
+      "problem": "haze",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::haze",
+      "title": "How to Tell if haze on sealed stone is Permanent",
+      "slug": "how-to-tell-if-haze-on-sealed-stone-is-permanent",
+      "problem": "haze",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::haze",
+      "title": "Why haze Keeps Coming Back on sealed stone",
+      "slug": "why-haze-keeps-coming-back-on-sealed-stone",
+      "problem": "haze",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::haze",
+      "title": "How to Maintain sealed stone and Keep haze Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-sealed-stone",
+      "problem": "haze",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::haze",
+      "title": "What Causes haze on shower grout",
+      "slug": "what-causes-haze-on-shower-grout",
+      "problem": "haze",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::haze",
+      "title": "How to Remove haze from shower grout",
+      "slug": "how-to-remove-haze-from-shower-grout",
+      "problem": "haze",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::haze",
+      "title": "How to Prevent haze on shower grout",
+      "slug": "how-to-prevent-haze-on-shower-grout",
+      "problem": "haze",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::haze",
+      "title": "How to Fix haze on shower grout",
+      "slug": "how-to-fix-haze-on-shower-grout",
+      "problem": "haze",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::haze",
+      "title": "How to Clean haze from shower grout",
+      "slug": "how-to-clean-haze-from-shower-grout",
+      "problem": "haze",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::haze",
+      "title": "How to Tell if haze on shower grout is Permanent",
+      "slug": "how-to-tell-if-haze-on-shower-grout-is-permanent",
+      "problem": "haze",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::haze",
+      "title": "Why haze Keeps Coming Back on shower grout",
+      "slug": "why-haze-keeps-coming-back-on-shower-grout",
+      "problem": "haze",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::haze",
+      "title": "How to Maintain shower grout and Keep haze Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-shower-grout",
+      "problem": "haze",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::haze",
+      "title": "What Causes haze on tile grout",
+      "slug": "what-causes-haze-on-tile-grout",
+      "problem": "haze",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::haze",
+      "title": "How to Remove haze from tile grout",
+      "slug": "how-to-remove-haze-from-tile-grout",
+      "problem": "haze",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::haze",
+      "title": "How to Prevent haze on tile grout",
+      "slug": "how-to-prevent-haze-on-tile-grout",
+      "problem": "haze",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::haze",
+      "title": "How to Fix haze on tile grout",
+      "slug": "how-to-fix-haze-on-tile-grout",
+      "problem": "haze",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::haze",
+      "title": "How to Clean haze from tile grout",
+      "slug": "how-to-clean-haze-from-tile-grout",
+      "problem": "haze",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::haze",
+      "title": "How to Tell if haze on tile grout is Permanent",
+      "slug": "how-to-tell-if-haze-on-tile-grout-is-permanent",
+      "problem": "haze",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::haze",
+      "title": "Why haze Keeps Coming Back on tile grout",
+      "slug": "why-haze-keeps-coming-back-on-tile-grout",
+      "problem": "haze",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::haze",
+      "title": "How to Maintain tile grout and Keep haze Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-tile-grout",
+      "problem": "haze",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::haze",
+      "title": "What Causes haze on caulking",
+      "slug": "what-causes-haze-on-caulking",
+      "problem": "haze",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

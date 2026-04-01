@@ -48,4 +48,5 @@ export type StructuredArticle = {
   title: string;
   slug: string;
   sections: StructuredSection[];
+  internalLinks?: Array<{ title: string; slug: string }>;
 };

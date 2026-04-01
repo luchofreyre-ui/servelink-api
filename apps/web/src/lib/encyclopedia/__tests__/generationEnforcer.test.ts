@@ -18,6 +18,11 @@ function compliantSnapshot(): CanonicalPageSnapshot {
     surface: "Glass shower doors",
     intent: "how-clean",
     riskLevel: "medium",
+    seo: {
+      title: "How to Clean Soap Scum from Glass Shower Doors",
+      slug: "how-to-clean-soap-scum-from-glass-shower-doors",
+      metaDescription: "Learn how to deal with soap scum on glass shower doors.",
+    },
     internalLinks: ["cause-soap-scum", "prevent-soap-scum", "diagnose-etching"],
     sections: [
       {

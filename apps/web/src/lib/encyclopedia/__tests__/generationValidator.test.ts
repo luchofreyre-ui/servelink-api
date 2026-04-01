@@ -30,6 +30,11 @@ function validSnapshot(overrides: Partial<CanonicalPageSnapshot> = {}): Canonica
     surface: "Kitchen stovetop",
     intent: "Remove safely",
     riskLevel: "low",
+    seo: {
+      title: "Valid SEO title example here",
+      slug: "valid-seo-title-example-here",
+      metaDescription: "Meta description long enough for validation purposes.",
+    },
     sections,
     internalLinks: ["related-one", "related-two", "related-three"],
     ...overrides,

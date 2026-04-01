@@ -1,0 +1,20 @@
+{
+  "targets": [
+    { "surface": "hardwood", "problem": "rust stains" },
+    { "surface": "hardwood", "problem": "tannin stains" },
+    { "surface": "hardwood", "problem": "bacteria buildup" },
+    { "surface": "hardwood", "problem": "etching" },
+    { "surface": "hardwood", "problem": "oxidation" },
+    { "surface": "hardwood", "problem": "corrosion" },
+    { "surface": "hardwood", "problem": "tarnish" },
+    { "surface": "hardwood", "problem": "heat damage" },
+
+    { "surface": "grout", "problem": "bacteria buildup" },
+    { "surface": "grout", "problem": "etching" },
+    { "surface": "grout", "problem": "oxidation" },
+    { "surface": "grout", "problem": "corrosion" },
+    { "surface": "grout", "problem": "tarnish" },
+    { "surface": "grout", "problem": "heat damage" },
+    { "surface": "grout", "problem": "uneven finish" }
+  ]
+}

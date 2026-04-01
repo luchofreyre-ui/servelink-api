@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-fix::laminate::cloudy film",
+      "title": "How to Fix cloudy film on laminate",
+      "slug": "how-to-fix-cloudy-film-on-laminate",
+      "problem": "cloudy film",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::cloudy film",
+      "title": "How to Clean cloudy film from laminate",
+      "slug": "how-to-clean-cloudy-film-from-laminate",
+      "problem": "cloudy film",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::cloudy film",
+      "title": "How to Tell if cloudy film on laminate is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-laminate-is-permanent",
+      "problem": "cloudy film",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on laminate",
+      "slug": "why-cloudy-film-keeps-coming-back-on-laminate",
+      "problem": "cloudy film",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::cloudy film",
+      "title": "How to Maintain laminate and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-laminate",
+      "problem": "cloudy film",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::cloudy film",
+      "title": "What Causes cloudy film on wood",
+      "slug": "what-causes-cloudy-film-on-wood",
+      "problem": "cloudy film",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::cloudy film",
+      "title": "How to Remove cloudy film from wood",
+      "slug": "how-to-remove-cloudy-film-from-wood",
+      "problem": "cloudy film",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::cloudy film",
+      "title": "How to Prevent cloudy film on wood",
+      "slug": "how-to-prevent-cloudy-film-on-wood",
+      "problem": "cloudy film",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::cloudy film",
+      "title": "How to Fix cloudy film on wood",
+      "slug": "how-to-fix-cloudy-film-on-wood",
+      "problem": "cloudy film",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::cloudy film",
+      "title": "How to Clean cloudy film from wood",
+      "slug": "how-to-clean-cloudy-film-from-wood",
+      "problem": "cloudy film",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::cloudy film",
+      "title": "How to Tell if cloudy film on wood is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-wood-is-permanent",
+      "problem": "cloudy film",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on wood",
+      "slug": "why-cloudy-film-keeps-coming-back-on-wood",
+      "problem": "cloudy film",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::cloudy film",
+      "title": "How to Maintain wood and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-wood-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-wood",
+      "problem": "cloudy film",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::cloudy film",
+      "title": "What Causes cloudy film on grout",
+      "slug": "what-causes-cloudy-film-on-grout",
+      "problem": "cloudy film",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::cloudy film",
+      "title": "How to Remove cloudy film from grout",
+      "slug": "how-to-remove-cloudy-film-from-grout",
+      "problem": "cloudy film",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::cloudy film",
+      "title": "How to Prevent cloudy film on grout",
+      "slug": "how-to-prevent-cloudy-film-on-grout",
+      "problem": "cloudy film",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::cloudy film",
+      "title": "How to Fix cloudy film on grout",
+      "slug": "how-to-fix-cloudy-film-on-grout",
+      "problem": "cloudy film",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::cloudy film",
+      "title": "How to Clean cloudy film from grout",
+      "slug": "how-to-clean-cloudy-film-from-grout",
+      "problem": "cloudy film",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::cloudy film",
+      "title": "How to Tell if cloudy film on grout is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-grout-is-permanent",
+      "problem": "cloudy film",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on grout",
+      "slug": "why-cloudy-film-keeps-coming-back-on-grout",
+      "problem": "cloudy film",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::cloudy film",
+      "title": "How to Maintain grout and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-grout-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-grout",
+      "problem": "cloudy film",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::cloudy film",
+      "title": "What Causes cloudy film on shower doors",
+      "slug": "what-causes-cloudy-film-on-shower-doors",
+      "problem": "cloudy film",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::cloudy film",
+      "title": "How to Remove cloudy film from shower doors",
+      "slug": "how-to-remove-cloudy-film-from-shower-doors",
+      "problem": "cloudy film",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::cloudy film",
+      "title": "How to Prevent cloudy film on shower doors",
+      "slug": "how-to-prevent-cloudy-film-on-shower-doors",
+      "problem": "cloudy film",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::cloudy film",
+      "title": "How to Fix cloudy film on shower doors",
+      "slug": "how-to-fix-cloudy-film-on-shower-doors",
+      "problem": "cloudy film",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::cloudy film",
+      "title": "How to Clean cloudy film from shower doors",
+      "slug": "how-to-clean-cloudy-film-from-shower-doors",
+      "problem": "cloudy film",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::cloudy film",
+      "title": "How to Tell if cloudy film on shower doors is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-shower-doors-is-permanent",
+      "problem": "cloudy film",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on shower doors",
+      "slug": "why-cloudy-film-keeps-coming-back-on-shower-doors",
+      "problem": "cloudy film",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::cloudy film",
+      "title": "How to Maintain shower doors and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-shower-doors",
+      "problem": "cloudy film",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::cloudy film",
+      "title": "What Causes cloudy film on sealed stone",
+      "slug": "what-causes-cloudy-film-on-sealed-stone",
+      "problem": "cloudy film",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::cloudy film",
+      "title": "How to Remove cloudy film from sealed stone",
+      "slug": "how-to-remove-cloudy-film-from-sealed-stone",
+      "problem": "cloudy film",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::cloudy film",
+      "title": "How to Prevent cloudy film on sealed stone",
+      "slug": "how-to-prevent-cloudy-film-on-sealed-stone",
+      "problem": "cloudy film",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::cloudy film",
+      "title": "How to Fix cloudy film on sealed stone",
+      "slug": "how-to-fix-cloudy-film-on-sealed-stone",
+      "problem": "cloudy film",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::cloudy film",
+      "title": "How to Clean cloudy film from sealed stone",
+      "slug": "how-to-clean-cloudy-film-from-sealed-stone",
+      "problem": "cloudy film",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::cloudy film",
+      "title": "How to Tell if cloudy film on sealed stone is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-sealed-stone-is-permanent",
+      "problem": "cloudy film",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on sealed stone",
+      "slug": "why-cloudy-film-keeps-coming-back-on-sealed-stone",
+      "problem": "cloudy film",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::cloudy film",
+      "title": "How to Maintain sealed stone and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-sealed-stone",
+      "problem": "cloudy film",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::cloudy film",
+      "title": "What Causes cloudy film on shower grout",
+      "slug": "what-causes-cloudy-film-on-shower-grout",
+      "problem": "cloudy film",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::cloudy film",
+      "title": "How to Remove cloudy film from shower grout",
+      "slug": "how-to-remove-cloudy-film-from-shower-grout",
+      "problem": "cloudy film",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::cloudy film",
+      "title": "How to Prevent cloudy film on shower grout",
+      "slug": "how-to-prevent-cloudy-film-on-shower-grout",
+      "problem": "cloudy film",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::cloudy film",
+      "title": "How to Fix cloudy film on shower grout",
+      "slug": "how-to-fix-cloudy-film-on-shower-grout",
+      "problem": "cloudy film",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::cloudy film",
+      "title": "How to Clean cloudy film from shower grout",
+      "slug": "how-to-clean-cloudy-film-from-shower-grout",
+      "problem": "cloudy film",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::cloudy film",
+      "title": "How to Tell if cloudy film on shower grout is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-shower-grout-is-permanent",
+      "problem": "cloudy film",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on shower grout",
+      "slug": "why-cloudy-film-keeps-coming-back-on-shower-grout",
+      "problem": "cloudy film",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::cloudy film",
+      "title": "How to Maintain shower grout and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-shower-grout",
+      "problem": "cloudy film",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::cloudy film",
+      "title": "What Causes cloudy film on tile grout",
+      "slug": "what-causes-cloudy-film-on-tile-grout",
+      "problem": "cloudy film",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::cloudy film",
+      "title": "How to Remove cloudy film from tile grout",
+      "slug": "how-to-remove-cloudy-film-from-tile-grout",
+      "problem": "cloudy film",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::cloudy film",
+      "title": "How to Prevent cloudy film on tile grout",
+      "slug": "how-to-prevent-cloudy-film-on-tile-grout",
+      "problem": "cloudy film",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::cloudy film",
+      "title": "How to Fix cloudy film on tile grout",
+      "slug": "how-to-fix-cloudy-film-on-tile-grout",
+      "problem": "cloudy film",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::cloudy film",
+      "title": "How to Clean cloudy film from tile grout",
+      "slug": "how-to-clean-cloudy-film-from-tile-grout",
+      "problem": "cloudy film",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::cloudy film",
+      "title": "How to Tell if cloudy film on tile grout is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-tile-grout-is-permanent",
+      "problem": "cloudy film",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on tile grout",
+      "slug": "why-cloudy-film-keeps-coming-back-on-tile-grout",
+      "problem": "cloudy film",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::cloudy film",
+      "title": "How to Maintain tile grout and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-tile-grout",
+      "problem": "cloudy film",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::cloudy film",
+      "title": "What Causes cloudy film on caulking",
+      "slug": "what-causes-cloudy-film-on-caulking",
+      "problem": "cloudy film",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::cloudy film",
+      "title": "How to Remove cloudy film from caulking",
+      "slug": "how-to-remove-cloudy-film-from-caulking",
+      "problem": "cloudy film",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::cloudy film",
+      "title": "How to Prevent cloudy film on caulking",
+      "slug": "how-to-prevent-cloudy-film-on-caulking",
+      "problem": "cloudy film",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::cloudy film",
+      "title": "How to Fix cloudy film on caulking",
+      "slug": "how-to-fix-cloudy-film-on-caulking",
+      "problem": "cloudy film",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::cloudy film",
+      "title": "How to Clean cloudy film from caulking",
+      "slug": "how-to-clean-cloudy-film-from-caulking",
+      "problem": "cloudy film",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::cloudy film",
+      "title": "How to Tell if cloudy film on caulking is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-caulking-is-permanent",
+      "problem": "cloudy film",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on caulking",
+      "slug": "why-cloudy-film-keeps-coming-back-on-caulking",
+      "problem": "cloudy film",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::cloudy film",
+      "title": "How to Maintain caulking and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-caulking",
+      "problem": "cloudy film",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::cloudy film",
+      "title": "What Causes cloudy film on sealed granite",
+      "slug": "what-causes-cloudy-film-on-sealed-granite",
+      "problem": "cloudy film",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::cloudy film",
+      "title": "How to Remove cloudy film from sealed granite",
+      "slug": "how-to-remove-cloudy-film-from-sealed-granite",
+      "problem": "cloudy film",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::cloudy film",
+      "title": "How to Prevent cloudy film on sealed granite",
+      "slug": "how-to-prevent-cloudy-film-on-sealed-granite",
+      "problem": "cloudy film",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::cloudy film",
+      "title": "How to Fix cloudy film on sealed granite",
+      "slug": "how-to-fix-cloudy-film-on-sealed-granite",
+      "problem": "cloudy film",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::cloudy film",
+      "title": "How to Clean cloudy film from sealed granite",
+      "slug": "how-to-clean-cloudy-film-from-sealed-granite",
+      "problem": "cloudy film",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::cloudy film",
+      "title": "How to Tell if cloudy film on sealed granite is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-sealed-granite-is-permanent",
+      "problem": "cloudy film",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on sealed granite",
+      "slug": "why-cloudy-film-keeps-coming-back-on-sealed-granite",
+      "problem": "cloudy film",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::cloudy film",
+      "title": "How to Maintain sealed granite and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-sealed-granite",
+      "problem": "cloudy film",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::cloudy film",
+      "title": "What Causes cloudy film on sealed marble",
+      "slug": "what-causes-cloudy-film-on-sealed-marble",
+      "problem": "cloudy film",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::cloudy film",
+      "title": "How to Remove cloudy film from sealed marble",
+      "slug": "how-to-remove-cloudy-film-from-sealed-marble",
+      "problem": "cloudy film",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::cloudy film",
+      "title": "How to Prevent cloudy film on sealed marble",
+      "slug": "how-to-prevent-cloudy-film-on-sealed-marble",
+      "problem": "cloudy film",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::cloudy film",
+      "title": "How to Fix cloudy film on sealed marble",
+      "slug": "how-to-fix-cloudy-film-on-sealed-marble",
+      "problem": "cloudy film",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::cloudy film",
+      "title": "How to Clean cloudy film from sealed marble",
+      "slug": "how-to-clean-cloudy-film-from-sealed-marble",
+      "problem": "cloudy film",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::cloudy film",
+      "title": "How to Tell if cloudy film on sealed marble is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-sealed-marble-is-permanent",
+      "problem": "cloudy film",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on sealed marble",
+      "slug": "why-cloudy-film-keeps-coming-back-on-sealed-marble",
+      "problem": "cloudy film",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::cloudy film",
+      "title": "How to Maintain sealed marble and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-sealed-marble",
+      "problem": "cloudy film",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::cloudy film",
+      "title": "What Causes cloudy film on quartz countertops",
+      "slug": "what-causes-cloudy-film-on-quartz-countertops",
+      "problem": "cloudy film",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::cloudy film",
+      "title": "How to Remove cloudy film from quartz countertops",
+      "slug": "how-to-remove-cloudy-film-from-quartz-countertops",
+      "problem": "cloudy film",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::cloudy film",
+      "title": "How to Prevent cloudy film on quartz countertops",
+      "slug": "how-to-prevent-cloudy-film-on-quartz-countertops",
+      "problem": "cloudy film",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::cloudy film",
+      "title": "How to Fix cloudy film on quartz countertops",
+      "slug": "how-to-fix-cloudy-film-on-quartz-countertops",
+      "problem": "cloudy film",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::cloudy film",
+      "title": "How to Clean cloudy film from quartz countertops",
+      "slug": "how-to-clean-cloudy-film-from-quartz-countertops",
+      "problem": "cloudy film",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::cloudy film",
+      "title": "How to Tell if cloudy film on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-quartz-countertops-is-permanent",
+      "problem": "cloudy film",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on quartz countertops",
+      "slug": "why-cloudy-film-keeps-coming-back-on-quartz-countertops",
+      "problem": "cloudy film",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::cloudy film",
+      "title": "How to Maintain quartz countertops and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-quartz-countertops",
+      "problem": "cloudy film",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::cloudy film",
+      "title": "What Causes cloudy film on laminate counters",
+      "slug": "what-causes-cloudy-film-on-laminate-counters",
+      "problem": "cloudy film",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::cloudy film",
+      "title": "How to Remove cloudy film from laminate counters",
+      "slug": "how-to-remove-cloudy-film-from-laminate-counters",
+      "problem": "cloudy film",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::cloudy film",
+      "title": "How to Prevent cloudy film on laminate counters",
+      "slug": "how-to-prevent-cloudy-film-on-laminate-counters",
+      "problem": "cloudy film",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::cloudy film",
+      "title": "How to Fix cloudy film on laminate counters",
+      "slug": "how-to-fix-cloudy-film-on-laminate-counters",
+      "problem": "cloudy film",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

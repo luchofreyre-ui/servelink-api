@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-clean::laminate counters::cloudy film",
+      "title": "How to Clean cloudy film from laminate counters",
+      "slug": "how-to-clean-cloudy-film-from-laminate-counters",
+      "problem": "cloudy film",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::cloudy film",
+      "title": "How to Tell if cloudy film on laminate counters is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-laminate-counters-is-permanent",
+      "problem": "cloudy film",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on laminate counters",
+      "slug": "why-cloudy-film-keeps-coming-back-on-laminate-counters",
+      "problem": "cloudy film",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::cloudy film",
+      "title": "How to Maintain laminate counters and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-laminate-counters",
+      "problem": "cloudy film",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::cloudy film",
+      "title": "What Causes cloudy film on butcher block",
+      "slug": "what-causes-cloudy-film-on-butcher-block",
+      "problem": "cloudy film",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::cloudy film",
+      "title": "How to Remove cloudy film from butcher block",
+      "slug": "how-to-remove-cloudy-film-from-butcher-block",
+      "problem": "cloudy film",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::cloudy film",
+      "title": "How to Prevent cloudy film on butcher block",
+      "slug": "how-to-prevent-cloudy-film-on-butcher-block",
+      "problem": "cloudy film",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::cloudy film",
+      "title": "How to Fix cloudy film on butcher block",
+      "slug": "how-to-fix-cloudy-film-on-butcher-block",
+      "problem": "cloudy film",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::cloudy film",
+      "title": "How to Clean cloudy film from butcher block",
+      "slug": "how-to-clean-cloudy-film-from-butcher-block",
+      "problem": "cloudy film",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::cloudy film",
+      "title": "How to Tell if cloudy film on butcher block is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-butcher-block-is-permanent",
+      "problem": "cloudy film",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on butcher block",
+      "slug": "why-cloudy-film-keeps-coming-back-on-butcher-block",
+      "problem": "cloudy film",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::cloudy film",
+      "title": "How to Maintain butcher block and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-butcher-block",
+      "problem": "cloudy film",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::cloudy film",
+      "title": "What Causes cloudy film on unfinished wood",
+      "slug": "what-causes-cloudy-film-on-unfinished-wood",
+      "problem": "cloudy film",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::cloudy film",
+      "title": "How to Remove cloudy film from unfinished wood",
+      "slug": "how-to-remove-cloudy-film-from-unfinished-wood",
+      "problem": "cloudy film",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::cloudy film",
+      "title": "How to Prevent cloudy film on unfinished wood",
+      "slug": "how-to-prevent-cloudy-film-on-unfinished-wood",
+      "problem": "cloudy film",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::cloudy film",
+      "title": "How to Fix cloudy film on unfinished wood",
+      "slug": "how-to-fix-cloudy-film-on-unfinished-wood",
+      "problem": "cloudy film",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::cloudy film",
+      "title": "How to Clean cloudy film from unfinished wood",
+      "slug": "how-to-clean-cloudy-film-from-unfinished-wood",
+      "problem": "cloudy film",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::cloudy film",
+      "title": "How to Tell if cloudy film on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-unfinished-wood-is-permanent",
+      "problem": "cloudy film",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on unfinished wood",
+      "slug": "why-cloudy-film-keeps-coming-back-on-unfinished-wood",
+      "problem": "cloudy film",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::cloudy film",
+      "title": "How to Maintain unfinished wood and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-unfinished-wood",
+      "problem": "cloudy film",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::cloudy film",
+      "title": "What Causes cloudy film on sealed wood",
+      "slug": "what-causes-cloudy-film-on-sealed-wood",
+      "problem": "cloudy film",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::cloudy film",
+      "title": "How to Remove cloudy film from sealed wood",
+      "slug": "how-to-remove-cloudy-film-from-sealed-wood",
+      "problem": "cloudy film",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::cloudy film",
+      "title": "How to Prevent cloudy film on sealed wood",
+      "slug": "how-to-prevent-cloudy-film-on-sealed-wood",
+      "problem": "cloudy film",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::cloudy film",
+      "title": "How to Fix cloudy film on sealed wood",
+      "slug": "how-to-fix-cloudy-film-on-sealed-wood",
+      "problem": "cloudy film",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::cloudy film",
+      "title": "How to Clean cloudy film from sealed wood",
+      "slug": "how-to-clean-cloudy-film-from-sealed-wood",
+      "problem": "cloudy film",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::cloudy film",
+      "title": "How to Tell if cloudy film on sealed wood is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-sealed-wood-is-permanent",
+      "problem": "cloudy film",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on sealed wood",
+      "slug": "why-cloudy-film-keeps-coming-back-on-sealed-wood",
+      "problem": "cloudy film",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::cloudy film",
+      "title": "How to Maintain sealed wood and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-sealed-wood",
+      "problem": "cloudy film",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::yellow stains",
+      "title": "What Causes yellow stains on shower glass",
+      "slug": "what-causes-yellow-stains-on-shower-glass",
+      "problem": "yellow stains",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::yellow stains",
+      "title": "How to Remove yellow stains from shower glass",
+      "slug": "how-to-remove-yellow-stains-from-shower-glass",
+      "problem": "yellow stains",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::yellow stains",
+      "title": "How to Prevent yellow stains on shower glass",
+      "slug": "how-to-prevent-yellow-stains-on-shower-glass",
+      "problem": "yellow stains",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::yellow stains",
+      "title": "How to Fix yellow stains on shower glass",
+      "slug": "how-to-fix-yellow-stains-on-shower-glass",
+      "problem": "yellow stains",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::yellow stains",
+      "title": "How to Clean yellow stains from shower glass",
+      "slug": "how-to-clean-yellow-stains-from-shower-glass",
+      "problem": "yellow stains",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::yellow stains",
+      "title": "How to Tell if yellow stains on shower glass is Permanent",
+      "slug": "how-to-tell-if-yellow-stains-on-shower-glass-is-permanent",
+      "problem": "yellow stains",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::yellow stains",
+      "title": "Why yellow stains Keeps Coming Back on shower glass",
+      "slug": "why-yellow-stains-keeps-coming-back-on-shower-glass",
+      "problem": "yellow stains",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::yellow stains",
+      "title": "How to Maintain shower glass and Keep yellow stains Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-yellow-stains-under-control",
+      "problem": "yellow stains",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::yellow stains",
+      "title": "How to Recover After a Cleaning Mistake With yellow stains on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellow-stains-on-shower-glass",
+      "problem": "yellow stains",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::yellow stains",
+      "title": "What Causes yellow stains on granite",
+      "slug": "what-causes-yellow-stains-on-granite",
+      "problem": "yellow stains",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::yellow stains",
+      "title": "How to Remove yellow stains from granite",
+      "slug": "how-to-remove-yellow-stains-from-granite",
+      "problem": "yellow stains",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::yellow stains",
+      "title": "How to Prevent yellow stains on granite",
+      "slug": "how-to-prevent-yellow-stains-on-granite",
+      "problem": "yellow stains",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::yellow stains",
+      "title": "How to Fix yellow stains on granite",
+      "slug": "how-to-fix-yellow-stains-on-granite",
+      "problem": "yellow stains",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::yellow stains",
+      "title": "How to Clean yellow stains from granite",
+      "slug": "how-to-clean-yellow-stains-from-granite",
+      "problem": "yellow stains",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::yellow stains",
+      "title": "How to Tell if yellow stains on granite is Permanent",
+      "slug": "how-to-tell-if-yellow-stains-on-granite-is-permanent",
+      "problem": "yellow stains",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::yellow stains",
+      "title": "Why yellow stains Keeps Coming Back on granite",
+      "slug": "why-yellow-stains-keeps-coming-back-on-granite",
+      "problem": "yellow stains",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::yellow stains",
+      "title": "How to Maintain granite and Keep yellow stains Under Control",
+      "slug": "how-to-maintain-granite-and-keep-yellow-stains-under-control",
+      "problem": "yellow stains",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::yellow stains",
+      "title": "How to Recover After a Cleaning Mistake With yellow stains on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellow-stains-on-granite",
+      "problem": "yellow stains",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::yellow stains",
+      "title": "What Causes yellow stains on marble",
+      "slug": "what-causes-yellow-stains-on-marble",
+      "problem": "yellow stains",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::yellow stains",
+      "title": "How to Remove yellow stains from marble",
+      "slug": "how-to-remove-yellow-stains-from-marble",
+      "problem": "yellow stains",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::yellow stains",
+      "title": "How to Prevent yellow stains on marble",
+      "slug": "how-to-prevent-yellow-stains-on-marble",
+      "problem": "yellow stains",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::yellow stains",
+      "title": "How to Fix yellow stains on marble",
+      "slug": "how-to-fix-yellow-stains-on-marble",
+      "problem": "yellow stains",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::yellow stains",
+      "title": "How to Clean yellow stains from marble",
+      "slug": "how-to-clean-yellow-stains-from-marble",
+      "problem": "yellow stains",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::yellow stains",
+      "title": "How to Tell if yellow stains on marble is Permanent",
+      "slug": "how-to-tell-if-yellow-stains-on-marble-is-permanent",
+      "problem": "yellow stains",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::yellow stains",
+      "title": "Why yellow stains Keeps Coming Back on marble",
+      "slug": "why-yellow-stains-keeps-coming-back-on-marble",
+      "problem": "yellow stains",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::yellow stains",
+      "title": "How to Maintain marble and Keep yellow stains Under Control",
+      "slug": "how-to-maintain-marble-and-keep-yellow-stains-under-control",
+      "problem": "yellow stains",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::yellow stains",
+      "title": "How to Recover After a Cleaning Mistake With yellow stains on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellow-stains-on-marble",
+      "problem": "yellow stains",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::yellow stains",
+      "title": "What Causes yellow stains on quartz",
+      "slug": "what-causes-yellow-stains-on-quartz",
+      "problem": "yellow stains",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::yellow stains",
+      "title": "How to Remove yellow stains from quartz",
+      "slug": "how-to-remove-yellow-stains-from-quartz",
+      "problem": "yellow stains",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::yellow stains",
+      "title": "How to Prevent yellow stains on quartz",
+      "slug": "how-to-prevent-yellow-stains-on-quartz",
+      "problem": "yellow stains",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::yellow stains",
+      "title": "How to Fix yellow stains on quartz",
+      "slug": "how-to-fix-yellow-stains-on-quartz",
+      "problem": "yellow stains",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::yellow stains",
+      "title": "How to Clean yellow stains from quartz",
+      "slug": "how-to-clean-yellow-stains-from-quartz",
+      "problem": "yellow stains",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::yellow stains",
+      "title": "How to Tell if yellow stains on quartz is Permanent",
+      "slug": "how-to-tell-if-yellow-stains-on-quartz-is-permanent",
+      "problem": "yellow stains",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::yellow stains",
+      "title": "Why yellow stains Keeps Coming Back on quartz",
+      "slug": "why-yellow-stains-keeps-coming-back-on-quartz",
+      "problem": "yellow stains",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::yellow stains",
+      "title": "How to Maintain quartz and Keep yellow stains Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-yellow-stains-under-control",
+      "problem": "yellow stains",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::yellow stains",
+      "title": "How to Recover After a Cleaning Mistake With yellow stains on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellow-stains-on-quartz",
+      "problem": "yellow stains",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::yellow stains",
+      "title": "What Causes yellow stains on laminate",
+      "slug": "what-causes-yellow-stains-on-laminate",
+      "problem": "yellow stains",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::yellow stains",
+      "title": "How to Remove yellow stains from laminate",
+      "slug": "how-to-remove-yellow-stains-from-laminate",
+      "problem": "yellow stains",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::yellow stains",
+      "title": "How to Prevent yellow stains on laminate",
+      "slug": "how-to-prevent-yellow-stains-on-laminate",
+      "problem": "yellow stains",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::yellow stains",
+      "title": "How to Fix yellow stains on laminate",
+      "slug": "how-to-fix-yellow-stains-on-laminate",
+      "problem": "yellow stains",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::yellow stains",
+      "title": "How to Clean yellow stains from laminate",
+      "slug": "how-to-clean-yellow-stains-from-laminate",
+      "problem": "yellow stains",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::yellow stains",
+      "title": "How to Tell if yellow stains on laminate is Permanent",
+      "slug": "how-to-tell-if-yellow-stains-on-laminate-is-permanent",
+      "problem": "yellow stains",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::yellow stains",
+      "title": "Why yellow stains Keeps Coming Back on laminate",
+      "slug": "why-yellow-stains-keeps-coming-back-on-laminate",
+      "problem": "yellow stains",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::yellow stains",
+      "title": "How to Maintain laminate and Keep yellow stains Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-yellow-stains-under-control",
+      "problem": "yellow stains",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::yellow stains",
+      "title": "How to Recover After a Cleaning Mistake With yellow stains on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellow-stains-on-laminate",
+      "problem": "yellow stains",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::yellow stains",
+      "title": "What Causes yellow stains on wood",
+      "slug": "what-causes-yellow-stains-on-wood",
+      "problem": "yellow stains",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::yellow stains",
+      "title": "How to Remove yellow stains from wood",
+      "slug": "how-to-remove-yellow-stains-from-wood",
+      "problem": "yellow stains",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::yellow stains",
+      "title": "How to Prevent yellow stains on wood",
+      "slug": "how-to-prevent-yellow-stains-on-wood",
+      "problem": "yellow stains",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::yellow stains",
+      "title": "How to Fix yellow stains on wood",
+      "slug": "how-to-fix-yellow-stains-on-wood",
+      "problem": "yellow stains",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::yellow stains",
+      "title": "How to Clean yellow stains from wood",
+      "slug": "how-to-clean-yellow-stains-from-wood",
+      "problem": "yellow stains",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::yellow stains",
+      "title": "How to Tell if yellow stains on wood is Permanent",
+      "slug": "how-to-tell-if-yellow-stains-on-wood-is-permanent",
+      "problem": "yellow stains",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::yellow stains",
+      "title": "Why yellow stains Keeps Coming Back on wood",
+      "slug": "why-yellow-stains-keeps-coming-back-on-wood",
+      "problem": "yellow stains",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::yellow stains",
+      "title": "How to Maintain wood and Keep yellow stains Under Control",
+      "slug": "how-to-maintain-wood-and-keep-yellow-stains-under-control",
+      "problem": "yellow stains",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::yellow stains",
+      "title": "How to Recover After a Cleaning Mistake With yellow stains on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellow-stains-on-wood",
+      "problem": "yellow stains",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::yellow stains",
+      "title": "What Causes yellow stains on grout",
+      "slug": "what-causes-yellow-stains-on-grout",
+      "problem": "yellow stains",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::yellow stains",
+      "title": "How to Remove yellow stains from grout",
+      "slug": "how-to-remove-yellow-stains-from-grout",
+      "problem": "yellow stains",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::yellow stains",
+      "title": "How to Prevent yellow stains on grout",
+      "slug": "how-to-prevent-yellow-stains-on-grout",
+      "problem": "yellow stains",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::yellow stains",
+      "title": "How to Fix yellow stains on grout",
+      "slug": "how-to-fix-yellow-stains-on-grout",
+      "problem": "yellow stains",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::yellow stains",
+      "title": "How to Clean yellow stains from grout",
+      "slug": "how-to-clean-yellow-stains-from-grout",
+      "problem": "yellow stains",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::yellow stains",
+      "title": "How to Tell if yellow stains on grout is Permanent",
+      "slug": "how-to-tell-if-yellow-stains-on-grout-is-permanent",
+      "problem": "yellow stains",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::yellow stains",
+      "title": "Why yellow stains Keeps Coming Back on grout",
+      "slug": "why-yellow-stains-keeps-coming-back-on-grout",
+      "problem": "yellow stains",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::yellow stains",
+      "title": "How to Maintain grout and Keep yellow stains Under Control",
+      "slug": "how-to-maintain-grout-and-keep-yellow-stains-under-control",
+      "problem": "yellow stains",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::yellow stains",
+      "title": "How to Recover After a Cleaning Mistake With yellow stains on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellow-stains-on-grout",
+      "problem": "yellow stains",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::yellow stains",
+      "title": "What Causes yellow stains on shower doors",
+      "slug": "what-causes-yellow-stains-on-shower-doors",
+      "problem": "yellow stains",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::yellow stains",
+      "title": "How to Remove yellow stains from shower doors",
+      "slug": "how-to-remove-yellow-stains-from-shower-doors",
+      "problem": "yellow stains",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::yellow stains",
+      "title": "How to Prevent yellow stains on shower doors",
+      "slug": "how-to-prevent-yellow-stains-on-shower-doors",
+      "problem": "yellow stains",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::yellow stains",
+      "title": "How to Fix yellow stains on shower doors",
+      "slug": "how-to-fix-yellow-stains-on-shower-doors",
+      "problem": "yellow stains",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::yellow stains",
+      "title": "How to Clean yellow stains from shower doors",
+      "slug": "how-to-clean-yellow-stains-from-shower-doors",
+      "problem": "yellow stains",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "what-causes::tile grout::mildew stains",
+      "title": "What Causes mildew stains on tile grout",
+      "slug": "what-causes-mildew-stains-on-tile-grout",
+      "problem": "mildew stains",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::mildew stains",
+      "title": "How to Remove mildew stains from tile grout",
+      "slug": "how-to-remove-mildew-stains-from-tile-grout",
+      "problem": "mildew stains",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::mildew stains",
+      "title": "How to Prevent mildew stains on tile grout",
+      "slug": "how-to-prevent-mildew-stains-on-tile-grout",
+      "problem": "mildew stains",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::mildew stains",
+      "title": "How to Fix mildew stains on tile grout",
+      "slug": "how-to-fix-mildew-stains-on-tile-grout",
+      "problem": "mildew stains",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::mildew stains",
+      "title": "How to Clean mildew stains from tile grout",
+      "slug": "how-to-clean-mildew-stains-from-tile-grout",
+      "problem": "mildew stains",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::mildew stains",
+      "title": "How to Tell if mildew stains on tile grout is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-tile-grout-is-permanent",
+      "problem": "mildew stains",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on tile grout",
+      "slug": "why-mildew-stains-keeps-coming-back-on-tile-grout",
+      "problem": "mildew stains",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::mildew stains",
+      "title": "How to Maintain tile grout and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-tile-grout",
+      "problem": "mildew stains",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::mildew stains",
+      "title": "What Causes mildew stains on caulking",
+      "slug": "what-causes-mildew-stains-on-caulking",
+      "problem": "mildew stains",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::mildew stains",
+      "title": "How to Remove mildew stains from caulking",
+      "slug": "how-to-remove-mildew-stains-from-caulking",
+      "problem": "mildew stains",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::mildew stains",
+      "title": "How to Prevent mildew stains on caulking",
+      "slug": "how-to-prevent-mildew-stains-on-caulking",
+      "problem": "mildew stains",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::mildew stains",
+      "title": "How to Fix mildew stains on caulking",
+      "slug": "how-to-fix-mildew-stains-on-caulking",
+      "problem": "mildew stains",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::mildew stains",
+      "title": "How to Clean mildew stains from caulking",
+      "slug": "how-to-clean-mildew-stains-from-caulking",
+      "problem": "mildew stains",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::mildew stains",
+      "title": "How to Tell if mildew stains on caulking is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-caulking-is-permanent",
+      "problem": "mildew stains",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on caulking",
+      "slug": "why-mildew-stains-keeps-coming-back-on-caulking",
+      "problem": "mildew stains",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::mildew stains",
+      "title": "How to Maintain caulking and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-caulking",
+      "problem": "mildew stains",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::baseboards::mildew stains",
+      "title": "What Causes mildew stains on baseboards",
+      "slug": "what-causes-mildew-stains-on-baseboards",
+      "problem": "mildew stains",
+      "surface": "baseboards",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::baseboards::mildew stains",
+      "title": "How to Remove mildew stains from baseboards",
+      "slug": "how-to-remove-mildew-stains-from-baseboards",
+      "problem": "mildew stains",
+      "surface": "baseboards",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::baseboards::mildew stains",
+      "title": "How to Prevent mildew stains on baseboards",
+      "slug": "how-to-prevent-mildew-stains-on-baseboards",
+      "problem": "mildew stains",
+      "surface": "baseboards",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::baseboards::mildew stains",
+      "title": "How to Fix mildew stains on baseboards",
+      "slug": "how-to-fix-mildew-stains-on-baseboards",
+      "problem": "mildew stains",
+      "surface": "baseboards",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::baseboards::mildew stains",
+      "title": "How to Clean mildew stains from baseboards",
+      "slug": "how-to-clean-mildew-stains-from-baseboards",
+      "problem": "mildew stains",
+      "surface": "baseboards",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::baseboards::mildew stains",
+      "title": "How to Tell if mildew stains on baseboards is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-baseboards-is-permanent",
+      "problem": "mildew stains",
+      "surface": "baseboards",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::baseboards::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on baseboards",
+      "slug": "why-mildew-stains-keeps-coming-back-on-baseboards",
+      "problem": "mildew stains",
+      "surface": "baseboards",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::baseboards::mildew stains",
+      "title": "How to Maintain baseboards and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-baseboards-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "baseboards",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::baseboards::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on baseboards",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-baseboards",
+      "problem": "mildew stains",
+      "surface": "baseboards",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::door frames::mildew stains",
+      "title": "What Causes mildew stains on door frames",
+      "slug": "what-causes-mildew-stains-on-door-frames",
+      "problem": "mildew stains",
+      "surface": "door frames",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::door frames::mildew stains",
+      "title": "How to Remove mildew stains from door frames",
+      "slug": "how-to-remove-mildew-stains-from-door-frames",
+      "problem": "mildew stains",
+      "surface": "door frames",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::door frames::mildew stains",
+      "title": "How to Prevent mildew stains on door frames",
+      "slug": "how-to-prevent-mildew-stains-on-door-frames",
+      "problem": "mildew stains",
+      "surface": "door frames",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::door frames::mildew stains",
+      "title": "How to Fix mildew stains on door frames",
+      "slug": "how-to-fix-mildew-stains-on-door-frames",
+      "problem": "mildew stains",
+      "surface": "door frames",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::door frames::mildew stains",
+      "title": "How to Clean mildew stains from door frames",
+      "slug": "how-to-clean-mildew-stains-from-door-frames",
+      "problem": "mildew stains",
+      "surface": "door frames",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::door frames::mildew stains",
+      "title": "How to Tell if mildew stains on door frames is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-door-frames-is-permanent",
+      "problem": "mildew stains",
+      "surface": "door frames",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::door frames::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on door frames",
+      "slug": "why-mildew-stains-keeps-coming-back-on-door-frames",
+      "problem": "mildew stains",
+      "surface": "door frames",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::door frames::mildew stains",
+      "title": "How to Maintain door frames and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-door-frames-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "door frames",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::door frames::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on door frames",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-door-frames",
+      "problem": "mildew stains",
+      "surface": "door frames",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::window tracks::mildew stains",
+      "title": "What Causes mildew stains on window tracks",
+      "slug": "what-causes-mildew-stains-on-window-tracks",
+      "problem": "mildew stains",
+      "surface": "window tracks",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::window tracks::mildew stains",
+      "title": "How to Remove mildew stains from window tracks",
+      "slug": "how-to-remove-mildew-stains-from-window-tracks",
+      "problem": "mildew stains",
+      "surface": "window tracks",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::window tracks::mildew stains",
+      "title": "How to Prevent mildew stains on window tracks",
+      "slug": "how-to-prevent-mildew-stains-on-window-tracks",
+      "problem": "mildew stains",
+      "surface": "window tracks",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::window tracks::mildew stains",
+      "title": "How to Fix mildew stains on window tracks",
+      "slug": "how-to-fix-mildew-stains-on-window-tracks",
+      "problem": "mildew stains",
+      "surface": "window tracks",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::window tracks::mildew stains",
+      "title": "How to Clean mildew stains from window tracks",
+      "slug": "how-to-clean-mildew-stains-from-window-tracks",
+      "problem": "mildew stains",
+      "surface": "window tracks",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::window tracks::mildew stains",
+      "title": "How to Tell if mildew stains on window tracks is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-window-tracks-is-permanent",
+      "problem": "mildew stains",
+      "surface": "window tracks",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::window tracks::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on window tracks",
+      "slug": "why-mildew-stains-keeps-coming-back-on-window-tracks",
+      "problem": "mildew stains",
+      "surface": "window tracks",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::window tracks::mildew stains",
+      "title": "How to Maintain window tracks and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-window-tracks-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "window tracks",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::window tracks::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on window tracks",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-window-tracks",
+      "problem": "mildew stains",
+      "surface": "window tracks",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::light switches::mildew stains",
+      "title": "What Causes mildew stains on light switches",
+      "slug": "what-causes-mildew-stains-on-light-switches",
+      "problem": "mildew stains",
+      "surface": "light switches",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::light switches::mildew stains",
+      "title": "How to Remove mildew stains from light switches",
+      "slug": "how-to-remove-mildew-stains-from-light-switches",
+      "problem": "mildew stains",
+      "surface": "light switches",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::light switches::mildew stains",
+      "title": "How to Prevent mildew stains on light switches",
+      "slug": "how-to-prevent-mildew-stains-on-light-switches",
+      "problem": "mildew stains",
+      "surface": "light switches",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::light switches::mildew stains",
+      "title": "How to Fix mildew stains on light switches",
+      "slug": "how-to-fix-mildew-stains-on-light-switches",
+      "problem": "mildew stains",
+      "surface": "light switches",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::light switches::mildew stains",
+      "title": "How to Clean mildew stains from light switches",
+      "slug": "how-to-clean-mildew-stains-from-light-switches",
+      "problem": "mildew stains",
+      "surface": "light switches",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::light switches::mildew stains",
+      "title": "How to Tell if mildew stains on light switches is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-light-switches-is-permanent",
+      "problem": "mildew stains",
+      "surface": "light switches",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::light switches::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on light switches",
+      "slug": "why-mildew-stains-keeps-coming-back-on-light-switches",
+      "problem": "mildew stains",
+      "surface": "light switches",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::light switches::mildew stains",
+      "title": "How to Maintain light switches and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-light-switches-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "light switches",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::light switches::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on light switches",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-light-switches",
+      "problem": "mildew stains",
+      "surface": "light switches",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::odor buildup",
+      "title": "What Causes odor buildup on backsplashes",
+      "slug": "what-causes-odor-buildup-on-backsplashes",
+      "problem": "odor buildup",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::odor buildup",
+      "title": "How to Remove odor buildup from backsplashes",
+      "slug": "how-to-remove-odor-buildup-from-backsplashes",
+      "problem": "odor buildup",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::odor buildup",
+      "title": "How to Prevent odor buildup on backsplashes",
+      "slug": "how-to-prevent-odor-buildup-on-backsplashes",
+      "problem": "odor buildup",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::odor buildup",
+      "title": "How to Fix odor buildup on backsplashes",
+      "slug": "how-to-fix-odor-buildup-on-backsplashes",
+      "problem": "odor buildup",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::odor buildup",
+      "title": "How to Clean odor buildup from backsplashes",
+      "slug": "how-to-clean-odor-buildup-from-backsplashes",
+      "problem": "odor buildup",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::odor buildup",
+      "title": "How to Tell if odor buildup on backsplashes is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-backsplashes-is-permanent",
+      "problem": "odor buildup",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on backsplashes",
+      "slug": "why-odor-buildup-keeps-coming-back-on-backsplashes",
+      "problem": "odor buildup",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::odor buildup",
+      "title": "How to Maintain backsplashes and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-backsplashes",
+      "problem": "odor buildup",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::kitchen cabinets::odor buildup",
+      "title": "What Causes odor buildup on kitchen cabinets",
+      "slug": "what-causes-odor-buildup-on-kitchen-cabinets",
+      "problem": "odor buildup",
+      "surface": "kitchen cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::kitchen cabinets::odor buildup",
+      "title": "How to Remove odor buildup from kitchen cabinets",
+      "slug": "how-to-remove-odor-buildup-from-kitchen-cabinets",
+      "problem": "odor buildup",
+      "surface": "kitchen cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::kitchen cabinets::odor buildup",
+      "title": "How to Prevent odor buildup on kitchen cabinets",
+      "slug": "how-to-prevent-odor-buildup-on-kitchen-cabinets",
+      "problem": "odor buildup",
+      "surface": "kitchen cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::kitchen cabinets::odor buildup",
+      "title": "How to Fix odor buildup on kitchen cabinets",
+      "slug": "how-to-fix-odor-buildup-on-kitchen-cabinets",
+      "problem": "odor buildup",
+      "surface": "kitchen cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::kitchen cabinets::odor buildup",
+      "title": "How to Clean odor buildup from kitchen cabinets",
+      "slug": "how-to-clean-odor-buildup-from-kitchen-cabinets",
+      "problem": "odor buildup",
+      "surface": "kitchen cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::kitchen cabinets::odor buildup",
+      "title": "How to Tell if odor buildup on kitchen cabinets is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-kitchen-cabinets-is-permanent",
+      "problem": "odor buildup",
+      "surface": "kitchen cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::kitchen cabinets::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on kitchen cabinets",
+      "slug": "why-odor-buildup-keeps-coming-back-on-kitchen-cabinets",
+      "problem": "odor buildup",
+      "surface": "kitchen cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::kitchen cabinets::odor buildup",
+      "title": "How to Maintain kitchen cabinets and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-kitchen-cabinets-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "kitchen cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::kitchen cabinets::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on kitchen cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-kitchen-cabinets",
+      "problem": "odor buildup",
+      "surface": "kitchen cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::odor buildup",
+      "title": "What Causes odor buildup on tile floors",
+      "slug": "what-causes-odor-buildup-on-tile-floors",
+      "problem": "odor buildup",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::odor buildup",
+      "title": "How to Remove odor buildup from tile floors",
+      "slug": "how-to-remove-odor-buildup-from-tile-floors",
+      "problem": "odor buildup",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::odor buildup",
+      "title": "How to Prevent odor buildup on tile floors",
+      "slug": "how-to-prevent-odor-buildup-on-tile-floors",
+      "problem": "odor buildup",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::odor buildup",
+      "title": "How to Fix odor buildup on tile floors",
+      "slug": "how-to-fix-odor-buildup-on-tile-floors",
+      "problem": "odor buildup",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::odor buildup",
+      "title": "How to Clean odor buildup from tile floors",
+      "slug": "how-to-clean-odor-buildup-from-tile-floors",
+      "problem": "odor buildup",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::odor buildup",
+      "title": "How to Tell if odor buildup on tile floors is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-tile-floors-is-permanent",
+      "problem": "odor buildup",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on tile floors",
+      "slug": "why-odor-buildup-keeps-coming-back-on-tile-floors",
+      "problem": "odor buildup",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::odor buildup",
+      "title": "How to Maintain tile floors and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-tile-floors",
+      "problem": "odor buildup",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::odor buildup",
+      "title": "What Causes odor buildup on shower glass",
+      "slug": "what-causes-odor-buildup-on-shower-glass",
+      "problem": "odor buildup",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::odor buildup",
+      "title": "How to Remove odor buildup from shower glass",
+      "slug": "how-to-remove-odor-buildup-from-shower-glass",
+      "problem": "odor buildup",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::odor buildup",
+      "title": "How to Prevent odor buildup on shower glass",
+      "slug": "how-to-prevent-odor-buildup-on-shower-glass",
+      "problem": "odor buildup",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::odor buildup",
+      "title": "How to Fix odor buildup on shower glass",
+      "slug": "how-to-fix-odor-buildup-on-shower-glass",
+      "problem": "odor buildup",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::odor buildup",
+      "title": "How to Clean odor buildup from shower glass",
+      "slug": "how-to-clean-odor-buildup-from-shower-glass",
+      "problem": "odor buildup",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::odor buildup",
+      "title": "How to Tell if odor buildup on shower glass is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-shower-glass-is-permanent",
+      "problem": "odor buildup",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on shower glass",
+      "slug": "why-odor-buildup-keeps-coming-back-on-shower-glass",
+      "problem": "odor buildup",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::odor buildup",
+      "title": "How to Maintain shower glass and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-shower-glass",
+      "problem": "odor buildup",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtubs::odor buildup",
+      "title": "What Causes odor buildup on bathtubs",
+      "slug": "what-causes-odor-buildup-on-bathtubs",
+      "problem": "odor buildup",
+      "surface": "bathtubs",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtubs::odor buildup",
+      "title": "How to Remove odor buildup from bathtubs",
+      "slug": "how-to-remove-odor-buildup-from-bathtubs",
+      "problem": "odor buildup",
+      "surface": "bathtubs",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtubs::odor buildup",
+      "title": "How to Prevent odor buildup on bathtubs",
+      "slug": "how-to-prevent-odor-buildup-on-bathtubs",
+      "problem": "odor buildup",
+      "surface": "bathtubs",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtubs::odor buildup",
+      "title": "How to Fix odor buildup on bathtubs",
+      "slug": "how-to-fix-odor-buildup-on-bathtubs",
+      "problem": "odor buildup",
+      "surface": "bathtubs",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtubs::odor buildup",
+      "title": "How to Clean odor buildup from bathtubs",
+      "slug": "how-to-clean-odor-buildup-from-bathtubs",
+      "problem": "odor buildup",
+      "surface": "bathtubs",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtubs::odor buildup",
+      "title": "How to Tell if odor buildup on bathtubs is Permanent",
+      "slug": "how-to-tell-if-odor-buildup-on-bathtubs-is-permanent",
+      "problem": "odor buildup",
+      "surface": "bathtubs",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtubs::odor buildup",
+      "title": "Why odor buildup Keeps Coming Back on bathtubs",
+      "slug": "why-odor-buildup-keeps-coming-back-on-bathtubs",
+      "problem": "odor buildup",
+      "surface": "bathtubs",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtubs::odor buildup",
+      "title": "How to Maintain bathtubs and Keep odor buildup Under Control",
+      "slug": "how-to-maintain-bathtubs-and-keep-odor-buildup-under-control",
+      "problem": "odor buildup",
+      "surface": "bathtubs",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtubs::odor buildup",
+      "title": "How to Recover After a Cleaning Mistake With odor buildup on bathtubs",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-buildup-on-bathtubs",
+      "problem": "odor buildup",
+      "surface": "bathtubs",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::odor buildup",
+      "title": "What Causes odor buildup on granite",
+      "slug": "what-causes-odor-buildup-on-granite",
+      "problem": "odor buildup",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

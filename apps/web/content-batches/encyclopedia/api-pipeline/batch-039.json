@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-prevent::sealed granite::white film",
+      "title": "How to Prevent white film on sealed granite",
+      "slug": "how-to-prevent-white-film-on-sealed-granite",
+      "problem": "white film",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::white film",
+      "title": "How to Fix white film on sealed granite",
+      "slug": "how-to-fix-white-film-on-sealed-granite",
+      "problem": "white film",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::white film",
+      "title": "How to Clean white film from sealed granite",
+      "slug": "how-to-clean-white-film-from-sealed-granite",
+      "problem": "white film",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::white film",
+      "title": "How to Tell if white film on sealed granite is Permanent",
+      "slug": "how-to-tell-if-white-film-on-sealed-granite-is-permanent",
+      "problem": "white film",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::white film",
+      "title": "Why white film Keeps Coming Back on sealed granite",
+      "slug": "why-white-film-keeps-coming-back-on-sealed-granite",
+      "problem": "white film",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::white film",
+      "title": "How to Maintain sealed granite and Keep white film Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-sealed-granite",
+      "problem": "white film",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::white film",
+      "title": "What Causes white film on sealed marble",
+      "slug": "what-causes-white-film-on-sealed-marble",
+      "problem": "white film",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::white film",
+      "title": "How to Remove white film from sealed marble",
+      "slug": "how-to-remove-white-film-from-sealed-marble",
+      "problem": "white film",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::white film",
+      "title": "How to Prevent white film on sealed marble",
+      "slug": "how-to-prevent-white-film-on-sealed-marble",
+      "problem": "white film",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::white film",
+      "title": "How to Fix white film on sealed marble",
+      "slug": "how-to-fix-white-film-on-sealed-marble",
+      "problem": "white film",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::white film",
+      "title": "How to Clean white film from sealed marble",
+      "slug": "how-to-clean-white-film-from-sealed-marble",
+      "problem": "white film",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::white film",
+      "title": "How to Tell if white film on sealed marble is Permanent",
+      "slug": "how-to-tell-if-white-film-on-sealed-marble-is-permanent",
+      "problem": "white film",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::white film",
+      "title": "Why white film Keeps Coming Back on sealed marble",
+      "slug": "why-white-film-keeps-coming-back-on-sealed-marble",
+      "problem": "white film",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::white film",
+      "title": "How to Maintain sealed marble and Keep white film Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-sealed-marble",
+      "problem": "white film",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::white film",
+      "title": "What Causes white film on quartz countertops",
+      "slug": "what-causes-white-film-on-quartz-countertops",
+      "problem": "white film",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::white film",
+      "title": "How to Remove white film from quartz countertops",
+      "slug": "how-to-remove-white-film-from-quartz-countertops",
+      "problem": "white film",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::white film",
+      "title": "How to Prevent white film on quartz countertops",
+      "slug": "how-to-prevent-white-film-on-quartz-countertops",
+      "problem": "white film",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::white film",
+      "title": "How to Fix white film on quartz countertops",
+      "slug": "how-to-fix-white-film-on-quartz-countertops",
+      "problem": "white film",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::white film",
+      "title": "How to Clean white film from quartz countertops",
+      "slug": "how-to-clean-white-film-from-quartz-countertops",
+      "problem": "white film",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::white film",
+      "title": "How to Tell if white film on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-white-film-on-quartz-countertops-is-permanent",
+      "problem": "white film",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::white film",
+      "title": "Why white film Keeps Coming Back on quartz countertops",
+      "slug": "why-white-film-keeps-coming-back-on-quartz-countertops",
+      "problem": "white film",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::white film",
+      "title": "How to Maintain quartz countertops and Keep white film Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-quartz-countertops",
+      "problem": "white film",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::white film",
+      "title": "What Causes white film on laminate counters",
+      "slug": "what-causes-white-film-on-laminate-counters",
+      "problem": "white film",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::white film",
+      "title": "How to Remove white film from laminate counters",
+      "slug": "how-to-remove-white-film-from-laminate-counters",
+      "problem": "white film",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::white film",
+      "title": "How to Prevent white film on laminate counters",
+      "slug": "how-to-prevent-white-film-on-laminate-counters",
+      "problem": "white film",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::white film",
+      "title": "How to Fix white film on laminate counters",
+      "slug": "how-to-fix-white-film-on-laminate-counters",
+      "problem": "white film",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::white film",
+      "title": "How to Clean white film from laminate counters",
+      "slug": "how-to-clean-white-film-from-laminate-counters",
+      "problem": "white film",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::white film",
+      "title": "How to Tell if white film on laminate counters is Permanent",
+      "slug": "how-to-tell-if-white-film-on-laminate-counters-is-permanent",
+      "problem": "white film",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::white film",
+      "title": "Why white film Keeps Coming Back on laminate counters",
+      "slug": "why-white-film-keeps-coming-back-on-laminate-counters",
+      "problem": "white film",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::white film",
+      "title": "How to Maintain laminate counters and Keep white film Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-laminate-counters",
+      "problem": "white film",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::white film",
+      "title": "What Causes white film on butcher block",
+      "slug": "what-causes-white-film-on-butcher-block",
+      "problem": "white film",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::white film",
+      "title": "How to Remove white film from butcher block",
+      "slug": "how-to-remove-white-film-from-butcher-block",
+      "problem": "white film",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::white film",
+      "title": "How to Prevent white film on butcher block",
+      "slug": "how-to-prevent-white-film-on-butcher-block",
+      "problem": "white film",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::white film",
+      "title": "How to Fix white film on butcher block",
+      "slug": "how-to-fix-white-film-on-butcher-block",
+      "problem": "white film",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::white film",
+      "title": "How to Clean white film from butcher block",
+      "slug": "how-to-clean-white-film-from-butcher-block",
+      "problem": "white film",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::white film",
+      "title": "How to Tell if white film on butcher block is Permanent",
+      "slug": "how-to-tell-if-white-film-on-butcher-block-is-permanent",
+      "problem": "white film",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::white film",
+      "title": "Why white film Keeps Coming Back on butcher block",
+      "slug": "why-white-film-keeps-coming-back-on-butcher-block",
+      "problem": "white film",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::white film",
+      "title": "How to Maintain butcher block and Keep white film Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-butcher-block",
+      "problem": "white film",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::white film",
+      "title": "What Causes white film on unfinished wood",
+      "slug": "what-causes-white-film-on-unfinished-wood",
+      "problem": "white film",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::white film",
+      "title": "How to Remove white film from unfinished wood",
+      "slug": "how-to-remove-white-film-from-unfinished-wood",
+      "problem": "white film",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::white film",
+      "title": "How to Prevent white film on unfinished wood",
+      "slug": "how-to-prevent-white-film-on-unfinished-wood",
+      "problem": "white film",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::white film",
+      "title": "How to Fix white film on unfinished wood",
+      "slug": "how-to-fix-white-film-on-unfinished-wood",
+      "problem": "white film",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::white film",
+      "title": "How to Clean white film from unfinished wood",
+      "slug": "how-to-clean-white-film-from-unfinished-wood",
+      "problem": "white film",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::white film",
+      "title": "How to Tell if white film on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-white-film-on-unfinished-wood-is-permanent",
+      "problem": "white film",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::white film",
+      "title": "Why white film Keeps Coming Back on unfinished wood",
+      "slug": "why-white-film-keeps-coming-back-on-unfinished-wood",
+      "problem": "white film",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::white film",
+      "title": "How to Maintain unfinished wood and Keep white film Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-unfinished-wood",
+      "problem": "white film",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::white film",
+      "title": "What Causes white film on sealed wood",
+      "slug": "what-causes-white-film-on-sealed-wood",
+      "problem": "white film",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::white film",
+      "title": "How to Remove white film from sealed wood",
+      "slug": "how-to-remove-white-film-from-sealed-wood",
+      "problem": "white film",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::white film",
+      "title": "How to Prevent white film on sealed wood",
+      "slug": "how-to-prevent-white-film-on-sealed-wood",
+      "problem": "white film",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::white film",
+      "title": "How to Fix white film on sealed wood",
+      "slug": "how-to-fix-white-film-on-sealed-wood",
+      "problem": "white film",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::white film",
+      "title": "How to Clean white film from sealed wood",
+      "slug": "how-to-clean-white-film-from-sealed-wood",
+      "problem": "white film",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::white film",
+      "title": "How to Tell if white film on sealed wood is Permanent",
+      "slug": "how-to-tell-if-white-film-on-sealed-wood-is-permanent",
+      "problem": "white film",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::white film",
+      "title": "Why white film Keeps Coming Back on sealed wood",
+      "slug": "why-white-film-keeps-coming-back-on-sealed-wood",
+      "problem": "white film",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::white film",
+      "title": "How to Maintain sealed wood and Keep white film Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-sealed-wood",
+      "problem": "white film",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::cloudy film",
+      "title": "What Causes cloudy film on shower glass",
+      "slug": "what-causes-cloudy-film-on-shower-glass",
+      "problem": "cloudy film",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::cloudy film",
+      "title": "How to Remove cloudy film from shower glass",
+      "slug": "how-to-remove-cloudy-film-from-shower-glass",
+      "problem": "cloudy film",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::cloudy film",
+      "title": "How to Prevent cloudy film on shower glass",
+      "slug": "how-to-prevent-cloudy-film-on-shower-glass",
+      "problem": "cloudy film",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::cloudy film",
+      "title": "How to Fix cloudy film on shower glass",
+      "slug": "how-to-fix-cloudy-film-on-shower-glass",
+      "problem": "cloudy film",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::cloudy film",
+      "title": "How to Clean cloudy film from shower glass",
+      "slug": "how-to-clean-cloudy-film-from-shower-glass",
+      "problem": "cloudy film",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::cloudy film",
+      "title": "How to Tell if cloudy film on shower glass is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-shower-glass-is-permanent",
+      "problem": "cloudy film",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on shower glass",
+      "slug": "why-cloudy-film-keeps-coming-back-on-shower-glass",
+      "problem": "cloudy film",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::cloudy film",
+      "title": "How to Maintain shower glass and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-shower-glass",
+      "problem": "cloudy film",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::cloudy film",
+      "title": "What Causes cloudy film on granite",
+      "slug": "what-causes-cloudy-film-on-granite",
+      "problem": "cloudy film",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::cloudy film",
+      "title": "How to Remove cloudy film from granite",
+      "slug": "how-to-remove-cloudy-film-from-granite",
+      "problem": "cloudy film",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::cloudy film",
+      "title": "How to Prevent cloudy film on granite",
+      "slug": "how-to-prevent-cloudy-film-on-granite",
+      "problem": "cloudy film",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::cloudy film",
+      "title": "How to Fix cloudy film on granite",
+      "slug": "how-to-fix-cloudy-film-on-granite",
+      "problem": "cloudy film",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::cloudy film",
+      "title": "How to Clean cloudy film from granite",
+      "slug": "how-to-clean-cloudy-film-from-granite",
+      "problem": "cloudy film",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::cloudy film",
+      "title": "How to Tell if cloudy film on granite is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-granite-is-permanent",
+      "problem": "cloudy film",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on granite",
+      "slug": "why-cloudy-film-keeps-coming-back-on-granite",
+      "problem": "cloudy film",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::cloudy film",
+      "title": "How to Maintain granite and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-granite-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-granite",
+      "problem": "cloudy film",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::cloudy film",
+      "title": "What Causes cloudy film on marble",
+      "slug": "what-causes-cloudy-film-on-marble",
+      "problem": "cloudy film",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::cloudy film",
+      "title": "How to Remove cloudy film from marble",
+      "slug": "how-to-remove-cloudy-film-from-marble",
+      "problem": "cloudy film",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::cloudy film",
+      "title": "How to Prevent cloudy film on marble",
+      "slug": "how-to-prevent-cloudy-film-on-marble",
+      "problem": "cloudy film",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::cloudy film",
+      "title": "How to Fix cloudy film on marble",
+      "slug": "how-to-fix-cloudy-film-on-marble",
+      "problem": "cloudy film",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::cloudy film",
+      "title": "How to Clean cloudy film from marble",
+      "slug": "how-to-clean-cloudy-film-from-marble",
+      "problem": "cloudy film",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::cloudy film",
+      "title": "How to Tell if cloudy film on marble is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-marble-is-permanent",
+      "problem": "cloudy film",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on marble",
+      "slug": "why-cloudy-film-keeps-coming-back-on-marble",
+      "problem": "cloudy film",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::cloudy film",
+      "title": "How to Maintain marble and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-marble-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-marble",
+      "problem": "cloudy film",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::cloudy film",
+      "title": "What Causes cloudy film on quartz",
+      "slug": "what-causes-cloudy-film-on-quartz",
+      "problem": "cloudy film",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::cloudy film",
+      "title": "How to Remove cloudy film from quartz",
+      "slug": "how-to-remove-cloudy-film-from-quartz",
+      "problem": "cloudy film",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::cloudy film",
+      "title": "How to Prevent cloudy film on quartz",
+      "slug": "how-to-prevent-cloudy-film-on-quartz",
+      "problem": "cloudy film",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::cloudy film",
+      "title": "How to Fix cloudy film on quartz",
+      "slug": "how-to-fix-cloudy-film-on-quartz",
+      "problem": "cloudy film",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::cloudy film",
+      "title": "How to Clean cloudy film from quartz",
+      "slug": "how-to-clean-cloudy-film-from-quartz",
+      "problem": "cloudy film",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::cloudy film",
+      "title": "How to Tell if cloudy film on quartz is Permanent",
+      "slug": "how-to-tell-if-cloudy-film-on-quartz-is-permanent",
+      "problem": "cloudy film",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::cloudy film",
+      "title": "Why cloudy film Keeps Coming Back on quartz",
+      "slug": "why-cloudy-film-keeps-coming-back-on-quartz",
+      "problem": "cloudy film",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::cloudy film",
+      "title": "How to Maintain quartz and Keep cloudy film Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-cloudy-film-under-control",
+      "problem": "cloudy film",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::cloudy film",
+      "title": "How to Recover After a Cleaning Mistake With cloudy film on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cloudy-film-on-quartz",
+      "problem": "cloudy film",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::cloudy film",
+      "title": "What Causes cloudy film on laminate",
+      "slug": "what-causes-cloudy-film-on-laminate",
+      "problem": "cloudy film",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::cloudy film",
+      "title": "How to Remove cloudy film from laminate",
+      "slug": "how-to-remove-cloudy-film-from-laminate",
+      "problem": "cloudy film",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::cloudy film",
+      "title": "How to Prevent cloudy film on laminate",
+      "slug": "how-to-prevent-cloudy-film-on-laminate",
+      "problem": "cloudy film",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

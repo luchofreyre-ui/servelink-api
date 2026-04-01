@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-prevent::unfinished wood::black stains",
+      "title": "How to Prevent black stains on unfinished wood",
+      "slug": "how-to-prevent-black-stains-on-unfinished-wood",
+      "problem": "black stains",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::black stains",
+      "title": "How to Fix black stains on unfinished wood",
+      "slug": "how-to-fix-black-stains-on-unfinished-wood",
+      "problem": "black stains",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::black stains",
+      "title": "How to Clean black stains from unfinished wood",
+      "slug": "how-to-clean-black-stains-from-unfinished-wood",
+      "problem": "black stains",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::black stains",
+      "title": "How to Tell if black stains on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-unfinished-wood-is-permanent",
+      "problem": "black stains",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::black stains",
+      "title": "Why black stains Keeps Coming Back on unfinished wood",
+      "slug": "why-black-stains-keeps-coming-back-on-unfinished-wood",
+      "problem": "black stains",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::black stains",
+      "title": "How to Maintain unfinished wood and Keep black stains Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-unfinished-wood",
+      "problem": "black stains",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::black stains",
+      "title": "What Causes black stains on sealed wood",
+      "slug": "what-causes-black-stains-on-sealed-wood",
+      "problem": "black stains",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::black stains",
+      "title": "How to Remove black stains from sealed wood",
+      "slug": "how-to-remove-black-stains-from-sealed-wood",
+      "problem": "black stains",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::black stains",
+      "title": "How to Prevent black stains on sealed wood",
+      "slug": "how-to-prevent-black-stains-on-sealed-wood",
+      "problem": "black stains",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::black stains",
+      "title": "How to Fix black stains on sealed wood",
+      "slug": "how-to-fix-black-stains-on-sealed-wood",
+      "problem": "black stains",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::black stains",
+      "title": "How to Clean black stains from sealed wood",
+      "slug": "how-to-clean-black-stains-from-sealed-wood",
+      "problem": "black stains",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::black stains",
+      "title": "How to Tell if black stains on sealed wood is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-sealed-wood-is-permanent",
+      "problem": "black stains",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::black stains",
+      "title": "Why black stains Keeps Coming Back on sealed wood",
+      "slug": "why-black-stains-keeps-coming-back-on-sealed-wood",
+      "problem": "black stains",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::black stains",
+      "title": "How to Maintain sealed wood and Keep black stains Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-sealed-wood",
+      "problem": "black stains",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::pink slime",
+      "title": "What Causes pink slime on backsplashes",
+      "slug": "what-causes-pink-slime-on-backsplashes",
+      "problem": "pink slime",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::pink slime",
+      "title": "How to Remove pink slime from backsplashes",
+      "slug": "how-to-remove-pink-slime-from-backsplashes",
+      "problem": "pink slime",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::pink slime",
+      "title": "How to Prevent pink slime on backsplashes",
+      "slug": "how-to-prevent-pink-slime-on-backsplashes",
+      "problem": "pink slime",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::pink slime",
+      "title": "How to Fix pink slime on backsplashes",
+      "slug": "how-to-fix-pink-slime-on-backsplashes",
+      "problem": "pink slime",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::pink slime",
+      "title": "How to Clean pink slime from backsplashes",
+      "slug": "how-to-clean-pink-slime-from-backsplashes",
+      "problem": "pink slime",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::pink slime",
+      "title": "How to Tell if pink slime on backsplashes is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-backsplashes-is-permanent",
+      "problem": "pink slime",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::pink slime",
+      "title": "Why pink slime Keeps Coming Back on backsplashes",
+      "slug": "why-pink-slime-keeps-coming-back-on-backsplashes",
+      "problem": "pink slime",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::pink slime",
+      "title": "How to Maintain backsplashes and Keep pink slime Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-backsplashes",
+      "problem": "pink slime",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::pink slime",
+      "title": "What Causes pink slime on tile floors",
+      "slug": "what-causes-pink-slime-on-tile-floors",
+      "problem": "pink slime",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::pink slime",
+      "title": "How to Remove pink slime from tile floors",
+      "slug": "how-to-remove-pink-slime-from-tile-floors",
+      "problem": "pink slime",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::pink slime",
+      "title": "How to Prevent pink slime on tile floors",
+      "slug": "how-to-prevent-pink-slime-on-tile-floors",
+      "problem": "pink slime",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::pink slime",
+      "title": "How to Fix pink slime on tile floors",
+      "slug": "how-to-fix-pink-slime-on-tile-floors",
+      "problem": "pink slime",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::pink slime",
+      "title": "How to Clean pink slime from tile floors",
+      "slug": "how-to-clean-pink-slime-from-tile-floors",
+      "problem": "pink slime",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::pink slime",
+      "title": "How to Tell if pink slime on tile floors is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-tile-floors-is-permanent",
+      "problem": "pink slime",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::pink slime",
+      "title": "Why pink slime Keeps Coming Back on tile floors",
+      "slug": "why-pink-slime-keeps-coming-back-on-tile-floors",
+      "problem": "pink slime",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::pink slime",
+      "title": "How to Maintain tile floors and Keep pink slime Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-tile-floors",
+      "problem": "pink slime",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtubs::pink slime",
+      "title": "What Causes pink slime on bathtubs",
+      "slug": "what-causes-pink-slime-on-bathtubs",
+      "problem": "pink slime",
+      "surface": "bathtubs",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtubs::pink slime",
+      "title": "How to Remove pink slime from bathtubs",
+      "slug": "how-to-remove-pink-slime-from-bathtubs",
+      "problem": "pink slime",
+      "surface": "bathtubs",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtubs::pink slime",
+      "title": "How to Prevent pink slime on bathtubs",
+      "slug": "how-to-prevent-pink-slime-on-bathtubs",
+      "problem": "pink slime",
+      "surface": "bathtubs",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtubs::pink slime",
+      "title": "How to Fix pink slime on bathtubs",
+      "slug": "how-to-fix-pink-slime-on-bathtubs",
+      "problem": "pink slime",
+      "surface": "bathtubs",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtubs::pink slime",
+      "title": "How to Clean pink slime from bathtubs",
+      "slug": "how-to-clean-pink-slime-from-bathtubs",
+      "problem": "pink slime",
+      "surface": "bathtubs",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtubs::pink slime",
+      "title": "How to Tell if pink slime on bathtubs is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-bathtubs-is-permanent",
+      "problem": "pink slime",
+      "surface": "bathtubs",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtubs::pink slime",
+      "title": "Why pink slime Keeps Coming Back on bathtubs",
+      "slug": "why-pink-slime-keeps-coming-back-on-bathtubs",
+      "problem": "pink slime",
+      "surface": "bathtubs",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtubs::pink slime",
+      "title": "How to Maintain bathtubs and Keep pink slime Under Control",
+      "slug": "how-to-maintain-bathtubs-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "bathtubs",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtubs::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on bathtubs",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-bathtubs",
+      "problem": "pink slime",
+      "surface": "bathtubs",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::pink slime",
+      "title": "What Causes pink slime on grout",
+      "slug": "what-causes-pink-slime-on-grout",
+      "problem": "pink slime",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::pink slime",
+      "title": "How to Remove pink slime from grout",
+      "slug": "how-to-remove-pink-slime-from-grout",
+      "problem": "pink slime",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::pink slime",
+      "title": "How to Prevent pink slime on grout",
+      "slug": "how-to-prevent-pink-slime-on-grout",
+      "problem": "pink slime",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::pink slime",
+      "title": "How to Fix pink slime on grout",
+      "slug": "how-to-fix-pink-slime-on-grout",
+      "problem": "pink slime",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::pink slime",
+      "title": "How to Clean pink slime from grout",
+      "slug": "how-to-clean-pink-slime-from-grout",
+      "problem": "pink slime",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::pink slime",
+      "title": "How to Tell if pink slime on grout is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-grout-is-permanent",
+      "problem": "pink slime",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::pink slime",
+      "title": "Why pink slime Keeps Coming Back on grout",
+      "slug": "why-pink-slime-keeps-coming-back-on-grout",
+      "problem": "pink slime",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::pink slime",
+      "title": "How to Maintain grout and Keep pink slime Under Control",
+      "slug": "how-to-maintain-grout-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-grout",
+      "problem": "pink slime",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::glass cooktops::pink slime",
+      "title": "What Causes pink slime on glass cooktops",
+      "slug": "what-causes-pink-slime-on-glass-cooktops",
+      "problem": "pink slime",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::glass cooktops::pink slime",
+      "title": "How to Remove pink slime from glass cooktops",
+      "slug": "how-to-remove-pink-slime-from-glass-cooktops",
+      "problem": "pink slime",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::glass cooktops::pink slime",
+      "title": "How to Prevent pink slime on glass cooktops",
+      "slug": "how-to-prevent-pink-slime-on-glass-cooktops",
+      "problem": "pink slime",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::glass cooktops::pink slime",
+      "title": "How to Fix pink slime on glass cooktops",
+      "slug": "how-to-fix-pink-slime-on-glass-cooktops",
+      "problem": "pink slime",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::glass cooktops::pink slime",
+      "title": "How to Clean pink slime from glass cooktops",
+      "slug": "how-to-clean-pink-slime-from-glass-cooktops",
+      "problem": "pink slime",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::glass cooktops::pink slime",
+      "title": "How to Tell if pink slime on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-glass-cooktops-is-permanent",
+      "problem": "pink slime",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::glass cooktops::pink slime",
+      "title": "Why pink slime Keeps Coming Back on glass cooktops",
+      "slug": "why-pink-slime-keeps-coming-back-on-glass-cooktops",
+      "problem": "pink slime",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::glass cooktops::pink slime",
+      "title": "How to Maintain glass cooktops and Keep pink slime Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::glass cooktops::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-glass-cooktops",
+      "problem": "pink slime",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::pink slime",
+      "title": "What Causes pink slime on shower grout",
+      "slug": "what-causes-pink-slime-on-shower-grout",
+      "problem": "pink slime",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::pink slime",
+      "title": "How to Remove pink slime from shower grout",
+      "slug": "how-to-remove-pink-slime-from-shower-grout",
+      "problem": "pink slime",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::pink slime",
+      "title": "How to Prevent pink slime on shower grout",
+      "slug": "how-to-prevent-pink-slime-on-shower-grout",
+      "problem": "pink slime",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::pink slime",
+      "title": "How to Fix pink slime on shower grout",
+      "slug": "how-to-fix-pink-slime-on-shower-grout",
+      "problem": "pink slime",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::pink slime",
+      "title": "How to Clean pink slime from shower grout",
+      "slug": "how-to-clean-pink-slime-from-shower-grout",
+      "problem": "pink slime",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::pink slime",
+      "title": "How to Tell if pink slime on shower grout is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-shower-grout-is-permanent",
+      "problem": "pink slime",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::pink slime",
+      "title": "Why pink slime Keeps Coming Back on shower grout",
+      "slug": "why-pink-slime-keeps-coming-back-on-shower-grout",
+      "problem": "pink slime",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::pink slime",
+      "title": "How to Maintain shower grout and Keep pink slime Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-shower-grout",
+      "problem": "pink slime",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::pink slime",
+      "title": "What Causes pink slime on tile grout",
+      "slug": "what-causes-pink-slime-on-tile-grout",
+      "problem": "pink slime",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::pink slime",
+      "title": "How to Remove pink slime from tile grout",
+      "slug": "how-to-remove-pink-slime-from-tile-grout",
+      "problem": "pink slime",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::pink slime",
+      "title": "How to Prevent pink slime on tile grout",
+      "slug": "how-to-prevent-pink-slime-on-tile-grout",
+      "problem": "pink slime",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::pink slime",
+      "title": "How to Fix pink slime on tile grout",
+      "slug": "how-to-fix-pink-slime-on-tile-grout",
+      "problem": "pink slime",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::pink slime",
+      "title": "How to Clean pink slime from tile grout",
+      "slug": "how-to-clean-pink-slime-from-tile-grout",
+      "problem": "pink slime",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::pink slime",
+      "title": "How to Tell if pink slime on tile grout is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-tile-grout-is-permanent",
+      "problem": "pink slime",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::pink slime",
+      "title": "Why pink slime Keeps Coming Back on tile grout",
+      "slug": "why-pink-slime-keeps-coming-back-on-tile-grout",
+      "problem": "pink slime",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::pink slime",
+      "title": "How to Maintain tile grout and Keep pink slime Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-tile-grout",
+      "problem": "pink slime",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::pink slime",
+      "title": "What Causes pink slime on caulking",
+      "slug": "what-causes-pink-slime-on-caulking",
+      "problem": "pink slime",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::pink slime",
+      "title": "How to Remove pink slime from caulking",
+      "slug": "how-to-remove-pink-slime-from-caulking",
+      "problem": "pink slime",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::pink slime",
+      "title": "How to Prevent pink slime on caulking",
+      "slug": "how-to-prevent-pink-slime-on-caulking",
+      "problem": "pink slime",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::pink slime",
+      "title": "How to Fix pink slime on caulking",
+      "slug": "how-to-fix-pink-slime-on-caulking",
+      "problem": "pink slime",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::pink slime",
+      "title": "How to Clean pink slime from caulking",
+      "slug": "how-to-clean-pink-slime-from-caulking",
+      "problem": "pink slime",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::pink slime",
+      "title": "How to Tell if pink slime on caulking is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-caulking-is-permanent",
+      "problem": "pink slime",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::pink slime",
+      "title": "Why pink slime Keeps Coming Back on caulking",
+      "slug": "why-pink-slime-keeps-coming-back-on-caulking",
+      "problem": "pink slime",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::pink slime",
+      "title": "How to Maintain caulking and Keep pink slime Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-caulking",
+      "problem": "pink slime",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::pink slime",
+      "title": "What Causes pink slime on shower pans",
+      "slug": "what-causes-pink-slime-on-shower-pans",
+      "problem": "pink slime",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::pink slime",
+      "title": "How to Remove pink slime from shower pans",
+      "slug": "how-to-remove-pink-slime-from-shower-pans",
+      "problem": "pink slime",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::pink slime",
+      "title": "How to Prevent pink slime on shower pans",
+      "slug": "how-to-prevent-pink-slime-on-shower-pans",
+      "problem": "pink slime",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::pink slime",
+      "title": "How to Fix pink slime on shower pans",
+      "slug": "how-to-fix-pink-slime-on-shower-pans",
+      "problem": "pink slime",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::pink slime",
+      "title": "How to Clean pink slime from shower pans",
+      "slug": "how-to-clean-pink-slime-from-shower-pans",
+      "problem": "pink slime",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::pink slime",
+      "title": "How to Tell if pink slime on shower pans is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-shower-pans-is-permanent",
+      "problem": "pink slime",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::pink slime",
+      "title": "Why pink slime Keeps Coming Back on shower pans",
+      "slug": "why-pink-slime-keeps-coming-back-on-shower-pans",
+      "problem": "pink slime",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::pink slime",
+      "title": "How to Maintain shower pans and Keep pink slime Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-shower-pans",
+      "problem": "pink slime",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::pink slime",
+      "title": "What Causes pink slime on bathtub surrounds",
+      "slug": "what-causes-pink-slime-on-bathtub-surrounds",
+      "problem": "pink slime",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::pink slime",
+      "title": "How to Remove pink slime from bathtub surrounds",
+      "slug": "how-to-remove-pink-slime-from-bathtub-surrounds",
+      "problem": "pink slime",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::pink slime",
+      "title": "How to Prevent pink slime on bathtub surrounds",
+      "slug": "how-to-prevent-pink-slime-on-bathtub-surrounds",
+      "problem": "pink slime",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

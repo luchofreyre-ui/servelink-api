@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "mistake-recovery::marble::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-marble",
+      "problem": "brown stains",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::brown stains",
+      "title": "What Causes brown stains on quartz",
+      "slug": "what-causes-brown-stains-on-quartz",
+      "problem": "brown stains",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::brown stains",
+      "title": "How to Remove brown stains from quartz",
+      "slug": "how-to-remove-brown-stains-from-quartz",
+      "problem": "brown stains",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::brown stains",
+      "title": "How to Prevent brown stains on quartz",
+      "slug": "how-to-prevent-brown-stains-on-quartz",
+      "problem": "brown stains",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::brown stains",
+      "title": "How to Fix brown stains on quartz",
+      "slug": "how-to-fix-brown-stains-on-quartz",
+      "problem": "brown stains",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::brown stains",
+      "title": "How to Clean brown stains from quartz",
+      "slug": "how-to-clean-brown-stains-from-quartz",
+      "problem": "brown stains",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::brown stains",
+      "title": "How to Tell if brown stains on quartz is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-quartz-is-permanent",
+      "problem": "brown stains",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::brown stains",
+      "title": "Why brown stains Keeps Coming Back on quartz",
+      "slug": "why-brown-stains-keeps-coming-back-on-quartz",
+      "problem": "brown stains",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::brown stains",
+      "title": "How to Maintain quartz and Keep brown stains Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-quartz",
+      "problem": "brown stains",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::brown stains",
+      "title": "What Causes brown stains on laminate",
+      "slug": "what-causes-brown-stains-on-laminate",
+      "problem": "brown stains",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::brown stains",
+      "title": "How to Remove brown stains from laminate",
+      "slug": "how-to-remove-brown-stains-from-laminate",
+      "problem": "brown stains",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::brown stains",
+      "title": "How to Prevent brown stains on laminate",
+      "slug": "how-to-prevent-brown-stains-on-laminate",
+      "problem": "brown stains",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::brown stains",
+      "title": "How to Fix brown stains on laminate",
+      "slug": "how-to-fix-brown-stains-on-laminate",
+      "problem": "brown stains",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::brown stains",
+      "title": "How to Clean brown stains from laminate",
+      "slug": "how-to-clean-brown-stains-from-laminate",
+      "problem": "brown stains",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::brown stains",
+      "title": "How to Tell if brown stains on laminate is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-laminate-is-permanent",
+      "problem": "brown stains",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::brown stains",
+      "title": "Why brown stains Keeps Coming Back on laminate",
+      "slug": "why-brown-stains-keeps-coming-back-on-laminate",
+      "problem": "brown stains",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::brown stains",
+      "title": "How to Maintain laminate and Keep brown stains Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-laminate",
+      "problem": "brown stains",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::brown stains",
+      "title": "What Causes brown stains on wood",
+      "slug": "what-causes-brown-stains-on-wood",
+      "problem": "brown stains",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::brown stains",
+      "title": "How to Remove brown stains from wood",
+      "slug": "how-to-remove-brown-stains-from-wood",
+      "problem": "brown stains",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::brown stains",
+      "title": "How to Prevent brown stains on wood",
+      "slug": "how-to-prevent-brown-stains-on-wood",
+      "problem": "brown stains",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::brown stains",
+      "title": "How to Fix brown stains on wood",
+      "slug": "how-to-fix-brown-stains-on-wood",
+      "problem": "brown stains",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::brown stains",
+      "title": "How to Clean brown stains from wood",
+      "slug": "how-to-clean-brown-stains-from-wood",
+      "problem": "brown stains",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::brown stains",
+      "title": "How to Tell if brown stains on wood is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-wood-is-permanent",
+      "problem": "brown stains",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::brown stains",
+      "title": "Why brown stains Keeps Coming Back on wood",
+      "slug": "why-brown-stains-keeps-coming-back-on-wood",
+      "problem": "brown stains",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::brown stains",
+      "title": "How to Maintain wood and Keep brown stains Under Control",
+      "slug": "how-to-maintain-wood-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-wood",
+      "problem": "brown stains",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::brown stains",
+      "title": "What Causes brown stains on grout",
+      "slug": "what-causes-brown-stains-on-grout",
+      "problem": "brown stains",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::brown stains",
+      "title": "How to Remove brown stains from grout",
+      "slug": "how-to-remove-brown-stains-from-grout",
+      "problem": "brown stains",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::brown stains",
+      "title": "How to Prevent brown stains on grout",
+      "slug": "how-to-prevent-brown-stains-on-grout",
+      "problem": "brown stains",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::brown stains",
+      "title": "How to Fix brown stains on grout",
+      "slug": "how-to-fix-brown-stains-on-grout",
+      "problem": "brown stains",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::brown stains",
+      "title": "How to Clean brown stains from grout",
+      "slug": "how-to-clean-brown-stains-from-grout",
+      "problem": "brown stains",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::brown stains",
+      "title": "How to Tell if brown stains on grout is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-grout-is-permanent",
+      "problem": "brown stains",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::brown stains",
+      "title": "Why brown stains Keeps Coming Back on grout",
+      "slug": "why-brown-stains-keeps-coming-back-on-grout",
+      "problem": "brown stains",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::brown stains",
+      "title": "How to Maintain grout and Keep brown stains Under Control",
+      "slug": "how-to-maintain-grout-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-grout",
+      "problem": "brown stains",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::brown stains",
+      "title": "What Causes brown stains on shower doors",
+      "slug": "what-causes-brown-stains-on-shower-doors",
+      "problem": "brown stains",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::brown stains",
+      "title": "How to Remove brown stains from shower doors",
+      "slug": "how-to-remove-brown-stains-from-shower-doors",
+      "problem": "brown stains",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::brown stains",
+      "title": "How to Prevent brown stains on shower doors",
+      "slug": "how-to-prevent-brown-stains-on-shower-doors",
+      "problem": "brown stains",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::brown stains",
+      "title": "How to Fix brown stains on shower doors",
+      "slug": "how-to-fix-brown-stains-on-shower-doors",
+      "problem": "brown stains",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::brown stains",
+      "title": "How to Clean brown stains from shower doors",
+      "slug": "how-to-clean-brown-stains-from-shower-doors",
+      "problem": "brown stains",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::brown stains",
+      "title": "How to Tell if brown stains on shower doors is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-shower-doors-is-permanent",
+      "problem": "brown stains",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::brown stains",
+      "title": "Why brown stains Keeps Coming Back on shower doors",
+      "slug": "why-brown-stains-keeps-coming-back-on-shower-doors",
+      "problem": "brown stains",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::brown stains",
+      "title": "How to Maintain shower doors and Keep brown stains Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-shower-doors",
+      "problem": "brown stains",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::brown stains",
+      "title": "What Causes brown stains on sealed stone",
+      "slug": "what-causes-brown-stains-on-sealed-stone",
+      "problem": "brown stains",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::brown stains",
+      "title": "How to Remove brown stains from sealed stone",
+      "slug": "how-to-remove-brown-stains-from-sealed-stone",
+      "problem": "brown stains",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::brown stains",
+      "title": "How to Prevent brown stains on sealed stone",
+      "slug": "how-to-prevent-brown-stains-on-sealed-stone",
+      "problem": "brown stains",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::brown stains",
+      "title": "How to Fix brown stains on sealed stone",
+      "slug": "how-to-fix-brown-stains-on-sealed-stone",
+      "problem": "brown stains",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::brown stains",
+      "title": "How to Clean brown stains from sealed stone",
+      "slug": "how-to-clean-brown-stains-from-sealed-stone",
+      "problem": "brown stains",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::brown stains",
+      "title": "How to Tell if brown stains on sealed stone is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-sealed-stone-is-permanent",
+      "problem": "brown stains",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::brown stains",
+      "title": "Why brown stains Keeps Coming Back on sealed stone",
+      "slug": "why-brown-stains-keeps-coming-back-on-sealed-stone",
+      "problem": "brown stains",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::brown stains",
+      "title": "How to Maintain sealed stone and Keep brown stains Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-sealed-stone",
+      "problem": "brown stains",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::brown stains",
+      "title": "What Causes brown stains on shower grout",
+      "slug": "what-causes-brown-stains-on-shower-grout",
+      "problem": "brown stains",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::brown stains",
+      "title": "How to Remove brown stains from shower grout",
+      "slug": "how-to-remove-brown-stains-from-shower-grout",
+      "problem": "brown stains",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::brown stains",
+      "title": "How to Prevent brown stains on shower grout",
+      "slug": "how-to-prevent-brown-stains-on-shower-grout",
+      "problem": "brown stains",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::brown stains",
+      "title": "How to Fix brown stains on shower grout",
+      "slug": "how-to-fix-brown-stains-on-shower-grout",
+      "problem": "brown stains",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::brown stains",
+      "title": "How to Clean brown stains from shower grout",
+      "slug": "how-to-clean-brown-stains-from-shower-grout",
+      "problem": "brown stains",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::brown stains",
+      "title": "How to Tell if brown stains on shower grout is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-shower-grout-is-permanent",
+      "problem": "brown stains",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::brown stains",
+      "title": "Why brown stains Keeps Coming Back on shower grout",
+      "slug": "why-brown-stains-keeps-coming-back-on-shower-grout",
+      "problem": "brown stains",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::brown stains",
+      "title": "How to Maintain shower grout and Keep brown stains Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-shower-grout",
+      "problem": "brown stains",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::brown stains",
+      "title": "What Causes brown stains on tile grout",
+      "slug": "what-causes-brown-stains-on-tile-grout",
+      "problem": "brown stains",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::brown stains",
+      "title": "How to Remove brown stains from tile grout",
+      "slug": "how-to-remove-brown-stains-from-tile-grout",
+      "problem": "brown stains",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::brown stains",
+      "title": "How to Prevent brown stains on tile grout",
+      "slug": "how-to-prevent-brown-stains-on-tile-grout",
+      "problem": "brown stains",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::brown stains",
+      "title": "How to Fix brown stains on tile grout",
+      "slug": "how-to-fix-brown-stains-on-tile-grout",
+      "problem": "brown stains",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::brown stains",
+      "title": "How to Clean brown stains from tile grout",
+      "slug": "how-to-clean-brown-stains-from-tile-grout",
+      "problem": "brown stains",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::brown stains",
+      "title": "How to Tell if brown stains on tile grout is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-tile-grout-is-permanent",
+      "problem": "brown stains",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::brown stains",
+      "title": "Why brown stains Keeps Coming Back on tile grout",
+      "slug": "why-brown-stains-keeps-coming-back-on-tile-grout",
+      "problem": "brown stains",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::brown stains",
+      "title": "How to Maintain tile grout and Keep brown stains Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-tile-grout",
+      "problem": "brown stains",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::brown stains",
+      "title": "What Causes brown stains on caulking",
+      "slug": "what-causes-brown-stains-on-caulking",
+      "problem": "brown stains",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::brown stains",
+      "title": "How to Remove brown stains from caulking",
+      "slug": "how-to-remove-brown-stains-from-caulking",
+      "problem": "brown stains",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::brown stains",
+      "title": "How to Prevent brown stains on caulking",
+      "slug": "how-to-prevent-brown-stains-on-caulking",
+      "problem": "brown stains",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::brown stains",
+      "title": "How to Fix brown stains on caulking",
+      "slug": "how-to-fix-brown-stains-on-caulking",
+      "problem": "brown stains",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::brown stains",
+      "title": "How to Clean brown stains from caulking",
+      "slug": "how-to-clean-brown-stains-from-caulking",
+      "problem": "brown stains",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::brown stains",
+      "title": "How to Tell if brown stains on caulking is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-caulking-is-permanent",
+      "problem": "brown stains",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::brown stains",
+      "title": "Why brown stains Keeps Coming Back on caulking",
+      "slug": "why-brown-stains-keeps-coming-back-on-caulking",
+      "problem": "brown stains",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::brown stains",
+      "title": "How to Maintain caulking and Keep brown stains Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-caulking",
+      "problem": "brown stains",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::brown stains",
+      "title": "What Causes brown stains on sealed granite",
+      "slug": "what-causes-brown-stains-on-sealed-granite",
+      "problem": "brown stains",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::brown stains",
+      "title": "How to Remove brown stains from sealed granite",
+      "slug": "how-to-remove-brown-stains-from-sealed-granite",
+      "problem": "brown stains",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::brown stains",
+      "title": "How to Prevent brown stains on sealed granite",
+      "slug": "how-to-prevent-brown-stains-on-sealed-granite",
+      "problem": "brown stains",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::brown stains",
+      "title": "How to Fix brown stains on sealed granite",
+      "slug": "how-to-fix-brown-stains-on-sealed-granite",
+      "problem": "brown stains",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::brown stains",
+      "title": "How to Clean brown stains from sealed granite",
+      "slug": "how-to-clean-brown-stains-from-sealed-granite",
+      "problem": "brown stains",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::brown stains",
+      "title": "How to Tell if brown stains on sealed granite is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-sealed-granite-is-permanent",
+      "problem": "brown stains",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::brown stains",
+      "title": "Why brown stains Keeps Coming Back on sealed granite",
+      "slug": "why-brown-stains-keeps-coming-back-on-sealed-granite",
+      "problem": "brown stains",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::brown stains",
+      "title": "How to Maintain sealed granite and Keep brown stains Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-sealed-granite",
+      "problem": "brown stains",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::brown stains",
+      "title": "What Causes brown stains on sealed marble",
+      "slug": "what-causes-brown-stains-on-sealed-marble",
+      "problem": "brown stains",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::brown stains",
+      "title": "How to Remove brown stains from sealed marble",
+      "slug": "how-to-remove-brown-stains-from-sealed-marble",
+      "problem": "brown stains",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::brown stains",
+      "title": "How to Prevent brown stains on sealed marble",
+      "slug": "how-to-prevent-brown-stains-on-sealed-marble",
+      "problem": "brown stains",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::brown stains",
+      "title": "How to Fix brown stains on sealed marble",
+      "slug": "how-to-fix-brown-stains-on-sealed-marble",
+      "problem": "brown stains",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::brown stains",
+      "title": "How to Clean brown stains from sealed marble",
+      "slug": "how-to-clean-brown-stains-from-sealed-marble",
+      "problem": "brown stains",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::brown stains",
+      "title": "How to Tell if brown stains on sealed marble is Permanent",
+      "slug": "how-to-tell-if-brown-stains-on-sealed-marble-is-permanent",
+      "problem": "brown stains",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::brown stains",
+      "title": "Why brown stains Keeps Coming Back on sealed marble",
+      "slug": "why-brown-stains-keeps-coming-back-on-sealed-marble",
+      "problem": "brown stains",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::brown stains",
+      "title": "How to Maintain sealed marble and Keep brown stains Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-brown-stains-under-control",
+      "problem": "brown stains",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::brown stains",
+      "title": "How to Recover After a Cleaning Mistake With brown stains on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-brown-stains-on-sealed-marble",
+      "problem": "brown stains",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

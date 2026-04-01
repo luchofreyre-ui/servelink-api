@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "what-causes::quartz countertops::odor retention",
+      "title": "What Causes odor retention on quartz countertops",
+      "slug": "what-causes-odor-retention-on-quartz-countertops",
+      "problem": "odor retention",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::odor retention",
+      "title": "How to Remove odor retention from quartz countertops",
+      "slug": "how-to-remove-odor-retention-from-quartz-countertops",
+      "problem": "odor retention",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::odor retention",
+      "title": "How to Prevent odor retention on quartz countertops",
+      "slug": "how-to-prevent-odor-retention-on-quartz-countertops",
+      "problem": "odor retention",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::odor retention",
+      "title": "How to Fix odor retention on quartz countertops",
+      "slug": "how-to-fix-odor-retention-on-quartz-countertops",
+      "problem": "odor retention",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::odor retention",
+      "title": "How to Clean odor retention from quartz countertops",
+      "slug": "how-to-clean-odor-retention-from-quartz-countertops",
+      "problem": "odor retention",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::odor retention",
+      "title": "How to Tell if odor retention on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-quartz-countertops-is-permanent",
+      "problem": "odor retention",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::odor retention",
+      "title": "Why odor retention Keeps Coming Back on quartz countertops",
+      "slug": "why-odor-retention-keeps-coming-back-on-quartz-countertops",
+      "problem": "odor retention",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::odor retention",
+      "title": "How to Maintain quartz countertops and Keep odor retention Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-quartz-countertops",
+      "problem": "odor retention",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::odor retention",
+      "title": "What Causes odor retention on laminate counters",
+      "slug": "what-causes-odor-retention-on-laminate-counters",
+      "problem": "odor retention",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::odor retention",
+      "title": "How to Remove odor retention from laminate counters",
+      "slug": "how-to-remove-odor-retention-from-laminate-counters",
+      "problem": "odor retention",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::odor retention",
+      "title": "How to Prevent odor retention on laminate counters",
+      "slug": "how-to-prevent-odor-retention-on-laminate-counters",
+      "problem": "odor retention",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::odor retention",
+      "title": "How to Fix odor retention on laminate counters",
+      "slug": "how-to-fix-odor-retention-on-laminate-counters",
+      "problem": "odor retention",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::odor retention",
+      "title": "How to Clean odor retention from laminate counters",
+      "slug": "how-to-clean-odor-retention-from-laminate-counters",
+      "problem": "odor retention",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::odor retention",
+      "title": "How to Tell if odor retention on laminate counters is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-laminate-counters-is-permanent",
+      "problem": "odor retention",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::odor retention",
+      "title": "Why odor retention Keeps Coming Back on laminate counters",
+      "slug": "why-odor-retention-keeps-coming-back-on-laminate-counters",
+      "problem": "odor retention",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::odor retention",
+      "title": "How to Maintain laminate counters and Keep odor retention Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-laminate-counters",
+      "problem": "odor retention",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::odor retention",
+      "title": "What Causes odor retention on butcher block",
+      "slug": "what-causes-odor-retention-on-butcher-block",
+      "problem": "odor retention",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::odor retention",
+      "title": "How to Remove odor retention from butcher block",
+      "slug": "how-to-remove-odor-retention-from-butcher-block",
+      "problem": "odor retention",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::odor retention",
+      "title": "How to Prevent odor retention on butcher block",
+      "slug": "how-to-prevent-odor-retention-on-butcher-block",
+      "problem": "odor retention",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::odor retention",
+      "title": "How to Fix odor retention on butcher block",
+      "slug": "how-to-fix-odor-retention-on-butcher-block",
+      "problem": "odor retention",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::odor retention",
+      "title": "How to Clean odor retention from butcher block",
+      "slug": "how-to-clean-odor-retention-from-butcher-block",
+      "problem": "odor retention",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::odor retention",
+      "title": "How to Tell if odor retention on butcher block is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-butcher-block-is-permanent",
+      "problem": "odor retention",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::odor retention",
+      "title": "Why odor retention Keeps Coming Back on butcher block",
+      "slug": "why-odor-retention-keeps-coming-back-on-butcher-block",
+      "problem": "odor retention",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::odor retention",
+      "title": "How to Maintain butcher block and Keep odor retention Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-butcher-block",
+      "problem": "odor retention",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::odor retention",
+      "title": "What Causes odor retention on unfinished wood",
+      "slug": "what-causes-odor-retention-on-unfinished-wood",
+      "problem": "odor retention",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::odor retention",
+      "title": "How to Remove odor retention from unfinished wood",
+      "slug": "how-to-remove-odor-retention-from-unfinished-wood",
+      "problem": "odor retention",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::odor retention",
+      "title": "How to Prevent odor retention on unfinished wood",
+      "slug": "how-to-prevent-odor-retention-on-unfinished-wood",
+      "problem": "odor retention",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::odor retention",
+      "title": "How to Fix odor retention on unfinished wood",
+      "slug": "how-to-fix-odor-retention-on-unfinished-wood",
+      "problem": "odor retention",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::odor retention",
+      "title": "How to Clean odor retention from unfinished wood",
+      "slug": "how-to-clean-odor-retention-from-unfinished-wood",
+      "problem": "odor retention",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::odor retention",
+      "title": "How to Tell if odor retention on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-unfinished-wood-is-permanent",
+      "problem": "odor retention",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::odor retention",
+      "title": "Why odor retention Keeps Coming Back on unfinished wood",
+      "slug": "why-odor-retention-keeps-coming-back-on-unfinished-wood",
+      "problem": "odor retention",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::odor retention",
+      "title": "How to Maintain unfinished wood and Keep odor retention Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-unfinished-wood",
+      "problem": "odor retention",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::odor retention",
+      "title": "What Causes odor retention on sealed wood",
+      "slug": "what-causes-odor-retention-on-sealed-wood",
+      "problem": "odor retention",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::odor retention",
+      "title": "How to Remove odor retention from sealed wood",
+      "slug": "how-to-remove-odor-retention-from-sealed-wood",
+      "problem": "odor retention",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::odor retention",
+      "title": "How to Prevent odor retention on sealed wood",
+      "slug": "how-to-prevent-odor-retention-on-sealed-wood",
+      "problem": "odor retention",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::odor retention",
+      "title": "How to Fix odor retention on sealed wood",
+      "slug": "how-to-fix-odor-retention-on-sealed-wood",
+      "problem": "odor retention",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::odor retention",
+      "title": "How to Clean odor retention from sealed wood",
+      "slug": "how-to-clean-odor-retention-from-sealed-wood",
+      "problem": "odor retention",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::odor retention",
+      "title": "How to Tell if odor retention on sealed wood is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-sealed-wood-is-permanent",
+      "problem": "odor retention",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::odor retention",
+      "title": "Why odor retention Keeps Coming Back on sealed wood",
+      "slug": "why-odor-retention-keeps-coming-back-on-sealed-wood",
+      "problem": "odor retention",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::odor retention",
+      "title": "How to Maintain sealed wood and Keep odor retention Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-sealed-wood",
+      "problem": "odor retention",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::baseboards::odor retention",
+      "title": "What Causes odor retention on baseboards",
+      "slug": "what-causes-odor-retention-on-baseboards",
+      "problem": "odor retention",
+      "surface": "baseboards",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::baseboards::odor retention",
+      "title": "How to Remove odor retention from baseboards",
+      "slug": "how-to-remove-odor-retention-from-baseboards",
+      "problem": "odor retention",
+      "surface": "baseboards",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::baseboards::odor retention",
+      "title": "How to Prevent odor retention on baseboards",
+      "slug": "how-to-prevent-odor-retention-on-baseboards",
+      "problem": "odor retention",
+      "surface": "baseboards",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::baseboards::odor retention",
+      "title": "How to Fix odor retention on baseboards",
+      "slug": "how-to-fix-odor-retention-on-baseboards",
+      "problem": "odor retention",
+      "surface": "baseboards",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::baseboards::odor retention",
+      "title": "How to Clean odor retention from baseboards",
+      "slug": "how-to-clean-odor-retention-from-baseboards",
+      "problem": "odor retention",
+      "surface": "baseboards",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::baseboards::odor retention",
+      "title": "How to Tell if odor retention on baseboards is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-baseboards-is-permanent",
+      "problem": "odor retention",
+      "surface": "baseboards",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::baseboards::odor retention",
+      "title": "Why odor retention Keeps Coming Back on baseboards",
+      "slug": "why-odor-retention-keeps-coming-back-on-baseboards",
+      "problem": "odor retention",
+      "surface": "baseboards",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::baseboards::odor retention",
+      "title": "How to Maintain baseboards and Keep odor retention Under Control",
+      "slug": "how-to-maintain-baseboards-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "baseboards",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::baseboards::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on baseboards",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-baseboards",
+      "problem": "odor retention",
+      "surface": "baseboards",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::door frames::odor retention",
+      "title": "What Causes odor retention on door frames",
+      "slug": "what-causes-odor-retention-on-door-frames",
+      "problem": "odor retention",
+      "surface": "door frames",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::door frames::odor retention",
+      "title": "How to Remove odor retention from door frames",
+      "slug": "how-to-remove-odor-retention-from-door-frames",
+      "problem": "odor retention",
+      "surface": "door frames",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::door frames::odor retention",
+      "title": "How to Prevent odor retention on door frames",
+      "slug": "how-to-prevent-odor-retention-on-door-frames",
+      "problem": "odor retention",
+      "surface": "door frames",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::door frames::odor retention",
+      "title": "How to Fix odor retention on door frames",
+      "slug": "how-to-fix-odor-retention-on-door-frames",
+      "problem": "odor retention",
+      "surface": "door frames",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::door frames::odor retention",
+      "title": "How to Clean odor retention from door frames",
+      "slug": "how-to-clean-odor-retention-from-door-frames",
+      "problem": "odor retention",
+      "surface": "door frames",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::door frames::odor retention",
+      "title": "How to Tell if odor retention on door frames is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-door-frames-is-permanent",
+      "problem": "odor retention",
+      "surface": "door frames",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::door frames::odor retention",
+      "title": "Why odor retention Keeps Coming Back on door frames",
+      "slug": "why-odor-retention-keeps-coming-back-on-door-frames",
+      "problem": "odor retention",
+      "surface": "door frames",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::door frames::odor retention",
+      "title": "How to Maintain door frames and Keep odor retention Under Control",
+      "slug": "how-to-maintain-door-frames-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "door frames",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::door frames::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on door frames",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-door-frames",
+      "problem": "odor retention",
+      "surface": "door frames",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::window tracks::odor retention",
+      "title": "What Causes odor retention on window tracks",
+      "slug": "what-causes-odor-retention-on-window-tracks",
+      "problem": "odor retention",
+      "surface": "window tracks",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::window tracks::odor retention",
+      "title": "How to Remove odor retention from window tracks",
+      "slug": "how-to-remove-odor-retention-from-window-tracks",
+      "problem": "odor retention",
+      "surface": "window tracks",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::window tracks::odor retention",
+      "title": "How to Prevent odor retention on window tracks",
+      "slug": "how-to-prevent-odor-retention-on-window-tracks",
+      "problem": "odor retention",
+      "surface": "window tracks",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::window tracks::odor retention",
+      "title": "How to Fix odor retention on window tracks",
+      "slug": "how-to-fix-odor-retention-on-window-tracks",
+      "problem": "odor retention",
+      "surface": "window tracks",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::window tracks::odor retention",
+      "title": "How to Clean odor retention from window tracks",
+      "slug": "how-to-clean-odor-retention-from-window-tracks",
+      "problem": "odor retention",
+      "surface": "window tracks",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::window tracks::odor retention",
+      "title": "How to Tell if odor retention on window tracks is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-window-tracks-is-permanent",
+      "problem": "odor retention",
+      "surface": "window tracks",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::window tracks::odor retention",
+      "title": "Why odor retention Keeps Coming Back on window tracks",
+      "slug": "why-odor-retention-keeps-coming-back-on-window-tracks",
+      "problem": "odor retention",
+      "surface": "window tracks",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::window tracks::odor retention",
+      "title": "How to Maintain window tracks and Keep odor retention Under Control",
+      "slug": "how-to-maintain-window-tracks-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "window tracks",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::window tracks::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on window tracks",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-window-tracks",
+      "problem": "odor retention",
+      "surface": "window tracks",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::light switches::odor retention",
+      "title": "What Causes odor retention on light switches",
+      "slug": "what-causes-odor-retention-on-light-switches",
+      "problem": "odor retention",
+      "surface": "light switches",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::light switches::odor retention",
+      "title": "How to Remove odor retention from light switches",
+      "slug": "how-to-remove-odor-retention-from-light-switches",
+      "problem": "odor retention",
+      "surface": "light switches",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::light switches::odor retention",
+      "title": "How to Prevent odor retention on light switches",
+      "slug": "how-to-prevent-odor-retention-on-light-switches",
+      "problem": "odor retention",
+      "surface": "light switches",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::light switches::odor retention",
+      "title": "How to Fix odor retention on light switches",
+      "slug": "how-to-fix-odor-retention-on-light-switches",
+      "problem": "odor retention",
+      "surface": "light switches",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::light switches::odor retention",
+      "title": "How to Clean odor retention from light switches",
+      "slug": "how-to-clean-odor-retention-from-light-switches",
+      "problem": "odor retention",
+      "surface": "light switches",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::light switches::odor retention",
+      "title": "How to Tell if odor retention on light switches is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-light-switches-is-permanent",
+      "problem": "odor retention",
+      "surface": "light switches",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::light switches::odor retention",
+      "title": "Why odor retention Keeps Coming Back on light switches",
+      "slug": "why-odor-retention-keeps-coming-back-on-light-switches",
+      "problem": "odor retention",
+      "surface": "light switches",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::light switches::odor retention",
+      "title": "How to Maintain light switches and Keep odor retention Under Control",
+      "slug": "how-to-maintain-light-switches-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "light switches",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::light switches::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on light switches",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-light-switches",
+      "problem": "odor retention",
+      "surface": "light switches",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::garbage cans::odor retention",
+      "title": "What Causes odor retention on garbage cans",
+      "slug": "what-causes-odor-retention-on-garbage-cans",
+      "problem": "odor retention",
+      "surface": "garbage cans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::garbage cans::odor retention",
+      "title": "How to Remove odor retention from garbage cans",
+      "slug": "how-to-remove-odor-retention-from-garbage-cans",
+      "problem": "odor retention",
+      "surface": "garbage cans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::garbage cans::odor retention",
+      "title": "How to Prevent odor retention on garbage cans",
+      "slug": "how-to-prevent-odor-retention-on-garbage-cans",
+      "problem": "odor retention",
+      "surface": "garbage cans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::garbage cans::odor retention",
+      "title": "How to Fix odor retention on garbage cans",
+      "slug": "how-to-fix-odor-retention-on-garbage-cans",
+      "problem": "odor retention",
+      "surface": "garbage cans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::garbage cans::odor retention",
+      "title": "How to Clean odor retention from garbage cans",
+      "slug": "how-to-clean-odor-retention-from-garbage-cans",
+      "problem": "odor retention",
+      "surface": "garbage cans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::garbage cans::odor retention",
+      "title": "How to Tell if odor retention on garbage cans is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-garbage-cans-is-permanent",
+      "problem": "odor retention",
+      "surface": "garbage cans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::garbage cans::odor retention",
+      "title": "Why odor retention Keeps Coming Back on garbage cans",
+      "slug": "why-odor-retention-keeps-coming-back-on-garbage-cans",
+      "problem": "odor retention",
+      "surface": "garbage cans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::garbage cans::odor retention",
+      "title": "How to Maintain garbage cans and Keep odor retention Under Control",
+      "slug": "how-to-maintain-garbage-cans-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "garbage cans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::garbage cans::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on garbage cans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-garbage-cans",
+      "problem": "odor retention",
+      "surface": "garbage cans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::cooked-on residue",
+      "title": "What Causes cooked-on residue on backsplashes",
+      "slug": "what-causes-cooked-on-residue-on-backsplashes",
+      "problem": "cooked-on residue",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::cooked-on residue",
+      "title": "How to Remove cooked-on residue from backsplashes",
+      "slug": "how-to-remove-cooked-on-residue-from-backsplashes",
+      "problem": "cooked-on residue",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::cooked-on residue",
+      "title": "How to Prevent cooked-on residue on backsplashes",
+      "slug": "how-to-prevent-cooked-on-residue-on-backsplashes",
+      "problem": "cooked-on residue",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::cooked-on residue",
+      "title": "How to Fix cooked-on residue on backsplashes",
+      "slug": "how-to-fix-cooked-on-residue-on-backsplashes",
+      "problem": "cooked-on residue",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::cooked-on residue",
+      "title": "How to Clean cooked-on residue from backsplashes",
+      "slug": "how-to-clean-cooked-on-residue-from-backsplashes",
+      "problem": "cooked-on residue",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::cooked-on residue",
+      "title": "How to Tell if cooked-on residue on backsplashes is Permanent",
+      "slug": "how-to-tell-if-cooked-on-residue-on-backsplashes-is-permanent",
+      "problem": "cooked-on residue",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::cooked-on residue",
+      "title": "Why cooked-on residue Keeps Coming Back on backsplashes",
+      "slug": "why-cooked-on-residue-keeps-coming-back-on-backsplashes",
+      "problem": "cooked-on residue",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::cooked-on residue",
+      "title": "How to Maintain backsplashes and Keep cooked-on residue Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-cooked-on-residue-under-control",
+      "problem": "cooked-on residue",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::cooked-on residue",
+      "title": "How to Recover After a Cleaning Mistake With cooked-on residue on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-cooked-on-residue-on-backsplashes",
+      "problem": "cooked-on residue",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::cooked-on residue",
+      "title": "What Causes cooked-on residue on tile floors",
+      "slug": "what-causes-cooked-on-residue-on-tile-floors",
+      "problem": "cooked-on residue",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

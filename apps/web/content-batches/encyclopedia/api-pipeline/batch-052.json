@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "why::ceramic tile::biofilm",
+      "title": "Why biofilm Keeps Coming Back on ceramic tile",
+      "slug": "why-biofilm-keeps-coming-back-on-ceramic-tile",
+      "problem": "biofilm",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::biofilm",
+      "title": "How to Maintain ceramic tile and Keep biofilm Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-ceramic-tile",
+      "problem": "biofilm",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::biofilm",
+      "title": "What Causes biofilm on porcelain tile",
+      "slug": "what-causes-biofilm-on-porcelain-tile",
+      "problem": "biofilm",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::biofilm",
+      "title": "How to Remove biofilm from porcelain tile",
+      "slug": "how-to-remove-biofilm-from-porcelain-tile",
+      "problem": "biofilm",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::biofilm",
+      "title": "How to Prevent biofilm on porcelain tile",
+      "slug": "how-to-prevent-biofilm-on-porcelain-tile",
+      "problem": "biofilm",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::biofilm",
+      "title": "How to Fix biofilm on porcelain tile",
+      "slug": "how-to-fix-biofilm-on-porcelain-tile",
+      "problem": "biofilm",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::biofilm",
+      "title": "How to Clean biofilm from porcelain tile",
+      "slug": "how-to-clean-biofilm-from-porcelain-tile",
+      "problem": "biofilm",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::biofilm",
+      "title": "How to Tell if biofilm on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-porcelain-tile-is-permanent",
+      "problem": "biofilm",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::biofilm",
+      "title": "Why biofilm Keeps Coming Back on porcelain tile",
+      "slug": "why-biofilm-keeps-coming-back-on-porcelain-tile",
+      "problem": "biofilm",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::biofilm",
+      "title": "How to Maintain porcelain tile and Keep biofilm Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-porcelain-tile",
+      "problem": "biofilm",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::garbage cans::biofilm",
+      "title": "What Causes biofilm on garbage cans",
+      "slug": "what-causes-biofilm-on-garbage-cans",
+      "problem": "biofilm",
+      "surface": "garbage cans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::garbage cans::biofilm",
+      "title": "How to Remove biofilm from garbage cans",
+      "slug": "how-to-remove-biofilm-from-garbage-cans",
+      "problem": "biofilm",
+      "surface": "garbage cans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::garbage cans::biofilm",
+      "title": "How to Prevent biofilm on garbage cans",
+      "slug": "how-to-prevent-biofilm-on-garbage-cans",
+      "problem": "biofilm",
+      "surface": "garbage cans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::garbage cans::biofilm",
+      "title": "How to Fix biofilm on garbage cans",
+      "slug": "how-to-fix-biofilm-on-garbage-cans",
+      "problem": "biofilm",
+      "surface": "garbage cans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::garbage cans::biofilm",
+      "title": "How to Clean biofilm from garbage cans",
+      "slug": "how-to-clean-biofilm-from-garbage-cans",
+      "problem": "biofilm",
+      "surface": "garbage cans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::garbage cans::biofilm",
+      "title": "How to Tell if biofilm on garbage cans is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-garbage-cans-is-permanent",
+      "problem": "biofilm",
+      "surface": "garbage cans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::garbage cans::biofilm",
+      "title": "Why biofilm Keeps Coming Back on garbage cans",
+      "slug": "why-biofilm-keeps-coming-back-on-garbage-cans",
+      "problem": "biofilm",
+      "surface": "garbage cans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::garbage cans::biofilm",
+      "title": "How to Maintain garbage cans and Keep biofilm Under Control",
+      "slug": "how-to-maintain-garbage-cans-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "garbage cans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::garbage cans::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on garbage cans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-garbage-cans",
+      "problem": "biofilm",
+      "surface": "garbage cans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::mold growth",
+      "title": "What Causes mold growth on backsplashes",
+      "slug": "what-causes-mold-growth-on-backsplashes",
+      "problem": "mold growth",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::mold growth",
+      "title": "How to Remove mold growth from backsplashes",
+      "slug": "how-to-remove-mold-growth-from-backsplashes",
+      "problem": "mold growth",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::mold growth",
+      "title": "How to Prevent mold growth on backsplashes",
+      "slug": "how-to-prevent-mold-growth-on-backsplashes",
+      "problem": "mold growth",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::mold growth",
+      "title": "How to Fix mold growth on backsplashes",
+      "slug": "how-to-fix-mold-growth-on-backsplashes",
+      "problem": "mold growth",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::mold growth",
+      "title": "How to Clean mold growth from backsplashes",
+      "slug": "how-to-clean-mold-growth-from-backsplashes",
+      "problem": "mold growth",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::mold growth",
+      "title": "How to Tell if mold growth on backsplashes is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-backsplashes-is-permanent",
+      "problem": "mold growth",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::mold growth",
+      "title": "Why mold growth Keeps Coming Back on backsplashes",
+      "slug": "why-mold-growth-keeps-coming-back-on-backsplashes",
+      "problem": "mold growth",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::mold growth",
+      "title": "How to Maintain backsplashes and Keep mold growth Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-backsplashes",
+      "problem": "mold growth",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::kitchen cabinets::mold growth",
+      "title": "What Causes mold growth on kitchen cabinets",
+      "slug": "what-causes-mold-growth-on-kitchen-cabinets",
+      "problem": "mold growth",
+      "surface": "kitchen cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::kitchen cabinets::mold growth",
+      "title": "How to Remove mold growth from kitchen cabinets",
+      "slug": "how-to-remove-mold-growth-from-kitchen-cabinets",
+      "problem": "mold growth",
+      "surface": "kitchen cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::kitchen cabinets::mold growth",
+      "title": "How to Prevent mold growth on kitchen cabinets",
+      "slug": "how-to-prevent-mold-growth-on-kitchen-cabinets",
+      "problem": "mold growth",
+      "surface": "kitchen cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::kitchen cabinets::mold growth",
+      "title": "How to Fix mold growth on kitchen cabinets",
+      "slug": "how-to-fix-mold-growth-on-kitchen-cabinets",
+      "problem": "mold growth",
+      "surface": "kitchen cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::kitchen cabinets::mold growth",
+      "title": "How to Clean mold growth from kitchen cabinets",
+      "slug": "how-to-clean-mold-growth-from-kitchen-cabinets",
+      "problem": "mold growth",
+      "surface": "kitchen cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::kitchen cabinets::mold growth",
+      "title": "How to Tell if mold growth on kitchen cabinets is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-kitchen-cabinets-is-permanent",
+      "problem": "mold growth",
+      "surface": "kitchen cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::kitchen cabinets::mold growth",
+      "title": "Why mold growth Keeps Coming Back on kitchen cabinets",
+      "slug": "why-mold-growth-keeps-coming-back-on-kitchen-cabinets",
+      "problem": "mold growth",
+      "surface": "kitchen cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::kitchen cabinets::mold growth",
+      "title": "How to Maintain kitchen cabinets and Keep mold growth Under Control",
+      "slug": "how-to-maintain-kitchen-cabinets-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "kitchen cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::kitchen cabinets::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on kitchen cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-kitchen-cabinets",
+      "problem": "mold growth",
+      "surface": "kitchen cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::mold growth",
+      "title": "What Causes mold growth on tile floors",
+      "slug": "what-causes-mold-growth-on-tile-floors",
+      "problem": "mold growth",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::mold growth",
+      "title": "How to Remove mold growth from tile floors",
+      "slug": "how-to-remove-mold-growth-from-tile-floors",
+      "problem": "mold growth",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::mold growth",
+      "title": "How to Prevent mold growth on tile floors",
+      "slug": "how-to-prevent-mold-growth-on-tile-floors",
+      "problem": "mold growth",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::mold growth",
+      "title": "How to Fix mold growth on tile floors",
+      "slug": "how-to-fix-mold-growth-on-tile-floors",
+      "problem": "mold growth",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::mold growth",
+      "title": "How to Clean mold growth from tile floors",
+      "slug": "how-to-clean-mold-growth-from-tile-floors",
+      "problem": "mold growth",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::mold growth",
+      "title": "How to Tell if mold growth on tile floors is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-tile-floors-is-permanent",
+      "problem": "mold growth",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::mold growth",
+      "title": "Why mold growth Keeps Coming Back on tile floors",
+      "slug": "why-mold-growth-keeps-coming-back-on-tile-floors",
+      "problem": "mold growth",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::mold growth",
+      "title": "How to Maintain tile floors and Keep mold growth Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-tile-floors",
+      "problem": "mold growth",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtubs::mold growth",
+      "title": "What Causes mold growth on bathtubs",
+      "slug": "what-causes-mold-growth-on-bathtubs",
+      "problem": "mold growth",
+      "surface": "bathtubs",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtubs::mold growth",
+      "title": "How to Remove mold growth from bathtubs",
+      "slug": "how-to-remove-mold-growth-from-bathtubs",
+      "problem": "mold growth",
+      "surface": "bathtubs",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtubs::mold growth",
+      "title": "How to Prevent mold growth on bathtubs",
+      "slug": "how-to-prevent-mold-growth-on-bathtubs",
+      "problem": "mold growth",
+      "surface": "bathtubs",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtubs::mold growth",
+      "title": "How to Fix mold growth on bathtubs",
+      "slug": "how-to-fix-mold-growth-on-bathtubs",
+      "problem": "mold growth",
+      "surface": "bathtubs",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtubs::mold growth",
+      "title": "How to Clean mold growth from bathtubs",
+      "slug": "how-to-clean-mold-growth-from-bathtubs",
+      "problem": "mold growth",
+      "surface": "bathtubs",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtubs::mold growth",
+      "title": "How to Tell if mold growth on bathtubs is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-bathtubs-is-permanent",
+      "problem": "mold growth",
+      "surface": "bathtubs",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtubs::mold growth",
+      "title": "Why mold growth Keeps Coming Back on bathtubs",
+      "slug": "why-mold-growth-keeps-coming-back-on-bathtubs",
+      "problem": "mold growth",
+      "surface": "bathtubs",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtubs::mold growth",
+      "title": "How to Maintain bathtubs and Keep mold growth Under Control",
+      "slug": "how-to-maintain-bathtubs-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "bathtubs",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtubs::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on bathtubs",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-bathtubs",
+      "problem": "mold growth",
+      "surface": "bathtubs",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::mold growth",
+      "title": "What Causes mold growth on granite",
+      "slug": "what-causes-mold-growth-on-granite",
+      "problem": "mold growth",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::mold growth",
+      "title": "How to Remove mold growth from granite",
+      "slug": "how-to-remove-mold-growth-from-granite",
+      "problem": "mold growth",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::mold growth",
+      "title": "How to Prevent mold growth on granite",
+      "slug": "how-to-prevent-mold-growth-on-granite",
+      "problem": "mold growth",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::mold growth",
+      "title": "How to Fix mold growth on granite",
+      "slug": "how-to-fix-mold-growth-on-granite",
+      "problem": "mold growth",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::mold growth",
+      "title": "How to Clean mold growth from granite",
+      "slug": "how-to-clean-mold-growth-from-granite",
+      "problem": "mold growth",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::mold growth",
+      "title": "How to Tell if mold growth on granite is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-granite-is-permanent",
+      "problem": "mold growth",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::mold growth",
+      "title": "Why mold growth Keeps Coming Back on granite",
+      "slug": "why-mold-growth-keeps-coming-back-on-granite",
+      "problem": "mold growth",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::mold growth",
+      "title": "How to Maintain granite and Keep mold growth Under Control",
+      "slug": "how-to-maintain-granite-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-granite",
+      "problem": "mold growth",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::mold growth",
+      "title": "What Causes mold growth on marble",
+      "slug": "what-causes-mold-growth-on-marble",
+      "problem": "mold growth",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::mold growth",
+      "title": "How to Remove mold growth from marble",
+      "slug": "how-to-remove-mold-growth-from-marble",
+      "problem": "mold growth",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::mold growth",
+      "title": "How to Prevent mold growth on marble",
+      "slug": "how-to-prevent-mold-growth-on-marble",
+      "problem": "mold growth",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::mold growth",
+      "title": "How to Fix mold growth on marble",
+      "slug": "how-to-fix-mold-growth-on-marble",
+      "problem": "mold growth",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::mold growth",
+      "title": "How to Clean mold growth from marble",
+      "slug": "how-to-clean-mold-growth-from-marble",
+      "problem": "mold growth",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::mold growth",
+      "title": "How to Tell if mold growth on marble is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-marble-is-permanent",
+      "problem": "mold growth",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::mold growth",
+      "title": "Why mold growth Keeps Coming Back on marble",
+      "slug": "why-mold-growth-keeps-coming-back-on-marble",
+      "problem": "mold growth",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::mold growth",
+      "title": "How to Maintain marble and Keep mold growth Under Control",
+      "slug": "how-to-maintain-marble-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-marble",
+      "problem": "mold growth",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::mold growth",
+      "title": "What Causes mold growth on quartz",
+      "slug": "what-causes-mold-growth-on-quartz",
+      "problem": "mold growth",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::mold growth",
+      "title": "How to Remove mold growth from quartz",
+      "slug": "how-to-remove-mold-growth-from-quartz",
+      "problem": "mold growth",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::mold growth",
+      "title": "How to Prevent mold growth on quartz",
+      "slug": "how-to-prevent-mold-growth-on-quartz",
+      "problem": "mold growth",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::mold growth",
+      "title": "How to Fix mold growth on quartz",
+      "slug": "how-to-fix-mold-growth-on-quartz",
+      "problem": "mold growth",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::mold growth",
+      "title": "How to Clean mold growth from quartz",
+      "slug": "how-to-clean-mold-growth-from-quartz",
+      "problem": "mold growth",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::mold growth",
+      "title": "How to Tell if mold growth on quartz is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-quartz-is-permanent",
+      "problem": "mold growth",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::mold growth",
+      "title": "Why mold growth Keeps Coming Back on quartz",
+      "slug": "why-mold-growth-keeps-coming-back-on-quartz",
+      "problem": "mold growth",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::mold growth",
+      "title": "How to Maintain quartz and Keep mold growth Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-quartz",
+      "problem": "mold growth",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted walls::mold growth",
+      "title": "What Causes mold growth on painted walls",
+      "slug": "what-causes-mold-growth-on-painted-walls",
+      "problem": "mold growth",
+      "surface": "painted walls",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted walls::mold growth",
+      "title": "How to Remove mold growth from painted walls",
+      "slug": "how-to-remove-mold-growth-from-painted-walls",
+      "problem": "mold growth",
+      "surface": "painted walls",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted walls::mold growth",
+      "title": "How to Prevent mold growth on painted walls",
+      "slug": "how-to-prevent-mold-growth-on-painted-walls",
+      "problem": "mold growth",
+      "surface": "painted walls",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted walls::mold growth",
+      "title": "How to Fix mold growth on painted walls",
+      "slug": "how-to-fix-mold-growth-on-painted-walls",
+      "problem": "mold growth",
+      "surface": "painted walls",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted walls::mold growth",
+      "title": "How to Clean mold growth from painted walls",
+      "slug": "how-to-clean-mold-growth-from-painted-walls",
+      "problem": "mold growth",
+      "surface": "painted walls",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted walls::mold growth",
+      "title": "How to Tell if mold growth on painted walls is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-painted-walls-is-permanent",
+      "problem": "mold growth",
+      "surface": "painted walls",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted walls::mold growth",
+      "title": "Why mold growth Keeps Coming Back on painted walls",
+      "slug": "why-mold-growth-keeps-coming-back-on-painted-walls",
+      "problem": "mold growth",
+      "surface": "painted walls",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted walls::mold growth",
+      "title": "How to Maintain painted walls and Keep mold growth Under Control",
+      "slug": "how-to-maintain-painted-walls-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "painted walls",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted walls::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on painted walls",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-painted-walls",
+      "problem": "mold growth",
+      "surface": "painted walls",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::mold growth",
+      "title": "What Causes mold growth on grout",
+      "slug": "what-causes-mold-growth-on-grout",
+      "problem": "mold growth",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::mold growth",
+      "title": "How to Remove mold growth from grout",
+      "slug": "how-to-remove-mold-growth-from-grout",
+      "problem": "mold growth",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::mold growth",
+      "title": "How to Prevent mold growth on grout",
+      "slug": "how-to-prevent-mold-growth-on-grout",
+      "problem": "mold growth",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::mold growth",
+      "title": "How to Fix mold growth on grout",
+      "slug": "how-to-fix-mold-growth-on-grout",
+      "problem": "mold growth",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::mold growth",
+      "title": "How to Clean mold growth from grout",
+      "slug": "how-to-clean-mold-growth-from-grout",
+      "problem": "mold growth",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::mold growth",
+      "title": "How to Tell if mold growth on grout is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-grout-is-permanent",
+      "problem": "mold growth",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::mold growth",
+      "title": "Why mold growth Keeps Coming Back on grout",
+      "slug": "why-mold-growth-keeps-coming-back-on-grout",
+      "problem": "mold growth",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

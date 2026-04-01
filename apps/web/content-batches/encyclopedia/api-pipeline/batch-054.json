@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "mistake-recovery::sealed granite::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-sealed-granite",
+      "problem": "mold growth",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::mold growth",
+      "title": "What Causes mold growth on sealed marble",
+      "slug": "what-causes-mold-growth-on-sealed-marble",
+      "problem": "mold growth",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::mold growth",
+      "title": "How to Remove mold growth from sealed marble",
+      "slug": "how-to-remove-mold-growth-from-sealed-marble",
+      "problem": "mold growth",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::mold growth",
+      "title": "How to Prevent mold growth on sealed marble",
+      "slug": "how-to-prevent-mold-growth-on-sealed-marble",
+      "problem": "mold growth",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::mold growth",
+      "title": "How to Fix mold growth on sealed marble",
+      "slug": "how-to-fix-mold-growth-on-sealed-marble",
+      "problem": "mold growth",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::mold growth",
+      "title": "How to Clean mold growth from sealed marble",
+      "slug": "how-to-clean-mold-growth-from-sealed-marble",
+      "problem": "mold growth",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::mold growth",
+      "title": "How to Tell if mold growth on sealed marble is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-sealed-marble-is-permanent",
+      "problem": "mold growth",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::mold growth",
+      "title": "Why mold growth Keeps Coming Back on sealed marble",
+      "slug": "why-mold-growth-keeps-coming-back-on-sealed-marble",
+      "problem": "mold growth",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::mold growth",
+      "title": "How to Maintain sealed marble and Keep mold growth Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-sealed-marble",
+      "problem": "mold growth",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::mold growth",
+      "title": "What Causes mold growth on quartz countertops",
+      "slug": "what-causes-mold-growth-on-quartz-countertops",
+      "problem": "mold growth",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::mold growth",
+      "title": "How to Remove mold growth from quartz countertops",
+      "slug": "how-to-remove-mold-growth-from-quartz-countertops",
+      "problem": "mold growth",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::mold growth",
+      "title": "How to Prevent mold growth on quartz countertops",
+      "slug": "how-to-prevent-mold-growth-on-quartz-countertops",
+      "problem": "mold growth",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::mold growth",
+      "title": "How to Fix mold growth on quartz countertops",
+      "slug": "how-to-fix-mold-growth-on-quartz-countertops",
+      "problem": "mold growth",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::mold growth",
+      "title": "How to Clean mold growth from quartz countertops",
+      "slug": "how-to-clean-mold-growth-from-quartz-countertops",
+      "problem": "mold growth",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::mold growth",
+      "title": "How to Tell if mold growth on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-quartz-countertops-is-permanent",
+      "problem": "mold growth",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::mold growth",
+      "title": "Why mold growth Keeps Coming Back on quartz countertops",
+      "slug": "why-mold-growth-keeps-coming-back-on-quartz-countertops",
+      "problem": "mold growth",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::mold growth",
+      "title": "How to Maintain quartz countertops and Keep mold growth Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-quartz-countertops",
+      "problem": "mold growth",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::baseboards::mold growth",
+      "title": "What Causes mold growth on baseboards",
+      "slug": "what-causes-mold-growth-on-baseboards",
+      "problem": "mold growth",
+      "surface": "baseboards",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::baseboards::mold growth",
+      "title": "How to Remove mold growth from baseboards",
+      "slug": "how-to-remove-mold-growth-from-baseboards",
+      "problem": "mold growth",
+      "surface": "baseboards",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::baseboards::mold growth",
+      "title": "How to Prevent mold growth on baseboards",
+      "slug": "how-to-prevent-mold-growth-on-baseboards",
+      "problem": "mold growth",
+      "surface": "baseboards",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::baseboards::mold growth",
+      "title": "How to Fix mold growth on baseboards",
+      "slug": "how-to-fix-mold-growth-on-baseboards",
+      "problem": "mold growth",
+      "surface": "baseboards",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::baseboards::mold growth",
+      "title": "How to Clean mold growth from baseboards",
+      "slug": "how-to-clean-mold-growth-from-baseboards",
+      "problem": "mold growth",
+      "surface": "baseboards",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::baseboards::mold growth",
+      "title": "How to Tell if mold growth on baseboards is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-baseboards-is-permanent",
+      "problem": "mold growth",
+      "surface": "baseboards",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::baseboards::mold growth",
+      "title": "Why mold growth Keeps Coming Back on baseboards",
+      "slug": "why-mold-growth-keeps-coming-back-on-baseboards",
+      "problem": "mold growth",
+      "surface": "baseboards",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::baseboards::mold growth",
+      "title": "How to Maintain baseboards and Keep mold growth Under Control",
+      "slug": "how-to-maintain-baseboards-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "baseboards",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::baseboards::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on baseboards",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-baseboards",
+      "problem": "mold growth",
+      "surface": "baseboards",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::door frames::mold growth",
+      "title": "What Causes mold growth on door frames",
+      "slug": "what-causes-mold-growth-on-door-frames",
+      "problem": "mold growth",
+      "surface": "door frames",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::door frames::mold growth",
+      "title": "How to Remove mold growth from door frames",
+      "slug": "how-to-remove-mold-growth-from-door-frames",
+      "problem": "mold growth",
+      "surface": "door frames",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::door frames::mold growth",
+      "title": "How to Prevent mold growth on door frames",
+      "slug": "how-to-prevent-mold-growth-on-door-frames",
+      "problem": "mold growth",
+      "surface": "door frames",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::door frames::mold growth",
+      "title": "How to Fix mold growth on door frames",
+      "slug": "how-to-fix-mold-growth-on-door-frames",
+      "problem": "mold growth",
+      "surface": "door frames",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::door frames::mold growth",
+      "title": "How to Clean mold growth from door frames",
+      "slug": "how-to-clean-mold-growth-from-door-frames",
+      "problem": "mold growth",
+      "surface": "door frames",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::door frames::mold growth",
+      "title": "How to Tell if mold growth on door frames is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-door-frames-is-permanent",
+      "problem": "mold growth",
+      "surface": "door frames",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::door frames::mold growth",
+      "title": "Why mold growth Keeps Coming Back on door frames",
+      "slug": "why-mold-growth-keeps-coming-back-on-door-frames",
+      "problem": "mold growth",
+      "surface": "door frames",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::door frames::mold growth",
+      "title": "How to Maintain door frames and Keep mold growth Under Control",
+      "slug": "how-to-maintain-door-frames-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "door frames",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::door frames::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on door frames",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-door-frames",
+      "problem": "mold growth",
+      "surface": "door frames",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::window tracks::mold growth",
+      "title": "What Causes mold growth on window tracks",
+      "slug": "what-causes-mold-growth-on-window-tracks",
+      "problem": "mold growth",
+      "surface": "window tracks",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::window tracks::mold growth",
+      "title": "How to Remove mold growth from window tracks",
+      "slug": "how-to-remove-mold-growth-from-window-tracks",
+      "problem": "mold growth",
+      "surface": "window tracks",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::window tracks::mold growth",
+      "title": "How to Prevent mold growth on window tracks",
+      "slug": "how-to-prevent-mold-growth-on-window-tracks",
+      "problem": "mold growth",
+      "surface": "window tracks",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::window tracks::mold growth",
+      "title": "How to Fix mold growth on window tracks",
+      "slug": "how-to-fix-mold-growth-on-window-tracks",
+      "problem": "mold growth",
+      "surface": "window tracks",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::window tracks::mold growth",
+      "title": "How to Clean mold growth from window tracks",
+      "slug": "how-to-clean-mold-growth-from-window-tracks",
+      "problem": "mold growth",
+      "surface": "window tracks",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::window tracks::mold growth",
+      "title": "How to Tell if mold growth on window tracks is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-window-tracks-is-permanent",
+      "problem": "mold growth",
+      "surface": "window tracks",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::window tracks::mold growth",
+      "title": "Why mold growth Keeps Coming Back on window tracks",
+      "slug": "why-mold-growth-keeps-coming-back-on-window-tracks",
+      "problem": "mold growth",
+      "surface": "window tracks",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::window tracks::mold growth",
+      "title": "How to Maintain window tracks and Keep mold growth Under Control",
+      "slug": "how-to-maintain-window-tracks-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "window tracks",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::window tracks::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on window tracks",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-window-tracks",
+      "problem": "mold growth",
+      "surface": "window tracks",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::light switches::mold growth",
+      "title": "What Causes mold growth on light switches",
+      "slug": "what-causes-mold-growth-on-light-switches",
+      "problem": "mold growth",
+      "surface": "light switches",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::light switches::mold growth",
+      "title": "How to Remove mold growth from light switches",
+      "slug": "how-to-remove-mold-growth-from-light-switches",
+      "problem": "mold growth",
+      "surface": "light switches",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::light switches::mold growth",
+      "title": "How to Prevent mold growth on light switches",
+      "slug": "how-to-prevent-mold-growth-on-light-switches",
+      "problem": "mold growth",
+      "surface": "light switches",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::light switches::mold growth",
+      "title": "How to Fix mold growth on light switches",
+      "slug": "how-to-fix-mold-growth-on-light-switches",
+      "problem": "mold growth",
+      "surface": "light switches",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::light switches::mold growth",
+      "title": "How to Clean mold growth from light switches",
+      "slug": "how-to-clean-mold-growth-from-light-switches",
+      "problem": "mold growth",
+      "surface": "light switches",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::light switches::mold growth",
+      "title": "How to Tell if mold growth on light switches is Permanent",
+      "slug": "how-to-tell-if-mold-growth-on-light-switches-is-permanent",
+      "problem": "mold growth",
+      "surface": "light switches",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::light switches::mold growth",
+      "title": "Why mold growth Keeps Coming Back on light switches",
+      "slug": "why-mold-growth-keeps-coming-back-on-light-switches",
+      "problem": "mold growth",
+      "surface": "light switches",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::light switches::mold growth",
+      "title": "How to Maintain light switches and Keep mold growth Under Control",
+      "slug": "how-to-maintain-light-switches-and-keep-mold-growth-under-control",
+      "problem": "mold growth",
+      "surface": "light switches",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::light switches::mold growth",
+      "title": "How to Recover After a Cleaning Mistake With mold growth on light switches",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mold-growth-on-light-switches",
+      "problem": "mold growth",
+      "surface": "light switches",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::kitchen cabinets::mildew stains",
+      "title": "What Causes mildew stains on kitchen cabinets",
+      "slug": "what-causes-mildew-stains-on-kitchen-cabinets",
+      "problem": "mildew stains",
+      "surface": "kitchen cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::kitchen cabinets::mildew stains",
+      "title": "How to Remove mildew stains from kitchen cabinets",
+      "slug": "how-to-remove-mildew-stains-from-kitchen-cabinets",
+      "problem": "mildew stains",
+      "surface": "kitchen cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::kitchen cabinets::mildew stains",
+      "title": "How to Prevent mildew stains on kitchen cabinets",
+      "slug": "how-to-prevent-mildew-stains-on-kitchen-cabinets",
+      "problem": "mildew stains",
+      "surface": "kitchen cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::kitchen cabinets::mildew stains",
+      "title": "How to Fix mildew stains on kitchen cabinets",
+      "slug": "how-to-fix-mildew-stains-on-kitchen-cabinets",
+      "problem": "mildew stains",
+      "surface": "kitchen cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::kitchen cabinets::mildew stains",
+      "title": "How to Clean mildew stains from kitchen cabinets",
+      "slug": "how-to-clean-mildew-stains-from-kitchen-cabinets",
+      "problem": "mildew stains",
+      "surface": "kitchen cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::kitchen cabinets::mildew stains",
+      "title": "How to Tell if mildew stains on kitchen cabinets is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-kitchen-cabinets-is-permanent",
+      "problem": "mildew stains",
+      "surface": "kitchen cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::kitchen cabinets::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on kitchen cabinets",
+      "slug": "why-mildew-stains-keeps-coming-back-on-kitchen-cabinets",
+      "problem": "mildew stains",
+      "surface": "kitchen cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::kitchen cabinets::mildew stains",
+      "title": "How to Maintain kitchen cabinets and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-kitchen-cabinets-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "kitchen cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::kitchen cabinets::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on kitchen cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-kitchen-cabinets",
+      "problem": "mildew stains",
+      "surface": "kitchen cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted walls::mildew stains",
+      "title": "What Causes mildew stains on painted walls",
+      "slug": "what-causes-mildew-stains-on-painted-walls",
+      "problem": "mildew stains",
+      "surface": "painted walls",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted walls::mildew stains",
+      "title": "How to Remove mildew stains from painted walls",
+      "slug": "how-to-remove-mildew-stains-from-painted-walls",
+      "problem": "mildew stains",
+      "surface": "painted walls",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted walls::mildew stains",
+      "title": "How to Prevent mildew stains on painted walls",
+      "slug": "how-to-prevent-mildew-stains-on-painted-walls",
+      "problem": "mildew stains",
+      "surface": "painted walls",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted walls::mildew stains",
+      "title": "How to Fix mildew stains on painted walls",
+      "slug": "how-to-fix-mildew-stains-on-painted-walls",
+      "problem": "mildew stains",
+      "surface": "painted walls",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted walls::mildew stains",
+      "title": "How to Clean mildew stains from painted walls",
+      "slug": "how-to-clean-mildew-stains-from-painted-walls",
+      "problem": "mildew stains",
+      "surface": "painted walls",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted walls::mildew stains",
+      "title": "How to Tell if mildew stains on painted walls is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-painted-walls-is-permanent",
+      "problem": "mildew stains",
+      "surface": "painted walls",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted walls::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on painted walls",
+      "slug": "why-mildew-stains-keeps-coming-back-on-painted-walls",
+      "problem": "mildew stains",
+      "surface": "painted walls",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted walls::mildew stains",
+      "title": "How to Maintain painted walls and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-painted-walls-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "painted walls",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted walls::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on painted walls",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-painted-walls",
+      "problem": "mildew stains",
+      "surface": "painted walls",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::mildew stains",
+      "title": "What Causes mildew stains on grout",
+      "slug": "what-causes-mildew-stains-on-grout",
+      "problem": "mildew stains",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::mildew stains",
+      "title": "How to Remove mildew stains from grout",
+      "slug": "how-to-remove-mildew-stains-from-grout",
+      "problem": "mildew stains",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::mildew stains",
+      "title": "How to Prevent mildew stains on grout",
+      "slug": "how-to-prevent-mildew-stains-on-grout",
+      "problem": "mildew stains",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::mildew stains",
+      "title": "How to Fix mildew stains on grout",
+      "slug": "how-to-fix-mildew-stains-on-grout",
+      "problem": "mildew stains",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::mildew stains",
+      "title": "How to Clean mildew stains from grout",
+      "slug": "how-to-clean-mildew-stains-from-grout",
+      "problem": "mildew stains",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::mildew stains",
+      "title": "How to Tell if mildew stains on grout is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-grout-is-permanent",
+      "problem": "mildew stains",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on grout",
+      "slug": "why-mildew-stains-keeps-coming-back-on-grout",
+      "problem": "mildew stains",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::mildew stains",
+      "title": "How to Maintain grout and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-grout-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-grout",
+      "problem": "mildew stains",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted cabinets::mildew stains",
+      "title": "What Causes mildew stains on painted cabinets",
+      "slug": "what-causes-mildew-stains-on-painted-cabinets",
+      "problem": "mildew stains",
+      "surface": "painted cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted cabinets::mildew stains",
+      "title": "How to Remove mildew stains from painted cabinets",
+      "slug": "how-to-remove-mildew-stains-from-painted-cabinets",
+      "problem": "mildew stains",
+      "surface": "painted cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted cabinets::mildew stains",
+      "title": "How to Prevent mildew stains on painted cabinets",
+      "slug": "how-to-prevent-mildew-stains-on-painted-cabinets",
+      "problem": "mildew stains",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted cabinets::mildew stains",
+      "title": "How to Fix mildew stains on painted cabinets",
+      "slug": "how-to-fix-mildew-stains-on-painted-cabinets",
+      "problem": "mildew stains",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted cabinets::mildew stains",
+      "title": "How to Clean mildew stains from painted cabinets",
+      "slug": "how-to-clean-mildew-stains-from-painted-cabinets",
+      "problem": "mildew stains",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted cabinets::mildew stains",
+      "title": "How to Tell if mildew stains on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-painted-cabinets-is-permanent",
+      "problem": "mildew stains",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted cabinets::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on painted cabinets",
+      "slug": "why-mildew-stains-keeps-coming-back-on-painted-cabinets",
+      "problem": "mildew stains",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted cabinets::mildew stains",
+      "title": "How to Maintain painted cabinets and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted cabinets::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-painted-cabinets",
+      "problem": "mildew stains",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::mildew stains",
+      "title": "What Causes mildew stains on shower grout",
+      "slug": "what-causes-mildew-stains-on-shower-grout",
+      "problem": "mildew stains",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::mildew stains",
+      "title": "How to Remove mildew stains from shower grout",
+      "slug": "how-to-remove-mildew-stains-from-shower-grout",
+      "problem": "mildew stains",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::mildew stains",
+      "title": "How to Prevent mildew stains on shower grout",
+      "slug": "how-to-prevent-mildew-stains-on-shower-grout",
+      "problem": "mildew stains",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::mildew stains",
+      "title": "How to Fix mildew stains on shower grout",
+      "slug": "how-to-fix-mildew-stains-on-shower-grout",
+      "problem": "mildew stains",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::mildew stains",
+      "title": "How to Clean mildew stains from shower grout",
+      "slug": "how-to-clean-mildew-stains-from-shower-grout",
+      "problem": "mildew stains",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::mildew stains",
+      "title": "How to Tell if mildew stains on shower grout is Permanent",
+      "slug": "how-to-tell-if-mildew-stains-on-shower-grout-is-permanent",
+      "problem": "mildew stains",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::mildew stains",
+      "title": "Why mildew stains Keeps Coming Back on shower grout",
+      "slug": "why-mildew-stains-keeps-coming-back-on-shower-grout",
+      "problem": "mildew stains",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::mildew stains",
+      "title": "How to Maintain shower grout and Keep mildew stains Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-mildew-stains-under-control",
+      "problem": "mildew stains",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::mildew stains",
+      "title": "How to Recover After a Cleaning Mistake With mildew stains on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mildew-stains-on-shower-grout",
+      "problem": "mildew stains",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

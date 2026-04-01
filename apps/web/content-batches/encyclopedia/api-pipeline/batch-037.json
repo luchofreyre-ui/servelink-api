@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "what-causes::sealed stone::scale deposits",
+      "title": "What Causes scale deposits on sealed stone",
+      "slug": "what-causes-scale-deposits-on-sealed-stone",
+      "problem": "scale deposits",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::scale deposits",
+      "title": "How to Remove scale deposits from sealed stone",
+      "slug": "how-to-remove-scale-deposits-from-sealed-stone",
+      "problem": "scale deposits",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::scale deposits",
+      "title": "How to Prevent scale deposits on sealed stone",
+      "slug": "how-to-prevent-scale-deposits-on-sealed-stone",
+      "problem": "scale deposits",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::scale deposits",
+      "title": "How to Fix scale deposits on sealed stone",
+      "slug": "how-to-fix-scale-deposits-on-sealed-stone",
+      "problem": "scale deposits",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::scale deposits",
+      "title": "How to Clean scale deposits from sealed stone",
+      "slug": "how-to-clean-scale-deposits-from-sealed-stone",
+      "problem": "scale deposits",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::scale deposits",
+      "title": "How to Tell if scale deposits on sealed stone is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-sealed-stone-is-permanent",
+      "problem": "scale deposits",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on sealed stone",
+      "slug": "why-scale-deposits-keeps-coming-back-on-sealed-stone",
+      "problem": "scale deposits",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::scale deposits",
+      "title": "How to Maintain sealed stone and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-sealed-stone",
+      "problem": "scale deposits",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::scale deposits",
+      "title": "What Causes scale deposits on shower grout",
+      "slug": "what-causes-scale-deposits-on-shower-grout",
+      "problem": "scale deposits",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::scale deposits",
+      "title": "How to Remove scale deposits from shower grout",
+      "slug": "how-to-remove-scale-deposits-from-shower-grout",
+      "problem": "scale deposits",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::scale deposits",
+      "title": "How to Prevent scale deposits on shower grout",
+      "slug": "how-to-prevent-scale-deposits-on-shower-grout",
+      "problem": "scale deposits",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::scale deposits",
+      "title": "How to Fix scale deposits on shower grout",
+      "slug": "how-to-fix-scale-deposits-on-shower-grout",
+      "problem": "scale deposits",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::scale deposits",
+      "title": "How to Clean scale deposits from shower grout",
+      "slug": "how-to-clean-scale-deposits-from-shower-grout",
+      "problem": "scale deposits",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::scale deposits",
+      "title": "How to Tell if scale deposits on shower grout is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-shower-grout-is-permanent",
+      "problem": "scale deposits",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on shower grout",
+      "slug": "why-scale-deposits-keeps-coming-back-on-shower-grout",
+      "problem": "scale deposits",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::scale deposits",
+      "title": "How to Maintain shower grout and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-shower-grout",
+      "problem": "scale deposits",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::scale deposits",
+      "title": "What Causes scale deposits on tile grout",
+      "slug": "what-causes-scale-deposits-on-tile-grout",
+      "problem": "scale deposits",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::scale deposits",
+      "title": "How to Remove scale deposits from tile grout",
+      "slug": "how-to-remove-scale-deposits-from-tile-grout",
+      "problem": "scale deposits",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::scale deposits",
+      "title": "How to Prevent scale deposits on tile grout",
+      "slug": "how-to-prevent-scale-deposits-on-tile-grout",
+      "problem": "scale deposits",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::scale deposits",
+      "title": "How to Fix scale deposits on tile grout",
+      "slug": "how-to-fix-scale-deposits-on-tile-grout",
+      "problem": "scale deposits",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::scale deposits",
+      "title": "How to Clean scale deposits from tile grout",
+      "slug": "how-to-clean-scale-deposits-from-tile-grout",
+      "problem": "scale deposits",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::scale deposits",
+      "title": "How to Tell if scale deposits on tile grout is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-tile-grout-is-permanent",
+      "problem": "scale deposits",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on tile grout",
+      "slug": "why-scale-deposits-keeps-coming-back-on-tile-grout",
+      "problem": "scale deposits",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::scale deposits",
+      "title": "How to Maintain tile grout and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-tile-grout",
+      "problem": "scale deposits",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::scale deposits",
+      "title": "What Causes scale deposits on caulking",
+      "slug": "what-causes-scale-deposits-on-caulking",
+      "problem": "scale deposits",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::scale deposits",
+      "title": "How to Remove scale deposits from caulking",
+      "slug": "how-to-remove-scale-deposits-from-caulking",
+      "problem": "scale deposits",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::scale deposits",
+      "title": "How to Prevent scale deposits on caulking",
+      "slug": "how-to-prevent-scale-deposits-on-caulking",
+      "problem": "scale deposits",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::scale deposits",
+      "title": "How to Fix scale deposits on caulking",
+      "slug": "how-to-fix-scale-deposits-on-caulking",
+      "problem": "scale deposits",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::scale deposits",
+      "title": "How to Clean scale deposits from caulking",
+      "slug": "how-to-clean-scale-deposits-from-caulking",
+      "problem": "scale deposits",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::scale deposits",
+      "title": "How to Tell if scale deposits on caulking is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-caulking-is-permanent",
+      "problem": "scale deposits",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on caulking",
+      "slug": "why-scale-deposits-keeps-coming-back-on-caulking",
+      "problem": "scale deposits",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::scale deposits",
+      "title": "How to Maintain caulking and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-caulking",
+      "problem": "scale deposits",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::scale deposits",
+      "title": "What Causes scale deposits on sealed granite",
+      "slug": "what-causes-scale-deposits-on-sealed-granite",
+      "problem": "scale deposits",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::scale deposits",
+      "title": "How to Remove scale deposits from sealed granite",
+      "slug": "how-to-remove-scale-deposits-from-sealed-granite",
+      "problem": "scale deposits",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::scale deposits",
+      "title": "How to Prevent scale deposits on sealed granite",
+      "slug": "how-to-prevent-scale-deposits-on-sealed-granite",
+      "problem": "scale deposits",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::scale deposits",
+      "title": "How to Fix scale deposits on sealed granite",
+      "slug": "how-to-fix-scale-deposits-on-sealed-granite",
+      "problem": "scale deposits",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::scale deposits",
+      "title": "How to Clean scale deposits from sealed granite",
+      "slug": "how-to-clean-scale-deposits-from-sealed-granite",
+      "problem": "scale deposits",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::scale deposits",
+      "title": "How to Tell if scale deposits on sealed granite is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-sealed-granite-is-permanent",
+      "problem": "scale deposits",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on sealed granite",
+      "slug": "why-scale-deposits-keeps-coming-back-on-sealed-granite",
+      "problem": "scale deposits",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::scale deposits",
+      "title": "How to Maintain sealed granite and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-sealed-granite",
+      "problem": "scale deposits",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::scale deposits",
+      "title": "What Causes scale deposits on sealed marble",
+      "slug": "what-causes-scale-deposits-on-sealed-marble",
+      "problem": "scale deposits",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::scale deposits",
+      "title": "How to Remove scale deposits from sealed marble",
+      "slug": "how-to-remove-scale-deposits-from-sealed-marble",
+      "problem": "scale deposits",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::scale deposits",
+      "title": "How to Prevent scale deposits on sealed marble",
+      "slug": "how-to-prevent-scale-deposits-on-sealed-marble",
+      "problem": "scale deposits",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::scale deposits",
+      "title": "How to Fix scale deposits on sealed marble",
+      "slug": "how-to-fix-scale-deposits-on-sealed-marble",
+      "problem": "scale deposits",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::scale deposits",
+      "title": "How to Clean scale deposits from sealed marble",
+      "slug": "how-to-clean-scale-deposits-from-sealed-marble",
+      "problem": "scale deposits",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::scale deposits",
+      "title": "How to Tell if scale deposits on sealed marble is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-sealed-marble-is-permanent",
+      "problem": "scale deposits",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on sealed marble",
+      "slug": "why-scale-deposits-keeps-coming-back-on-sealed-marble",
+      "problem": "scale deposits",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::scale deposits",
+      "title": "How to Maintain sealed marble and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-sealed-marble",
+      "problem": "scale deposits",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::scale deposits",
+      "title": "What Causes scale deposits on quartz countertops",
+      "slug": "what-causes-scale-deposits-on-quartz-countertops",
+      "problem": "scale deposits",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::scale deposits",
+      "title": "How to Remove scale deposits from quartz countertops",
+      "slug": "how-to-remove-scale-deposits-from-quartz-countertops",
+      "problem": "scale deposits",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::scale deposits",
+      "title": "How to Prevent scale deposits on quartz countertops",
+      "slug": "how-to-prevent-scale-deposits-on-quartz-countertops",
+      "problem": "scale deposits",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::scale deposits",
+      "title": "How to Fix scale deposits on quartz countertops",
+      "slug": "how-to-fix-scale-deposits-on-quartz-countertops",
+      "problem": "scale deposits",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::scale deposits",
+      "title": "How to Clean scale deposits from quartz countertops",
+      "slug": "how-to-clean-scale-deposits-from-quartz-countertops",
+      "problem": "scale deposits",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::scale deposits",
+      "title": "How to Tell if scale deposits on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-quartz-countertops-is-permanent",
+      "problem": "scale deposits",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on quartz countertops",
+      "slug": "why-scale-deposits-keeps-coming-back-on-quartz-countertops",
+      "problem": "scale deposits",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::scale deposits",
+      "title": "How to Maintain quartz countertops and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-quartz-countertops",
+      "problem": "scale deposits",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::scale deposits",
+      "title": "What Causes scale deposits on butcher block",
+      "slug": "what-causes-scale-deposits-on-butcher-block",
+      "problem": "scale deposits",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::scale deposits",
+      "title": "How to Remove scale deposits from butcher block",
+      "slug": "how-to-remove-scale-deposits-from-butcher-block",
+      "problem": "scale deposits",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::scale deposits",
+      "title": "How to Prevent scale deposits on butcher block",
+      "slug": "how-to-prevent-scale-deposits-on-butcher-block",
+      "problem": "scale deposits",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::scale deposits",
+      "title": "How to Fix scale deposits on butcher block",
+      "slug": "how-to-fix-scale-deposits-on-butcher-block",
+      "problem": "scale deposits",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::scale deposits",
+      "title": "How to Clean scale deposits from butcher block",
+      "slug": "how-to-clean-scale-deposits-from-butcher-block",
+      "problem": "scale deposits",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::scale deposits",
+      "title": "How to Tell if scale deposits on butcher block is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-butcher-block-is-permanent",
+      "problem": "scale deposits",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on butcher block",
+      "slug": "why-scale-deposits-keeps-coming-back-on-butcher-block",
+      "problem": "scale deposits",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::scale deposits",
+      "title": "How to Maintain butcher block and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-butcher-block",
+      "problem": "scale deposits",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::scale deposits",
+      "title": "What Causes scale deposits on unfinished wood",
+      "slug": "what-causes-scale-deposits-on-unfinished-wood",
+      "problem": "scale deposits",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::scale deposits",
+      "title": "How to Remove scale deposits from unfinished wood",
+      "slug": "how-to-remove-scale-deposits-from-unfinished-wood",
+      "problem": "scale deposits",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::scale deposits",
+      "title": "How to Prevent scale deposits on unfinished wood",
+      "slug": "how-to-prevent-scale-deposits-on-unfinished-wood",
+      "problem": "scale deposits",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::scale deposits",
+      "title": "How to Fix scale deposits on unfinished wood",
+      "slug": "how-to-fix-scale-deposits-on-unfinished-wood",
+      "problem": "scale deposits",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::scale deposits",
+      "title": "How to Clean scale deposits from unfinished wood",
+      "slug": "how-to-clean-scale-deposits-from-unfinished-wood",
+      "problem": "scale deposits",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::scale deposits",
+      "title": "How to Tell if scale deposits on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-unfinished-wood-is-permanent",
+      "problem": "scale deposits",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on unfinished wood",
+      "slug": "why-scale-deposits-keeps-coming-back-on-unfinished-wood",
+      "problem": "scale deposits",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::scale deposits",
+      "title": "How to Maintain unfinished wood and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-unfinished-wood",
+      "problem": "scale deposits",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::scale deposits",
+      "title": "What Causes scale deposits on sealed wood",
+      "slug": "what-causes-scale-deposits-on-sealed-wood",
+      "problem": "scale deposits",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::scale deposits",
+      "title": "How to Remove scale deposits from sealed wood",
+      "slug": "how-to-remove-scale-deposits-from-sealed-wood",
+      "problem": "scale deposits",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::scale deposits",
+      "title": "How to Prevent scale deposits on sealed wood",
+      "slug": "how-to-prevent-scale-deposits-on-sealed-wood",
+      "problem": "scale deposits",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::scale deposits",
+      "title": "How to Fix scale deposits on sealed wood",
+      "slug": "how-to-fix-scale-deposits-on-sealed-wood",
+      "problem": "scale deposits",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::scale deposits",
+      "title": "How to Clean scale deposits from sealed wood",
+      "slug": "how-to-clean-scale-deposits-from-sealed-wood",
+      "problem": "scale deposits",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::scale deposits",
+      "title": "How to Tell if scale deposits on sealed wood is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-sealed-wood-is-permanent",
+      "problem": "scale deposits",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on sealed wood",
+      "slug": "why-scale-deposits-keeps-coming-back-on-sealed-wood",
+      "problem": "scale deposits",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::scale deposits",
+      "title": "How to Maintain sealed wood and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-sealed-wood",
+      "problem": "scale deposits",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::white film",
+      "title": "What Causes white film on shower glass",
+      "slug": "what-causes-white-film-on-shower-glass",
+      "problem": "white film",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::white film",
+      "title": "How to Remove white film from shower glass",
+      "slug": "how-to-remove-white-film-from-shower-glass",
+      "problem": "white film",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::white film",
+      "title": "How to Prevent white film on shower glass",
+      "slug": "how-to-prevent-white-film-on-shower-glass",
+      "problem": "white film",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::white film",
+      "title": "How to Fix white film on shower glass",
+      "slug": "how-to-fix-white-film-on-shower-glass",
+      "problem": "white film",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::white film",
+      "title": "How to Clean white film from shower glass",
+      "slug": "how-to-clean-white-film-from-shower-glass",
+      "problem": "white film",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::white film",
+      "title": "How to Tell if white film on shower glass is Permanent",
+      "slug": "how-to-tell-if-white-film-on-shower-glass-is-permanent",
+      "problem": "white film",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::white film",
+      "title": "Why white film Keeps Coming Back on shower glass",
+      "slug": "why-white-film-keeps-coming-back-on-shower-glass",
+      "problem": "white film",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::white film",
+      "title": "How to Maintain shower glass and Keep white film Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-white-film-under-control",
+      "problem": "white film",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::white film",
+      "title": "How to Recover After a Cleaning Mistake With white film on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-white-film-on-shower-glass",
+      "problem": "white film",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::white film",
+      "title": "What Causes white film on granite",
+      "slug": "what-causes-white-film-on-granite",
+      "problem": "white film",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

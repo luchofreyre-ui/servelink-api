@@ -35,6 +35,13 @@ import { AuthorityHero } from "./AuthorityHero";
 import { AuthorityJsonLd } from "./AuthorityJsonLd";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
+import RecommendedProductsForTopic from "@/components/products/RecommendedProductsForTopic";
+import { COMMON_CLEANING_MISUSE_BULLETS } from "@/lib/products/commonCleaningMisuse";
+import {
+  productProblemStringForAuthorityProblemSlug,
+  productSurfaceStringForAuthoritySurfaceSlug,
+} from "@/lib/authority/authorityProductTaxonomyBridge";
+import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 
 function cap<T>(items: T[], max = 6): T[] {
   return items.slice(0, max);
@@ -131,12 +138,21 @@ function comboFaqBlock(data: AuthorityCombinationPageData) {
   return null;
 }
 
+function surfaceProblemProductTopic(data: AuthorityCombinationPageData): { problem: string; surface: string } | null {
+  if (data.type !== "surface_problem" || !data.surfaceSlug || !data.problemSlug) return null;
+  const problem = productProblemStringForAuthorityProblemSlug(data.problemSlug);
+  const surface = productSurfaceStringForAuthoritySurfaceSlug(data.surfaceSlug);
+  if (!problem || !surface) return null;
+  return { problem, surface };
+}
+
 export function AuthorityCombinationPage(props: { data: AuthorityCombinationPageData }) {
   const { data } = props;
   const crumbs = comboBreadcrumbs(data);
   const seeAlso = buildComboSeeAlso(data);
   const path = resolveCanonicalMetadataHref(comboCanonicalPath(data));
   const faqBlock = comboFaqBlock(data);
+  const productTopic = surfaceProblemProductTopic(data);
   const jsonLd: Record<string, unknown>[] = [
     buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(crumbs)),
     buildArticleSchema({ title: data.title, description: data.description, path }),
@@ -150,6 +166,7 @@ export function AuthorityCombinationPage(props: { data: AuthorityCombinationPage
       <main className="mx-auto max-w-3xl px-6 py-16 md:px-8">
         <AuthorityBreadcrumbs items={crumbs} />
         <AuthorityHero eyebrow={comboEyebrow(data)} title={data.title} description={data.description} />
+        <AuthorityTopicalCrossLinks pageKey={`combo-${data.slug}`} problemSlug={data.problemSlug} />
         <AuthoritySection title="Overview">
           <p>{data.overview}</p>
         </AuthoritySection>
@@ -166,6 +183,38 @@ export function AuthorityCombinationPage(props: { data: AuthorityCombinationPage
             ))}
           </ol>
         </AuthoritySection>
+
+        <div className="mt-8 rounded-lg border border-neutral-200 bg-gray-50 p-4">
+          <h3 className="mb-3 font-semibold text-[#0F172A]">Best approach by severity</h3>
+          <ul className="space-y-2 text-sm text-gray-700">
+            <li>
+              <strong>Light:</strong> Use a mild cleaner and wipe method
+            </li>
+            <li>
+              <strong>Moderate:</strong> Use targeted chemistry with dwell time
+            </li>
+            <li>
+              <strong>Heavy:</strong> Use restoration-level cleaning and repeat cycles
+            </li>
+          </ul>
+        </div>
+
+        {productTopic ? (
+          <div className="mt-10">
+            <RecommendedProductsForTopic problem={productTopic.problem} surface={productTopic.surface} />
+          </div>
+        ) : null}
+
+        <AuthoritySection title="Common mistakes">
+          <div className="space-y-2">
+            {COMMON_CLEANING_MISUSE_BULLETS.slice(0, 3).map((m) => (
+              <AuthorityCallout key={m} variant="mistake">
+                {m}
+              </AuthorityCallout>
+            ))}
+          </div>
+        </AuthoritySection>
+
         <AuthorityFaq block={faqBlock} />
         <AuthoritySeeAlso groups={seeAlso} />
         <div className="mt-14 flex flex-wrap gap-4 border-t border-[#C9B27C]/20 pt-10">

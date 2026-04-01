@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "mistake-recovery::unfinished wood::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-unfinished-wood",
+      "problem": "smearing",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::smearing",
+      "title": "What Causes smearing on sealed wood",
+      "slug": "what-causes-smearing-on-sealed-wood",
+      "problem": "smearing",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::smearing",
+      "title": "How to Remove smearing from sealed wood",
+      "slug": "how-to-remove-smearing-from-sealed-wood",
+      "problem": "smearing",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::smearing",
+      "title": "How to Prevent smearing on sealed wood",
+      "slug": "how-to-prevent-smearing-on-sealed-wood",
+      "problem": "smearing",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::smearing",
+      "title": "How to Fix smearing on sealed wood",
+      "slug": "how-to-fix-smearing-on-sealed-wood",
+      "problem": "smearing",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::smearing",
+      "title": "How to Clean smearing from sealed wood",
+      "slug": "how-to-clean-smearing-from-sealed-wood",
+      "problem": "smearing",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::smearing",
+      "title": "How to Tell if smearing on sealed wood is Permanent",
+      "slug": "how-to-tell-if-smearing-on-sealed-wood-is-permanent",
+      "problem": "smearing",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::smearing",
+      "title": "Why smearing Keeps Coming Back on sealed wood",
+      "slug": "why-smearing-keeps-coming-back-on-sealed-wood",
+      "problem": "smearing",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::smearing",
+      "title": "How to Maintain sealed wood and Keep smearing Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-sealed-wood",
+      "problem": "smearing",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::baseboards::smearing",
+      "title": "What Causes smearing on baseboards",
+      "slug": "what-causes-smearing-on-baseboards",
+      "problem": "smearing",
+      "surface": "baseboards",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::baseboards::smearing",
+      "title": "How to Remove smearing from baseboards",
+      "slug": "how-to-remove-smearing-from-baseboards",
+      "problem": "smearing",
+      "surface": "baseboards",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::baseboards::smearing",
+      "title": "How to Prevent smearing on baseboards",
+      "slug": "how-to-prevent-smearing-on-baseboards",
+      "problem": "smearing",
+      "surface": "baseboards",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::baseboards::smearing",
+      "title": "How to Fix smearing on baseboards",
+      "slug": "how-to-fix-smearing-on-baseboards",
+      "problem": "smearing",
+      "surface": "baseboards",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::baseboards::smearing",
+      "title": "How to Clean smearing from baseboards",
+      "slug": "how-to-clean-smearing-from-baseboards",
+      "problem": "smearing",
+      "surface": "baseboards",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::baseboards::smearing",
+      "title": "How to Tell if smearing on baseboards is Permanent",
+      "slug": "how-to-tell-if-smearing-on-baseboards-is-permanent",
+      "problem": "smearing",
+      "surface": "baseboards",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::baseboards::smearing",
+      "title": "Why smearing Keeps Coming Back on baseboards",
+      "slug": "why-smearing-keeps-coming-back-on-baseboards",
+      "problem": "smearing",
+      "surface": "baseboards",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::baseboards::smearing",
+      "title": "How to Maintain baseboards and Keep smearing Under Control",
+      "slug": "how-to-maintain-baseboards-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "baseboards",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::baseboards::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on baseboards",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-baseboards",
+      "problem": "smearing",
+      "surface": "baseboards",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::door frames::smearing",
+      "title": "What Causes smearing on door frames",
+      "slug": "what-causes-smearing-on-door-frames",
+      "problem": "smearing",
+      "surface": "door frames",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::door frames::smearing",
+      "title": "How to Remove smearing from door frames",
+      "slug": "how-to-remove-smearing-from-door-frames",
+      "problem": "smearing",
+      "surface": "door frames",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::door frames::smearing",
+      "title": "How to Prevent smearing on door frames",
+      "slug": "how-to-prevent-smearing-on-door-frames",
+      "problem": "smearing",
+      "surface": "door frames",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::door frames::smearing",
+      "title": "How to Fix smearing on door frames",
+      "slug": "how-to-fix-smearing-on-door-frames",
+      "problem": "smearing",
+      "surface": "door frames",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::door frames::smearing",
+      "title": "How to Clean smearing from door frames",
+      "slug": "how-to-clean-smearing-from-door-frames",
+      "problem": "smearing",
+      "surface": "door frames",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::door frames::smearing",
+      "title": "How to Tell if smearing on door frames is Permanent",
+      "slug": "how-to-tell-if-smearing-on-door-frames-is-permanent",
+      "problem": "smearing",
+      "surface": "door frames",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::door frames::smearing",
+      "title": "Why smearing Keeps Coming Back on door frames",
+      "slug": "why-smearing-keeps-coming-back-on-door-frames",
+      "problem": "smearing",
+      "surface": "door frames",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::door frames::smearing",
+      "title": "How to Maintain door frames and Keep smearing Under Control",
+      "slug": "how-to-maintain-door-frames-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "door frames",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::door frames::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on door frames",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-door-frames",
+      "problem": "smearing",
+      "surface": "door frames",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::window tracks::smearing",
+      "title": "What Causes smearing on window tracks",
+      "slug": "what-causes-smearing-on-window-tracks",
+      "problem": "smearing",
+      "surface": "window tracks",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::window tracks::smearing",
+      "title": "How to Remove smearing from window tracks",
+      "slug": "how-to-remove-smearing-from-window-tracks",
+      "problem": "smearing",
+      "surface": "window tracks",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::window tracks::smearing",
+      "title": "How to Prevent smearing on window tracks",
+      "slug": "how-to-prevent-smearing-on-window-tracks",
+      "problem": "smearing",
+      "surface": "window tracks",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::window tracks::smearing",
+      "title": "How to Fix smearing on window tracks",
+      "slug": "how-to-fix-smearing-on-window-tracks",
+      "problem": "smearing",
+      "surface": "window tracks",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::window tracks::smearing",
+      "title": "How to Clean smearing from window tracks",
+      "slug": "how-to-clean-smearing-from-window-tracks",
+      "problem": "smearing",
+      "surface": "window tracks",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::window tracks::smearing",
+      "title": "How to Tell if smearing on window tracks is Permanent",
+      "slug": "how-to-tell-if-smearing-on-window-tracks-is-permanent",
+      "problem": "smearing",
+      "surface": "window tracks",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::window tracks::smearing",
+      "title": "Why smearing Keeps Coming Back on window tracks",
+      "slug": "why-smearing-keeps-coming-back-on-window-tracks",
+      "problem": "smearing",
+      "surface": "window tracks",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::window tracks::smearing",
+      "title": "How to Maintain window tracks and Keep smearing Under Control",
+      "slug": "how-to-maintain-window-tracks-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "window tracks",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::window tracks::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on window tracks",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-window-tracks",
+      "problem": "smearing",
+      "surface": "window tracks",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::light switches::smearing",
+      "title": "What Causes smearing on light switches",
+      "slug": "what-causes-smearing-on-light-switches",
+      "problem": "smearing",
+      "surface": "light switches",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::light switches::smearing",
+      "title": "How to Remove smearing from light switches",
+      "slug": "how-to-remove-smearing-from-light-switches",
+      "problem": "smearing",
+      "surface": "light switches",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::light switches::smearing",
+      "title": "How to Prevent smearing on light switches",
+      "slug": "how-to-prevent-smearing-on-light-switches",
+      "problem": "smearing",
+      "surface": "light switches",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::light switches::smearing",
+      "title": "How to Fix smearing on light switches",
+      "slug": "how-to-fix-smearing-on-light-switches",
+      "problem": "smearing",
+      "surface": "light switches",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::light switches::smearing",
+      "title": "How to Clean smearing from light switches",
+      "slug": "how-to-clean-smearing-from-light-switches",
+      "problem": "smearing",
+      "surface": "light switches",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::light switches::smearing",
+      "title": "How to Tell if smearing on light switches is Permanent",
+      "slug": "how-to-tell-if-smearing-on-light-switches-is-permanent",
+      "problem": "smearing",
+      "surface": "light switches",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::light switches::smearing",
+      "title": "Why smearing Keeps Coming Back on light switches",
+      "slug": "why-smearing-keeps-coming-back-on-light-switches",
+      "problem": "smearing",
+      "surface": "light switches",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::light switches::smearing",
+      "title": "How to Maintain light switches and Keep smearing Under Control",
+      "slug": "how-to-maintain-light-switches-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "light switches",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::light switches::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on light switches",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-light-switches",
+      "problem": "smearing",
+      "surface": "light switches",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::haze",
+      "title": "What Causes haze on backsplashes",
+      "slug": "what-causes-haze-on-backsplashes",
+      "problem": "haze",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::haze",
+      "title": "How to Remove haze from backsplashes",
+      "slug": "how-to-remove-haze-from-backsplashes",
+      "problem": "haze",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::haze",
+      "title": "How to Prevent haze on backsplashes",
+      "slug": "how-to-prevent-haze-on-backsplashes",
+      "problem": "haze",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::haze",
+      "title": "How to Fix haze on backsplashes",
+      "slug": "how-to-fix-haze-on-backsplashes",
+      "problem": "haze",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::haze",
+      "title": "How to Clean haze from backsplashes",
+      "slug": "how-to-clean-haze-from-backsplashes",
+      "problem": "haze",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::haze",
+      "title": "How to Tell if haze on backsplashes is Permanent",
+      "slug": "how-to-tell-if-haze-on-backsplashes-is-permanent",
+      "problem": "haze",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::haze",
+      "title": "Why haze Keeps Coming Back on backsplashes",
+      "slug": "why-haze-keeps-coming-back-on-backsplashes",
+      "problem": "haze",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::haze",
+      "title": "How to Maintain backsplashes and Keep haze Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-backsplashes",
+      "problem": "haze",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::kitchen cabinets::haze",
+      "title": "What Causes haze on kitchen cabinets",
+      "slug": "what-causes-haze-on-kitchen-cabinets",
+      "problem": "haze",
+      "surface": "kitchen cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::kitchen cabinets::haze",
+      "title": "How to Remove haze from kitchen cabinets",
+      "slug": "how-to-remove-haze-from-kitchen-cabinets",
+      "problem": "haze",
+      "surface": "kitchen cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::kitchen cabinets::haze",
+      "title": "How to Prevent haze on kitchen cabinets",
+      "slug": "how-to-prevent-haze-on-kitchen-cabinets",
+      "problem": "haze",
+      "surface": "kitchen cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::kitchen cabinets::haze",
+      "title": "How to Fix haze on kitchen cabinets",
+      "slug": "how-to-fix-haze-on-kitchen-cabinets",
+      "problem": "haze",
+      "surface": "kitchen cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::kitchen cabinets::haze",
+      "title": "How to Clean haze from kitchen cabinets",
+      "slug": "how-to-clean-haze-from-kitchen-cabinets",
+      "problem": "haze",
+      "surface": "kitchen cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::kitchen cabinets::haze",
+      "title": "How to Tell if haze on kitchen cabinets is Permanent",
+      "slug": "how-to-tell-if-haze-on-kitchen-cabinets-is-permanent",
+      "problem": "haze",
+      "surface": "kitchen cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::kitchen cabinets::haze",
+      "title": "Why haze Keeps Coming Back on kitchen cabinets",
+      "slug": "why-haze-keeps-coming-back-on-kitchen-cabinets",
+      "problem": "haze",
+      "surface": "kitchen cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::kitchen cabinets::haze",
+      "title": "How to Maintain kitchen cabinets and Keep haze Under Control",
+      "slug": "how-to-maintain-kitchen-cabinets-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "kitchen cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::kitchen cabinets::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on kitchen cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-kitchen-cabinets",
+      "problem": "haze",
+      "surface": "kitchen cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::haze",
+      "title": "What Causes haze on tile floors",
+      "slug": "what-causes-haze-on-tile-floors",
+      "problem": "haze",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::haze",
+      "title": "How to Remove haze from tile floors",
+      "slug": "how-to-remove-haze-from-tile-floors",
+      "problem": "haze",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::haze",
+      "title": "How to Prevent haze on tile floors",
+      "slug": "how-to-prevent-haze-on-tile-floors",
+      "problem": "haze",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::haze",
+      "title": "How to Fix haze on tile floors",
+      "slug": "how-to-fix-haze-on-tile-floors",
+      "problem": "haze",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::haze",
+      "title": "How to Clean haze from tile floors",
+      "slug": "how-to-clean-haze-from-tile-floors",
+      "problem": "haze",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::haze",
+      "title": "How to Tell if haze on tile floors is Permanent",
+      "slug": "how-to-tell-if-haze-on-tile-floors-is-permanent",
+      "problem": "haze",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::haze",
+      "title": "Why haze Keeps Coming Back on tile floors",
+      "slug": "why-haze-keeps-coming-back-on-tile-floors",
+      "problem": "haze",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::haze",
+      "title": "How to Maintain tile floors and Keep haze Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-tile-floors",
+      "problem": "haze",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::haze",
+      "title": "What Causes haze on shower glass",
+      "slug": "what-causes-haze-on-shower-glass",
+      "problem": "haze",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::haze",
+      "title": "How to Remove haze from shower glass",
+      "slug": "how-to-remove-haze-from-shower-glass",
+      "problem": "haze",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::haze",
+      "title": "How to Prevent haze on shower glass",
+      "slug": "how-to-prevent-haze-on-shower-glass",
+      "problem": "haze",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::haze",
+      "title": "How to Fix haze on shower glass",
+      "slug": "how-to-fix-haze-on-shower-glass",
+      "problem": "haze",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::haze",
+      "title": "How to Clean haze from shower glass",
+      "slug": "how-to-clean-haze-from-shower-glass",
+      "problem": "haze",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::haze",
+      "title": "How to Tell if haze on shower glass is Permanent",
+      "slug": "how-to-tell-if-haze-on-shower-glass-is-permanent",
+      "problem": "haze",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::haze",
+      "title": "Why haze Keeps Coming Back on shower glass",
+      "slug": "why-haze-keeps-coming-back-on-shower-glass",
+      "problem": "haze",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::haze",
+      "title": "How to Maintain shower glass and Keep haze Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-shower-glass",
+      "problem": "haze",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtubs::haze",
+      "title": "What Causes haze on bathtubs",
+      "slug": "what-causes-haze-on-bathtubs",
+      "problem": "haze",
+      "surface": "bathtubs",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtubs::haze",
+      "title": "How to Remove haze from bathtubs",
+      "slug": "how-to-remove-haze-from-bathtubs",
+      "problem": "haze",
+      "surface": "bathtubs",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtubs::haze",
+      "title": "How to Prevent haze on bathtubs",
+      "slug": "how-to-prevent-haze-on-bathtubs",
+      "problem": "haze",
+      "surface": "bathtubs",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtubs::haze",
+      "title": "How to Fix haze on bathtubs",
+      "slug": "how-to-fix-haze-on-bathtubs",
+      "problem": "haze",
+      "surface": "bathtubs",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtubs::haze",
+      "title": "How to Clean haze from bathtubs",
+      "slug": "how-to-clean-haze-from-bathtubs",
+      "problem": "haze",
+      "surface": "bathtubs",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtubs::haze",
+      "title": "How to Tell if haze on bathtubs is Permanent",
+      "slug": "how-to-tell-if-haze-on-bathtubs-is-permanent",
+      "problem": "haze",
+      "surface": "bathtubs",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtubs::haze",
+      "title": "Why haze Keeps Coming Back on bathtubs",
+      "slug": "why-haze-keeps-coming-back-on-bathtubs",
+      "problem": "haze",
+      "surface": "bathtubs",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtubs::haze",
+      "title": "How to Maintain bathtubs and Keep haze Under Control",
+      "slug": "how-to-maintain-bathtubs-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "bathtubs",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtubs::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on bathtubs",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-bathtubs",
+      "problem": "haze",
+      "surface": "bathtubs",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::haze",
+      "title": "What Causes haze on granite",
+      "slug": "what-causes-haze-on-granite",
+      "problem": "haze",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::haze",
+      "title": "How to Remove haze from granite",
+      "slug": "how-to-remove-haze-from-granite",
+      "problem": "haze",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::haze",
+      "title": "How to Prevent haze on granite",
+      "slug": "how-to-prevent-haze-on-granite",
+      "problem": "haze",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::haze",
+      "title": "How to Fix haze on granite",
+      "slug": "how-to-fix-haze-on-granite",
+      "problem": "haze",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::haze",
+      "title": "How to Clean haze from granite",
+      "slug": "how-to-clean-haze-from-granite",
+      "problem": "haze",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::haze",
+      "title": "How to Tell if haze on granite is Permanent",
+      "slug": "how-to-tell-if-haze-on-granite-is-permanent",
+      "problem": "haze",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::haze",
+      "title": "Why haze Keeps Coming Back on granite",
+      "slug": "why-haze-keeps-coming-back-on-granite",
+      "problem": "haze",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::haze",
+      "title": "How to Maintain granite and Keep haze Under Control",
+      "slug": "how-to-maintain-granite-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-granite",
+      "problem": "haze",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "diagnosis::sealed wood::dye transfer",
+      "title": "How to Tell if dye transfer on sealed wood is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-sealed-wood-is-permanent",
+      "problem": "dye transfer",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on sealed wood",
+      "slug": "why-dye-transfer-keeps-coming-back-on-sealed-wood",
+      "problem": "dye transfer",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::dye transfer",
+      "title": "How to Maintain sealed wood and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-sealed-wood",
+      "problem": "dye transfer",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::biofilm",
+      "title": "What Causes biofilm on backsplashes",
+      "slug": "what-causes-biofilm-on-backsplashes",
+      "problem": "biofilm",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::biofilm",
+      "title": "How to Remove biofilm from backsplashes",
+      "slug": "how-to-remove-biofilm-from-backsplashes",
+      "problem": "biofilm",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::biofilm",
+      "title": "How to Prevent biofilm on backsplashes",
+      "slug": "how-to-prevent-biofilm-on-backsplashes",
+      "problem": "biofilm",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::biofilm",
+      "title": "How to Fix biofilm on backsplashes",
+      "slug": "how-to-fix-biofilm-on-backsplashes",
+      "problem": "biofilm",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::biofilm",
+      "title": "How to Clean biofilm from backsplashes",
+      "slug": "how-to-clean-biofilm-from-backsplashes",
+      "problem": "biofilm",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::biofilm",
+      "title": "How to Tell if biofilm on backsplashes is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-backsplashes-is-permanent",
+      "problem": "biofilm",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::biofilm",
+      "title": "Why biofilm Keeps Coming Back on backsplashes",
+      "slug": "why-biofilm-keeps-coming-back-on-backsplashes",
+      "problem": "biofilm",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::biofilm",
+      "title": "How to Maintain backsplashes and Keep biofilm Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-backsplashes",
+      "problem": "biofilm",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::biofilm",
+      "title": "What Causes biofilm on tile floors",
+      "slug": "what-causes-biofilm-on-tile-floors",
+      "problem": "biofilm",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::biofilm",
+      "title": "How to Remove biofilm from tile floors",
+      "slug": "how-to-remove-biofilm-from-tile-floors",
+      "problem": "biofilm",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::biofilm",
+      "title": "How to Prevent biofilm on tile floors",
+      "slug": "how-to-prevent-biofilm-on-tile-floors",
+      "problem": "biofilm",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::biofilm",
+      "title": "How to Fix biofilm on tile floors",
+      "slug": "how-to-fix-biofilm-on-tile-floors",
+      "problem": "biofilm",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::biofilm",
+      "title": "How to Clean biofilm from tile floors",
+      "slug": "how-to-clean-biofilm-from-tile-floors",
+      "problem": "biofilm",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::biofilm",
+      "title": "How to Tell if biofilm on tile floors is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-tile-floors-is-permanent",
+      "problem": "biofilm",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::biofilm",
+      "title": "Why biofilm Keeps Coming Back on tile floors",
+      "slug": "why-biofilm-keeps-coming-back-on-tile-floors",
+      "problem": "biofilm",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::biofilm",
+      "title": "How to Maintain tile floors and Keep biofilm Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-tile-floors",
+      "problem": "biofilm",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtubs::biofilm",
+      "title": "What Causes biofilm on bathtubs",
+      "slug": "what-causes-biofilm-on-bathtubs",
+      "problem": "biofilm",
+      "surface": "bathtubs",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtubs::biofilm",
+      "title": "How to Remove biofilm from bathtubs",
+      "slug": "how-to-remove-biofilm-from-bathtubs",
+      "problem": "biofilm",
+      "surface": "bathtubs",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtubs::biofilm",
+      "title": "How to Prevent biofilm on bathtubs",
+      "slug": "how-to-prevent-biofilm-on-bathtubs",
+      "problem": "biofilm",
+      "surface": "bathtubs",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtubs::biofilm",
+      "title": "How to Fix biofilm on bathtubs",
+      "slug": "how-to-fix-biofilm-on-bathtubs",
+      "problem": "biofilm",
+      "surface": "bathtubs",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtubs::biofilm",
+      "title": "How to Clean biofilm from bathtubs",
+      "slug": "how-to-clean-biofilm-from-bathtubs",
+      "problem": "biofilm",
+      "surface": "bathtubs",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtubs::biofilm",
+      "title": "How to Tell if biofilm on bathtubs is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-bathtubs-is-permanent",
+      "problem": "biofilm",
+      "surface": "bathtubs",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtubs::biofilm",
+      "title": "Why biofilm Keeps Coming Back on bathtubs",
+      "slug": "why-biofilm-keeps-coming-back-on-bathtubs",
+      "problem": "biofilm",
+      "surface": "bathtubs",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtubs::biofilm",
+      "title": "How to Maintain bathtubs and Keep biofilm Under Control",
+      "slug": "how-to-maintain-bathtubs-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "bathtubs",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtubs::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on bathtubs",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-bathtubs",
+      "problem": "biofilm",
+      "surface": "bathtubs",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::biofilm",
+      "title": "What Causes biofilm on grout",
+      "slug": "what-causes-biofilm-on-grout",
+      "problem": "biofilm",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::biofilm",
+      "title": "How to Remove biofilm from grout",
+      "slug": "how-to-remove-biofilm-from-grout",
+      "problem": "biofilm",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::biofilm",
+      "title": "How to Prevent biofilm on grout",
+      "slug": "how-to-prevent-biofilm-on-grout",
+      "problem": "biofilm",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::biofilm",
+      "title": "How to Fix biofilm on grout",
+      "slug": "how-to-fix-biofilm-on-grout",
+      "problem": "biofilm",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::biofilm",
+      "title": "How to Clean biofilm from grout",
+      "slug": "how-to-clean-biofilm-from-grout",
+      "problem": "biofilm",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::biofilm",
+      "title": "How to Tell if biofilm on grout is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-grout-is-permanent",
+      "problem": "biofilm",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::biofilm",
+      "title": "Why biofilm Keeps Coming Back on grout",
+      "slug": "why-biofilm-keeps-coming-back-on-grout",
+      "problem": "biofilm",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::biofilm",
+      "title": "How to Maintain grout and Keep biofilm Under Control",
+      "slug": "how-to-maintain-grout-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-grout",
+      "problem": "biofilm",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::glass cooktops::biofilm",
+      "title": "What Causes biofilm on glass cooktops",
+      "slug": "what-causes-biofilm-on-glass-cooktops",
+      "problem": "biofilm",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::glass cooktops::biofilm",
+      "title": "How to Remove biofilm from glass cooktops",
+      "slug": "how-to-remove-biofilm-from-glass-cooktops",
+      "problem": "biofilm",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::glass cooktops::biofilm",
+      "title": "How to Prevent biofilm on glass cooktops",
+      "slug": "how-to-prevent-biofilm-on-glass-cooktops",
+      "problem": "biofilm",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::glass cooktops::biofilm",
+      "title": "How to Fix biofilm on glass cooktops",
+      "slug": "how-to-fix-biofilm-on-glass-cooktops",
+      "problem": "biofilm",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::glass cooktops::biofilm",
+      "title": "How to Clean biofilm from glass cooktops",
+      "slug": "how-to-clean-biofilm-from-glass-cooktops",
+      "problem": "biofilm",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::glass cooktops::biofilm",
+      "title": "How to Tell if biofilm on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-glass-cooktops-is-permanent",
+      "problem": "biofilm",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::glass cooktops::biofilm",
+      "title": "Why biofilm Keeps Coming Back on glass cooktops",
+      "slug": "why-biofilm-keeps-coming-back-on-glass-cooktops",
+      "problem": "biofilm",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::glass cooktops::biofilm",
+      "title": "How to Maintain glass cooktops and Keep biofilm Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::glass cooktops::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-glass-cooktops",
+      "problem": "biofilm",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::biofilm",
+      "title": "What Causes biofilm on shower grout",
+      "slug": "what-causes-biofilm-on-shower-grout",
+      "problem": "biofilm",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::biofilm",
+      "title": "How to Remove biofilm from shower grout",
+      "slug": "how-to-remove-biofilm-from-shower-grout",
+      "problem": "biofilm",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::biofilm",
+      "title": "How to Prevent biofilm on shower grout",
+      "slug": "how-to-prevent-biofilm-on-shower-grout",
+      "problem": "biofilm",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::biofilm",
+      "title": "How to Fix biofilm on shower grout",
+      "slug": "how-to-fix-biofilm-on-shower-grout",
+      "problem": "biofilm",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::biofilm",
+      "title": "How to Clean biofilm from shower grout",
+      "slug": "how-to-clean-biofilm-from-shower-grout",
+      "problem": "biofilm",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::biofilm",
+      "title": "How to Tell if biofilm on shower grout is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-shower-grout-is-permanent",
+      "problem": "biofilm",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::biofilm",
+      "title": "Why biofilm Keeps Coming Back on shower grout",
+      "slug": "why-biofilm-keeps-coming-back-on-shower-grout",
+      "problem": "biofilm",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::biofilm",
+      "title": "How to Maintain shower grout and Keep biofilm Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-shower-grout",
+      "problem": "biofilm",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::biofilm",
+      "title": "What Causes biofilm on tile grout",
+      "slug": "what-causes-biofilm-on-tile-grout",
+      "problem": "biofilm",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::biofilm",
+      "title": "How to Remove biofilm from tile grout",
+      "slug": "how-to-remove-biofilm-from-tile-grout",
+      "problem": "biofilm",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::biofilm",
+      "title": "How to Prevent biofilm on tile grout",
+      "slug": "how-to-prevent-biofilm-on-tile-grout",
+      "problem": "biofilm",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::biofilm",
+      "title": "How to Fix biofilm on tile grout",
+      "slug": "how-to-fix-biofilm-on-tile-grout",
+      "problem": "biofilm",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::biofilm",
+      "title": "How to Clean biofilm from tile grout",
+      "slug": "how-to-clean-biofilm-from-tile-grout",
+      "problem": "biofilm",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::biofilm",
+      "title": "How to Tell if biofilm on tile grout is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-tile-grout-is-permanent",
+      "problem": "biofilm",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::biofilm",
+      "title": "Why biofilm Keeps Coming Back on tile grout",
+      "slug": "why-biofilm-keeps-coming-back-on-tile-grout",
+      "problem": "biofilm",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::biofilm",
+      "title": "How to Maintain tile grout and Keep biofilm Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-tile-grout",
+      "problem": "biofilm",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::biofilm",
+      "title": "What Causes biofilm on caulking",
+      "slug": "what-causes-biofilm-on-caulking",
+      "problem": "biofilm",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::biofilm",
+      "title": "How to Remove biofilm from caulking",
+      "slug": "how-to-remove-biofilm-from-caulking",
+      "problem": "biofilm",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::biofilm",
+      "title": "How to Prevent biofilm on caulking",
+      "slug": "how-to-prevent-biofilm-on-caulking",
+      "problem": "biofilm",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::biofilm",
+      "title": "How to Fix biofilm on caulking",
+      "slug": "how-to-fix-biofilm-on-caulking",
+      "problem": "biofilm",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::biofilm",
+      "title": "How to Clean biofilm from caulking",
+      "slug": "how-to-clean-biofilm-from-caulking",
+      "problem": "biofilm",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::biofilm",
+      "title": "How to Tell if biofilm on caulking is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-caulking-is-permanent",
+      "problem": "biofilm",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::biofilm",
+      "title": "Why biofilm Keeps Coming Back on caulking",
+      "slug": "why-biofilm-keeps-coming-back-on-caulking",
+      "problem": "biofilm",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::biofilm",
+      "title": "How to Maintain caulking and Keep biofilm Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-caulking",
+      "problem": "biofilm",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::biofilm",
+      "title": "What Causes biofilm on shower pans",
+      "slug": "what-causes-biofilm-on-shower-pans",
+      "problem": "biofilm",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::biofilm",
+      "title": "How to Remove biofilm from shower pans",
+      "slug": "how-to-remove-biofilm-from-shower-pans",
+      "problem": "biofilm",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::biofilm",
+      "title": "How to Prevent biofilm on shower pans",
+      "slug": "how-to-prevent-biofilm-on-shower-pans",
+      "problem": "biofilm",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::biofilm",
+      "title": "How to Fix biofilm on shower pans",
+      "slug": "how-to-fix-biofilm-on-shower-pans",
+      "problem": "biofilm",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::biofilm",
+      "title": "How to Clean biofilm from shower pans",
+      "slug": "how-to-clean-biofilm-from-shower-pans",
+      "problem": "biofilm",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::biofilm",
+      "title": "How to Tell if biofilm on shower pans is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-shower-pans-is-permanent",
+      "problem": "biofilm",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::biofilm",
+      "title": "Why biofilm Keeps Coming Back on shower pans",
+      "slug": "why-biofilm-keeps-coming-back-on-shower-pans",
+      "problem": "biofilm",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::biofilm",
+      "title": "How to Maintain shower pans and Keep biofilm Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-shower-pans",
+      "problem": "biofilm",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::biofilm",
+      "title": "What Causes biofilm on bathtub surrounds",
+      "slug": "what-causes-biofilm-on-bathtub-surrounds",
+      "problem": "biofilm",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::biofilm",
+      "title": "How to Remove biofilm from bathtub surrounds",
+      "slug": "how-to-remove-biofilm-from-bathtub-surrounds",
+      "problem": "biofilm",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::biofilm",
+      "title": "How to Prevent biofilm on bathtub surrounds",
+      "slug": "how-to-prevent-biofilm-on-bathtub-surrounds",
+      "problem": "biofilm",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::biofilm",
+      "title": "How to Fix biofilm on bathtub surrounds",
+      "slug": "how-to-fix-biofilm-on-bathtub-surrounds",
+      "problem": "biofilm",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::biofilm",
+      "title": "How to Clean biofilm from bathtub surrounds",
+      "slug": "how-to-clean-biofilm-from-bathtub-surrounds",
+      "problem": "biofilm",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::biofilm",
+      "title": "How to Tell if biofilm on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-bathtub-surrounds-is-permanent",
+      "problem": "biofilm",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::biofilm",
+      "title": "Why biofilm Keeps Coming Back on bathtub surrounds",
+      "slug": "why-biofilm-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "biofilm",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::biofilm",
+      "title": "How to Maintain bathtub surrounds and Keep biofilm Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-biofilm-under-control",
+      "problem": "biofilm",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::biofilm",
+      "title": "How to Recover After a Cleaning Mistake With biofilm on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-biofilm-on-bathtub-surrounds",
+      "problem": "biofilm",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::biofilm",
+      "title": "What Causes biofilm on ceramic tile",
+      "slug": "what-causes-biofilm-on-ceramic-tile",
+      "problem": "biofilm",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::biofilm",
+      "title": "How to Remove biofilm from ceramic tile",
+      "slug": "how-to-remove-biofilm-from-ceramic-tile",
+      "problem": "biofilm",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::biofilm",
+      "title": "How to Prevent biofilm on ceramic tile",
+      "slug": "how-to-prevent-biofilm-on-ceramic-tile",
+      "problem": "biofilm",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::biofilm",
+      "title": "How to Fix biofilm on ceramic tile",
+      "slug": "how-to-fix-biofilm-on-ceramic-tile",
+      "problem": "biofilm",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::biofilm",
+      "title": "How to Clean biofilm from ceramic tile",
+      "slug": "how-to-clean-biofilm-from-ceramic-tile",
+      "problem": "biofilm",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::biofilm",
+      "title": "How to Tell if biofilm on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-biofilm-on-ceramic-tile-is-permanent",
+      "problem": "biofilm",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "targets": [
+    { "surface": "stovetops", "problem": "grease buildup" },
+    { "surface": "stovetops", "problem": "soap residue" },
+    { "surface": "stovetops", "problem": "hard water stains" },
+    { "surface": "stovetops", "problem": "limescale" },
+    { "surface": "stovetops", "problem": "mineral deposits" },
+    { "surface": "stovetops", "problem": "dust buildup" },
+    { "surface": "stovetops", "problem": "product residue" },
+    { "surface": "stovetops", "problem": "soap scum" },
+    { "surface": "stovetops", "problem": "water spots" },
+    { "surface": "stovetops", "problem": "yellowing" }
+  ]
+}

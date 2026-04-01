@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "diagnosis::butcher block::streaking",
+      "title": "How to Tell if streaking on butcher block is Permanent",
+      "slug": "how-to-tell-if-streaking-on-butcher-block-is-permanent",
+      "problem": "streaking",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::streaking",
+      "title": "Why streaking Keeps Coming Back on butcher block",
+      "slug": "why-streaking-keeps-coming-back-on-butcher-block",
+      "problem": "streaking",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::streaking",
+      "title": "How to Maintain butcher block and Keep streaking Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-butcher-block",
+      "problem": "streaking",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::streaking",
+      "title": "What Causes streaking on unfinished wood",
+      "slug": "what-causes-streaking-on-unfinished-wood",
+      "problem": "streaking",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::streaking",
+      "title": "How to Remove streaking from unfinished wood",
+      "slug": "how-to-remove-streaking-from-unfinished-wood",
+      "problem": "streaking",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::streaking",
+      "title": "How to Prevent streaking on unfinished wood",
+      "slug": "how-to-prevent-streaking-on-unfinished-wood",
+      "problem": "streaking",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::streaking",
+      "title": "How to Fix streaking on unfinished wood",
+      "slug": "how-to-fix-streaking-on-unfinished-wood",
+      "problem": "streaking",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::streaking",
+      "title": "How to Clean streaking from unfinished wood",
+      "slug": "how-to-clean-streaking-from-unfinished-wood",
+      "problem": "streaking",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::streaking",
+      "title": "How to Tell if streaking on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-streaking-on-unfinished-wood-is-permanent",
+      "problem": "streaking",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::streaking",
+      "title": "Why streaking Keeps Coming Back on unfinished wood",
+      "slug": "why-streaking-keeps-coming-back-on-unfinished-wood",
+      "problem": "streaking",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::streaking",
+      "title": "How to Maintain unfinished wood and Keep streaking Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-unfinished-wood",
+      "problem": "streaking",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::streaking",
+      "title": "What Causes streaking on sealed wood",
+      "slug": "what-causes-streaking-on-sealed-wood",
+      "problem": "streaking",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::streaking",
+      "title": "How to Remove streaking from sealed wood",
+      "slug": "how-to-remove-streaking-from-sealed-wood",
+      "problem": "streaking",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::streaking",
+      "title": "How to Prevent streaking on sealed wood",
+      "slug": "how-to-prevent-streaking-on-sealed-wood",
+      "problem": "streaking",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::streaking",
+      "title": "How to Fix streaking on sealed wood",
+      "slug": "how-to-fix-streaking-on-sealed-wood",
+      "problem": "streaking",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::streaking",
+      "title": "How to Clean streaking from sealed wood",
+      "slug": "how-to-clean-streaking-from-sealed-wood",
+      "problem": "streaking",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::streaking",
+      "title": "How to Tell if streaking on sealed wood is Permanent",
+      "slug": "how-to-tell-if-streaking-on-sealed-wood-is-permanent",
+      "problem": "streaking",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::streaking",
+      "title": "Why streaking Keeps Coming Back on sealed wood",
+      "slug": "why-streaking-keeps-coming-back-on-sealed-wood",
+      "problem": "streaking",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::streaking",
+      "title": "How to Maintain sealed wood and Keep streaking Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-sealed-wood",
+      "problem": "streaking",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::baseboards::streaking",
+      "title": "What Causes streaking on baseboards",
+      "slug": "what-causes-streaking-on-baseboards",
+      "problem": "streaking",
+      "surface": "baseboards",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::baseboards::streaking",
+      "title": "How to Remove streaking from baseboards",
+      "slug": "how-to-remove-streaking-from-baseboards",
+      "problem": "streaking",
+      "surface": "baseboards",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::baseboards::streaking",
+      "title": "How to Prevent streaking on baseboards",
+      "slug": "how-to-prevent-streaking-on-baseboards",
+      "problem": "streaking",
+      "surface": "baseboards",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::baseboards::streaking",
+      "title": "How to Fix streaking on baseboards",
+      "slug": "how-to-fix-streaking-on-baseboards",
+      "problem": "streaking",
+      "surface": "baseboards",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::baseboards::streaking",
+      "title": "How to Clean streaking from baseboards",
+      "slug": "how-to-clean-streaking-from-baseboards",
+      "problem": "streaking",
+      "surface": "baseboards",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::baseboards::streaking",
+      "title": "How to Tell if streaking on baseboards is Permanent",
+      "slug": "how-to-tell-if-streaking-on-baseboards-is-permanent",
+      "problem": "streaking",
+      "surface": "baseboards",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::baseboards::streaking",
+      "title": "Why streaking Keeps Coming Back on baseboards",
+      "slug": "why-streaking-keeps-coming-back-on-baseboards",
+      "problem": "streaking",
+      "surface": "baseboards",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::baseboards::streaking",
+      "title": "How to Maintain baseboards and Keep streaking Under Control",
+      "slug": "how-to-maintain-baseboards-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "baseboards",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::baseboards::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on baseboards",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-baseboards",
+      "problem": "streaking",
+      "surface": "baseboards",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::door frames::streaking",
+      "title": "What Causes streaking on door frames",
+      "slug": "what-causes-streaking-on-door-frames",
+      "problem": "streaking",
+      "surface": "door frames",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::door frames::streaking",
+      "title": "How to Remove streaking from door frames",
+      "slug": "how-to-remove-streaking-from-door-frames",
+      "problem": "streaking",
+      "surface": "door frames",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::door frames::streaking",
+      "title": "How to Prevent streaking on door frames",
+      "slug": "how-to-prevent-streaking-on-door-frames",
+      "problem": "streaking",
+      "surface": "door frames",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::door frames::streaking",
+      "title": "How to Fix streaking on door frames",
+      "slug": "how-to-fix-streaking-on-door-frames",
+      "problem": "streaking",
+      "surface": "door frames",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::door frames::streaking",
+      "title": "How to Clean streaking from door frames",
+      "slug": "how-to-clean-streaking-from-door-frames",
+      "problem": "streaking",
+      "surface": "door frames",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::door frames::streaking",
+      "title": "How to Tell if streaking on door frames is Permanent",
+      "slug": "how-to-tell-if-streaking-on-door-frames-is-permanent",
+      "problem": "streaking",
+      "surface": "door frames",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::door frames::streaking",
+      "title": "Why streaking Keeps Coming Back on door frames",
+      "slug": "why-streaking-keeps-coming-back-on-door-frames",
+      "problem": "streaking",
+      "surface": "door frames",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::door frames::streaking",
+      "title": "How to Maintain door frames and Keep streaking Under Control",
+      "slug": "how-to-maintain-door-frames-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "door frames",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::door frames::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on door frames",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-door-frames",
+      "problem": "streaking",
+      "surface": "door frames",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::window tracks::streaking",
+      "title": "What Causes streaking on window tracks",
+      "slug": "what-causes-streaking-on-window-tracks",
+      "problem": "streaking",
+      "surface": "window tracks",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::window tracks::streaking",
+      "title": "How to Remove streaking from window tracks",
+      "slug": "how-to-remove-streaking-from-window-tracks",
+      "problem": "streaking",
+      "surface": "window tracks",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::window tracks::streaking",
+      "title": "How to Prevent streaking on window tracks",
+      "slug": "how-to-prevent-streaking-on-window-tracks",
+      "problem": "streaking",
+      "surface": "window tracks",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::window tracks::streaking",
+      "title": "How to Fix streaking on window tracks",
+      "slug": "how-to-fix-streaking-on-window-tracks",
+      "problem": "streaking",
+      "surface": "window tracks",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::window tracks::streaking",
+      "title": "How to Clean streaking from window tracks",
+      "slug": "how-to-clean-streaking-from-window-tracks",
+      "problem": "streaking",
+      "surface": "window tracks",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::window tracks::streaking",
+      "title": "How to Tell if streaking on window tracks is Permanent",
+      "slug": "how-to-tell-if-streaking-on-window-tracks-is-permanent",
+      "problem": "streaking",
+      "surface": "window tracks",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::window tracks::streaking",
+      "title": "Why streaking Keeps Coming Back on window tracks",
+      "slug": "why-streaking-keeps-coming-back-on-window-tracks",
+      "problem": "streaking",
+      "surface": "window tracks",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::window tracks::streaking",
+      "title": "How to Maintain window tracks and Keep streaking Under Control",
+      "slug": "how-to-maintain-window-tracks-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "window tracks",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::window tracks::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on window tracks",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-window-tracks",
+      "problem": "streaking",
+      "surface": "window tracks",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::light switches::streaking",
+      "title": "What Causes streaking on light switches",
+      "slug": "what-causes-streaking-on-light-switches",
+      "problem": "streaking",
+      "surface": "light switches",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::light switches::streaking",
+      "title": "How to Remove streaking from light switches",
+      "slug": "how-to-remove-streaking-from-light-switches",
+      "problem": "streaking",
+      "surface": "light switches",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::light switches::streaking",
+      "title": "How to Prevent streaking on light switches",
+      "slug": "how-to-prevent-streaking-on-light-switches",
+      "problem": "streaking",
+      "surface": "light switches",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::light switches::streaking",
+      "title": "How to Fix streaking on light switches",
+      "slug": "how-to-fix-streaking-on-light-switches",
+      "problem": "streaking",
+      "surface": "light switches",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::light switches::streaking",
+      "title": "How to Clean streaking from light switches",
+      "slug": "how-to-clean-streaking-from-light-switches",
+      "problem": "streaking",
+      "surface": "light switches",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::light switches::streaking",
+      "title": "How to Tell if streaking on light switches is Permanent",
+      "slug": "how-to-tell-if-streaking-on-light-switches-is-permanent",
+      "problem": "streaking",
+      "surface": "light switches",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::light switches::streaking",
+      "title": "Why streaking Keeps Coming Back on light switches",
+      "slug": "why-streaking-keeps-coming-back-on-light-switches",
+      "problem": "streaking",
+      "surface": "light switches",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::light switches::streaking",
+      "title": "How to Maintain light switches and Keep streaking Under Control",
+      "slug": "how-to-maintain-light-switches-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "light switches",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::light switches::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on light switches",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-light-switches",
+      "problem": "streaking",
+      "surface": "light switches",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::smearing",
+      "title": "What Causes smearing on backsplashes",
+      "slug": "what-causes-smearing-on-backsplashes",
+      "problem": "smearing",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::smearing",
+      "title": "How to Remove smearing from backsplashes",
+      "slug": "how-to-remove-smearing-from-backsplashes",
+      "problem": "smearing",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::smearing",
+      "title": "How to Prevent smearing on backsplashes",
+      "slug": "how-to-prevent-smearing-on-backsplashes",
+      "problem": "smearing",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::smearing",
+      "title": "How to Fix smearing on backsplashes",
+      "slug": "how-to-fix-smearing-on-backsplashes",
+      "problem": "smearing",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::smearing",
+      "title": "How to Clean smearing from backsplashes",
+      "slug": "how-to-clean-smearing-from-backsplashes",
+      "problem": "smearing",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::smearing",
+      "title": "How to Tell if smearing on backsplashes is Permanent",
+      "slug": "how-to-tell-if-smearing-on-backsplashes-is-permanent",
+      "problem": "smearing",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::smearing",
+      "title": "Why smearing Keeps Coming Back on backsplashes",
+      "slug": "why-smearing-keeps-coming-back-on-backsplashes",
+      "problem": "smearing",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::smearing",
+      "title": "How to Maintain backsplashes and Keep smearing Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-backsplashes",
+      "problem": "smearing",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::kitchen cabinets::smearing",
+      "title": "What Causes smearing on kitchen cabinets",
+      "slug": "what-causes-smearing-on-kitchen-cabinets",
+      "problem": "smearing",
+      "surface": "kitchen cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::kitchen cabinets::smearing",
+      "title": "How to Remove smearing from kitchen cabinets",
+      "slug": "how-to-remove-smearing-from-kitchen-cabinets",
+      "problem": "smearing",
+      "surface": "kitchen cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::kitchen cabinets::smearing",
+      "title": "How to Prevent smearing on kitchen cabinets",
+      "slug": "how-to-prevent-smearing-on-kitchen-cabinets",
+      "problem": "smearing",
+      "surface": "kitchen cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::kitchen cabinets::smearing",
+      "title": "How to Fix smearing on kitchen cabinets",
+      "slug": "how-to-fix-smearing-on-kitchen-cabinets",
+      "problem": "smearing",
+      "surface": "kitchen cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::kitchen cabinets::smearing",
+      "title": "How to Clean smearing from kitchen cabinets",
+      "slug": "how-to-clean-smearing-from-kitchen-cabinets",
+      "problem": "smearing",
+      "surface": "kitchen cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::kitchen cabinets::smearing",
+      "title": "How to Tell if smearing on kitchen cabinets is Permanent",
+      "slug": "how-to-tell-if-smearing-on-kitchen-cabinets-is-permanent",
+      "problem": "smearing",
+      "surface": "kitchen cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::kitchen cabinets::smearing",
+      "title": "Why smearing Keeps Coming Back on kitchen cabinets",
+      "slug": "why-smearing-keeps-coming-back-on-kitchen-cabinets",
+      "problem": "smearing",
+      "surface": "kitchen cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::kitchen cabinets::smearing",
+      "title": "How to Maintain kitchen cabinets and Keep smearing Under Control",
+      "slug": "how-to-maintain-kitchen-cabinets-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "kitchen cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::kitchen cabinets::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on kitchen cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-kitchen-cabinets",
+      "problem": "smearing",
+      "surface": "kitchen cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::smearing",
+      "title": "What Causes smearing on tile floors",
+      "slug": "what-causes-smearing-on-tile-floors",
+      "problem": "smearing",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::smearing",
+      "title": "How to Remove smearing from tile floors",
+      "slug": "how-to-remove-smearing-from-tile-floors",
+      "problem": "smearing",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::smearing",
+      "title": "How to Prevent smearing on tile floors",
+      "slug": "how-to-prevent-smearing-on-tile-floors",
+      "problem": "smearing",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::smearing",
+      "title": "How to Fix smearing on tile floors",
+      "slug": "how-to-fix-smearing-on-tile-floors",
+      "problem": "smearing",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::smearing",
+      "title": "How to Clean smearing from tile floors",
+      "slug": "how-to-clean-smearing-from-tile-floors",
+      "problem": "smearing",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::smearing",
+      "title": "How to Tell if smearing on tile floors is Permanent",
+      "slug": "how-to-tell-if-smearing-on-tile-floors-is-permanent",
+      "problem": "smearing",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::smearing",
+      "title": "Why smearing Keeps Coming Back on tile floors",
+      "slug": "why-smearing-keeps-coming-back-on-tile-floors",
+      "problem": "smearing",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::smearing",
+      "title": "How to Maintain tile floors and Keep smearing Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-tile-floors",
+      "problem": "smearing",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::smearing",
+      "title": "What Causes smearing on shower glass",
+      "slug": "what-causes-smearing-on-shower-glass",
+      "problem": "smearing",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::smearing",
+      "title": "How to Remove smearing from shower glass",
+      "slug": "how-to-remove-smearing-from-shower-glass",
+      "problem": "smearing",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::smearing",
+      "title": "How to Prevent smearing on shower glass",
+      "slug": "how-to-prevent-smearing-on-shower-glass",
+      "problem": "smearing",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::smearing",
+      "title": "How to Fix smearing on shower glass",
+      "slug": "how-to-fix-smearing-on-shower-glass",
+      "problem": "smearing",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::smearing",
+      "title": "How to Clean smearing from shower glass",
+      "slug": "how-to-clean-smearing-from-shower-glass",
+      "problem": "smearing",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::smearing",
+      "title": "How to Tell if smearing on shower glass is Permanent",
+      "slug": "how-to-tell-if-smearing-on-shower-glass-is-permanent",
+      "problem": "smearing",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::smearing",
+      "title": "Why smearing Keeps Coming Back on shower glass",
+      "slug": "why-smearing-keeps-coming-back-on-shower-glass",
+      "problem": "smearing",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::smearing",
+      "title": "How to Maintain shower glass and Keep smearing Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-shower-glass",
+      "problem": "smearing",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtubs::smearing",
+      "title": "What Causes smearing on bathtubs",
+      "slug": "what-causes-smearing-on-bathtubs",
+      "problem": "smearing",
+      "surface": "bathtubs",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtubs::smearing",
+      "title": "How to Remove smearing from bathtubs",
+      "slug": "how-to-remove-smearing-from-bathtubs",
+      "problem": "smearing",
+      "surface": "bathtubs",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtubs::smearing",
+      "title": "How to Prevent smearing on bathtubs",
+      "slug": "how-to-prevent-smearing-on-bathtubs",
+      "problem": "smearing",
+      "surface": "bathtubs",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtubs::smearing",
+      "title": "How to Fix smearing on bathtubs",
+      "slug": "how-to-fix-smearing-on-bathtubs",
+      "problem": "smearing",
+      "surface": "bathtubs",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtubs::smearing",
+      "title": "How to Clean smearing from bathtubs",
+      "slug": "how-to-clean-smearing-from-bathtubs",
+      "problem": "smearing",
+      "surface": "bathtubs",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtubs::smearing",
+      "title": "How to Tell if smearing on bathtubs is Permanent",
+      "slug": "how-to-tell-if-smearing-on-bathtubs-is-permanent",
+      "problem": "smearing",
+      "surface": "bathtubs",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

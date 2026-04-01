@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-maintain::granite::mineral haze",
+      "title": "How to Maintain granite and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-granite-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-granite",
+      "problem": "mineral haze",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::mineral haze",
+      "title": "What Causes mineral haze on marble",
+      "slug": "what-causes-mineral-haze-on-marble",
+      "problem": "mineral haze",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::mineral haze",
+      "title": "How to Remove mineral haze from marble",
+      "slug": "how-to-remove-mineral-haze-from-marble",
+      "problem": "mineral haze",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::mineral haze",
+      "title": "How to Prevent mineral haze on marble",
+      "slug": "how-to-prevent-mineral-haze-on-marble",
+      "problem": "mineral haze",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::mineral haze",
+      "title": "How to Fix mineral haze on marble",
+      "slug": "how-to-fix-mineral-haze-on-marble",
+      "problem": "mineral haze",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::mineral haze",
+      "title": "How to Clean mineral haze from marble",
+      "slug": "how-to-clean-mineral-haze-from-marble",
+      "problem": "mineral haze",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::mineral haze",
+      "title": "How to Tell if mineral haze on marble is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-marble-is-permanent",
+      "problem": "mineral haze",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on marble",
+      "slug": "why-mineral-haze-keeps-coming-back-on-marble",
+      "problem": "mineral haze",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::mineral haze",
+      "title": "How to Maintain marble and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-marble-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-marble",
+      "problem": "mineral haze",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::mineral haze",
+      "title": "What Causes mineral haze on quartz",
+      "slug": "what-causes-mineral-haze-on-quartz",
+      "problem": "mineral haze",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::mineral haze",
+      "title": "How to Remove mineral haze from quartz",
+      "slug": "how-to-remove-mineral-haze-from-quartz",
+      "problem": "mineral haze",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::mineral haze",
+      "title": "How to Prevent mineral haze on quartz",
+      "slug": "how-to-prevent-mineral-haze-on-quartz",
+      "problem": "mineral haze",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::mineral haze",
+      "title": "How to Fix mineral haze on quartz",
+      "slug": "how-to-fix-mineral-haze-on-quartz",
+      "problem": "mineral haze",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::mineral haze",
+      "title": "How to Clean mineral haze from quartz",
+      "slug": "how-to-clean-mineral-haze-from-quartz",
+      "problem": "mineral haze",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::mineral haze",
+      "title": "How to Tell if mineral haze on quartz is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-quartz-is-permanent",
+      "problem": "mineral haze",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on quartz",
+      "slug": "why-mineral-haze-keeps-coming-back-on-quartz",
+      "problem": "mineral haze",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::mineral haze",
+      "title": "How to Maintain quartz and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-quartz",
+      "problem": "mineral haze",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::mineral haze",
+      "title": "What Causes mineral haze on laminate",
+      "slug": "what-causes-mineral-haze-on-laminate",
+      "problem": "mineral haze",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::mineral haze",
+      "title": "How to Remove mineral haze from laminate",
+      "slug": "how-to-remove-mineral-haze-from-laminate",
+      "problem": "mineral haze",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::mineral haze",
+      "title": "How to Prevent mineral haze on laminate",
+      "slug": "how-to-prevent-mineral-haze-on-laminate",
+      "problem": "mineral haze",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::mineral haze",
+      "title": "How to Fix mineral haze on laminate",
+      "slug": "how-to-fix-mineral-haze-on-laminate",
+      "problem": "mineral haze",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::mineral haze",
+      "title": "How to Clean mineral haze from laminate",
+      "slug": "how-to-clean-mineral-haze-from-laminate",
+      "problem": "mineral haze",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::mineral haze",
+      "title": "How to Tell if mineral haze on laminate is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-laminate-is-permanent",
+      "problem": "mineral haze",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on laminate",
+      "slug": "why-mineral-haze-keeps-coming-back-on-laminate",
+      "problem": "mineral haze",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::mineral haze",
+      "title": "How to Maintain laminate and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-laminate",
+      "problem": "mineral haze",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::mineral haze",
+      "title": "What Causes mineral haze on wood",
+      "slug": "what-causes-mineral-haze-on-wood",
+      "problem": "mineral haze",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::mineral haze",
+      "title": "How to Remove mineral haze from wood",
+      "slug": "how-to-remove-mineral-haze-from-wood",
+      "problem": "mineral haze",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::mineral haze",
+      "title": "How to Prevent mineral haze on wood",
+      "slug": "how-to-prevent-mineral-haze-on-wood",
+      "problem": "mineral haze",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::mineral haze",
+      "title": "How to Fix mineral haze on wood",
+      "slug": "how-to-fix-mineral-haze-on-wood",
+      "problem": "mineral haze",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::mineral haze",
+      "title": "How to Clean mineral haze from wood",
+      "slug": "how-to-clean-mineral-haze-from-wood",
+      "problem": "mineral haze",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::mineral haze",
+      "title": "How to Tell if mineral haze on wood is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-wood-is-permanent",
+      "problem": "mineral haze",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on wood",
+      "slug": "why-mineral-haze-keeps-coming-back-on-wood",
+      "problem": "mineral haze",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::mineral haze",
+      "title": "How to Maintain wood and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-wood-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-wood",
+      "problem": "mineral haze",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::mineral haze",
+      "title": "What Causes mineral haze on grout",
+      "slug": "what-causes-mineral-haze-on-grout",
+      "problem": "mineral haze",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::mineral haze",
+      "title": "How to Remove mineral haze from grout",
+      "slug": "how-to-remove-mineral-haze-from-grout",
+      "problem": "mineral haze",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::mineral haze",
+      "title": "How to Prevent mineral haze on grout",
+      "slug": "how-to-prevent-mineral-haze-on-grout",
+      "problem": "mineral haze",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::mineral haze",
+      "title": "How to Fix mineral haze on grout",
+      "slug": "how-to-fix-mineral-haze-on-grout",
+      "problem": "mineral haze",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::mineral haze",
+      "title": "How to Clean mineral haze from grout",
+      "slug": "how-to-clean-mineral-haze-from-grout",
+      "problem": "mineral haze",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::mineral haze",
+      "title": "How to Tell if mineral haze on grout is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-grout-is-permanent",
+      "problem": "mineral haze",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on grout",
+      "slug": "why-mineral-haze-keeps-coming-back-on-grout",
+      "problem": "mineral haze",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::mineral haze",
+      "title": "How to Maintain grout and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-grout-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-grout",
+      "problem": "mineral haze",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::mineral haze",
+      "title": "What Causes mineral haze on shower doors",
+      "slug": "what-causes-mineral-haze-on-shower-doors",
+      "problem": "mineral haze",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::mineral haze",
+      "title": "How to Remove mineral haze from shower doors",
+      "slug": "how-to-remove-mineral-haze-from-shower-doors",
+      "problem": "mineral haze",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::mineral haze",
+      "title": "How to Prevent mineral haze on shower doors",
+      "slug": "how-to-prevent-mineral-haze-on-shower-doors",
+      "problem": "mineral haze",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::mineral haze",
+      "title": "How to Fix mineral haze on shower doors",
+      "slug": "how-to-fix-mineral-haze-on-shower-doors",
+      "problem": "mineral haze",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::mineral haze",
+      "title": "How to Clean mineral haze from shower doors",
+      "slug": "how-to-clean-mineral-haze-from-shower-doors",
+      "problem": "mineral haze",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::mineral haze",
+      "title": "How to Tell if mineral haze on shower doors is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-shower-doors-is-permanent",
+      "problem": "mineral haze",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on shower doors",
+      "slug": "why-mineral-haze-keeps-coming-back-on-shower-doors",
+      "problem": "mineral haze",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::mineral haze",
+      "title": "How to Maintain shower doors and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-shower-doors",
+      "problem": "mineral haze",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::mineral haze",
+      "title": "What Causes mineral haze on sealed stone",
+      "slug": "what-causes-mineral-haze-on-sealed-stone",
+      "problem": "mineral haze",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::mineral haze",
+      "title": "How to Remove mineral haze from sealed stone",
+      "slug": "how-to-remove-mineral-haze-from-sealed-stone",
+      "problem": "mineral haze",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::mineral haze",
+      "title": "How to Prevent mineral haze on sealed stone",
+      "slug": "how-to-prevent-mineral-haze-on-sealed-stone",
+      "problem": "mineral haze",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::mineral haze",
+      "title": "How to Fix mineral haze on sealed stone",
+      "slug": "how-to-fix-mineral-haze-on-sealed-stone",
+      "problem": "mineral haze",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::mineral haze",
+      "title": "How to Clean mineral haze from sealed stone",
+      "slug": "how-to-clean-mineral-haze-from-sealed-stone",
+      "problem": "mineral haze",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::mineral haze",
+      "title": "How to Tell if mineral haze on sealed stone is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-sealed-stone-is-permanent",
+      "problem": "mineral haze",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on sealed stone",
+      "slug": "why-mineral-haze-keeps-coming-back-on-sealed-stone",
+      "problem": "mineral haze",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::mineral haze",
+      "title": "How to Maintain sealed stone and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-sealed-stone",
+      "problem": "mineral haze",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::mineral haze",
+      "title": "What Causes mineral haze on shower grout",
+      "slug": "what-causes-mineral-haze-on-shower-grout",
+      "problem": "mineral haze",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::mineral haze",
+      "title": "How to Remove mineral haze from shower grout",
+      "slug": "how-to-remove-mineral-haze-from-shower-grout",
+      "problem": "mineral haze",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::mineral haze",
+      "title": "How to Prevent mineral haze on shower grout",
+      "slug": "how-to-prevent-mineral-haze-on-shower-grout",
+      "problem": "mineral haze",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::mineral haze",
+      "title": "How to Fix mineral haze on shower grout",
+      "slug": "how-to-fix-mineral-haze-on-shower-grout",
+      "problem": "mineral haze",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::mineral haze",
+      "title": "How to Clean mineral haze from shower grout",
+      "slug": "how-to-clean-mineral-haze-from-shower-grout",
+      "problem": "mineral haze",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::mineral haze",
+      "title": "How to Tell if mineral haze on shower grout is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-shower-grout-is-permanent",
+      "problem": "mineral haze",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on shower grout",
+      "slug": "why-mineral-haze-keeps-coming-back-on-shower-grout",
+      "problem": "mineral haze",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::mineral haze",
+      "title": "How to Maintain shower grout and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-shower-grout",
+      "problem": "mineral haze",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::mineral haze",
+      "title": "What Causes mineral haze on tile grout",
+      "slug": "what-causes-mineral-haze-on-tile-grout",
+      "problem": "mineral haze",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::mineral haze",
+      "title": "How to Remove mineral haze from tile grout",
+      "slug": "how-to-remove-mineral-haze-from-tile-grout",
+      "problem": "mineral haze",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::mineral haze",
+      "title": "How to Prevent mineral haze on tile grout",
+      "slug": "how-to-prevent-mineral-haze-on-tile-grout",
+      "problem": "mineral haze",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::mineral haze",
+      "title": "How to Fix mineral haze on tile grout",
+      "slug": "how-to-fix-mineral-haze-on-tile-grout",
+      "problem": "mineral haze",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::mineral haze",
+      "title": "How to Clean mineral haze from tile grout",
+      "slug": "how-to-clean-mineral-haze-from-tile-grout",
+      "problem": "mineral haze",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::mineral haze",
+      "title": "How to Tell if mineral haze on tile grout is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-tile-grout-is-permanent",
+      "problem": "mineral haze",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on tile grout",
+      "slug": "why-mineral-haze-keeps-coming-back-on-tile-grout",
+      "problem": "mineral haze",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::mineral haze",
+      "title": "How to Maintain tile grout and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-tile-grout",
+      "problem": "mineral haze",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::mineral haze",
+      "title": "What Causes mineral haze on caulking",
+      "slug": "what-causes-mineral-haze-on-caulking",
+      "problem": "mineral haze",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::mineral haze",
+      "title": "How to Remove mineral haze from caulking",
+      "slug": "how-to-remove-mineral-haze-from-caulking",
+      "problem": "mineral haze",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::mineral haze",
+      "title": "How to Prevent mineral haze on caulking",
+      "slug": "how-to-prevent-mineral-haze-on-caulking",
+      "problem": "mineral haze",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::mineral haze",
+      "title": "How to Fix mineral haze on caulking",
+      "slug": "how-to-fix-mineral-haze-on-caulking",
+      "problem": "mineral haze",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::mineral haze",
+      "title": "How to Clean mineral haze from caulking",
+      "slug": "how-to-clean-mineral-haze-from-caulking",
+      "problem": "mineral haze",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::mineral haze",
+      "title": "How to Tell if mineral haze on caulking is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-caulking-is-permanent",
+      "problem": "mineral haze",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on caulking",
+      "slug": "why-mineral-haze-keeps-coming-back-on-caulking",
+      "problem": "mineral haze",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::mineral haze",
+      "title": "How to Maintain caulking and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-caulking",
+      "problem": "mineral haze",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::mineral haze",
+      "title": "What Causes mineral haze on sealed granite",
+      "slug": "what-causes-mineral-haze-on-sealed-granite",
+      "problem": "mineral haze",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::mineral haze",
+      "title": "How to Remove mineral haze from sealed granite",
+      "slug": "how-to-remove-mineral-haze-from-sealed-granite",
+      "problem": "mineral haze",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::mineral haze",
+      "title": "How to Prevent mineral haze on sealed granite",
+      "slug": "how-to-prevent-mineral-haze-on-sealed-granite",
+      "problem": "mineral haze",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::mineral haze",
+      "title": "How to Fix mineral haze on sealed granite",
+      "slug": "how-to-fix-mineral-haze-on-sealed-granite",
+      "problem": "mineral haze",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::mineral haze",
+      "title": "How to Clean mineral haze from sealed granite",
+      "slug": "how-to-clean-mineral-haze-from-sealed-granite",
+      "problem": "mineral haze",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::mineral haze",
+      "title": "How to Tell if mineral haze on sealed granite is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-sealed-granite-is-permanent",
+      "problem": "mineral haze",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on sealed granite",
+      "slug": "why-mineral-haze-keeps-coming-back-on-sealed-granite",
+      "problem": "mineral haze",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::mineral haze",
+      "title": "How to Maintain sealed granite and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "mistake-recovery::sealed granite::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-sealed-granite",
+      "problem": "mineral haze",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::mineral haze",
+      "title": "What Causes mineral haze on sealed marble",
+      "slug": "what-causes-mineral-haze-on-sealed-marble",
+      "problem": "mineral haze",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::mineral haze",
+      "title": "How to Remove mineral haze from sealed marble",
+      "slug": "how-to-remove-mineral-haze-from-sealed-marble",
+      "problem": "mineral haze",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::mineral haze",
+      "title": "How to Prevent mineral haze on sealed marble",
+      "slug": "how-to-prevent-mineral-haze-on-sealed-marble",
+      "problem": "mineral haze",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::mineral haze",
+      "title": "How to Fix mineral haze on sealed marble",
+      "slug": "how-to-fix-mineral-haze-on-sealed-marble",
+      "problem": "mineral haze",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::mineral haze",
+      "title": "How to Clean mineral haze from sealed marble",
+      "slug": "how-to-clean-mineral-haze-from-sealed-marble",
+      "problem": "mineral haze",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::mineral haze",
+      "title": "How to Tell if mineral haze on sealed marble is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-sealed-marble-is-permanent",
+      "problem": "mineral haze",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on sealed marble",
+      "slug": "why-mineral-haze-keeps-coming-back-on-sealed-marble",
+      "problem": "mineral haze",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::mineral haze",
+      "title": "How to Maintain sealed marble and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-sealed-marble",
+      "problem": "mineral haze",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::mineral haze",
+      "title": "What Causes mineral haze on quartz countertops",
+      "slug": "what-causes-mineral-haze-on-quartz-countertops",
+      "problem": "mineral haze",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::mineral haze",
+      "title": "How to Remove mineral haze from quartz countertops",
+      "slug": "how-to-remove-mineral-haze-from-quartz-countertops",
+      "problem": "mineral haze",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::mineral haze",
+      "title": "How to Prevent mineral haze on quartz countertops",
+      "slug": "how-to-prevent-mineral-haze-on-quartz-countertops",
+      "problem": "mineral haze",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::mineral haze",
+      "title": "How to Fix mineral haze on quartz countertops",
+      "slug": "how-to-fix-mineral-haze-on-quartz-countertops",
+      "problem": "mineral haze",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::mineral haze",
+      "title": "How to Clean mineral haze from quartz countertops",
+      "slug": "how-to-clean-mineral-haze-from-quartz-countertops",
+      "problem": "mineral haze",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::mineral haze",
+      "title": "How to Tell if mineral haze on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-quartz-countertops-is-permanent",
+      "problem": "mineral haze",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on quartz countertops",
+      "slug": "why-mineral-haze-keeps-coming-back-on-quartz-countertops",
+      "problem": "mineral haze",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::mineral haze",
+      "title": "How to Maintain quartz countertops and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-quartz-countertops",
+      "problem": "mineral haze",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::mineral haze",
+      "title": "What Causes mineral haze on laminate counters",
+      "slug": "what-causes-mineral-haze-on-laminate-counters",
+      "problem": "mineral haze",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::mineral haze",
+      "title": "How to Remove mineral haze from laminate counters",
+      "slug": "how-to-remove-mineral-haze-from-laminate-counters",
+      "problem": "mineral haze",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::mineral haze",
+      "title": "How to Prevent mineral haze on laminate counters",
+      "slug": "how-to-prevent-mineral-haze-on-laminate-counters",
+      "problem": "mineral haze",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::mineral haze",
+      "title": "How to Fix mineral haze on laminate counters",
+      "slug": "how-to-fix-mineral-haze-on-laminate-counters",
+      "problem": "mineral haze",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::mineral haze",
+      "title": "How to Clean mineral haze from laminate counters",
+      "slug": "how-to-clean-mineral-haze-from-laminate-counters",
+      "problem": "mineral haze",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::mineral haze",
+      "title": "How to Tell if mineral haze on laminate counters is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-laminate-counters-is-permanent",
+      "problem": "mineral haze",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on laminate counters",
+      "slug": "why-mineral-haze-keeps-coming-back-on-laminate-counters",
+      "problem": "mineral haze",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::mineral haze",
+      "title": "How to Maintain laminate counters and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-laminate-counters",
+      "problem": "mineral haze",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::mineral haze",
+      "title": "What Causes mineral haze on butcher block",
+      "slug": "what-causes-mineral-haze-on-butcher-block",
+      "problem": "mineral haze",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::mineral haze",
+      "title": "How to Remove mineral haze from butcher block",
+      "slug": "how-to-remove-mineral-haze-from-butcher-block",
+      "problem": "mineral haze",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::mineral haze",
+      "title": "How to Prevent mineral haze on butcher block",
+      "slug": "how-to-prevent-mineral-haze-on-butcher-block",
+      "problem": "mineral haze",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::mineral haze",
+      "title": "How to Fix mineral haze on butcher block",
+      "slug": "how-to-fix-mineral-haze-on-butcher-block",
+      "problem": "mineral haze",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::mineral haze",
+      "title": "How to Clean mineral haze from butcher block",
+      "slug": "how-to-clean-mineral-haze-from-butcher-block",
+      "problem": "mineral haze",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::mineral haze",
+      "title": "How to Tell if mineral haze on butcher block is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-butcher-block-is-permanent",
+      "problem": "mineral haze",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on butcher block",
+      "slug": "why-mineral-haze-keeps-coming-back-on-butcher-block",
+      "problem": "mineral haze",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::mineral haze",
+      "title": "How to Maintain butcher block and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-butcher-block",
+      "problem": "mineral haze",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::mineral haze",
+      "title": "What Causes mineral haze on unfinished wood",
+      "slug": "what-causes-mineral-haze-on-unfinished-wood",
+      "problem": "mineral haze",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::mineral haze",
+      "title": "How to Remove mineral haze from unfinished wood",
+      "slug": "how-to-remove-mineral-haze-from-unfinished-wood",
+      "problem": "mineral haze",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::mineral haze",
+      "title": "How to Prevent mineral haze on unfinished wood",
+      "slug": "how-to-prevent-mineral-haze-on-unfinished-wood",
+      "problem": "mineral haze",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::mineral haze",
+      "title": "How to Fix mineral haze on unfinished wood",
+      "slug": "how-to-fix-mineral-haze-on-unfinished-wood",
+      "problem": "mineral haze",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::mineral haze",
+      "title": "How to Clean mineral haze from unfinished wood",
+      "slug": "how-to-clean-mineral-haze-from-unfinished-wood",
+      "problem": "mineral haze",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::mineral haze",
+      "title": "How to Tell if mineral haze on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-unfinished-wood-is-permanent",
+      "problem": "mineral haze",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on unfinished wood",
+      "slug": "why-mineral-haze-keeps-coming-back-on-unfinished-wood",
+      "problem": "mineral haze",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::mineral haze",
+      "title": "How to Maintain unfinished wood and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-unfinished-wood",
+      "problem": "mineral haze",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::mineral haze",
+      "title": "What Causes mineral haze on sealed wood",
+      "slug": "what-causes-mineral-haze-on-sealed-wood",
+      "problem": "mineral haze",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::mineral haze",
+      "title": "How to Remove mineral haze from sealed wood",
+      "slug": "how-to-remove-mineral-haze-from-sealed-wood",
+      "problem": "mineral haze",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::mineral haze",
+      "title": "How to Prevent mineral haze on sealed wood",
+      "slug": "how-to-prevent-mineral-haze-on-sealed-wood",
+      "problem": "mineral haze",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::mineral haze",
+      "title": "How to Fix mineral haze on sealed wood",
+      "slug": "how-to-fix-mineral-haze-on-sealed-wood",
+      "problem": "mineral haze",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::mineral haze",
+      "title": "How to Clean mineral haze from sealed wood",
+      "slug": "how-to-clean-mineral-haze-from-sealed-wood",
+      "problem": "mineral haze",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::mineral haze",
+      "title": "How to Tell if mineral haze on sealed wood is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-sealed-wood-is-permanent",
+      "problem": "mineral haze",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on sealed wood",
+      "slug": "why-mineral-haze-keeps-coming-back-on-sealed-wood",
+      "problem": "mineral haze",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::mineral haze",
+      "title": "How to Maintain sealed wood and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-sealed-wood",
+      "problem": "mineral haze",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::scale deposits",
+      "title": "What Causes scale deposits on granite",
+      "slug": "what-causes-scale-deposits-on-granite",
+      "problem": "scale deposits",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::scale deposits",
+      "title": "How to Remove scale deposits from granite",
+      "slug": "how-to-remove-scale-deposits-from-granite",
+      "problem": "scale deposits",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::scale deposits",
+      "title": "How to Prevent scale deposits on granite",
+      "slug": "how-to-prevent-scale-deposits-on-granite",
+      "problem": "scale deposits",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::scale deposits",
+      "title": "How to Fix scale deposits on granite",
+      "slug": "how-to-fix-scale-deposits-on-granite",
+      "problem": "scale deposits",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::scale deposits",
+      "title": "How to Clean scale deposits from granite",
+      "slug": "how-to-clean-scale-deposits-from-granite",
+      "problem": "scale deposits",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::scale deposits",
+      "title": "How to Tell if scale deposits on granite is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-granite-is-permanent",
+      "problem": "scale deposits",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on granite",
+      "slug": "why-scale-deposits-keeps-coming-back-on-granite",
+      "problem": "scale deposits",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::scale deposits",
+      "title": "How to Maintain granite and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-granite-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-granite",
+      "problem": "scale deposits",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::scale deposits",
+      "title": "What Causes scale deposits on marble",
+      "slug": "what-causes-scale-deposits-on-marble",
+      "problem": "scale deposits",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::scale deposits",
+      "title": "How to Remove scale deposits from marble",
+      "slug": "how-to-remove-scale-deposits-from-marble",
+      "problem": "scale deposits",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::scale deposits",
+      "title": "How to Prevent scale deposits on marble",
+      "slug": "how-to-prevent-scale-deposits-on-marble",
+      "problem": "scale deposits",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::scale deposits",
+      "title": "How to Fix scale deposits on marble",
+      "slug": "how-to-fix-scale-deposits-on-marble",
+      "problem": "scale deposits",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::scale deposits",
+      "title": "How to Clean scale deposits from marble",
+      "slug": "how-to-clean-scale-deposits-from-marble",
+      "problem": "scale deposits",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::scale deposits",
+      "title": "How to Tell if scale deposits on marble is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-marble-is-permanent",
+      "problem": "scale deposits",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on marble",
+      "slug": "why-scale-deposits-keeps-coming-back-on-marble",
+      "problem": "scale deposits",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::scale deposits",
+      "title": "How to Maintain marble and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-marble-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-marble",
+      "problem": "scale deposits",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::scale deposits",
+      "title": "What Causes scale deposits on quartz",
+      "slug": "what-causes-scale-deposits-on-quartz",
+      "problem": "scale deposits",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::scale deposits",
+      "title": "How to Remove scale deposits from quartz",
+      "slug": "how-to-remove-scale-deposits-from-quartz",
+      "problem": "scale deposits",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::scale deposits",
+      "title": "How to Prevent scale deposits on quartz",
+      "slug": "how-to-prevent-scale-deposits-on-quartz",
+      "problem": "scale deposits",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::scale deposits",
+      "title": "How to Fix scale deposits on quartz",
+      "slug": "how-to-fix-scale-deposits-on-quartz",
+      "problem": "scale deposits",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::scale deposits",
+      "title": "How to Clean scale deposits from quartz",
+      "slug": "how-to-clean-scale-deposits-from-quartz",
+      "problem": "scale deposits",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::scale deposits",
+      "title": "How to Tell if scale deposits on quartz is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-quartz-is-permanent",
+      "problem": "scale deposits",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on quartz",
+      "slug": "why-scale-deposits-keeps-coming-back-on-quartz",
+      "problem": "scale deposits",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::scale deposits",
+      "title": "How to Maintain quartz and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-quartz",
+      "problem": "scale deposits",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::scale deposits",
+      "title": "What Causes scale deposits on wood",
+      "slug": "what-causes-scale-deposits-on-wood",
+      "problem": "scale deposits",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::scale deposits",
+      "title": "How to Remove scale deposits from wood",
+      "slug": "how-to-remove-scale-deposits-from-wood",
+      "problem": "scale deposits",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::scale deposits",
+      "title": "How to Prevent scale deposits on wood",
+      "slug": "how-to-prevent-scale-deposits-on-wood",
+      "problem": "scale deposits",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::scale deposits",
+      "title": "How to Fix scale deposits on wood",
+      "slug": "how-to-fix-scale-deposits-on-wood",
+      "problem": "scale deposits",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::scale deposits",
+      "title": "How to Clean scale deposits from wood",
+      "slug": "how-to-clean-scale-deposits-from-wood",
+      "problem": "scale deposits",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::scale deposits",
+      "title": "How to Tell if scale deposits on wood is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-wood-is-permanent",
+      "problem": "scale deposits",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on wood",
+      "slug": "why-scale-deposits-keeps-coming-back-on-wood",
+      "problem": "scale deposits",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::scale deposits",
+      "title": "How to Maintain wood and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-wood-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-wood",
+      "problem": "scale deposits",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::scale deposits",
+      "title": "What Causes scale deposits on grout",
+      "slug": "what-causes-scale-deposits-on-grout",
+      "problem": "scale deposits",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::scale deposits",
+      "title": "How to Remove scale deposits from grout",
+      "slug": "how-to-remove-scale-deposits-from-grout",
+      "problem": "scale deposits",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::scale deposits",
+      "title": "How to Prevent scale deposits on grout",
+      "slug": "how-to-prevent-scale-deposits-on-grout",
+      "problem": "scale deposits",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::scale deposits",
+      "title": "How to Fix scale deposits on grout",
+      "slug": "how-to-fix-scale-deposits-on-grout",
+      "problem": "scale deposits",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::scale deposits",
+      "title": "How to Clean scale deposits from grout",
+      "slug": "how-to-clean-scale-deposits-from-grout",
+      "problem": "scale deposits",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::scale deposits",
+      "title": "How to Tell if scale deposits on grout is Permanent",
+      "slug": "how-to-tell-if-scale-deposits-on-grout-is-permanent",
+      "problem": "scale deposits",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::scale deposits",
+      "title": "Why scale deposits Keeps Coming Back on grout",
+      "slug": "why-scale-deposits-keeps-coming-back-on-grout",
+      "problem": "scale deposits",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::scale deposits",
+      "title": "How to Maintain grout and Keep scale deposits Under Control",
+      "slug": "how-to-maintain-grout-and-keep-scale-deposits-under-control",
+      "problem": "scale deposits",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::scale deposits",
+      "title": "How to Recover After a Cleaning Mistake With scale deposits on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scale-deposits-on-grout",
+      "problem": "scale deposits",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

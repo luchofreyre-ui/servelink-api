@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-maintain::shower grout::smearing",
+      "title": "How to Maintain shower grout and Keep smearing Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-shower-grout",
+      "problem": "smearing",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::smearing",
+      "title": "What Causes smearing on tile grout",
+      "slug": "what-causes-smearing-on-tile-grout",
+      "problem": "smearing",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::smearing",
+      "title": "How to Remove smearing from tile grout",
+      "slug": "how-to-remove-smearing-from-tile-grout",
+      "problem": "smearing",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::smearing",
+      "title": "How to Prevent smearing on tile grout",
+      "slug": "how-to-prevent-smearing-on-tile-grout",
+      "problem": "smearing",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::smearing",
+      "title": "How to Fix smearing on tile grout",
+      "slug": "how-to-fix-smearing-on-tile-grout",
+      "problem": "smearing",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::smearing",
+      "title": "How to Clean smearing from tile grout",
+      "slug": "how-to-clean-smearing-from-tile-grout",
+      "problem": "smearing",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::smearing",
+      "title": "How to Tell if smearing on tile grout is Permanent",
+      "slug": "how-to-tell-if-smearing-on-tile-grout-is-permanent",
+      "problem": "smearing",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::smearing",
+      "title": "Why smearing Keeps Coming Back on tile grout",
+      "slug": "why-smearing-keeps-coming-back-on-tile-grout",
+      "problem": "smearing",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::smearing",
+      "title": "How to Maintain tile grout and Keep smearing Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-tile-grout",
+      "problem": "smearing",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::smearing",
+      "title": "What Causes smearing on caulking",
+      "slug": "what-causes-smearing-on-caulking",
+      "problem": "smearing",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::smearing",
+      "title": "How to Remove smearing from caulking",
+      "slug": "how-to-remove-smearing-from-caulking",
+      "problem": "smearing",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::smearing",
+      "title": "How to Prevent smearing on caulking",
+      "slug": "how-to-prevent-smearing-on-caulking",
+      "problem": "smearing",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::smearing",
+      "title": "How to Fix smearing on caulking",
+      "slug": "how-to-fix-smearing-on-caulking",
+      "problem": "smearing",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::smearing",
+      "title": "How to Clean smearing from caulking",
+      "slug": "how-to-clean-smearing-from-caulking",
+      "problem": "smearing",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::smearing",
+      "title": "How to Tell if smearing on caulking is Permanent",
+      "slug": "how-to-tell-if-smearing-on-caulking-is-permanent",
+      "problem": "smearing",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::smearing",
+      "title": "Why smearing Keeps Coming Back on caulking",
+      "slug": "why-smearing-keeps-coming-back-on-caulking",
+      "problem": "smearing",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::smearing",
+      "title": "How to Maintain caulking and Keep smearing Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-caulking",
+      "problem": "smearing",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::smearing",
+      "title": "What Causes smearing on shower pans",
+      "slug": "what-causes-smearing-on-shower-pans",
+      "problem": "smearing",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::smearing",
+      "title": "How to Remove smearing from shower pans",
+      "slug": "how-to-remove-smearing-from-shower-pans",
+      "problem": "smearing",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::smearing",
+      "title": "How to Prevent smearing on shower pans",
+      "slug": "how-to-prevent-smearing-on-shower-pans",
+      "problem": "smearing",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::smearing",
+      "title": "How to Fix smearing on shower pans",
+      "slug": "how-to-fix-smearing-on-shower-pans",
+      "problem": "smearing",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::smearing",
+      "title": "How to Clean smearing from shower pans",
+      "slug": "how-to-clean-smearing-from-shower-pans",
+      "problem": "smearing",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::smearing",
+      "title": "How to Tell if smearing on shower pans is Permanent",
+      "slug": "how-to-tell-if-smearing-on-shower-pans-is-permanent",
+      "problem": "smearing",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::smearing",
+      "title": "Why smearing Keeps Coming Back on shower pans",
+      "slug": "why-smearing-keeps-coming-back-on-shower-pans",
+      "problem": "smearing",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::smearing",
+      "title": "How to Maintain shower pans and Keep smearing Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-shower-pans",
+      "problem": "smearing",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::smearing",
+      "title": "What Causes smearing on bathtub surrounds",
+      "slug": "what-causes-smearing-on-bathtub-surrounds",
+      "problem": "smearing",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::smearing",
+      "title": "How to Remove smearing from bathtub surrounds",
+      "slug": "how-to-remove-smearing-from-bathtub-surrounds",
+      "problem": "smearing",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::smearing",
+      "title": "How to Prevent smearing on bathtub surrounds",
+      "slug": "how-to-prevent-smearing-on-bathtub-surrounds",
+      "problem": "smearing",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::smearing",
+      "title": "How to Fix smearing on bathtub surrounds",
+      "slug": "how-to-fix-smearing-on-bathtub-surrounds",
+      "problem": "smearing",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::smearing",
+      "title": "How to Clean smearing from bathtub surrounds",
+      "slug": "how-to-clean-smearing-from-bathtub-surrounds",
+      "problem": "smearing",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::smearing",
+      "title": "How to Tell if smearing on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-smearing-on-bathtub-surrounds-is-permanent",
+      "problem": "smearing",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::smearing",
+      "title": "Why smearing Keeps Coming Back on bathtub surrounds",
+      "slug": "why-smearing-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "smearing",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::smearing",
+      "title": "How to Maintain bathtub surrounds and Keep smearing Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-bathtub-surrounds",
+      "problem": "smearing",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::smearing",
+      "title": "What Causes smearing on ceramic tile",
+      "slug": "what-causes-smearing-on-ceramic-tile",
+      "problem": "smearing",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::smearing",
+      "title": "How to Remove smearing from ceramic tile",
+      "slug": "how-to-remove-smearing-from-ceramic-tile",
+      "problem": "smearing",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::smearing",
+      "title": "How to Prevent smearing on ceramic tile",
+      "slug": "how-to-prevent-smearing-on-ceramic-tile",
+      "problem": "smearing",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::smearing",
+      "title": "How to Fix smearing on ceramic tile",
+      "slug": "how-to-fix-smearing-on-ceramic-tile",
+      "problem": "smearing",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::smearing",
+      "title": "How to Clean smearing from ceramic tile",
+      "slug": "how-to-clean-smearing-from-ceramic-tile",
+      "problem": "smearing",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::smearing",
+      "title": "How to Tell if smearing on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-smearing-on-ceramic-tile-is-permanent",
+      "problem": "smearing",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::smearing",
+      "title": "Why smearing Keeps Coming Back on ceramic tile",
+      "slug": "why-smearing-keeps-coming-back-on-ceramic-tile",
+      "problem": "smearing",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::smearing",
+      "title": "How to Maintain ceramic tile and Keep smearing Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-ceramic-tile",
+      "problem": "smearing",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::smearing",
+      "title": "What Causes smearing on porcelain tile",
+      "slug": "what-causes-smearing-on-porcelain-tile",
+      "problem": "smearing",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::smearing",
+      "title": "How to Remove smearing from porcelain tile",
+      "slug": "how-to-remove-smearing-from-porcelain-tile",
+      "problem": "smearing",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::smearing",
+      "title": "How to Prevent smearing on porcelain tile",
+      "slug": "how-to-prevent-smearing-on-porcelain-tile",
+      "problem": "smearing",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::smearing",
+      "title": "How to Fix smearing on porcelain tile",
+      "slug": "how-to-fix-smearing-on-porcelain-tile",
+      "problem": "smearing",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::smearing",
+      "title": "How to Clean smearing from porcelain tile",
+      "slug": "how-to-clean-smearing-from-porcelain-tile",
+      "problem": "smearing",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::smearing",
+      "title": "How to Tell if smearing on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-smearing-on-porcelain-tile-is-permanent",
+      "problem": "smearing",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::smearing",
+      "title": "Why smearing Keeps Coming Back on porcelain tile",
+      "slug": "why-smearing-keeps-coming-back-on-porcelain-tile",
+      "problem": "smearing",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::smearing",
+      "title": "How to Maintain porcelain tile and Keep smearing Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-porcelain-tile",
+      "problem": "smearing",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::smearing",
+      "title": "What Causes smearing on sealed granite",
+      "slug": "what-causes-smearing-on-sealed-granite",
+      "problem": "smearing",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::smearing",
+      "title": "How to Remove smearing from sealed granite",
+      "slug": "how-to-remove-smearing-from-sealed-granite",
+      "problem": "smearing",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::smearing",
+      "title": "How to Prevent smearing on sealed granite",
+      "slug": "how-to-prevent-smearing-on-sealed-granite",
+      "problem": "smearing",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::smearing",
+      "title": "How to Fix smearing on sealed granite",
+      "slug": "how-to-fix-smearing-on-sealed-granite",
+      "problem": "smearing",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::smearing",
+      "title": "How to Clean smearing from sealed granite",
+      "slug": "how-to-clean-smearing-from-sealed-granite",
+      "problem": "smearing",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::smearing",
+      "title": "How to Tell if smearing on sealed granite is Permanent",
+      "slug": "how-to-tell-if-smearing-on-sealed-granite-is-permanent",
+      "problem": "smearing",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::smearing",
+      "title": "Why smearing Keeps Coming Back on sealed granite",
+      "slug": "why-smearing-keeps-coming-back-on-sealed-granite",
+      "problem": "smearing",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::smearing",
+      "title": "How to Maintain sealed granite and Keep smearing Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-sealed-granite",
+      "problem": "smearing",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::smearing",
+      "title": "What Causes smearing on sealed marble",
+      "slug": "what-causes-smearing-on-sealed-marble",
+      "problem": "smearing",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::smearing",
+      "title": "How to Remove smearing from sealed marble",
+      "slug": "how-to-remove-smearing-from-sealed-marble",
+      "problem": "smearing",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::smearing",
+      "title": "How to Prevent smearing on sealed marble",
+      "slug": "how-to-prevent-smearing-on-sealed-marble",
+      "problem": "smearing",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::smearing",
+      "title": "How to Fix smearing on sealed marble",
+      "slug": "how-to-fix-smearing-on-sealed-marble",
+      "problem": "smearing",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::smearing",
+      "title": "How to Clean smearing from sealed marble",
+      "slug": "how-to-clean-smearing-from-sealed-marble",
+      "problem": "smearing",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::smearing",
+      "title": "How to Tell if smearing on sealed marble is Permanent",
+      "slug": "how-to-tell-if-smearing-on-sealed-marble-is-permanent",
+      "problem": "smearing",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::smearing",
+      "title": "Why smearing Keeps Coming Back on sealed marble",
+      "slug": "why-smearing-keeps-coming-back-on-sealed-marble",
+      "problem": "smearing",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::smearing",
+      "title": "How to Maintain sealed marble and Keep smearing Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-sealed-marble",
+      "problem": "smearing",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::smearing",
+      "title": "What Causes smearing on quartz countertops",
+      "slug": "what-causes-smearing-on-quartz-countertops",
+      "problem": "smearing",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::smearing",
+      "title": "How to Remove smearing from quartz countertops",
+      "slug": "how-to-remove-smearing-from-quartz-countertops",
+      "problem": "smearing",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::smearing",
+      "title": "How to Prevent smearing on quartz countertops",
+      "slug": "how-to-prevent-smearing-on-quartz-countertops",
+      "problem": "smearing",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::smearing",
+      "title": "How to Fix smearing on quartz countertops",
+      "slug": "how-to-fix-smearing-on-quartz-countertops",
+      "problem": "smearing",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::smearing",
+      "title": "How to Clean smearing from quartz countertops",
+      "slug": "how-to-clean-smearing-from-quartz-countertops",
+      "problem": "smearing",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::smearing",
+      "title": "How to Tell if smearing on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-smearing-on-quartz-countertops-is-permanent",
+      "problem": "smearing",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::smearing",
+      "title": "Why smearing Keeps Coming Back on quartz countertops",
+      "slug": "why-smearing-keeps-coming-back-on-quartz-countertops",
+      "problem": "smearing",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::smearing",
+      "title": "How to Maintain quartz countertops and Keep smearing Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-quartz-countertops",
+      "problem": "smearing",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::smearing",
+      "title": "What Causes smearing on butcher block",
+      "slug": "what-causes-smearing-on-butcher-block",
+      "problem": "smearing",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::smearing",
+      "title": "How to Remove smearing from butcher block",
+      "slug": "how-to-remove-smearing-from-butcher-block",
+      "problem": "smearing",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::smearing",
+      "title": "How to Prevent smearing on butcher block",
+      "slug": "how-to-prevent-smearing-on-butcher-block",
+      "problem": "smearing",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::smearing",
+      "title": "How to Fix smearing on butcher block",
+      "slug": "how-to-fix-smearing-on-butcher-block",
+      "problem": "smearing",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::smearing",
+      "title": "How to Clean smearing from butcher block",
+      "slug": "how-to-clean-smearing-from-butcher-block",
+      "problem": "smearing",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::smearing",
+      "title": "How to Tell if smearing on butcher block is Permanent",
+      "slug": "how-to-tell-if-smearing-on-butcher-block-is-permanent",
+      "problem": "smearing",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::smearing",
+      "title": "Why smearing Keeps Coming Back on butcher block",
+      "slug": "why-smearing-keeps-coming-back-on-butcher-block",
+      "problem": "smearing",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::smearing",
+      "title": "How to Maintain butcher block and Keep smearing Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::smearing",
+      "title": "How to Recover After a Cleaning Mistake With smearing on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-smearing-on-butcher-block",
+      "problem": "smearing",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::smearing",
+      "title": "What Causes smearing on unfinished wood",
+      "slug": "what-causes-smearing-on-unfinished-wood",
+      "problem": "smearing",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::smearing",
+      "title": "How to Remove smearing from unfinished wood",
+      "slug": "how-to-remove-smearing-from-unfinished-wood",
+      "problem": "smearing",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::smearing",
+      "title": "How to Prevent smearing on unfinished wood",
+      "slug": "how-to-prevent-smearing-on-unfinished-wood",
+      "problem": "smearing",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::smearing",
+      "title": "How to Fix smearing on unfinished wood",
+      "slug": "how-to-fix-smearing-on-unfinished-wood",
+      "problem": "smearing",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::smearing",
+      "title": "How to Clean smearing from unfinished wood",
+      "slug": "how-to-clean-smearing-from-unfinished-wood",
+      "problem": "smearing",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::smearing",
+      "title": "How to Tell if smearing on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-smearing-on-unfinished-wood-is-permanent",
+      "problem": "smearing",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::smearing",
+      "title": "Why smearing Keeps Coming Back on unfinished wood",
+      "slug": "why-smearing-keeps-coming-back-on-unfinished-wood",
+      "problem": "smearing",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::smearing",
+      "title": "How to Maintain unfinished wood and Keep smearing Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-smearing-under-control",
+      "problem": "smearing",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

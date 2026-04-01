@@ -1,10 +1,9 @@
 /**
- * Full API-backed encyclopedia pipeline with overlap-aware batching.
+ * Corpus-gap-first encyclopedia pipeline only (no full-matrix net-new regeneration).
  *
- * Combo identity (hard rule): normalized intent + problem + surface — not title.
- * Seeds from GET /api/v1/encyclopedia/list, emits only net-new triples, repeats until none remain.
- * The matrix is fully scanned each pass (no mid-scan overlap-ratio exit): partial exits can skip
- * net-new combos that appear later in traversal order and break multi-pass refresh.
+ * Builds targets from GET /api/v1/encyclopedia/list vs the taxonomy matrix: matrix cells with
+ * evidence whose canonical (surface, problem) pair is missing from the live corpus. If there are
+ * no such gaps, generation is skipped.
  *
  * Run from apps/web: npm run run:full-encyclopedia
  * Write batch JSON only: npm run run:full-encyclopedia -- --seed-only
@@ -14,6 +13,7 @@
 import { execSync } from "child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { setTimeout as sleep } from "node:timers/promises";
 
 import {
   normalizeTaxonomyPart,
@@ -149,34 +149,30 @@ function normalizeIntent(raw: string): Intent {
 
 async function fetchLiveList(apiBase: string): Promise<PublicListItem[]> {
   const url = `${apiBase.replace(/\/$/, "")}/encyclopedia/list`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`GET ${url} failed: ${res.status} ${res.statusText}`);
-  }
-  const data = (await res.json()) as { ok?: boolean; items?: PublicListItem[] };
-  if (!Array.isArray(data.items)) {
-    throw new Error(`Unexpected encyclopedia list shape (missing items[])`);
-  }
-  return data.items;
-}
+  let lastError: unknown = null;
 
-async function refreshExistingCombosFromApi(apiBase: string): Promise<Set<string>> {
-  const items = await fetchLiveList(apiBase);
-  const existingCombos = new Set<string>();
-  for (const item of items) {
-    const intent = item.intent;
-    const problem = item.problem;
-    const surface = item.surface;
-    if (
-      typeof intent !== "string" ||
-      typeof problem !== "string" ||
-      typeof surface !== "string"
-    ) {
-      continue;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const res = await fetch(url, {
+        // Reduce chance of stale keep-alive sockets causing EPIPE in long runs.
+        headers: { Connection: "close" },
+      });
+      if (!res.ok) {
+        throw new Error(`GET ${url} failed: ${res.status} ${res.statusText}`);
+      }
+      const data = (await res.json()) as { ok?: boolean; items?: PublicListItem[] };
+      if (!Array.isArray(data.items)) {
+        throw new Error(`Unexpected encyclopedia list shape (missing items[])`);
+      }
+      return data.items;
+    } catch (err) {
+      lastError = err;
+      // brief backoff then retry (undici can surface transient EPIPE)
+      await sleep(150 * attempt);
     }
-    existingCombos.add(comboKey(intent, problem, surface));
   }
-  return existingCombos;
+
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
 }
 
 async function buildCorpusGapFirstCandidates(apiBase: string): Promise<PageRow[]> {
@@ -230,45 +226,6 @@ async function buildCorpusGapFirstCandidates(apiBase: string): Promise<PageRow[]
   }
 
   return accepted;
-}
-
-function buildNetNewCandidates(existingCombos: Set<string>): {
-  accepted: PageRow[];
-  overlapCount: number;
-  attempted: number;
-} {
-  const working = new Set(existingCombos);
-  const accepted: PageRow[] = [];
-  let overlapCount = 0;
-  let attempted = 0;
-  const riskLevels = ["low", "medium", "high"] as const;
-
-  for (const problem of PROBLEMS) {
-    for (const surface of SURFACES) {
-      for (const intent of PRODUCT_INTENTS) {
-        attempted++;
-        const key = comboKey(intent, problem, surface);
-        if (working.has(key)) {
-          overlapCount++;
-          continue;
-        }
-        working.add(key);
-        const title = buildTitle(intent, problem, surface);
-        accepted.push({
-          id: `P-PL-NN-${String(accepted.length + 1).padStart(5, "0")}`,
-          title,
-          slug: slugify(title),
-          problem,
-          surface,
-          intent,
-          riskLevel: riskLevels[accepted.length % 3],
-          status: "draft",
-        });
-      }
-    }
-  }
-
-  return { accepted, overlapCount, attempted };
 }
 
 function clearApiPipelineBatchJson() {
@@ -447,64 +404,37 @@ async function main() {
   }
 
   if (seedOnly) {
-    const existingCombos = await refreshExistingCombosFromApi(apiBase);
-    const { accepted, overlapCount, attempted } =
-      buildNetNewCandidates(existingCombos);
-    const pctSeed =
-      attempted > 0
-        ? `${((100 * overlapCount) / attempted).toFixed(1)}% overlap`
-        : "no attempts";
-    console.log(
-      `Net-new scan: ${accepted.length} accepted, ${overlapCount} overlaps / ${attempted} attempted (${pctSeed})`,
-    );
-    if (accepted.length === 0) {
-      console.log("No net-new encyclopedia pages remain in current matrix.");
+    const corpusGaps = await buildCorpusGapFirstCandidates(apiBase);
+    if (corpusGaps.length > 50_000) {
+      throw new Error("Corpus gap explosion detected — aborting run");
+    }
+    if (corpusGaps.length === 0) {
+      console.log("No corpus gaps. Skipping generation.");
       process.exit(0);
     }
-    writeBatchesFromAccepted(accepted);
+    writeBatchesFromAccepted(corpusGaps);
     console.log("\n✅ Seed complete (--seed-only)\n");
     return;
   }
 
-  let pass = 0;
-  while (true) {
-    pass++;
-    console.log(`\n—— Pass ${pass}: loading live corpus keys ——\n`);
-    const existingCombos = await refreshExistingCombosFromApi(apiBase);
-
-    // CORPUS GAP PRIORITY: generate missing (surface, problem) pages that
-    // have evidence support but do not yet exist as live pages by canonical key.
-    const gapAccepted = await buildCorpusGapFirstCandidates(apiBase);
-    if (gapAccepted.length > 0) {
-      console.log(
-        `Corpus-gap scan: ${gapAccepted.length} accepted (evidence OK, missing live canonical pair)`,
-      );
-      writeBatchesFromAccepted(gapAccepted);
-      runPipelineOnDiskBatches(apiBase);
-      continue;
-    }
-
-    const { accepted, overlapCount, attempted } =
-      buildNetNewCandidates(existingCombos);
-    const pct =
-      attempted > 0
-        ? `${((100 * overlapCount) / attempted).toFixed(1)}% overlap`
-        : "no attempts";
+  console.log("\n—— Corpus-gap-only pass: loading live corpus keys ——\n");
+  const corpusGaps = await buildCorpusGapFirstCandidates(apiBase);
+  // Rows = (missing canonical pairs) × intents — can exceed matrix "cell" gap counts.
+  if (corpusGaps.length > 50_000) {
+    throw new Error("Corpus gap explosion detected — aborting run");
+  }
+  if (corpusGaps.length === 0) {
+    console.log("No corpus gaps. Skipping generation.");
+  } else {
     console.log(
-      `Net-new scan: ${accepted.length} accepted, ${overlapCount} overlaps / ${attempted} attempted (${pct})`,
+      `Corpus-gap scan: ${corpusGaps.length} accepted (evidence OK, missing live canonical pair)`,
     );
-
-    if (accepted.length === 0) {
-      console.log("No net-new pages left. Stopping.");
-      break;
-    }
-
-    writeBatchesFromAccepted(accepted);
+    writeBatchesFromAccepted(corpusGaps);
     runPipelineOnDiskBatches(apiBase);
   }
 
   run(`npm run assert:coverage`, WEB_ROOT);
-  console.log("\n✅ PIPELINE FINISHED (no more net-new rows for this taxonomy)\n");
+  console.log("\n✅ PIPELINE FINISHED (corpus-gap-only pass)\n");
 }
 
 main().catch((err) => {

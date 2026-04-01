@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-fix::bathtub surrounds::pink slime",
+      "title": "How to Fix pink slime on bathtub surrounds",
+      "slug": "how-to-fix-pink-slime-on-bathtub-surrounds",
+      "problem": "pink slime",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::pink slime",
+      "title": "How to Clean pink slime from bathtub surrounds",
+      "slug": "how-to-clean-pink-slime-from-bathtub-surrounds",
+      "problem": "pink slime",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::pink slime",
+      "title": "How to Tell if pink slime on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-bathtub-surrounds-is-permanent",
+      "problem": "pink slime",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::pink slime",
+      "title": "Why pink slime Keeps Coming Back on bathtub surrounds",
+      "slug": "why-pink-slime-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "pink slime",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::pink slime",
+      "title": "How to Maintain bathtub surrounds and Keep pink slime Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-bathtub-surrounds",
+      "problem": "pink slime",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::pink slime",
+      "title": "What Causes pink slime on ceramic tile",
+      "slug": "what-causes-pink-slime-on-ceramic-tile",
+      "problem": "pink slime",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::pink slime",
+      "title": "How to Remove pink slime from ceramic tile",
+      "slug": "how-to-remove-pink-slime-from-ceramic-tile",
+      "problem": "pink slime",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::pink slime",
+      "title": "How to Prevent pink slime on ceramic tile",
+      "slug": "how-to-prevent-pink-slime-on-ceramic-tile",
+      "problem": "pink slime",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::pink slime",
+      "title": "How to Fix pink slime on ceramic tile",
+      "slug": "how-to-fix-pink-slime-on-ceramic-tile",
+      "problem": "pink slime",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::pink slime",
+      "title": "How to Clean pink slime from ceramic tile",
+      "slug": "how-to-clean-pink-slime-from-ceramic-tile",
+      "problem": "pink slime",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::pink slime",
+      "title": "How to Tell if pink slime on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-ceramic-tile-is-permanent",
+      "problem": "pink slime",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::pink slime",
+      "title": "Why pink slime Keeps Coming Back on ceramic tile",
+      "slug": "why-pink-slime-keeps-coming-back-on-ceramic-tile",
+      "problem": "pink slime",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::pink slime",
+      "title": "How to Maintain ceramic tile and Keep pink slime Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-ceramic-tile",
+      "problem": "pink slime",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::pink slime",
+      "title": "What Causes pink slime on porcelain tile",
+      "slug": "what-causes-pink-slime-on-porcelain-tile",
+      "problem": "pink slime",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::pink slime",
+      "title": "How to Remove pink slime from porcelain tile",
+      "slug": "how-to-remove-pink-slime-from-porcelain-tile",
+      "problem": "pink slime",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::pink slime",
+      "title": "How to Prevent pink slime on porcelain tile",
+      "slug": "how-to-prevent-pink-slime-on-porcelain-tile",
+      "problem": "pink slime",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::pink slime",
+      "title": "How to Fix pink slime on porcelain tile",
+      "slug": "how-to-fix-pink-slime-on-porcelain-tile",
+      "problem": "pink slime",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::pink slime",
+      "title": "How to Clean pink slime from porcelain tile",
+      "slug": "how-to-clean-pink-slime-from-porcelain-tile",
+      "problem": "pink slime",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::pink slime",
+      "title": "How to Tell if pink slime on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-porcelain-tile-is-permanent",
+      "problem": "pink slime",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::pink slime",
+      "title": "Why pink slime Keeps Coming Back on porcelain tile",
+      "slug": "why-pink-slime-keeps-coming-back-on-porcelain-tile",
+      "problem": "pink slime",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::pink slime",
+      "title": "How to Maintain porcelain tile and Keep pink slime Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-porcelain-tile",
+      "problem": "pink slime",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::garbage cans::pink slime",
+      "title": "What Causes pink slime on garbage cans",
+      "slug": "what-causes-pink-slime-on-garbage-cans",
+      "problem": "pink slime",
+      "surface": "garbage cans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::garbage cans::pink slime",
+      "title": "How to Remove pink slime from garbage cans",
+      "slug": "how-to-remove-pink-slime-from-garbage-cans",
+      "problem": "pink slime",
+      "surface": "garbage cans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::garbage cans::pink slime",
+      "title": "How to Prevent pink slime on garbage cans",
+      "slug": "how-to-prevent-pink-slime-on-garbage-cans",
+      "problem": "pink slime",
+      "surface": "garbage cans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::garbage cans::pink slime",
+      "title": "How to Fix pink slime on garbage cans",
+      "slug": "how-to-fix-pink-slime-on-garbage-cans",
+      "problem": "pink slime",
+      "surface": "garbage cans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::garbage cans::pink slime",
+      "title": "How to Clean pink slime from garbage cans",
+      "slug": "how-to-clean-pink-slime-from-garbage-cans",
+      "problem": "pink slime",
+      "surface": "garbage cans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::garbage cans::pink slime",
+      "title": "How to Tell if pink slime on garbage cans is Permanent",
+      "slug": "how-to-tell-if-pink-slime-on-garbage-cans-is-permanent",
+      "problem": "pink slime",
+      "surface": "garbage cans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::garbage cans::pink slime",
+      "title": "Why pink slime Keeps Coming Back on garbage cans",
+      "slug": "why-pink-slime-keeps-coming-back-on-garbage-cans",
+      "problem": "pink slime",
+      "surface": "garbage cans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::garbage cans::pink slime",
+      "title": "How to Maintain garbage cans and Keep pink slime Under Control",
+      "slug": "how-to-maintain-garbage-cans-and-keep-pink-slime-under-control",
+      "problem": "pink slime",
+      "surface": "garbage cans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::garbage cans::pink slime",
+      "title": "How to Recover After a Cleaning Mistake With pink slime on garbage cans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-pink-slime-on-garbage-cans",
+      "problem": "pink slime",
+      "surface": "garbage cans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::dye transfer",
+      "title": "What Causes dye transfer on shower glass",
+      "slug": "what-causes-dye-transfer-on-shower-glass",
+      "problem": "dye transfer",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::dye transfer",
+      "title": "How to Remove dye transfer from shower glass",
+      "slug": "how-to-remove-dye-transfer-from-shower-glass",
+      "problem": "dye transfer",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::dye transfer",
+      "title": "How to Prevent dye transfer on shower glass",
+      "slug": "how-to-prevent-dye-transfer-on-shower-glass",
+      "problem": "dye transfer",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::dye transfer",
+      "title": "How to Fix dye transfer on shower glass",
+      "slug": "how-to-fix-dye-transfer-on-shower-glass",
+      "problem": "dye transfer",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::dye transfer",
+      "title": "How to Clean dye transfer from shower glass",
+      "slug": "how-to-clean-dye-transfer-from-shower-glass",
+      "problem": "dye transfer",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::dye transfer",
+      "title": "How to Tell if dye transfer on shower glass is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-shower-glass-is-permanent",
+      "problem": "dye transfer",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on shower glass",
+      "slug": "why-dye-transfer-keeps-coming-back-on-shower-glass",
+      "problem": "dye transfer",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::dye transfer",
+      "title": "How to Maintain shower glass and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-shower-glass",
+      "problem": "dye transfer",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::dye transfer",
+      "title": "What Causes dye transfer on granite",
+      "slug": "what-causes-dye-transfer-on-granite",
+      "problem": "dye transfer",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::dye transfer",
+      "title": "How to Remove dye transfer from granite",
+      "slug": "how-to-remove-dye-transfer-from-granite",
+      "problem": "dye transfer",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::dye transfer",
+      "title": "How to Prevent dye transfer on granite",
+      "slug": "how-to-prevent-dye-transfer-on-granite",
+      "problem": "dye transfer",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::dye transfer",
+      "title": "How to Fix dye transfer on granite",
+      "slug": "how-to-fix-dye-transfer-on-granite",
+      "problem": "dye transfer",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::dye transfer",
+      "title": "How to Clean dye transfer from granite",
+      "slug": "how-to-clean-dye-transfer-from-granite",
+      "problem": "dye transfer",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::dye transfer",
+      "title": "How to Tell if dye transfer on granite is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-granite-is-permanent",
+      "problem": "dye transfer",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on granite",
+      "slug": "why-dye-transfer-keeps-coming-back-on-granite",
+      "problem": "dye transfer",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::dye transfer",
+      "title": "How to Maintain granite and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-granite-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-granite",
+      "problem": "dye transfer",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::dye transfer",
+      "title": "What Causes dye transfer on marble",
+      "slug": "what-causes-dye-transfer-on-marble",
+      "problem": "dye transfer",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::dye transfer",
+      "title": "How to Remove dye transfer from marble",
+      "slug": "how-to-remove-dye-transfer-from-marble",
+      "problem": "dye transfer",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::dye transfer",
+      "title": "How to Prevent dye transfer on marble",
+      "slug": "how-to-prevent-dye-transfer-on-marble",
+      "problem": "dye transfer",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::dye transfer",
+      "title": "How to Fix dye transfer on marble",
+      "slug": "how-to-fix-dye-transfer-on-marble",
+      "problem": "dye transfer",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::dye transfer",
+      "title": "How to Clean dye transfer from marble",
+      "slug": "how-to-clean-dye-transfer-from-marble",
+      "problem": "dye transfer",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::dye transfer",
+      "title": "How to Tell if dye transfer on marble is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-marble-is-permanent",
+      "problem": "dye transfer",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on marble",
+      "slug": "why-dye-transfer-keeps-coming-back-on-marble",
+      "problem": "dye transfer",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::dye transfer",
+      "title": "How to Maintain marble and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-marble-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-marble",
+      "problem": "dye transfer",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::dye transfer",
+      "title": "What Causes dye transfer on quartz",
+      "slug": "what-causes-dye-transfer-on-quartz",
+      "problem": "dye transfer",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::dye transfer",
+      "title": "How to Remove dye transfer from quartz",
+      "slug": "how-to-remove-dye-transfer-from-quartz",
+      "problem": "dye transfer",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::dye transfer",
+      "title": "How to Prevent dye transfer on quartz",
+      "slug": "how-to-prevent-dye-transfer-on-quartz",
+      "problem": "dye transfer",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::dye transfer",
+      "title": "How to Fix dye transfer on quartz",
+      "slug": "how-to-fix-dye-transfer-on-quartz",
+      "problem": "dye transfer",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::dye transfer",
+      "title": "How to Clean dye transfer from quartz",
+      "slug": "how-to-clean-dye-transfer-from-quartz",
+      "problem": "dye transfer",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::dye transfer",
+      "title": "How to Tell if dye transfer on quartz is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-quartz-is-permanent",
+      "problem": "dye transfer",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on quartz",
+      "slug": "why-dye-transfer-keeps-coming-back-on-quartz",
+      "problem": "dye transfer",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::dye transfer",
+      "title": "How to Maintain quartz and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-quartz",
+      "problem": "dye transfer",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::dye transfer",
+      "title": "What Causes dye transfer on laminate",
+      "slug": "what-causes-dye-transfer-on-laminate",
+      "problem": "dye transfer",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::dye transfer",
+      "title": "How to Remove dye transfer from laminate",
+      "slug": "how-to-remove-dye-transfer-from-laminate",
+      "problem": "dye transfer",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::dye transfer",
+      "title": "How to Prevent dye transfer on laminate",
+      "slug": "how-to-prevent-dye-transfer-on-laminate",
+      "problem": "dye transfer",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::dye transfer",
+      "title": "How to Fix dye transfer on laminate",
+      "slug": "how-to-fix-dye-transfer-on-laminate",
+      "problem": "dye transfer",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::dye transfer",
+      "title": "How to Clean dye transfer from laminate",
+      "slug": "how-to-clean-dye-transfer-from-laminate",
+      "problem": "dye transfer",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::dye transfer",
+      "title": "How to Tell if dye transfer on laminate is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-laminate-is-permanent",
+      "problem": "dye transfer",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on laminate",
+      "slug": "why-dye-transfer-keeps-coming-back-on-laminate",
+      "problem": "dye transfer",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::dye transfer",
+      "title": "How to Maintain laminate and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-laminate",
+      "problem": "dye transfer",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::dye transfer",
+      "title": "What Causes dye transfer on wood",
+      "slug": "what-causes-dye-transfer-on-wood",
+      "problem": "dye transfer",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::dye transfer",
+      "title": "How to Remove dye transfer from wood",
+      "slug": "how-to-remove-dye-transfer-from-wood",
+      "problem": "dye transfer",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::dye transfer",
+      "title": "How to Prevent dye transfer on wood",
+      "slug": "how-to-prevent-dye-transfer-on-wood",
+      "problem": "dye transfer",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::dye transfer",
+      "title": "How to Fix dye transfer on wood",
+      "slug": "how-to-fix-dye-transfer-on-wood",
+      "problem": "dye transfer",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::dye transfer",
+      "title": "How to Clean dye transfer from wood",
+      "slug": "how-to-clean-dye-transfer-from-wood",
+      "problem": "dye transfer",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::dye transfer",
+      "title": "How to Tell if dye transfer on wood is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-wood-is-permanent",
+      "problem": "dye transfer",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on wood",
+      "slug": "why-dye-transfer-keeps-coming-back-on-wood",
+      "problem": "dye transfer",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::dye transfer",
+      "title": "How to Maintain wood and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-wood-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-wood",
+      "problem": "dye transfer",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::dye transfer",
+      "title": "What Causes dye transfer on grout",
+      "slug": "what-causes-dye-transfer-on-grout",
+      "problem": "dye transfer",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::dye transfer",
+      "title": "How to Remove dye transfer from grout",
+      "slug": "how-to-remove-dye-transfer-from-grout",
+      "problem": "dye transfer",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::dye transfer",
+      "title": "How to Prevent dye transfer on grout",
+      "slug": "how-to-prevent-dye-transfer-on-grout",
+      "problem": "dye transfer",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::dye transfer",
+      "title": "How to Fix dye transfer on grout",
+      "slug": "how-to-fix-dye-transfer-on-grout",
+      "problem": "dye transfer",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::dye transfer",
+      "title": "How to Clean dye transfer from grout",
+      "slug": "how-to-clean-dye-transfer-from-grout",
+      "problem": "dye transfer",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::dye transfer",
+      "title": "How to Tell if dye transfer on grout is Permanent",
+      "slug": "how-to-tell-if-dye-transfer-on-grout-is-permanent",
+      "problem": "dye transfer",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::dye transfer",
+      "title": "Why dye transfer Keeps Coming Back on grout",
+      "slug": "why-dye-transfer-keeps-coming-back-on-grout",
+      "problem": "dye transfer",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::dye transfer",
+      "title": "How to Maintain grout and Keep dye transfer Under Control",
+      "slug": "how-to-maintain-grout-and-keep-dye-transfer-under-control",
+      "problem": "dye transfer",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::dye transfer",
+      "title": "How to Recover After a Cleaning Mistake With dye transfer on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dye-transfer-on-grout",
+      "problem": "dye transfer",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::dye transfer",
+      "title": "What Causes dye transfer on shower doors",
+      "slug": "what-causes-dye-transfer-on-shower-doors",
+      "problem": "dye transfer",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::dye transfer",
+      "title": "How to Remove dye transfer from shower doors",
+      "slug": "how-to-remove-dye-transfer-from-shower-doors",
+      "problem": "dye transfer",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::dye transfer",
+      "title": "How to Prevent dye transfer on shower doors",
+      "slug": "how-to-prevent-dye-transfer-on-shower-doors",
+      "problem": "dye transfer",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::dye transfer",
+      "title": "How to Fix dye transfer on shower doors",
+      "slug": "how-to-fix-dye-transfer-on-shower-doors",
+      "problem": "dye transfer",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

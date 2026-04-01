@@ -1,0 +1,304 @@
+{
+  "pages": [
+    {
+      "id": "why::door frames::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on door frames",
+      "slug": "why-uneven-finish-keeps-coming-back-on-door-frames",
+      "problem": "uneven finish",
+      "surface": "door frames",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::door frames::uneven finish",
+      "title": "How to Maintain door frames and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-door-frames-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "door frames",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::door frames::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on door frames",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-door-frames",
+      "problem": "uneven finish",
+      "surface": "door frames",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::window tracks::uneven finish",
+      "title": "What Causes uneven finish on window tracks",
+      "slug": "what-causes-uneven-finish-on-window-tracks",
+      "problem": "uneven finish",
+      "surface": "window tracks",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::window tracks::uneven finish",
+      "title": "How to Remove uneven finish from window tracks",
+      "slug": "how-to-remove-uneven-finish-from-window-tracks",
+      "problem": "uneven finish",
+      "surface": "window tracks",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::window tracks::uneven finish",
+      "title": "How to Prevent uneven finish on window tracks",
+      "slug": "how-to-prevent-uneven-finish-on-window-tracks",
+      "problem": "uneven finish",
+      "surface": "window tracks",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::window tracks::uneven finish",
+      "title": "How to Fix uneven finish on window tracks",
+      "slug": "how-to-fix-uneven-finish-on-window-tracks",
+      "problem": "uneven finish",
+      "surface": "window tracks",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::window tracks::uneven finish",
+      "title": "How to Clean uneven finish from window tracks",
+      "slug": "how-to-clean-uneven-finish-from-window-tracks",
+      "problem": "uneven finish",
+      "surface": "window tracks",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::window tracks::uneven finish",
+      "title": "How to Tell if uneven finish on window tracks is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-window-tracks-is-permanent",
+      "problem": "uneven finish",
+      "surface": "window tracks",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::window tracks::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on window tracks",
+      "slug": "why-uneven-finish-keeps-coming-back-on-window-tracks",
+      "problem": "uneven finish",
+      "surface": "window tracks",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::window tracks::uneven finish",
+      "title": "How to Maintain window tracks and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-window-tracks-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "window tracks",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::window tracks::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on window tracks",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-window-tracks",
+      "problem": "uneven finish",
+      "surface": "window tracks",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::light switches::uneven finish",
+      "title": "What Causes uneven finish on light switches",
+      "slug": "what-causes-uneven-finish-on-light-switches",
+      "problem": "uneven finish",
+      "surface": "light switches",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::light switches::uneven finish",
+      "title": "How to Remove uneven finish from light switches",
+      "slug": "how-to-remove-uneven-finish-from-light-switches",
+      "problem": "uneven finish",
+      "surface": "light switches",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::light switches::uneven finish",
+      "title": "How to Prevent uneven finish on light switches",
+      "slug": "how-to-prevent-uneven-finish-on-light-switches",
+      "problem": "uneven finish",
+      "surface": "light switches",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::light switches::uneven finish",
+      "title": "How to Fix uneven finish on light switches",
+      "slug": "how-to-fix-uneven-finish-on-light-switches",
+      "problem": "uneven finish",
+      "surface": "light switches",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::light switches::uneven finish",
+      "title": "How to Clean uneven finish from light switches",
+      "slug": "how-to-clean-uneven-finish-from-light-switches",
+      "problem": "uneven finish",
+      "surface": "light switches",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::light switches::uneven finish",
+      "title": "How to Tell if uneven finish on light switches is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-light-switches-is-permanent",
+      "problem": "uneven finish",
+      "surface": "light switches",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::light switches::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on light switches",
+      "slug": "why-uneven-finish-keeps-coming-back-on-light-switches",
+      "problem": "uneven finish",
+      "surface": "light switches",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::light switches::uneven finish",
+      "title": "How to Maintain light switches and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-light-switches-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "light switches",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::light switches::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on light switches",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-light-switches",
+      "problem": "uneven finish",
+      "surface": "light switches",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::garbage cans::uneven finish",
+      "title": "What Causes uneven finish on garbage cans",
+      "slug": "what-causes-uneven-finish-on-garbage-cans",
+      "problem": "uneven finish",
+      "surface": "garbage cans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::garbage cans::uneven finish",
+      "title": "How to Remove uneven finish from garbage cans",
+      "slug": "how-to-remove-uneven-finish-from-garbage-cans",
+      "problem": "uneven finish",
+      "surface": "garbage cans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::garbage cans::uneven finish",
+      "title": "How to Prevent uneven finish on garbage cans",
+      "slug": "how-to-prevent-uneven-finish-on-garbage-cans",
+      "problem": "uneven finish",
+      "surface": "garbage cans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::garbage cans::uneven finish",
+      "title": "How to Fix uneven finish on garbage cans",
+      "slug": "how-to-fix-uneven-finish-on-garbage-cans",
+      "problem": "uneven finish",
+      "surface": "garbage cans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::garbage cans::uneven finish",
+      "title": "How to Clean uneven finish from garbage cans",
+      "slug": "how-to-clean-uneven-finish-from-garbage-cans",
+      "problem": "uneven finish",
+      "surface": "garbage cans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::garbage cans::uneven finish",
+      "title": "How to Tell if uneven finish on garbage cans is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-garbage-cans-is-permanent",
+      "problem": "uneven finish",
+      "surface": "garbage cans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::garbage cans::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on garbage cans",
+      "slug": "why-uneven-finish-keeps-coming-back-on-garbage-cans",
+      "problem": "uneven finish",
+      "surface": "garbage cans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::garbage cans::uneven finish",
+      "title": "How to Maintain garbage cans and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-garbage-cans-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "garbage cans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::garbage cans::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on garbage cans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-garbage-cans",
+      "problem": "uneven finish",
+      "surface": "garbage cans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

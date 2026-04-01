@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "diagnosis::door frames::dullness",
+      "title": "How to Tell if dullness on door frames is Permanent",
+      "slug": "how-to-tell-if-dullness-on-door-frames-is-permanent",
+      "problem": "dullness",
+      "surface": "door frames",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::door frames::dullness",
+      "title": "Why dullness Keeps Coming Back on door frames",
+      "slug": "why-dullness-keeps-coming-back-on-door-frames",
+      "problem": "dullness",
+      "surface": "door frames",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::door frames::dullness",
+      "title": "How to Maintain door frames and Keep dullness Under Control",
+      "slug": "how-to-maintain-door-frames-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "door frames",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::door frames::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on door frames",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-door-frames",
+      "problem": "dullness",
+      "surface": "door frames",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::window tracks::dullness",
+      "title": "What Causes dullness on window tracks",
+      "slug": "what-causes-dullness-on-window-tracks",
+      "problem": "dullness",
+      "surface": "window tracks",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::window tracks::dullness",
+      "title": "How to Remove dullness from window tracks",
+      "slug": "how-to-remove-dullness-from-window-tracks",
+      "problem": "dullness",
+      "surface": "window tracks",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::window tracks::dullness",
+      "title": "How to Prevent dullness on window tracks",
+      "slug": "how-to-prevent-dullness-on-window-tracks",
+      "problem": "dullness",
+      "surface": "window tracks",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::window tracks::dullness",
+      "title": "How to Fix dullness on window tracks",
+      "slug": "how-to-fix-dullness-on-window-tracks",
+      "problem": "dullness",
+      "surface": "window tracks",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::window tracks::dullness",
+      "title": "How to Clean dullness from window tracks",
+      "slug": "how-to-clean-dullness-from-window-tracks",
+      "problem": "dullness",
+      "surface": "window tracks",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::window tracks::dullness",
+      "title": "How to Tell if dullness on window tracks is Permanent",
+      "slug": "how-to-tell-if-dullness-on-window-tracks-is-permanent",
+      "problem": "dullness",
+      "surface": "window tracks",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::window tracks::dullness",
+      "title": "Why dullness Keeps Coming Back on window tracks",
+      "slug": "why-dullness-keeps-coming-back-on-window-tracks",
+      "problem": "dullness",
+      "surface": "window tracks",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::window tracks::dullness",
+      "title": "How to Maintain window tracks and Keep dullness Under Control",
+      "slug": "how-to-maintain-window-tracks-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "window tracks",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::window tracks::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on window tracks",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-window-tracks",
+      "problem": "dullness",
+      "surface": "window tracks",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::light switches::dullness",
+      "title": "What Causes dullness on light switches",
+      "slug": "what-causes-dullness-on-light-switches",
+      "problem": "dullness",
+      "surface": "light switches",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::light switches::dullness",
+      "title": "How to Remove dullness from light switches",
+      "slug": "how-to-remove-dullness-from-light-switches",
+      "problem": "dullness",
+      "surface": "light switches",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::light switches::dullness",
+      "title": "How to Prevent dullness on light switches",
+      "slug": "how-to-prevent-dullness-on-light-switches",
+      "problem": "dullness",
+      "surface": "light switches",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::light switches::dullness",
+      "title": "How to Fix dullness on light switches",
+      "slug": "how-to-fix-dullness-on-light-switches",
+      "problem": "dullness",
+      "surface": "light switches",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::light switches::dullness",
+      "title": "How to Clean dullness from light switches",
+      "slug": "how-to-clean-dullness-from-light-switches",
+      "problem": "dullness",
+      "surface": "light switches",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::light switches::dullness",
+      "title": "How to Tell if dullness on light switches is Permanent",
+      "slug": "how-to-tell-if-dullness-on-light-switches-is-permanent",
+      "problem": "dullness",
+      "surface": "light switches",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::light switches::dullness",
+      "title": "Why dullness Keeps Coming Back on light switches",
+      "slug": "why-dullness-keeps-coming-back-on-light-switches",
+      "problem": "dullness",
+      "surface": "light switches",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::light switches::dullness",
+      "title": "How to Maintain light switches and Keep dullness Under Control",
+      "slug": "how-to-maintain-light-switches-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "light switches",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::light switches::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on light switches",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-light-switches",
+      "problem": "dullness",
+      "surface": "light switches",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::kitchen cabinets::uneven finish",
+      "title": "What Causes uneven finish on kitchen cabinets",
+      "slug": "what-causes-uneven-finish-on-kitchen-cabinets",
+      "problem": "uneven finish",
+      "surface": "kitchen cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::kitchen cabinets::uneven finish",
+      "title": "How to Remove uneven finish from kitchen cabinets",
+      "slug": "how-to-remove-uneven-finish-from-kitchen-cabinets",
+      "problem": "uneven finish",
+      "surface": "kitchen cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::kitchen cabinets::uneven finish",
+      "title": "How to Prevent uneven finish on kitchen cabinets",
+      "slug": "how-to-prevent-uneven-finish-on-kitchen-cabinets",
+      "problem": "uneven finish",
+      "surface": "kitchen cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::kitchen cabinets::uneven finish",
+      "title": "How to Fix uneven finish on kitchen cabinets",
+      "slug": "how-to-fix-uneven-finish-on-kitchen-cabinets",
+      "problem": "uneven finish",
+      "surface": "kitchen cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::kitchen cabinets::uneven finish",
+      "title": "How to Clean uneven finish from kitchen cabinets",
+      "slug": "how-to-clean-uneven-finish-from-kitchen-cabinets",
+      "problem": "uneven finish",
+      "surface": "kitchen cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::kitchen cabinets::uneven finish",
+      "title": "How to Tell if uneven finish on kitchen cabinets is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-kitchen-cabinets-is-permanent",
+      "problem": "uneven finish",
+      "surface": "kitchen cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::kitchen cabinets::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on kitchen cabinets",
+      "slug": "why-uneven-finish-keeps-coming-back-on-kitchen-cabinets",
+      "problem": "uneven finish",
+      "surface": "kitchen cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::kitchen cabinets::uneven finish",
+      "title": "How to Maintain kitchen cabinets and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-kitchen-cabinets-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "kitchen cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::kitchen cabinets::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on kitchen cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-kitchen-cabinets",
+      "problem": "uneven finish",
+      "surface": "kitchen cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::uneven finish",
+      "title": "What Causes uneven finish on wood",
+      "slug": "what-causes-uneven-finish-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::uneven finish",
+      "title": "How to Remove uneven finish from wood",
+      "slug": "how-to-remove-uneven-finish-from-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::uneven finish",
+      "title": "How to Prevent uneven finish on wood",
+      "slug": "how-to-prevent-uneven-finish-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::uneven finish",
+      "title": "How to Fix uneven finish on wood",
+      "slug": "how-to-fix-uneven-finish-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::uneven finish",
+      "title": "How to Clean uneven finish from wood",
+      "slug": "how-to-clean-uneven-finish-from-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::uneven finish",
+      "title": "How to Tell if uneven finish on wood is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-wood-is-permanent",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on wood",
+      "slug": "why-uneven-finish-keeps-coming-back-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::uneven finish",
+      "title": "How to Maintain wood and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-wood-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-wood",
+      "problem": "uneven finish",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted walls::uneven finish",
+      "title": "What Causes uneven finish on painted walls",
+      "slug": "what-causes-uneven-finish-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted walls::uneven finish",
+      "title": "How to Remove uneven finish from painted walls",
+      "slug": "how-to-remove-uneven-finish-from-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted walls::uneven finish",
+      "title": "How to Prevent uneven finish on painted walls",
+      "slug": "how-to-prevent-uneven-finish-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted walls::uneven finish",
+      "title": "How to Fix uneven finish on painted walls",
+      "slug": "how-to-fix-uneven-finish-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted walls::uneven finish",
+      "title": "How to Clean uneven finish from painted walls",
+      "slug": "how-to-clean-uneven-finish-from-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted walls::uneven finish",
+      "title": "How to Tell if uneven finish on painted walls is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-painted-walls-is-permanent",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted walls::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on painted walls",
+      "slug": "why-uneven-finish-keeps-coming-back-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted walls::uneven finish",
+      "title": "How to Maintain painted walls and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-painted-walls-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted walls::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on painted walls",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-painted-walls",
+      "problem": "uneven finish",
+      "surface": "painted walls",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted cabinets::uneven finish",
+      "title": "What Causes uneven finish on painted cabinets",
+      "slug": "what-causes-uneven-finish-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted cabinets::uneven finish",
+      "title": "How to Remove uneven finish from painted cabinets",
+      "slug": "how-to-remove-uneven-finish-from-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted cabinets::uneven finish",
+      "title": "How to Prevent uneven finish on painted cabinets",
+      "slug": "how-to-prevent-uneven-finish-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted cabinets::uneven finish",
+      "title": "How to Fix uneven finish on painted cabinets",
+      "slug": "how-to-fix-uneven-finish-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted cabinets::uneven finish",
+      "title": "How to Clean uneven finish from painted cabinets",
+      "slug": "how-to-clean-uneven-finish-from-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted cabinets::uneven finish",
+      "title": "How to Tell if uneven finish on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-painted-cabinets-is-permanent",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted cabinets::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on painted cabinets",
+      "slug": "why-uneven-finish-keeps-coming-back-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted cabinets::uneven finish",
+      "title": "How to Maintain painted cabinets and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted cabinets::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-painted-cabinets",
+      "problem": "uneven finish",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::uneven finish",
+      "title": "What Causes uneven finish on butcher block",
+      "slug": "what-causes-uneven-finish-on-butcher-block",
+      "problem": "uneven finish",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::uneven finish",
+      "title": "How to Remove uneven finish from butcher block",
+      "slug": "how-to-remove-uneven-finish-from-butcher-block",
+      "problem": "uneven finish",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::uneven finish",
+      "title": "How to Prevent uneven finish on butcher block",
+      "slug": "how-to-prevent-uneven-finish-on-butcher-block",
+      "problem": "uneven finish",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::uneven finish",
+      "title": "How to Fix uneven finish on butcher block",
+      "slug": "how-to-fix-uneven-finish-on-butcher-block",
+      "problem": "uneven finish",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::uneven finish",
+      "title": "How to Clean uneven finish from butcher block",
+      "slug": "how-to-clean-uneven-finish-from-butcher-block",
+      "problem": "uneven finish",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::uneven finish",
+      "title": "How to Tell if uneven finish on butcher block is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-butcher-block-is-permanent",
+      "problem": "uneven finish",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on butcher block",
+      "slug": "why-uneven-finish-keeps-coming-back-on-butcher-block",
+      "problem": "uneven finish",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::uneven finish",
+      "title": "How to Maintain butcher block and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-butcher-block",
+      "problem": "uneven finish",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::uneven finish",
+      "title": "What Causes uneven finish on unfinished wood",
+      "slug": "what-causes-uneven-finish-on-unfinished-wood",
+      "problem": "uneven finish",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::uneven finish",
+      "title": "How to Remove uneven finish from unfinished wood",
+      "slug": "how-to-remove-uneven-finish-from-unfinished-wood",
+      "problem": "uneven finish",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::uneven finish",
+      "title": "How to Prevent uneven finish on unfinished wood",
+      "slug": "how-to-prevent-uneven-finish-on-unfinished-wood",
+      "problem": "uneven finish",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::uneven finish",
+      "title": "How to Fix uneven finish on unfinished wood",
+      "slug": "how-to-fix-uneven-finish-on-unfinished-wood",
+      "problem": "uneven finish",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::uneven finish",
+      "title": "How to Clean uneven finish from unfinished wood",
+      "slug": "how-to-clean-uneven-finish-from-unfinished-wood",
+      "problem": "uneven finish",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::uneven finish",
+      "title": "How to Tell if uneven finish on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-unfinished-wood-is-permanent",
+      "problem": "uneven finish",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on unfinished wood",
+      "slug": "why-uneven-finish-keeps-coming-back-on-unfinished-wood",
+      "problem": "uneven finish",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::uneven finish",
+      "title": "How to Maintain unfinished wood and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-unfinished-wood",
+      "problem": "uneven finish",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::uneven finish",
+      "title": "What Causes uneven finish on sealed wood",
+      "slug": "what-causes-uneven-finish-on-sealed-wood",
+      "problem": "uneven finish",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::uneven finish",
+      "title": "How to Remove uneven finish from sealed wood",
+      "slug": "how-to-remove-uneven-finish-from-sealed-wood",
+      "problem": "uneven finish",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::uneven finish",
+      "title": "How to Prevent uneven finish on sealed wood",
+      "slug": "how-to-prevent-uneven-finish-on-sealed-wood",
+      "problem": "uneven finish",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::uneven finish",
+      "title": "How to Fix uneven finish on sealed wood",
+      "slug": "how-to-fix-uneven-finish-on-sealed-wood",
+      "problem": "uneven finish",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::uneven finish",
+      "title": "How to Clean uneven finish from sealed wood",
+      "slug": "how-to-clean-uneven-finish-from-sealed-wood",
+      "problem": "uneven finish",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::uneven finish",
+      "title": "How to Tell if uneven finish on sealed wood is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-sealed-wood-is-permanent",
+      "problem": "uneven finish",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on sealed wood",
+      "slug": "why-uneven-finish-keeps-coming-back-on-sealed-wood",
+      "problem": "uneven finish",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::uneven finish",
+      "title": "How to Maintain sealed wood and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-sealed-wood",
+      "problem": "uneven finish",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::baseboards::uneven finish",
+      "title": "What Causes uneven finish on baseboards",
+      "slug": "what-causes-uneven-finish-on-baseboards",
+      "problem": "uneven finish",
+      "surface": "baseboards",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::baseboards::uneven finish",
+      "title": "How to Remove uneven finish from baseboards",
+      "slug": "how-to-remove-uneven-finish-from-baseboards",
+      "problem": "uneven finish",
+      "surface": "baseboards",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::baseboards::uneven finish",
+      "title": "How to Prevent uneven finish on baseboards",
+      "slug": "how-to-prevent-uneven-finish-on-baseboards",
+      "problem": "uneven finish",
+      "surface": "baseboards",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::baseboards::uneven finish",
+      "title": "How to Fix uneven finish on baseboards",
+      "slug": "how-to-fix-uneven-finish-on-baseboards",
+      "problem": "uneven finish",
+      "surface": "baseboards",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::baseboards::uneven finish",
+      "title": "How to Clean uneven finish from baseboards",
+      "slug": "how-to-clean-uneven-finish-from-baseboards",
+      "problem": "uneven finish",
+      "surface": "baseboards",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::baseboards::uneven finish",
+      "title": "How to Tell if uneven finish on baseboards is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-baseboards-is-permanent",
+      "problem": "uneven finish",
+      "surface": "baseboards",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::baseboards::uneven finish",
+      "title": "Why uneven finish Keeps Coming Back on baseboards",
+      "slug": "why-uneven-finish-keeps-coming-back-on-baseboards",
+      "problem": "uneven finish",
+      "surface": "baseboards",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::baseboards::uneven finish",
+      "title": "How to Maintain baseboards and Keep uneven finish Under Control",
+      "slug": "how-to-maintain-baseboards-and-keep-uneven-finish-under-control",
+      "problem": "uneven finish",
+      "surface": "baseboards",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::baseboards::uneven finish",
+      "title": "How to Recover After a Cleaning Mistake With uneven finish on baseboards",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-uneven-finish-on-baseboards",
+      "problem": "uneven finish",
+      "surface": "baseboards",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::door frames::uneven finish",
+      "title": "What Causes uneven finish on door frames",
+      "slug": "what-causes-uneven-finish-on-door-frames",
+      "problem": "uneven finish",
+      "surface": "door frames",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::door frames::uneven finish",
+      "title": "How to Remove uneven finish from door frames",
+      "slug": "how-to-remove-uneven-finish-from-door-frames",
+      "problem": "uneven finish",
+      "surface": "door frames",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::door frames::uneven finish",
+      "title": "How to Prevent uneven finish on door frames",
+      "slug": "how-to-prevent-uneven-finish-on-door-frames",
+      "problem": "uneven finish",
+      "surface": "door frames",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::door frames::uneven finish",
+      "title": "How to Fix uneven finish on door frames",
+      "slug": "how-to-fix-uneven-finish-on-door-frames",
+      "problem": "uneven finish",
+      "surface": "door frames",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::door frames::uneven finish",
+      "title": "How to Clean uneven finish from door frames",
+      "slug": "how-to-clean-uneven-finish-from-door-frames",
+      "problem": "uneven finish",
+      "surface": "door frames",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::door frames::uneven finish",
+      "title": "How to Tell if uneven finish on door frames is Permanent",
+      "slug": "how-to-tell-if-uneven-finish-on-door-frames-is-permanent",
+      "problem": "uneven finish",
+      "surface": "door frames",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

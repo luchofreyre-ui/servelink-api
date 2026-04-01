@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-remove::grout::black stains",
+      "title": "How to Remove black stains from grout",
+      "slug": "how-to-remove-black-stains-from-grout",
+      "problem": "black stains",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::black stains",
+      "title": "How to Prevent black stains on grout",
+      "slug": "how-to-prevent-black-stains-on-grout",
+      "problem": "black stains",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::black stains",
+      "title": "How to Fix black stains on grout",
+      "slug": "how-to-fix-black-stains-on-grout",
+      "problem": "black stains",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::black stains",
+      "title": "How to Clean black stains from grout",
+      "slug": "how-to-clean-black-stains-from-grout",
+      "problem": "black stains",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::black stains",
+      "title": "How to Tell if black stains on grout is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-grout-is-permanent",
+      "problem": "black stains",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::black stains",
+      "title": "Why black stains Keeps Coming Back on grout",
+      "slug": "why-black-stains-keeps-coming-back-on-grout",
+      "problem": "black stains",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::black stains",
+      "title": "How to Maintain grout and Keep black stains Under Control",
+      "slug": "how-to-maintain-grout-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-grout",
+      "problem": "black stains",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::black stains",
+      "title": "What Causes black stains on shower doors",
+      "slug": "what-causes-black-stains-on-shower-doors",
+      "problem": "black stains",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::black stains",
+      "title": "How to Remove black stains from shower doors",
+      "slug": "how-to-remove-black-stains-from-shower-doors",
+      "problem": "black stains",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::black stains",
+      "title": "How to Prevent black stains on shower doors",
+      "slug": "how-to-prevent-black-stains-on-shower-doors",
+      "problem": "black stains",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::black stains",
+      "title": "How to Fix black stains on shower doors",
+      "slug": "how-to-fix-black-stains-on-shower-doors",
+      "problem": "black stains",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::black stains",
+      "title": "How to Clean black stains from shower doors",
+      "slug": "how-to-clean-black-stains-from-shower-doors",
+      "problem": "black stains",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::black stains",
+      "title": "How to Tell if black stains on shower doors is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-shower-doors-is-permanent",
+      "problem": "black stains",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::black stains",
+      "title": "Why black stains Keeps Coming Back on shower doors",
+      "slug": "why-black-stains-keeps-coming-back-on-shower-doors",
+      "problem": "black stains",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::black stains",
+      "title": "How to Maintain shower doors and Keep black stains Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-shower-doors",
+      "problem": "black stains",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::black stains",
+      "title": "What Causes black stains on sealed stone",
+      "slug": "what-causes-black-stains-on-sealed-stone",
+      "problem": "black stains",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::black stains",
+      "title": "How to Remove black stains from sealed stone",
+      "slug": "how-to-remove-black-stains-from-sealed-stone",
+      "problem": "black stains",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::black stains",
+      "title": "How to Prevent black stains on sealed stone",
+      "slug": "how-to-prevent-black-stains-on-sealed-stone",
+      "problem": "black stains",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::black stains",
+      "title": "How to Fix black stains on sealed stone",
+      "slug": "how-to-fix-black-stains-on-sealed-stone",
+      "problem": "black stains",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::black stains",
+      "title": "How to Clean black stains from sealed stone",
+      "slug": "how-to-clean-black-stains-from-sealed-stone",
+      "problem": "black stains",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::black stains",
+      "title": "How to Tell if black stains on sealed stone is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-sealed-stone-is-permanent",
+      "problem": "black stains",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::black stains",
+      "title": "Why black stains Keeps Coming Back on sealed stone",
+      "slug": "why-black-stains-keeps-coming-back-on-sealed-stone",
+      "problem": "black stains",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::black stains",
+      "title": "How to Maintain sealed stone and Keep black stains Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-sealed-stone",
+      "problem": "black stains",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::black stains",
+      "title": "What Causes black stains on shower grout",
+      "slug": "what-causes-black-stains-on-shower-grout",
+      "problem": "black stains",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::black stains",
+      "title": "How to Remove black stains from shower grout",
+      "slug": "how-to-remove-black-stains-from-shower-grout",
+      "problem": "black stains",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::black stains",
+      "title": "How to Prevent black stains on shower grout",
+      "slug": "how-to-prevent-black-stains-on-shower-grout",
+      "problem": "black stains",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::black stains",
+      "title": "How to Fix black stains on shower grout",
+      "slug": "how-to-fix-black-stains-on-shower-grout",
+      "problem": "black stains",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::black stains",
+      "title": "How to Clean black stains from shower grout",
+      "slug": "how-to-clean-black-stains-from-shower-grout",
+      "problem": "black stains",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::black stains",
+      "title": "How to Tell if black stains on shower grout is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-shower-grout-is-permanent",
+      "problem": "black stains",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::black stains",
+      "title": "Why black stains Keeps Coming Back on shower grout",
+      "slug": "why-black-stains-keeps-coming-back-on-shower-grout",
+      "problem": "black stains",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::black stains",
+      "title": "How to Maintain shower grout and Keep black stains Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-shower-grout",
+      "problem": "black stains",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::black stains",
+      "title": "What Causes black stains on tile grout",
+      "slug": "what-causes-black-stains-on-tile-grout",
+      "problem": "black stains",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::black stains",
+      "title": "How to Remove black stains from tile grout",
+      "slug": "how-to-remove-black-stains-from-tile-grout",
+      "problem": "black stains",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::black stains",
+      "title": "How to Prevent black stains on tile grout",
+      "slug": "how-to-prevent-black-stains-on-tile-grout",
+      "problem": "black stains",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::black stains",
+      "title": "How to Fix black stains on tile grout",
+      "slug": "how-to-fix-black-stains-on-tile-grout",
+      "problem": "black stains",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::black stains",
+      "title": "How to Clean black stains from tile grout",
+      "slug": "how-to-clean-black-stains-from-tile-grout",
+      "problem": "black stains",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::black stains",
+      "title": "How to Tell if black stains on tile grout is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-tile-grout-is-permanent",
+      "problem": "black stains",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::black stains",
+      "title": "Why black stains Keeps Coming Back on tile grout",
+      "slug": "why-black-stains-keeps-coming-back-on-tile-grout",
+      "problem": "black stains",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::black stains",
+      "title": "How to Maintain tile grout and Keep black stains Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-tile-grout",
+      "problem": "black stains",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::black stains",
+      "title": "What Causes black stains on caulking",
+      "slug": "what-causes-black-stains-on-caulking",
+      "problem": "black stains",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::black stains",
+      "title": "How to Remove black stains from caulking",
+      "slug": "how-to-remove-black-stains-from-caulking",
+      "problem": "black stains",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::black stains",
+      "title": "How to Prevent black stains on caulking",
+      "slug": "how-to-prevent-black-stains-on-caulking",
+      "problem": "black stains",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::black stains",
+      "title": "How to Fix black stains on caulking",
+      "slug": "how-to-fix-black-stains-on-caulking",
+      "problem": "black stains",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::black stains",
+      "title": "How to Clean black stains from caulking",
+      "slug": "how-to-clean-black-stains-from-caulking",
+      "problem": "black stains",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::black stains",
+      "title": "How to Tell if black stains on caulking is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-caulking-is-permanent",
+      "problem": "black stains",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::black stains",
+      "title": "Why black stains Keeps Coming Back on caulking",
+      "slug": "why-black-stains-keeps-coming-back-on-caulking",
+      "problem": "black stains",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::black stains",
+      "title": "How to Maintain caulking and Keep black stains Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-caulking",
+      "problem": "black stains",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::black stains",
+      "title": "What Causes black stains on sealed granite",
+      "slug": "what-causes-black-stains-on-sealed-granite",
+      "problem": "black stains",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::black stains",
+      "title": "How to Remove black stains from sealed granite",
+      "slug": "how-to-remove-black-stains-from-sealed-granite",
+      "problem": "black stains",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::black stains",
+      "title": "How to Prevent black stains on sealed granite",
+      "slug": "how-to-prevent-black-stains-on-sealed-granite",
+      "problem": "black stains",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::black stains",
+      "title": "How to Fix black stains on sealed granite",
+      "slug": "how-to-fix-black-stains-on-sealed-granite",
+      "problem": "black stains",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::black stains",
+      "title": "How to Clean black stains from sealed granite",
+      "slug": "how-to-clean-black-stains-from-sealed-granite",
+      "problem": "black stains",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::black stains",
+      "title": "How to Tell if black stains on sealed granite is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-sealed-granite-is-permanent",
+      "problem": "black stains",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::black stains",
+      "title": "Why black stains Keeps Coming Back on sealed granite",
+      "slug": "why-black-stains-keeps-coming-back-on-sealed-granite",
+      "problem": "black stains",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::black stains",
+      "title": "How to Maintain sealed granite and Keep black stains Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-sealed-granite",
+      "problem": "black stains",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::black stains",
+      "title": "What Causes black stains on sealed marble",
+      "slug": "what-causes-black-stains-on-sealed-marble",
+      "problem": "black stains",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::black stains",
+      "title": "How to Remove black stains from sealed marble",
+      "slug": "how-to-remove-black-stains-from-sealed-marble",
+      "problem": "black stains",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::black stains",
+      "title": "How to Prevent black stains on sealed marble",
+      "slug": "how-to-prevent-black-stains-on-sealed-marble",
+      "problem": "black stains",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::black stains",
+      "title": "How to Fix black stains on sealed marble",
+      "slug": "how-to-fix-black-stains-on-sealed-marble",
+      "problem": "black stains",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::black stains",
+      "title": "How to Clean black stains from sealed marble",
+      "slug": "how-to-clean-black-stains-from-sealed-marble",
+      "problem": "black stains",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::black stains",
+      "title": "How to Tell if black stains on sealed marble is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-sealed-marble-is-permanent",
+      "problem": "black stains",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::black stains",
+      "title": "Why black stains Keeps Coming Back on sealed marble",
+      "slug": "why-black-stains-keeps-coming-back-on-sealed-marble",
+      "problem": "black stains",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::black stains",
+      "title": "How to Maintain sealed marble and Keep black stains Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-sealed-marble",
+      "problem": "black stains",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::black stains",
+      "title": "What Causes black stains on quartz countertops",
+      "slug": "what-causes-black-stains-on-quartz-countertops",
+      "problem": "black stains",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::black stains",
+      "title": "How to Remove black stains from quartz countertops",
+      "slug": "how-to-remove-black-stains-from-quartz-countertops",
+      "problem": "black stains",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::black stains",
+      "title": "How to Prevent black stains on quartz countertops",
+      "slug": "how-to-prevent-black-stains-on-quartz-countertops",
+      "problem": "black stains",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::black stains",
+      "title": "How to Fix black stains on quartz countertops",
+      "slug": "how-to-fix-black-stains-on-quartz-countertops",
+      "problem": "black stains",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::black stains",
+      "title": "How to Clean black stains from quartz countertops",
+      "slug": "how-to-clean-black-stains-from-quartz-countertops",
+      "problem": "black stains",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::black stains",
+      "title": "How to Tell if black stains on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-quartz-countertops-is-permanent",
+      "problem": "black stains",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::black stains",
+      "title": "Why black stains Keeps Coming Back on quartz countertops",
+      "slug": "why-black-stains-keeps-coming-back-on-quartz-countertops",
+      "problem": "black stains",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::black stains",
+      "title": "How to Maintain quartz countertops and Keep black stains Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-quartz-countertops",
+      "problem": "black stains",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::black stains",
+      "title": "What Causes black stains on laminate counters",
+      "slug": "what-causes-black-stains-on-laminate-counters",
+      "problem": "black stains",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::black stains",
+      "title": "How to Remove black stains from laminate counters",
+      "slug": "how-to-remove-black-stains-from-laminate-counters",
+      "problem": "black stains",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::black stains",
+      "title": "How to Prevent black stains on laminate counters",
+      "slug": "how-to-prevent-black-stains-on-laminate-counters",
+      "problem": "black stains",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::black stains",
+      "title": "How to Fix black stains on laminate counters",
+      "slug": "how-to-fix-black-stains-on-laminate-counters",
+      "problem": "black stains",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::black stains",
+      "title": "How to Clean black stains from laminate counters",
+      "slug": "how-to-clean-black-stains-from-laminate-counters",
+      "problem": "black stains",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::black stains",
+      "title": "How to Tell if black stains on laminate counters is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-laminate-counters-is-permanent",
+      "problem": "black stains",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::black stains",
+      "title": "Why black stains Keeps Coming Back on laminate counters",
+      "slug": "why-black-stains-keeps-coming-back-on-laminate-counters",
+      "problem": "black stains",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::black stains",
+      "title": "How to Maintain laminate counters and Keep black stains Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-laminate-counters",
+      "problem": "black stains",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::black stains",
+      "title": "What Causes black stains on butcher block",
+      "slug": "what-causes-black-stains-on-butcher-block",
+      "problem": "black stains",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::black stains",
+      "title": "How to Remove black stains from butcher block",
+      "slug": "how-to-remove-black-stains-from-butcher-block",
+      "problem": "black stains",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::black stains",
+      "title": "How to Prevent black stains on butcher block",
+      "slug": "how-to-prevent-black-stains-on-butcher-block",
+      "problem": "black stains",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::black stains",
+      "title": "How to Fix black stains on butcher block",
+      "slug": "how-to-fix-black-stains-on-butcher-block",
+      "problem": "black stains",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::black stains",
+      "title": "How to Clean black stains from butcher block",
+      "slug": "how-to-clean-black-stains-from-butcher-block",
+      "problem": "black stains",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::black stains",
+      "title": "How to Tell if black stains on butcher block is Permanent",
+      "slug": "how-to-tell-if-black-stains-on-butcher-block-is-permanent",
+      "problem": "black stains",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::black stains",
+      "title": "Why black stains Keeps Coming Back on butcher block",
+      "slug": "why-black-stains-keeps-coming-back-on-butcher-block",
+      "problem": "black stains",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::black stains",
+      "title": "How to Maintain butcher block and Keep black stains Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-black-stains-under-control",
+      "problem": "black stains",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::black stains",
+      "title": "How to Recover After a Cleaning Mistake With black stains on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-black-stains-on-butcher-block",
+      "problem": "black stains",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::black stains",
+      "title": "What Causes black stains on unfinished wood",
+      "slug": "what-causes-black-stains-on-unfinished-wood",
+      "problem": "black stains",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::black stains",
+      "title": "How to Remove black stains from unfinished wood",
+      "slug": "how-to-remove-black-stains-from-unfinished-wood",
+      "problem": "black stains",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -37,8 +37,15 @@ import { AuthorityRelatedLinks } from "./AuthorityRelatedLinks";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
 import { AuthorityToEncyclopediaBridge } from "./AuthorityToEncyclopediaBridge";
+import { AuthorityProblemProductHub } from "./AuthorityProblemProductHub";
+import { AuthorityProblemBestBySurface } from "./AuthorityProblemBestBySurface";
+import { AuthorityProblemDecisionShortcuts } from "./AuthorityProblemDecisionShortcuts";
+import { AuthorityProblemExploreMore } from "./AuthorityProblemExploreMore";
 import { getBuiltBridgeMap } from "@/lib/encyclopedia/bridgeMap";
 import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
+import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
+import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
+import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 
 export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageData }) {
   const { data } = props;
@@ -60,6 +67,8 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
   const compareSlugs = getComparisonSlugsForEntity("problem_comparison", data.slug).slice(0, 4);
   const relatedClusterSlugs = getRelatedClusterSlugsForProblemCategory(data.category);
+  const quickAnswerText =
+    data.quickAnswer?.trim() || snippetAnswer(data.whatItUsuallyIs, 2, 260);
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
@@ -68,6 +77,11 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
       <main className="mx-auto max-w-3xl px-6 py-16 md:px-8">
         <AuthorityBreadcrumbs items={crumbs} />
         <AuthorityHero eyebrow="Cleaning problem" title={data.title} description={data.summary} />
+        <AuthorityQuickAnswer text={quickAnswerText} />
+        <AuthorityTopicalCrossLinks pageKey={`problem-${data.slug}`} problemSlug={data.slug} />
+        <div className="mt-8">
+          <AuthorityProblemDecisionShortcuts data={data} />
+        </div>
         <AuthoritySection title="What it usually is">
           <p>{data.whatItUsuallyIs}</p>
         </AuthoritySection>
@@ -189,6 +203,25 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             </ul>
           </AuthoritySection>
         ) : null}
+
+        <AuthorityProblemBestBySurface problemSlug={data.slug} data={data} />
+
+        <AuthorityProblemProductHub data={data} />
+
+        <AuthoritySection title="Product vs product comparisons">
+          <p className="font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">
+            Head-to-head dossier pages (same decision system as recommendations) live in the product comparison
+            hub—useful when two bottles look interchangeable but sit in different chemistry lanes.
+          </p>
+          <p className="mt-3">
+            <Link href="/compare/products" className="font-medium text-[#0D9488] hover:underline">
+              Browse product comparisons →
+            </Link>
+          </p>
+        </AuthoritySection>
+
+        <AuthorityProblemExploreMore problemSlug={data.slug} data={data} />
+
         <AuthorityFaq block={faqBlock} />
         <AuthoritySeeAlso groups={seeAlso} />
         {encyclopediaBridge ?

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-prevent::baseboards::haze",
+      "title": "How to Prevent haze on baseboards",
+      "slug": "how-to-prevent-haze-on-baseboards",
+      "problem": "haze",
+      "surface": "baseboards",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::baseboards::haze",
+      "title": "How to Fix haze on baseboards",
+      "slug": "how-to-fix-haze-on-baseboards",
+      "problem": "haze",
+      "surface": "baseboards",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::baseboards::haze",
+      "title": "How to Clean haze from baseboards",
+      "slug": "how-to-clean-haze-from-baseboards",
+      "problem": "haze",
+      "surface": "baseboards",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::baseboards::haze",
+      "title": "How to Tell if haze on baseboards is Permanent",
+      "slug": "how-to-tell-if-haze-on-baseboards-is-permanent",
+      "problem": "haze",
+      "surface": "baseboards",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::baseboards::haze",
+      "title": "Why haze Keeps Coming Back on baseboards",
+      "slug": "why-haze-keeps-coming-back-on-baseboards",
+      "problem": "haze",
+      "surface": "baseboards",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::baseboards::haze",
+      "title": "How to Maintain baseboards and Keep haze Under Control",
+      "slug": "how-to-maintain-baseboards-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "baseboards",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::baseboards::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on baseboards",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-baseboards",
+      "problem": "haze",
+      "surface": "baseboards",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::door frames::haze",
+      "title": "What Causes haze on door frames",
+      "slug": "what-causes-haze-on-door-frames",
+      "problem": "haze",
+      "surface": "door frames",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::door frames::haze",
+      "title": "How to Remove haze from door frames",
+      "slug": "how-to-remove-haze-from-door-frames",
+      "problem": "haze",
+      "surface": "door frames",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::door frames::haze",
+      "title": "How to Prevent haze on door frames",
+      "slug": "how-to-prevent-haze-on-door-frames",
+      "problem": "haze",
+      "surface": "door frames",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::door frames::haze",
+      "title": "How to Fix haze on door frames",
+      "slug": "how-to-fix-haze-on-door-frames",
+      "problem": "haze",
+      "surface": "door frames",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::door frames::haze",
+      "title": "How to Clean haze from door frames",
+      "slug": "how-to-clean-haze-from-door-frames",
+      "problem": "haze",
+      "surface": "door frames",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::door frames::haze",
+      "title": "How to Tell if haze on door frames is Permanent",
+      "slug": "how-to-tell-if-haze-on-door-frames-is-permanent",
+      "problem": "haze",
+      "surface": "door frames",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::door frames::haze",
+      "title": "Why haze Keeps Coming Back on door frames",
+      "slug": "why-haze-keeps-coming-back-on-door-frames",
+      "problem": "haze",
+      "surface": "door frames",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::door frames::haze",
+      "title": "How to Maintain door frames and Keep haze Under Control",
+      "slug": "how-to-maintain-door-frames-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "door frames",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::door frames::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on door frames",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-door-frames",
+      "problem": "haze",
+      "surface": "door frames",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::window tracks::haze",
+      "title": "What Causes haze on window tracks",
+      "slug": "what-causes-haze-on-window-tracks",
+      "problem": "haze",
+      "surface": "window tracks",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::window tracks::haze",
+      "title": "How to Remove haze from window tracks",
+      "slug": "how-to-remove-haze-from-window-tracks",
+      "problem": "haze",
+      "surface": "window tracks",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::window tracks::haze",
+      "title": "How to Prevent haze on window tracks",
+      "slug": "how-to-prevent-haze-on-window-tracks",
+      "problem": "haze",
+      "surface": "window tracks",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::window tracks::haze",
+      "title": "How to Fix haze on window tracks",
+      "slug": "how-to-fix-haze-on-window-tracks",
+      "problem": "haze",
+      "surface": "window tracks",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::window tracks::haze",
+      "title": "How to Clean haze from window tracks",
+      "slug": "how-to-clean-haze-from-window-tracks",
+      "problem": "haze",
+      "surface": "window tracks",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::window tracks::haze",
+      "title": "How to Tell if haze on window tracks is Permanent",
+      "slug": "how-to-tell-if-haze-on-window-tracks-is-permanent",
+      "problem": "haze",
+      "surface": "window tracks",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::window tracks::haze",
+      "title": "Why haze Keeps Coming Back on window tracks",
+      "slug": "why-haze-keeps-coming-back-on-window-tracks",
+      "problem": "haze",
+      "surface": "window tracks",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::window tracks::haze",
+      "title": "How to Maintain window tracks and Keep haze Under Control",
+      "slug": "how-to-maintain-window-tracks-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "window tracks",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::window tracks::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on window tracks",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-window-tracks",
+      "problem": "haze",
+      "surface": "window tracks",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::light switches::haze",
+      "title": "What Causes haze on light switches",
+      "slug": "what-causes-haze-on-light-switches",
+      "problem": "haze",
+      "surface": "light switches",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::light switches::haze",
+      "title": "How to Remove haze from light switches",
+      "slug": "how-to-remove-haze-from-light-switches",
+      "problem": "haze",
+      "surface": "light switches",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::light switches::haze",
+      "title": "How to Prevent haze on light switches",
+      "slug": "how-to-prevent-haze-on-light-switches",
+      "problem": "haze",
+      "surface": "light switches",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::light switches::haze",
+      "title": "How to Fix haze on light switches",
+      "slug": "how-to-fix-haze-on-light-switches",
+      "problem": "haze",
+      "surface": "light switches",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::light switches::haze",
+      "title": "How to Clean haze from light switches",
+      "slug": "how-to-clean-haze-from-light-switches",
+      "problem": "haze",
+      "surface": "light switches",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::light switches::haze",
+      "title": "How to Tell if haze on light switches is Permanent",
+      "slug": "how-to-tell-if-haze-on-light-switches-is-permanent",
+      "problem": "haze",
+      "surface": "light switches",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::light switches::haze",
+      "title": "Why haze Keeps Coming Back on light switches",
+      "slug": "why-haze-keeps-coming-back-on-light-switches",
+      "problem": "haze",
+      "surface": "light switches",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::light switches::haze",
+      "title": "How to Maintain light switches and Keep haze Under Control",
+      "slug": "how-to-maintain-light-switches-and-keep-haze-under-control",
+      "problem": "haze",
+      "surface": "light switches",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::light switches::haze",
+      "title": "How to Recover After a Cleaning Mistake With haze on light switches",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-haze-on-light-switches",
+      "problem": "haze",
+      "surface": "light switches",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::dullness",
+      "title": "What Causes dullness on backsplashes",
+      "slug": "what-causes-dullness-on-backsplashes",
+      "problem": "dullness",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::dullness",
+      "title": "How to Remove dullness from backsplashes",
+      "slug": "how-to-remove-dullness-from-backsplashes",
+      "problem": "dullness",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::dullness",
+      "title": "How to Prevent dullness on backsplashes",
+      "slug": "how-to-prevent-dullness-on-backsplashes",
+      "problem": "dullness",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::dullness",
+      "title": "How to Fix dullness on backsplashes",
+      "slug": "how-to-fix-dullness-on-backsplashes",
+      "problem": "dullness",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::dullness",
+      "title": "How to Clean dullness from backsplashes",
+      "slug": "how-to-clean-dullness-from-backsplashes",
+      "problem": "dullness",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::dullness",
+      "title": "How to Tell if dullness on backsplashes is Permanent",
+      "slug": "how-to-tell-if-dullness-on-backsplashes-is-permanent",
+      "problem": "dullness",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::dullness",
+      "title": "Why dullness Keeps Coming Back on backsplashes",
+      "slug": "why-dullness-keeps-coming-back-on-backsplashes",
+      "problem": "dullness",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::dullness",
+      "title": "How to Maintain backsplashes and Keep dullness Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-backsplashes",
+      "problem": "dullness",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::kitchen cabinets::dullness",
+      "title": "What Causes dullness on kitchen cabinets",
+      "slug": "what-causes-dullness-on-kitchen-cabinets",
+      "problem": "dullness",
+      "surface": "kitchen cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::kitchen cabinets::dullness",
+      "title": "How to Remove dullness from kitchen cabinets",
+      "slug": "how-to-remove-dullness-from-kitchen-cabinets",
+      "problem": "dullness",
+      "surface": "kitchen cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::kitchen cabinets::dullness",
+      "title": "How to Prevent dullness on kitchen cabinets",
+      "slug": "how-to-prevent-dullness-on-kitchen-cabinets",
+      "problem": "dullness",
+      "surface": "kitchen cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::kitchen cabinets::dullness",
+      "title": "How to Fix dullness on kitchen cabinets",
+      "slug": "how-to-fix-dullness-on-kitchen-cabinets",
+      "problem": "dullness",
+      "surface": "kitchen cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::kitchen cabinets::dullness",
+      "title": "How to Clean dullness from kitchen cabinets",
+      "slug": "how-to-clean-dullness-from-kitchen-cabinets",
+      "problem": "dullness",
+      "surface": "kitchen cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::kitchen cabinets::dullness",
+      "title": "How to Tell if dullness on kitchen cabinets is Permanent",
+      "slug": "how-to-tell-if-dullness-on-kitchen-cabinets-is-permanent",
+      "problem": "dullness",
+      "surface": "kitchen cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::kitchen cabinets::dullness",
+      "title": "Why dullness Keeps Coming Back on kitchen cabinets",
+      "slug": "why-dullness-keeps-coming-back-on-kitchen-cabinets",
+      "problem": "dullness",
+      "surface": "kitchen cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::kitchen cabinets::dullness",
+      "title": "How to Maintain kitchen cabinets and Keep dullness Under Control",
+      "slug": "how-to-maintain-kitchen-cabinets-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "kitchen cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::kitchen cabinets::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on kitchen cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-kitchen-cabinets",
+      "problem": "dullness",
+      "surface": "kitchen cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::dullness",
+      "title": "What Causes dullness on tile floors",
+      "slug": "what-causes-dullness-on-tile-floors",
+      "problem": "dullness",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::dullness",
+      "title": "How to Remove dullness from tile floors",
+      "slug": "how-to-remove-dullness-from-tile-floors",
+      "problem": "dullness",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::dullness",
+      "title": "How to Prevent dullness on tile floors",
+      "slug": "how-to-prevent-dullness-on-tile-floors",
+      "problem": "dullness",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::dullness",
+      "title": "How to Fix dullness on tile floors",
+      "slug": "how-to-fix-dullness-on-tile-floors",
+      "problem": "dullness",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::dullness",
+      "title": "How to Clean dullness from tile floors",
+      "slug": "how-to-clean-dullness-from-tile-floors",
+      "problem": "dullness",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::dullness",
+      "title": "How to Tell if dullness on tile floors is Permanent",
+      "slug": "how-to-tell-if-dullness-on-tile-floors-is-permanent",
+      "problem": "dullness",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::dullness",
+      "title": "Why dullness Keeps Coming Back on tile floors",
+      "slug": "why-dullness-keeps-coming-back-on-tile-floors",
+      "problem": "dullness",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::dullness",
+      "title": "How to Maintain tile floors and Keep dullness Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-tile-floors",
+      "problem": "dullness",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::dullness",
+      "title": "What Causes dullness on shower glass",
+      "slug": "what-causes-dullness-on-shower-glass",
+      "problem": "dullness",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::dullness",
+      "title": "How to Remove dullness from shower glass",
+      "slug": "how-to-remove-dullness-from-shower-glass",
+      "problem": "dullness",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::dullness",
+      "title": "How to Prevent dullness on shower glass",
+      "slug": "how-to-prevent-dullness-on-shower-glass",
+      "problem": "dullness",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::dullness",
+      "title": "How to Fix dullness on shower glass",
+      "slug": "how-to-fix-dullness-on-shower-glass",
+      "problem": "dullness",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::dullness",
+      "title": "How to Clean dullness from shower glass",
+      "slug": "how-to-clean-dullness-from-shower-glass",
+      "problem": "dullness",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::dullness",
+      "title": "How to Tell if dullness on shower glass is Permanent",
+      "slug": "how-to-tell-if-dullness-on-shower-glass-is-permanent",
+      "problem": "dullness",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::dullness",
+      "title": "Why dullness Keeps Coming Back on shower glass",
+      "slug": "why-dullness-keeps-coming-back-on-shower-glass",
+      "problem": "dullness",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::dullness",
+      "title": "How to Maintain shower glass and Keep dullness Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-shower-glass",
+      "problem": "dullness",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtubs::dullness",
+      "title": "What Causes dullness on bathtubs",
+      "slug": "what-causes-dullness-on-bathtubs",
+      "problem": "dullness",
+      "surface": "bathtubs",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtubs::dullness",
+      "title": "How to Remove dullness from bathtubs",
+      "slug": "how-to-remove-dullness-from-bathtubs",
+      "problem": "dullness",
+      "surface": "bathtubs",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtubs::dullness",
+      "title": "How to Prevent dullness on bathtubs",
+      "slug": "how-to-prevent-dullness-on-bathtubs",
+      "problem": "dullness",
+      "surface": "bathtubs",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtubs::dullness",
+      "title": "How to Fix dullness on bathtubs",
+      "slug": "how-to-fix-dullness-on-bathtubs",
+      "problem": "dullness",
+      "surface": "bathtubs",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtubs::dullness",
+      "title": "How to Clean dullness from bathtubs",
+      "slug": "how-to-clean-dullness-from-bathtubs",
+      "problem": "dullness",
+      "surface": "bathtubs",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtubs::dullness",
+      "title": "How to Tell if dullness on bathtubs is Permanent",
+      "slug": "how-to-tell-if-dullness-on-bathtubs-is-permanent",
+      "problem": "dullness",
+      "surface": "bathtubs",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtubs::dullness",
+      "title": "Why dullness Keeps Coming Back on bathtubs",
+      "slug": "why-dullness-keeps-coming-back-on-bathtubs",
+      "problem": "dullness",
+      "surface": "bathtubs",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtubs::dullness",
+      "title": "How to Maintain bathtubs and Keep dullness Under Control",
+      "slug": "how-to-maintain-bathtubs-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "bathtubs",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtubs::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on bathtubs",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-bathtubs",
+      "problem": "dullness",
+      "surface": "bathtubs",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::dullness",
+      "title": "What Causes dullness on granite",
+      "slug": "what-causes-dullness-on-granite",
+      "problem": "dullness",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::dullness",
+      "title": "How to Remove dullness from granite",
+      "slug": "how-to-remove-dullness-from-granite",
+      "problem": "dullness",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::dullness",
+      "title": "How to Prevent dullness on granite",
+      "slug": "how-to-prevent-dullness-on-granite",
+      "problem": "dullness",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::dullness",
+      "title": "How to Fix dullness on granite",
+      "slug": "how-to-fix-dullness-on-granite",
+      "problem": "dullness",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::dullness",
+      "title": "How to Clean dullness from granite",
+      "slug": "how-to-clean-dullness-from-granite",
+      "problem": "dullness",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::dullness",
+      "title": "How to Tell if dullness on granite is Permanent",
+      "slug": "how-to-tell-if-dullness-on-granite-is-permanent",
+      "problem": "dullness",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::dullness",
+      "title": "Why dullness Keeps Coming Back on granite",
+      "slug": "why-dullness-keeps-coming-back-on-granite",
+      "problem": "dullness",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::dullness",
+      "title": "How to Maintain granite and Keep dullness Under Control",
+      "slug": "how-to-maintain-granite-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-granite",
+      "problem": "dullness",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::dullness",
+      "title": "What Causes dullness on marble",
+      "slug": "what-causes-dullness-on-marble",
+      "problem": "dullness",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::dullness",
+      "title": "How to Remove dullness from marble",
+      "slug": "how-to-remove-dullness-from-marble",
+      "problem": "dullness",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::dullness",
+      "title": "How to Prevent dullness on marble",
+      "slug": "how-to-prevent-dullness-on-marble",
+      "problem": "dullness",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::dullness",
+      "title": "How to Fix dullness on marble",
+      "slug": "how-to-fix-dullness-on-marble",
+      "problem": "dullness",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::dullness",
+      "title": "How to Clean dullness from marble",
+      "slug": "how-to-clean-dullness-from-marble",
+      "problem": "dullness",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::dullness",
+      "title": "How to Tell if dullness on marble is Permanent",
+      "slug": "how-to-tell-if-dullness-on-marble-is-permanent",
+      "problem": "dullness",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::dullness",
+      "title": "Why dullness Keeps Coming Back on marble",
+      "slug": "why-dullness-keeps-coming-back-on-marble",
+      "problem": "dullness",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::dullness",
+      "title": "How to Maintain marble and Keep dullness Under Control",
+      "slug": "how-to-maintain-marble-and-keep-dullness-under-control",
+      "problem": "dullness",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::dullness",
+      "title": "How to Recover After a Cleaning Mistake With dullness on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-dullness-on-marble",
+      "problem": "dullness",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::dullness",
+      "title": "What Causes dullness on quartz",
+      "slug": "what-causes-dullness-on-quartz",
+      "problem": "dullness",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::dullness",
+      "title": "How to Remove dullness from quartz",
+      "slug": "how-to-remove-dullness-from-quartz",
+      "problem": "dullness",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::dullness",
+      "title": "How to Prevent dullness on quartz",
+      "slug": "how-to-prevent-dullness-on-quartz",
+      "problem": "dullness",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

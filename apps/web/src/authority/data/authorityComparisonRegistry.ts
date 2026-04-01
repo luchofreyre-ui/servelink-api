@@ -1,4 +1,5 @@
 import type { AuthorityComparisonType } from "../types/authorityPageTypes";
+import { buildAuthorityProductComparisonSeeds } from "./authorityProductComparisonSeeds";
 
 export interface AuthorityComparisonSeed {
   type: AuthorityComparisonType;
@@ -6,7 +7,7 @@ export interface AuthorityComparisonSeed {
   rightSlug: string;
 }
 
-export const AUTHORITY_COMPARISON_SEEDS: AuthorityComparisonSeed[] = [
+const STATIC_COMPARISON_SEEDS: AuthorityComparisonSeed[] = [
   { type: "method_comparison", leftSlug: "degreasing", rightSlug: "neutral-surface-cleaning" },
   {
     type: "method_comparison",
@@ -22,4 +23,9 @@ export const AUTHORITY_COMPARISON_SEEDS: AuthorityComparisonSeed[] = [
   { type: "problem_comparison", leftSlug: "soap-scum", rightSlug: "hard-water-deposits" },
   { type: "problem_comparison", leftSlug: "grease-buildup", rightSlug: "stuck-on-residue" },
   { type: "problem_comparison", leftSlug: "dust-buildup", rightSlug: "general-soil" },
+];
+
+export const AUTHORITY_COMPARISON_SEEDS: AuthorityComparisonSeed[] = [
+  ...STATIC_COMPARISON_SEEDS,
+  ...buildAuthorityProductComparisonSeeds(),
 ];

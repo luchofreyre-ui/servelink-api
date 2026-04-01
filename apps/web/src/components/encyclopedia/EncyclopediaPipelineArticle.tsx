@@ -44,6 +44,8 @@ export function EncyclopediaPipelineArticle({ page, category }: Props) {
         <StructuredArticleRenderer
           article={structured}
           resolveInternalLink={resolveInternalLink}
+          taxonomyProblem={snapshot.problem}
+          taxonomySurface={snapshot.surface}
         />
 
         <p className="mt-10 font-[var(--font-manrope)] text-xs text-[#64748B]">

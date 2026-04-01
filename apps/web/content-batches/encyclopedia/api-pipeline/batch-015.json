@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "diagnosis::sealed wood::water spots",
+      "title": "How to Tell if water spots on sealed wood is Permanent",
+      "slug": "how-to-tell-if-water-spots-on-sealed-wood-is-permanent",
+      "problem": "water spots",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::water spots",
+      "title": "Why water spots Keeps Coming Back on sealed wood",
+      "slug": "why-water-spots-keeps-coming-back-on-sealed-wood",
+      "problem": "water spots",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::water spots",
+      "title": "How to Maintain sealed wood and Keep water spots Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-water-spots-under-control",
+      "problem": "water spots",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::water spots",
+      "title": "How to Recover After a Cleaning Mistake With water spots on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-water-spots-on-sealed-wood",
+      "problem": "water spots",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::yellowing",
+      "title": "What Causes yellowing on shower glass",
+      "slug": "what-causes-yellowing-on-shower-glass",
+      "problem": "yellowing",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::yellowing",
+      "title": "How to Remove yellowing from shower glass",
+      "slug": "how-to-remove-yellowing-from-shower-glass",
+      "problem": "yellowing",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::yellowing",
+      "title": "How to Prevent yellowing on shower glass",
+      "slug": "how-to-prevent-yellowing-on-shower-glass",
+      "problem": "yellowing",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::yellowing",
+      "title": "How to Fix yellowing on shower glass",
+      "slug": "how-to-fix-yellowing-on-shower-glass",
+      "problem": "yellowing",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::yellowing",
+      "title": "How to Clean yellowing from shower glass",
+      "slug": "how-to-clean-yellowing-from-shower-glass",
+      "problem": "yellowing",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::yellowing",
+      "title": "How to Tell if yellowing on shower glass is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-shower-glass-is-permanent",
+      "problem": "yellowing",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::yellowing",
+      "title": "Why yellowing Keeps Coming Back on shower glass",
+      "slug": "why-yellowing-keeps-coming-back-on-shower-glass",
+      "problem": "yellowing",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::yellowing",
+      "title": "How to Maintain shower glass and Keep yellowing Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-shower-glass",
+      "problem": "yellowing",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::yellowing",
+      "title": "What Causes yellowing on granite",
+      "slug": "what-causes-yellowing-on-granite",
+      "problem": "yellowing",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::yellowing",
+      "title": "How to Remove yellowing from granite",
+      "slug": "how-to-remove-yellowing-from-granite",
+      "problem": "yellowing",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::yellowing",
+      "title": "How to Prevent yellowing on granite",
+      "slug": "how-to-prevent-yellowing-on-granite",
+      "problem": "yellowing",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::yellowing",
+      "title": "How to Fix yellowing on granite",
+      "slug": "how-to-fix-yellowing-on-granite",
+      "problem": "yellowing",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::yellowing",
+      "title": "How to Clean yellowing from granite",
+      "slug": "how-to-clean-yellowing-from-granite",
+      "problem": "yellowing",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::yellowing",
+      "title": "How to Tell if yellowing on granite is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-granite-is-permanent",
+      "problem": "yellowing",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::yellowing",
+      "title": "Why yellowing Keeps Coming Back on granite",
+      "slug": "why-yellowing-keeps-coming-back-on-granite",
+      "problem": "yellowing",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::yellowing",
+      "title": "How to Maintain granite and Keep yellowing Under Control",
+      "slug": "how-to-maintain-granite-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-granite",
+      "problem": "yellowing",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::yellowing",
+      "title": "What Causes yellowing on marble",
+      "slug": "what-causes-yellowing-on-marble",
+      "problem": "yellowing",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::yellowing",
+      "title": "How to Remove yellowing from marble",
+      "slug": "how-to-remove-yellowing-from-marble",
+      "problem": "yellowing",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::yellowing",
+      "title": "How to Prevent yellowing on marble",
+      "slug": "how-to-prevent-yellowing-on-marble",
+      "problem": "yellowing",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::yellowing",
+      "title": "How to Fix yellowing on marble",
+      "slug": "how-to-fix-yellowing-on-marble",
+      "problem": "yellowing",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::yellowing",
+      "title": "How to Clean yellowing from marble",
+      "slug": "how-to-clean-yellowing-from-marble",
+      "problem": "yellowing",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::yellowing",
+      "title": "How to Tell if yellowing on marble is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-marble-is-permanent",
+      "problem": "yellowing",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::yellowing",
+      "title": "Why yellowing Keeps Coming Back on marble",
+      "slug": "why-yellowing-keeps-coming-back-on-marble",
+      "problem": "yellowing",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::yellowing",
+      "title": "How to Maintain marble and Keep yellowing Under Control",
+      "slug": "how-to-maintain-marble-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-marble",
+      "problem": "yellowing",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::yellowing",
+      "title": "What Causes yellowing on quartz",
+      "slug": "what-causes-yellowing-on-quartz",
+      "problem": "yellowing",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::yellowing",
+      "title": "How to Remove yellowing from quartz",
+      "slug": "how-to-remove-yellowing-from-quartz",
+      "problem": "yellowing",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::yellowing",
+      "title": "How to Prevent yellowing on quartz",
+      "slug": "how-to-prevent-yellowing-on-quartz",
+      "problem": "yellowing",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::yellowing",
+      "title": "How to Fix yellowing on quartz",
+      "slug": "how-to-fix-yellowing-on-quartz",
+      "problem": "yellowing",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::yellowing",
+      "title": "How to Clean yellowing from quartz",
+      "slug": "how-to-clean-yellowing-from-quartz",
+      "problem": "yellowing",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::yellowing",
+      "title": "How to Tell if yellowing on quartz is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-quartz-is-permanent",
+      "problem": "yellowing",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::yellowing",
+      "title": "Why yellowing Keeps Coming Back on quartz",
+      "slug": "why-yellowing-keeps-coming-back-on-quartz",
+      "problem": "yellowing",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::yellowing",
+      "title": "How to Maintain quartz and Keep yellowing Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-quartz",
+      "problem": "yellowing",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::yellowing",
+      "title": "What Causes yellowing on laminate",
+      "slug": "what-causes-yellowing-on-laminate",
+      "problem": "yellowing",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::yellowing",
+      "title": "How to Remove yellowing from laminate",
+      "slug": "how-to-remove-yellowing-from-laminate",
+      "problem": "yellowing",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::yellowing",
+      "title": "How to Prevent yellowing on laminate",
+      "slug": "how-to-prevent-yellowing-on-laminate",
+      "problem": "yellowing",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::yellowing",
+      "title": "How to Fix yellowing on laminate",
+      "slug": "how-to-fix-yellowing-on-laminate",
+      "problem": "yellowing",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::yellowing",
+      "title": "How to Clean yellowing from laminate",
+      "slug": "how-to-clean-yellowing-from-laminate",
+      "problem": "yellowing",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::yellowing",
+      "title": "How to Tell if yellowing on laminate is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-laminate-is-permanent",
+      "problem": "yellowing",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::yellowing",
+      "title": "Why yellowing Keeps Coming Back on laminate",
+      "slug": "why-yellowing-keeps-coming-back-on-laminate",
+      "problem": "yellowing",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::yellowing",
+      "title": "How to Maintain laminate and Keep yellowing Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-laminate",
+      "problem": "yellowing",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::yellowing",
+      "title": "What Causes yellowing on wood",
+      "slug": "what-causes-yellowing-on-wood",
+      "problem": "yellowing",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::yellowing",
+      "title": "How to Remove yellowing from wood",
+      "slug": "how-to-remove-yellowing-from-wood",
+      "problem": "yellowing",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::yellowing",
+      "title": "How to Prevent yellowing on wood",
+      "slug": "how-to-prevent-yellowing-on-wood",
+      "problem": "yellowing",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::yellowing",
+      "title": "How to Fix yellowing on wood",
+      "slug": "how-to-fix-yellowing-on-wood",
+      "problem": "yellowing",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::yellowing",
+      "title": "How to Clean yellowing from wood",
+      "slug": "how-to-clean-yellowing-from-wood",
+      "problem": "yellowing",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::yellowing",
+      "title": "How to Tell if yellowing on wood is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-wood-is-permanent",
+      "problem": "yellowing",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::yellowing",
+      "title": "Why yellowing Keeps Coming Back on wood",
+      "slug": "why-yellowing-keeps-coming-back-on-wood",
+      "problem": "yellowing",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::yellowing",
+      "title": "How to Maintain wood and Keep yellowing Under Control",
+      "slug": "how-to-maintain-wood-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-wood",
+      "problem": "yellowing",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::yellowing",
+      "title": "What Causes yellowing on grout",
+      "slug": "what-causes-yellowing-on-grout",
+      "problem": "yellowing",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::yellowing",
+      "title": "How to Remove yellowing from grout",
+      "slug": "how-to-remove-yellowing-from-grout",
+      "problem": "yellowing",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::yellowing",
+      "title": "How to Prevent yellowing on grout",
+      "slug": "how-to-prevent-yellowing-on-grout",
+      "problem": "yellowing",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::yellowing",
+      "title": "How to Fix yellowing on grout",
+      "slug": "how-to-fix-yellowing-on-grout",
+      "problem": "yellowing",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::yellowing",
+      "title": "How to Clean yellowing from grout",
+      "slug": "how-to-clean-yellowing-from-grout",
+      "problem": "yellowing",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::yellowing",
+      "title": "How to Tell if yellowing on grout is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-grout-is-permanent",
+      "problem": "yellowing",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::yellowing",
+      "title": "Why yellowing Keeps Coming Back on grout",
+      "slug": "why-yellowing-keeps-coming-back-on-grout",
+      "problem": "yellowing",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::yellowing",
+      "title": "How to Maintain grout and Keep yellowing Under Control",
+      "slug": "how-to-maintain-grout-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-grout",
+      "problem": "yellowing",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::yellowing",
+      "title": "What Causes yellowing on shower doors",
+      "slug": "what-causes-yellowing-on-shower-doors",
+      "problem": "yellowing",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::yellowing",
+      "title": "How to Remove yellowing from shower doors",
+      "slug": "how-to-remove-yellowing-from-shower-doors",
+      "problem": "yellowing",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::yellowing",
+      "title": "How to Prevent yellowing on shower doors",
+      "slug": "how-to-prevent-yellowing-on-shower-doors",
+      "problem": "yellowing",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::yellowing",
+      "title": "How to Fix yellowing on shower doors",
+      "slug": "how-to-fix-yellowing-on-shower-doors",
+      "problem": "yellowing",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::yellowing",
+      "title": "How to Clean yellowing from shower doors",
+      "slug": "how-to-clean-yellowing-from-shower-doors",
+      "problem": "yellowing",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::yellowing",
+      "title": "How to Tell if yellowing on shower doors is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-shower-doors-is-permanent",
+      "problem": "yellowing",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::yellowing",
+      "title": "Why yellowing Keeps Coming Back on shower doors",
+      "slug": "why-yellowing-keeps-coming-back-on-shower-doors",
+      "problem": "yellowing",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::yellowing",
+      "title": "How to Maintain shower doors and Keep yellowing Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-shower-doors",
+      "problem": "yellowing",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::yellowing",
+      "title": "What Causes yellowing on sealed stone",
+      "slug": "what-causes-yellowing-on-sealed-stone",
+      "problem": "yellowing",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::yellowing",
+      "title": "How to Remove yellowing from sealed stone",
+      "slug": "how-to-remove-yellowing-from-sealed-stone",
+      "problem": "yellowing",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::yellowing",
+      "title": "How to Prevent yellowing on sealed stone",
+      "slug": "how-to-prevent-yellowing-on-sealed-stone",
+      "problem": "yellowing",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::yellowing",
+      "title": "How to Fix yellowing on sealed stone",
+      "slug": "how-to-fix-yellowing-on-sealed-stone",
+      "problem": "yellowing",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::yellowing",
+      "title": "How to Clean yellowing from sealed stone",
+      "slug": "how-to-clean-yellowing-from-sealed-stone",
+      "problem": "yellowing",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::yellowing",
+      "title": "How to Tell if yellowing on sealed stone is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-sealed-stone-is-permanent",
+      "problem": "yellowing",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::yellowing",
+      "title": "Why yellowing Keeps Coming Back on sealed stone",
+      "slug": "why-yellowing-keeps-coming-back-on-sealed-stone",
+      "problem": "yellowing",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::yellowing",
+      "title": "How to Maintain sealed stone and Keep yellowing Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-sealed-stone",
+      "problem": "yellowing",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::yellowing",
+      "title": "What Causes yellowing on shower grout",
+      "slug": "what-causes-yellowing-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::yellowing",
+      "title": "How to Remove yellowing from shower grout",
+      "slug": "how-to-remove-yellowing-from-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::yellowing",
+      "title": "How to Prevent yellowing on shower grout",
+      "slug": "how-to-prevent-yellowing-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::yellowing",
+      "title": "How to Fix yellowing on shower grout",
+      "slug": "how-to-fix-yellowing-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::yellowing",
+      "title": "How to Clean yellowing from shower grout",
+      "slug": "how-to-clean-yellowing-from-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::yellowing",
+      "title": "How to Tell if yellowing on shower grout is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-shower-grout-is-permanent",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::yellowing",
+      "title": "Why yellowing Keeps Coming Back on shower grout",
+      "slug": "why-yellowing-keeps-coming-back-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::yellowing",
+      "title": "How to Maintain shower grout and Keep yellowing Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-shower-grout",
+      "problem": "yellowing",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::yellowing",
+      "title": "What Causes yellowing on tile grout",
+      "slug": "what-causes-yellowing-on-tile-grout",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::yellowing",
+      "title": "How to Remove yellowing from tile grout",
+      "slug": "how-to-remove-yellowing-from-tile-grout",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::yellowing",
+      "title": "How to Prevent yellowing on tile grout",
+      "slug": "how-to-prevent-yellowing-on-tile-grout",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::yellowing",
+      "title": "How to Fix yellowing on tile grout",
+      "slug": "how-to-fix-yellowing-on-tile-grout",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::yellowing",
+      "title": "How to Clean yellowing from tile grout",
+      "slug": "how-to-clean-yellowing-from-tile-grout",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::yellowing",
+      "title": "How to Tell if yellowing on tile grout is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-tile-grout-is-permanent",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

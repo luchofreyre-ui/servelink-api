@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-prevent::wood::soap scum",
+      "title": "How to Prevent soap scum on wood",
+      "slug": "how-to-prevent-soap-scum-on-wood",
+      "problem": "soap scum",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::soap scum",
+      "title": "How to Fix soap scum on wood",
+      "slug": "how-to-fix-soap-scum-on-wood",
+      "problem": "soap scum",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::soap scum",
+      "title": "How to Clean soap scum from wood",
+      "slug": "how-to-clean-soap-scum-from-wood",
+      "problem": "soap scum",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::soap scum",
+      "title": "How to Tell if soap scum on wood is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-wood-is-permanent",
+      "problem": "soap scum",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::soap scum",
+      "title": "Why soap scum Keeps Coming Back on wood",
+      "slug": "why-soap-scum-keeps-coming-back-on-wood",
+      "problem": "soap scum",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::soap scum",
+      "title": "How to Maintain wood and Keep soap scum Under Control",
+      "slug": "how-to-maintain-wood-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-wood",
+      "problem": "soap scum",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::soap scum",
+      "title": "What Causes soap scum on grout",
+      "slug": "what-causes-soap-scum-on-grout",
+      "problem": "soap scum",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::soap scum",
+      "title": "How to Remove soap scum from grout",
+      "slug": "how-to-remove-soap-scum-from-grout",
+      "problem": "soap scum",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::soap scum",
+      "title": "How to Prevent soap scum on grout",
+      "slug": "how-to-prevent-soap-scum-on-grout",
+      "problem": "soap scum",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::soap scum",
+      "title": "How to Fix soap scum on grout",
+      "slug": "how-to-fix-soap-scum-on-grout",
+      "problem": "soap scum",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::soap scum",
+      "title": "How to Clean soap scum from grout",
+      "slug": "how-to-clean-soap-scum-from-grout",
+      "problem": "soap scum",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::soap scum",
+      "title": "How to Tell if soap scum on grout is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-grout-is-permanent",
+      "problem": "soap scum",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::soap scum",
+      "title": "Why soap scum Keeps Coming Back on grout",
+      "slug": "why-soap-scum-keeps-coming-back-on-grout",
+      "problem": "soap scum",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::soap scum",
+      "title": "How to Maintain grout and Keep soap scum Under Control",
+      "slug": "how-to-maintain-grout-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-grout",
+      "problem": "soap scum",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::soap scum",
+      "title": "What Causes soap scum on shower doors",
+      "slug": "what-causes-soap-scum-on-shower-doors",
+      "problem": "soap scum",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::soap scum",
+      "title": "How to Remove soap scum from shower doors",
+      "slug": "how-to-remove-soap-scum-from-shower-doors",
+      "problem": "soap scum",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::soap scum",
+      "title": "How to Prevent soap scum on shower doors",
+      "slug": "how-to-prevent-soap-scum-on-shower-doors",
+      "problem": "soap scum",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::soap scum",
+      "title": "How to Fix soap scum on shower doors",
+      "slug": "how-to-fix-soap-scum-on-shower-doors",
+      "problem": "soap scum",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::soap scum",
+      "title": "How to Clean soap scum from shower doors",
+      "slug": "how-to-clean-soap-scum-from-shower-doors",
+      "problem": "soap scum",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::soap scum",
+      "title": "How to Tell if soap scum on shower doors is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-shower-doors-is-permanent",
+      "problem": "soap scum",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::soap scum",
+      "title": "Why soap scum Keeps Coming Back on shower doors",
+      "slug": "why-soap-scum-keeps-coming-back-on-shower-doors",
+      "problem": "soap scum",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::soap scum",
+      "title": "How to Maintain shower doors and Keep soap scum Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-shower-doors",
+      "problem": "soap scum",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::soap scum",
+      "title": "What Causes soap scum on sealed stone",
+      "slug": "what-causes-soap-scum-on-sealed-stone",
+      "problem": "soap scum",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::soap scum",
+      "title": "How to Remove soap scum from sealed stone",
+      "slug": "how-to-remove-soap-scum-from-sealed-stone",
+      "problem": "soap scum",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::soap scum",
+      "title": "How to Prevent soap scum on sealed stone",
+      "slug": "how-to-prevent-soap-scum-on-sealed-stone",
+      "problem": "soap scum",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::soap scum",
+      "title": "How to Fix soap scum on sealed stone",
+      "slug": "how-to-fix-soap-scum-on-sealed-stone",
+      "problem": "soap scum",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::soap scum",
+      "title": "How to Clean soap scum from sealed stone",
+      "slug": "how-to-clean-soap-scum-from-sealed-stone",
+      "problem": "soap scum",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::soap scum",
+      "title": "How to Tell if soap scum on sealed stone is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-sealed-stone-is-permanent",
+      "problem": "soap scum",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::soap scum",
+      "title": "Why soap scum Keeps Coming Back on sealed stone",
+      "slug": "why-soap-scum-keeps-coming-back-on-sealed-stone",
+      "problem": "soap scum",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::soap scum",
+      "title": "How to Maintain sealed stone and Keep soap scum Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-sealed-stone",
+      "problem": "soap scum",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::soap scum",
+      "title": "What Causes soap scum on shower grout",
+      "slug": "what-causes-soap-scum-on-shower-grout",
+      "problem": "soap scum",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::soap scum",
+      "title": "How to Remove soap scum from shower grout",
+      "slug": "how-to-remove-soap-scum-from-shower-grout",
+      "problem": "soap scum",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::soap scum",
+      "title": "How to Prevent soap scum on shower grout",
+      "slug": "how-to-prevent-soap-scum-on-shower-grout",
+      "problem": "soap scum",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::soap scum",
+      "title": "How to Fix soap scum on shower grout",
+      "slug": "how-to-fix-soap-scum-on-shower-grout",
+      "problem": "soap scum",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::soap scum",
+      "title": "How to Clean soap scum from shower grout",
+      "slug": "how-to-clean-soap-scum-from-shower-grout",
+      "problem": "soap scum",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::soap scum",
+      "title": "How to Tell if soap scum on shower grout is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-shower-grout-is-permanent",
+      "problem": "soap scum",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::soap scum",
+      "title": "Why soap scum Keeps Coming Back on shower grout",
+      "slug": "why-soap-scum-keeps-coming-back-on-shower-grout",
+      "problem": "soap scum",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::soap scum",
+      "title": "How to Maintain shower grout and Keep soap scum Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-shower-grout",
+      "problem": "soap scum",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::soap scum",
+      "title": "What Causes soap scum on tile grout",
+      "slug": "what-causes-soap-scum-on-tile-grout",
+      "problem": "soap scum",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::soap scum",
+      "title": "How to Remove soap scum from tile grout",
+      "slug": "how-to-remove-soap-scum-from-tile-grout",
+      "problem": "soap scum",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::soap scum",
+      "title": "How to Prevent soap scum on tile grout",
+      "slug": "how-to-prevent-soap-scum-on-tile-grout",
+      "problem": "soap scum",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::soap scum",
+      "title": "How to Fix soap scum on tile grout",
+      "slug": "how-to-fix-soap-scum-on-tile-grout",
+      "problem": "soap scum",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::soap scum",
+      "title": "How to Clean soap scum from tile grout",
+      "slug": "how-to-clean-soap-scum-from-tile-grout",
+      "problem": "soap scum",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::soap scum",
+      "title": "How to Tell if soap scum on tile grout is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-tile-grout-is-permanent",
+      "problem": "soap scum",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::soap scum",
+      "title": "Why soap scum Keeps Coming Back on tile grout",
+      "slug": "why-soap-scum-keeps-coming-back-on-tile-grout",
+      "problem": "soap scum",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::soap scum",
+      "title": "How to Maintain tile grout and Keep soap scum Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-tile-grout",
+      "problem": "soap scum",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::soap scum",
+      "title": "What Causes soap scum on caulking",
+      "slug": "what-causes-soap-scum-on-caulking",
+      "problem": "soap scum",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::soap scum",
+      "title": "How to Remove soap scum from caulking",
+      "slug": "how-to-remove-soap-scum-from-caulking",
+      "problem": "soap scum",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::soap scum",
+      "title": "How to Prevent soap scum on caulking",
+      "slug": "how-to-prevent-soap-scum-on-caulking",
+      "problem": "soap scum",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::soap scum",
+      "title": "How to Fix soap scum on caulking",
+      "slug": "how-to-fix-soap-scum-on-caulking",
+      "problem": "soap scum",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::soap scum",
+      "title": "How to Clean soap scum from caulking",
+      "slug": "how-to-clean-soap-scum-from-caulking",
+      "problem": "soap scum",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::soap scum",
+      "title": "How to Tell if soap scum on caulking is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-caulking-is-permanent",
+      "problem": "soap scum",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::soap scum",
+      "title": "Why soap scum Keeps Coming Back on caulking",
+      "slug": "why-soap-scum-keeps-coming-back-on-caulking",
+      "problem": "soap scum",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::soap scum",
+      "title": "How to Maintain caulking and Keep soap scum Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-caulking",
+      "problem": "soap scum",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::soap scum",
+      "title": "What Causes soap scum on sealed granite",
+      "slug": "what-causes-soap-scum-on-sealed-granite",
+      "problem": "soap scum",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::soap scum",
+      "title": "How to Remove soap scum from sealed granite",
+      "slug": "how-to-remove-soap-scum-from-sealed-granite",
+      "problem": "soap scum",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::soap scum",
+      "title": "How to Prevent soap scum on sealed granite",
+      "slug": "how-to-prevent-soap-scum-on-sealed-granite",
+      "problem": "soap scum",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::soap scum",
+      "title": "How to Fix soap scum on sealed granite",
+      "slug": "how-to-fix-soap-scum-on-sealed-granite",
+      "problem": "soap scum",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::soap scum",
+      "title": "How to Clean soap scum from sealed granite",
+      "slug": "how-to-clean-soap-scum-from-sealed-granite",
+      "problem": "soap scum",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::soap scum",
+      "title": "How to Tell if soap scum on sealed granite is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-sealed-granite-is-permanent",
+      "problem": "soap scum",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::soap scum",
+      "title": "Why soap scum Keeps Coming Back on sealed granite",
+      "slug": "why-soap-scum-keeps-coming-back-on-sealed-granite",
+      "problem": "soap scum",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::soap scum",
+      "title": "How to Maintain sealed granite and Keep soap scum Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-sealed-granite",
+      "problem": "soap scum",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::soap scum",
+      "title": "What Causes soap scum on sealed marble",
+      "slug": "what-causes-soap-scum-on-sealed-marble",
+      "problem": "soap scum",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::soap scum",
+      "title": "How to Remove soap scum from sealed marble",
+      "slug": "how-to-remove-soap-scum-from-sealed-marble",
+      "problem": "soap scum",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::soap scum",
+      "title": "How to Prevent soap scum on sealed marble",
+      "slug": "how-to-prevent-soap-scum-on-sealed-marble",
+      "problem": "soap scum",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::soap scum",
+      "title": "How to Fix soap scum on sealed marble",
+      "slug": "how-to-fix-soap-scum-on-sealed-marble",
+      "problem": "soap scum",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::soap scum",
+      "title": "How to Clean soap scum from sealed marble",
+      "slug": "how-to-clean-soap-scum-from-sealed-marble",
+      "problem": "soap scum",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::soap scum",
+      "title": "How to Tell if soap scum on sealed marble is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-sealed-marble-is-permanent",
+      "problem": "soap scum",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::soap scum",
+      "title": "Why soap scum Keeps Coming Back on sealed marble",
+      "slug": "why-soap-scum-keeps-coming-back-on-sealed-marble",
+      "problem": "soap scum",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::soap scum",
+      "title": "How to Maintain sealed marble and Keep soap scum Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-sealed-marble",
+      "problem": "soap scum",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::soap scum",
+      "title": "What Causes soap scum on quartz countertops",
+      "slug": "what-causes-soap-scum-on-quartz-countertops",
+      "problem": "soap scum",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::soap scum",
+      "title": "How to Remove soap scum from quartz countertops",
+      "slug": "how-to-remove-soap-scum-from-quartz-countertops",
+      "problem": "soap scum",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::soap scum",
+      "title": "How to Prevent soap scum on quartz countertops",
+      "slug": "how-to-prevent-soap-scum-on-quartz-countertops",
+      "problem": "soap scum",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::soap scum",
+      "title": "How to Fix soap scum on quartz countertops",
+      "slug": "how-to-fix-soap-scum-on-quartz-countertops",
+      "problem": "soap scum",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::soap scum",
+      "title": "How to Clean soap scum from quartz countertops",
+      "slug": "how-to-clean-soap-scum-from-quartz-countertops",
+      "problem": "soap scum",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::soap scum",
+      "title": "How to Tell if soap scum on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-quartz-countertops-is-permanent",
+      "problem": "soap scum",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::soap scum",
+      "title": "Why soap scum Keeps Coming Back on quartz countertops",
+      "slug": "why-soap-scum-keeps-coming-back-on-quartz-countertops",
+      "problem": "soap scum",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::soap scum",
+      "title": "How to Maintain quartz countertops and Keep soap scum Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-quartz-countertops",
+      "problem": "soap scum",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::soap scum",
+      "title": "What Causes soap scum on laminate counters",
+      "slug": "what-causes-soap-scum-on-laminate-counters",
+      "problem": "soap scum",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::soap scum",
+      "title": "How to Remove soap scum from laminate counters",
+      "slug": "how-to-remove-soap-scum-from-laminate-counters",
+      "problem": "soap scum",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::soap scum",
+      "title": "How to Prevent soap scum on laminate counters",
+      "slug": "how-to-prevent-soap-scum-on-laminate-counters",
+      "problem": "soap scum",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::soap scum",
+      "title": "How to Fix soap scum on laminate counters",
+      "slug": "how-to-fix-soap-scum-on-laminate-counters",
+      "problem": "soap scum",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::soap scum",
+      "title": "How to Clean soap scum from laminate counters",
+      "slug": "how-to-clean-soap-scum-from-laminate-counters",
+      "problem": "soap scum",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::soap scum",
+      "title": "How to Tell if soap scum on laminate counters is Permanent",
+      "slug": "how-to-tell-if-soap-scum-on-laminate-counters-is-permanent",
+      "problem": "soap scum",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::soap scum",
+      "title": "Why soap scum Keeps Coming Back on laminate counters",
+      "slug": "why-soap-scum-keeps-coming-back-on-laminate-counters",
+      "problem": "soap scum",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::soap scum",
+      "title": "How to Maintain laminate counters and Keep soap scum Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-soap-scum-under-control",
+      "problem": "soap scum",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::soap scum",
+      "title": "How to Recover After a Cleaning Mistake With soap scum on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-soap-scum-on-laminate-counters",
+      "problem": "soap scum",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::soap scum",
+      "title": "What Causes soap scum on butcher block",
+      "slug": "what-causes-soap-scum-on-butcher-block",
+      "problem": "soap scum",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::soap scum",
+      "title": "How to Remove soap scum from butcher block",
+      "slug": "how-to-remove-soap-scum-from-butcher-block",
+      "problem": "soap scum",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::soap scum",
+      "title": "How to Prevent soap scum on butcher block",
+      "slug": "how-to-prevent-soap-scum-on-butcher-block",
+      "problem": "soap scum",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

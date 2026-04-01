@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "why::shower grout::hard water film",
+      "title": "Why hard water film Keeps Coming Back on shower grout",
+      "slug": "why-hard-water-film-keeps-coming-back-on-shower-grout",
+      "problem": "hard water film",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::hard water film",
+      "title": "How to Maintain shower grout and Keep hard water film Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-shower-grout",
+      "problem": "hard water film",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::hard water film",
+      "title": "What Causes hard water film on tile grout",
+      "slug": "what-causes-hard-water-film-on-tile-grout",
+      "problem": "hard water film",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::hard water film",
+      "title": "How to Remove hard water film from tile grout",
+      "slug": "how-to-remove-hard-water-film-from-tile-grout",
+      "problem": "hard water film",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::hard water film",
+      "title": "How to Prevent hard water film on tile grout",
+      "slug": "how-to-prevent-hard-water-film-on-tile-grout",
+      "problem": "hard water film",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::hard water film",
+      "title": "How to Fix hard water film on tile grout",
+      "slug": "how-to-fix-hard-water-film-on-tile-grout",
+      "problem": "hard water film",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::hard water film",
+      "title": "How to Clean hard water film from tile grout",
+      "slug": "how-to-clean-hard-water-film-from-tile-grout",
+      "problem": "hard water film",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::hard water film",
+      "title": "How to Tell if hard water film on tile grout is Permanent",
+      "slug": "how-to-tell-if-hard-water-film-on-tile-grout-is-permanent",
+      "problem": "hard water film",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::hard water film",
+      "title": "Why hard water film Keeps Coming Back on tile grout",
+      "slug": "why-hard-water-film-keeps-coming-back-on-tile-grout",
+      "problem": "hard water film",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::hard water film",
+      "title": "How to Maintain tile grout and Keep hard water film Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-tile-grout",
+      "problem": "hard water film",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::hard water film",
+      "title": "What Causes hard water film on caulking",
+      "slug": "what-causes-hard-water-film-on-caulking",
+      "problem": "hard water film",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::hard water film",
+      "title": "How to Remove hard water film from caulking",
+      "slug": "how-to-remove-hard-water-film-from-caulking",
+      "problem": "hard water film",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::hard water film",
+      "title": "How to Prevent hard water film on caulking",
+      "slug": "how-to-prevent-hard-water-film-on-caulking",
+      "problem": "hard water film",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::hard water film",
+      "title": "How to Fix hard water film on caulking",
+      "slug": "how-to-fix-hard-water-film-on-caulking",
+      "problem": "hard water film",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::hard water film",
+      "title": "How to Clean hard water film from caulking",
+      "slug": "how-to-clean-hard-water-film-from-caulking",
+      "problem": "hard water film",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::hard water film",
+      "title": "How to Tell if hard water film on caulking is Permanent",
+      "slug": "how-to-tell-if-hard-water-film-on-caulking-is-permanent",
+      "problem": "hard water film",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::hard water film",
+      "title": "Why hard water film Keeps Coming Back on caulking",
+      "slug": "why-hard-water-film-keeps-coming-back-on-caulking",
+      "problem": "hard water film",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::hard water film",
+      "title": "How to Maintain caulking and Keep hard water film Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-caulking",
+      "problem": "hard water film",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::hard water film",
+      "title": "What Causes hard water film on sealed granite",
+      "slug": "what-causes-hard-water-film-on-sealed-granite",
+      "problem": "hard water film",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::hard water film",
+      "title": "How to Remove hard water film from sealed granite",
+      "slug": "how-to-remove-hard-water-film-from-sealed-granite",
+      "problem": "hard water film",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::hard water film",
+      "title": "How to Prevent hard water film on sealed granite",
+      "slug": "how-to-prevent-hard-water-film-on-sealed-granite",
+      "problem": "hard water film",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::hard water film",
+      "title": "How to Fix hard water film on sealed granite",
+      "slug": "how-to-fix-hard-water-film-on-sealed-granite",
+      "problem": "hard water film",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::hard water film",
+      "title": "How to Clean hard water film from sealed granite",
+      "slug": "how-to-clean-hard-water-film-from-sealed-granite",
+      "problem": "hard water film",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::hard water film",
+      "title": "How to Tell if hard water film on sealed granite is Permanent",
+      "slug": "how-to-tell-if-hard-water-film-on-sealed-granite-is-permanent",
+      "problem": "hard water film",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::hard water film",
+      "title": "Why hard water film Keeps Coming Back on sealed granite",
+      "slug": "why-hard-water-film-keeps-coming-back-on-sealed-granite",
+      "problem": "hard water film",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::hard water film",
+      "title": "How to Maintain sealed granite and Keep hard water film Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-sealed-granite",
+      "problem": "hard water film",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::hard water film",
+      "title": "What Causes hard water film on sealed marble",
+      "slug": "what-causes-hard-water-film-on-sealed-marble",
+      "problem": "hard water film",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::hard water film",
+      "title": "How to Remove hard water film from sealed marble",
+      "slug": "how-to-remove-hard-water-film-from-sealed-marble",
+      "problem": "hard water film",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::hard water film",
+      "title": "How to Prevent hard water film on sealed marble",
+      "slug": "how-to-prevent-hard-water-film-on-sealed-marble",
+      "problem": "hard water film",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::hard water film",
+      "title": "How to Fix hard water film on sealed marble",
+      "slug": "how-to-fix-hard-water-film-on-sealed-marble",
+      "problem": "hard water film",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::hard water film",
+      "title": "How to Clean hard water film from sealed marble",
+      "slug": "how-to-clean-hard-water-film-from-sealed-marble",
+      "problem": "hard water film",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::hard water film",
+      "title": "How to Tell if hard water film on sealed marble is Permanent",
+      "slug": "how-to-tell-if-hard-water-film-on-sealed-marble-is-permanent",
+      "problem": "hard water film",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::hard water film",
+      "title": "Why hard water film Keeps Coming Back on sealed marble",
+      "slug": "why-hard-water-film-keeps-coming-back-on-sealed-marble",
+      "problem": "hard water film",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::hard water film",
+      "title": "How to Maintain sealed marble and Keep hard water film Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-sealed-marble",
+      "problem": "hard water film",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::hard water film",
+      "title": "What Causes hard water film on quartz countertops",
+      "slug": "what-causes-hard-water-film-on-quartz-countertops",
+      "problem": "hard water film",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::hard water film",
+      "title": "How to Remove hard water film from quartz countertops",
+      "slug": "how-to-remove-hard-water-film-from-quartz-countertops",
+      "problem": "hard water film",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::hard water film",
+      "title": "How to Prevent hard water film on quartz countertops",
+      "slug": "how-to-prevent-hard-water-film-on-quartz-countertops",
+      "problem": "hard water film",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::hard water film",
+      "title": "How to Fix hard water film on quartz countertops",
+      "slug": "how-to-fix-hard-water-film-on-quartz-countertops",
+      "problem": "hard water film",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::hard water film",
+      "title": "How to Clean hard water film from quartz countertops",
+      "slug": "how-to-clean-hard-water-film-from-quartz-countertops",
+      "problem": "hard water film",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::hard water film",
+      "title": "How to Tell if hard water film on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-hard-water-film-on-quartz-countertops-is-permanent",
+      "problem": "hard water film",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::hard water film",
+      "title": "Why hard water film Keeps Coming Back on quartz countertops",
+      "slug": "why-hard-water-film-keeps-coming-back-on-quartz-countertops",
+      "problem": "hard water film",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::hard water film",
+      "title": "How to Maintain quartz countertops and Keep hard water film Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-quartz-countertops",
+      "problem": "hard water film",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::hard water film",
+      "title": "What Causes hard water film on laminate counters",
+      "slug": "what-causes-hard-water-film-on-laminate-counters",
+      "problem": "hard water film",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::hard water film",
+      "title": "How to Remove hard water film from laminate counters",
+      "slug": "how-to-remove-hard-water-film-from-laminate-counters",
+      "problem": "hard water film",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::hard water film",
+      "title": "How to Prevent hard water film on laminate counters",
+      "slug": "how-to-prevent-hard-water-film-on-laminate-counters",
+      "problem": "hard water film",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::hard water film",
+      "title": "How to Fix hard water film on laminate counters",
+      "slug": "how-to-fix-hard-water-film-on-laminate-counters",
+      "problem": "hard water film",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::hard water film",
+      "title": "How to Clean hard water film from laminate counters",
+      "slug": "how-to-clean-hard-water-film-from-laminate-counters",
+      "problem": "hard water film",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::hard water film",
+      "title": "How to Tell if hard water film on laminate counters is Permanent",
+      "slug": "how-to-tell-if-hard-water-film-on-laminate-counters-is-permanent",
+      "problem": "hard water film",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::hard water film",
+      "title": "Why hard water film Keeps Coming Back on laminate counters",
+      "slug": "why-hard-water-film-keeps-coming-back-on-laminate-counters",
+      "problem": "hard water film",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::hard water film",
+      "title": "How to Maintain laminate counters and Keep hard water film Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-laminate-counters",
+      "problem": "hard water film",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::hard water film",
+      "title": "What Causes hard water film on butcher block",
+      "slug": "what-causes-hard-water-film-on-butcher-block",
+      "problem": "hard water film",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::hard water film",
+      "title": "How to Remove hard water film from butcher block",
+      "slug": "how-to-remove-hard-water-film-from-butcher-block",
+      "problem": "hard water film",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::hard water film",
+      "title": "How to Prevent hard water film on butcher block",
+      "slug": "how-to-prevent-hard-water-film-on-butcher-block",
+      "problem": "hard water film",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::hard water film",
+      "title": "How to Fix hard water film on butcher block",
+      "slug": "how-to-fix-hard-water-film-on-butcher-block",
+      "problem": "hard water film",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::hard water film",
+      "title": "How to Clean hard water film from butcher block",
+      "slug": "how-to-clean-hard-water-film-from-butcher-block",
+      "problem": "hard water film",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::hard water film",
+      "title": "How to Tell if hard water film on butcher block is Permanent",
+      "slug": "how-to-tell-if-hard-water-film-on-butcher-block-is-permanent",
+      "problem": "hard water film",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::hard water film",
+      "title": "Why hard water film Keeps Coming Back on butcher block",
+      "slug": "why-hard-water-film-keeps-coming-back-on-butcher-block",
+      "problem": "hard water film",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::hard water film",
+      "title": "How to Maintain butcher block and Keep hard water film Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-butcher-block",
+      "problem": "hard water film",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::hard water film",
+      "title": "What Causes hard water film on unfinished wood",
+      "slug": "what-causes-hard-water-film-on-unfinished-wood",
+      "problem": "hard water film",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::hard water film",
+      "title": "How to Remove hard water film from unfinished wood",
+      "slug": "how-to-remove-hard-water-film-from-unfinished-wood",
+      "problem": "hard water film",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::hard water film",
+      "title": "How to Prevent hard water film on unfinished wood",
+      "slug": "how-to-prevent-hard-water-film-on-unfinished-wood",
+      "problem": "hard water film",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::hard water film",
+      "title": "How to Fix hard water film on unfinished wood",
+      "slug": "how-to-fix-hard-water-film-on-unfinished-wood",
+      "problem": "hard water film",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::hard water film",
+      "title": "How to Clean hard water film from unfinished wood",
+      "slug": "how-to-clean-hard-water-film-from-unfinished-wood",
+      "problem": "hard water film",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::hard water film",
+      "title": "How to Tell if hard water film on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-hard-water-film-on-unfinished-wood-is-permanent",
+      "problem": "hard water film",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::hard water film",
+      "title": "Why hard water film Keeps Coming Back on unfinished wood",
+      "slug": "why-hard-water-film-keeps-coming-back-on-unfinished-wood",
+      "problem": "hard water film",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::hard water film",
+      "title": "How to Maintain unfinished wood and Keep hard water film Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-unfinished-wood",
+      "problem": "hard water film",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::hard water film",
+      "title": "What Causes hard water film on sealed wood",
+      "slug": "what-causes-hard-water-film-on-sealed-wood",
+      "problem": "hard water film",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::hard water film",
+      "title": "How to Remove hard water film from sealed wood",
+      "slug": "how-to-remove-hard-water-film-from-sealed-wood",
+      "problem": "hard water film",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::hard water film",
+      "title": "How to Prevent hard water film on sealed wood",
+      "slug": "how-to-prevent-hard-water-film-on-sealed-wood",
+      "problem": "hard water film",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::hard water film",
+      "title": "How to Fix hard water film on sealed wood",
+      "slug": "how-to-fix-hard-water-film-on-sealed-wood",
+      "problem": "hard water film",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::hard water film",
+      "title": "How to Clean hard water film from sealed wood",
+      "slug": "how-to-clean-hard-water-film-from-sealed-wood",
+      "problem": "hard water film",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::hard water film",
+      "title": "How to Tell if hard water film on sealed wood is Permanent",
+      "slug": "how-to-tell-if-hard-water-film-on-sealed-wood-is-permanent",
+      "problem": "hard water film",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::hard water film",
+      "title": "Why hard water film Keeps Coming Back on sealed wood",
+      "slug": "why-hard-water-film-keeps-coming-back-on-sealed-wood",
+      "problem": "hard water film",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::hard water film",
+      "title": "How to Maintain sealed wood and Keep hard water film Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-hard-water-film-under-control",
+      "problem": "hard water film",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::hard water film",
+      "title": "How to Recover After a Cleaning Mistake With hard water film on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-hard-water-film-on-sealed-wood",
+      "problem": "hard water film",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::mineral haze",
+      "title": "What Causes mineral haze on shower glass",
+      "slug": "what-causes-mineral-haze-on-shower-glass",
+      "problem": "mineral haze",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::mineral haze",
+      "title": "How to Remove mineral haze from shower glass",
+      "slug": "how-to-remove-mineral-haze-from-shower-glass",
+      "problem": "mineral haze",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::mineral haze",
+      "title": "How to Prevent mineral haze on shower glass",
+      "slug": "how-to-prevent-mineral-haze-on-shower-glass",
+      "problem": "mineral haze",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::mineral haze",
+      "title": "How to Fix mineral haze on shower glass",
+      "slug": "how-to-fix-mineral-haze-on-shower-glass",
+      "problem": "mineral haze",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::mineral haze",
+      "title": "How to Clean mineral haze from shower glass",
+      "slug": "how-to-clean-mineral-haze-from-shower-glass",
+      "problem": "mineral haze",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::mineral haze",
+      "title": "How to Tell if mineral haze on shower glass is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-shower-glass-is-permanent",
+      "problem": "mineral haze",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on shower glass",
+      "slug": "why-mineral-haze-keeps-coming-back-on-shower-glass",
+      "problem": "mineral haze",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::mineral haze",
+      "title": "How to Maintain shower glass and Keep mineral haze Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-mineral-haze-under-control",
+      "problem": "mineral haze",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::mineral haze",
+      "title": "How to Recover After a Cleaning Mistake With mineral haze on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-mineral-haze-on-shower-glass",
+      "problem": "mineral haze",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::mineral haze",
+      "title": "What Causes mineral haze on granite",
+      "slug": "what-causes-mineral-haze-on-granite",
+      "problem": "mineral haze",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::mineral haze",
+      "title": "How to Remove mineral haze from granite",
+      "slug": "how-to-remove-mineral-haze-from-granite",
+      "problem": "mineral haze",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::mineral haze",
+      "title": "How to Prevent mineral haze on granite",
+      "slug": "how-to-prevent-mineral-haze-on-granite",
+      "problem": "mineral haze",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::mineral haze",
+      "title": "How to Fix mineral haze on granite",
+      "slug": "how-to-fix-mineral-haze-on-granite",
+      "problem": "mineral haze",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::mineral haze",
+      "title": "How to Clean mineral haze from granite",
+      "slug": "how-to-clean-mineral-haze-from-granite",
+      "problem": "mineral haze",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::mineral haze",
+      "title": "How to Tell if mineral haze on granite is Permanent",
+      "slug": "how-to-tell-if-mineral-haze-on-granite-is-permanent",
+      "problem": "mineral haze",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::mineral haze",
+      "title": "Why mineral haze Keeps Coming Back on granite",
+      "slug": "why-mineral-haze-keeps-coming-back-on-granite",
+      "problem": "mineral haze",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

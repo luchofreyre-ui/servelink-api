@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-prevent::painted cabinets::wax buildup",
+      "title": "How to Prevent wax buildup on painted cabinets",
+      "slug": "how-to-prevent-wax-buildup-on-painted-cabinets",
+      "problem": "wax buildup",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted cabinets::wax buildup",
+      "title": "How to Fix wax buildup on painted cabinets",
+      "slug": "how-to-fix-wax-buildup-on-painted-cabinets",
+      "problem": "wax buildup",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted cabinets::wax buildup",
+      "title": "How to Clean wax buildup from painted cabinets",
+      "slug": "how-to-clean-wax-buildup-from-painted-cabinets",
+      "problem": "wax buildup",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted cabinets::wax buildup",
+      "title": "How to Tell if wax buildup on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-painted-cabinets-is-permanent",
+      "problem": "wax buildup",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted cabinets::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on painted cabinets",
+      "slug": "why-wax-buildup-keeps-coming-back-on-painted-cabinets",
+      "problem": "wax buildup",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted cabinets::wax buildup",
+      "title": "How to Maintain painted cabinets and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted cabinets::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-painted-cabinets",
+      "problem": "wax buildup",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::wax buildup",
+      "title": "What Causes wax buildup on sealed stone",
+      "slug": "what-causes-wax-buildup-on-sealed-stone",
+      "problem": "wax buildup",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::wax buildup",
+      "title": "How to Remove wax buildup from sealed stone",
+      "slug": "how-to-remove-wax-buildup-from-sealed-stone",
+      "problem": "wax buildup",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::wax buildup",
+      "title": "How to Prevent wax buildup on sealed stone",
+      "slug": "how-to-prevent-wax-buildup-on-sealed-stone",
+      "problem": "wax buildup",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::wax buildup",
+      "title": "How to Fix wax buildup on sealed stone",
+      "slug": "how-to-fix-wax-buildup-on-sealed-stone",
+      "problem": "wax buildup",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::wax buildup",
+      "title": "How to Clean wax buildup from sealed stone",
+      "slug": "how-to-clean-wax-buildup-from-sealed-stone",
+      "problem": "wax buildup",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::wax buildup",
+      "title": "How to Tell if wax buildup on sealed stone is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-sealed-stone-is-permanent",
+      "problem": "wax buildup",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on sealed stone",
+      "slug": "why-wax-buildup-keeps-coming-back-on-sealed-stone",
+      "problem": "wax buildup",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::wax buildup",
+      "title": "How to Maintain sealed stone and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-sealed-stone",
+      "problem": "wax buildup",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::wax buildup",
+      "title": "What Causes wax buildup on shower grout",
+      "slug": "what-causes-wax-buildup-on-shower-grout",
+      "problem": "wax buildup",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::wax buildup",
+      "title": "How to Remove wax buildup from shower grout",
+      "slug": "how-to-remove-wax-buildup-from-shower-grout",
+      "problem": "wax buildup",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::wax buildup",
+      "title": "How to Prevent wax buildup on shower grout",
+      "slug": "how-to-prevent-wax-buildup-on-shower-grout",
+      "problem": "wax buildup",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::wax buildup",
+      "title": "How to Fix wax buildup on shower grout",
+      "slug": "how-to-fix-wax-buildup-on-shower-grout",
+      "problem": "wax buildup",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::wax buildup",
+      "title": "How to Clean wax buildup from shower grout",
+      "slug": "how-to-clean-wax-buildup-from-shower-grout",
+      "problem": "wax buildup",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::wax buildup",
+      "title": "How to Tell if wax buildup on shower grout is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-shower-grout-is-permanent",
+      "problem": "wax buildup",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on shower grout",
+      "slug": "why-wax-buildup-keeps-coming-back-on-shower-grout",
+      "problem": "wax buildup",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::wax buildup",
+      "title": "How to Maintain shower grout and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-shower-grout",
+      "problem": "wax buildup",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::wax buildup",
+      "title": "What Causes wax buildup on tile grout",
+      "slug": "what-causes-wax-buildup-on-tile-grout",
+      "problem": "wax buildup",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::wax buildup",
+      "title": "How to Remove wax buildup from tile grout",
+      "slug": "how-to-remove-wax-buildup-from-tile-grout",
+      "problem": "wax buildup",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::wax buildup",
+      "title": "How to Prevent wax buildup on tile grout",
+      "slug": "how-to-prevent-wax-buildup-on-tile-grout",
+      "problem": "wax buildup",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::wax buildup",
+      "title": "How to Fix wax buildup on tile grout",
+      "slug": "how-to-fix-wax-buildup-on-tile-grout",
+      "problem": "wax buildup",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::wax buildup",
+      "title": "How to Clean wax buildup from tile grout",
+      "slug": "how-to-clean-wax-buildup-from-tile-grout",
+      "problem": "wax buildup",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::wax buildup",
+      "title": "How to Tell if wax buildup on tile grout is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-tile-grout-is-permanent",
+      "problem": "wax buildup",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on tile grout",
+      "slug": "why-wax-buildup-keeps-coming-back-on-tile-grout",
+      "problem": "wax buildup",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::wax buildup",
+      "title": "How to Maintain tile grout and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-tile-grout",
+      "problem": "wax buildup",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::wax buildup",
+      "title": "What Causes wax buildup on caulking",
+      "slug": "what-causes-wax-buildup-on-caulking",
+      "problem": "wax buildup",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::wax buildup",
+      "title": "How to Remove wax buildup from caulking",
+      "slug": "how-to-remove-wax-buildup-from-caulking",
+      "problem": "wax buildup",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::wax buildup",
+      "title": "How to Prevent wax buildup on caulking",
+      "slug": "how-to-prevent-wax-buildup-on-caulking",
+      "problem": "wax buildup",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::wax buildup",
+      "title": "How to Fix wax buildup on caulking",
+      "slug": "how-to-fix-wax-buildup-on-caulking",
+      "problem": "wax buildup",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::wax buildup",
+      "title": "How to Clean wax buildup from caulking",
+      "slug": "how-to-clean-wax-buildup-from-caulking",
+      "problem": "wax buildup",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::wax buildup",
+      "title": "How to Tell if wax buildup on caulking is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-caulking-is-permanent",
+      "problem": "wax buildup",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on caulking",
+      "slug": "why-wax-buildup-keeps-coming-back-on-caulking",
+      "problem": "wax buildup",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::wax buildup",
+      "title": "How to Maintain caulking and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-caulking",
+      "problem": "wax buildup",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::wax buildup",
+      "title": "What Causes wax buildup on shower pans",
+      "slug": "what-causes-wax-buildup-on-shower-pans",
+      "problem": "wax buildup",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::wax buildup",
+      "title": "How to Remove wax buildup from shower pans",
+      "slug": "how-to-remove-wax-buildup-from-shower-pans",
+      "problem": "wax buildup",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::wax buildup",
+      "title": "How to Prevent wax buildup on shower pans",
+      "slug": "how-to-prevent-wax-buildup-on-shower-pans",
+      "problem": "wax buildup",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::wax buildup",
+      "title": "How to Fix wax buildup on shower pans",
+      "slug": "how-to-fix-wax-buildup-on-shower-pans",
+      "problem": "wax buildup",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::wax buildup",
+      "title": "How to Clean wax buildup from shower pans",
+      "slug": "how-to-clean-wax-buildup-from-shower-pans",
+      "problem": "wax buildup",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::wax buildup",
+      "title": "How to Tell if wax buildup on shower pans is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-shower-pans-is-permanent",
+      "problem": "wax buildup",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on shower pans",
+      "slug": "why-wax-buildup-keeps-coming-back-on-shower-pans",
+      "problem": "wax buildup",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::wax buildup",
+      "title": "How to Maintain shower pans and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-shower-pans",
+      "problem": "wax buildup",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::wax buildup",
+      "title": "What Causes wax buildup on bathtub surrounds",
+      "slug": "what-causes-wax-buildup-on-bathtub-surrounds",
+      "problem": "wax buildup",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::wax buildup",
+      "title": "How to Remove wax buildup from bathtub surrounds",
+      "slug": "how-to-remove-wax-buildup-from-bathtub-surrounds",
+      "problem": "wax buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::wax buildup",
+      "title": "How to Prevent wax buildup on bathtub surrounds",
+      "slug": "how-to-prevent-wax-buildup-on-bathtub-surrounds",
+      "problem": "wax buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::wax buildup",
+      "title": "How to Fix wax buildup on bathtub surrounds",
+      "slug": "how-to-fix-wax-buildup-on-bathtub-surrounds",
+      "problem": "wax buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::wax buildup",
+      "title": "How to Clean wax buildup from bathtub surrounds",
+      "slug": "how-to-clean-wax-buildup-from-bathtub-surrounds",
+      "problem": "wax buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::wax buildup",
+      "title": "How to Tell if wax buildup on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-bathtub-surrounds-is-permanent",
+      "problem": "wax buildup",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on bathtub surrounds",
+      "slug": "why-wax-buildup-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "wax buildup",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::wax buildup",
+      "title": "How to Maintain bathtub surrounds and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-bathtub-surrounds",
+      "problem": "wax buildup",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::wax buildup",
+      "title": "What Causes wax buildup on ceramic tile",
+      "slug": "what-causes-wax-buildup-on-ceramic-tile",
+      "problem": "wax buildup",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::wax buildup",
+      "title": "How to Remove wax buildup from ceramic tile",
+      "slug": "how-to-remove-wax-buildup-from-ceramic-tile",
+      "problem": "wax buildup",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::wax buildup",
+      "title": "How to Prevent wax buildup on ceramic tile",
+      "slug": "how-to-prevent-wax-buildup-on-ceramic-tile",
+      "problem": "wax buildup",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::wax buildup",
+      "title": "How to Fix wax buildup on ceramic tile",
+      "slug": "how-to-fix-wax-buildup-on-ceramic-tile",
+      "problem": "wax buildup",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::wax buildup",
+      "title": "How to Clean wax buildup from ceramic tile",
+      "slug": "how-to-clean-wax-buildup-from-ceramic-tile",
+      "problem": "wax buildup",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::wax buildup",
+      "title": "How to Tell if wax buildup on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-ceramic-tile-is-permanent",
+      "problem": "wax buildup",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on ceramic tile",
+      "slug": "why-wax-buildup-keeps-coming-back-on-ceramic-tile",
+      "problem": "wax buildup",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::wax buildup",
+      "title": "How to Maintain ceramic tile and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-ceramic-tile",
+      "problem": "wax buildup",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::wax buildup",
+      "title": "What Causes wax buildup on porcelain tile",
+      "slug": "what-causes-wax-buildup-on-porcelain-tile",
+      "problem": "wax buildup",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::wax buildup",
+      "title": "How to Remove wax buildup from porcelain tile",
+      "slug": "how-to-remove-wax-buildup-from-porcelain-tile",
+      "problem": "wax buildup",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::wax buildup",
+      "title": "How to Prevent wax buildup on porcelain tile",
+      "slug": "how-to-prevent-wax-buildup-on-porcelain-tile",
+      "problem": "wax buildup",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::wax buildup",
+      "title": "How to Fix wax buildup on porcelain tile",
+      "slug": "how-to-fix-wax-buildup-on-porcelain-tile",
+      "problem": "wax buildup",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::wax buildup",
+      "title": "How to Clean wax buildup from porcelain tile",
+      "slug": "how-to-clean-wax-buildup-from-porcelain-tile",
+      "problem": "wax buildup",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::wax buildup",
+      "title": "How to Tell if wax buildup on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-porcelain-tile-is-permanent",
+      "problem": "wax buildup",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on porcelain tile",
+      "slug": "why-wax-buildup-keeps-coming-back-on-porcelain-tile",
+      "problem": "wax buildup",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::wax buildup",
+      "title": "How to Maintain porcelain tile and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-porcelain-tile",
+      "problem": "wax buildup",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::wax buildup",
+      "title": "What Causes wax buildup on sealed granite",
+      "slug": "what-causes-wax-buildup-on-sealed-granite",
+      "problem": "wax buildup",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::wax buildup",
+      "title": "How to Remove wax buildup from sealed granite",
+      "slug": "how-to-remove-wax-buildup-from-sealed-granite",
+      "problem": "wax buildup",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::wax buildup",
+      "title": "How to Prevent wax buildup on sealed granite",
+      "slug": "how-to-prevent-wax-buildup-on-sealed-granite",
+      "problem": "wax buildup",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::wax buildup",
+      "title": "How to Fix wax buildup on sealed granite",
+      "slug": "how-to-fix-wax-buildup-on-sealed-granite",
+      "problem": "wax buildup",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::wax buildup",
+      "title": "How to Clean wax buildup from sealed granite",
+      "slug": "how-to-clean-wax-buildup-from-sealed-granite",
+      "problem": "wax buildup",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::wax buildup",
+      "title": "How to Tell if wax buildup on sealed granite is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-sealed-granite-is-permanent",
+      "problem": "wax buildup",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on sealed granite",
+      "slug": "why-wax-buildup-keeps-coming-back-on-sealed-granite",
+      "problem": "wax buildup",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::wax buildup",
+      "title": "How to Maintain sealed granite and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-sealed-granite",
+      "problem": "wax buildup",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::wax buildup",
+      "title": "What Causes wax buildup on sealed marble",
+      "slug": "what-causes-wax-buildup-on-sealed-marble",
+      "problem": "wax buildup",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::wax buildup",
+      "title": "How to Remove wax buildup from sealed marble",
+      "slug": "how-to-remove-wax-buildup-from-sealed-marble",
+      "problem": "wax buildup",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::wax buildup",
+      "title": "How to Prevent wax buildup on sealed marble",
+      "slug": "how-to-prevent-wax-buildup-on-sealed-marble",
+      "problem": "wax buildup",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::wax buildup",
+      "title": "How to Fix wax buildup on sealed marble",
+      "slug": "how-to-fix-wax-buildup-on-sealed-marble",
+      "problem": "wax buildup",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::wax buildup",
+      "title": "How to Clean wax buildup from sealed marble",
+      "slug": "how-to-clean-wax-buildup-from-sealed-marble",
+      "problem": "wax buildup",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::wax buildup",
+      "title": "How to Tell if wax buildup on sealed marble is Permanent",
+      "slug": "how-to-tell-if-wax-buildup-on-sealed-marble-is-permanent",
+      "problem": "wax buildup",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::wax buildup",
+      "title": "Why wax buildup Keeps Coming Back on sealed marble",
+      "slug": "why-wax-buildup-keeps-coming-back-on-sealed-marble",
+      "problem": "wax buildup",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::wax buildup",
+      "title": "How to Maintain sealed marble and Keep wax buildup Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-wax-buildup-under-control",
+      "problem": "wax buildup",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::wax buildup",
+      "title": "How to Recover After a Cleaning Mistake With wax buildup on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-wax-buildup-on-sealed-marble",
+      "problem": "wax buildup",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::wax buildup",
+      "title": "What Causes wax buildup on quartz countertops",
+      "slug": "what-causes-wax-buildup-on-quartz-countertops",
+      "problem": "wax buildup",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::wax buildup",
+      "title": "How to Remove wax buildup from quartz countertops",
+      "slug": "how-to-remove-wax-buildup-from-quartz-countertops",
+      "problem": "wax buildup",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::wax buildup",
+      "title": "How to Prevent wax buildup on quartz countertops",
+      "slug": "how-to-prevent-wax-buildup-on-quartz-countertops",
+      "problem": "wax buildup",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "targets": [
+    { "surface": "backsplashes", "problem": "streaking" },
+    { "surface": "kitchen cabinets", "problem": "streaking" },
+    { "surface": "granite", "problem": "streaking" },
+    { "surface": "backsplashes", "problem": "pink slime" },
+    { "surface": "backsplashes", "problem": "scratches" },
+    { "surface": "wood", "problem": "streaking" },
+    { "surface": "grout", "problem": "streaking" },
+    { "surface": "backsplashes", "problem": "mold growth" },
+    { "surface": "shower glass", "problem": "streaking" },
+    { "surface": "wood", "problem": "scratches" },
+    { "surface": "grout", "problem": "pink slime" },
+    { "surface": "grout", "problem": "scratches" },
+    { "surface": "kitchen cabinets", "problem": "mold growth" },
+    { "surface": "kitchen cabinets", "problem": "mildew stains" },
+    { "surface": "kitchen cabinets", "problem": "uneven finish" },
+    { "surface": "granite", "problem": "mold growth" },
+    { "surface": "wood", "problem": "uneven finish" },
+    { "surface": "grout", "problem": "mold growth" },
+    { "surface": "grout", "problem": "mildew stains" },
+    { "surface": "garbage cans", "problem": "pink slime" },
+    { "surface": "garbage cans", "problem": "uneven finish" }
+  ]
+}

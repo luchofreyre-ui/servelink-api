@@ -25,6 +25,9 @@ import { AuthorityJsonLd } from "./AuthorityJsonLd";
 import { AuthorityRelatedLinks } from "./AuthorityRelatedLinks";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
+import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
+import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
+import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 
 function sectionParagraphs(section: AuthorityGuideSection): string[] {
   if (section.paragraphs?.length) return section.paragraphs;
@@ -52,6 +55,8 @@ function GuideSectionBody({ section }: { section: AuthorityGuideSection }) {
 
 function guideEyebrow(category?: AuthorityGuideCategory): string {
   switch (category) {
+    case "anti_pattern":
+      return "Anti-pattern guide";
     case "chemical_safety":
       return "Safety guide";
     case "failure_analysis":
@@ -77,6 +82,10 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
   const path = resolveCanonicalMetadataHref(`/guides/${data.slug}`);
   const articleDescription = data.description ?? data.summary;
   const faqBlock = buildGuideFaqBlock(data.slug);
+  const quickAnswerText =
+    data.category === "anti_pattern"
+      ? data.quickAnswer?.trim() || snippetAnswer(data.intro ?? data.summary, 2, 260)
+      : "";
   const jsonLd: Record<string, unknown>[] = [
     buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(crumbs)),
     buildArticleSchema({ title: data.title, description: articleDescription, path }),
@@ -90,6 +99,8 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
       <main className="mx-auto max-w-3xl px-6 py-16 md:px-8">
         <AuthorityBreadcrumbs items={crumbs} />
         <AuthorityHero eyebrow={guideEyebrow(data.category)} title={data.title} description={lead} />
+        {quickAnswerText ? <AuthorityQuickAnswer text={quickAnswerText} /> : null}
+        <AuthorityTopicalCrossLinks pageKey={`guide-${data.slug}`} />
         <div className="space-y-0">
           {data.sections.map((section) => (
             <AuthoritySection key={section.id} title={section.title}>

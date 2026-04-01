@@ -57,6 +57,7 @@ export function getAuthorityStaticIndexEntries(): AuthoritySitemapUrlEntry[] {
     entry(getCompareHubCanonicalPath("methods")),
     entry(getCompareHubCanonicalPath("surfaces")),
     entry(getCompareHubCanonicalPath("problems")),
+    entry(getCompareHubCanonicalPath("products")),
     entry(getClustersCanonicalPath()),
   ];
 }
@@ -99,6 +100,10 @@ export function getAuthorityComparisonEntries(): AuthoritySitemapUrlEntry[] {
 
     if (seed.type === "surface_comparison") {
       return entry(getComparisonCanonicalPath("surfaces", comparisonSlug));
+    }
+
+    if (seed.type === "product_comparison") {
+      return entry(getComparisonCanonicalPath("products", comparisonSlug));
     }
 
     return entry(getComparisonCanonicalPath("problems", comparisonSlug));

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "why::tile grout::yellowing",
+      "title": "Why yellowing Keeps Coming Back on tile grout",
+      "slug": "why-yellowing-keeps-coming-back-on-tile-grout",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::yellowing",
+      "title": "How to Maintain tile grout and Keep yellowing Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-tile-grout",
+      "problem": "yellowing",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::yellowing",
+      "title": "What Causes yellowing on caulking",
+      "slug": "what-causes-yellowing-on-caulking",
+      "problem": "yellowing",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::yellowing",
+      "title": "How to Remove yellowing from caulking",
+      "slug": "how-to-remove-yellowing-from-caulking",
+      "problem": "yellowing",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::yellowing",
+      "title": "How to Prevent yellowing on caulking",
+      "slug": "how-to-prevent-yellowing-on-caulking",
+      "problem": "yellowing",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::yellowing",
+      "title": "How to Fix yellowing on caulking",
+      "slug": "how-to-fix-yellowing-on-caulking",
+      "problem": "yellowing",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::yellowing",
+      "title": "How to Clean yellowing from caulking",
+      "slug": "how-to-clean-yellowing-from-caulking",
+      "problem": "yellowing",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::yellowing",
+      "title": "How to Tell if yellowing on caulking is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-caulking-is-permanent",
+      "problem": "yellowing",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::yellowing",
+      "title": "Why yellowing Keeps Coming Back on caulking",
+      "slug": "why-yellowing-keeps-coming-back-on-caulking",
+      "problem": "yellowing",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::yellowing",
+      "title": "How to Maintain caulking and Keep yellowing Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-caulking",
+      "problem": "yellowing",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::yellowing",
+      "title": "What Causes yellowing on sealed granite",
+      "slug": "what-causes-yellowing-on-sealed-granite",
+      "problem": "yellowing",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::yellowing",
+      "title": "How to Remove yellowing from sealed granite",
+      "slug": "how-to-remove-yellowing-from-sealed-granite",
+      "problem": "yellowing",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::yellowing",
+      "title": "How to Prevent yellowing on sealed granite",
+      "slug": "how-to-prevent-yellowing-on-sealed-granite",
+      "problem": "yellowing",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::yellowing",
+      "title": "How to Fix yellowing on sealed granite",
+      "slug": "how-to-fix-yellowing-on-sealed-granite",
+      "problem": "yellowing",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::yellowing",
+      "title": "How to Clean yellowing from sealed granite",
+      "slug": "how-to-clean-yellowing-from-sealed-granite",
+      "problem": "yellowing",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::yellowing",
+      "title": "How to Tell if yellowing on sealed granite is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-sealed-granite-is-permanent",
+      "problem": "yellowing",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::yellowing",
+      "title": "Why yellowing Keeps Coming Back on sealed granite",
+      "slug": "why-yellowing-keeps-coming-back-on-sealed-granite",
+      "problem": "yellowing",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::yellowing",
+      "title": "How to Maintain sealed granite and Keep yellowing Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-sealed-granite",
+      "problem": "yellowing",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::yellowing",
+      "title": "What Causes yellowing on sealed marble",
+      "slug": "what-causes-yellowing-on-sealed-marble",
+      "problem": "yellowing",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::yellowing",
+      "title": "How to Remove yellowing from sealed marble",
+      "slug": "how-to-remove-yellowing-from-sealed-marble",
+      "problem": "yellowing",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::yellowing",
+      "title": "How to Prevent yellowing on sealed marble",
+      "slug": "how-to-prevent-yellowing-on-sealed-marble",
+      "problem": "yellowing",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::yellowing",
+      "title": "How to Fix yellowing on sealed marble",
+      "slug": "how-to-fix-yellowing-on-sealed-marble",
+      "problem": "yellowing",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::yellowing",
+      "title": "How to Clean yellowing from sealed marble",
+      "slug": "how-to-clean-yellowing-from-sealed-marble",
+      "problem": "yellowing",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::yellowing",
+      "title": "How to Tell if yellowing on sealed marble is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-sealed-marble-is-permanent",
+      "problem": "yellowing",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::yellowing",
+      "title": "Why yellowing Keeps Coming Back on sealed marble",
+      "slug": "why-yellowing-keeps-coming-back-on-sealed-marble",
+      "problem": "yellowing",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::yellowing",
+      "title": "How to Maintain sealed marble and Keep yellowing Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-sealed-marble",
+      "problem": "yellowing",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::yellowing",
+      "title": "What Causes yellowing on quartz countertops",
+      "slug": "what-causes-yellowing-on-quartz-countertops",
+      "problem": "yellowing",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::yellowing",
+      "title": "How to Remove yellowing from quartz countertops",
+      "slug": "how-to-remove-yellowing-from-quartz-countertops",
+      "problem": "yellowing",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::yellowing",
+      "title": "How to Prevent yellowing on quartz countertops",
+      "slug": "how-to-prevent-yellowing-on-quartz-countertops",
+      "problem": "yellowing",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::yellowing",
+      "title": "How to Fix yellowing on quartz countertops",
+      "slug": "how-to-fix-yellowing-on-quartz-countertops",
+      "problem": "yellowing",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::yellowing",
+      "title": "How to Clean yellowing from quartz countertops",
+      "slug": "how-to-clean-yellowing-from-quartz-countertops",
+      "problem": "yellowing",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::yellowing",
+      "title": "How to Tell if yellowing on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-quartz-countertops-is-permanent",
+      "problem": "yellowing",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::yellowing",
+      "title": "Why yellowing Keeps Coming Back on quartz countertops",
+      "slug": "why-yellowing-keeps-coming-back-on-quartz-countertops",
+      "problem": "yellowing",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::yellowing",
+      "title": "How to Maintain quartz countertops and Keep yellowing Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-quartz-countertops",
+      "problem": "yellowing",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::yellowing",
+      "title": "What Causes yellowing on laminate counters",
+      "slug": "what-causes-yellowing-on-laminate-counters",
+      "problem": "yellowing",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::yellowing",
+      "title": "How to Remove yellowing from laminate counters",
+      "slug": "how-to-remove-yellowing-from-laminate-counters",
+      "problem": "yellowing",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::yellowing",
+      "title": "How to Prevent yellowing on laminate counters",
+      "slug": "how-to-prevent-yellowing-on-laminate-counters",
+      "problem": "yellowing",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::yellowing",
+      "title": "How to Fix yellowing on laminate counters",
+      "slug": "how-to-fix-yellowing-on-laminate-counters",
+      "problem": "yellowing",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::yellowing",
+      "title": "How to Clean yellowing from laminate counters",
+      "slug": "how-to-clean-yellowing-from-laminate-counters",
+      "problem": "yellowing",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::yellowing",
+      "title": "How to Tell if yellowing on laminate counters is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-laminate-counters-is-permanent",
+      "problem": "yellowing",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::yellowing",
+      "title": "Why yellowing Keeps Coming Back on laminate counters",
+      "slug": "why-yellowing-keeps-coming-back-on-laminate-counters",
+      "problem": "yellowing",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::yellowing",
+      "title": "How to Maintain laminate counters and Keep yellowing Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-laminate-counters",
+      "problem": "yellowing",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::yellowing",
+      "title": "What Causes yellowing on butcher block",
+      "slug": "what-causes-yellowing-on-butcher-block",
+      "problem": "yellowing",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::yellowing",
+      "title": "How to Remove yellowing from butcher block",
+      "slug": "how-to-remove-yellowing-from-butcher-block",
+      "problem": "yellowing",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::yellowing",
+      "title": "How to Prevent yellowing on butcher block",
+      "slug": "how-to-prevent-yellowing-on-butcher-block",
+      "problem": "yellowing",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::yellowing",
+      "title": "How to Fix yellowing on butcher block",
+      "slug": "how-to-fix-yellowing-on-butcher-block",
+      "problem": "yellowing",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::yellowing",
+      "title": "How to Clean yellowing from butcher block",
+      "slug": "how-to-clean-yellowing-from-butcher-block",
+      "problem": "yellowing",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::yellowing",
+      "title": "How to Tell if yellowing on butcher block is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-butcher-block-is-permanent",
+      "problem": "yellowing",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::yellowing",
+      "title": "Why yellowing Keeps Coming Back on butcher block",
+      "slug": "why-yellowing-keeps-coming-back-on-butcher-block",
+      "problem": "yellowing",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::yellowing",
+      "title": "How to Maintain butcher block and Keep yellowing Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-butcher-block",
+      "problem": "yellowing",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::yellowing",
+      "title": "What Causes yellowing on unfinished wood",
+      "slug": "what-causes-yellowing-on-unfinished-wood",
+      "problem": "yellowing",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::yellowing",
+      "title": "How to Remove yellowing from unfinished wood",
+      "slug": "how-to-remove-yellowing-from-unfinished-wood",
+      "problem": "yellowing",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::yellowing",
+      "title": "How to Prevent yellowing on unfinished wood",
+      "slug": "how-to-prevent-yellowing-on-unfinished-wood",
+      "problem": "yellowing",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::yellowing",
+      "title": "How to Fix yellowing on unfinished wood",
+      "slug": "how-to-fix-yellowing-on-unfinished-wood",
+      "problem": "yellowing",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::yellowing",
+      "title": "How to Clean yellowing from unfinished wood",
+      "slug": "how-to-clean-yellowing-from-unfinished-wood",
+      "problem": "yellowing",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::yellowing",
+      "title": "How to Tell if yellowing on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-unfinished-wood-is-permanent",
+      "problem": "yellowing",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::yellowing",
+      "title": "Why yellowing Keeps Coming Back on unfinished wood",
+      "slug": "why-yellowing-keeps-coming-back-on-unfinished-wood",
+      "problem": "yellowing",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::yellowing",
+      "title": "How to Maintain unfinished wood and Keep yellowing Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-unfinished-wood",
+      "problem": "yellowing",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::yellowing",
+      "title": "What Causes yellowing on sealed wood",
+      "slug": "what-causes-yellowing-on-sealed-wood",
+      "problem": "yellowing",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::yellowing",
+      "title": "How to Remove yellowing from sealed wood",
+      "slug": "how-to-remove-yellowing-from-sealed-wood",
+      "problem": "yellowing",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::yellowing",
+      "title": "How to Prevent yellowing on sealed wood",
+      "slug": "how-to-prevent-yellowing-on-sealed-wood",
+      "problem": "yellowing",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::yellowing",
+      "title": "How to Fix yellowing on sealed wood",
+      "slug": "how-to-fix-yellowing-on-sealed-wood",
+      "problem": "yellowing",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::yellowing",
+      "title": "How to Clean yellowing from sealed wood",
+      "slug": "how-to-clean-yellowing-from-sealed-wood",
+      "problem": "yellowing",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::yellowing",
+      "title": "How to Tell if yellowing on sealed wood is Permanent",
+      "slug": "how-to-tell-if-yellowing-on-sealed-wood-is-permanent",
+      "problem": "yellowing",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::yellowing",
+      "title": "Why yellowing Keeps Coming Back on sealed wood",
+      "slug": "why-yellowing-keeps-coming-back-on-sealed-wood",
+      "problem": "yellowing",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::yellowing",
+      "title": "How to Maintain sealed wood and Keep yellowing Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-yellowing-under-control",
+      "problem": "yellowing",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::yellowing",
+      "title": "How to Recover After a Cleaning Mistake With yellowing on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-yellowing-on-sealed-wood",
+      "problem": "yellowing",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::odor retention",
+      "title": "What Causes odor retention on backsplashes",
+      "slug": "what-causes-odor-retention-on-backsplashes",
+      "problem": "odor retention",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::odor retention",
+      "title": "How to Remove odor retention from backsplashes",
+      "slug": "how-to-remove-odor-retention-from-backsplashes",
+      "problem": "odor retention",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::odor retention",
+      "title": "How to Prevent odor retention on backsplashes",
+      "slug": "how-to-prevent-odor-retention-on-backsplashes",
+      "problem": "odor retention",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::odor retention",
+      "title": "How to Fix odor retention on backsplashes",
+      "slug": "how-to-fix-odor-retention-on-backsplashes",
+      "problem": "odor retention",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::odor retention",
+      "title": "How to Clean odor retention from backsplashes",
+      "slug": "how-to-clean-odor-retention-from-backsplashes",
+      "problem": "odor retention",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::odor retention",
+      "title": "How to Tell if odor retention on backsplashes is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-backsplashes-is-permanent",
+      "problem": "odor retention",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::odor retention",
+      "title": "Why odor retention Keeps Coming Back on backsplashes",
+      "slug": "why-odor-retention-keeps-coming-back-on-backsplashes",
+      "problem": "odor retention",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::odor retention",
+      "title": "How to Maintain backsplashes and Keep odor retention Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-backsplashes",
+      "problem": "odor retention",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::kitchen cabinets::odor retention",
+      "title": "What Causes odor retention on kitchen cabinets",
+      "slug": "what-causes-odor-retention-on-kitchen-cabinets",
+      "problem": "odor retention",
+      "surface": "kitchen cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::kitchen cabinets::odor retention",
+      "title": "How to Remove odor retention from kitchen cabinets",
+      "slug": "how-to-remove-odor-retention-from-kitchen-cabinets",
+      "problem": "odor retention",
+      "surface": "kitchen cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::kitchen cabinets::odor retention",
+      "title": "How to Prevent odor retention on kitchen cabinets",
+      "slug": "how-to-prevent-odor-retention-on-kitchen-cabinets",
+      "problem": "odor retention",
+      "surface": "kitchen cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::kitchen cabinets::odor retention",
+      "title": "How to Fix odor retention on kitchen cabinets",
+      "slug": "how-to-fix-odor-retention-on-kitchen-cabinets",
+      "problem": "odor retention",
+      "surface": "kitchen cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::kitchen cabinets::odor retention",
+      "title": "How to Clean odor retention from kitchen cabinets",
+      "slug": "how-to-clean-odor-retention-from-kitchen-cabinets",
+      "problem": "odor retention",
+      "surface": "kitchen cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::kitchen cabinets::odor retention",
+      "title": "How to Tell if odor retention on kitchen cabinets is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-kitchen-cabinets-is-permanent",
+      "problem": "odor retention",
+      "surface": "kitchen cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::kitchen cabinets::odor retention",
+      "title": "Why odor retention Keeps Coming Back on kitchen cabinets",
+      "slug": "why-odor-retention-keeps-coming-back-on-kitchen-cabinets",
+      "problem": "odor retention",
+      "surface": "kitchen cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::kitchen cabinets::odor retention",
+      "title": "How to Maintain kitchen cabinets and Keep odor retention Under Control",
+      "slug": "how-to-maintain-kitchen-cabinets-and-keep-odor-retention-under-control",
+      "problem": "odor retention",
+      "surface": "kitchen cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::kitchen cabinets::odor retention",
+      "title": "How to Recover After a Cleaning Mistake With odor retention on kitchen cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-odor-retention-on-kitchen-cabinets",
+      "problem": "odor retention",
+      "surface": "kitchen cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::odor retention",
+      "title": "What Causes odor retention on tile floors",
+      "slug": "what-causes-odor-retention-on-tile-floors",
+      "problem": "odor retention",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::odor retention",
+      "title": "How to Remove odor retention from tile floors",
+      "slug": "how-to-remove-odor-retention-from-tile-floors",
+      "problem": "odor retention",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::odor retention",
+      "title": "How to Prevent odor retention on tile floors",
+      "slug": "how-to-prevent-odor-retention-on-tile-floors",
+      "problem": "odor retention",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::odor retention",
+      "title": "How to Fix odor retention on tile floors",
+      "slug": "how-to-fix-odor-retention-on-tile-floors",
+      "problem": "odor retention",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::odor retention",
+      "title": "How to Clean odor retention from tile floors",
+      "slug": "how-to-clean-odor-retention-from-tile-floors",
+      "problem": "odor retention",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::odor retention",
+      "title": "How to Tell if odor retention on tile floors is Permanent",
+      "slug": "how-to-tell-if-odor-retention-on-tile-floors-is-permanent",
+      "problem": "odor retention",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::odor retention",
+      "title": "Why odor retention Keeps Coming Back on tile floors",
+      "slug": "why-odor-retention-keeps-coming-back-on-tile-floors",
+      "problem": "odor retention",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

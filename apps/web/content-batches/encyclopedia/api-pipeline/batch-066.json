@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-prevent::caulking::discoloration",
+      "title": "How to Prevent discoloration on caulking",
+      "slug": "how-to-prevent-discoloration-on-caulking",
+      "problem": "discoloration",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::discoloration",
+      "title": "How to Fix discoloration on caulking",
+      "slug": "how-to-fix-discoloration-on-caulking",
+      "problem": "discoloration",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::discoloration",
+      "title": "How to Clean discoloration from caulking",
+      "slug": "how-to-clean-discoloration-from-caulking",
+      "problem": "discoloration",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::discoloration",
+      "title": "How to Tell if discoloration on caulking is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-caulking-is-permanent",
+      "problem": "discoloration",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::discoloration",
+      "title": "Why discoloration Keeps Coming Back on caulking",
+      "slug": "why-discoloration-keeps-coming-back-on-caulking",
+      "problem": "discoloration",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::discoloration",
+      "title": "How to Maintain caulking and Keep discoloration Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-caulking",
+      "problem": "discoloration",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::discoloration",
+      "title": "What Causes discoloration on sealed granite",
+      "slug": "what-causes-discoloration-on-sealed-granite",
+      "problem": "discoloration",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::discoloration",
+      "title": "How to Remove discoloration from sealed granite",
+      "slug": "how-to-remove-discoloration-from-sealed-granite",
+      "problem": "discoloration",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::discoloration",
+      "title": "How to Prevent discoloration on sealed granite",
+      "slug": "how-to-prevent-discoloration-on-sealed-granite",
+      "problem": "discoloration",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::discoloration",
+      "title": "How to Fix discoloration on sealed granite",
+      "slug": "how-to-fix-discoloration-on-sealed-granite",
+      "problem": "discoloration",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::discoloration",
+      "title": "How to Clean discoloration from sealed granite",
+      "slug": "how-to-clean-discoloration-from-sealed-granite",
+      "problem": "discoloration",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::discoloration",
+      "title": "How to Tell if discoloration on sealed granite is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-sealed-granite-is-permanent",
+      "problem": "discoloration",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::discoloration",
+      "title": "Why discoloration Keeps Coming Back on sealed granite",
+      "slug": "why-discoloration-keeps-coming-back-on-sealed-granite",
+      "problem": "discoloration",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::discoloration",
+      "title": "How to Maintain sealed granite and Keep discoloration Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-sealed-granite",
+      "problem": "discoloration",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::discoloration",
+      "title": "What Causes discoloration on sealed marble",
+      "slug": "what-causes-discoloration-on-sealed-marble",
+      "problem": "discoloration",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::discoloration",
+      "title": "How to Remove discoloration from sealed marble",
+      "slug": "how-to-remove-discoloration-from-sealed-marble",
+      "problem": "discoloration",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::discoloration",
+      "title": "How to Prevent discoloration on sealed marble",
+      "slug": "how-to-prevent-discoloration-on-sealed-marble",
+      "problem": "discoloration",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::discoloration",
+      "title": "How to Fix discoloration on sealed marble",
+      "slug": "how-to-fix-discoloration-on-sealed-marble",
+      "problem": "discoloration",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::discoloration",
+      "title": "How to Clean discoloration from sealed marble",
+      "slug": "how-to-clean-discoloration-from-sealed-marble",
+      "problem": "discoloration",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::discoloration",
+      "title": "How to Tell if discoloration on sealed marble is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-sealed-marble-is-permanent",
+      "problem": "discoloration",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::discoloration",
+      "title": "Why discoloration Keeps Coming Back on sealed marble",
+      "slug": "why-discoloration-keeps-coming-back-on-sealed-marble",
+      "problem": "discoloration",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::discoloration",
+      "title": "How to Maintain sealed marble and Keep discoloration Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-sealed-marble",
+      "problem": "discoloration",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::discoloration",
+      "title": "What Causes discoloration on quartz countertops",
+      "slug": "what-causes-discoloration-on-quartz-countertops",
+      "problem": "discoloration",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::discoloration",
+      "title": "How to Remove discoloration from quartz countertops",
+      "slug": "how-to-remove-discoloration-from-quartz-countertops",
+      "problem": "discoloration",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::discoloration",
+      "title": "How to Prevent discoloration on quartz countertops",
+      "slug": "how-to-prevent-discoloration-on-quartz-countertops",
+      "problem": "discoloration",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::discoloration",
+      "title": "How to Fix discoloration on quartz countertops",
+      "slug": "how-to-fix-discoloration-on-quartz-countertops",
+      "problem": "discoloration",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::discoloration",
+      "title": "How to Clean discoloration from quartz countertops",
+      "slug": "how-to-clean-discoloration-from-quartz-countertops",
+      "problem": "discoloration",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::discoloration",
+      "title": "How to Tell if discoloration on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-quartz-countertops-is-permanent",
+      "problem": "discoloration",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::discoloration",
+      "title": "Why discoloration Keeps Coming Back on quartz countertops",
+      "slug": "why-discoloration-keeps-coming-back-on-quartz-countertops",
+      "problem": "discoloration",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::discoloration",
+      "title": "How to Maintain quartz countertops and Keep discoloration Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-quartz-countertops",
+      "problem": "discoloration",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate counters::discoloration",
+      "title": "What Causes discoloration on laminate counters",
+      "slug": "what-causes-discoloration-on-laminate-counters",
+      "problem": "discoloration",
+      "surface": "laminate counters",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate counters::discoloration",
+      "title": "How to Remove discoloration from laminate counters",
+      "slug": "how-to-remove-discoloration-from-laminate-counters",
+      "problem": "discoloration",
+      "surface": "laminate counters",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate counters::discoloration",
+      "title": "How to Prevent discoloration on laminate counters",
+      "slug": "how-to-prevent-discoloration-on-laminate-counters",
+      "problem": "discoloration",
+      "surface": "laminate counters",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate counters::discoloration",
+      "title": "How to Fix discoloration on laminate counters",
+      "slug": "how-to-fix-discoloration-on-laminate-counters",
+      "problem": "discoloration",
+      "surface": "laminate counters",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate counters::discoloration",
+      "title": "How to Clean discoloration from laminate counters",
+      "slug": "how-to-clean-discoloration-from-laminate-counters",
+      "problem": "discoloration",
+      "surface": "laminate counters",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate counters::discoloration",
+      "title": "How to Tell if discoloration on laminate counters is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-laminate-counters-is-permanent",
+      "problem": "discoloration",
+      "surface": "laminate counters",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate counters::discoloration",
+      "title": "Why discoloration Keeps Coming Back on laminate counters",
+      "slug": "why-discoloration-keeps-coming-back-on-laminate-counters",
+      "problem": "discoloration",
+      "surface": "laminate counters",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate counters::discoloration",
+      "title": "How to Maintain laminate counters and Keep discoloration Under Control",
+      "slug": "how-to-maintain-laminate-counters-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "laminate counters",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate counters::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on laminate counters",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-laminate-counters",
+      "problem": "discoloration",
+      "surface": "laminate counters",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::discoloration",
+      "title": "What Causes discoloration on butcher block",
+      "slug": "what-causes-discoloration-on-butcher-block",
+      "problem": "discoloration",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::discoloration",
+      "title": "How to Remove discoloration from butcher block",
+      "slug": "how-to-remove-discoloration-from-butcher-block",
+      "problem": "discoloration",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::discoloration",
+      "title": "How to Prevent discoloration on butcher block",
+      "slug": "how-to-prevent-discoloration-on-butcher-block",
+      "problem": "discoloration",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::discoloration",
+      "title": "How to Fix discoloration on butcher block",
+      "slug": "how-to-fix-discoloration-on-butcher-block",
+      "problem": "discoloration",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::discoloration",
+      "title": "How to Clean discoloration from butcher block",
+      "slug": "how-to-clean-discoloration-from-butcher-block",
+      "problem": "discoloration",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::discoloration",
+      "title": "How to Tell if discoloration on butcher block is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-butcher-block-is-permanent",
+      "problem": "discoloration",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::discoloration",
+      "title": "Why discoloration Keeps Coming Back on butcher block",
+      "slug": "why-discoloration-keeps-coming-back-on-butcher-block",
+      "problem": "discoloration",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::discoloration",
+      "title": "How to Maintain butcher block and Keep discoloration Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-butcher-block",
+      "problem": "discoloration",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::discoloration",
+      "title": "What Causes discoloration on unfinished wood",
+      "slug": "what-causes-discoloration-on-unfinished-wood",
+      "problem": "discoloration",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::discoloration",
+      "title": "How to Remove discoloration from unfinished wood",
+      "slug": "how-to-remove-discoloration-from-unfinished-wood",
+      "problem": "discoloration",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::discoloration",
+      "title": "How to Prevent discoloration on unfinished wood",
+      "slug": "how-to-prevent-discoloration-on-unfinished-wood",
+      "problem": "discoloration",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::discoloration",
+      "title": "How to Fix discoloration on unfinished wood",
+      "slug": "how-to-fix-discoloration-on-unfinished-wood",
+      "problem": "discoloration",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::discoloration",
+      "title": "How to Clean discoloration from unfinished wood",
+      "slug": "how-to-clean-discoloration-from-unfinished-wood",
+      "problem": "discoloration",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::discoloration",
+      "title": "How to Tell if discoloration on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-unfinished-wood-is-permanent",
+      "problem": "discoloration",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::discoloration",
+      "title": "Why discoloration Keeps Coming Back on unfinished wood",
+      "slug": "why-discoloration-keeps-coming-back-on-unfinished-wood",
+      "problem": "discoloration",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::discoloration",
+      "title": "How to Maintain unfinished wood and Keep discoloration Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-unfinished-wood",
+      "problem": "discoloration",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::discoloration",
+      "title": "What Causes discoloration on sealed wood",
+      "slug": "what-causes-discoloration-on-sealed-wood",
+      "problem": "discoloration",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::discoloration",
+      "title": "How to Remove discoloration from sealed wood",
+      "slug": "how-to-remove-discoloration-from-sealed-wood",
+      "problem": "discoloration",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::discoloration",
+      "title": "How to Prevent discoloration on sealed wood",
+      "slug": "how-to-prevent-discoloration-on-sealed-wood",
+      "problem": "discoloration",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::discoloration",
+      "title": "How to Fix discoloration on sealed wood",
+      "slug": "how-to-fix-discoloration-on-sealed-wood",
+      "problem": "discoloration",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::discoloration",
+      "title": "How to Clean discoloration from sealed wood",
+      "slug": "how-to-clean-discoloration-from-sealed-wood",
+      "problem": "discoloration",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::discoloration",
+      "title": "How to Tell if discoloration on sealed wood is Permanent",
+      "slug": "how-to-tell-if-discoloration-on-sealed-wood-is-permanent",
+      "problem": "discoloration",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::discoloration",
+      "title": "Why discoloration Keeps Coming Back on sealed wood",
+      "slug": "why-discoloration-keeps-coming-back-on-sealed-wood",
+      "problem": "discoloration",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::discoloration",
+      "title": "How to Maintain sealed wood and Keep discoloration Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-discoloration-under-control",
+      "problem": "discoloration",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::discoloration",
+      "title": "How to Recover After a Cleaning Mistake With discoloration on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-discoloration-on-sealed-wood",
+      "problem": "discoloration",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::backsplashes::streaking",
+      "title": "What Causes streaking on backsplashes",
+      "slug": "what-causes-streaking-on-backsplashes",
+      "problem": "streaking",
+      "surface": "backsplashes",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::backsplashes::streaking",
+      "title": "How to Remove streaking from backsplashes",
+      "slug": "how-to-remove-streaking-from-backsplashes",
+      "problem": "streaking",
+      "surface": "backsplashes",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::backsplashes::streaking",
+      "title": "How to Prevent streaking on backsplashes",
+      "slug": "how-to-prevent-streaking-on-backsplashes",
+      "problem": "streaking",
+      "surface": "backsplashes",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::backsplashes::streaking",
+      "title": "How to Fix streaking on backsplashes",
+      "slug": "how-to-fix-streaking-on-backsplashes",
+      "problem": "streaking",
+      "surface": "backsplashes",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::backsplashes::streaking",
+      "title": "How to Clean streaking from backsplashes",
+      "slug": "how-to-clean-streaking-from-backsplashes",
+      "problem": "streaking",
+      "surface": "backsplashes",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::backsplashes::streaking",
+      "title": "How to Tell if streaking on backsplashes is Permanent",
+      "slug": "how-to-tell-if-streaking-on-backsplashes-is-permanent",
+      "problem": "streaking",
+      "surface": "backsplashes",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::backsplashes::streaking",
+      "title": "Why streaking Keeps Coming Back on backsplashes",
+      "slug": "why-streaking-keeps-coming-back-on-backsplashes",
+      "problem": "streaking",
+      "surface": "backsplashes",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::backsplashes::streaking",
+      "title": "How to Maintain backsplashes and Keep streaking Under Control",
+      "slug": "how-to-maintain-backsplashes-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "backsplashes",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::backsplashes::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on backsplashes",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-backsplashes",
+      "problem": "streaking",
+      "surface": "backsplashes",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::kitchen cabinets::streaking",
+      "title": "What Causes streaking on kitchen cabinets",
+      "slug": "what-causes-streaking-on-kitchen-cabinets",
+      "problem": "streaking",
+      "surface": "kitchen cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::kitchen cabinets::streaking",
+      "title": "How to Remove streaking from kitchen cabinets",
+      "slug": "how-to-remove-streaking-from-kitchen-cabinets",
+      "problem": "streaking",
+      "surface": "kitchen cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::kitchen cabinets::streaking",
+      "title": "How to Prevent streaking on kitchen cabinets",
+      "slug": "how-to-prevent-streaking-on-kitchen-cabinets",
+      "problem": "streaking",
+      "surface": "kitchen cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::kitchen cabinets::streaking",
+      "title": "How to Fix streaking on kitchen cabinets",
+      "slug": "how-to-fix-streaking-on-kitchen-cabinets",
+      "problem": "streaking",
+      "surface": "kitchen cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::kitchen cabinets::streaking",
+      "title": "How to Clean streaking from kitchen cabinets",
+      "slug": "how-to-clean-streaking-from-kitchen-cabinets",
+      "problem": "streaking",
+      "surface": "kitchen cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::kitchen cabinets::streaking",
+      "title": "How to Tell if streaking on kitchen cabinets is Permanent",
+      "slug": "how-to-tell-if-streaking-on-kitchen-cabinets-is-permanent",
+      "problem": "streaking",
+      "surface": "kitchen cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::kitchen cabinets::streaking",
+      "title": "Why streaking Keeps Coming Back on kitchen cabinets",
+      "slug": "why-streaking-keeps-coming-back-on-kitchen-cabinets",
+      "problem": "streaking",
+      "surface": "kitchen cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::kitchen cabinets::streaking",
+      "title": "How to Maintain kitchen cabinets and Keep streaking Under Control",
+      "slug": "how-to-maintain-kitchen-cabinets-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "kitchen cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::kitchen cabinets::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on kitchen cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-kitchen-cabinets",
+      "problem": "streaking",
+      "surface": "kitchen cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile floors::streaking",
+      "title": "What Causes streaking on tile floors",
+      "slug": "what-causes-streaking-on-tile-floors",
+      "problem": "streaking",
+      "surface": "tile floors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile floors::streaking",
+      "title": "How to Remove streaking from tile floors",
+      "slug": "how-to-remove-streaking-from-tile-floors",
+      "problem": "streaking",
+      "surface": "tile floors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile floors::streaking",
+      "title": "How to Prevent streaking on tile floors",
+      "slug": "how-to-prevent-streaking-on-tile-floors",
+      "problem": "streaking",
+      "surface": "tile floors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile floors::streaking",
+      "title": "How to Fix streaking on tile floors",
+      "slug": "how-to-fix-streaking-on-tile-floors",
+      "problem": "streaking",
+      "surface": "tile floors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile floors::streaking",
+      "title": "How to Clean streaking from tile floors",
+      "slug": "how-to-clean-streaking-from-tile-floors",
+      "problem": "streaking",
+      "surface": "tile floors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile floors::streaking",
+      "title": "How to Tell if streaking on tile floors is Permanent",
+      "slug": "how-to-tell-if-streaking-on-tile-floors-is-permanent",
+      "problem": "streaking",
+      "surface": "tile floors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile floors::streaking",
+      "title": "Why streaking Keeps Coming Back on tile floors",
+      "slug": "why-streaking-keeps-coming-back-on-tile-floors",
+      "problem": "streaking",
+      "surface": "tile floors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile floors::streaking",
+      "title": "How to Maintain tile floors and Keep streaking Under Control",
+      "slug": "how-to-maintain-tile-floors-and-keep-streaking-under-control",
+      "problem": "streaking",
+      "surface": "tile floors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile floors::streaking",
+      "title": "How to Recover After a Cleaning Mistake With streaking on tile floors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-streaking-on-tile-floors",
+      "problem": "streaking",
+      "surface": "tile floors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::streaking",
+      "title": "What Causes streaking on shower glass",
+      "slug": "what-causes-streaking-on-shower-glass",
+      "problem": "streaking",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::streaking",
+      "title": "How to Remove streaking from shower glass",
+      "slug": "how-to-remove-streaking-from-shower-glass",
+      "problem": "streaking",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::streaking",
+      "title": "How to Prevent streaking on shower glass",
+      "slug": "how-to-prevent-streaking-on-shower-glass",
+      "problem": "streaking",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "what-causes::quartz::product residue",
+      "title": "What Causes product residue on quartz",
+      "slug": "what-causes-product-residue-on-quartz",
+      "problem": "product residue",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::product residue",
+      "title": "How to Remove product residue from quartz",
+      "slug": "how-to-remove-product-residue-from-quartz",
+      "problem": "product residue",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::product residue",
+      "title": "How to Prevent product residue on quartz",
+      "slug": "how-to-prevent-product-residue-on-quartz",
+      "problem": "product residue",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::product residue",
+      "title": "How to Fix product residue on quartz",
+      "slug": "how-to-fix-product-residue-on-quartz",
+      "problem": "product residue",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::product residue",
+      "title": "How to Clean product residue from quartz",
+      "slug": "how-to-clean-product-residue-from-quartz",
+      "problem": "product residue",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::product residue",
+      "title": "How to Tell if product residue on quartz is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-quartz-is-permanent",
+      "problem": "product residue",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::product residue",
+      "title": "Why product residue Keeps Coming Back on quartz",
+      "slug": "why-product-residue-keeps-coming-back-on-quartz",
+      "problem": "product residue",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::product residue",
+      "title": "How to Maintain quartz and Keep product residue Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-quartz",
+      "problem": "product residue",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::product residue",
+      "title": "What Causes product residue on laminate",
+      "slug": "what-causes-product-residue-on-laminate",
+      "problem": "product residue",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::product residue",
+      "title": "How to Remove product residue from laminate",
+      "slug": "how-to-remove-product-residue-from-laminate",
+      "problem": "product residue",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::product residue",
+      "title": "How to Prevent product residue on laminate",
+      "slug": "how-to-prevent-product-residue-on-laminate",
+      "problem": "product residue",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::product residue",
+      "title": "How to Fix product residue on laminate",
+      "slug": "how-to-fix-product-residue-on-laminate",
+      "problem": "product residue",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::product residue",
+      "title": "How to Clean product residue from laminate",
+      "slug": "how-to-clean-product-residue-from-laminate",
+      "problem": "product residue",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::product residue",
+      "title": "How to Tell if product residue on laminate is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-laminate-is-permanent",
+      "problem": "product residue",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::product residue",
+      "title": "Why product residue Keeps Coming Back on laminate",
+      "slug": "why-product-residue-keeps-coming-back-on-laminate",
+      "problem": "product residue",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::laminate::product residue",
+      "title": "How to Maintain laminate and Keep product residue Under Control",
+      "slug": "how-to-maintain-laminate-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "laminate",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::laminate::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on laminate",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-laminate",
+      "problem": "product residue",
+      "surface": "laminate",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::product residue",
+      "title": "What Causes product residue on wood",
+      "slug": "what-causes-product-residue-on-wood",
+      "problem": "product residue",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::product residue",
+      "title": "How to Remove product residue from wood",
+      "slug": "how-to-remove-product-residue-from-wood",
+      "problem": "product residue",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::product residue",
+      "title": "How to Prevent product residue on wood",
+      "slug": "how-to-prevent-product-residue-on-wood",
+      "problem": "product residue",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::product residue",
+      "title": "How to Fix product residue on wood",
+      "slug": "how-to-fix-product-residue-on-wood",
+      "problem": "product residue",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::product residue",
+      "title": "How to Clean product residue from wood",
+      "slug": "how-to-clean-product-residue-from-wood",
+      "problem": "product residue",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::product residue",
+      "title": "How to Tell if product residue on wood is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-wood-is-permanent",
+      "problem": "product residue",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::product residue",
+      "title": "Why product residue Keeps Coming Back on wood",
+      "slug": "why-product-residue-keeps-coming-back-on-wood",
+      "problem": "product residue",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::product residue",
+      "title": "How to Maintain wood and Keep product residue Under Control",
+      "slug": "how-to-maintain-wood-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-wood",
+      "problem": "product residue",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::product residue",
+      "title": "What Causes product residue on grout",
+      "slug": "what-causes-product-residue-on-grout",
+      "problem": "product residue",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::product residue",
+      "title": "How to Remove product residue from grout",
+      "slug": "how-to-remove-product-residue-from-grout",
+      "problem": "product residue",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::product residue",
+      "title": "How to Prevent product residue on grout",
+      "slug": "how-to-prevent-product-residue-on-grout",
+      "problem": "product residue",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::product residue",
+      "title": "How to Fix product residue on grout",
+      "slug": "how-to-fix-product-residue-on-grout",
+      "problem": "product residue",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::product residue",
+      "title": "How to Clean product residue from grout",
+      "slug": "how-to-clean-product-residue-from-grout",
+      "problem": "product residue",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::product residue",
+      "title": "How to Tell if product residue on grout is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-grout-is-permanent",
+      "problem": "product residue",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::product residue",
+      "title": "Why product residue Keeps Coming Back on grout",
+      "slug": "why-product-residue-keeps-coming-back-on-grout",
+      "problem": "product residue",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::product residue",
+      "title": "How to Maintain grout and Keep product residue Under Control",
+      "slug": "how-to-maintain-grout-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-grout",
+      "problem": "product residue",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower doors::product residue",
+      "title": "What Causes product residue on shower doors",
+      "slug": "what-causes-product-residue-on-shower-doors",
+      "problem": "product residue",
+      "surface": "shower doors",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower doors::product residue",
+      "title": "How to Remove product residue from shower doors",
+      "slug": "how-to-remove-product-residue-from-shower-doors",
+      "problem": "product residue",
+      "surface": "shower doors",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower doors::product residue",
+      "title": "How to Prevent product residue on shower doors",
+      "slug": "how-to-prevent-product-residue-on-shower-doors",
+      "problem": "product residue",
+      "surface": "shower doors",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower doors::product residue",
+      "title": "How to Fix product residue on shower doors",
+      "slug": "how-to-fix-product-residue-on-shower-doors",
+      "problem": "product residue",
+      "surface": "shower doors",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower doors::product residue",
+      "title": "How to Clean product residue from shower doors",
+      "slug": "how-to-clean-product-residue-from-shower-doors",
+      "problem": "product residue",
+      "surface": "shower doors",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower doors::product residue",
+      "title": "How to Tell if product residue on shower doors is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-shower-doors-is-permanent",
+      "problem": "product residue",
+      "surface": "shower doors",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower doors::product residue",
+      "title": "Why product residue Keeps Coming Back on shower doors",
+      "slug": "why-product-residue-keeps-coming-back-on-shower-doors",
+      "problem": "product residue",
+      "surface": "shower doors",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower doors::product residue",
+      "title": "How to Maintain shower doors and Keep product residue Under Control",
+      "slug": "how-to-maintain-shower-doors-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "shower doors",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower doors::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on shower doors",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-shower-doors",
+      "problem": "product residue",
+      "surface": "shower doors",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::product residue",
+      "title": "What Causes product residue on sealed stone",
+      "slug": "what-causes-product-residue-on-sealed-stone",
+      "problem": "product residue",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::product residue",
+      "title": "How to Remove product residue from sealed stone",
+      "slug": "how-to-remove-product-residue-from-sealed-stone",
+      "problem": "product residue",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::product residue",
+      "title": "How to Prevent product residue on sealed stone",
+      "slug": "how-to-prevent-product-residue-on-sealed-stone",
+      "problem": "product residue",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::product residue",
+      "title": "How to Fix product residue on sealed stone",
+      "slug": "how-to-fix-product-residue-on-sealed-stone",
+      "problem": "product residue",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::product residue",
+      "title": "How to Clean product residue from sealed stone",
+      "slug": "how-to-clean-product-residue-from-sealed-stone",
+      "problem": "product residue",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::product residue",
+      "title": "How to Tell if product residue on sealed stone is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-sealed-stone-is-permanent",
+      "problem": "product residue",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::product residue",
+      "title": "Why product residue Keeps Coming Back on sealed stone",
+      "slug": "why-product-residue-keeps-coming-back-on-sealed-stone",
+      "problem": "product residue",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::product residue",
+      "title": "How to Maintain sealed stone and Keep product residue Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-sealed-stone",
+      "problem": "product residue",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::product residue",
+      "title": "What Causes product residue on shower grout",
+      "slug": "what-causes-product-residue-on-shower-grout",
+      "problem": "product residue",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::product residue",
+      "title": "How to Remove product residue from shower grout",
+      "slug": "how-to-remove-product-residue-from-shower-grout",
+      "problem": "product residue",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::product residue",
+      "title": "How to Prevent product residue on shower grout",
+      "slug": "how-to-prevent-product-residue-on-shower-grout",
+      "problem": "product residue",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::product residue",
+      "title": "How to Fix product residue on shower grout",
+      "slug": "how-to-fix-product-residue-on-shower-grout",
+      "problem": "product residue",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::product residue",
+      "title": "How to Clean product residue from shower grout",
+      "slug": "how-to-clean-product-residue-from-shower-grout",
+      "problem": "product residue",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::product residue",
+      "title": "How to Tell if product residue on shower grout is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-shower-grout-is-permanent",
+      "problem": "product residue",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::product residue",
+      "title": "Why product residue Keeps Coming Back on shower grout",
+      "slug": "why-product-residue-keeps-coming-back-on-shower-grout",
+      "problem": "product residue",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::product residue",
+      "title": "How to Maintain shower grout and Keep product residue Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-shower-grout",
+      "problem": "product residue",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::product residue",
+      "title": "What Causes product residue on tile grout",
+      "slug": "what-causes-product-residue-on-tile-grout",
+      "problem": "product residue",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::product residue",
+      "title": "How to Remove product residue from tile grout",
+      "slug": "how-to-remove-product-residue-from-tile-grout",
+      "problem": "product residue",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::product residue",
+      "title": "How to Prevent product residue on tile grout",
+      "slug": "how-to-prevent-product-residue-on-tile-grout",
+      "problem": "product residue",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::product residue",
+      "title": "How to Fix product residue on tile grout",
+      "slug": "how-to-fix-product-residue-on-tile-grout",
+      "problem": "product residue",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::product residue",
+      "title": "How to Clean product residue from tile grout",
+      "slug": "how-to-clean-product-residue-from-tile-grout",
+      "problem": "product residue",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::product residue",
+      "title": "How to Tell if product residue on tile grout is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-tile-grout-is-permanent",
+      "problem": "product residue",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::product residue",
+      "title": "Why product residue Keeps Coming Back on tile grout",
+      "slug": "why-product-residue-keeps-coming-back-on-tile-grout",
+      "problem": "product residue",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::product residue",
+      "title": "How to Maintain tile grout and Keep product residue Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-tile-grout",
+      "problem": "product residue",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::product residue",
+      "title": "What Causes product residue on caulking",
+      "slug": "what-causes-product-residue-on-caulking",
+      "problem": "product residue",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::product residue",
+      "title": "How to Remove product residue from caulking",
+      "slug": "how-to-remove-product-residue-from-caulking",
+      "problem": "product residue",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::product residue",
+      "title": "How to Prevent product residue on caulking",
+      "slug": "how-to-prevent-product-residue-on-caulking",
+      "problem": "product residue",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::product residue",
+      "title": "How to Fix product residue on caulking",
+      "slug": "how-to-fix-product-residue-on-caulking",
+      "problem": "product residue",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::product residue",
+      "title": "How to Clean product residue from caulking",
+      "slug": "how-to-clean-product-residue-from-caulking",
+      "problem": "product residue",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::product residue",
+      "title": "How to Tell if product residue on caulking is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-caulking-is-permanent",
+      "problem": "product residue",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::product residue",
+      "title": "Why product residue Keeps Coming Back on caulking",
+      "slug": "why-product-residue-keeps-coming-back-on-caulking",
+      "problem": "product residue",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::product residue",
+      "title": "How to Maintain caulking and Keep product residue Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-caulking",
+      "problem": "product residue",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::product residue",
+      "title": "What Causes product residue on sealed granite",
+      "slug": "what-causes-product-residue-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::product residue",
+      "title": "How to Remove product residue from sealed granite",
+      "slug": "how-to-remove-product-residue-from-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::product residue",
+      "title": "How to Prevent product residue on sealed granite",
+      "slug": "how-to-prevent-product-residue-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::product residue",
+      "title": "How to Fix product residue on sealed granite",
+      "slug": "how-to-fix-product-residue-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::product residue",
+      "title": "How to Clean product residue from sealed granite",
+      "slug": "how-to-clean-product-residue-from-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::product residue",
+      "title": "How to Tell if product residue on sealed granite is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-sealed-granite-is-permanent",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::product residue",
+      "title": "Why product residue Keeps Coming Back on sealed granite",
+      "slug": "why-product-residue-keeps-coming-back-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::product residue",
+      "title": "How to Maintain sealed granite and Keep product residue Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-sealed-granite",
+      "problem": "product residue",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::product residue",
+      "title": "What Causes product residue on sealed marble",
+      "slug": "what-causes-product-residue-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::product residue",
+      "title": "How to Remove product residue from sealed marble",
+      "slug": "how-to-remove-product-residue-from-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::product residue",
+      "title": "How to Prevent product residue on sealed marble",
+      "slug": "how-to-prevent-product-residue-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::product residue",
+      "title": "How to Fix product residue on sealed marble",
+      "slug": "how-to-fix-product-residue-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::product residue",
+      "title": "How to Clean product residue from sealed marble",
+      "slug": "how-to-clean-product-residue-from-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::product residue",
+      "title": "How to Tell if product residue on sealed marble is Permanent",
+      "slug": "how-to-tell-if-product-residue-on-sealed-marble-is-permanent",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::product residue",
+      "title": "Why product residue Keeps Coming Back on sealed marble",
+      "slug": "why-product-residue-keeps-coming-back-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::product residue",
+      "title": "How to Maintain sealed marble and Keep product residue Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-product-residue-under-control",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::product residue",
+      "title": "How to Recover After a Cleaning Mistake With product residue on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-product-residue-on-sealed-marble",
+      "problem": "product residue",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::product residue",
+      "title": "What Causes product residue on quartz countertops",
+      "slug": "what-causes-product-residue-on-quartz-countertops",
+      "problem": "product residue",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

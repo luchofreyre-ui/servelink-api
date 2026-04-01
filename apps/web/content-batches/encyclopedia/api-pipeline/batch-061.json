@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "why::shower pans::scuff marks",
+      "title": "Why scuff marks Keeps Coming Back on shower pans",
+      "slug": "why-scuff-marks-keeps-coming-back-on-shower-pans",
+      "problem": "scuff marks",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::scuff marks",
+      "title": "How to Maintain shower pans and Keep scuff marks Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-scuff-marks-under-control",
+      "problem": "scuff marks",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::scuff marks",
+      "title": "How to Recover After a Cleaning Mistake With scuff marks on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scuff-marks-on-shower-pans",
+      "problem": "scuff marks",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::scuff marks",
+      "title": "What Causes scuff marks on bathtub surrounds",
+      "slug": "what-causes-scuff-marks-on-bathtub-surrounds",
+      "problem": "scuff marks",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::scuff marks",
+      "title": "How to Remove scuff marks from bathtub surrounds",
+      "slug": "how-to-remove-scuff-marks-from-bathtub-surrounds",
+      "problem": "scuff marks",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::scuff marks",
+      "title": "How to Prevent scuff marks on bathtub surrounds",
+      "slug": "how-to-prevent-scuff-marks-on-bathtub-surrounds",
+      "problem": "scuff marks",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::scuff marks",
+      "title": "How to Fix scuff marks on bathtub surrounds",
+      "slug": "how-to-fix-scuff-marks-on-bathtub-surrounds",
+      "problem": "scuff marks",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::scuff marks",
+      "title": "How to Clean scuff marks from bathtub surrounds",
+      "slug": "how-to-clean-scuff-marks-from-bathtub-surrounds",
+      "problem": "scuff marks",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::scuff marks",
+      "title": "How to Tell if scuff marks on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-scuff-marks-on-bathtub-surrounds-is-permanent",
+      "problem": "scuff marks",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::scuff marks",
+      "title": "Why scuff marks Keeps Coming Back on bathtub surrounds",
+      "slug": "why-scuff-marks-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "scuff marks",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::scuff marks",
+      "title": "How to Maintain bathtub surrounds and Keep scuff marks Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-scuff-marks-under-control",
+      "problem": "scuff marks",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::scuff marks",
+      "title": "How to Recover After a Cleaning Mistake With scuff marks on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scuff-marks-on-bathtub-surrounds",
+      "problem": "scuff marks",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::scuff marks",
+      "title": "What Causes scuff marks on ceramic tile",
+      "slug": "what-causes-scuff-marks-on-ceramic-tile",
+      "problem": "scuff marks",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::scuff marks",
+      "title": "How to Remove scuff marks from ceramic tile",
+      "slug": "how-to-remove-scuff-marks-from-ceramic-tile",
+      "problem": "scuff marks",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::scuff marks",
+      "title": "How to Prevent scuff marks on ceramic tile",
+      "slug": "how-to-prevent-scuff-marks-on-ceramic-tile",
+      "problem": "scuff marks",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::scuff marks",
+      "title": "How to Fix scuff marks on ceramic tile",
+      "slug": "how-to-fix-scuff-marks-on-ceramic-tile",
+      "problem": "scuff marks",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::scuff marks",
+      "title": "How to Clean scuff marks from ceramic tile",
+      "slug": "how-to-clean-scuff-marks-from-ceramic-tile",
+      "problem": "scuff marks",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::scuff marks",
+      "title": "How to Tell if scuff marks on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-scuff-marks-on-ceramic-tile-is-permanent",
+      "problem": "scuff marks",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::scuff marks",
+      "title": "Why scuff marks Keeps Coming Back on ceramic tile",
+      "slug": "why-scuff-marks-keeps-coming-back-on-ceramic-tile",
+      "problem": "scuff marks",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::scuff marks",
+      "title": "How to Maintain ceramic tile and Keep scuff marks Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-scuff-marks-under-control",
+      "problem": "scuff marks",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::scuff marks",
+      "title": "How to Recover After a Cleaning Mistake With scuff marks on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scuff-marks-on-ceramic-tile",
+      "problem": "scuff marks",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::scuff marks",
+      "title": "What Causes scuff marks on porcelain tile",
+      "slug": "what-causes-scuff-marks-on-porcelain-tile",
+      "problem": "scuff marks",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::scuff marks",
+      "title": "How to Remove scuff marks from porcelain tile",
+      "slug": "how-to-remove-scuff-marks-from-porcelain-tile",
+      "problem": "scuff marks",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::scuff marks",
+      "title": "How to Prevent scuff marks on porcelain tile",
+      "slug": "how-to-prevent-scuff-marks-on-porcelain-tile",
+      "problem": "scuff marks",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::scuff marks",
+      "title": "How to Fix scuff marks on porcelain tile",
+      "slug": "how-to-fix-scuff-marks-on-porcelain-tile",
+      "problem": "scuff marks",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::scuff marks",
+      "title": "How to Clean scuff marks from porcelain tile",
+      "slug": "how-to-clean-scuff-marks-from-porcelain-tile",
+      "problem": "scuff marks",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::scuff marks",
+      "title": "How to Tell if scuff marks on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-scuff-marks-on-porcelain-tile-is-permanent",
+      "problem": "scuff marks",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::porcelain tile::scuff marks",
+      "title": "Why scuff marks Keeps Coming Back on porcelain tile",
+      "slug": "why-scuff-marks-keeps-coming-back-on-porcelain-tile",
+      "problem": "scuff marks",
+      "surface": "porcelain tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::porcelain tile::scuff marks",
+      "title": "How to Maintain porcelain tile and Keep scuff marks Under Control",
+      "slug": "how-to-maintain-porcelain-tile-and-keep-scuff-marks-under-control",
+      "problem": "scuff marks",
+      "surface": "porcelain tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::porcelain tile::scuff marks",
+      "title": "How to Recover After a Cleaning Mistake With scuff marks on porcelain tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scuff-marks-on-porcelain-tile",
+      "problem": "scuff marks",
+      "surface": "porcelain tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::scuff marks",
+      "title": "What Causes scuff marks on butcher block",
+      "slug": "what-causes-scuff-marks-on-butcher-block",
+      "problem": "scuff marks",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::scuff marks",
+      "title": "How to Remove scuff marks from butcher block",
+      "slug": "how-to-remove-scuff-marks-from-butcher-block",
+      "problem": "scuff marks",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::scuff marks",
+      "title": "How to Prevent scuff marks on butcher block",
+      "slug": "how-to-prevent-scuff-marks-on-butcher-block",
+      "problem": "scuff marks",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::scuff marks",
+      "title": "How to Fix scuff marks on butcher block",
+      "slug": "how-to-fix-scuff-marks-on-butcher-block",
+      "problem": "scuff marks",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::scuff marks",
+      "title": "How to Clean scuff marks from butcher block",
+      "slug": "how-to-clean-scuff-marks-from-butcher-block",
+      "problem": "scuff marks",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::scuff marks",
+      "title": "How to Tell if scuff marks on butcher block is Permanent",
+      "slug": "how-to-tell-if-scuff-marks-on-butcher-block-is-permanent",
+      "problem": "scuff marks",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::scuff marks",
+      "title": "Why scuff marks Keeps Coming Back on butcher block",
+      "slug": "why-scuff-marks-keeps-coming-back-on-butcher-block",
+      "problem": "scuff marks",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::scuff marks",
+      "title": "How to Maintain butcher block and Keep scuff marks Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-scuff-marks-under-control",
+      "problem": "scuff marks",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::scuff marks",
+      "title": "How to Recover After a Cleaning Mistake With scuff marks on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scuff-marks-on-butcher-block",
+      "problem": "scuff marks",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::scuff marks",
+      "title": "What Causes scuff marks on unfinished wood",
+      "slug": "what-causes-scuff-marks-on-unfinished-wood",
+      "problem": "scuff marks",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::scuff marks",
+      "title": "How to Remove scuff marks from unfinished wood",
+      "slug": "how-to-remove-scuff-marks-from-unfinished-wood",
+      "problem": "scuff marks",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::scuff marks",
+      "title": "How to Prevent scuff marks on unfinished wood",
+      "slug": "how-to-prevent-scuff-marks-on-unfinished-wood",
+      "problem": "scuff marks",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::scuff marks",
+      "title": "How to Fix scuff marks on unfinished wood",
+      "slug": "how-to-fix-scuff-marks-on-unfinished-wood",
+      "problem": "scuff marks",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::scuff marks",
+      "title": "How to Clean scuff marks from unfinished wood",
+      "slug": "how-to-clean-scuff-marks-from-unfinished-wood",
+      "problem": "scuff marks",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::unfinished wood::scuff marks",
+      "title": "How to Tell if scuff marks on unfinished wood is Permanent",
+      "slug": "how-to-tell-if-scuff-marks-on-unfinished-wood-is-permanent",
+      "problem": "scuff marks",
+      "surface": "unfinished wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::unfinished wood::scuff marks",
+      "title": "Why scuff marks Keeps Coming Back on unfinished wood",
+      "slug": "why-scuff-marks-keeps-coming-back-on-unfinished-wood",
+      "problem": "scuff marks",
+      "surface": "unfinished wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::unfinished wood::scuff marks",
+      "title": "How to Maintain unfinished wood and Keep scuff marks Under Control",
+      "slug": "how-to-maintain-unfinished-wood-and-keep-scuff-marks-under-control",
+      "problem": "scuff marks",
+      "surface": "unfinished wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::unfinished wood::scuff marks",
+      "title": "How to Recover After a Cleaning Mistake With scuff marks on unfinished wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scuff-marks-on-unfinished-wood",
+      "problem": "scuff marks",
+      "surface": "unfinished wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed wood::scuff marks",
+      "title": "What Causes scuff marks on sealed wood",
+      "slug": "what-causes-scuff-marks-on-sealed-wood",
+      "problem": "scuff marks",
+      "surface": "sealed wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed wood::scuff marks",
+      "title": "How to Remove scuff marks from sealed wood",
+      "slug": "how-to-remove-scuff-marks-from-sealed-wood",
+      "problem": "scuff marks",
+      "surface": "sealed wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed wood::scuff marks",
+      "title": "How to Prevent scuff marks on sealed wood",
+      "slug": "how-to-prevent-scuff-marks-on-sealed-wood",
+      "problem": "scuff marks",
+      "surface": "sealed wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed wood::scuff marks",
+      "title": "How to Fix scuff marks on sealed wood",
+      "slug": "how-to-fix-scuff-marks-on-sealed-wood",
+      "problem": "scuff marks",
+      "surface": "sealed wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed wood::scuff marks",
+      "title": "How to Clean scuff marks from sealed wood",
+      "slug": "how-to-clean-scuff-marks-from-sealed-wood",
+      "problem": "scuff marks",
+      "surface": "sealed wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed wood::scuff marks",
+      "title": "How to Tell if scuff marks on sealed wood is Permanent",
+      "slug": "how-to-tell-if-scuff-marks-on-sealed-wood-is-permanent",
+      "problem": "scuff marks",
+      "surface": "sealed wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed wood::scuff marks",
+      "title": "Why scuff marks Keeps Coming Back on sealed wood",
+      "slug": "why-scuff-marks-keeps-coming-back-on-sealed-wood",
+      "problem": "scuff marks",
+      "surface": "sealed wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed wood::scuff marks",
+      "title": "How to Maintain sealed wood and Keep scuff marks Under Control",
+      "slug": "how-to-maintain-sealed-wood-and-keep-scuff-marks-under-control",
+      "problem": "scuff marks",
+      "surface": "sealed wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed wood::scuff marks",
+      "title": "How to Recover After a Cleaning Mistake With scuff marks on sealed wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-scuff-marks-on-sealed-wood",
+      "problem": "scuff marks",
+      "surface": "sealed wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower glass::burn marks",
+      "title": "What Causes burn marks on shower glass",
+      "slug": "what-causes-burn-marks-on-shower-glass",
+      "problem": "burn marks",
+      "surface": "shower glass",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower glass::burn marks",
+      "title": "How to Remove burn marks from shower glass",
+      "slug": "how-to-remove-burn-marks-from-shower-glass",
+      "problem": "burn marks",
+      "surface": "shower glass",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower glass::burn marks",
+      "title": "How to Prevent burn marks on shower glass",
+      "slug": "how-to-prevent-burn-marks-on-shower-glass",
+      "problem": "burn marks",
+      "surface": "shower glass",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower glass::burn marks",
+      "title": "How to Fix burn marks on shower glass",
+      "slug": "how-to-fix-burn-marks-on-shower-glass",
+      "problem": "burn marks",
+      "surface": "shower glass",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower glass::burn marks",
+      "title": "How to Clean burn marks from shower glass",
+      "slug": "how-to-clean-burn-marks-from-shower-glass",
+      "problem": "burn marks",
+      "surface": "shower glass",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower glass::burn marks",
+      "title": "How to Tell if burn marks on shower glass is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-shower-glass-is-permanent",
+      "problem": "burn marks",
+      "surface": "shower glass",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower glass::burn marks",
+      "title": "Why burn marks Keeps Coming Back on shower glass",
+      "slug": "why-burn-marks-keeps-coming-back-on-shower-glass",
+      "problem": "burn marks",
+      "surface": "shower glass",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower glass::burn marks",
+      "title": "How to Maintain shower glass and Keep burn marks Under Control",
+      "slug": "how-to-maintain-shower-glass-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "shower glass",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower glass::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on shower glass",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-shower-glass",
+      "problem": "burn marks",
+      "surface": "shower glass",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::granite::burn marks",
+      "title": "What Causes burn marks on granite",
+      "slug": "what-causes-burn-marks-on-granite",
+      "problem": "burn marks",
+      "surface": "granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::granite::burn marks",
+      "title": "How to Remove burn marks from granite",
+      "slug": "how-to-remove-burn-marks-from-granite",
+      "problem": "burn marks",
+      "surface": "granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::granite::burn marks",
+      "title": "How to Prevent burn marks on granite",
+      "slug": "how-to-prevent-burn-marks-on-granite",
+      "problem": "burn marks",
+      "surface": "granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::granite::burn marks",
+      "title": "How to Fix burn marks on granite",
+      "slug": "how-to-fix-burn-marks-on-granite",
+      "problem": "burn marks",
+      "surface": "granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::granite::burn marks",
+      "title": "How to Clean burn marks from granite",
+      "slug": "how-to-clean-burn-marks-from-granite",
+      "problem": "burn marks",
+      "surface": "granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::granite::burn marks",
+      "title": "How to Tell if burn marks on granite is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-granite-is-permanent",
+      "problem": "burn marks",
+      "surface": "granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::granite::burn marks",
+      "title": "Why burn marks Keeps Coming Back on granite",
+      "slug": "why-burn-marks-keeps-coming-back-on-granite",
+      "problem": "burn marks",
+      "surface": "granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::granite::burn marks",
+      "title": "How to Maintain granite and Keep burn marks Under Control",
+      "slug": "how-to-maintain-granite-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::granite::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-granite",
+      "problem": "burn marks",
+      "surface": "granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::marble::burn marks",
+      "title": "What Causes burn marks on marble",
+      "slug": "what-causes-burn-marks-on-marble",
+      "problem": "burn marks",
+      "surface": "marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::marble::burn marks",
+      "title": "How to Remove burn marks from marble",
+      "slug": "how-to-remove-burn-marks-from-marble",
+      "problem": "burn marks",
+      "surface": "marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::marble::burn marks",
+      "title": "How to Prevent burn marks on marble",
+      "slug": "how-to-prevent-burn-marks-on-marble",
+      "problem": "burn marks",
+      "surface": "marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::marble::burn marks",
+      "title": "How to Fix burn marks on marble",
+      "slug": "how-to-fix-burn-marks-on-marble",
+      "problem": "burn marks",
+      "surface": "marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::marble::burn marks",
+      "title": "How to Clean burn marks from marble",
+      "slug": "how-to-clean-burn-marks-from-marble",
+      "problem": "burn marks",
+      "surface": "marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::marble::burn marks",
+      "title": "How to Tell if burn marks on marble is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-marble-is-permanent",
+      "problem": "burn marks",
+      "surface": "marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::marble::burn marks",
+      "title": "Why burn marks Keeps Coming Back on marble",
+      "slug": "why-burn-marks-keeps-coming-back-on-marble",
+      "problem": "burn marks",
+      "surface": "marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::marble::burn marks",
+      "title": "How to Maintain marble and Keep burn marks Under Control",
+      "slug": "how-to-maintain-marble-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::marble::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-marble",
+      "problem": "burn marks",
+      "surface": "marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz::burn marks",
+      "title": "What Causes burn marks on quartz",
+      "slug": "what-causes-burn-marks-on-quartz",
+      "problem": "burn marks",
+      "surface": "quartz",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz::burn marks",
+      "title": "How to Remove burn marks from quartz",
+      "slug": "how-to-remove-burn-marks-from-quartz",
+      "problem": "burn marks",
+      "surface": "quartz",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz::burn marks",
+      "title": "How to Prevent burn marks on quartz",
+      "slug": "how-to-prevent-burn-marks-on-quartz",
+      "problem": "burn marks",
+      "surface": "quartz",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz::burn marks",
+      "title": "How to Fix burn marks on quartz",
+      "slug": "how-to-fix-burn-marks-on-quartz",
+      "problem": "burn marks",
+      "surface": "quartz",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz::burn marks",
+      "title": "How to Clean burn marks from quartz",
+      "slug": "how-to-clean-burn-marks-from-quartz",
+      "problem": "burn marks",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::burn marks",
+      "title": "How to Tell if burn marks on quartz is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-quartz-is-permanent",
+      "problem": "burn marks",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::burn marks",
+      "title": "Why burn marks Keeps Coming Back on quartz",
+      "slug": "why-burn-marks-keeps-coming-back-on-quartz",
+      "problem": "burn marks",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::burn marks",
+      "title": "How to Maintain quartz and Keep burn marks Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-burn-marks-under-control",
+      "problem": "burn marks",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::burn marks",
+      "title": "How to Recover After a Cleaning Mistake With burn marks on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-burn-marks-on-quartz",
+      "problem": "burn marks",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::laminate::burn marks",
+      "title": "What Causes burn marks on laminate",
+      "slug": "what-causes-burn-marks-on-laminate",
+      "problem": "burn marks",
+      "surface": "laminate",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::laminate::burn marks",
+      "title": "How to Remove burn marks from laminate",
+      "slug": "how-to-remove-burn-marks-from-laminate",
+      "problem": "burn marks",
+      "surface": "laminate",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::laminate::burn marks",
+      "title": "How to Prevent burn marks on laminate",
+      "slug": "how-to-prevent-burn-marks-on-laminate",
+      "problem": "burn marks",
+      "surface": "laminate",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::laminate::burn marks",
+      "title": "How to Fix burn marks on laminate",
+      "slug": "how-to-fix-burn-marks-on-laminate",
+      "problem": "burn marks",
+      "surface": "laminate",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::laminate::burn marks",
+      "title": "How to Clean burn marks from laminate",
+      "slug": "how-to-clean-burn-marks-from-laminate",
+      "problem": "burn marks",
+      "surface": "laminate",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::laminate::burn marks",
+      "title": "How to Tell if burn marks on laminate is Permanent",
+      "slug": "how-to-tell-if-burn-marks-on-laminate-is-permanent",
+      "problem": "burn marks",
+      "surface": "laminate",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::laminate::burn marks",
+      "title": "Why burn marks Keeps Coming Back on laminate",
+      "slug": "why-burn-marks-keeps-coming-back-on-laminate",
+      "problem": "burn marks",
+      "surface": "laminate",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

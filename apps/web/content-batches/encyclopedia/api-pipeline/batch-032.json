@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "how-clean::quartz::calcium buildup",
+      "title": "How to Clean calcium buildup from quartz",
+      "slug": "how-to-clean-calcium-buildup-from-quartz",
+      "problem": "calcium buildup",
+      "surface": "quartz",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz::calcium buildup",
+      "title": "How to Tell if calcium buildup on quartz is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-quartz-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "quartz",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on quartz",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-quartz",
+      "problem": "calcium buildup",
+      "surface": "quartz",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz::calcium buildup",
+      "title": "How to Maintain quartz and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-quartz-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "quartz",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on quartz",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-quartz",
+      "problem": "calcium buildup",
+      "surface": "quartz",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::wood::calcium buildup",
+      "title": "What Causes calcium buildup on wood",
+      "slug": "what-causes-calcium-buildup-on-wood",
+      "problem": "calcium buildup",
+      "surface": "wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::wood::calcium buildup",
+      "title": "How to Remove calcium buildup from wood",
+      "slug": "how-to-remove-calcium-buildup-from-wood",
+      "problem": "calcium buildup",
+      "surface": "wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::wood::calcium buildup",
+      "title": "How to Prevent calcium buildup on wood",
+      "slug": "how-to-prevent-calcium-buildup-on-wood",
+      "problem": "calcium buildup",
+      "surface": "wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::wood::calcium buildup",
+      "title": "How to Fix calcium buildup on wood",
+      "slug": "how-to-fix-calcium-buildup-on-wood",
+      "problem": "calcium buildup",
+      "surface": "wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::wood::calcium buildup",
+      "title": "How to Clean calcium buildup from wood",
+      "slug": "how-to-clean-calcium-buildup-from-wood",
+      "problem": "calcium buildup",
+      "surface": "wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::wood::calcium buildup",
+      "title": "How to Tell if calcium buildup on wood is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-wood-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "wood",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::wood::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on wood",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-wood",
+      "problem": "calcium buildup",
+      "surface": "wood",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::wood::calcium buildup",
+      "title": "How to Maintain wood and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-wood-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "wood",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::wood::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on wood",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-wood",
+      "problem": "calcium buildup",
+      "surface": "wood",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::calcium buildup",
+      "title": "What Causes calcium buildup on grout",
+      "slug": "what-causes-calcium-buildup-on-grout",
+      "problem": "calcium buildup",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::calcium buildup",
+      "title": "How to Remove calcium buildup from grout",
+      "slug": "how-to-remove-calcium-buildup-from-grout",
+      "problem": "calcium buildup",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::calcium buildup",
+      "title": "How to Prevent calcium buildup on grout",
+      "slug": "how-to-prevent-calcium-buildup-on-grout",
+      "problem": "calcium buildup",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::calcium buildup",
+      "title": "How to Fix calcium buildup on grout",
+      "slug": "how-to-fix-calcium-buildup-on-grout",
+      "problem": "calcium buildup",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::calcium buildup",
+      "title": "How to Clean calcium buildup from grout",
+      "slug": "how-to-clean-calcium-buildup-from-grout",
+      "problem": "calcium buildup",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::calcium buildup",
+      "title": "How to Tell if calcium buildup on grout is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-grout-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on grout",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-grout",
+      "problem": "calcium buildup",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::calcium buildup",
+      "title": "How to Maintain grout and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-grout-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-grout",
+      "problem": "calcium buildup",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::calcium buildup",
+      "title": "What Causes calcium buildup on sealed stone",
+      "slug": "what-causes-calcium-buildup-on-sealed-stone",
+      "problem": "calcium buildup",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::calcium buildup",
+      "title": "How to Remove calcium buildup from sealed stone",
+      "slug": "how-to-remove-calcium-buildup-from-sealed-stone",
+      "problem": "calcium buildup",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::calcium buildup",
+      "title": "How to Prevent calcium buildup on sealed stone",
+      "slug": "how-to-prevent-calcium-buildup-on-sealed-stone",
+      "problem": "calcium buildup",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::calcium buildup",
+      "title": "How to Fix calcium buildup on sealed stone",
+      "slug": "how-to-fix-calcium-buildup-on-sealed-stone",
+      "problem": "calcium buildup",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::calcium buildup",
+      "title": "How to Clean calcium buildup from sealed stone",
+      "slug": "how-to-clean-calcium-buildup-from-sealed-stone",
+      "problem": "calcium buildup",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::calcium buildup",
+      "title": "How to Tell if calcium buildup on sealed stone is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-sealed-stone-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on sealed stone",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-sealed-stone",
+      "problem": "calcium buildup",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::calcium buildup",
+      "title": "How to Maintain sealed stone and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-sealed-stone",
+      "problem": "calcium buildup",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::calcium buildup",
+      "title": "What Causes calcium buildup on shower grout",
+      "slug": "what-causes-calcium-buildup-on-shower-grout",
+      "problem": "calcium buildup",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::calcium buildup",
+      "title": "How to Remove calcium buildup from shower grout",
+      "slug": "how-to-remove-calcium-buildup-from-shower-grout",
+      "problem": "calcium buildup",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::calcium buildup",
+      "title": "How to Prevent calcium buildup on shower grout",
+      "slug": "how-to-prevent-calcium-buildup-on-shower-grout",
+      "problem": "calcium buildup",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::calcium buildup",
+      "title": "How to Fix calcium buildup on shower grout",
+      "slug": "how-to-fix-calcium-buildup-on-shower-grout",
+      "problem": "calcium buildup",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::calcium buildup",
+      "title": "How to Clean calcium buildup from shower grout",
+      "slug": "how-to-clean-calcium-buildup-from-shower-grout",
+      "problem": "calcium buildup",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::calcium buildup",
+      "title": "How to Tell if calcium buildup on shower grout is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-shower-grout-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on shower grout",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-shower-grout",
+      "problem": "calcium buildup",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::calcium buildup",
+      "title": "How to Maintain shower grout and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-shower-grout",
+      "problem": "calcium buildup",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::calcium buildup",
+      "title": "What Causes calcium buildup on tile grout",
+      "slug": "what-causes-calcium-buildup-on-tile-grout",
+      "problem": "calcium buildup",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::calcium buildup",
+      "title": "How to Remove calcium buildup from tile grout",
+      "slug": "how-to-remove-calcium-buildup-from-tile-grout",
+      "problem": "calcium buildup",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::calcium buildup",
+      "title": "How to Prevent calcium buildup on tile grout",
+      "slug": "how-to-prevent-calcium-buildup-on-tile-grout",
+      "problem": "calcium buildup",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::calcium buildup",
+      "title": "How to Fix calcium buildup on tile grout",
+      "slug": "how-to-fix-calcium-buildup-on-tile-grout",
+      "problem": "calcium buildup",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::calcium buildup",
+      "title": "How to Clean calcium buildup from tile grout",
+      "slug": "how-to-clean-calcium-buildup-from-tile-grout",
+      "problem": "calcium buildup",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::calcium buildup",
+      "title": "How to Tell if calcium buildup on tile grout is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-tile-grout-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on tile grout",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-tile-grout",
+      "problem": "calcium buildup",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::calcium buildup",
+      "title": "How to Maintain tile grout and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-tile-grout",
+      "problem": "calcium buildup",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::calcium buildup",
+      "title": "What Causes calcium buildup on caulking",
+      "slug": "what-causes-calcium-buildup-on-caulking",
+      "problem": "calcium buildup",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::calcium buildup",
+      "title": "How to Remove calcium buildup from caulking",
+      "slug": "how-to-remove-calcium-buildup-from-caulking",
+      "problem": "calcium buildup",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::calcium buildup",
+      "title": "How to Prevent calcium buildup on caulking",
+      "slug": "how-to-prevent-calcium-buildup-on-caulking",
+      "problem": "calcium buildup",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::calcium buildup",
+      "title": "How to Fix calcium buildup on caulking",
+      "slug": "how-to-fix-calcium-buildup-on-caulking",
+      "problem": "calcium buildup",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::calcium buildup",
+      "title": "How to Clean calcium buildup from caulking",
+      "slug": "how-to-clean-calcium-buildup-from-caulking",
+      "problem": "calcium buildup",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::calcium buildup",
+      "title": "How to Tell if calcium buildup on caulking is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-caulking-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on caulking",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-caulking",
+      "problem": "calcium buildup",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::calcium buildup",
+      "title": "How to Maintain caulking and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-caulking",
+      "problem": "calcium buildup",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed granite::calcium buildup",
+      "title": "What Causes calcium buildup on sealed granite",
+      "slug": "what-causes-calcium-buildup-on-sealed-granite",
+      "problem": "calcium buildup",
+      "surface": "sealed granite",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed granite::calcium buildup",
+      "title": "How to Remove calcium buildup from sealed granite",
+      "slug": "how-to-remove-calcium-buildup-from-sealed-granite",
+      "problem": "calcium buildup",
+      "surface": "sealed granite",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed granite::calcium buildup",
+      "title": "How to Prevent calcium buildup on sealed granite",
+      "slug": "how-to-prevent-calcium-buildup-on-sealed-granite",
+      "problem": "calcium buildup",
+      "surface": "sealed granite",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed granite::calcium buildup",
+      "title": "How to Fix calcium buildup on sealed granite",
+      "slug": "how-to-fix-calcium-buildup-on-sealed-granite",
+      "problem": "calcium buildup",
+      "surface": "sealed granite",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed granite::calcium buildup",
+      "title": "How to Clean calcium buildup from sealed granite",
+      "slug": "how-to-clean-calcium-buildup-from-sealed-granite",
+      "problem": "calcium buildup",
+      "surface": "sealed granite",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed granite::calcium buildup",
+      "title": "How to Tell if calcium buildup on sealed granite is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-sealed-granite-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "sealed granite",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed granite::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on sealed granite",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-sealed-granite",
+      "problem": "calcium buildup",
+      "surface": "sealed granite",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed granite::calcium buildup",
+      "title": "How to Maintain sealed granite and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-sealed-granite-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "sealed granite",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed granite::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on sealed granite",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-sealed-granite",
+      "problem": "calcium buildup",
+      "surface": "sealed granite",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed marble::calcium buildup",
+      "title": "What Causes calcium buildup on sealed marble",
+      "slug": "what-causes-calcium-buildup-on-sealed-marble",
+      "problem": "calcium buildup",
+      "surface": "sealed marble",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed marble::calcium buildup",
+      "title": "How to Remove calcium buildup from sealed marble",
+      "slug": "how-to-remove-calcium-buildup-from-sealed-marble",
+      "problem": "calcium buildup",
+      "surface": "sealed marble",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed marble::calcium buildup",
+      "title": "How to Prevent calcium buildup on sealed marble",
+      "slug": "how-to-prevent-calcium-buildup-on-sealed-marble",
+      "problem": "calcium buildup",
+      "surface": "sealed marble",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed marble::calcium buildup",
+      "title": "How to Fix calcium buildup on sealed marble",
+      "slug": "how-to-fix-calcium-buildup-on-sealed-marble",
+      "problem": "calcium buildup",
+      "surface": "sealed marble",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed marble::calcium buildup",
+      "title": "How to Clean calcium buildup from sealed marble",
+      "slug": "how-to-clean-calcium-buildup-from-sealed-marble",
+      "problem": "calcium buildup",
+      "surface": "sealed marble",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed marble::calcium buildup",
+      "title": "How to Tell if calcium buildup on sealed marble is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-sealed-marble-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "sealed marble",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed marble::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on sealed marble",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-sealed-marble",
+      "problem": "calcium buildup",
+      "surface": "sealed marble",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed marble::calcium buildup",
+      "title": "How to Maintain sealed marble and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-sealed-marble-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "sealed marble",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed marble::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on sealed marble",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-sealed-marble",
+      "problem": "calcium buildup",
+      "surface": "sealed marble",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::quartz countertops::calcium buildup",
+      "title": "What Causes calcium buildup on quartz countertops",
+      "slug": "what-causes-calcium-buildup-on-quartz-countertops",
+      "problem": "calcium buildup",
+      "surface": "quartz countertops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::quartz countertops::calcium buildup",
+      "title": "How to Remove calcium buildup from quartz countertops",
+      "slug": "how-to-remove-calcium-buildup-from-quartz-countertops",
+      "problem": "calcium buildup",
+      "surface": "quartz countertops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::quartz countertops::calcium buildup",
+      "title": "How to Prevent calcium buildup on quartz countertops",
+      "slug": "how-to-prevent-calcium-buildup-on-quartz-countertops",
+      "problem": "calcium buildup",
+      "surface": "quartz countertops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::quartz countertops::calcium buildup",
+      "title": "How to Fix calcium buildup on quartz countertops",
+      "slug": "how-to-fix-calcium-buildup-on-quartz-countertops",
+      "problem": "calcium buildup",
+      "surface": "quartz countertops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::quartz countertops::calcium buildup",
+      "title": "How to Clean calcium buildup from quartz countertops",
+      "slug": "how-to-clean-calcium-buildup-from-quartz-countertops",
+      "problem": "calcium buildup",
+      "surface": "quartz countertops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::quartz countertops::calcium buildup",
+      "title": "How to Tell if calcium buildup on quartz countertops is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-quartz-countertops-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "quartz countertops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::quartz countertops::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on quartz countertops",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-quartz-countertops",
+      "problem": "calcium buildup",
+      "surface": "quartz countertops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::quartz countertops::calcium buildup",
+      "title": "How to Maintain quartz countertops and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-quartz-countertops-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "quartz countertops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::quartz countertops::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on quartz countertops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-quartz-countertops",
+      "problem": "calcium buildup",
+      "surface": "quartz countertops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::butcher block::calcium buildup",
+      "title": "What Causes calcium buildup on butcher block",
+      "slug": "what-causes-calcium-buildup-on-butcher-block",
+      "problem": "calcium buildup",
+      "surface": "butcher block",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::butcher block::calcium buildup",
+      "title": "How to Remove calcium buildup from butcher block",
+      "slug": "how-to-remove-calcium-buildup-from-butcher-block",
+      "problem": "calcium buildup",
+      "surface": "butcher block",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::butcher block::calcium buildup",
+      "title": "How to Prevent calcium buildup on butcher block",
+      "slug": "how-to-prevent-calcium-buildup-on-butcher-block",
+      "problem": "calcium buildup",
+      "surface": "butcher block",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::butcher block::calcium buildup",
+      "title": "How to Fix calcium buildup on butcher block",
+      "slug": "how-to-fix-calcium-buildup-on-butcher-block",
+      "problem": "calcium buildup",
+      "surface": "butcher block",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::butcher block::calcium buildup",
+      "title": "How to Clean calcium buildup from butcher block",
+      "slug": "how-to-clean-calcium-buildup-from-butcher-block",
+      "problem": "calcium buildup",
+      "surface": "butcher block",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::butcher block::calcium buildup",
+      "title": "How to Tell if calcium buildup on butcher block is Permanent",
+      "slug": "how-to-tell-if-calcium-buildup-on-butcher-block-is-permanent",
+      "problem": "calcium buildup",
+      "surface": "butcher block",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::butcher block::calcium buildup",
+      "title": "Why calcium buildup Keeps Coming Back on butcher block",
+      "slug": "why-calcium-buildup-keeps-coming-back-on-butcher-block",
+      "problem": "calcium buildup",
+      "surface": "butcher block",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::butcher block::calcium buildup",
+      "title": "How to Maintain butcher block and Keep calcium buildup Under Control",
+      "slug": "how-to-maintain-butcher-block-and-keep-calcium-buildup-under-control",
+      "problem": "calcium buildup",
+      "surface": "butcher block",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::butcher block::calcium buildup",
+      "title": "How to Recover After a Cleaning Mistake With calcium buildup on butcher block",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-calcium-buildup-on-butcher-block",
+      "problem": "calcium buildup",
+      "surface": "butcher block",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::unfinished wood::calcium buildup",
+      "title": "What Causes calcium buildup on unfinished wood",
+      "slug": "what-causes-calcium-buildup-on-unfinished-wood",
+      "problem": "calcium buildup",
+      "surface": "unfinished wood",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::unfinished wood::calcium buildup",
+      "title": "How to Remove calcium buildup from unfinished wood",
+      "slug": "how-to-remove-calcium-buildup-from-unfinished-wood",
+      "problem": "calcium buildup",
+      "surface": "unfinished wood",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::unfinished wood::calcium buildup",
+      "title": "How to Prevent calcium buildup on unfinished wood",
+      "slug": "how-to-prevent-calcium-buildup-on-unfinished-wood",
+      "problem": "calcium buildup",
+      "surface": "unfinished wood",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::unfinished wood::calcium buildup",
+      "title": "How to Fix calcium buildup on unfinished wood",
+      "slug": "how-to-fix-calcium-buildup-on-unfinished-wood",
+      "problem": "calcium buildup",
+      "surface": "unfinished wood",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::unfinished wood::calcium buildup",
+      "title": "How to Clean calcium buildup from unfinished wood",
+      "slug": "how-to-clean-calcium-buildup-from-unfinished-wood",
+      "problem": "calcium buildup",
+      "surface": "unfinished wood",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

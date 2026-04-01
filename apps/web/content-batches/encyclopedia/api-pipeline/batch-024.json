@@ -1,0 +1,1004 @@
+{
+  "pages": [
+    {
+      "id": "diagnosis::painted walls::sticky residue",
+      "title": "How to Tell if sticky residue on painted walls is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-painted-walls-is-permanent",
+      "problem": "sticky residue",
+      "surface": "painted walls",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted walls::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on painted walls",
+      "slug": "why-sticky-residue-keeps-coming-back-on-painted-walls",
+      "problem": "sticky residue",
+      "surface": "painted walls",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted walls::sticky residue",
+      "title": "How to Maintain painted walls and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-painted-walls-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "painted walls",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted walls::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on painted walls",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-painted-walls",
+      "problem": "sticky residue",
+      "surface": "painted walls",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::grout::sticky residue",
+      "title": "What Causes sticky residue on grout",
+      "slug": "what-causes-sticky-residue-on-grout",
+      "problem": "sticky residue",
+      "surface": "grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::grout::sticky residue",
+      "title": "How to Remove sticky residue from grout",
+      "slug": "how-to-remove-sticky-residue-from-grout",
+      "problem": "sticky residue",
+      "surface": "grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::grout::sticky residue",
+      "title": "How to Prevent sticky residue on grout",
+      "slug": "how-to-prevent-sticky-residue-on-grout",
+      "problem": "sticky residue",
+      "surface": "grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::grout::sticky residue",
+      "title": "How to Fix sticky residue on grout",
+      "slug": "how-to-fix-sticky-residue-on-grout",
+      "problem": "sticky residue",
+      "surface": "grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::grout::sticky residue",
+      "title": "How to Clean sticky residue from grout",
+      "slug": "how-to-clean-sticky-residue-from-grout",
+      "problem": "sticky residue",
+      "surface": "grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::grout::sticky residue",
+      "title": "How to Tell if sticky residue on grout is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-grout-is-permanent",
+      "problem": "sticky residue",
+      "surface": "grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::grout::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on grout",
+      "slug": "why-sticky-residue-keeps-coming-back-on-grout",
+      "problem": "sticky residue",
+      "surface": "grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::grout::sticky residue",
+      "title": "How to Maintain grout and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-grout-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::grout::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-grout",
+      "problem": "sticky residue",
+      "surface": "grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::glass cooktops::sticky residue",
+      "title": "What Causes sticky residue on glass cooktops",
+      "slug": "what-causes-sticky-residue-on-glass-cooktops",
+      "problem": "sticky residue",
+      "surface": "glass cooktops",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::glass cooktops::sticky residue",
+      "title": "How to Remove sticky residue from glass cooktops",
+      "slug": "how-to-remove-sticky-residue-from-glass-cooktops",
+      "problem": "sticky residue",
+      "surface": "glass cooktops",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::glass cooktops::sticky residue",
+      "title": "How to Prevent sticky residue on glass cooktops",
+      "slug": "how-to-prevent-sticky-residue-on-glass-cooktops",
+      "problem": "sticky residue",
+      "surface": "glass cooktops",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::glass cooktops::sticky residue",
+      "title": "How to Fix sticky residue on glass cooktops",
+      "slug": "how-to-fix-sticky-residue-on-glass-cooktops",
+      "problem": "sticky residue",
+      "surface": "glass cooktops",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::glass cooktops::sticky residue",
+      "title": "How to Clean sticky residue from glass cooktops",
+      "slug": "how-to-clean-sticky-residue-from-glass-cooktops",
+      "problem": "sticky residue",
+      "surface": "glass cooktops",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::glass cooktops::sticky residue",
+      "title": "How to Tell if sticky residue on glass cooktops is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-glass-cooktops-is-permanent",
+      "problem": "sticky residue",
+      "surface": "glass cooktops",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::glass cooktops::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on glass cooktops",
+      "slug": "why-sticky-residue-keeps-coming-back-on-glass-cooktops",
+      "problem": "sticky residue",
+      "surface": "glass cooktops",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::glass cooktops::sticky residue",
+      "title": "How to Maintain glass cooktops and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-glass-cooktops-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "glass cooktops",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::glass cooktops::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on glass cooktops",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-glass-cooktops",
+      "problem": "sticky residue",
+      "surface": "glass cooktops",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::painted cabinets::sticky residue",
+      "title": "What Causes sticky residue on painted cabinets",
+      "slug": "what-causes-sticky-residue-on-painted-cabinets",
+      "problem": "sticky residue",
+      "surface": "painted cabinets",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::painted cabinets::sticky residue",
+      "title": "How to Remove sticky residue from painted cabinets",
+      "slug": "how-to-remove-sticky-residue-from-painted-cabinets",
+      "problem": "sticky residue",
+      "surface": "painted cabinets",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::painted cabinets::sticky residue",
+      "title": "How to Prevent sticky residue on painted cabinets",
+      "slug": "how-to-prevent-sticky-residue-on-painted-cabinets",
+      "problem": "sticky residue",
+      "surface": "painted cabinets",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::painted cabinets::sticky residue",
+      "title": "How to Fix sticky residue on painted cabinets",
+      "slug": "how-to-fix-sticky-residue-on-painted-cabinets",
+      "problem": "sticky residue",
+      "surface": "painted cabinets",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::painted cabinets::sticky residue",
+      "title": "How to Clean sticky residue from painted cabinets",
+      "slug": "how-to-clean-sticky-residue-from-painted-cabinets",
+      "problem": "sticky residue",
+      "surface": "painted cabinets",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::painted cabinets::sticky residue",
+      "title": "How to Tell if sticky residue on painted cabinets is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-painted-cabinets-is-permanent",
+      "problem": "sticky residue",
+      "surface": "painted cabinets",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::painted cabinets::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on painted cabinets",
+      "slug": "why-sticky-residue-keeps-coming-back-on-painted-cabinets",
+      "problem": "sticky residue",
+      "surface": "painted cabinets",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::painted cabinets::sticky residue",
+      "title": "How to Maintain painted cabinets and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-painted-cabinets-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "painted cabinets",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::painted cabinets::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on painted cabinets",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-painted-cabinets",
+      "problem": "sticky residue",
+      "surface": "painted cabinets",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::sealed stone::sticky residue",
+      "title": "What Causes sticky residue on sealed stone",
+      "slug": "what-causes-sticky-residue-on-sealed-stone",
+      "problem": "sticky residue",
+      "surface": "sealed stone",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::sealed stone::sticky residue",
+      "title": "How to Remove sticky residue from sealed stone",
+      "slug": "how-to-remove-sticky-residue-from-sealed-stone",
+      "problem": "sticky residue",
+      "surface": "sealed stone",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::sealed stone::sticky residue",
+      "title": "How to Prevent sticky residue on sealed stone",
+      "slug": "how-to-prevent-sticky-residue-on-sealed-stone",
+      "problem": "sticky residue",
+      "surface": "sealed stone",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::sealed stone::sticky residue",
+      "title": "How to Fix sticky residue on sealed stone",
+      "slug": "how-to-fix-sticky-residue-on-sealed-stone",
+      "problem": "sticky residue",
+      "surface": "sealed stone",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::sealed stone::sticky residue",
+      "title": "How to Clean sticky residue from sealed stone",
+      "slug": "how-to-clean-sticky-residue-from-sealed-stone",
+      "problem": "sticky residue",
+      "surface": "sealed stone",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::sealed stone::sticky residue",
+      "title": "How to Tell if sticky residue on sealed stone is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-sealed-stone-is-permanent",
+      "problem": "sticky residue",
+      "surface": "sealed stone",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::sealed stone::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on sealed stone",
+      "slug": "why-sticky-residue-keeps-coming-back-on-sealed-stone",
+      "problem": "sticky residue",
+      "surface": "sealed stone",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::sealed stone::sticky residue",
+      "title": "How to Maintain sealed stone and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-sealed-stone-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "sealed stone",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::sealed stone::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on sealed stone",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-sealed-stone",
+      "problem": "sticky residue",
+      "surface": "sealed stone",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower grout::sticky residue",
+      "title": "What Causes sticky residue on shower grout",
+      "slug": "what-causes-sticky-residue-on-shower-grout",
+      "problem": "sticky residue",
+      "surface": "shower grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower grout::sticky residue",
+      "title": "How to Remove sticky residue from shower grout",
+      "slug": "how-to-remove-sticky-residue-from-shower-grout",
+      "problem": "sticky residue",
+      "surface": "shower grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower grout::sticky residue",
+      "title": "How to Prevent sticky residue on shower grout",
+      "slug": "how-to-prevent-sticky-residue-on-shower-grout",
+      "problem": "sticky residue",
+      "surface": "shower grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower grout::sticky residue",
+      "title": "How to Fix sticky residue on shower grout",
+      "slug": "how-to-fix-sticky-residue-on-shower-grout",
+      "problem": "sticky residue",
+      "surface": "shower grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower grout::sticky residue",
+      "title": "How to Clean sticky residue from shower grout",
+      "slug": "how-to-clean-sticky-residue-from-shower-grout",
+      "problem": "sticky residue",
+      "surface": "shower grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower grout::sticky residue",
+      "title": "How to Tell if sticky residue on shower grout is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-shower-grout-is-permanent",
+      "problem": "sticky residue",
+      "surface": "shower grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower grout::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on shower grout",
+      "slug": "why-sticky-residue-keeps-coming-back-on-shower-grout",
+      "problem": "sticky residue",
+      "surface": "shower grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower grout::sticky residue",
+      "title": "How to Maintain shower grout and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-shower-grout-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "shower grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower grout::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on shower grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-shower-grout",
+      "problem": "sticky residue",
+      "surface": "shower grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::tile grout::sticky residue",
+      "title": "What Causes sticky residue on tile grout",
+      "slug": "what-causes-sticky-residue-on-tile-grout",
+      "problem": "sticky residue",
+      "surface": "tile grout",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::tile grout::sticky residue",
+      "title": "How to Remove sticky residue from tile grout",
+      "slug": "how-to-remove-sticky-residue-from-tile-grout",
+      "problem": "sticky residue",
+      "surface": "tile grout",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::tile grout::sticky residue",
+      "title": "How to Prevent sticky residue on tile grout",
+      "slug": "how-to-prevent-sticky-residue-on-tile-grout",
+      "problem": "sticky residue",
+      "surface": "tile grout",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::tile grout::sticky residue",
+      "title": "How to Fix sticky residue on tile grout",
+      "slug": "how-to-fix-sticky-residue-on-tile-grout",
+      "problem": "sticky residue",
+      "surface": "tile grout",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::tile grout::sticky residue",
+      "title": "How to Clean sticky residue from tile grout",
+      "slug": "how-to-clean-sticky-residue-from-tile-grout",
+      "problem": "sticky residue",
+      "surface": "tile grout",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::tile grout::sticky residue",
+      "title": "How to Tell if sticky residue on tile grout is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-tile-grout-is-permanent",
+      "problem": "sticky residue",
+      "surface": "tile grout",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::tile grout::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on tile grout",
+      "slug": "why-sticky-residue-keeps-coming-back-on-tile-grout",
+      "problem": "sticky residue",
+      "surface": "tile grout",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::tile grout::sticky residue",
+      "title": "How to Maintain tile grout and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-tile-grout-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "tile grout",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::tile grout::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on tile grout",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-tile-grout",
+      "problem": "sticky residue",
+      "surface": "tile grout",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::caulking::sticky residue",
+      "title": "What Causes sticky residue on caulking",
+      "slug": "what-causes-sticky-residue-on-caulking",
+      "problem": "sticky residue",
+      "surface": "caulking",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::caulking::sticky residue",
+      "title": "How to Remove sticky residue from caulking",
+      "slug": "how-to-remove-sticky-residue-from-caulking",
+      "problem": "sticky residue",
+      "surface": "caulking",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::caulking::sticky residue",
+      "title": "How to Prevent sticky residue on caulking",
+      "slug": "how-to-prevent-sticky-residue-on-caulking",
+      "problem": "sticky residue",
+      "surface": "caulking",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::caulking::sticky residue",
+      "title": "How to Fix sticky residue on caulking",
+      "slug": "how-to-fix-sticky-residue-on-caulking",
+      "problem": "sticky residue",
+      "surface": "caulking",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::caulking::sticky residue",
+      "title": "How to Clean sticky residue from caulking",
+      "slug": "how-to-clean-sticky-residue-from-caulking",
+      "problem": "sticky residue",
+      "surface": "caulking",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::caulking::sticky residue",
+      "title": "How to Tell if sticky residue on caulking is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-caulking-is-permanent",
+      "problem": "sticky residue",
+      "surface": "caulking",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::caulking::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on caulking",
+      "slug": "why-sticky-residue-keeps-coming-back-on-caulking",
+      "problem": "sticky residue",
+      "surface": "caulking",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::caulking::sticky residue",
+      "title": "How to Maintain caulking and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-caulking-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "caulking",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::caulking::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on caulking",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-caulking",
+      "problem": "sticky residue",
+      "surface": "caulking",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::shower pans::sticky residue",
+      "title": "What Causes sticky residue on shower pans",
+      "slug": "what-causes-sticky-residue-on-shower-pans",
+      "problem": "sticky residue",
+      "surface": "shower pans",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::shower pans::sticky residue",
+      "title": "How to Remove sticky residue from shower pans",
+      "slug": "how-to-remove-sticky-residue-from-shower-pans",
+      "problem": "sticky residue",
+      "surface": "shower pans",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::shower pans::sticky residue",
+      "title": "How to Prevent sticky residue on shower pans",
+      "slug": "how-to-prevent-sticky-residue-on-shower-pans",
+      "problem": "sticky residue",
+      "surface": "shower pans",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::shower pans::sticky residue",
+      "title": "How to Fix sticky residue on shower pans",
+      "slug": "how-to-fix-sticky-residue-on-shower-pans",
+      "problem": "sticky residue",
+      "surface": "shower pans",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::shower pans::sticky residue",
+      "title": "How to Clean sticky residue from shower pans",
+      "slug": "how-to-clean-sticky-residue-from-shower-pans",
+      "problem": "sticky residue",
+      "surface": "shower pans",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::shower pans::sticky residue",
+      "title": "How to Tell if sticky residue on shower pans is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-shower-pans-is-permanent",
+      "problem": "sticky residue",
+      "surface": "shower pans",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::shower pans::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on shower pans",
+      "slug": "why-sticky-residue-keeps-coming-back-on-shower-pans",
+      "problem": "sticky residue",
+      "surface": "shower pans",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::shower pans::sticky residue",
+      "title": "How to Maintain shower pans and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-shower-pans-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "shower pans",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::shower pans::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on shower pans",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-shower-pans",
+      "problem": "sticky residue",
+      "surface": "shower pans",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::bathtub surrounds::sticky residue",
+      "title": "What Causes sticky residue on bathtub surrounds",
+      "slug": "what-causes-sticky-residue-on-bathtub-surrounds",
+      "problem": "sticky residue",
+      "surface": "bathtub surrounds",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::bathtub surrounds::sticky residue",
+      "title": "How to Remove sticky residue from bathtub surrounds",
+      "slug": "how-to-remove-sticky-residue-from-bathtub-surrounds",
+      "problem": "sticky residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::bathtub surrounds::sticky residue",
+      "title": "How to Prevent sticky residue on bathtub surrounds",
+      "slug": "how-to-prevent-sticky-residue-on-bathtub-surrounds",
+      "problem": "sticky residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::bathtub surrounds::sticky residue",
+      "title": "How to Fix sticky residue on bathtub surrounds",
+      "slug": "how-to-fix-sticky-residue-on-bathtub-surrounds",
+      "problem": "sticky residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::bathtub surrounds::sticky residue",
+      "title": "How to Clean sticky residue from bathtub surrounds",
+      "slug": "how-to-clean-sticky-residue-from-bathtub-surrounds",
+      "problem": "sticky residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::bathtub surrounds::sticky residue",
+      "title": "How to Tell if sticky residue on bathtub surrounds is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-bathtub-surrounds-is-permanent",
+      "problem": "sticky residue",
+      "surface": "bathtub surrounds",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::bathtub surrounds::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on bathtub surrounds",
+      "slug": "why-sticky-residue-keeps-coming-back-on-bathtub-surrounds",
+      "problem": "sticky residue",
+      "surface": "bathtub surrounds",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::bathtub surrounds::sticky residue",
+      "title": "How to Maintain bathtub surrounds and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-bathtub-surrounds-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "bathtub surrounds",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::bathtub surrounds::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on bathtub surrounds",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-bathtub-surrounds",
+      "problem": "sticky residue",
+      "surface": "bathtub surrounds",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::ceramic tile::sticky residue",
+      "title": "What Causes sticky residue on ceramic tile",
+      "slug": "what-causes-sticky-residue-on-ceramic-tile",
+      "problem": "sticky residue",
+      "surface": "ceramic tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::ceramic tile::sticky residue",
+      "title": "How to Remove sticky residue from ceramic tile",
+      "slug": "how-to-remove-sticky-residue-from-ceramic-tile",
+      "problem": "sticky residue",
+      "surface": "ceramic tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::ceramic tile::sticky residue",
+      "title": "How to Prevent sticky residue on ceramic tile",
+      "slug": "how-to-prevent-sticky-residue-on-ceramic-tile",
+      "problem": "sticky residue",
+      "surface": "ceramic tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::ceramic tile::sticky residue",
+      "title": "How to Fix sticky residue on ceramic tile",
+      "slug": "how-to-fix-sticky-residue-on-ceramic-tile",
+      "problem": "sticky residue",
+      "surface": "ceramic tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::ceramic tile::sticky residue",
+      "title": "How to Clean sticky residue from ceramic tile",
+      "slug": "how-to-clean-sticky-residue-from-ceramic-tile",
+      "problem": "sticky residue",
+      "surface": "ceramic tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::ceramic tile::sticky residue",
+      "title": "How to Tell if sticky residue on ceramic tile is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-ceramic-tile-is-permanent",
+      "problem": "sticky residue",
+      "surface": "ceramic tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "why::ceramic tile::sticky residue",
+      "title": "Why sticky residue Keeps Coming Back on ceramic tile",
+      "slug": "why-sticky-residue-keeps-coming-back-on-ceramic-tile",
+      "problem": "sticky residue",
+      "surface": "ceramic tile",
+      "intent": "why",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-maintain::ceramic tile::sticky residue",
+      "title": "How to Maintain ceramic tile and Keep sticky residue Under Control",
+      "slug": "how-to-maintain-ceramic-tile-and-keep-sticky-residue-under-control",
+      "problem": "sticky residue",
+      "surface": "ceramic tile",
+      "intent": "how-maintain",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "mistake-recovery::ceramic tile::sticky residue",
+      "title": "How to Recover After a Cleaning Mistake With sticky residue on ceramic tile",
+      "slug": "how-to-recover-after-a-cleaning-mistake-with-sticky-residue-on-ceramic-tile",
+      "problem": "sticky residue",
+      "surface": "ceramic tile",
+      "intent": "mistake-recovery",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "what-causes::porcelain tile::sticky residue",
+      "title": "What Causes sticky residue on porcelain tile",
+      "slug": "what-causes-sticky-residue-on-porcelain-tile",
+      "problem": "sticky residue",
+      "surface": "porcelain tile",
+      "intent": "what-causes",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-remove::porcelain tile::sticky residue",
+      "title": "How to Remove sticky residue from porcelain tile",
+      "slug": "how-to-remove-sticky-residue-from-porcelain-tile",
+      "problem": "sticky residue",
+      "surface": "porcelain tile",
+      "intent": "how-remove",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-prevent::porcelain tile::sticky residue",
+      "title": "How to Prevent sticky residue on porcelain tile",
+      "slug": "how-to-prevent-sticky-residue-on-porcelain-tile",
+      "problem": "sticky residue",
+      "surface": "porcelain tile",
+      "intent": "how-prevent",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-fix::porcelain tile::sticky residue",
+      "title": "How to Fix sticky residue on porcelain tile",
+      "slug": "how-to-fix-sticky-residue-on-porcelain-tile",
+      "problem": "sticky residue",
+      "surface": "porcelain tile",
+      "intent": "how-fix",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "how-clean::porcelain tile::sticky residue",
+      "title": "How to Clean sticky residue from porcelain tile",
+      "slug": "how-to-clean-sticky-residue-from-porcelain-tile",
+      "problem": "sticky residue",
+      "surface": "porcelain tile",
+      "intent": "how-clean",
+      "riskLevel": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "diagnosis::porcelain tile::sticky residue",
+      "title": "How to Tell if sticky residue on porcelain tile is Permanent",
+      "slug": "how-to-tell-if-sticky-residue-on-porcelain-tile-is-permanent",
+      "problem": "sticky residue",
+      "surface": "porcelain tile",
+      "intent": "diagnosis",
+      "riskLevel": "medium",
+      "status": "draft"
+    }
+  ]
+}

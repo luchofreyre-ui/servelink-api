@@ -35,3 +35,6 @@ services/api/data/encyclopedia/review-store.json
 
 # Jest localstorage artifacts
 .jest-localstorage.json-*
+
+# local backup junk
+*.corrupt.bak

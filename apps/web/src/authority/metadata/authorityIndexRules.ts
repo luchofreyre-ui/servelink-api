@@ -18,6 +18,7 @@ export function isAuthorityFamilyIndexable(family: AuthorityPageFamily): boolean
     case "method_compare_detail":
     case "surface_compare_detail":
     case "problem_compare_detail":
+    case "product_compare_detail":
     case "cluster_detail":
       return true;
     default:
