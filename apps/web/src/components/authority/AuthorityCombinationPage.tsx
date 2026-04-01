@@ -167,7 +167,8 @@ type ComboProductTopicResolved = {
   problem: string;
   surface: string;
   intent: ProductCleaningIntent;
-  contextNote?: string;
+  /** Drives the amber context callout in `RecommendedProductsForTopic` (no raw “limitation” copy in UI). */
+  contextTone?: "method_representative" | "surface_wording_match";
 };
 
 /**
@@ -177,10 +178,37 @@ type ComboProductTopicResolved = {
  */
 function comboProductTopic(data: AuthorityCombinationPageData): ComboProductTopicResolved | null {
   if (data.type === "surface_problem" && data.surfaceSlug && data.problemSlug) {
-    const problem = productProblemStringForAuthorityProblemSlug(data.problemSlug);
-    const surface = productSurfaceStringForAuthoritySurfaceSlug(data.surfaceSlug);
-    if (!problem || !surface) return null;
-    return { problem, surface, intent: inferRecommendationIntent(problem) };
+    const directProblem = productProblemStringForAuthorityProblemSlug(data.problemSlug);
+    const directSurface = productSurfaceStringForAuthoritySurfaceSlug(data.surfaceSlug);
+
+    if (directProblem && directSurface) {
+      return {
+        problem: directProblem,
+        surface: directSurface,
+        intent: inferRecommendationIntent(directProblem),
+      };
+    }
+
+    const normalizedProblemSlug = data.problemSlug
+      .replace(/-on-[a-z0-9-]+$/i, "")
+      .replace(/-from-[a-z0-9-]+$/i, "")
+      .replace(/-for-[a-z0-9-]+$/i, "");
+
+    const fallbackProblem =
+      directProblem ?? productProblemStringForAuthorityProblemSlug(normalizedProblemSlug);
+
+    const fallbackSurface = directSurface;
+
+    if (fallbackProblem && fallbackSurface) {
+      return {
+        problem: fallbackProblem,
+        surface: fallbackSurface,
+        intent: inferRecommendationIntent(fallbackProblem),
+        contextTone: "surface_wording_match",
+      };
+    }
+
+    return null;
   }
 
   if (data.type === "method_problem" && data.methodSlug && data.problemSlug) {
@@ -192,19 +220,14 @@ function comboProductTopic(data: AuthorityCombinationPageData): ComboProductTopi
     const surfaceProduct = fallbackAuth ? productSurfaceStringForAuthoritySurfaceSlug(fallbackAuth) : null;
     const surface = surfaceProduct ?? "tile";
 
-    let contextNote: string | undefined;
-    if (!surfaceProduct) {
-      contextNote =
-        "No authority surface is linked to this problem in the graph yet—rankings use tile as a broad library stand-in. Always verify the label against your material.";
-    } else if (!matchedAuth) {
-      contextNote = `This method + problem pair is not pinned to one surface in the graph—rankings use ${surface} as a representative surface from the problem’s links.`;
-    }
+    const contextTone: "method_representative" | undefined =
+      !surfaceProduct || !matchedAuth ? "method_representative" : undefined;
 
     return {
       problem,
       surface,
       intent: inferRecommendationIntentForMethodPlaybook(data.methodSlug, problem),
-      contextNote,
+      contextTone,
     };
   }
 
@@ -268,19 +291,24 @@ export function AuthorityCombinationPage(props: { data: AuthorityCombinationPage
           </ul>
         </div>
 
-        {productTopic ? (
-          <div className="mt-10">
+        <div className="mt-10">
+          {productTopic ? (
             <RecommendedProductsForTopic
               problem={productTopic.problem}
               surface={productTopic.surface}
               intent={productTopic.intent}
-              contextNote={productTopic.contextNote}
+              contextTone={productTopic.contextTone}
               showScores
               showReasons
               showComparisons
             />
-          </div>
-        ) : null}
+          ) : (
+            <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
+              Product recommendations are not available for this page yet because the authority slug has not been
+              mapped cleanly into the product library.
+            </div>
+          )}
+        </div>
 
         <AuthoritySection title="Common mistakes">
           <div className="space-y-2">

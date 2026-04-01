@@ -5,6 +5,28 @@
 
 import { AUTHORITY_PROBLEM_SLUGS, AUTHORITY_SURFACE_SLUGS } from "@/authority/data/authorityTaxonomy";
 
+/**
+ * Authority problem slug → exact product-library `compatibleProblems` string.
+ * Consulted before `PROBLEM_SLUG_TO_PRODUCT` for explicit / variant wording.
+ */
+const AUTHORITY_PROBLEM_TO_PRODUCT_PROBLEM: Record<string, string> = {
+  "streaking-on-glass": "streaking",
+  /** Normalized slug when trailing `-on-*` is stripped in playbook fallbacks */
+  streaking: "streaking",
+  "fingerprints-and-smudges": "smudge marks",
+  "soap-scum": "soap scum",
+  "hard-water-deposits": "hard water stains",
+  "cloudy-glass": "cloudy film",
+  "glass-cloudiness": "cloudy film",
+  "cooked-on-grease": "cooked-on grease",
+  "light-mildew": "mildew stains",
+  "water-spotting": "hard water film",
+  "water-spots": "hard water film",
+  "limescale-buildup": "limescale",
+  "mold-growth": "mold growth",
+  "biofilm-buildup": "biofilm",
+};
+
 const PROBLEM_SLUG_TO_PRODUCT: Record<string, string> = {
   "soap-scum": "soap scum",
   "grease-buildup": "grease buildup",
@@ -100,6 +122,9 @@ export function isKnownAuthoritySurfaceSlug(slug: string): boolean {
 /** Reverse map: product-library problem strings → authority `/problems/{slug}` slugs. */
 export function authorityProblemSlugsForProductProblems(productProblems: string[]): string[] {
   const set = new Set<string>();
+  for (const [authSlug, pStr] of Object.entries(AUTHORITY_PROBLEM_TO_PRODUCT_PROBLEM)) {
+    if (productProblems.includes(pStr)) set.add(authSlug);
+  }
   for (const [authSlug, pStr] of Object.entries(PROBLEM_SLUG_TO_PRODUCT)) {
     if (productProblems.includes(pStr)) set.add(authSlug);
   }

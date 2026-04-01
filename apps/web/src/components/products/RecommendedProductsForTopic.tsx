@@ -27,8 +27,8 @@ type Props = {
   surface: string;
   /** When set, overrides problem-inferred intent for the recommendation engine. */
   intent?: ProductCleaningIntent;
-  /** Optional note when surface is representative / fallback (method playbooks). */
-  contextNote?: string;
+  /** Context callout tone (method vs surface wording bridge)—keeps copy intentional, not error-like. */
+  contextTone?: "method_representative" | "surface_wording_match";
   showScores?: boolean;
   showReasons?: boolean;
   showComparisons?: boolean;
@@ -81,7 +81,7 @@ export default function RecommendedProductsForTopic({
   problem,
   surface,
   intent,
-  contextNote,
+  contextTone,
   showScores = true,
   showReasons = true,
   showComparisons = true,
@@ -111,7 +111,12 @@ export default function RecommendedProductsForTopic({
           Ranked for <span className="font-medium">{problem}</span> on{" "}
           <span className="font-medium">{surface}</span>.
         </p>
-        {contextNote ? (
+        {contextTone === "surface_wording_match" ? (
+          <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-600">
+            <span className="font-medium">Context:</span>{" "}
+            Recommendations are shown using the closest product-library match for this surface and problem wording.
+          </div>
+        ) : contextTone === "method_representative" ? (
           <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-600">
             <span className="font-medium">Context:</span>{" "}
             These recommendations are based on the most representative surface for this method and problem, ensuring
