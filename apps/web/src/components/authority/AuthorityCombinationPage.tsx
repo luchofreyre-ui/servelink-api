@@ -4,6 +4,8 @@ import { getMethodPageBySlug } from "@/authority/data/authorityMethodPageData";
 import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
 import { getSurfacePageBySlug } from "@/authority/data/authoritySurfacePageData";
 import {
+  getSurfaceSlugsForMethod,
+  getSurfaceSlugsForProblem,
   methodProblemRelationshipExists,
   methodSurfaceRelationshipExists,
 } from "@/authority/data/authorityGraphSelectors";
@@ -36,6 +38,11 @@ import { AuthorityJsonLd } from "./AuthorityJsonLd";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
 import RecommendedProductsForTopic from "@/components/products/RecommendedProductsForTopic";
+import {
+  inferRecommendationIntent,
+  inferRecommendationIntentForMethodPlaybook,
+} from "@/lib/products/getRecommendedProducts";
+import type { ProductCleaningIntent } from "@/lib/products/productTypes";
 import { COMMON_CLEANING_MISUSE_BULLETS } from "@/lib/products/commonCleaningMisuse";
 import {
   productProblemStringForAuthorityProblemSlug,
@@ -138,12 +145,74 @@ function comboFaqBlock(data: AuthorityCombinationPageData) {
   return null;
 }
 
-function surfaceProblemProductTopic(data: AuthorityCombinationPageData): { problem: string; surface: string } | null {
-  if (data.type !== "surface_problem" || !data.surfaceSlug || !data.problemSlug) return null;
-  const problem = productProblemStringForAuthorityProblemSlug(data.problemSlug);
-  const surface = productSurfaceStringForAuthoritySurfaceSlug(data.surfaceSlug);
-  if (!problem || !surface) return null;
-  return { problem, surface };
+function sortedAuthorityStrings(values: string[]): string[] {
+  return [...values].sort((a, b) => a.localeCompare(b));
+}
+
+/** Shared graph surface for method + problem when the graph lists both. */
+function intersectAuthoritySurfaceForMethodProblem(methodSlug: string, problemSlug: string): string | null {
+  const methodSurfaces = new Set(getSurfaceSlugsForMethod(methodSlug));
+  for (const s of sortedAuthorityStrings(getSurfaceSlugsForProblem(problemSlug))) {
+    if (methodSurfaces.has(s)) return s;
+  }
+  return null;
+}
+
+function firstAuthoritySurfaceForProblem(problemSlug: string): string | null {
+  const sorted = sortedAuthorityStrings(getSurfaceSlugsForProblem(problemSlug));
+  return sorted[0] ?? null;
+}
+
+type ComboProductTopicResolved = {
+  problem: string;
+  surface: string;
+  intent: ProductCleaningIntent;
+  contextNote?: string;
+};
+
+/**
+ * Resolves product-library topic for playbooks. There is no separate `method_surface_problem` type;
+ * method + surface lives in `method_surface` (no product block—surface without problem) and
+ * method + problem lives in `method_problem`.
+ */
+function comboProductTopic(data: AuthorityCombinationPageData): ComboProductTopicResolved | null {
+  if (data.type === "surface_problem" && data.surfaceSlug && data.problemSlug) {
+    const problem = productProblemStringForAuthorityProblemSlug(data.problemSlug);
+    const surface = productSurfaceStringForAuthoritySurfaceSlug(data.surfaceSlug);
+    if (!problem || !surface) return null;
+    return { problem, surface, intent: inferRecommendationIntent(problem) };
+  }
+
+  if (data.type === "method_problem" && data.methodSlug && data.problemSlug) {
+    const problem = productProblemStringForAuthorityProblemSlug(data.problemSlug);
+    if (!problem) return null;
+
+    const matchedAuth = intersectAuthoritySurfaceForMethodProblem(data.methodSlug, data.problemSlug);
+    const fallbackAuth = matchedAuth ?? firstAuthoritySurfaceForProblem(data.problemSlug);
+    const surfaceProduct = fallbackAuth ? productSurfaceStringForAuthoritySurfaceSlug(fallbackAuth) : null;
+    const surface = surfaceProduct ?? "tile";
+
+    let contextNote: string | undefined;
+    if (!surfaceProduct) {
+      contextNote =
+        "No authority surface is linked to this problem in the graph yet—rankings use tile as a broad library stand-in. Always verify the label against your material.";
+    } else if (!matchedAuth) {
+      contextNote = `This method + problem pair is not pinned to one surface in the graph—rankings use ${surface} as a representative surface from the problem’s links.`;
+    }
+
+    return {
+      problem,
+      surface,
+      intent: inferRecommendationIntentForMethodPlaybook(data.methodSlug, problem),
+      contextNote,
+    };
+  }
+
+  if (data.type === "method_surface") {
+    return null;
+  }
+
+  return null;
 }
 
 export function AuthorityCombinationPage(props: { data: AuthorityCombinationPageData }) {
@@ -152,7 +221,7 @@ export function AuthorityCombinationPage(props: { data: AuthorityCombinationPage
   const seeAlso = buildComboSeeAlso(data);
   const path = resolveCanonicalMetadataHref(comboCanonicalPath(data));
   const faqBlock = comboFaqBlock(data);
-  const productTopic = surfaceProblemProductTopic(data);
+  const productTopic = comboProductTopic(data);
   const jsonLd: Record<string, unknown>[] = [
     buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(crumbs)),
     buildArticleSchema({ title: data.title, description: data.description, path }),
@@ -201,7 +270,15 @@ export function AuthorityCombinationPage(props: { data: AuthorityCombinationPage
 
         {productTopic ? (
           <div className="mt-10">
-            <RecommendedProductsForTopic problem={productTopic.problem} surface={productTopic.surface} />
+            <RecommendedProductsForTopic
+              problem={productTopic.problem}
+              surface={productTopic.surface}
+              intent={productTopic.intent}
+              contextNote={productTopic.contextNote}
+              showScores
+              showReasons
+              showComparisons
+            />
           </div>
         ) : null}
 

@@ -98,3 +98,32 @@ export function getWhenProductLosesScenarios(
 
   return [...dedup.values()].slice(0, limit);
 }
+
+/**
+ * One-line tradeoff for the *current* problem × surface (playbook) card.
+ * Does not change ranking—reads the same engine output as the list.
+ */
+export function whenThisLosesOnPlaybook(
+  slug: string,
+  problem: string,
+  surface: string,
+  intent: ProductCleaningIntent,
+): string | null {
+  const catalog = getAllPublishedProducts() as PublishedProductLike[];
+  const ranked = getRecommendedProducts({ problem, surface, limit: 12, intent });
+  const idx = ranked.findIndex((p) => p.slug === slug);
+  if (idx === -1) {
+    return "Not in the top ranking window for this exact playbook—verify the label before relying on it here.";
+  }
+  const self = ranked[idx]!;
+  const adj = recommendationAdjustment(self, problem, surface, intent, catalog);
+  if (idx > 0) {
+    const leader = ranked[0]!;
+    const ln = leader.title ?? leader.slug;
+    return `Ranks #${idx + 1} here—${ln} leads for this problem on this surface.`;
+  }
+  if (adj <= PENALTY_THRESHOLD) {
+    return "Heavy situational penalty from the engine—another labeled pick may be the safer default for this pairing.";
+  }
+  return null;
+}

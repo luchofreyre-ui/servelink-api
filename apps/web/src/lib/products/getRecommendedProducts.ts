@@ -118,6 +118,16 @@ export function inferRecommendationIntent(problem: string): ProductCleaningInten
   return "clean";
 }
 
+/** Intent hint for method + problem playbooks (does not change scoring tables—routes intent like the method family). */
+export function inferRecommendationIntentForMethodPlaybook(
+  methodSlug: string,
+  problemLibraryString: string,
+): ProductCleaningIntent {
+  if (methodSlug === "touchpoint-sanitization") return "disinfect";
+  if (methodSlug === "hard-water-deposit-removal") return "restore";
+  return inferRecommendationIntent(problemLibraryString);
+}
+
 function getScore(product: PublishedProductLike): number {
   return product.finalScore ?? product.score ?? product.rating?.finalScore ?? 0;
 }
