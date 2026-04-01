@@ -424,6 +424,17 @@ export function buildProductComparisonPage(comparisonSlug: string): AuthorityCom
     note: r.note,
   }));
 
+  let topSharedProblemSlug: string | undefined;
+  let topSharedSurfaceSlug: string | undefined;
+  for (const w of productScenarioWinners) {
+    const m = w.playbookHref.match(/^\/surfaces\/([^/]+)\/([^/]+)$/);
+    if (m) {
+      topSharedSurfaceSlug = m[1];
+      topSharedProblemSlug = m[2];
+      break;
+    }
+  }
+
   const slug = normalizeComparisonSlug(left.slug, right.slug);
   const routing = mergeExpertProductRouting(slug, buildProductComparisonRouting(left, right));
 
@@ -443,6 +454,8 @@ export function buildProductComparisonPage(comparisonSlug: string): AuthorityCom
     relatedSurfaces: [],
     relatedMethods: [],
     productScenarioWinners,
+    topSharedProblemSlug,
+    topSharedSurfaceSlug,
     notInterchangeable: routing.notInterchangeable,
     quickDecision: routing.quickDecision,
     commonMistake: routing.commonMistake,

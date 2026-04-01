@@ -31,6 +31,8 @@ import { AuthorityProductComparisonExplore } from "./AuthorityProductComparisonE
 import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
 import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
+import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
+import { resolveProductRecommendationContextForComparisonFallback } from "@/lib/products/productRecommendationContext";
 
 function buildComparisonEyebrow(type: AuthorityComparisonPageData["type"]) {
   switch (type) {
@@ -215,6 +217,13 @@ export function AuthorityComparisonPage({
     data.type === "problem_comparison"
       ? data.leftSlug
       : data.relatedProblems?.[0] ?? null;
+  const comparisonProductContext =
+    data.type === "product_comparison" && data.topSharedProblemSlug
+      ? resolveProductRecommendationContextForComparisonFallback(
+          data.topSharedProblemSlug,
+          data.topSharedSurfaceSlug,
+        )
+      : null;
   const schemas = [
     buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(breadcrumbs)),
     buildArticleSchema({
@@ -261,6 +270,10 @@ export function AuthorityComparisonPage({
           <AuthoritySection title="When neither works">
             <p className="font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">{data.whenNeitherWorks}</p>
           </AuthoritySection>
+        ) : null}
+
+        {data.type === "product_comparison" ? (
+          <ContextualProductRecommendations context={comparisonProductContext} />
         ) : null}
 
         {data.type === "product_comparison" && data.notInterchangeable ? (

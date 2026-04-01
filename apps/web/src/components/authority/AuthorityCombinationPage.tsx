@@ -3,12 +3,7 @@ import type { AuthoritySeeAlsoGroup } from "@/authority/types/authorityNavigatio
 import { getMethodPageBySlug } from "@/authority/data/authorityMethodPageData";
 import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
 import { getSurfacePageBySlug } from "@/authority/data/authoritySurfacePageData";
-import {
-  getSurfaceSlugsForMethod,
-  getSurfaceSlugsForProblem,
-  methodProblemRelationshipExists,
-  methodSurfaceRelationshipExists,
-} from "@/authority/data/authorityGraphSelectors";
+import { methodProblemRelationshipExists, methodSurfaceRelationshipExists } from "@/authority/data/authorityGraphSelectors";
 import {
   buildMethodComboFaqBlock,
   buildSurfaceProblemFaqBlock,
@@ -37,17 +32,12 @@ import { AuthorityHero } from "./AuthorityHero";
 import { AuthorityJsonLd } from "./AuthorityJsonLd";
 import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
-import RecommendedProductsForTopic from "@/components/products/RecommendedProductsForTopic";
+import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
 import {
-  inferRecommendationIntent,
-  inferRecommendationIntentForMethodPlaybook,
-} from "@/lib/products/getRecommendedProducts";
-import type { ProductCleaningIntent } from "@/lib/products/productTypes";
+  resolveProductRecommendationContextForMethodProblemPage,
+  resolveProductRecommendationContextForSurfaceProblemPage,
+} from "@/lib/products/productRecommendationContext";
 import { COMMON_CLEANING_MISUSE_BULLETS } from "@/lib/products/commonCleaningMisuse";
-import {
-  productProblemStringForAuthorityProblemSlug,
-  productSurfaceStringForAuthoritySurfaceSlug,
-} from "@/lib/authority/authorityProductTaxonomyBridge";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 
 function cap<T>(items: T[], max = 6): T[] {
@@ -145,106 +135,18 @@ function comboFaqBlock(data: AuthorityCombinationPageData) {
   return null;
 }
 
-function sortedAuthorityStrings(values: string[]): string[] {
-  return [...values].sort((a, b) => a.localeCompare(b));
-}
-
-/** Shared graph surface for method + problem when the graph lists both. */
-function intersectAuthoritySurfaceForMethodProblem(methodSlug: string, problemSlug: string): string | null {
-  const methodSurfaces = new Set(getSurfaceSlugsForMethod(methodSlug));
-  for (const s of sortedAuthorityStrings(getSurfaceSlugsForProblem(problemSlug))) {
-    if (methodSurfaces.has(s)) return s;
-  }
-  return null;
-}
-
-function firstAuthoritySurfaceForProblem(problemSlug: string): string | null {
-  const sorted = sortedAuthorityStrings(getSurfaceSlugsForProblem(problemSlug));
-  return sorted[0] ?? null;
-}
-
-type ComboProductTopicResolved = {
-  problem: string;
-  surface: string;
-  intent: ProductCleaningIntent;
-  /** Drives the amber context callout in `RecommendedProductsForTopic` (no raw “limitation” copy in UI). */
-  contextTone?: "method_representative" | "surface_wording_match";
-};
-
-/**
- * Resolves product-library topic for playbooks. There is no separate `method_surface_problem` type;
- * method + surface lives in `method_surface` (no product block—surface without problem) and
- * method + problem lives in `method_problem`.
- */
-function comboProductTopic(data: AuthorityCombinationPageData): ComboProductTopicResolved | null {
-  if (data.type === "surface_problem" && data.surfaceSlug && data.problemSlug) {
-    const directProblem = productProblemStringForAuthorityProblemSlug(data.problemSlug);
-    const directSurface = productSurfaceStringForAuthoritySurfaceSlug(data.surfaceSlug);
-
-    if (directProblem && directSurface) {
-      return {
-        problem: directProblem,
-        surface: directSurface,
-        intent: inferRecommendationIntent(directProblem),
-      };
-    }
-
-    const normalizedProblemSlug = data.problemSlug
-      .replace(/-on-[a-z0-9-]+$/i, "")
-      .replace(/-from-[a-z0-9-]+$/i, "")
-      .replace(/-for-[a-z0-9-]+$/i, "");
-
-    const fallbackProblem =
-      directProblem ?? productProblemStringForAuthorityProblemSlug(normalizedProblemSlug);
-
-    const fallbackSurface = directSurface;
-
-    if (fallbackProblem && fallbackSurface) {
-      return {
-        problem: fallbackProblem,
-        surface: fallbackSurface,
-        intent: inferRecommendationIntent(fallbackProblem),
-        contextTone: "surface_wording_match",
-      };
-    }
-
-    return null;
-  }
-
-  if (data.type === "method_problem" && data.methodSlug && data.problemSlug) {
-    const problem = productProblemStringForAuthorityProblemSlug(data.problemSlug);
-    if (!problem) return null;
-
-    const matchedAuth = intersectAuthoritySurfaceForMethodProblem(data.methodSlug, data.problemSlug);
-    const fallbackAuth = matchedAuth ?? firstAuthoritySurfaceForProblem(data.problemSlug);
-    const surfaceProduct = fallbackAuth ? productSurfaceStringForAuthoritySurfaceSlug(fallbackAuth) : null;
-    const surface = surfaceProduct ?? "tile";
-
-    const contextTone: "method_representative" | undefined =
-      !surfaceProduct || !matchedAuth ? "method_representative" : undefined;
-
-    return {
-      problem,
-      surface,
-      intent: inferRecommendationIntentForMethodPlaybook(data.methodSlug, problem),
-      contextTone,
-    };
-  }
-
-  if (data.type === "method_surface") {
-    return null;
-  }
-
-  return null;
-}
-
 export function AuthorityCombinationPage(props: { data: AuthorityCombinationPageData }) {
   const { data } = props;
   const crumbs = comboBreadcrumbs(data);
   const seeAlso = buildComboSeeAlso(data);
   const path = resolveCanonicalMetadataHref(comboCanonicalPath(data));
   const faqBlock = comboFaqBlock(data);
-  const productTopic = comboProductTopic(data);
+  const productContext =
+    data.type === "surface_problem" && data.surfaceSlug && data.problemSlug
+      ? resolveProductRecommendationContextForSurfaceProblemPage(data.surfaceSlug, data.problemSlug)
+      : data.type === "method_problem" && data.methodSlug && data.problemSlug
+        ? resolveProductRecommendationContextForMethodProblemPage(data.methodSlug, data.problemSlug)
+        : null;
   const jsonLd: Record<string, unknown>[] = [
     buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(crumbs)),
     buildArticleSchema({ title: data.title, description: data.description, path }),
@@ -291,24 +193,7 @@ export function AuthorityCombinationPage(props: { data: AuthorityCombinationPage
           </ul>
         </div>
 
-        <div className="mt-10">
-          {productTopic ? (
-            <RecommendedProductsForTopic
-              problem={productTopic.problem}
-              surface={productTopic.surface}
-              intent={productTopic.intent}
-              contextTone={productTopic.contextTone}
-              showScores
-              showReasons
-              showComparisons
-            />
-          ) : (
-            <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
-              Product recommendations are not available for this page yet because the authority slug has not been
-              mapped cleanly into the product library.
-            </div>
-          )}
-        </div>
+        <ContextualProductRecommendations context={productContext} />
 
         <AuthoritySection title="Common mistakes">
           <div className="space-y-2">

@@ -28,6 +28,8 @@ import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
 import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
 import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
+import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
+import { resolveProductRecommendationContextForAntiPatternPage } from "@/lib/products/productRecommendationContext";
 
 function sectionParagraphs(section: AuthorityGuideSection): string[] {
   if (section.paragraphs?.length) return section.paragraphs;
@@ -92,6 +94,11 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
   ];
   if (faqBlock?.items.length) jsonLd.push(buildFaqSchema(faqBlock.items));
 
+  const productContext =
+    data.category === "anti_pattern" && data.primaryProblemSlug
+      ? resolveProductRecommendationContextForAntiPatternPage(data.primaryProblemSlug)
+      : null;
+
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />
@@ -101,6 +108,7 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
         <AuthorityHero eyebrow={guideEyebrow(data.category)} title={data.title} description={lead} />
         {quickAnswerText ? <AuthorityQuickAnswer text={quickAnswerText} /> : null}
         <AuthorityTopicalCrossLinks pageKey={`guide-${data.slug}`} />
+        {data.category === "anti_pattern" ? <ContextualProductRecommendations context={productContext} /> : null}
         <div className="space-y-0">
           {data.sections.map((section) => (
             <AuthoritySection key={section.id} title={section.title}>

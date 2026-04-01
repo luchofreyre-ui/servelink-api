@@ -22,13 +22,21 @@ import {
 import { whenThisLosesOnPlaybook } from "@/lib/products/productWhenThisLoses";
 import type { ProductCleaningIntent } from "@/lib/products/productTypes";
 
+export type RecommendationContextTone =
+  | "direct"
+  | "surface_wording_match"
+  | "method_representative"
+  | "anti_pattern_replacement"
+  | "comparison_fallback";
+
 type Props = {
   problem: string;
   surface: string;
   /** When set, overrides problem-inferred intent for the recommendation engine. */
   intent?: ProductCleaningIntent;
-  /** Context callout tone (method vs surface wording bridge)—keeps copy intentional, not error-like. */
-  contextTone?: "method_representative" | "surface_wording_match";
+  /** Replaces the default section H2 (used by contextual placements). */
+  sectionTitle?: string;
+  contextTone?: RecommendationContextTone;
   showScores?: boolean;
   showReasons?: boolean;
   showComparisons?: boolean;
@@ -77,10 +85,28 @@ function findComparisonLink(
   return null;
 }
 
+function contextCalloutCopy(tone: RecommendationContextTone | undefined): string | null {
+  if (!tone || tone === "direct") return null;
+  if (tone === "surface_wording_match") {
+    return "Recommendations are shown using the closest product-library match for this surface and problem wording.";
+  }
+  if (tone === "method_representative") {
+    return "Recommendations are shown for the closest representative surface for this method and problem.";
+  }
+  if (tone === "anti_pattern_replacement") {
+    return "These recommendations focus on what to use instead for this problem.";
+  }
+  if (tone === "comparison_fallback") {
+    return "These recommendations show stronger product fits for the shared scenario behind this comparison.";
+  }
+  return null;
+}
+
 export default function RecommendedProductsForTopic({
   problem,
   surface,
   intent,
+  sectionTitle,
   contextTone,
   showScores = true,
   showReasons = true,
@@ -103,24 +129,21 @@ export default function RecommendedProductsForTopic({
 
   if (!products.length) return null;
 
+  const contextBody = contextCalloutCopy(contextTone);
+
   return (
     <section className="rounded-2xl border border-[#C9B27C]/35 bg-[#FCFAF5] p-6">
       <div className="mb-4">
-        <h2 className="text-xl font-semibold text-neutral-900">Recommended products for this problem</h2>
+        <h2 className="text-xl font-semibold text-neutral-900">
+          {sectionTitle ?? "Recommended products for this problem"}
+        </h2>
         <p className="mt-1 text-sm text-neutral-600">
           Ranked for <span className="font-medium">{problem}</span> on{" "}
           <span className="font-medium">{surface}</span>.
         </p>
-        {contextTone === "surface_wording_match" ? (
+        {contextBody ? (
           <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-600">
-            <span className="font-medium">Context:</span>{" "}
-            Recommendations are shown using the closest product-library match for this surface and problem wording.
-          </div>
-        ) : contextTone === "method_representative" ? (
-          <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-600">
-            <span className="font-medium">Context:</span>{" "}
-            These recommendations are based on the most representative surface for this method and problem, ensuring
-            accurate product selection.
+            <span className="font-medium">Context:</span> {contextBody}
           </div>
         ) : null}
         <p className="mt-2 text-xs leading-relaxed text-neutral-500">

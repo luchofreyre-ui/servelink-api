@@ -45,6 +45,7 @@ const ANTI_PATTERN_GUIDES_BASE_BY_SLUG: Record<string, AuthorityGuidePageData> =
     slug: "why-vinegar-doesnt-remove-grease",
     title: "Why vinegar doesn’t remove grease",
     category: "anti_pattern",
+    primaryProblemSlug: "grease-buildup",
     summary: "Vinegar is weak acid and surfactant-poor—great for some films, wrong default for kitchen lipid soils.",
     description: "Why vinegar fails on grease, what to use instead, and where to go in the authority graph.",
     intro:
@@ -155,6 +156,7 @@ const ANTI_PATTERN_GUIDES_BASE_BY_SLUG: Record<string, AuthorityGuidePageData> =
     slug: "why-disinfectants-dont-clean-surfaces",
     title: "Why disinfectants don’t clean surfaces",
     category: "anti_pattern",
+    primaryProblemSlug: "general-soil",
     summary: "Disinfection is a kill step; soil removal still needs surfactants, rinse, and often a separate clean pass.",
     description: "Separate “clean” from “disinfect” and link to the right hubs.",
     intro:
@@ -201,6 +203,7 @@ const ANTI_PATTERN_GUIDES_BASE_BY_SLUG: Record<string, AuthorityGuidePageData> =
     slug: "why-bleach-isnt-a-universal-cleaner",
     title: "Why bleach isn’t a universal cleaner",
     category: "anti_pattern",
+    primaryProblemSlug: "organic-stains",
     summary: "Bleach is a strong oxidizer with narrow compatibility—great for some disinfection, wrong default for grease, stone, and many mixes.",
     description: "Why bleach fails as an all-surface cleaner and safer routing.",
     intro:

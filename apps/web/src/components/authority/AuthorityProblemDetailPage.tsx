@@ -46,6 +46,8 @@ import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
 import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
 import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
+import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
+import { resolveProductRecommendationContextForProblemPage } from "@/lib/products/productRecommendationContext";
 
 export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageData }) {
   const { data } = props;
@@ -69,6 +71,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
   const relatedClusterSlugs = getRelatedClusterSlugsForProblemCategory(data.category);
   const quickAnswerText =
     data.quickAnswer?.trim() || snippetAnswer(data.whatItUsuallyIs, 2, 260);
+  const productContext = resolveProductRecommendationContextForProblemPage(data.slug);
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
@@ -82,6 +85,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         <div className="mt-8">
           <AuthorityProblemDecisionShortcuts data={data} />
         </div>
+        <ContextualProductRecommendations context={productContext} />
         <AuthoritySection title="What it usually is">
           <p>{data.whatItUsuallyIs}</p>
         </AuthoritySection>

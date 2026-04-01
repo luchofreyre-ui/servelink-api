@@ -152,6 +152,10 @@ export interface AuthorityComparisonPageData {
   /** Product vs product: who wins on shared playbook scenarios. */
   productScenarioWinners?: AuthorityProductScenarioWinner[];
 
+  /** Product comparison: first scenario row with a surface + problem playbook (authority slugs). */
+  topSharedProblemSlug?: string;
+  topSharedSurfaceSlug?: string;
+
   /** When each SKU is the right tool—and when neither is. */
   notInterchangeable?: {
     leftWins: string;
@@ -219,6 +223,8 @@ export type AuthorityGuidePageData = {
   intro?: string;
   /** Optional snippet-first answer; anti-pattern pages use intro/summary as fallback when unset. */
   quickAnswer?: string;
+  /** Anti-pattern: authority problem slug for product recommendations (e.g. `grease-buildup`). */
+  primaryProblemSlug?: string;
   sections: AuthorityGuideSection[];
   relatedMethods: AuthorityEntitySummary[];
   relatedSurfaces: AuthorityEntitySummary[];
