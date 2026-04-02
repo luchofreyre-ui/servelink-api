@@ -85,7 +85,6 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         <div className="mt-8">
           <AuthorityProblemDecisionShortcuts data={data} />
         </div>
-        <ContextualProductRecommendations context={productContext} />
         <AuthoritySection title="What it usually is">
           <p>{data.whatItUsuallyIs}</p>
         </AuthoritySection>
@@ -121,6 +120,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             ))}
           </ul>
         </AuthoritySection>
+        <ContextualProductRecommendations context={productContext} />
         <AuthoritySection title="Common mistakes">
           <div className="space-y-2">
             {data.commonMistakes.map((m) => (

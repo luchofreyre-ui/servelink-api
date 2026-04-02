@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
+import { firstAuthorityProblemSlugForProductProblem } from "@/lib/authority/authorityProductTaxonomyBridge";
+
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
+import { ProductImageGallery } from "@/components/products/ProductImageGallery";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import ProductSummaryRail from "@/components/products/ProductSummaryRail";
 import { ProductVerdictStrip } from "@/components/products/ProductVerdictStrip";
@@ -47,16 +52,44 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="mx-auto max-w-5xl space-y-10 px-6 py-10">
-      {/* TITLE */}
-      <div>
-        <h1 className="text-3xl font-semibold">{product.name}</h1>
-        <p className="mt-2 text-gray-500">{product.brand}</p>
+      <div className="grid gap-8 lg:grid-cols-[minmax(280px,420px)_1fr]">
+        <div>
+          <ProductImageGallery
+            product={{
+              name: product.name,
+              primaryImageUrl: product.primaryImageUrl,
+              imageUrls: product.imageUrls,
+            }}
+            aspect="square"
+            rounded="2xl"
+            priority
+            sizes="(max-width: 768px) 100vw, 40vw"
+            className="shadow-sm"
+          />
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <h1 className="text-3xl font-semibold">{product.name}</h1>
+            <p className="mt-2 text-gray-500">{product.brand}</p>
+          </div>
+
+          <ProductVerdictStrip product={product} />
+
+          <p className="text-sm text-zinc-600">
+            Recommended because it directly addresses the root cause of the problem — not just the visible symptoms.
+          </p>
+
+          {product.compatibleProblems?.length ? (
+            <p className="text-xs leading-snug text-neutral-600">
+              Used for: {product.compatibleProblems.slice(0, 4).join(" · ")}
+            </p>
+          ) : null}
+
+          <ProductPurchaseActions product={product} />
+          <ProductAffiliateDisclosure />
+        </div>
       </div>
-
-      <ProductVerdictStrip product={product} />
-
-      <ProductPurchaseActions product={product} />
-      <ProductAffiliateDisclosure />
 
       <section className="rounded-2xl border border-amber-200/90 bg-amber-50/50 p-6">
         <h2 className="text-lg font-semibold text-neutral-900">Common mistakes</h2>
@@ -378,11 +411,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <section>
         <h2 className="mb-3 text-xl font-semibold">Top problems this solves</h2>
         <div className="flex flex-wrap gap-2">
-          {product.compatibleProblems?.map((p: string) => (
-            <span key={p} className="rounded-full bg-gray-100 px-3 py-1 text-sm">
-              {p}
-            </span>
-          ))}
+          {product.compatibleProblems?.map((p: string) => {
+            const hub = firstAuthorityProblemSlugForProductProblem(p);
+            return hub ? (
+              <Link
+                key={p}
+                href={preferEncyclopediaCanonicalHref(`/problems/${hub}`)}
+                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-neutral-800 hover:bg-gray-200 hover:underline"
+              >
+                {p}
+              </Link>
+            ) : (
+              <span key={p} className="rounded-full bg-gray-100 px-3 py-1 text-sm">
+                {p}
+              </span>
+            );
+          })}
         </div>
       </section>
 

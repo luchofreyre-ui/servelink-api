@@ -1,16 +1,28 @@
 import Link from "next/link";
 
+import { ProductImage } from "@/components/products/ProductImage";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import type { PublishedProductSnapshot } from "@/lib/products/productTypes";
 
 export function ProductCard({ product }: { product: PublishedProductSnapshot }) {
   return (
-    <div className="rounded-2xl border border-[#C9B27C] bg-white p-5 shadow-sm transition hover:shadow-md">
+    <div className="space-y-3 rounded-2xl border border-[#C9B27C] bg-white p-5 shadow-sm transition hover:shadow-sm">
+      <ProductImage
+        product={{
+          name: product.title,
+          primaryImageUrl: product.primaryImageUrl,
+          imageUrls: product.imageUrls,
+        }}
+        aspect="square"
+        rounded="xl"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+      />
+
       <Link href={`/products/${product.slug}`} className="block">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-neutral-500">{product.brand}</p>
-            <h3 className="mt-1 text-xl font-semibold text-neutral-900">{product.title}</h3>
+            <h3 className="mt-1 text-base font-semibold leading-tight text-zinc-900">{product.title}</h3>
             <p className="mt-1 text-sm text-neutral-600">{product.category}</p>
           </div>
           <div className="rounded-full border border-[#C9B27C] px-3 py-1 text-sm font-semibold text-neutral-900">
@@ -50,6 +62,10 @@ export function ProductCard({ product }: { product: PublishedProductSnapshot }) 
           </div>
         </div>
       </Link>
+
+      <p className="text-xs text-zinc-500">
+        Used for: {product.bestUseCases?.[0]?.trim() || "targeted cleaning applications"}
+      </p>
 
       <ProductPurchaseActions
         product={{ ...product, name: product.title }}

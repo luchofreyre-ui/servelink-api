@@ -56,7 +56,11 @@ export function AuthorityProblemProductHub({ data }: { data: AuthorityProblemPag
                 View playbook →
               </Link>
             </div>
-            <RecommendedProductsForTopic problem={sc.problem} surface={sc.surface} />
+            <RecommendedProductsForTopic
+              problem={sc.problem}
+              surface={sc.surface}
+              densityAuthorityProblemSlug={data.slug}
+            />
           </div>
         ))}
       </div>

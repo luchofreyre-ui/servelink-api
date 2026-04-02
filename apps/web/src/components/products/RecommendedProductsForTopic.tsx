@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
+import { ProductImage } from "@/components/products/ProductImage";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import {
   getComparisonSeedBySlug,
@@ -12,6 +13,7 @@ import {
   inferRecommendationIntent,
   type PublishedProductLike,
 } from "@/lib/products/getRecommendedProducts";
+import { getRecommendedProductsForDisplay } from "@/lib/products/productRecommendationDensity";
 import {
   buildRecommendationCaveat,
   buildRecommendationReasons,
@@ -23,6 +25,12 @@ import {
 } from "@/lib/products/recommendationConfidence";
 import { whenThisLosesOnPlaybook } from "@/lib/products/productWhenThisLoses";
 import type { ProductCleaningIntent } from "@/lib/products/productTypes";
+
+const PRO_HEAVY_DUTY_COMPLEMENT_SLUGS = new Set([
+  "simple-green-pro-hd",
+  "purple-power-industrial-strength-cleaner-degreaser",
+  "oil-eater-cleaner-degreaser",
+]);
 
 export type RecommendationContextTone =
   | "direct"
@@ -38,6 +46,8 @@ type Props = {
   intent?: ProductCleaningIntent;
   /** Replaces the default section H2 (used by contextual placements). */
   sectionTitle?: string;
+  /** Authority problem slug for cross-surface density when primary surface is sparse. */
+  densityAuthorityProblemSlug?: string;
   contextTone?: RecommendationContextTone;
   showScores?: boolean;
   showReasons?: boolean;
@@ -109,17 +119,18 @@ export default function RecommendedProductsForTopic({
   surface,
   intent,
   sectionTitle,
+  densityAuthorityProblemSlug,
   contextTone,
   showScores = true,
   showReasons = true,
   showComparisons = true,
 }: Props) {
   const effectiveIntent = intent ?? inferRecommendationIntent(problem);
-  const products = getRecommendedProducts({
+  const products = getRecommendedProductsForDisplay({
     problem,
     surface,
-    limit: 3,
     intent: effectiveIntent,
+    densityAuthorityProblemSlug,
   });
 
   const expandedForCompare = getRecommendedProducts({
@@ -129,9 +140,20 @@ export default function RecommendedProductsForTopic({
     intent: effectiveIntent,
   });
 
-  if (!products.length) return null;
-
   const contextBody = contextCalloutCopy(contextTone);
+
+  if (!products.length) {
+    return (
+      <section className="rounded-2xl border border-[#C9B27C]/35 bg-[#FCFAF5] p-6">
+        <h2 className="text-xl font-semibold text-neutral-900">
+          {sectionTitle ?? "Recommended products for this problem"}
+        </h2>
+        <p className="mt-3 text-sm text-zinc-600">
+          Not sure what to use? The system matches products based on how cleaning actually works — not guesses.
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="rounded-2xl border border-[#C9B27C]/35 bg-[#FCFAF5] p-6">
@@ -156,7 +178,11 @@ export default function RecommendedProductsForTopic({
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <p className="mb-4 text-sm text-zinc-600">
+        These products are selected based on what actually works for this specific problem.
+      </p>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {products.map((product, index) => {
           const reasons = buildRecommendationReasons({
             slug: product.slug,
@@ -190,6 +216,16 @@ export default function RecommendedProductsForTopic({
               key={product.slug}
               className="space-y-2 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm"
             >
+              <ProductImage
+                product={{
+                  name: product.title ?? product.slug,
+                  primaryImageUrl: product.primaryImageUrl,
+                  imageUrls: product.imageUrls,
+                }}
+                aspect="square"
+                rounded="xl"
+                sizes="(max-width: 768px) 100vw, 25vw"
+              />
               <div className="flex items-center justify-between gap-2">
                 <Link
                   href={`/products/${product.slug}`}
@@ -205,6 +241,10 @@ export default function RecommendedProductsForTopic({
               </div>
 
               {product.brand ? <div className="text-sm text-neutral-500">{product.brand}</div> : null}
+
+              {PRO_HEAVY_DUTY_COMPLEMENT_SLUGS.has(product.slug) ? (
+                <p className="text-xs text-neutral-600">Heavy-duty / pro-style option for tougher jobs.</p>
+              ) : null}
 
               <div className="flex flex-wrap items-center gap-2">
                 <RecommendationConfidenceBadge level={conf} />
@@ -250,6 +290,7 @@ export default function RecommendedProductsForTopic({
               <ProductPurchaseActions
                 product={{ ...product, name: product.title }}
                 viewHref={`/products/${product.slug}`}
+                usedForSummary={product.compatibleProblems?.slice(0, 3).join(" · ")}
                 compact
               />
             </div>

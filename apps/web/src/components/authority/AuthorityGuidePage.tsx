@@ -108,7 +108,6 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
         <AuthorityHero eyebrow={guideEyebrow(data.category)} title={data.title} description={lead} />
         {quickAnswerText ? <AuthorityQuickAnswer text={quickAnswerText} /> : null}
         <AuthorityTopicalCrossLinks pageKey={`guide-${data.slug}`} />
-        {data.category === "anti_pattern" ? <ContextualProductRecommendations context={productContext} /> : null}
         <div className="space-y-0">
           {data.sections.map((section) => (
             <AuthoritySection key={section.id} title={section.title}>
@@ -134,6 +133,7 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
             ))}
           </div>
         ) : null}
+        {data.category === "anti_pattern" ? <ContextualProductRecommendations context={productContext} /> : null}
         <AuthorityRelatedLinks
           beforeProblems={[
             { heading: "Related methods", links: data.relatedMethods },

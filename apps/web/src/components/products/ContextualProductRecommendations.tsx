@@ -16,15 +16,16 @@ export function ContextualProductRecommendations({
           problem={context.problem}
           surface={context.surface ?? DEFAULT_SURFACE}
           intent={context.intent}
+          densityAuthorityProblemSlug={context.densityAuthorityProblemSlug}
           contextTone={context.contextTone}
           showScores
           showReasons
           showComparisons
         />
       ) : (
-        <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
-          Product recommendations are not available for this page yet because this topic does not map cleanly into the
-          product library.
+        <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-zinc-600">
+          Not sure what to use? The system matches products based on how cleaning actually works — not guesses. This
+          topic does not map cleanly into the product library yet.
         </div>
       )}
     </section>

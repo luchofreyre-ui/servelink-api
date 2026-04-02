@@ -81,7 +81,11 @@
     "validate:cleaning-evidence-catalog": "tsx scripts/encyclopedia/validate-cleaning-evidence-catalog.ts",
     "export:encyclopedia-review-import": "tsx scripts/encyclopedia/export-review-import.ts",
     "intake:encyclopedia-generated-review-records": "tsx scripts/encyclopedia/intake-generated-review-records.ts",
-    "run:full-encyclopedia": "tsx scripts/run-full-encyclopedia-pipeline.ts"
+    "run:full-encyclopedia": "tsx scripts/run-full-encyclopedia-pipeline.ts",
+    "preview:amazon-paste-import": "tsx scripts/preview-amazon-paste-import.ts",
+    "report:amazon-catalog-health": "tsx scripts/report-amazon-catalog-health.ts",
+    "report:amazon-catalog-fill-status": "tsx scripts/report-amazon-catalog-fill-status.ts",
+    "report:amazon-catalog-ops": "tsx scripts/report-amazon-catalog-ops.ts"
   },
   "dependencies": {
     "@servelink/system-test-intelligence": "file:../../packages/system-test-intelligence",

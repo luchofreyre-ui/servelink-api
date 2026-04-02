@@ -130,6 +130,8 @@ export function analyzeAllProducts(seeds: ProductSeed[]): AnalyzedProduct[] {
       buyLabel: seed.buyLabel ?? "Buy on Amazon",
       walmartUrl: seed.walmartUrl,
       homeDepotUrl: seed.homeDepotUrl,
+      primaryImageUrl: seed.primaryImageUrl,
+      imageUrls: seed.imageUrls,
     };
   });
 }

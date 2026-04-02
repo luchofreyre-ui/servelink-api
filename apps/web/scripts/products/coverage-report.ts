@@ -1,13 +1,23 @@
 /**
  * Product library coverage report: chemistry classes, problem clusters,
- * "better alternative" gaps, and over-recommendation signals across a small grid.
+ * authority playbook pair density, orphan link signals, "better alternative" gaps,
+ * and over-recommendation signals across a small grid.
  *
  * Run: npm run report:product-coverage
  */
+import { AUTHORITY_PROBLEM_SLUGS } from "../../src/authority/data/authorityTaxonomy";
+import { getSurfaceSlugsForProblem } from "../../src/authority/data/authorityGraphSelectors";
+import { getComparisonSlugsForEntity } from "../../src/authority/data/authorityComparisonSelectors";
 import { PRODUCTS } from "../../src/lib/products/products.seed";
+import {
+  authorityProblemSlugsForProductProblems,
+  productProblemStringForAuthorityProblemSlug,
+  productSurfaceStringForAuthoritySurfaceSlug,
+} from "../../src/lib/authority/authorityProductTaxonomyBridge";
 import { getRecommendedProducts } from "../../src/lib/products/getRecommendedProducts";
 import { getRelatedProducts } from "../../src/lib/products/productRelated";
-import { getPublishedProductBySlug } from "../../src/lib/products/productPublishing";
+import { getPublishedProductBySlug, getAllProductSlugs } from "../../src/lib/products/productPublishing";
+import { getProductBySlug } from "../../src/lib/products/productRegistry";
 
 const PROBLEM_CLUSTERS: Record<string, readonly string[]> = {
   mineral_scale: [
@@ -63,13 +73,15 @@ function main() {
   }
   console.log("");
 
-  console.log('=== Products with no "better" related pick (empty similar pool edge case) ===\n');
+  console.log('=== Products with no related pick after UI fallback (better → peer similar) ===\n');
   const noBetter: string[] = [];
   for (const p of PRODUCTS) {
     const snap = getPublishedProductBySlug(p.slug);
     if (!snap) continue;
     const better = getRelatedProducts(snap, { mode: "better", limit: 1 });
-    if (better.length === 0) noBetter.push(p.slug);
+    const resolved =
+      better.length > 0 ? better : getRelatedProducts(snap, { mode: "similar", limit: 1 });
+    if (resolved.length === 0) noBetter.push(p.slug);
   }
   console.log(noBetter.length ? noBetter.join("\n") : "(none — catalog always has at least one other SKU)");
   console.log("");
@@ -88,6 +100,45 @@ function main() {
     console.log(`${slug}: ${c}/${SAMPLE_PAIRS.length}${flag}`);
   }
   console.log(`\n(Frequent threshold ≈ ${threshold} hits on ${SAMPLE_PAIRS.length} pairs)\n`);
+
+  console.log("=== Authority problem × surface playbooks: ranked product count (top 4 pool) ===\n");
+  const zeroPairs: string[] = [];
+  const onePairs: string[] = [];
+  const underTwoPairs: string[] = [];
+  for (const ps of AUTHORITY_PROBLEM_SLUGS) {
+    const pStr = productProblemStringForAuthorityProblemSlug(ps);
+    if (!pStr) continue;
+    for (const ss of getSurfaceSlugsForProblem(ps)) {
+      const sStr = productSurfaceStringForAuthoritySurfaceSlug(ss);
+      if (!sStr) continue;
+      const n = getRecommendedProducts({ problem: pStr, surface: sStr, limit: 4 }).length;
+      const key = `${ps} @ ${ss}`;
+      if (n === 0) zeroPairs.push(key);
+      if (n === 1) onePairs.push(key);
+      if (n < 2) underTwoPairs.push(`${key} (${n})`);
+    }
+  }
+  console.log(`0 products: ${zeroPairs.length}`);
+  if (zeroPairs.length) console.log(zeroPairs.join("\n"));
+  console.log(`\n1 product only: ${onePairs.length}`);
+  if (onePairs.length) console.log(onePairs.join("\n"));
+  console.log(`\nAnti-pattern (<2 alternatives in pool): ${underTwoPairs.length}`);
+  if (underTwoPairs.length) console.log(underTwoPairs.join("\n"));
+  console.log("");
+
+  console.log(
+    "=== Product pages with no product_comparison seed and no bridged problem hub (weak internal loop) ===\n",
+  );
+  const weakProductLinks: string[] = [];
+  for (const slug of getAllProductSlugs()) {
+    const p = getProductBySlug(slug);
+    if (!p) continue;
+    const comps = getComparisonSlugsForEntity("product_comparison", slug);
+    const hubs = authorityProblemSlugsForProductProblems(p.compatibleProblems ?? []);
+    if (!comps.length && !hubs.length) weakProductLinks.push(slug);
+  }
+  console.log(weakProductLinks.length ? weakProductLinks.join("\n") : "(none)");
+  console.log("");
 }
 
 main();

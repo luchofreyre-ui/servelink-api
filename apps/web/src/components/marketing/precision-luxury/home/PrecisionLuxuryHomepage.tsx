@@ -48,14 +48,14 @@ export function PrecisionLuxuryHomepage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(201,178,124,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(13,148,136,0.12),transparent_24%)]" />
           <div className="relative mx-auto grid max-w-7xl gap-14 px-6 py-20 md:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-28">
             <div>
-              <p className="mb-5 font-[var(--font-poppins)] text-xs font-medium uppercase tracking-[0.28em] text-[#C9B27C]">
-                Quiet luxury for a category-leading cleaning company
-              </p>
-              <h1 className="max-w-3xl font-[var(--font-poppins)] text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-[#0F172A] md:text-6xl lg:text-7xl">
-                A premium home cleaning experience built on calm, trust, and precision.
+              <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-zinc-900 md:text-4xl">
+                The Cleaning Solution System
               </h1>
-              <p className="mt-6 max-w-2xl font-[var(--font-manrope)] text-lg leading-8 text-[#475569] md:text-xl">
-                Nu Standard Cleaning brings together refined service, consistent standards, and a polished residential experience that feels as good as it looks.
+              <p className="mt-3 max-w-2xl text-base text-zinc-600">
+                Fix anything the right way — not by guessing.
+              </p>
+              <p className="mt-2 max-w-2xl text-sm text-zinc-500">
+                Powered by a Cleaning Education Engine.
               </p>
 
               <div className="mt-8 max-w-xl space-y-2">

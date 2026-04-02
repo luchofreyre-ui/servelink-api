@@ -2,6 +2,8 @@ import type { ProductSeed } from "./productTypes";
 
 export type { ProductSeed } from "./productTypes";
 
+import { getAmazonCatalogImportBySlug } from "./amazonCatalogRegistry";
+
 function withAmazonDefaults(seed: ProductSeed): ProductSeed {
   return {
     ...seed,
@@ -12,64 +14,121 @@ function withAmazonDefaults(seed: ProductSeed): ProductSeed {
   };
 }
 
-function amazonAffiliateTag(url: string): string {
-  if (!url) return "";
-  return url.includes("?") ? `${url}&tag=YOURTAG-20` : `${url}?tag=YOURTAG-20`;
-}
+const PURCHASE_READY = [
+  // GLASS / SURFACES
+  "windex-original-glass-cleaner",
+  "sprayway-glass-cleaner",
+  "invisible-glass-premium-glass-cleaner",
 
-/** High-visibility SKUs: real PDPs + purchase enabled (swap YOURTAG-20 when enrolled). */
-const PURCHASE_READY: Partial<
-  Record<string, Partial<Pick<ProductSeed, "amazonUrl" | "amazonAffiliateUrl" | "isPurchaseAvailable" | "buyLabel">>>
-> = {
-  "bar-keepers-friend-cleanser": {
-    isPurchaseAvailable: true,
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B000V72992"),
-  },
-  "dawn-platinum-dish-spray": {
-    isPurchaseAvailable: true,
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B0F1ZBWFYG"),
-  },
-  "clr-calcium-lime-rust": {
-    isPurchaseAvailable: true,
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B0CLX1TGS7"),
-  },
-  "windex-original-glass-cleaner": {
-    amazonUrl: "https://www.amazon.com/dp/B075NPQDTG",
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B075NPQDTG"),
-    isPurchaseAvailable: true,
-  },
-  "sprayway-glass-cleaner": {
-    amazonUrl: "https://www.amazon.com/dp/B001HZ6DLM",
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B001HZ6DLM"),
-    isPurchaseAvailable: true,
-  },
-  "invisible-glass-premium-glass-cleaner": {
-    amazonUrl: "https://www.amazon.com/dp/B001DSY4L0",
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B001DSY4L0"),
-    isPurchaseAvailable: true,
-  },
-  "goo-gone-original-liquid": {
-    amazonUrl: "https://www.amazon.com/dp/B000CIABM6",
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B000CIABM6"),
-    isPurchaseAvailable: true,
-  },
-  "krud-kutter-original-cleaner-degreaser": {
-    amazonUrl: "https://www.amazon.com/dp/B000CIIH62",
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B000CIIH62"),
-    isPurchaseAvailable: true,
-  },
-  "cerama-bryte-cooktop-cleaner": {
-    isPurchaseAvailable: true,
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B000BQ0L8Q"),
-  },
-  "lime-a-way-cleaner": {
-    amazonUrl: "https://www.amazon.com/dp/B001KBY8E6",
-    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B001KBY8E6"),
-    isPurchaseAvailable: true,
-  },
+  // DEGREASERS
+  "krud-kutter-original-cleaner-degreaser",
+  "dawn-platinum-dish-spray",
+  "simple-green-all-purpose-cleaner",
+
+  // MINERAL / HARD WATER
+  "clr-calcium-lime-rust",
+  "lime-a-way-cleaner",
+
+  // ABRASIVE / HEAVY CLEAN
+  "bar-keepers-friend-cleanser",
+  "comet-cleanser-powder",
+  "bon-ami-cleanser",
+
+  // ADHESIVE / RESIDUE
+  "goo-gone-original-liquid",
+
+  // STOVETOP / SPECIALTY
+  "cerama-bryte-cooktop-cleaner",
+
+  // DISINFECTING / GENERAL
+  "lysol-all-purpose-cleaner",
+  "clorox-clean-up-cleaner",
+  "lysol-disinfectant-spray",
+  "clorox-clean-up-cleaner-bleach",
+
+  // FLOOR / MULTI
+  "mr-clean-multi-surface-cleaner",
+  "pledge-multisurface-cleaner",
+
+  // BATHROOM
+  "scrubbing-bubbles-bathroom-cleaner",
+  "scrubbing-bubbles-daily-shower-cleaner",
+  "wet-and-forget-shower-cleaner",
+  "kaboom-foam-tastic-bathroom-cleaner",
+
+  // DEGREASERS / KITCHEN (batch 2)
+  "oil-eater-cleaner-degreaser",
+  "easy-off-kitchen-degreaser",
+
+  // MINERAL / SCALE (batch 2)
+  "zep-calcium-lime-rust-remover",
+
+  // STAINLESS / APPLIANCE / DESCALER (batch 3)
+  "weiman-stainless-steel-cleaner-polish",
+  "therapy-stainless-steel-cleaner-polish",
+  "hope-s-perfect-stainless-steel-cleaner",
+  "affresh-washing-machine-cleaner",
+  "active-washing-machine-cleaner-tablets",
+  "glisten-dishwasher-cleaner",
+  "finish-dishwasher-cleaner",
+  "urnex-coffee-machine-descaler",
+  "dezcal-descaling-powder",
+  "impresa-descaler",
+
+  // FABRIC / FLOOR / WOOD / APC / TOOLS (batch 4)
+  "oxiclean-versatile-stain-remover",
+  "resolve-carpet-cleaner-spray",
+  "fiebings-saddle-soap",
+  "murphy-oil-soap-wood-cleaner",
+  "method-all-purpose-cleaner",
+  "seventh-generation-all-purpose-cleaner",
+  "bona-hardwood-floor-cleaner",
+  "swiffer-wetjet-cleaning-solution",
+  "drill-brush-power-scrubber-kit",
+  "rubbermaid-microfiber-cleaning-cloths",
+] as const;
+
+/** Catalog slug when the purchase list uses a different label than `PRODUCTS_RAW`. */
+const PURCHASE_READY_SLUG_ALIASES: Partial<Record<(typeof PURCHASE_READY)[number], string>> = {
+  "clorox-clean-up-cleaner": "clorox-clean-up-cleaner-bleach",
+  "scrubbing-bubbles-bathroom-cleaner": "scrubbing-bubbles-bathroom-grime-fighter",
 };
 
-const PRODUCTS_RAW: ProductSeed[] = [
+function purchaseReadySeedSlugSet(): Set<string> {
+  const set = new Set<string>();
+  for (const slug of PURCHASE_READY) {
+    set.add(slug);
+    const mapped = PURCHASE_READY_SLUG_ALIASES[slug];
+    if (mapped) set.add(mapped);
+  }
+  return set;
+}
+
+const PURCHASE_READY_SEED_SLUGS = purchaseReadySeedSlugSet();
+
+/** Amazon PDP when the row has no `amazonUrl` but is purchase-enabled. */
+const PURCHASE_AMAZON_FALLBACK: Partial<Record<string, string>> = {
+  "windex-original-glass-cleaner": "https://www.amazon.com/dp/B075NPQDTG",
+  "sprayway-glass-cleaner": "https://www.amazon.com/dp/B0002MBV5O",
+  "invisible-glass-premium-glass-cleaner": "https://www.amazon.com/dp/B000M3V95U",
+  "krud-kutter-original-cleaner-degreaser": "https://www.amazon.com/dp/B000S8EQFO",
+  "simple-green-all-purpose-cleaner": "https://www.amazon.com/dp/B004E3L13O",
+  "lime-a-way-cleaner": "https://www.amazon.com/dp/B00949ZKYO",
+  "goo-gone-original-liquid": "https://www.amazon.com/dp/B00006IBNJ",
+  "scrubbing-bubbles-bathroom-grime-fighter": "https://www.amazon.com/dp/B00EEZKX2W",
+  "weiman-stainless-steel-cleaner-polish": "https://www.amazon.com/dp/B001F0QJYA",
+  "therapy-stainless-steel-cleaner-polish": "https://www.amazon.com/dp/B00L2P0KNO",
+  "hope-s-perfect-stainless-steel-cleaner": "https://www.amazon.com/dp/B00EWJA0QY",
+  "affresh-washing-machine-cleaner": "https://www.amazon.com/dp/B00C91Q86I",
+  "active-washing-machine-cleaner-tablets": "https://www.amazon.com/dp/B08DVFZTTG",
+  "glisten-dishwasher-cleaner": "https://www.amazon.com/dp/B003PESG6S",
+  "finish-dishwasher-cleaner": "https://www.amazon.com/dp/B010OVNPEW",
+  "urnex-coffee-machine-descaler": "https://www.amazon.com/dp/B00E1NPB3I",
+  "dezcal-descaling-powder": "https://www.amazon.com/dp/B001Q4YR44",
+  "impresa-descaler": "https://www.amazon.com/dp/B0C7LL8DZV",
+};
+
+export const PRODUCTS_RAW: ProductSeed[] = [
   {
     id: "bar_keepers_friend_cleanser",
     slug: "bar-keepers-friend-cleanser",
@@ -154,6 +213,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["plastic", "tile", "porcelain", "ceramic", "countertops", "general household surfaces"],
     problems: ["bacteria buildup", "mold growth", "odor retention", "biofilm"],
     notes: "EPA registration and contact time are label-specific; never mix with other chemicals.",
+    amazonUrl: "https://www.amazon.com/dp/B007RFQA64",
   },
   {
     id: "windex_original_glass_cleaner",
@@ -178,6 +238,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["tile", "porcelain", "ceramic", "chrome", "bathtubs", "sinks", "shower glass", "toilets"],
     problems: ["soap scum", "soap residue", "mildew stains", "discoloration", "biofilm"],
     notes: "Bathroom soap-grime maintenance; use CLR-class descalers for heavy mineral scale on label-safe surfaces.",
+    amazonUrl: "https://www.amazon.com/dp/B00EEZKX2W",
   },
   {
     id: "goo_gone_original_liquid",
@@ -226,6 +287,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["tile", "glass", "chrome", "stainless steel", "porcelain", "sinks", "bathtubs", "toilets", "shower glass"],
     problems: ["limescale", "mineral deposits", "hard water film", "rust stains", "calcium buildup", "hard water stains"],
     notes: "Strong descaler positioning; verify SDS; never mix with bleach or other cleaners.",
+    amazonUrl: "https://www.amazon.com/dp/B002RPVW80",
   },
   {
     id: "lysol_power_toilet_bowl_cleaner",
@@ -282,6 +344,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["countertops", "appliances", "tile", "floors", "plastic", "metal", "general household surfaces"],
     problems: ["grease buildup", "food residue", "soap residue", "dust buildup", "discoloration"],
     notes: "Dilution-dependent mainstream benchmark—not a substitute for registered disinfectants or heavy descalers.",
+    amazonUrl: "https://www.amazon.com/dp/B004E3L13O",
   },
   {
     id: "sprayway_glass_cleaner",
@@ -356,6 +419,19 @@ const PRODUCTS_RAW: ProductSeed[] = [
     notes: "Verify EPA registration and contact time on bottle; same process discipline as conventional disinfectants.",
   },
   {
+    id: "seventh_generation_all_purpose_cleaner",
+    slug: "seventh-generation-all-purpose-cleaner",
+    name: "Seventh Generation All Purpose Cleaner (Lemon Chamomile)",
+    brand: "Seventh Generation",
+    category: "all-purpose spray cleaner",
+    chemicalClass: "surfactant",
+    intent: "clean",
+    surfaces: ["countertops", "tile", "plastic", "porcelain", "ceramic", "general household surfaces"],
+    problems: ["grease buildup", "food residue", "light film", "dust buildup", "product residue"],
+    notes: "Plant-forward APC lane for everyday hard-surface grime; verify label on stone and finished wood; not a disinfectant substitute.",
+    amazonUrl: "https://www.amazon.com/dp/B0BB3H17Z4",
+  },
+  {
     id: "zep_shower_tub_tile_cleaner",
     slug: "zep-shower-tub-tile-cleaner",
     name: "Zep Shower, Tub & Tile Cleaner",
@@ -426,6 +502,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["hardwood floors", "sealed wood"],
     problems: ["floor residue", "dust buildup", "dullness", "product residue"],
     notes: "Wood-floor-specific; not for stone, carpet, or heavy grease.",
+    amazonUrl: "https://www.amazon.com/dp/B07GC6N35C",
   },
   {
     id: "zep_neutral_ph_floor_cleaner",
@@ -450,6 +527,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["carpet", "upholstery"],
     problems: ["organic stains", "food residue", "tannin stains", "dye transfer"],
     notes: "Fiber spot treatment only; not for hard-surface grease, scale, or disinfection claims.",
+    amazonUrl: "https://www.amazon.com/dp/B011O2T8A0",
   },
   {
     id: "folex_instant_carpet_spot_remover",
@@ -462,6 +540,19 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["carpet", "upholstery"],
     problems: ["organic stains", "food residue", "tannin stains", "dye transfer"],
     notes: "Water-based spotter benchmark; test colorfastness; keep off hard-surface mineral work.",
+  },
+  {
+    id: "fiebings_saddle_soap",
+    slug: "fiebings-saddle-soap",
+    name: "Fiebing's Saddle Soap",
+    brand: "Fiebing's",
+    category: "leather cleaner (saddle soap)",
+    chemicalClass: "surfactant",
+    intent: "clean",
+    surfaces: ["leather", "upholstery", "finished leather", "auto interior"],
+    problems: ["product residue", "dullness", "organic stains", "dust buildup"],
+    notes: "Leather and oiled-hide maintenance—test in a hidden area; not a fabric carpet spotter or mineral descaler.",
+    amazonUrl: "https://www.amazon.com/dp/B008ROOES0",
   },
   {
     id: "natures_miracle_stain_and_odor_remover",
@@ -498,6 +589,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["shower glass", "tile", "porcelain", "ceramic", "chrome"],
     problems: ["preventive maintenance", "soap scum"],
     notes: "No-rinse maintenance positioning—not for active heavy grease, scale restoration, or same-day deep scrub expectations.",
+    amazonUrl: "https://www.amazon.com/dp/B07GJV5SY7",
   },
   {
     id: "drano_max_gel_drain_clog_remover",
@@ -522,8 +614,47 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["sealed wood", "hardwood floors", "cabinets", "laminate"],
     problems: ["floor residue", "dust buildup", "dullness", "product residue"],
     notes: "Oil-soap routine care for sealed wood; not a mineral descaler, disinfectant, or wax-stripping restorer.",
-    amazonUrl: "https://www.amazon.com/dp/B000ARFQRU",
+    amazonUrl: "https://www.amazon.com/dp/B00005UVD7",
     walmartUrl: "https://www.walmart.com/ip/Murphy-Oil-Soap-Wood-Cleaner-Original-32-fl-oz/10309136",
+  },
+  {
+    id: "swiffer_wetjet_cleaning_solution",
+    slug: "swiffer-wetjet-cleaning-solution",
+    name: "Swiffer WetJet Wood Floor Cleaning Solution Refill",
+    brand: "Swiffer",
+    category: "mop system cleaning solution (refill)",
+    chemicalClass: "surfactant",
+    intent: "clean",
+    surfaces: ["hardwood floors", "sealed wood", "finished wood"],
+    problems: ["floor residue", "dust buildup", "light film", "product residue"],
+    notes: "WetJet refill lane for labeled wood floors—requires compatible WetJet hardware; not a general carpet or stone program.",
+    amazonUrl: "https://www.amazon.com/dp/B07DGPL4YN",
+  },
+  {
+    id: "drill_brush_power_scrubber_kit",
+    slug: "drill-brush-power-scrubber-kit",
+    name: "Holikme Drill Brush Power Scrubber Attachment Kit",
+    brand: "Holikme",
+    category: "power scrub brush attachments (drill)",
+    chemicalClass: "neutral",
+    intent: "clean",
+    surfaces: ["tile", "grout", "bathtubs", "showers", "porcelain", "ceramic", "glass", "countertops"],
+    problems: ["soap scum", "grease buildup", "product residue", "discoloration", "biofilm"],
+    notes: "Mechanical agitation multiplier—match bristle stiffness to the surface, keep rpm moderate, and pair with appropriate chemistry.",
+    amazonUrl: "https://www.amazon.com/dp/B0D66LZTXZ",
+  },
+  {
+    id: "rubbermaid_microfiber_cleaning_cloths",
+    slug: "rubbermaid-microfiber-cleaning-cloths",
+    name: "Rubbermaid Microfiber Cleaning Cloths (24-Pack)",
+    brand: "Rubbermaid",
+    category: "microfiber cleaning cloths",
+    chemicalClass: "neutral",
+    intent: "clean",
+    surfaces: ["glass", "stainless steel", "countertops", "tile", "appliances", "general household surfaces"],
+    problems: ["streaking", "light film", "dust buildup", "product residue"],
+    notes: "Lint-reduced wiping and buffing—launder without softener; not a substitute for stain chemistry on set-in soils.",
+    amazonUrl: "https://www.amazon.com/dp/B09YHVX1GT",
   },
   {
     id: "rejuvenate_luxury_vinyl_floor_cleaner",
@@ -583,7 +714,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["countertops", "tile", "appliances", "stainless steel", "plastic", "porcelain"],
     problems: ["bacteria buildup", "mold growth", "disinfection", "mildew stains"],
     notes: "Spray bleach workflow—ventilation, no mixing, and acid-sensitive surfaces off-label.",
-    amazonUrl: "https://www.amazon.com/dp/B003O4IROS",
+    amazonUrl: "https://www.amazon.com/dp/B0009P68MK",
   },
   {
     id: "rocco_roxie_stain_odor_eliminator",
@@ -651,6 +782,19 @@ const PRODUCTS_RAW: ProductSeed[] = [
     amazonUrl: "https://www.amazon.com/dp/B000PKQ7Y0",
   },
   {
+    id: "method_all_purpose_cleaner",
+    slug: "method-all-purpose-cleaner",
+    name: "Method All-Purpose Cleaner (Pink Grapefruit)",
+    brand: "Method",
+    category: "all-purpose spray cleaner",
+    chemicalClass: "surfactant",
+    intent: "clean",
+    surfaces: ["countertops", "tile", "plastic", "porcelain", "ceramic", "glass", "general household surfaces"],
+    problems: ["grease buildup", "food residue", "light film", "dust buildup", "product residue"],
+    notes: "Scented APC benchmark for sealed non-porous daily cleaning; confirm label guidance on stone and waxed wood.",
+    amazonUrl: "https://www.amazon.com/dp/B000EEX7QG",
+  },
+  {
     id: "pledge_multisurface_cleaner",
     slug: "pledge-multisurface-cleaner",
     name: "Pledge Multisurface Cleaner",
@@ -661,7 +805,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["cabinets", "finished wood", "sealed wood", "laminate", "countertops", "appliances"],
     problems: ["light dust", "light film", "dust buildup", "product residue"],
     notes: "Finished-wood and cabinet-safe dust/film pass—different role from oil-soap floor programs; not a floor-stripper or disinfectant default.",
-    amazonUrl: "https://www.amazon.com/dp/B001KYQG48",
+    amazonUrl: "https://www.amazon.com/dp/B0021LZSJO",
   },
   {
     id: "weiman_gas_range_cleaner_degreaser",
@@ -760,7 +904,111 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["cooktops", "range hoods", "stainless steel appliances"],
     problems: ["greasy film", "grease buildup", "food residue", "cooked-on grease", "light film"],
     notes: "Cooktop/hood degreaser—never for oven/grill baked-on (use oven SKUs); not a drain or fabric product.",
-    amazonUrl: "https://www.amazon.com/dp/B07H9D3B3V",
+    amazonUrl: "https://www.amazon.com/dp/B06XX85RSS",
+  },
+  {
+    id: "active_washing_machine_cleaner_tablets",
+    slug: "active-washing-machine-cleaner-tablets",
+    name: "Active Washing Machine Cleaner Tablets",
+    brand: "Active",
+    category: "washing machine cleaner (tablets)",
+    chemicalClass: "surfactant",
+    intent: "clean",
+    surfaces: ["washing machines", "washer interior", "laundry appliances"],
+    problems: ["musty odor", "odor retention", "product residue", "mold growth"],
+    notes: "Tablet cycle-clean workflow per label—appliance interior only; not a fabric softener substitute.",
+    amazonUrl: "https://www.amazon.com/dp/B08DVFZTTG",
+  },
+  {
+    id: "affresh_washing_machine_cleaner",
+    slug: "affresh-washing-machine-cleaner",
+    name: "Affresh Washing Machine Cleaner",
+    brand: "Affresh",
+    category: "washing machine cleaner (tablets)",
+    chemicalClass: "neutral",
+    intent: "clean",
+    surfaces: ["washing machines", "washer interior", "laundry appliances"],
+    problems: ["musty odor", "odor retention", "product residue", "biofilm"],
+    notes: "OEM-style washer maintenance tablets; follow brand cycle instructions—never mix with bleach in the same cycle.",
+    amazonUrl: "https://www.amazon.com/dp/B00C91Q86I",
+  },
+  {
+    id: "dezcal_descaling_powder",
+    slug: "dezcal-descaling-powder",
+    name: "Urnex Dezcal Activated Scale Remover (Powder)",
+    brand: "Urnex",
+    category: "descaling powder (coffee equipment)",
+    chemicalClass: "acid",
+    intent: "restore",
+    surfaces: ["coffee makers", "espresso machines", "kettles", "appliances"],
+    problems: ["mineral deposits", "limescale", "hard water stains", "scale deposits"],
+    notes: "Powder descaler for labeled coffee/heating equipment—rinse thoroughly; not interchangeable with tablet descalers.",
+    amazonUrl: "https://www.amazon.com/dp/B001Q4YR44",
+  },
+  {
+    id: "finish_dishwasher_cleaner",
+    slug: "finish-dishwasher-cleaner",
+    name: "Finish Dishwasher Cleaner Liquid",
+    brand: "Finish",
+    category: "dishwasher maintenance cleaner (liquid)",
+    chemicalClass: "acid",
+    intent: "clean",
+    surfaces: ["dishwashers", "appliances"],
+    problems: ["limescale", "grease buildup", "odor retention", "mineral deposits"],
+    notes: "Dishwasher-internal liquid cleaner per label—do not use as a hand dish soap substitute.",
+    amazonUrl: "https://www.amazon.com/dp/B010OVNPEW",
+  },
+  {
+    id: "glisten_dishwasher_cleaner",
+    slug: "glisten-dishwasher-cleaner",
+    name: "Glisten Dishwasher Cleaner and Hardwater Spot Remover",
+    brand: "Glisten",
+    category: "dishwasher maintenance cleaner",
+    chemicalClass: "acid",
+    intent: "clean",
+    surfaces: ["dishwashers", "appliances"],
+    problems: ["limescale", "hard water stains", "water spots", "odor retention"],
+    notes: "In-machine dishwasher cleaner workflow; confirm compatibility with stainless interiors per label.",
+    amazonUrl: "https://www.amazon.com/dp/B003PESG6S",
+  },
+  {
+    id: "hope_s_perfect_stainless_steel_cleaner",
+    slug: "hope-s-perfect-stainless-steel-cleaner",
+    name: "HOPE'S Perfect Stainless Steel Cleaner & Polish",
+    brand: "HOPE'S",
+    category: "stainless polish",
+    chemicalClass: "stainless_polish",
+    intent: "clean",
+    surfaces: ["finished stainless", "stainless steel appliances", "stainless steel", "appliances"],
+    problems: ["fingerprints", "surface haze", "light film", "streaking", "dullness"],
+    notes: "Stainless appearance lane—US listing is a multi-bottle case pack; verify unit count before buying.",
+    amazonUrl: "https://www.amazon.com/dp/B00EWJA0QY",
+  },
+  {
+    id: "impresa_descaler",
+    slug: "impresa-descaler",
+    name: "Impresa Coffee Machine Descaler",
+    brand: "Impresa",
+    category: "descaling liquid (coffee equipment)",
+    chemicalClass: "acid",
+    intent: "restore",
+    surfaces: ["coffee makers", "espresso machines", "kettles", "appliances"],
+    problems: ["mineral deposits", "limescale", "hard water stains", "scale deposits"],
+    notes: "Liquid descaler for labeled brewers—follow dose and rinse steps; not a Dezcal powder substitute.",
+    amazonUrl: "https://www.amazon.com/dp/B0C7LL8DZV",
+  },
+  {
+    id: "urnex_coffee_machine_descaler",
+    slug: "urnex-coffee-machine-descaler",
+    name: "Urnex CleanCup Descaling Solution",
+    brand: "Urnex",
+    category: "descaling liquid (coffee equipment)",
+    chemicalClass: "acid",
+    intent: "restore",
+    surfaces: ["coffee makers", "espresso machines", "kettles", "appliances"],
+    problems: ["mineral deposits", "limescale", "hard water stains", "scale deposits"],
+    notes: "14 oz liquid descaler positioned for Keurig/drip per listing—still follow your machine manufacturer guidance.",
+    amazonUrl: "https://www.amazon.com/dp/B00E1NPB3I",
   },
   {
     id: "weiman_stainless_steel_cleaner_polish",
@@ -812,7 +1060,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["laundry", "fabrics", "bedding", "towels", "upholstery", "delicates"],
     problems: ["laundry odor", "odor retention", "pet odor"],
     notes: "Fabric refresh lane—verify label; not a hard-surface disinfect substitute.",
-    amazonUrl: "https://www.amazon.com/dp/B07C8QW7N1",
+    amazonUrl: "https://www.amazon.com/dp/B09MZSSM2F",
   },
   {
     id: "oil_eater_cleaner_degreaser",
@@ -825,7 +1073,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["exterior concrete", "concrete", "garbage cans", "appliances"],
     problems: ["oil stains", "grease buildup", "greasy film", "food residue"],
     notes: "Industrial-style degreaser for concrete and tough grease—dilute per label; not stone-safe default.",
-    amazonUrl: "https://www.amazon.com/dp/B0002JPEWA",
+    amazonUrl: "https://www.amazon.com/dp/B000EALHHG",
   },
   {
     id: "un_du_adhesive_remover",
@@ -903,7 +1151,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["shower glass", "tile", "porcelain", "ceramic", "chrome"],
     problems: ["preventive maintenance", "soap scum", "light film"],
     notes: "Fourth daily shower maintainer—soap-scum-adjacent; still weak on hard mineral restore.",
-    amazonUrl: "https://www.amazon.com/dp/B001KYQ6YS",
+    amazonUrl: "https://www.amazon.com/dp/B016WFFGCI",
   },
   {
     id: "pledge_everyday_clean_multisurface",
@@ -1003,7 +1251,7 @@ const PRODUCTS_RAW: ProductSeed[] = [
     surfaces: ["cooktops", "glass"],
     problems: ["smudge marks", "light film", "light dust", "streaking", "product residue"],
     notes: "Precision glass/ceramic cooktop cosmetic cleaner—heavy degreasers and oven SKUs penalized on light film/smudge.",
-    amazonUrl: "https://www.amazon.com/dp/B000BQ0L8Q",
+    amazonUrl: "https://www.amazon.com/dp/B001TI570A",
   },
   {
     id: "sprayway_stainless_steel_cleaner",
@@ -1020,6 +1268,47 @@ const PRODUCTS_RAW: ProductSeed[] = [
   },
 ];
 
-export const PRODUCTS: ProductSeed[] = PRODUCTS_RAW.map((s) =>
-  withAmazonDefaults({ ...s, ...PURCHASE_READY[s.slug] }),
-);
+export const PRODUCTS: ProductSeed[] = PRODUCTS_RAW.map((seed) => {
+  const amazonImport = getAmazonCatalogImportBySlug(seed.slug);
+
+  const mergedAmazonUrl =
+    amazonImport?.amazonUrl ||
+    seed.amazonUrl ||
+    PURCHASE_AMAZON_FALLBACK[seed.slug] ||
+    undefined;
+
+  const mergedAmazonAffiliateUrl =
+    amazonImport?.amazonAffiliateUrl || seed.amazonAffiliateUrl || undefined;
+
+  const mergedBrand = amazonImport?.brand || seed.brand || undefined;
+
+  // Normalized import (via registry) wins for imagery; seed fills gaps.
+  const mergedPrimaryImageUrl =
+    amazonImport?.primaryImageUrl || seed.primaryImageUrl || undefined;
+
+  const mergedImageUrls =
+    amazonImport?.imageUrls && amazonImport.imageUrls.length > 0
+      ? amazonImport.imageUrls
+      : seed.imageUrls || [];
+
+  const mergedBuyLabel =
+    amazonImport?.buyLabel || seed.buyLabel || "Buy on Amazon";
+
+  const mergedPurchaseAvailable =
+    amazonImport?.isPurchaseAvailable ??
+    seed.isPurchaseAvailable ??
+    PURCHASE_READY_SEED_SLUGS.has(seed.slug);
+
+  const normalizedImageUrls = mergedImageUrls.filter(Boolean);
+
+  return withAmazonDefaults({
+    ...seed,
+    brand: mergedBrand ?? seed.brand,
+    amazonUrl: mergedAmazonUrl ?? "",
+    amazonAffiliateUrl: mergedAmazonAffiliateUrl ?? "",
+    primaryImageUrl: mergedPrimaryImageUrl,
+    imageUrls: normalizedImageUrls,
+    buyLabel: mergedBuyLabel,
+    isPurchaseAvailable: mergedPurchaseAvailable,
+  });
+});

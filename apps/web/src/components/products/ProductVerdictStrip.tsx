@@ -22,6 +22,11 @@ export function ProductVerdictStrip({ product }: Props) {
 
   const primaryRisk = dossier?.riskFlags?.[0] ?? "Use with care—read label, ventilate, and spot-test";
 
+  const whyPickLine =
+    product.bestUseCases?.[0]?.trim() ||
+    dossier?.bestUseCases?.[0]?.trim() ||
+    "Strong fit for common household cleaning scenarios where reliability matters.";
+
   return (
     <div className="space-y-3 rounded-xl border border-neutral-200 bg-white p-4">
       <div>
@@ -43,6 +48,8 @@ export function ProductVerdictStrip({ product }: Props) {
         <span className="font-semibold">Primary risk: </span>
         {primaryRisk}
       </div>
+
+      <p className="border-t border-neutral-100 pt-3 text-sm text-zinc-600">{whyPickLine}</p>
     </div>
   );
 }

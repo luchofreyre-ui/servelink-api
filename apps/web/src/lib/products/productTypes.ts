@@ -24,6 +24,9 @@ export interface ProductSeed {
   buyLabel?: string;
   walmartUrl?: string;
   homeDepotUrl?: string;
+  /** Amazon / catalog imagery (optional; bulk-filled via `amazonCatalogImport`). */
+  primaryImageUrl?: string;
+  imageUrls?: string[];
 }
 
 export interface ProductScore {
@@ -70,6 +73,8 @@ export interface PublishedProductSnapshot {
   buyLabel?: string;
   walmartUrl?: string;
   homeDepotUrl?: string;
+  primaryImageUrl?: string;
+  imageUrls?: string[];
 }
 
 /** Row from `analyzeAllProducts` before snapshot decoration. */
@@ -94,4 +99,6 @@ export interface AnalyzedProduct {
   buyLabel?: string;
   walmartUrl?: string;
   homeDepotUrl?: string;
+  primaryImageUrl?: string;
+  imageUrls?: string[];
 }

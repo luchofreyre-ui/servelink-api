@@ -26,13 +26,13 @@ import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
 import { getGuidePageBySlug } from "@/authority/data/authorityGuidePageData";
 import { getProductComparisonNavExtras } from "@/authority/data/authorityProductComparisonNav";
-import { getProductBySlug } from "@/lib/products/productRegistry";
+import { getProductBySlug, type ProductDetailView } from "@/lib/products/productRegistry";
 import { AuthorityProductComparisonExplore } from "./AuthorityProductComparisonExplore";
 import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
 import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
-import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
+import { ProductComparisonMediaCard } from "@/components/products/ProductComparisonMediaCard";
 import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
 import { resolveProductRecommendationContextForComparisonFallback } from "@/lib/products/productRecommendationContext";
 
@@ -167,6 +167,35 @@ function buildSeeAlsoGroups(data: AuthorityComparisonPageData): AuthoritySeeAlso
   ];
 }
 
+function firstDecisionPhrase(text: string | undefined, maxLen: number): string | undefined {
+  if (!text?.trim()) return undefined;
+  const first = text.trim().split(/[.;\n]/)[0]?.trim() ?? text.trim();
+  if (first.length <= maxLen) return first;
+  return `${first.slice(0, maxLen - 1)}…`;
+}
+
+function buildPurchaseQuickDecisionLine(
+  data: AuthorityComparisonPageData,
+  left: ProductDetailView,
+  right: ProductDetailView,
+): string {
+  const qd = data.quickDecision;
+  if (qd && qd.length >= 2) {
+    const a = qd[0]?.trim();
+    const b = qd[1]?.trim();
+    if (a && b) return `${a} vs ${b}`;
+  }
+  const leftSummary =
+    firstDecisionPhrase(data.notInterchangeable?.leftWins, 72) ||
+    firstDecisionPhrase(left.bestUseCases?.[0], 72) ||
+    "Better when the left pick’s chemistry wins";
+  const rightSummary =
+    firstDecisionPhrase(data.notInterchangeable?.rightWins, 72) ||
+    firstDecisionPhrase(right.bestUseCases?.[0], 72) ||
+    "Better when the right pick’s chemistry wins";
+  return `${leftSummary} vs ${rightSummary}`;
+}
+
 function buildComparisonFaq(data: AuthorityComparisonPageData) {
   return {
     title: "Comparison FAQ",
@@ -276,10 +305,6 @@ export function AuthorityComparisonPage({
           </AuthoritySection>
         ) : null}
 
-        {data.type === "product_comparison" ? (
-          <ContextualProductRecommendations context={comparisonProductContext} />
-        ) : null}
-
         {data.type === "product_comparison" && data.notInterchangeable ? (
           <AuthoritySection title="Not interchangeable">
             <div className="space-y-4 font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">
@@ -306,6 +331,9 @@ export function AuthorityComparisonPage({
                 <li key={line}>{line}</li>
               ))}
             </ul>
+            <p className="mt-4 text-xs text-zinc-500">
+              Based on how each product actually performs in real cleaning scenarios.
+            </p>
           </AuthoritySection>
         ) : null}
 
@@ -342,26 +370,35 @@ export function AuthorityComparisonPage({
 
         {data.type === "product_comparison" && leftComparisonProduct && rightComparisonProduct ? (
           <AuthoritySection title="Purchase">
+            <p className="mb-4 text-sm font-medium text-zinc-700">
+              {buildPurchaseQuickDecisionLine(data, leftComparisonProduct, rightComparisonProduct)}
+            </p>
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="rounded-xl border border-[#C9B27C]/25 bg-white p-4">
-                <p className="text-sm font-semibold text-[#0F172A]">{leftComparisonProduct.name}</p>
-                <ProductPurchaseActions
-                  product={leftComparisonProduct}
-                  viewHref={`/products/${leftComparisonProduct.slug}`}
-                  compact
-                />
-              </div>
-              <div className="rounded-xl border border-[#C9B27C]/25 bg-white p-4">
-                <p className="text-sm font-semibold text-[#0F172A]">{rightComparisonProduct.name}</p>
-                <ProductPurchaseActions
-                  product={rightComparisonProduct}
-                  viewHref={`/products/${rightComparisonProduct.slug}`}
-                  compact
-                />
-              </div>
+              <ProductComparisonMediaCard
+                product={leftComparisonProduct}
+                subtitle={
+                  leftComparisonProduct.bestUseCases?.[0]?.trim() ||
+                  leftComparisonProduct.heroVerdict?.trim() ||
+                  undefined
+                }
+                viewHref={`/products/${leftComparisonProduct.slug}`}
+              />
+              <ProductComparisonMediaCard
+                product={rightComparisonProduct}
+                subtitle={
+                  rightComparisonProduct.bestUseCases?.[0]?.trim() ||
+                  rightComparisonProduct.heroVerdict?.trim() ||
+                  undefined
+                }
+                viewHref={`/products/${rightComparisonProduct.slug}`}
+              />
             </div>
             <ProductAffiliateDisclosure />
           </AuthoritySection>
+        ) : null}
+
+        {data.type === "product_comparison" ? (
+          <ContextualProductRecommendations context={comparisonProductContext} />
         ) : null}
 
         {data.type === "product_comparison" && data.productScenarioWinners && data.productScenarioWinners.length > 0 ? (

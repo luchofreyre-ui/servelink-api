@@ -5,6 +5,8 @@ import { getProductComparisonSlugsForAuthorityProblem } from "@/authority/data/a
 import { formatComparisonLinkLabel } from "@/authority/data/authorityComparisonSelectors";
 import { getSurfaceSlugsForProblem } from "@/authority/data/authorityGraphSelectors";
 import { getSurfacePageBySlug } from "@/authority/data/authoritySurfacePageData";
+import { ProductImage } from "@/components/products/ProductImage";
+import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import { getProductBySlug } from "@/lib/products/productRegistry";
 import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import {
@@ -14,7 +16,7 @@ import {
 import { getRecommendedProducts, inferRecommendationIntent } from "@/lib/products/getRecommendedProducts";
 import type { ProductCleaningIntent } from "@/lib/products/productTypes";
 
-function topProductSlugsForProblem(problemSlug: string, limit = 3): string[] {
+function topProductSlugsForProblem(problemSlug: string, limit = 5): string[] {
   const pStr = productProblemStringForAuthorityProblemSlug(problemSlug);
   if (!pStr) return [];
   const out: string[] = [];
@@ -23,13 +25,13 @@ function topProductSlugsForProblem(problemSlug: string, limit = 3): string[] {
     const sStr = productSurfaceStringForAuthoritySurfaceSlug(surfaceSlug);
     if (!sStr) continue;
     const intent = inferRecommendationIntent(pStr) as ProductCleaningIntent;
-    const top = getRecommendedProducts({ problem: pStr, surface: sStr, limit: 1, intent });
-    const slug = top[0]?.slug;
-    if (slug && !seen.has(slug)) {
-      seen.add(slug);
-      out.push(slug);
+    const top = getRecommendedProducts({ problem: pStr, surface: sStr, limit: 2, intent });
+    for (const row of top) {
+      if (seen.has(row.slug)) continue;
+      seen.add(row.slug);
+      out.push(row.slug);
+      if (out.length >= limit) return out;
     }
-    if (out.length >= limit) break;
   }
   return out;
 }
@@ -89,14 +91,45 @@ export function AuthorityProblemExploreMore({
         {prodSlugs.length ? (
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">Top products</p>
-            <ul className="mt-2 space-y-2 text-sm">
-              {prodSlugs.map((s) => (
-                <li key={s}>
-                  <Link href={`/products/${s}`} className="font-medium text-[#0D9488] hover:underline">
-                    {getProductBySlug(s)?.name ?? s}
-                  </Link>
-                </li>
-              ))}
+            <ul className="mt-2 space-y-3 text-sm">
+              {prodSlugs.map((s) => {
+                const product = getProductBySlug(s);
+                if (!product) {
+                  return (
+                    <li key={s}>
+                      <Link href={`/products/${s}`} className="font-medium text-[#0D9488] hover:underline">
+                        {s}
+                      </Link>
+                    </li>
+                  );
+                }
+                return (
+                  <li key={s} className="rounded-lg border border-[#C9B27C]/20 bg-white/60 p-3">
+                    <div className="flex gap-3">
+                      <ProductImage
+                        product={{
+                          name: product.name,
+                          primaryImageUrl: product.primaryImageUrl,
+                          imageUrls: product.imageUrls,
+                        }}
+                        aspect="square"
+                        rounded="lg"
+                        className="w-20 shrink-0"
+                        sizes="80px"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <Link href={`/products/${s}`} className="font-medium text-[#0D9488] hover:underline">
+                          {product.name}
+                        </Link>
+                        <ProductPurchaseActions
+                          product={product}
+                          usedForSummary={product.compatibleProblems?.slice(0, 3).join(" · ")}
+                        />
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ) : null}

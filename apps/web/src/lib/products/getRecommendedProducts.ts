@@ -18,6 +18,8 @@ export type PublishedProductLike = {
   amazonAffiliateUrl?: string;
   isPurchaseAvailable?: boolean;
   buyLabel?: string;
+  primaryImageUrl?: string;
+  imageUrls?: string[];
 };
 
 export type RecommendationInput = {

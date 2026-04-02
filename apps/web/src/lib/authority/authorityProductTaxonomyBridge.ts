@@ -9,6 +9,12 @@ import { AUTHORITY_PROBLEM_SLUGS, AUTHORITY_SURFACE_SLUGS } from "@/authority/da
  * Authority problem slug → exact product-library `compatibleProblems` string.
  * Consulted before `PROBLEM_SLUG_TO_PRODUCT` for explicit / variant wording.
  */
+/** Product-library problems with no 1:1 authority slug — link to closest hubs for internal loops. */
+const EXTRA_PRODUCT_PROBLEM_TO_AUTHORITY_SLUGS: Record<string, readonly string[]> = {
+  /** Drain openers: closest playbook adjacency (biofilm / odor routing), not a dedicated clog hub. */
+  clog: ["biofilm-buildup", "musty-odor"],
+};
+
 const AUTHORITY_PROBLEM_TO_PRODUCT_PROBLEM: Record<string, string> = {
   "streaking-on-glass": "streaking",
   /** Normalized slug when trailing `-on-*` is stripped in playbook fallbacks */
@@ -128,7 +134,21 @@ export function authorityProblemSlugsForProductProblems(productProblems: string[
   for (const [authSlug, pStr] of Object.entries(PROBLEM_SLUG_TO_PRODUCT)) {
     if (productProblems.includes(pStr)) set.add(authSlug);
   }
+  for (const pp of productProblems) {
+    const extra = EXTRA_PRODUCT_PROBLEM_TO_AUTHORITY_SLUGS[pp];
+    if (extra) {
+      for (const authSlug of extra) {
+        if ((AUTHORITY_PROBLEM_SLUGS as readonly string[]).includes(authSlug)) set.add(authSlug);
+      }
+    }
+  }
   return [...set].sort((a, b) => a.localeCompare(b));
+}
+
+/** First canonical `/problems/{slug}` for a product-library problem string, if any. */
+export function firstAuthorityProblemSlugForProductProblem(productProblem: string): string | null {
+  const slugs = authorityProblemSlugsForProductProblems([productProblem]);
+  return slugs[0] ?? null;
 }
 
 /** Map product-library surface strings to authority `/surfaces/{slug}` slugs (inverse of SURFACE_SLUG_TO_PRODUCT). */

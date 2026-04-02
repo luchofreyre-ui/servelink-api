@@ -22,6 +22,8 @@ export type ProductRecommendationContext = {
   intent: ProductCleaningIntent;
   sourcePageType: ProductRecommendationSourcePageType;
   heading: string;
+  /** Authority problem slug for cross-surface density fallback (same ranker; extra surfaces only). */
+  densityAuthorityProblemSlug?: string;
   contextTone?:
     | "direct"
     | "surface_wording_match"
@@ -70,6 +72,7 @@ export function resolveProductRecommendationContextForProblemPage(
     intent: inferRecommendationIntent(problem),
     sourcePageType: "problem",
     heading: "Best products for this problem",
+    densityAuthorityProblemSlug: problemSlug,
     contextTone: directProblem ? "direct" : "surface_wording_match",
   };
 }
@@ -88,6 +91,7 @@ export function resolveProductRecommendationContextForSurfaceProblemPage(
       intent: inferRecommendationIntent(directProblem),
       sourcePageType: "surface_problem",
       heading: "Recommended products for this situation",
+      densityAuthorityProblemSlug: problemSlug,
       contextTone: "direct",
     };
   }
@@ -101,6 +105,7 @@ export function resolveProductRecommendationContextForSurfaceProblemPage(
       intent: inferRecommendationIntent(normalizedProblem),
       sourcePageType: "surface_problem",
       heading: "Recommended products for this situation",
+      densityAuthorityProblemSlug: problemSlug,
       contextTone: "surface_wording_match",
     };
   }
@@ -129,6 +134,7 @@ export function resolveProductRecommendationContextForMethodProblemPage(
     intent: inferRecommendationIntentForMethodPlaybook(methodSlug, problem),
     sourcePageType: "method_problem",
     heading: "Products that fit this method",
+    densityAuthorityProblemSlug: problemSlug,
     contextTone: intersectedSurfaceSlug ? "direct" : "method_representative",
   };
 }
@@ -153,6 +159,7 @@ export function resolveProductRecommendationContextForAntiPatternPage(
     intent: inferRecommendationIntent(problem),
     sourcePageType: "anti_pattern",
     heading: "Use these instead",
+    densityAuthorityProblemSlug: primaryProblemSlug,
     contextTone: "anti_pattern_replacement",
   };
 }
@@ -174,6 +181,7 @@ export function resolveProductRecommendationContextForComparisonFallback(
     intent: inferRecommendationIntent(problem),
     sourcePageType: "comparison",
     heading: "Better options for this scenario",
+    densityAuthorityProblemSlug: problemSlug,
     contextTone: "comparison_fallback",
   };
 }

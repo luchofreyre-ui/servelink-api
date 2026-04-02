@@ -62,6 +62,8 @@ export function buildPublishedProductSnapshot(product: AnalyzedProduct): Publish
     buyLabel: product.buyLabel,
     walmartUrl: product.walmartUrl,
     homeDepotUrl: product.homeDepotUrl,
+    primaryImageUrl: product.primaryImageUrl,
+    imageUrls: product.imageUrls,
   };
 }
 

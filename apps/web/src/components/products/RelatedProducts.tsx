@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ProductImage } from "@/components/products/ProductImage";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import { getRelatedProducts } from "@/lib/products/productRelated";
 import type { ProductLike } from "@/lib/products/productRelated";
@@ -12,6 +13,8 @@ type RelatedProductLike = ProductLike & {
   amazonAffiliateUrl?: string;
   isPurchaseAvailable?: boolean;
   buyLabel?: string;
+  primaryImageUrl?: string;
+  imageUrls?: string[];
 };
 
 type Props = {
@@ -33,23 +36,41 @@ export default function RelatedProducts({
   mode = "similar",
   products = [],
 }: Props) {
-  const items =
+  const primary =
     product != null ? getRelatedProducts(product, { mode, limit: 3 }) : products.slice(0, 3);
+  const usedPeerFallback =
+    Boolean(product && mode === "better" && !primary.length);
+  const items =
+    usedPeerFallback ? getRelatedProducts(product!, { mode: "similar", limit: 3 }) : primary;
 
   if (!items.length) return null;
 
+  const heading = usedPeerFallback
+    ? "Peer alternative (same role)"
+    : mode === "better"
+      ? "Better alternatives (stronger fit)"
+      : "Similar products (same role)";
+
   return (
     <div>
-      <h3 className="mb-3 text-lg font-semibold text-neutral-900">
-        {mode === "better" ? "Better alternatives (stronger fit)" : "Similar products (same role)"}
-      </h3>
+      <h3 className="mb-3 text-lg font-semibold text-neutral-900">{heading}</h3>
 
       <div className="grid gap-4 md:grid-cols-3">
         {items.map((item) => (
           <div
             key={item.slug}
-            className="rounded-2xl border border-neutral-200 bg-white p-4 transition hover:border-[#C9B27C]/60 hover:shadow-sm"
+            className="space-y-3 rounded-2xl border border-neutral-200 bg-white p-4 transition hover:border-[#C9B27C]/60 hover:shadow-sm"
           >
+            <ProductImage
+              product={{
+                name: normalizeName(item),
+                primaryImageUrl: item.primaryImageUrl,
+                imageUrls: item.imageUrls,
+              }}
+              aspect="square"
+              rounded="xl"
+              sizes="(max-width: 768px) 100vw, 20vw"
+            />
             <Link href={`/products/${item.slug}`} className="block">
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -63,15 +84,16 @@ export default function RelatedProducts({
               </div>
 
               <p className="mt-1 text-sm text-gray-500">
-                {mode === "better"
-                  ? "Stronger chemistry fit for this problem"
-                  : "Similar cleaning role with comparable behavior"}
+                {usedPeerFallback || mode === "similar"
+                  ? "Similar cleaning role with comparable behavior"
+                  : "Stronger chemistry fit for this problem"}
               </p>
             </Link>
 
             <ProductPurchaseActions
               product={{ ...item, name: normalizeName(item) }}
               viewHref={`/products/${item.slug}`}
+              usedForSummary={item.compatibleProblems?.slice(0, 3).join(" · ")}
               compact
             />
           </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ProductImage } from "@/components/products/ProductImage";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 
 type ProductLike = {
@@ -18,6 +19,8 @@ type ProductLike = {
   amazonAffiliateUrl?: string;
   isPurchaseAvailable?: boolean;
   buyLabel?: string;
+  primaryImageUrl?: string;
+  imageUrls?: string[];
   affiliateLinks?: {
     walmart?: string;
     homedepot?: string;
@@ -132,7 +135,21 @@ export default function ProductSummaryRail(props: Props) {
   return (
     <section className="rounded-2xl border border-[#C9B27C]/35 bg-[#FCFAF5] p-5 md:p-6">
       <div className="grid gap-5 md:grid-cols-[220px_1fr]">
-        <div className="rounded-2xl border border-[#C9B27C]/30 bg-white p-5">
+        <div className="space-y-4">
+          {"product" in props ? (
+            <ProductImage
+              product={{
+                name: props.product.name ?? props.product.title ?? "Product",
+                primaryImageUrl: props.product.primaryImageUrl,
+                imageUrls: props.product.imageUrls,
+              }}
+              aspect="square"
+              rounded="xl"
+              sizes="220px"
+              className="max-w-[220px]"
+            />
+          ) : null}
+          <div className="rounded-2xl border border-[#C9B27C]/30 bg-white p-5">
           <div className="text-sm font-medium uppercase tracking-wide text-neutral-500">Product score</div>
           <div className="mt-2 text-4xl font-semibold text-neutral-900">
             {typeof view.score === "number" ? view.score.toFixed(1) : "—"}
@@ -140,6 +157,7 @@ export default function ProductSummaryRail(props: Props) {
           <div className="mt-2 text-sm text-neutral-600">
             Best-fit heuristic from chemistry, safety, and declared surface–problem tags—not a marketing score.
           </div>
+        </div>
         </div>
 
         <div className="space-y-5">

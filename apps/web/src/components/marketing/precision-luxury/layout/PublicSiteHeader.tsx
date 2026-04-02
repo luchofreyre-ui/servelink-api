@@ -78,6 +78,10 @@ export function PublicSiteHeader() {
             ))}
           </nav>
         </div>
+
+        <div className="border-t border-[#C9B27C]/15 px-6 pb-2 pt-2 md:px-8">
+          <p className="text-xs text-zinc-500">Powered by a Cleaning Education Engine</p>
+        </div>
       </div>
     </header>
   );
