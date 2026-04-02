@@ -10,8 +10,8 @@ export function ProductWhereItFitsSection({ contexts }: { contexts: ProductAutho
     <section className="rounded-2xl border border-[#C9B27C]/35 bg-[#FCFAF5] p-6">
       <h2 className="text-xl font-semibold text-neutral-900">Where this product actually fits</h2>
       <p className="mt-2 text-sm text-neutral-600">
-        Up to five surface + problem playbooks where this SKU ranks #1–2 <span className="font-medium">and</span>{" "}
-        confidence is High or Medium (situational picks are hidden so links stay decisive).
+        Up to five surface + problem playbooks where this SKU ranks #1–2 <span className="font-medium">and</span> fit
+        reads strong or balanced (borderline picks stay off this list so every link stays decisive).
       </p>
       <ul className="mt-5 space-y-3 text-neutral-800">
         {contexts.map((c) => (

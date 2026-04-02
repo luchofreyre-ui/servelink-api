@@ -8,23 +8,23 @@ export type RecommendationConfidenceLevel = "high" | "medium" | "situational";
 export function recommendationConfidenceLabel(level: RecommendationConfidenceLevel): string {
   switch (level) {
     case "high":
-      return "High";
+      return "Strong fit";
     case "medium":
-      return "Medium";
+      return "Good fit";
     case "situational":
       return "Situational";
   }
 }
 
-/** Plain-language reason for the badge — does not change how confidence is computed. */
+/** Outcome-focused note for the badge — does not change how fit tier is computed. */
 export function recommendationConfidenceExplanation(level: RecommendationConfidenceLevel): string {
   switch (level) {
     case "high":
-      return "High confidence means the product lists this exact problem and surface, chemistry fit scores strongly, and the engine did not flag a hard caveat for this scenario.";
+      return "Listed for this problem and surface, with strong chemistry alignment and no major scenario caveat flagged.";
     case "medium":
-      return "Medium confidence means the match is real but partial—one of chemistry fit, surface fit, or scenario notes is closer to the middle band, so verify labels before heavy use.";
+      return "A solid option—double-check labels because fit is stronger in some dimensions than others.";
     case "situational":
-      return "Situational means tradeoffs or risks dominate: a strong caveat fired, the product does not list this exact pairing, or fit scores sit below the high-confidence band—still usable with label checks.";
+      return "Use with extra label care here—tradeoffs or limits matter more for this pairing.";
   }
 }
 

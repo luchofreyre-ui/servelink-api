@@ -48,7 +48,8 @@ export function PrecisionLuxuryHomepage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(201,178,124,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(13,148,136,0.12),transparent_24%)]" />
           <div className="relative mx-auto grid max-w-7xl gap-14 px-6 py-20 md:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-28">
             <div>
-              <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-zinc-900 md:text-4xl">
+              <p className="text-xs tracking-wide text-zinc-400 uppercase">Precision cleaning guidance</p>
+              <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-tight text-zinc-900 md:text-3xl">
                 The Cleaning Solution System
               </h1>
               <p className="mt-3 max-w-2xl text-base text-zinc-600">
@@ -238,7 +239,7 @@ export function PrecisionLuxuryHomepage() {
               <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
                 The standard behind the service
               </p>
-              <h2 className="mt-4 font-[var(--font-poppins)] text-4xl font-semibold tracking-[-0.04em] text-white md:text-5xl">
+              <h2 className="mt-4 font-[var(--font-poppins)] text-3xl font-semibold tracking-[-0.04em] text-white md:text-4xl">
                 Premium presentation matters. So does what sits underneath it.
               </h2>
               <p className="mt-5 max-w-2xl font-[var(--font-manrope)] text-lg leading-8 text-white/75">

@@ -76,15 +76,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           <ProductVerdictStrip product={product} />
 
-          <p className="text-sm text-zinc-600">
-            Recommended because it directly addresses the root cause of the problem — not just the visible symptoms.
-          </p>
-
           {product.compatibleProblems?.length ? (
             <p className="text-xs leading-snug text-neutral-600">
               Used for: {product.compatibleProblems.slice(0, 4).join(" · ")}
             </p>
           ) : null}
+
+          <p className="text-sm text-neutral-600">
+            Selected based on what works for this problem and surface.
+          </p>
 
           <ProductPurchaseActions product={product} />
           <ProductAffiliateDisclosure />

@@ -156,7 +156,7 @@ export function buildRecommendationCaveat({ slug, problem, surface, intent }: Ex
   if (effectiveIntent === "restore" && cleaningStrength === "light")
     return "Light-duty profile—may underperform vs true restoration chemistry";
 
-  if (adj <= -10) return "Situational ranking penalty—double-check label fit for this surface and soil";
+  if (adj <= -10) return "Situational pick here—double-check label fit for this surface and soil";
 
   return null;
 }

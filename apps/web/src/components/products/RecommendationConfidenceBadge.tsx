@@ -16,7 +16,7 @@ export function RecommendationConfidenceBadge({ level }: { level: Recommendation
       className={`inline-flex shrink-0 rounded-lg border px-2 py-0.5 text-xs font-semibold ${STYLES[level]}`}
       title={recommendationConfidenceExplanation(level)}
     >
-      Confidence: {recommendationConfidenceLabel(level)}
+      Fit: {recommendationConfidenceLabel(level)}
     </span>
   );
 }

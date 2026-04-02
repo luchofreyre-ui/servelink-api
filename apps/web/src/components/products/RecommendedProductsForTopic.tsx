@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
-import { ProductImage } from "@/components/products/ProductImage";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
+import { RECOMMENDATION_EMPTY_STATE_LINE } from "@/components/products/recommendationEmptyStateCopy";
 import {
   getComparisonSeedBySlug,
   normalizeComparisonSlug,
@@ -24,7 +24,9 @@ import {
   recommendationConfidenceLabel,
 } from "@/lib/products/recommendationConfidence";
 import { whenThisLosesOnPlaybook } from "@/lib/products/productWhenThisLoses";
+import { getPublishedProductBySlug } from "@/lib/products/productPublishing";
 import type { ProductCleaningIntent } from "@/lib/products/productTypes";
+import { ProductCard } from "@/components/products/ProductCard";
 
 const PRO_HEAVY_DUTY_COMPLEMENT_SLUGS = new Set([
   "simple-green-pro-hd",
@@ -60,6 +62,48 @@ function getScore(product: {
   rating?: { finalScore?: number };
 }) {
   return product.finalScore ?? product.score ?? product.rating?.finalScore ?? null;
+}
+
+function cleaningPowerScore(slug: string): number | null {
+  const snap = getPublishedProductBySlug(slug);
+  if (!snap) return null;
+  return snap.rating.cleaningPower.score;
+}
+
+function getRecommendationLabels(products: PublishedProductLike[]) {
+  if (!products || products.length === 0) return {};
+
+  const bestOverall = products[0]?.slug;
+  const bestForHeavy = products.find((p) => {
+    if (PRO_HEAVY_DUTY_COMPLEMENT_SLUGS.has(p.slug)) return true;
+    const s = cleaningPowerScore(p.slug);
+    return s !== null && s >= 8;
+  })?.slug;
+  const bestForMaintenance = products.find((p) => {
+    if (p.intent === "maintain") return true;
+    const s = cleaningPowerScore(p.slug);
+    return s !== null && s <= 5;
+  })?.slug;
+
+  const proOption = products.find((p) => PRO_HEAVY_DUTY_COMPLEMENT_SLUGS.has(p.slug));
+
+  return {
+    bestOverall,
+    bestForHeavy,
+    bestForMaintenance,
+    professional: proOption?.slug,
+  };
+}
+
+function recommendationShortcutLabel(
+  slug: string,
+  labels: ReturnType<typeof getRecommendationLabels>,
+): string | undefined {
+  if (slug === labels.bestOverall) return "Best overall";
+  if (slug === labels.bestForHeavy) return "Best for heavy buildup";
+  if (slug === labels.bestForMaintenance) return "Best for maintenance";
+  if (slug === labels.professional) return "Professional-grade option";
+  return undefined;
 }
 
 function explainLines(reasons: string[]): { summary: string[]; cautionsFromReasons: string[] } {
@@ -114,6 +158,142 @@ function contextCalloutCopy(tone: RecommendationContextTone | undefined): string
   return null;
 }
 
+type RecommendationProductColumnProps = {
+  product: PublishedProductLike;
+  index: number;
+  prioritizedProducts: PublishedProductLike[];
+  expandedForCompare: PublishedProductLike[];
+  problem: string;
+  surface: string;
+  effectiveIntent: ProductCleaningIntent;
+  showScores: boolean;
+  showReasons: boolean;
+  showComparisons: boolean;
+  cardLabel?: string;
+  highlight?: boolean;
+};
+
+function RecommendationProductColumn({
+  product,
+  index,
+  prioritizedProducts,
+  expandedForCompare,
+  problem,
+  surface,
+  effectiveIntent,
+  showScores,
+  showReasons,
+  showComparisons,
+  cardLabel,
+  highlight,
+}: RecommendationProductColumnProps) {
+  const reasons = buildRecommendationReasons({
+    slug: product.slug,
+    problem,
+    surface,
+    intent: effectiveIntent,
+  });
+  const caveat = buildRecommendationCaveat({
+    slug: product.slug,
+    problem,
+    surface,
+    intent: effectiveIntent,
+  });
+  const { summary, cautionsFromReasons } = explainLines(reasons);
+  const displayReasons =
+    summary.length > 0 ? summary : reasons.filter((r) => !r.startsWith("Caution:")).slice(0, 2);
+  const conf = recommendationConfidence({
+    slug: product.slug,
+    problem,
+    surface,
+    intent: effectiveIntent,
+  });
+  const scoreVal = getScore(product);
+  const losesLine = whenThisLosesOnPlaybook(product.slug, problem, surface, effectiveIntent);
+
+  const compare =
+    showComparisons ?
+      findComparisonLink(product.slug, index, prioritizedProducts, expandedForCompare)
+    : null;
+
+  const published = getPublishedProductBySlug(product.slug);
+
+  return (
+    <div className="space-y-3">
+      {published ? (
+        <ProductCard
+          product={published}
+          label={cardLabel}
+          highlight={highlight}
+          fitLabel={recommendationConfidenceLabel(conf)}
+        />
+      ) : (
+        <div className="space-y-2 rounded-2xl border border-[#C9B27C] bg-white p-4 shadow-sm">
+          <p className="text-sm font-medium text-neutral-800">{product.title ?? product.slug}</p>
+          <ProductPurchaseActions
+            product={{ ...product, name: product.title }}
+            viewHref={`/products/${product.slug}`}
+            forcePrimary
+            highlight={highlight}
+          />
+        </div>
+      )}
+
+      {published ? (
+        <div className="space-y-2 rounded-lg border border-neutral-200 bg-white/80 p-3 shadow-sm">
+          {showScores ? (
+            <div className="text-sm font-medium text-neutral-800">
+              Score: {typeof scoreVal === "number" ? Math.round(scoreVal) : "—"}
+            </div>
+          ) : null}
+
+          {PRO_HEAVY_DUTY_COMPLEMENT_SLUGS.has(product.slug) ? (
+            <p className="text-xs text-neutral-600">Heavy-duty / pro-style option for tougher jobs.</p>
+          ) : null}
+
+          <div className="flex flex-wrap items-center gap-2">
+            <RecommendationConfidenceBadge level={conf} />
+          </div>
+          <p className="text-[10px] leading-snug text-neutral-500">
+            {recommendationConfidenceExplanation(conf)}
+          </p>
+
+          {showReasons ? (
+            <div className="text-sm text-gray-600">
+              {displayReasons.length ? (
+                displayReasons.map((r, i) => (
+                  <div key={i}>• {r}</div>
+                ))
+              ) : (
+                <div>• Fits this scenario among the picks shown for this page.</div>
+              )}
+            </div>
+          ) : null}
+
+          {cautionsFromReasons.map((r, i) => (
+            <p key={`cr-${i}`} className="text-sm text-amber-900/90">
+              {r}
+            </p>
+          ))}
+
+          {caveat ? <p className="text-sm font-medium text-amber-900/90">Caution: {caveat}</p> : null}
+
+          {losesLine ? <p className="text-xs text-red-600">{losesLine}</p> : null}
+
+          {compare ? (
+            <Link
+              href={`/compare/products/${compare.compareSlug}`}
+              className="inline-block text-sm font-medium text-[#0F172A] underline decoration-[#C9B27C]/60 underline-offset-2 hover:text-neutral-700"
+            >
+              Compare with {compare.peerTitle} →
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export default function RecommendedProductsForTopic({
   problem,
   surface,
@@ -140,7 +320,44 @@ export default function RecommendedProductsForTopic({
     intent: effectiveIntent,
   });
 
+  const labels = getRecommendationLabels(products);
+
+  const priorityOrderRaw = [
+    labels.bestOverall,
+    labels.bestForHeavy,
+    labels.bestForMaintenance,
+    labels.professional,
+  ].filter((slug): slug is string => Boolean(slug));
+  const priorityOrder = [...new Set(priorityOrderRaw)];
+
+  const prioritizedProducts = [
+    ...priorityOrder
+      .map((slug) => products.find((p) => p.slug === slug))
+      .filter((p): p is PublishedProductLike => p != null),
+    ...products.filter((p) => !priorityOrder.includes(p.slug)),
+  ];
+
+  const bestOverallSlug = labels.bestOverall;
+  const bestOverallProduct =
+    bestOverallSlug ? prioritizedProducts.find((p) => p.slug === bestOverallSlug) : undefined;
+  const secondaryProducts = bestOverallProduct
+    ? prioritizedProducts.filter((p) => p.slug !== bestOverallProduct.slug)
+    : prioritizedProducts;
+  const heroIndex =
+    bestOverallProduct ? prioritizedProducts.findIndex((p) => p.slug === bestOverallProduct.slug) : 0;
+
   const contextBody = contextCalloutCopy(contextTone);
+
+  const columnPropsBase = {
+    prioritizedProducts,
+    expandedForCompare,
+    problem,
+    surface,
+    effectiveIntent,
+    showScores,
+    showReasons,
+    showComparisons,
+  };
 
   if (!products.length) {
     return (
@@ -149,7 +366,7 @@ export default function RecommendedProductsForTopic({
           {sectionTitle ?? "Recommended products for this problem"}
         </h2>
         <p className="mt-3 text-sm text-zinc-600">
-          Not sure what to use? The system matches products based on how cleaning actually works — not guesses.
+          {RECOMMENDATION_EMPTY_STATE_LINE}
         </p>
       </section>
     );
@@ -170,130 +387,43 @@ export default function RecommendedProductsForTopic({
             <span className="font-medium">Context:</span> {contextBody}
           </div>
         ) : null}
-        <p className="mt-2 text-xs leading-relaxed text-neutral-500">
-          Confidence labels mean: <span className="font-medium text-neutral-700">High</span> — strong problem +
-          surface + chemistry alignment without a hard caveat; <span className="font-medium text-neutral-700">Medium</span>{" "}
-          — useful but verify labels; <span className="font-medium text-neutral-700">Situational</span> — caveats or
-          partial listing—read the note on each card.
+      </div>
+
+      <div className="mb-4 space-y-2">
+        <p className="text-sm text-neutral-600">
+          These products are selected based on what actually works for the problem, surface, and cleaning goal.
+        </p>
+        <p className="text-xs text-neutral-500">
+          Start with <span className="font-medium text-neutral-700">Best overall</span>, then use the other picks
+          for heavier buildup, maintenance, or a stronger professional option.
         </p>
       </div>
 
-      <p className="mb-4 text-sm text-zinc-600">
-        These products are selected based on what actually works for this specific problem.
-      </p>
+      {bestOverallProduct ? (
+        <div className="mb-10">
+          <div className="mb-2 text-sm font-semibold text-emerald-700">
+            ⭐ Best Overall — Recommended Starting Point
+          </div>
+          <RecommendationProductColumn
+            {...columnPropsBase}
+            product={bestOverallProduct}
+            index={heroIndex >= 0 ? heroIndex : 0}
+            highlight
+          />
+        </div>
+      ) : null}
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {products.map((product, index) => {
-          const reasons = buildRecommendationReasons({
-            slug: product.slug,
-            problem,
-            surface,
-            intent: effectiveIntent,
-          });
-          const caveat = buildRecommendationCaveat({
-            slug: product.slug,
-            problem,
-            surface,
-            intent: effectiveIntent,
-          });
-          const { summary, cautionsFromReasons } = explainLines(reasons);
-          const displayReasons =
-            summary.length > 0 ? summary : reasons.filter((r) => !r.startsWith("Caution:")).slice(0, 2);
-          const conf = recommendationConfidence({
-            slug: product.slug,
-            problem,
-            surface,
-            intent: effectiveIntent,
-          });
-          const scoreVal = getScore(product);
-          const losesLine = whenThisLosesOnPlaybook(product.slug, problem, surface, effectiveIntent);
-
-          const compare =
-            showComparisons ? findComparisonLink(product.slug, index, products, expandedForCompare) : null;
-
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {secondaryProducts.map((product) => {
+          const index = prioritizedProducts.findIndex((p) => p.slug === product.slug);
           return (
-            <div
+            <RecommendationProductColumn
               key={product.slug}
-              className="space-y-2 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm"
-            >
-              <ProductImage
-                product={{
-                  name: product.title ?? product.slug,
-                  primaryImageUrl: product.primaryImageUrl,
-                  imageUrls: product.imageUrls,
-                }}
-                aspect="square"
-                rounded="xl"
-                sizes="(max-width: 768px) 100vw, 25vw"
-              />
-              <div className="flex items-center justify-between gap-2">
-                <Link
-                  href={`/products/${product.slug}`}
-                  className="min-w-0 font-semibold text-neutral-900 hover:underline"
-                >
-                  {product.title ?? product.slug}
-                </Link>
-                {showScores ? (
-                  <span className="shrink-0 text-sm font-medium text-neutral-800">
-                    Score: {typeof scoreVal === "number" ? Math.round(scoreVal) : "—"}
-                  </span>
-                ) : null}
-              </div>
-
-              {product.brand ? <div className="text-sm text-neutral-500">{product.brand}</div> : null}
-
-              {PRO_HEAVY_DUTY_COMPLEMENT_SLUGS.has(product.slug) ? (
-                <p className="text-xs text-neutral-600">Heavy-duty / pro-style option for tougher jobs.</p>
-              ) : null}
-
-              <div className="flex flex-wrap items-center gap-2">
-                <RecommendationConfidenceBadge level={conf} />
-                <span className="text-xs text-gray-500">
-                  Confidence: {recommendationConfidenceLabel(conf)}
-                </span>
-              </div>
-              <p className="text-[10px] leading-snug text-neutral-500">
-                {recommendationConfidenceExplanation(conf)}
-              </p>
-
-              {showReasons ? (
-                <div className="text-sm text-gray-600">
-                  {displayReasons.length ? (
-                    displayReasons.map((r, i) => (
-                      <div key={i}>• {r}</div>
-                    ))
-                  ) : (
-                    <div>• Fits this scenario in the ranked library set.</div>
-                  )}
-                </div>
-              ) : null}
-
-              {cautionsFromReasons.map((r, i) => (
-                <p key={`cr-${i}`} className="text-sm text-amber-900/90">
-                  {r}
-                </p>
-              ))}
-
-              {caveat ? <p className="text-sm font-medium text-amber-900/90">Caution: {caveat}</p> : null}
-
-              {losesLine ? <p className="text-xs text-red-600">{losesLine}</p> : null}
-
-              {compare ? (
-                <Link
-                  href={`/compare/products/${compare.compareSlug}`}
-                  className="inline-block text-sm font-medium text-[#0F172A] underline decoration-[#C9B27C]/60 underline-offset-2 hover:text-neutral-700"
-                >
-                  Compare with {compare.peerTitle} →
-                </Link>
-              ) : null}
-
-              <ProductPurchaseActions
-                product={{ ...product, name: product.title }}
-                viewHref={`/products/${product.slug}`}
-                usedForSummary={product.compatibleProblems?.slice(0, 3).join(" · ")}
-                compact
-              />
-            </div>
+              {...columnPropsBase}
+              product={product}
+              index={index >= 0 ? index : 0}
+              cardLabel={recommendationShortcutLabel(product.slug, labels)}
+            />
           );
         })}
       </div>

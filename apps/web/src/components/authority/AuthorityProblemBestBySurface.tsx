@@ -61,8 +61,8 @@ export function AuthorityProblemBestBySurface({
   return (
     <AuthoritySection title="Best picks by surface">
       <p className="font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">
-        Live top library picks for this problem on each authority surface (up to three when confidence is high)—same
-        engine as product pages and playbooks.
+        Live top library picks for this problem on each surface (up to three when the lead pick is a clear choice for
+        that pairing)—the same picks you see on playbooks and product pages.
       </p>
       {data.bestBySurfaceExtras?.length ? (
         <ul className="mt-4 space-y-2 font-[var(--font-manrope)] text-sm text-[#0F172A]">

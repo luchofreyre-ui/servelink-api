@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 
 type ProductPurchaseActionsProps = {
@@ -13,60 +15,85 @@ type ProductPurchaseActionsProps = {
   compact?: boolean;
   /** Compact line above CTAs (e.g. library problem labels). */
   usedForSummary?: string | null;
+  /** Full-width primary Amazon CTA; suppresses extra copy above buttons. */
+  forcePrimary?: boolean;
+  /** Stronger emerald styling for hero recommendation card. */
+  highlight?: boolean;
 };
-
-const rowClass = (compact: boolean) =>
-  compact ? "flex flex-wrap gap-2" : "flex flex-wrap gap-3";
 
 export function ProductPurchaseActions({
   product,
   viewHref,
   compact = false,
   usedForSummary,
+  forcePrimary = false,
+  highlight = false,
 }: ProductPurchaseActionsProps) {
-  const label = product.buyLabel || "Buy on Amazon";
   const purchaseAvailable = Boolean(product.isPurchaseAvailable);
-  const purchaseUrl = purchaseAvailable ? getProductPurchaseUrl(product) : null;
+  const purchaseUrl = getProductPurchaseUrl(product);
   const usedForTrimmed = usedForSummary?.trim();
+  const suppressCtaCopy = compact || forcePrimary;
 
-  if (!purchaseAvailable && !viewHref) return null;
-  if (purchaseAvailable && !purchaseUrl && !viewHref) return null;
+  const primaryButtonClass = clsx(
+    "inline-flex items-center justify-center rounded-full font-semibold text-white transition",
+    highlight
+      ? "bg-emerald-600 py-4 text-base hover:bg-emerald-700"
+      : forcePrimary
+        ? "bg-[#0D9488] py-3 text-sm hover:bg-[#0f766e]"
+        : "bg-[#0D9488] px-4 py-2.5 text-sm hover:bg-[#0f766e]",
+    (forcePrimary || highlight) && "w-full justify-center",
+  );
 
-  if (purchaseAvailable && purchaseUrl) {
+  const secondaryButtonClass =
+    "inline-flex items-center justify-center rounded-full border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-700 transition hover:border-neutral-300 hover:bg-neutral-50";
+
+  if (!purchaseUrl && !viewHref) return null;
+
+  const amazonLabel = purchaseAvailable ? "Buy on Amazon" : "View on Amazon";
+
+  const stackVertically = compact || forcePrimary;
+  const buttonRowClass = stackVertically ? "flex flex-col space-y-2" : "flex flex-wrap gap-3";
+
+  if (purchaseUrl) {
     return (
-      <div className={compact ? "pt-2" : "pt-3"}>
-        {usedForTrimmed ? (
+      <div className={suppressCtaCopy ? "pt-0" : compact ? "pt-2" : "pt-3"}>
+        {!suppressCtaCopy && usedForTrimmed ? (
           <p className="mb-1.5 text-xs leading-snug text-neutral-600">Used for: {usedForTrimmed}</p>
         ) : null}
-        <div className={rowClass(compact)}>
-        <a
-          href={purchaseUrl}
-          target="_blank"
-          rel="noopener noreferrer sponsored"
-          className="inline-flex flex-col items-center justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
-        >
-          <span>{label}</span>
-          <span className="text-xs font-normal leading-tight text-zinc-400">via Amazon</span>
-        </a>
+        <div className={buttonRowClass}>
+          <a
+            href={purchaseUrl}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className={primaryButtonClass}
+          >
+            {amazonLabel}
+          </a>
+          {viewHref ? (
+            <a
+              href={viewHref}
+              className={`${secondaryButtonClass} ${forcePrimary ? "w-full justify-center" : ""}`}
+            >
+              Full details
+            </a>
+          ) : null}
         </div>
       </div>
     );
   }
 
-  if (!viewHref) return null;
-
   return (
-    <div className={compact ? "pt-2" : "pt-3"}>
-      {usedForTrimmed ? (
+    <div className={suppressCtaCopy ? "pt-0" : compact ? "pt-2" : "pt-3"}>
+      {!suppressCtaCopy && usedForTrimmed ? (
         <p className="mb-1.5 text-xs leading-snug text-neutral-600">Used for: {usedForTrimmed}</p>
       ) : null}
-      <div className={rowClass(compact)}>
-      <a
-        href={viewHref}
-        className="inline-flex items-center justify-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
-      >
-        View product
-      </a>
+      <div className={buttonRowClass}>
+        <a
+          href={viewHref!}
+          className={`${secondaryButtonClass} ${forcePrimary ? "w-full justify-center" : ""}`}
+        >
+          Full details
+        </a>
       </div>
     </div>
   );

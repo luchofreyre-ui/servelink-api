@@ -214,8 +214,8 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
         <AuthoritySection title="Product vs product comparisons">
           <p className="font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">
-            Head-to-head dossier pages (same decision system as recommendations) live in the product comparison
-            hub—useful when two bottles look interchangeable but sit in different chemistry lanes.
+            Head-to-head dossier pages use the same picks as recommendations—useful when two bottles look interchangeable
+            but sit in different chemistry lanes.
           </p>
           <p className="mt-3">
             <Link href="/compare/products" className="font-medium text-[#0D9488] hover:underline">

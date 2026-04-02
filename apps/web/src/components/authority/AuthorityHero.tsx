@@ -12,7 +12,7 @@ export function AuthorityHero({
       <p className="mb-2 font-[var(--font-manrope)] text-sm font-semibold uppercase tracking-[0.12em] text-[#64748B]">
         {eyebrow}
       </p>
-      <h1 className="mb-3 font-[var(--font-poppins)] text-4xl font-semibold tracking-tight text-[#0F172A]">
+      <h1 className="mb-3 font-[var(--font-poppins)] text-3xl font-semibold tracking-tight text-[#0F172A]">
         {title}
       </h1>
       <p className="max-w-3xl font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">{description}</p>

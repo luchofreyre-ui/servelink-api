@@ -155,7 +155,7 @@ export default function ProductSummaryRail(props: Props) {
             {typeof view.score === "number" ? view.score.toFixed(1) : "—"}
           </div>
           <div className="mt-2 text-sm text-neutral-600">
-            Best-fit heuristic from chemistry, safety, and declared surface–problem tags—not a marketing score.
+            Reflects chemistry fit, safety limits, and declared surface–problem tags—not popularity or reviews alone.
           </div>
         </div>
         </div>
