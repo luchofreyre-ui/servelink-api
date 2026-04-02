@@ -60,8 +60,13 @@ export function resolveProductRecommendationContextForProblemPage(
 ): ProductRecommendationContext | null {
   const directProblem = productProblemStringForAuthorityProblemSlug(problemSlug);
   const normalizedProblem = productProblemStringForAuthorityProblemSlug(normalizeAuthorityProblemSlug(problemSlug));
-  const problem = directProblem ?? normalizedProblem;
-  if (!problem) return null;
+
+  const problem =
+    directProblem ?? normalizedProblem ?? problemSlug.replace(/-/g, " ");
+
+  if (!directProblem && !normalizedProblem) {
+    console.warn("[ProductContextFallback] using raw slug:", problemSlug);
+  }
 
   const authSurface = firstAuthoritySurfaceForProblem(problemSlug);
   const surface = authSurface ? productSurfaceStringForAuthoritySurfaceSlug(authSurface) ?? undefined : undefined;
