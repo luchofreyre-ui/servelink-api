@@ -15,6 +15,10 @@ import {
 } from "@/lib/products/getRecommendedProducts";
 import { getRecommendedProductsForDisplay } from "@/lib/products/productRecommendationDensity";
 import {
+  assignRecommendationRoleLabels,
+  PRO_HEAVY_DUTY_COMPLEMENT_SLUGS,
+} from "@/lib/products/recommendationRoles";
+import {
   buildRecommendationCaveat,
   buildRecommendationReasons,
 } from "@/lib/products/recommendationExplanation";
@@ -27,12 +31,6 @@ import { whenThisLosesOnPlaybook } from "@/lib/products/productWhenThisLoses";
 import { getPublishedProductBySlug } from "@/lib/products/productPublishing";
 import type { ProductCleaningIntent } from "@/lib/products/productTypes";
 import { ProductCard } from "@/components/products/ProductCard";
-
-const PRO_HEAVY_DUTY_COMPLEMENT_SLUGS = new Set([
-  "simple-green-pro-hd",
-  "purple-power-industrial-strength-cleaner-degreaser",
-  "oil-eater-cleaner-degreaser",
-]);
 
 export type RecommendationContextTone =
   | "direct"
@@ -54,6 +52,8 @@ type Props = {
   showScores?: boolean;
   showReasons?: boolean;
   showComparisons?: boolean;
+  /** On `/compare/products/A-vs-B`, both dossier SKUs must appear in this list. */
+  pinnedProductSlugs?: readonly string[];
 };
 
 function getScore(product: {
@@ -64,40 +64,9 @@ function getScore(product: {
   return product.finalScore ?? product.score ?? product.rating?.finalScore ?? null;
 }
 
-function cleaningPowerScore(slug: string): number | null {
-  const snap = getPublishedProductBySlug(slug);
-  if (!snap) return null;
-  return snap.rating.cleaningPower.score;
-}
-
-function getRecommendationLabels(products: PublishedProductLike[]) {
-  if (!products || products.length === 0) return {};
-
-  const bestOverall = products[0]?.slug;
-  const bestForHeavy = products.find((p) => {
-    if (PRO_HEAVY_DUTY_COMPLEMENT_SLUGS.has(p.slug)) return true;
-    const s = cleaningPowerScore(p.slug);
-    return s !== null && s >= 8;
-  })?.slug;
-  const bestForMaintenance = products.find((p) => {
-    if (p.intent === "maintain") return true;
-    const s = cleaningPowerScore(p.slug);
-    return s !== null && s <= 5;
-  })?.slug;
-
-  const proOption = products.find((p) => PRO_HEAVY_DUTY_COMPLEMENT_SLUGS.has(p.slug));
-
-  return {
-    bestOverall,
-    bestForHeavy,
-    bestForMaintenance,
-    professional: proOption?.slug,
-  };
-}
-
 function recommendationShortcutLabel(
   slug: string,
-  labels: ReturnType<typeof getRecommendationLabels>,
+  labels: ReturnType<typeof assignRecommendationRoleLabels>,
 ): string | undefined {
   if (slug === labels.bestOverall) return "Best overall";
   if (slug === labels.bestForHeavy) return "Best for heavy buildup";
@@ -304,6 +273,7 @@ export default function RecommendedProductsForTopic({
   showScores = true,
   showReasons = true,
   showComparisons = true,
+  pinnedProductSlugs,
 }: Props) {
   const effectiveIntent = intent ?? inferRecommendationIntent(problem);
   const products = getRecommendedProductsForDisplay({
@@ -311,6 +281,7 @@ export default function RecommendedProductsForTopic({
     surface,
     intent: effectiveIntent,
     densityAuthorityProblemSlug,
+    pinnedSlugs: pinnedProductSlugs,
   });
 
   const expandedForCompare = getRecommendedProducts({
@@ -318,9 +289,10 @@ export default function RecommendedProductsForTopic({
     surface,
     limit: 15,
     intent: effectiveIntent,
+    pinnedSlugs: pinnedProductSlugs,
   });
 
-  const labels = getRecommendationLabels(products);
+  const labels = assignRecommendationRoleLabels(products, surface);
 
   const priorityOrderRaw = [
     labels.bestOverall,
@@ -409,6 +381,7 @@ export default function RecommendedProductsForTopic({
             product={bestOverallProduct}
             index={heroIndex >= 0 ? heroIndex : 0}
             highlight
+            cardLabel={recommendationShortcutLabel(bestOverallProduct.slug, labels)}
           />
         </div>
       ) : null}

@@ -3,11 +3,57 @@ import {
   productProblemStringForAuthorityProblemSlug,
   productSurfaceStringForAuthoritySurfaceSlug,
 } from "@/lib/authority/authorityProductTaxonomyBridge";
+import { getPublishedProductBySlug } from "@/lib/products/productPublishing";
 import { getRecommendedProducts, type PublishedProductLike } from "@/lib/products/getRecommendedProducts";
 import type { ProductCleaningIntent } from "@/lib/products/productTypes";
 
 const MIN_DENSITY = 2;
 const MAX_DENSITY = 4;
+const FETCH_BEFORE_DEDUPE = 14;
+
+function brandCategoryFamilyKey(p: PublishedProductLike): string {
+  const snap = getPublishedProductBySlug(p.slug);
+  if (!snap) return `slug:${p.slug}`;
+  const cat = snap.category.split(/[,/&]/)[0]?.trim().toLowerCase() ?? "";
+  const brand = snap.brand.toLowerCase().replace(/\s+/g, " ").trim();
+  return `${brand}::${cat}`;
+}
+
+/**
+ * Avoid stacking multiple near-duplicate SKUs (same brand + category family) in the top list.
+ * `protect` slugs are always kept first (e.g. comparison page dossier pair).
+ */
+export function dedupeBrandCategoryStack(
+  products: PublishedProductLike[],
+  max: number,
+  protect?: ReadonlySet<string>,
+): PublishedProductLike[] {
+  const out: PublishedProductLike[] = [];
+  const seenSlug = new Set<string>();
+  const seenFamily = new Set<string>();
+
+  if (protect?.size) {
+    for (const p of products) {
+      if (!protect.has(p.slug) || seenSlug.has(p.slug)) continue;
+      out.push(p);
+      seenSlug.add(p.slug);
+      seenFamily.add(brandCategoryFamilyKey(p));
+      if (out.length >= max) return out;
+    }
+  }
+
+  for (const p of products) {
+    if (out.length >= max) break;
+    if (seenSlug.has(p.slug)) continue;
+    const fam = brandCategoryFamilyKey(p);
+    if (seenFamily.has(fam)) continue;
+    seenSlug.add(p.slug);
+    seenFamily.add(fam);
+    out.push(p);
+  }
+
+  return out;
+}
 
 /**
  * Returns up to four ranked products. If the primary surface yields fewer than two picks,
@@ -19,10 +65,20 @@ export function getRecommendedProductsForDisplay(args: {
   surface: string;
   intent: ProductCleaningIntent;
   densityAuthorityProblemSlug?: string;
+  pinnedSlugs?: readonly string[];
 }): PublishedProductLike[] {
-  const { problem, surface, intent, densityAuthorityProblemSlug } = args;
+  const { problem, surface, intent, densityAuthorityProblemSlug, pinnedSlugs } = args;
+  const protect = pinnedSlugs?.length ? new Set(pinnedSlugs) : undefined;
 
-  const primary = getRecommendedProducts({ problem, surface, limit: MAX_DENSITY, intent });
+  const primaryRaw = getRecommendedProducts({
+    problem,
+    surface,
+    limit: FETCH_BEFORE_DEDUPE,
+    intent,
+    pinnedSlugs,
+  });
+  const primary = dedupeBrandCategoryStack(primaryRaw, MAX_DENSITY, protect);
+
   if (primary.length >= MIN_DENSITY || !densityAuthorityProblemSlug) {
     return primary;
   }
@@ -39,14 +95,20 @@ export function getRecommendedProductsForDisplay(args: {
     const sStr = productSurfaceStringForAuthoritySurfaceSlug(surfSlug);
     if (!sStr || sStr === surface) continue;
 
-    const extra = getRecommendedProducts({ problem, surface: sStr, limit: MAX_DENSITY, intent });
+    const extra = getRecommendedProducts({
+      problem,
+      surface: sStr,
+      limit: FETCH_BEFORE_DEDUPE,
+      intent,
+      pinnedSlugs,
+    });
     for (const p of extra) {
       if (seen.has(p.slug)) continue;
       seen.add(p.slug);
       merged.push(p);
-      if (merged.length >= MAX_DENSITY) return merged;
+      if (merged.length >= MAX_DENSITY * 3) break;
     }
   }
 
-  return merged.slice(0, MAX_DENSITY);
+  return dedupeBrandCategoryStack(merged, MAX_DENSITY, protect);
 }

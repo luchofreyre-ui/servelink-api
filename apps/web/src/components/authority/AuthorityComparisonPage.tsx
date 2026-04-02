@@ -398,7 +398,10 @@ export function AuthorityComparisonPage({
         ) : null}
 
         {data.type === "product_comparison" ? (
-          <ContextualProductRecommendations context={comparisonProductContext} />
+          <ContextualProductRecommendations
+            context={comparisonProductContext}
+            pinnedProductSlugs={[data.leftSlug, data.rightSlug]}
+          />
         ) : null}
 
         {data.type === "product_comparison" && data.productScenarioWinners && data.productScenarioWinners.length > 0 ? (

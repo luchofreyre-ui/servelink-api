@@ -11,6 +11,7 @@ export type PublishedProductLike = {
   compatibleSurfaces?: string[];
   rating?: {
     finalScore?: number;
+    cleaningPower?: { score: number };
   };
   finalScore?: number;
   score?: number;
@@ -28,6 +29,8 @@ export type RecommendationInput = {
   limit?: number;
   /** When omitted, derived from `problem` via `inferRecommendationIntent`. */
   intent?: ProductCleaningIntent;
+  /** Large rank boost so these SKUs stay in the shortlist (e.g. product comparison pages). */
+  pinnedSlugs?: readonly string[];
 };
 
 const MINERAL_HEAVY = new Set([
@@ -1075,30 +1078,37 @@ export function getRecommendedProducts({
   surface,
   limit = 3,
   intent: intentOverride,
+  pinnedSlugs = [],
 }: RecommendationInput): PublishedProductLike[] {
   const products = getAllPublishedProducts() as PublishedProductLike[];
   const effectiveIntent = intentOverride ?? inferRecommendationIntent(problem);
   const pNorm = problem.toLowerCase().trim();
+  const pinned = new Set(pinnedSlugs);
 
   return products
     .map((product) => {
+      const isPinned = pinned.has(product.slug);
+
       if (
         product.slug === "heinz-distilled-white-vinegar-5pct" &&
-        VINEGAR_HARD_EXCLUDE_PROBLEMS.has(pNorm)
+        VINEGAR_HARD_EXCLUDE_PROBLEMS.has(pNorm) &&
+        !isPinned
       ) {
         return null;
       }
 
       if (
         DRAIN_OPENER_SLUGS.has(product.slug) &&
-        (surface.toLowerCase().trim() !== "drains" || pNorm !== "clog")
+        (surface.toLowerCase().trim() !== "drains" || pNorm !== "clog") &&
+        !isPinned
       ) {
         return null;
       }
 
       if (
         OVEN_CLEANER_SLUGS.has(product.slug) &&
-        (!OVEN_CLASS_PROBLEMS.has(pNorm) || !isOvenClassSurface(surface))
+        (!OVEN_CLASS_PROBLEMS.has(pNorm) || !isOvenClassSurface(surface)) &&
+        !isPinned
       ) {
         return null;
       }
@@ -1106,7 +1116,8 @@ export function getRecommendedProducts({
       if (
         KITCHEN_HOOD_DEGREASER_SLUGS.has(product.slug) &&
         isOvenClassSurface(surface) &&
-        OVEN_CLASS_PROBLEMS.has(pNorm)
+        OVEN_CLASS_PROBLEMS.has(pNorm) &&
+        !isPinned
       ) {
         return null;
       }
@@ -1116,14 +1127,23 @@ export function getRecommendedProducts({
 
       const base = problemMatch * 5 + surfaceMatch * 3 + getScore(product);
       const adjustment = recommendationAdjustment(product, problem, surface, effectiveIntent, products);
-      const rank = base + adjustment + intentAlignmentBoost(product, effectiveIntent);
+      const cpScore = product.rating?.cleaningPower?.score ?? 5;
+      const pinnedCompatBoost = isPinned && !problemMatch && !surfaceMatch ? 42 : 0;
+      const pinnedBoost = isPinned ? 78 + pinnedCompatBoost : 0;
+      const rank =
+        base +
+        adjustment +
+        intentAlignmentBoost(product, effectiveIntent) +
+        cpScore * 0.52 +
+        pinnedBoost;
 
-      return { product, rank, score: getScore(product), problemMatch, surfaceMatch };
+      return { product, rank, score: getScore(product), problemMatch, surfaceMatch, cpScore };
     })
     .filter((item): item is NonNullable<typeof item> => item !== null)
-    .filter((item) => item.problemMatch || item.surfaceMatch)
+    .filter((item) => pinned.has(item.product.slug) || item.problemMatch || item.surfaceMatch)
     .sort((a, b) => {
       if (b.rank !== a.rank) return b.rank - a.rank;
+      if (b.cpScore !== a.cpScore) return b.cpScore - a.cpScore;
       if (b.score !== a.score) return b.score - a.score;
       if (
         ENZYME_PRODUCT_SLUGS.has(a.product.slug) &&

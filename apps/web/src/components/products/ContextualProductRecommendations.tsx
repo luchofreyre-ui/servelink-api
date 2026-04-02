@@ -6,8 +6,10 @@ const DEFAULT_SURFACE = "tile";
 
 export function ContextualProductRecommendations({
   context,
+  pinnedProductSlugs,
 }: {
   context: ProductRecommendationContext | null;
+  pinnedProductSlugs?: readonly string[];
 }) {
   return (
     <section className="mt-10">
@@ -19,6 +21,7 @@ export function ContextualProductRecommendations({
           intent={context.intent}
           densityAuthorityProblemSlug={context.densityAuthorityProblemSlug}
           contextTone={context.contextTone}
+          pinnedProductSlugs={pinnedProductSlugs}
           showScores
           showReasons
           showComparisons
