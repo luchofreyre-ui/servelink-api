@@ -1,4 +1,4 @@
-import { PublicSiteHeader } from "../layout/PublicSiteHeader";
+import { ServiceHeader } from "../layout/ServiceHeader";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
 import { getRelatedPublicContentBySlug } from "../content/publicContentSelectors";
 import {
@@ -48,7 +48,7 @@ export function ServicePageTemplate({ page }: ServicePageTemplateProps) {
         />
       ))}
 
-      <PublicSiteHeader />
+      <ServiceHeader />
 
       <main>
         <MarketingPageHero

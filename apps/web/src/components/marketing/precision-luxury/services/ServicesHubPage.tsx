@@ -1,4 +1,4 @@
-import { PublicSiteHeader } from "../layout/PublicSiteHeader";
+import { ServiceHeader } from "../layout/ServiceHeader";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
 import { getServiceHubCards } from "../content/publicContentSelectors";
 import { MarketingLinkButton } from "../shared/MarketingLinkButton";
@@ -9,7 +9,7 @@ export function ServicesHubPage() {
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
-      <PublicSiteHeader />
+      <ServiceHeader />
 
       <main>
         <section className="relative overflow-hidden border-b border-[#C9B27C]/14">

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { PublicSiteHeader } from "../layout/PublicSiteHeader";
+import { ServiceHeader } from "../layout/ServiceHeader";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
 import { BookingFlowProgress } from "../BookingFlowProgress";
 import { bookingSteps } from "./bookingFlowData";
@@ -238,7 +238,7 @@ export function BookingFlowClient() {
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
-      <PublicSiteHeader />
+      <ServiceHeader />
 
       <main>
         <section className="border-b border-[#C9B27C]/14">

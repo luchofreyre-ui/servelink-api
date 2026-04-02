@@ -1,4 +1,4 @@
-import { PublicSiteHeader } from "../layout/PublicSiteHeader";
+import { ServiceHeader } from "../layout/ServiceHeader";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
 import {
   getHomepageFeaturedArticles,
@@ -41,7 +41,7 @@ export function PrecisionLuxuryHomepage() {
         />
       ))}
 
-      <PublicSiteHeader />
+      <ServiceHeader />
 
       <main>
         <section className="relative overflow-hidden">

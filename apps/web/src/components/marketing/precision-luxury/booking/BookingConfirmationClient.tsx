@@ -7,7 +7,7 @@ import { DeepCleanProgramCard } from "@/components/booking/deep-clean/DeepCleanP
 import { fetchPublicBookingConfirmation } from "@/lib/api/bookings";
 import { mapBookingScreenProgramToDisplay } from "@/mappers/deepCleanProgramMappers";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
-import { PublicSiteHeader } from "../layout/PublicSiteHeader";
+import { ServiceHeader } from "../layout/ServiceHeader";
 
 function formatUsdFromCents(cents: number): string {
   const n = Number.isFinite(cents) ? cents / 100 : 0;
@@ -105,7 +105,7 @@ export function BookingConfirmationClient() {
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
-      <PublicSiteHeader />
+      <ServiceHeader />
 
       <main>
         <section className="mx-auto max-w-3xl px-6 py-20 md:px-8 md:py-28">

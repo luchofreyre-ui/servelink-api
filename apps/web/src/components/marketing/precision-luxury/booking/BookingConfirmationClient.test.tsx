@@ -16,8 +16,8 @@ vi.mock("next/navigation", () => ({
   },
 }));
 
-vi.mock("../layout/PublicSiteHeader", () => ({
-  PublicSiteHeader: () => <header data-testid="pub-header" />,
+vi.mock("../layout/ServiceHeader", () => ({
+  ServiceHeader: () => <header data-testid="pub-header" />,
 }));
 vi.mock("../layout/PublicSiteFooter", () => ({
   PublicSiteFooter: () => <footer data-testid="pub-footer" />,
