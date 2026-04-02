@@ -33,7 +33,7 @@ const AUTHORITY_PROBLEM_TO_PRODUCT_PROBLEM: Record<string, string> = {
   "biofilm-buildup": "biofilm",
 };
 
-const PROBLEM_SLUG_TO_PRODUCT: Record<string, string> = {
+export const PROBLEM_SLUG_TO_PRODUCT: Record<string, string> = {
   "soap-scum": "soap scum",
   "grease-buildup": "grease buildup",
   "hard-water-deposits": "hard water stains",
@@ -96,7 +96,7 @@ const PROBLEM_SLUG_TO_PRODUCT: Record<string, string> = {
   "sink-ring-stains": "hard water stains",
 };
 
-const SURFACE_SLUG_TO_PRODUCT: Record<string, string> = {
+export const SURFACE_SLUG_TO_PRODUCT: Record<string, string> = {
   "shower-glass": "shower glass",
   tile: "tile",
   grout: "grout",

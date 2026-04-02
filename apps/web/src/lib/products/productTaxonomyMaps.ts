@@ -1,62 +1,70 @@
-export const PRODUCT_PROBLEM_MAP: Record<string, string> = {
-  "grease-buildup": "grease buildup",
-  "soap-scum": "soap scum",
+import {
+  PROBLEM_SLUG_TO_PRODUCT,
+  SURFACE_SLUG_TO_PRODUCT,
+} from "@/lib/authority/authorityProductTaxonomyBridge";
+
+/**
+ * Canonical problem slugs → product-library `compatibleProblems` strings (aligned with
+ * `authorityProductTaxonomyBridge`). Aliases extend coverage for shorthand / legacy URLs.
+ */
+const PRODUCT_PROBLEM_LABEL_ALIASES: Record<string, string> = {
   "hard-water-stains": "hard water stains",
   "hard-water-film": "hard water film",
   "mineral-deposits": "mineral deposits",
-  "water-spots": "water spots",
-  "mold": "mold",
-  "mildew": "mildew",
-  "biofilm": "biofilm",
+  mold: "mold growth",
+  mildew: "mildew stains",
+  biofilm: "biofilm",
   "sticky-residue": "sticky residue",
   "soap-residue": "soap residue",
   "food-residue": "food residue",
-  "burnt-residue": "burnt residue",
   "oil-stains": "oil stains",
   "protein-residue": "protein residue",
-  "discoloration": "discoloration",
-  "yellowing": "yellowing",
+  discoloration: "discoloration",
   "yellow-stains": "yellow stains",
   "orange-stains": "orange stains",
   "brown-stains": "brown stains",
   "black-stains": "black stains",
-  "dust-buildup": "dust buildup",
-  "odor-retention": "odor retention",
-  "streaking": "streaking",
-  "smearing": "smearing",
-  "residue": "residue",
-  "limescale": "limescale",
+  streaking: "streaking",
+  smearing: "smearing",
+  residue: "residue",
+  limescale: "limescale",
 };
 
-export const PRODUCT_SURFACE_MAP: Record<string, string> = {
-  "stainless-steel": "stainless steel",
-  "glass": "glass",
-  "shower-glass": "shower glass",
-  "tile": "tile",
-  "grout": "grout",
-  "granite": "granite",
-  "marble": "marble",
-  "quartz": "quartz",
-  "countertops": "countertops",
-  "appliances": "appliances",
-  "stovetops": "stovetops",
-  "sinks": "sinks",
-  "faucets": "faucets",
-  "mirrors": "mirrors",
-  "backsplashes": "backsplashes",
-  "vinyl": "vinyl",
-  "laminate": "laminate",
-  "hardwood": "hardwood",
-  "wood": "wood",
+export const PRODUCT_PROBLEM_MAP: Record<string, string> = {
+  ...PROBLEM_SLUG_TO_PRODUCT,
+  ...PRODUCT_PROBLEM_LABEL_ALIASES,
+};
+
+/** Shorthand / marketing surface slugs → product-library `compatibleSurfaces` strings. */
+const PRODUCT_SURFACE_LABEL_ALIASES: Record<string, string> = {
+  glass: "glass",
+  marble: "marble",
+  quartz: "quartz",
+  granite: "granite",
+  countertops: "countertops",
+  appliances: "appliances",
+  stovetops: "stovetops",
+  sinks: "sinks",
+  faucets: "faucets",
+  mirrors: "mirrors",
+  backsplashes: "backsplashes",
+  vinyl: "vinyl",
+  hardwood: "hardwood",
+  wood: "wood",
   "painted-surfaces": "painted surfaces",
   "painted-cabinets": "painted cabinets",
   "kitchen-cabinets": "kitchen cabinets",
-  "baseboards": "baseboards",
+  baseboards: "baseboards",
   "door-frames": "door frames",
   "window-tracks": "window tracks",
-  "toilets": "toilets",
-  "bathtubs": "bathtubs",
+  toilets: "toilets",
+  bathtubs: "bathtubs",
   "garbage-cans": "garbage cans",
+};
+
+export const PRODUCT_SURFACE_MAP: Record<string, string> = {
+  ...SURFACE_SLUG_TO_PRODUCT,
+  ...PRODUCT_SURFACE_LABEL_ALIASES,
 };
 
 export function getMappedProblemLabel(problemSlug?: string | null): string | null {
