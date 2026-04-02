@@ -248,4 +248,9 @@ export type CleaningProduct = {
 
   confidenceScore: number;
   lastUpdated: string;
+
+  amazonUrl?: string;
+  amazonAffiliateUrl?: string;
+  isPurchaseAvailable?: boolean;
+  buyLabel?: string;
 };

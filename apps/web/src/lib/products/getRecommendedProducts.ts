@@ -14,6 +14,10 @@ export type PublishedProductLike = {
   };
   finalScore?: number;
   score?: number;
+  amazonUrl?: string;
+  amazonAffiliateUrl?: string;
+  isPurchaseAvailable?: boolean;
+  buyLabel?: string;
 };
 
 export type RecommendationInput = {

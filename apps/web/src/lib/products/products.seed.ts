@@ -2,7 +2,74 @@ import type { ProductSeed } from "./productTypes";
 
 export type { ProductSeed } from "./productTypes";
 
-export const PRODUCTS: ProductSeed[] = [
+function withAmazonDefaults(seed: ProductSeed): ProductSeed {
+  return {
+    ...seed,
+    amazonUrl: seed.amazonUrl ?? "",
+    amazonAffiliateUrl: seed.amazonAffiliateUrl ?? "",
+    isPurchaseAvailable: seed.isPurchaseAvailable ?? false,
+    buyLabel: seed.buyLabel ?? "Buy on Amazon",
+  };
+}
+
+function amazonAffiliateTag(url: string): string {
+  if (!url) return "";
+  return url.includes("?") ? `${url}&tag=YOURTAG-20` : `${url}?tag=YOURTAG-20`;
+}
+
+/** High-visibility SKUs: real PDPs + purchase enabled (swap YOURTAG-20 when enrolled). */
+const PURCHASE_READY: Partial<
+  Record<string, Partial<Pick<ProductSeed, "amazonUrl" | "amazonAffiliateUrl" | "isPurchaseAvailable" | "buyLabel">>>
+> = {
+  "bar-keepers-friend-cleanser": {
+    isPurchaseAvailable: true,
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B000V72992"),
+  },
+  "dawn-platinum-dish-spray": {
+    isPurchaseAvailable: true,
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B0F1ZBWFYG"),
+  },
+  "clr-calcium-lime-rust": {
+    isPurchaseAvailable: true,
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B0CLX1TGS7"),
+  },
+  "windex-original-glass-cleaner": {
+    amazonUrl: "https://www.amazon.com/dp/B075NPQDTG",
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B075NPQDTG"),
+    isPurchaseAvailable: true,
+  },
+  "sprayway-glass-cleaner": {
+    amazonUrl: "https://www.amazon.com/dp/B001HZ6DLM",
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B001HZ6DLM"),
+    isPurchaseAvailable: true,
+  },
+  "invisible-glass-premium-glass-cleaner": {
+    amazonUrl: "https://www.amazon.com/dp/B001DSY4L0",
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B001DSY4L0"),
+    isPurchaseAvailable: true,
+  },
+  "goo-gone-original-liquid": {
+    amazonUrl: "https://www.amazon.com/dp/B000CIABM6",
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B000CIABM6"),
+    isPurchaseAvailable: true,
+  },
+  "krud-kutter-original-cleaner-degreaser": {
+    amazonUrl: "https://www.amazon.com/dp/B000CIIH62",
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B000CIIH62"),
+    isPurchaseAvailable: true,
+  },
+  "cerama-bryte-cooktop-cleaner": {
+    isPurchaseAvailable: true,
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B000BQ0L8Q"),
+  },
+  "lime-a-way-cleaner": {
+    amazonUrl: "https://www.amazon.com/dp/B001KBY8E6",
+    amazonAffiliateUrl: amazonAffiliateTag("https://www.amazon.com/dp/B001KBY8E6"),
+    isPurchaseAvailable: true,
+  },
+};
+
+const PRODUCTS_RAW: ProductSeed[] = [
   {
     id: "bar_keepers_friend_cleanser",
     slug: "bar-keepers-friend-cleanser",
@@ -952,3 +1019,7 @@ export const PRODUCTS: ProductSeed[] = [
     amazonUrl: "https://www.amazon.com/dp/B001F0QKZU",
   },
 ];
+
+export const PRODUCTS: ProductSeed[] = PRODUCTS_RAW.map((s) =>
+  withAmazonDefaults({ ...s, ...PURCHASE_READY[s.slug] }),
+);

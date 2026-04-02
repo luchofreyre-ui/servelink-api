@@ -31,6 +31,8 @@ import { AuthorityProductComparisonExplore } from "./AuthorityProductComparisonE
 import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
 import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
+import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
+import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
 import { resolveProductRecommendationContextForComparisonFallback } from "@/lib/products/productRecommendationContext";
 
@@ -224,6 +226,8 @@ export function AuthorityComparisonPage({
           data.topSharedSurfaceSlug,
         )
       : null;
+  const leftComparisonProduct = data.type === "product_comparison" ? getProductBySlug(data.leftSlug) : null;
+  const rightComparisonProduct = data.type === "product_comparison" ? getProductBySlug(data.rightSlug) : null;
   const schemas = [
     buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(breadcrumbs)),
     buildArticleSchema({
@@ -335,6 +339,30 @@ export function AuthorityComparisonPage({
             </table>
           </div>
         </AuthoritySection>
+
+        {data.type === "product_comparison" && leftComparisonProduct && rightComparisonProduct ? (
+          <AuthoritySection title="Purchase">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="rounded-xl border border-[#C9B27C]/25 bg-white p-4">
+                <p className="text-sm font-semibold text-[#0F172A]">{leftComparisonProduct.name}</p>
+                <ProductPurchaseActions
+                  product={leftComparisonProduct}
+                  viewHref={`/products/${leftComparisonProduct.slug}`}
+                  compact
+                />
+              </div>
+              <div className="rounded-xl border border-[#C9B27C]/25 bg-white p-4">
+                <p className="text-sm font-semibold text-[#0F172A]">{rightComparisonProduct.name}</p>
+                <ProductPurchaseActions
+                  product={rightComparisonProduct}
+                  viewHref={`/products/${rightComparisonProduct.slug}`}
+                  compact
+                />
+              </div>
+            </div>
+            <ProductAffiliateDisclosure />
+          </AuthoritySection>
+        ) : null}
 
         {data.type === "product_comparison" && data.productScenarioWinners && data.productScenarioWinners.length > 0 ? (
           <AuthoritySection title="Winner by scenario">

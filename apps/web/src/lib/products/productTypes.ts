@@ -19,6 +19,9 @@ export interface ProductSeed {
   notes?: string;
   /** Public retailer PDPs (replace with tagged affiliate URLs when enrolled). */
   amazonUrl?: string;
+  amazonAffiliateUrl?: string;
+  isPurchaseAvailable?: boolean;
+  buyLabel?: string;
   walmartUrl?: string;
   homeDepotUrl?: string;
 }
@@ -62,6 +65,9 @@ export interface PublishedProductSnapshot {
   relatedEncyclopediaLinks: ProductTaxonomyLink[];
   /** Optional retailer URLs for product detail CTAs */
   amazonUrl?: string;
+  amazonAffiliateUrl?: string;
+  isPurchaseAvailable?: boolean;
+  buyLabel?: string;
   walmartUrl?: string;
   homeDepotUrl?: string;
 }
@@ -83,6 +89,9 @@ export interface AnalyzedProduct {
   worstUseCases: string[];
   rating: ProductRating;
   amazonUrl?: string;
+  amazonAffiliateUrl?: string;
+  isPurchaseAvailable?: boolean;
+  buyLabel?: string;
   walmartUrl?: string;
   homeDepotUrl?: string;
 }

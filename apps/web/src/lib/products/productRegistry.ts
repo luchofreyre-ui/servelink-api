@@ -10,7 +10,6 @@ export type ProductDetailView = PublishedProductSnapshot & {
   replaces: string[];
   finalScore: number;
   affiliateLinks: {
-    amazon?: string;
     walmart?: string;
     homedepot?: string;
   };
@@ -28,7 +27,6 @@ export function getProductBySlug(slug: string): ProductDetailView | null {
     replaces: [],
     finalScore: p.rating.finalScore,
     affiliateLinks: {
-      amazon: p.amazonUrl ?? undefined,
       walmart: p.walmartUrl ?? undefined,
       homedepot: p.homeDepotUrl ?? undefined,
     },

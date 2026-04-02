@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
+import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import {
   getComparisonSeedBySlug,
   normalizeComparisonSlug,
@@ -245,16 +247,17 @@ export default function RecommendedProductsForTopic({
                 </Link>
               ) : null}
 
-              <Link
-                href={`/products/${product.slug}`}
-                className="inline-block text-sm font-medium text-neutral-900 hover:underline"
-              >
-                View product →
-              </Link>
+              <ProductPurchaseActions
+                product={{ ...product, name: product.title }}
+                viewHref={`/products/${product.slug}`}
+                compact
+              />
             </div>
           );
         })}
       </div>
+
+      <ProductAffiliateDisclosure />
     </section>
   );
 }

@@ -57,6 +57,9 @@ export function buildPublishedProductSnapshot(product: AnalyzedProduct): Publish
     rating: product.rating,
     relatedEncyclopediaLinks: relatedLinks,
     amazonUrl: product.amazonUrl,
+    amazonAffiliateUrl: product.amazonAffiliateUrl,
+    isPurchaseAvailable: product.isPurchaseAvailable,
+    buyLabel: product.buyLabel,
     walmartUrl: product.walmartUrl,
     homeDepotUrl: product.homeDepotUrl,
   };

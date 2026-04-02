@@ -124,7 +124,10 @@ export function analyzeAllProducts(seeds: ProductSeed[]): AnalyzedProduct[] {
       bestUseCases: narratives.bestUseCases,
       worstUseCases: narratives.worstUseCases,
       rating,
-      amazonUrl: seed.amazonUrl,
+      amazonUrl: seed.amazonUrl ?? "",
+      amazonAffiliateUrl: seed.amazonAffiliateUrl ?? "",
+      isPurchaseAvailable: seed.isPurchaseAvailable ?? false,
+      buyLabel: seed.buyLabel ?? "Buy on Amazon",
       walmartUrl: seed.walmartUrl,
       homeDepotUrl: seed.homeDepotUrl,
     };

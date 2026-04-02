@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import { getRelatedProducts } from "@/lib/products/productRelated";
 import type { ProductLike } from "@/lib/products/productRelated";
 
@@ -7,6 +8,10 @@ type RelatedProductLike = ProductLike & {
   name?: string;
   title?: string;
   brand?: string;
+  amazonUrl?: string;
+  amazonAffiliateUrl?: string;
+  isPurchaseAvailable?: boolean;
+  buyLabel?: string;
 };
 
 type Props = {
@@ -41,30 +46,35 @@ export default function RelatedProducts({
 
       <div className="grid gap-4 md:grid-cols-3">
         {items.map((item) => (
-          <Link
+          <div
             key={item.slug}
-            href={`/products/${item.slug}`}
             className="rounded-2xl border border-neutral-200 bg-white p-4 transition hover:border-[#C9B27C]/60 hover:shadow-sm"
           >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="text-base font-semibold text-neutral-900">{normalizeName(item)}</div>
-                {item.brand ? <div className="mt-1 text-sm text-neutral-500">{item.brand}</div> : null}
+            <Link href={`/products/${item.slug}`} className="block">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-base font-semibold text-neutral-900">{normalizeName(item)}</div>
+                  {item.brand ? <div className="mt-1 text-sm text-neutral-500">{item.brand}</div> : null}
+                </div>
+
+                <div className="rounded-xl bg-[#FCFAF5] px-3 py-1 text-sm font-semibold text-neutral-900">
+                  {typeof normalizeScore(item) === "number" ? normalizeScore(item)!.toFixed(1) : "—"}
+                </div>
               </div>
 
-              <div className="rounded-xl bg-[#FCFAF5] px-3 py-1 text-sm font-semibold text-neutral-900">
-                {typeof normalizeScore(item) === "number" ? normalizeScore(item)!.toFixed(1) : "—"}
-              </div>
-            </div>
+              <p className="mt-1 text-sm text-gray-500">
+                {mode === "better"
+                  ? "Stronger chemistry fit for this problem"
+                  : "Similar cleaning role with comparable behavior"}
+              </p>
+            </Link>
 
-            <p className="mt-1 text-sm text-gray-500">
-              {mode === "better"
-                ? "Stronger chemistry fit for this problem"
-                : "Similar cleaning role with comparable behavior"}
-            </p>
-
-            <div className="mt-4 text-sm font-medium text-neutral-900">View product →</div>
-          </Link>
+            <ProductPurchaseActions
+              product={{ ...item, name: normalizeName(item) }}
+              viewHref={`/products/${item.slug}`}
+              compact
+            />
+          </div>
         ))}
       </div>
     </div>

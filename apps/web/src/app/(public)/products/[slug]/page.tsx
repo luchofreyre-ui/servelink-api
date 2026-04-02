@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
+import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import ProductSummaryRail from "@/components/products/ProductSummaryRail";
 import { ProductVerdictStrip } from "@/components/products/ProductVerdictStrip";
 import RelatedProducts from "@/components/products/RelatedProducts";
@@ -52,6 +54,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <ProductVerdictStrip product={product} />
+
+      <ProductPurchaseActions product={product} />
+      <ProductAffiliateDisclosure />
 
       <section className="rounded-2xl border border-amber-200/90 bg-amber-50/50 p-6">
         <h2 className="text-lg font-semibold text-neutral-900">Common mistakes</h2>

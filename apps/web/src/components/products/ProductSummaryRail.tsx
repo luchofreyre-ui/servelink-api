@@ -1,6 +1,11 @@
 import Link from "next/link";
 
+import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
+
 type ProductLike = {
+  slug?: string;
+  name?: string;
+  title?: string;
   finalScore?: number;
   score?: number;
   chemicalClass?: string | null;
@@ -9,8 +14,11 @@ type ProductLike = {
   bestUseCases?: string[];
   avoidUseCases?: string[];
   weaknesses?: string[];
+  amazonUrl?: string;
+  amazonAffiliateUrl?: string;
+  isPurchaseAvailable?: boolean;
+  buyLabel?: string;
   affiliateLinks?: {
-    amazon?: string;
     walmart?: string;
     homedepot?: string;
   };
@@ -23,7 +31,6 @@ type LegacyProps = {
   avoidFor?: string[];
   compatibleSurfaces?: string[];
   affiliateLinks?: {
-    amazon?: string;
     walmart?: string;
     homedepot?: string;
   };
@@ -42,6 +49,14 @@ function toViewModel(props: Props) {
       compatibleSurfaces: p.compatibleSurfaces ?? [],
       primaryCaution: p.weaknesses?.[0] ?? null,
       affiliateLinks: p.affiliateLinks ?? {},
+      purchaseProduct: {
+        name: p.name ?? p.title,
+        slug: p.slug,
+        amazonUrl: p.amazonUrl,
+        amazonAffiliateUrl: p.amazonAffiliateUrl,
+        isPurchaseAvailable: p.isPurchaseAvailable,
+        buyLabel: p.buyLabel,
+      },
     };
   }
 
@@ -53,6 +68,7 @@ function toViewModel(props: Props) {
     compatibleSurfaces: props.compatibleSurfaces ?? [],
     primaryCaution: null,
     affiliateLinks: props.affiliateLinks ?? {},
+    purchaseProduct: null as null,
   };
 }
 
@@ -82,10 +98,9 @@ function SurfaceChips({ surfaces }: { surfaces: string[] }) {
 function CtaButtons({
   affiliateLinks,
 }: {
-  affiliateLinks: { amazon?: string; walmart?: string; homedepot?: string };
+  affiliateLinks: { walmart?: string; homedepot?: string };
 }) {
   const links = [
-    affiliateLinks.amazon ? { href: affiliateLinks.amazon, label: "View on Amazon" } : null,
     affiliateLinks.walmart ? { href: affiliateLinks.walmart, label: "View on Walmart" } : null,
     affiliateLinks.homedepot ? { href: affiliateLinks.homedepot, label: "View at Home Depot" } : null,
   ].filter(Boolean) as { href: string; label: string }[];
@@ -176,6 +191,8 @@ export default function ProductSummaryRail(props: Props) {
           </div>
 
           <CtaButtons affiliateLinks={view.affiliateLinks} />
+
+          {view.purchaseProduct ? <ProductPurchaseActions product={view.purchaseProduct} compact /> : null}
         </div>
       </div>
     </section>
