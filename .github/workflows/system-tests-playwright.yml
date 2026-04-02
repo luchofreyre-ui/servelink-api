@@ -89,14 +89,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: |
-            services/api/package-lock.json
-            apps/web/package-lock.json
+          # No npm cache: avoid stale resolution for file:../../packages/system-test-intelligence.
+
+      - name: Clean install (node_modules only)
+        run: |
+          rm -rf services/api/node_modules
+          rm -rf apps/web/node_modules
+          rm -rf packages/system-test-intelligence/node_modules
 
       - name: Install API dependencies
         working-directory: services/api
         run: npm ci
+
+      - name: Build system-test-intelligence
+        working-directory: packages/system-test-intelligence
+        run: |
+          npm install
+          npm run build
 
       - name: Prisma generate + migrate
         working-directory: services/api
@@ -104,6 +113,7 @@ jobs:
           npx prisma generate
           npx prisma migrate deploy
 
+      # Also runs build:system-test-intelligence (tsc) before API compile — keeps lockfile-driven installs honest.
       - name: Build API
         working-directory: services/api
         run: npm run build
