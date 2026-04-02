@@ -23,6 +23,10 @@ type ProductPurchaseActionsProps = {
   highlight?: boolean;
   onPrimaryNavigationClick?: () => void;
   onSecondaryNavigationClick?: () => void;
+  /** Label for the internal product link (default: “Full details”). */
+  viewDetailsLabel?: string;
+  /** Side-by-side CTAs (e.g. compact recommendation row). */
+  inlineCtas?: boolean;
 };
 
 export function ProductPurchaseActions({
@@ -34,6 +38,8 @@ export function ProductPurchaseActions({
   highlight = false,
   onPrimaryNavigationClick,
   onSecondaryNavigationClick,
+  viewDetailsLabel = "Full details",
+  inlineCtas = false,
 }: ProductPurchaseActionsProps) {
   const purchaseAvailable = Boolean(product.isPurchaseAvailable);
   const purchaseUrl = getProductPurchaseUrl(product);
@@ -45,20 +51,24 @@ export function ProductPurchaseActions({
     highlight
       ? "bg-emerald-600 py-4 text-base hover:bg-emerald-700"
       : forcePrimary
-        ? "bg-[#0D9488] py-3 text-sm hover:bg-[#0f766e]"
+        ? inlineCtas
+          ? "bg-[#0D9488] px-3 py-2 text-xs hover:bg-[#0f766e]"
+          : "bg-[#0D9488] py-3 text-sm hover:bg-[#0f766e]"
         : "bg-[#0D9488] px-4 py-2.5 text-sm hover:bg-[#0f766e]",
-    (forcePrimary || highlight) && "w-full justify-center",
+    !inlineCtas && (forcePrimary || highlight) && "w-full justify-center",
   );
 
-  const secondaryButtonClass =
-    "inline-flex items-center justify-center rounded-full border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-700 transition hover:border-neutral-300 hover:bg-neutral-50";
+  const secondaryButtonClass = clsx(
+    "inline-flex items-center justify-center rounded-full border border-neutral-200 font-medium text-neutral-700 transition hover:border-neutral-300 hover:bg-neutral-50",
+    inlineCtas ? "px-3 py-2 text-xs" : "px-4 py-2.5 text-sm",
+  );
 
   if (!purchaseUrl && !viewHref) return null;
 
   const amazonLabel = purchaseAvailable ? "Buy on Amazon" : "View on Amazon";
 
-  const stackVertically = compact || forcePrimary;
-  const buttonRowClass = stackVertically ? "flex flex-col space-y-2" : "flex flex-wrap gap-3";
+  const stackVertically = (compact || forcePrimary) && !inlineCtas;
+  const buttonRowClass = stackVertically ? "flex flex-col space-y-2" : "flex flex-wrap gap-2";
 
   if (purchaseUrl) {
     return (
@@ -79,10 +89,10 @@ export function ProductPurchaseActions({
           {viewHref ? (
             <a
               href={viewHref}
-              className={`${secondaryButtonClass} ${forcePrimary ? "w-full justify-center" : ""}`}
+              className={clsx(secondaryButtonClass, forcePrimary && !inlineCtas && "w-full justify-center")}
               onClick={onSecondaryNavigationClick}
             >
-              Full details
+              {viewDetailsLabel}
             </a>
           ) : null}
         </div>
@@ -98,10 +108,10 @@ export function ProductPurchaseActions({
       <div className={buttonRowClass}>
         <a
           href={viewHref!}
-          className={`${secondaryButtonClass} ${forcePrimary ? "w-full justify-center" : ""}`}
+          className={clsx(secondaryButtonClass, forcePrimary && !inlineCtas && "w-full justify-center")}
           onClick={onSecondaryNavigationClick ?? onPrimaryNavigationClick}
         >
-          Full details
+          {viewDetailsLabel}
         </a>
       </div>
     </div>

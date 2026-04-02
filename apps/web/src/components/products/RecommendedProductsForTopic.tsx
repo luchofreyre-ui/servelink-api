@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import Link from "next/link";
 
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
@@ -60,6 +61,11 @@ type Props = {
   /** On `/compare/products/A-vs-B`, both dossier SKUs must appear in this list. */
   pinnedProductSlugs?: readonly string[];
   trackingContext?: ProductRecommendationTrackingContext;
+  /**
+   * Problem hub: compressed supporting strip (smaller cards, guardrail copy, lighter chrome).
+   * Other surfaces keep the standard recommendation layout.
+   */
+  presentation?: "default" | "problemHubSupporting";
 };
 
 function getScore(product: {
@@ -74,11 +80,26 @@ function recommendationShortcutLabel(
   slug: string,
   labels: ReturnType<typeof assignRecommendationRoleLabels>,
 ): string | undefined {
-  if (slug === labels.bestOverall) return "Best overall";
-  if (slug === labels.bestForHeavy) return "Best for heavy buildup";
-  if (slug === labels.bestForMaintenance) return "Best for maintenance";
-  if (slug === labels.professional) return "Professional-grade option";
+  if (slug === labels.bestOverall) return "Start here";
+  if (slug === labels.bestForHeavy) return "For heavier buildup";
+  if (slug === labels.bestForMaintenance) return "For maintenance";
+  if (slug === labels.professional) return "Stronger option";
   return undefined;
+}
+
+function recommendationRoleBlurb(label?: string): string {
+  switch (label) {
+    case "Start here":
+      return "Balanced option for most typical buildup in this scenario.";
+    case "For heavier buildup":
+      return "Stronger option when buildup has been sitting longer.";
+    case "For maintenance":
+      return "Better for ongoing maintenance.";
+    case "Stronger option":
+      return "Stronger chemistry when the label allows—ventilate and rinse well.";
+    default:
+      return "Fits this scenario when you want extra chemistry help.";
+  }
 }
 
 function explainLines(reasons: string[]): { summary: string[]; cautionsFromReasons: string[] } {
@@ -149,6 +170,9 @@ type RecommendationProductColumnProps = {
   recommendationPosition: number;
   trackingContext?: ProductRecommendationTrackingContext;
   pinnedSlugsForTracking?: readonly string[];
+  cardLayout?: "default" | "supporting";
+  roleExplanation?: string;
+  minimalDetails?: boolean;
 };
 
 function RecommendationProductColumn({
@@ -167,6 +191,9 @@ function RecommendationProductColumn({
   recommendationPosition,
   trackingContext,
   pinnedSlugsForTracking,
+  cardLayout = "default",
+  roleExplanation,
+  minimalDetails = false,
 }: RecommendationProductColumnProps) {
   const reasons = buildRecommendationReasons({
     slug: product.slug,
@@ -217,27 +244,38 @@ function RecommendationProductColumn({
         <ProductCard
           product={published}
           label={cardLabel}
-          highlight={highlight}
-          fitLabel={recommendationConfidenceLabel(conf)}
+          highlight={highlight && cardLayout === "default"}
+          fitLabel={cardLayout === "default" ? recommendationConfidenceLabel(conf) : undefined}
+          layout={cardLayout}
+          roleExplanation={roleExplanation}
+          viewDetailsLabel="View details"
           onTitleLinkClick={() => track(viewHref)}
           onPrimaryPurchaseClick={purchaseUrl ? () => track(purchaseUrl) : undefined}
           onSecondaryPurchaseClick={() => track(viewHref)}
         />
       ) : (
-        <div className="space-y-2 rounded-2xl border border-[#C9B27C] bg-white p-4 shadow-sm">
+        <div
+          className={
+            cardLayout === "supporting"
+              ? "space-y-2 rounded-xl border border-neutral-200/90 bg-white p-3 shadow-none"
+              : "space-y-2 rounded-2xl border border-[#C9B27C] bg-white p-4 shadow-sm"
+          }
+        >
           <p className="text-sm font-medium text-neutral-800">{product.title ?? product.slug}</p>
+          {roleExplanation ? <p className="text-xs text-neutral-600">{roleExplanation}</p> : null}
           <ProductPurchaseActions
             product={{ ...product, name: product.title }}
             viewHref={viewHref}
             forcePrimary
-            highlight={highlight}
+            highlight={highlight && cardLayout === "default"}
+            viewDetailsLabel="View details"
             onPrimaryNavigationClick={purchaseUrl ? () => track(purchaseUrl) : () => track(viewHref)}
             onSecondaryNavigationClick={() => track(viewHref)}
           />
         </div>
       )}
 
-      {published ? (
+      {published && !minimalDetails ? (
         <div className="space-y-2 rounded-lg border border-neutral-200 bg-white/80 p-3 shadow-sm">
           {showScores ? (
             <div className="text-sm font-medium text-neutral-800">
@@ -305,7 +343,12 @@ export default function RecommendedProductsForTopic({
   showComparisons = true,
   pinnedProductSlugs,
   trackingContext,
+  presentation = "default",
 }: Props) {
+  const hub = presentation === "problemHubSupporting";
+  const effectiveShowScores = hub ? false : showScores;
+  const effectiveShowReasons = hub ? false : showReasons;
+  const effectiveShowComparisons = hub ? false : showComparisons;
   const effectiveIntent = intent ?? inferRecommendationIntent(problem);
   const pinnedSlugsForTracking = [
     ...new Set([
@@ -346,15 +389,6 @@ export default function RecommendedProductsForTopic({
     ...products.filter((p) => !priorityOrder.includes(p.slug)),
   ];
 
-  const bestOverallSlug = labels.bestOverall;
-  const bestOverallProduct =
-    bestOverallSlug ? prioritizedProducts.find((p) => p.slug === bestOverallSlug) : undefined;
-  const secondaryProducts = bestOverallProduct
-    ? prioritizedProducts.filter((p) => p.slug !== bestOverallProduct.slug)
-    : prioritizedProducts;
-  const heroIndex =
-    bestOverallProduct ? prioritizedProducts.findIndex((p) => p.slug === bestOverallProduct.slug) : 0;
-
   const contextBody = contextCalloutCopy(contextTone);
 
   const columnPropsBase = {
@@ -363,82 +397,90 @@ export default function RecommendedProductsForTopic({
     problem,
     surface,
     effectiveIntent,
-    showScores,
-    showReasons,
-    showComparisons,
+    showScores: effectiveShowScores,
+    showReasons: effectiveShowReasons,
+    showComparisons: effectiveShowComparisons,
   };
+
+  const defaultTitle = hub ? "If you need a product" : "Recommended products for this problem";
 
   if (!products.length) {
     return (
-      <section className="rounded-2xl border border-[#C9B27C]/35 bg-[#FCFAF5] p-6">
-        <h2 className="text-xl font-semibold text-neutral-900">
-          {sectionTitle ?? "Recommended products for this problem"}
-        </h2>
-        <p className="mt-3 text-sm text-zinc-600">
-          {RECOMMENDATION_EMPTY_STATE_LINE}
-        </p>
+      <section
+        id={hub ? "problem-products" : undefined}
+        className={clsx(
+          hub ? "mt-14 scroll-mt-24 border-t border-[#C9B27C]/20 pt-12" : "rounded-2xl border border-[#C9B27C]/35 bg-[#FCFAF5] p-6",
+        )}
+      >
+        <h2 className="text-xl font-semibold text-neutral-900">{sectionTitle ?? defaultTitle}</h2>
+        <p className="mt-3 text-sm text-zinc-600">{RECOMMENDATION_EMPTY_STATE_LINE}</p>
       </section>
     );
   }
 
   return (
-    <section className="rounded-2xl border border-[#C9B27C]/35 bg-[#FCFAF5] p-6">
+    <section
+      id={hub ? "problem-products" : undefined}
+      className={clsx(
+        hub
+          ? "mt-14 scroll-mt-24 border-t border-[#C9B27C]/20 pt-12"
+          : "rounded-2xl border border-[#C9B27C]/35 bg-[#FCFAF5] p-6",
+      )}
+    >
       <div className="mb-4">
-        <h2 className="text-xl font-semibold text-neutral-900">
-          {sectionTitle ?? "Recommended products for this problem"}
-        </h2>
-        <p className="mt-1 text-sm text-neutral-600">
-          Ranked for <span className="font-medium">{problem}</span> on{" "}
-          <span className="font-medium">{surface}</span>.
-        </p>
-        {contextBody ? (
+        <h2 className="text-xl font-semibold text-neutral-900">{sectionTitle ?? defaultTitle}</h2>
+        {!hub ? (
+          <p className="mt-1 text-sm text-neutral-600">
+            Ranked for <span className="font-medium">{problem}</span> on{" "}
+            <span className="font-medium">{surface}</span>.
+          </p>
+        ) : null}
+        {!hub && contextBody ? (
           <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-600">
             <span className="font-medium">Context:</span> {contextBody}
           </div>
         ) : null}
       </div>
 
-      <div className="mb-4 space-y-2">
-        <p className="text-sm text-neutral-600">
-          These products are selected based on what actually works for the problem, surface, and cleaning goal.
+      {hub ? (
+        <p className="mb-5 max-w-2xl text-sm leading-relaxed text-neutral-600">
+          Most cases can be solved with the right method alone. Use a product when buildup needs extra help.
         </p>
-        <p className="text-xs text-neutral-500">
-          Start with <span className="font-medium text-neutral-700">Best overall</span>, then use the other picks
-          for heavier buildup, maintenance, or a stronger professional option.
-        </p>
-      </div>
-
-      {bestOverallProduct ? (
-        <div className="mb-10">
-          <div className="mb-2 text-sm font-semibold text-emerald-700">
-            ⭐ Best Overall — Recommended Starting Point
-          </div>
-          <RecommendationProductColumn
-            {...columnPropsBase}
-            product={bestOverallProduct}
-            index={heroIndex >= 0 ? heroIndex : 0}
-            highlight
-            cardLabel={recommendationShortcutLabel(bestOverallProduct.slug, labels)}
-            recommendationPosition={heroIndex >= 0 ? heroIndex + 1 : 1}
-            trackingContext={trackingContext}
-            pinnedSlugsForTracking={pinnedSlugsForTracking}
-          />
+      ) : (
+        <div className="mb-5 space-y-2">
+          <p className="text-sm text-neutral-600">
+            These products are selected based on what actually works for the problem, surface, and cleaning goal.
+          </p>
+          <p className="text-xs text-neutral-500">
+            Start with <span className="font-medium text-neutral-700">Start here</span>, then use the other picks for
+            heavier buildup, maintenance, or a stronger option.
+          </p>
         </div>
-      ) : null}
+      )}
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {secondaryProducts.map((product) => {
+      <div
+        className={clsx(
+          "grid",
+          hub ? "grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" : "grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3",
+        )}
+      >
+        {prioritizedProducts.map((product) => {
           const index = prioritizedProducts.findIndex((p) => p.slug === product.slug);
+          const cardLabel = recommendationShortcutLabel(product.slug, labels);
           return (
             <RecommendationProductColumn
               key={product.slug}
               {...columnPropsBase}
               product={product}
               index={index >= 0 ? index : 0}
-              cardLabel={recommendationShortcutLabel(product.slug, labels)}
+              cardLabel={cardLabel}
+              highlight={false}
               recommendationPosition={index >= 0 ? index + 1 : 1}
               trackingContext={trackingContext}
               pinnedSlugsForTracking={pinnedSlugsForTracking}
+              cardLayout={hub ? "supporting" : "default"}
+              roleExplanation={hub ? recommendationRoleBlurb(cardLabel) : undefined}
+              minimalDetails={hub}
             />
           );
         })}

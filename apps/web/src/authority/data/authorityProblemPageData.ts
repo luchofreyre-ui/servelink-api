@@ -48,7 +48,31 @@ function prob(
 }
 
 const PROBLEMS: Record<string, AuthorityProblemPageData> = {
-  "soap-scum": prob("soap-scum", "Soap scum", "residue"),
+  "soap-scum": {
+    ...prob("soap-scum", "Soap scum", "residue"),
+    summary: "Soap scum is one of the most common—and most misidentified—bathroom problems.",
+    heroSubline:
+      "Most cases are removable with the right method. The key is knowing what you're actually dealing with before you clean.",
+    whatItUsuallyIs:
+      "Soap scum is a surface film made from soap residue, minerals in water, and body oils.\n\nIt builds up in layers and can look like staining or damage, especially on grout, tile, and glass.",
+    whyItHappens:
+      "It forms in areas that stay damp and don't get fully rinsed.\n\nOver time, residue layers combine with minerals in the water, creating a film that becomes harder to remove the longer it sits.",
+    commonOn:
+      "Showers, grout lines, glass, and any surface that regularly stays wet.\n\nHigh-use areas build it faster, especially where airflow is limited.",
+    beforeYouClean:
+      "Most people go too aggressive too early.\n\nSoap scum is usually removable, but using the wrong method can make it worse or cause surface damage.\n\nStart neutral, test first, and only escalate if needed.",
+    bestMethods:
+      "Start with a neutral cleaner and a soft tool to break up the film.\n\nIf buildup remains, step up gradually—don't jump straight to harsh chemicals.\n\nRinsing thoroughly matters just as much as the cleaner you use.",
+    avoidMethods:
+      "Jumping straight to strong acids\nDry scrubbing on sensitive finishes\nMixing products without knowing compatibility\nAssuming all buildup is removable residue",
+    whenItFails:
+      "If the surface gets dull, rough, or worse after cleaning, you may be dealing with damage—not residue.\n\nAt that point, more cleaning won't fix it.",
+    diagnosticVoiceLines: [
+      "You don't need anything aggressive to fix this.",
+      "This is where most people go wrong.",
+      "If it gets worse, stop—this usually means damage.",
+    ],
+  },
   "grease-buildup": {
     ...prob("grease-buildup", "Grease buildup", "oil_based"),
     decisionShortcuts: [

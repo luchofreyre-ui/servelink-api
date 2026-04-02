@@ -48,10 +48,21 @@ export function normalizeRoleLabel(label?: string | null): ProductRecommendation
 
   const normalized = label.trim().toLowerCase();
 
-  if (normalized === "best overall") return "best_overall";
-  if (normalized === "heavy buildup" || normalized === "best for heavy buildup") return "heavy";
-  if (normalized === "maintenance" || normalized === "best for maintenance") return "maintenance";
-  if (normalized === "professional" || normalized === "professional-grade option") return "professional";
+  if (normalized === "best overall" || normalized === "start here") return "best_overall";
+  if (
+    normalized === "heavy buildup" ||
+    normalized === "best for heavy buildup" ||
+    normalized === "for heavier buildup"
+  )
+    return "heavy";
+  if (normalized === "maintenance" || normalized === "best for maintenance" || normalized === "for maintenance")
+    return "maintenance";
+  if (
+    normalized === "professional" ||
+    normalized === "professional-grade option" ||
+    normalized === "stronger option"
+  )
+    return "professional";
 
   return "unlabeled";
 }

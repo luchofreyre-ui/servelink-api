@@ -12,6 +12,10 @@ const labelStyles: Record<string, string> = {
   "Best for heavy buildup": "text-amber-600",
   "Best for maintenance": "text-blue-600",
   "Professional-grade option": "text-purple-600",
+  "Start here": "text-emerald-600",
+  "For heavier buildup": "text-amber-600",
+  "For maintenance": "text-blue-600",
+  "Stronger option": "text-purple-600",
 };
 
 export type ProductCardProps = {
@@ -22,6 +26,11 @@ export type ProductCardProps = {
   onTitleLinkClick?: () => void;
   onPrimaryPurchaseClick?: () => void;
   onSecondaryPurchaseClick?: () => void;
+  /** Compact horizontal layout for supporting recommendation strips. */
+  layout?: "default" | "supporting";
+  /** One-line reason this SKU appears (supporting layout). */
+  roleExplanation?: string;
+  viewDetailsLabel?: string;
 };
 
 export function ProductCard({
@@ -32,19 +41,88 @@ export function ProductCard({
   onTitleLinkClick,
   onPrimaryPurchaseClick,
   onSecondaryPurchaseClick,
+  layout = "default",
+  roleExplanation,
+  viewDetailsLabel,
 }: ProductCardProps) {
   const scoreNum = product.rating.finalScore;
+  const isSupporting = layout === "supporting";
 
   const rootClass = clsx(
-    "rounded-2xl bg-white transition space-y-0",
-    highlight
-      ? "rounded-xl border-2 border-emerald-500 p-6 shadow-md"
-      : label === "Best overall"
-        ? "border border-emerald-500 p-5 shadow-sm hover:shadow-sm"
-        : label
-          ? "border border-neutral-200 p-5 shadow-sm hover:shadow-sm"
-          : "border border-[#C9B27C] p-5 shadow-sm hover:shadow-sm",
+    "rounded-2xl bg-white transition",
+    isSupporting
+      ? "border border-neutral-200/90 p-3 shadow-none"
+      : "space-y-0",
+    !isSupporting &&
+      (highlight
+        ? "rounded-xl border-2 border-emerald-500 p-6 shadow-md"
+        : label === "Best overall" || label === "Start here"
+          ? "border border-emerald-500 p-5 shadow-sm hover:shadow-sm"
+          : label
+            ? "border border-neutral-200 p-5 shadow-sm hover:shadow-sm"
+            : "border border-[#C9B27C] p-5 shadow-sm hover:shadow-sm"),
   );
+
+  const labelChip = label ? (
+    <span
+      className={clsx(
+        "inline-flex rounded-full border border-current/15 bg-white/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+        labelStyles[label] || "text-green-700",
+      )}
+    >
+      {label}
+    </span>
+  ) : null;
+
+  const titleBlock = (
+    <Link href={`/products/${product.slug}`} className="block min-w-0" onClick={onTitleLinkClick}>
+      <h3 className="text-sm font-semibold leading-snug text-zinc-900">{product.title}</h3>
+      <p className="mt-0.5 text-[11px] uppercase tracking-[0.14em] text-neutral-500">{product.brand}</p>
+      {roleExplanation ? (
+        <p className="mt-2 text-sm leading-snug text-neutral-600">{roleExplanation}</p>
+      ) : null}
+    </Link>
+  );
+
+  const actions = (
+    <ProductPurchaseActions
+      product={{ ...product, name: product.title }}
+      viewHref={`/products/${product.slug}`}
+      forcePrimary
+      highlight={highlight && !isSupporting}
+      inlineCtas={isSupporting}
+      onPrimaryNavigationClick={onPrimaryPurchaseClick}
+      onSecondaryNavigationClick={onSecondaryPurchaseClick}
+      viewDetailsLabel={viewDetailsLabel}
+    />
+  );
+
+  if (isSupporting) {
+    return (
+      <div className={rootClass}>
+        <div className="flex gap-3">
+          <div className="h-20 w-20 shrink-0">
+            <ProductImage
+              product={{
+                name: product.title,
+                primaryImageUrl: product.primaryImageUrl,
+                imageUrls: product.imageUrls,
+              }}
+              aspect="square"
+              rounded="lg"
+              sizes="80px"
+              className="h-full w-full"
+            />
+          </div>
+          <div className="min-w-0 flex-1 space-y-2">
+            {labelChip ? <div>{labelChip}</div> : null}
+            {titleBlock}
+            <div className="pt-1">{actions}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={rootClass}>
@@ -63,13 +141,13 @@ export function ProductCard({
           >
             {label}
           </span>
-          {label === "Best overall" ? (
+          {label === "Best overall" || label === "Start here" ? (
             <span className="text-[11px] font-medium text-neutral-500">Top pick</span>
           ) : null}
         </div>
       ) : null}
 
-      {label === "Best overall" && !highlight ? (
+      {(label === "Best overall" || label === "Start here") && !highlight ? (
         <p className="mb-3 text-xs text-neutral-600">
           Best balance of cleaning power, surface safety, and everyday usability.
         </p>
@@ -118,16 +196,7 @@ export function ProductCard({
         {product.bestUseCases?.[0]?.trim() || "targeted cleaning applications"}
       </p>
 
-      <div className="mt-4 border-t border-neutral-100 pt-4">
-        <ProductPurchaseActions
-          product={{ ...product, name: product.title }}
-          viewHref={`/products/${product.slug}`}
-          forcePrimary
-          highlight={highlight}
-          onPrimaryNavigationClick={onPrimaryPurchaseClick}
-          onSecondaryNavigationClick={onSecondaryPurchaseClick}
-        />
-      </div>
+      <div className="mt-4 border-t border-neutral-100 pt-4">{actions}</div>
     </div>
   );
 }

@@ -83,6 +83,8 @@ export type AuthorityProblemPageData = {
   title: string;
   description: string;
   summary: string;
+  /** Optional second hero line under the main summary (diagnostic framing). */
+  heroSubline?: string;
   /** Featured-snippet style direct answer; falls back to a trimmed “what it usually is” if omitted. */
   quickAnswer?: string;
   category: AuthorityProblemCategory;
@@ -93,6 +95,10 @@ export type AuthorityProblemPageData = {
   commonOn: string;
   bestMethods: string;
   avoidMethods: string;
+  /** Mindset block before methods; falls back to a shared default when omitted. */
+  beforeYouClean?: string;
+  /** Short human voice lines (2–4) placed after key sections; optional per problem. */
+  diagnosticVoiceLines?: string[];
   recommendedTools: AuthorityToolSummary[];
   recommendedChemicals: AuthorityChemicalSummary[];
   commonMistakes: string[];

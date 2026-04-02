@@ -49,6 +49,52 @@ import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
 import { resolveProductRecommendationContextForProblemPage } from "@/lib/products/productRecommendationContext";
 
+const DEFAULT_BEFORE_YOU_CLEAN = `Most people go too aggressive too early.
+
+Most surface buildup here is removable with the right method—but the wrong approach can make things worse or damage the finish.
+
+Start neutral, test first, and only escalate if needed.`;
+
+function splitBlocks(text: string) {
+  return text
+    .split(/\n\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
+function ProseBlocks({ text }: { text: string }) {
+  return (
+    <>
+      {splitBlocks(text).map((para, i) => (
+        <p key={i}>{para}</p>
+      ))}
+    </>
+  );
+}
+
+function HumanSignal({ children }: { children: string }) {
+  return (
+    <p className="mt-4 border-l-2 border-[#C9B27C]/50 pl-3 text-sm italic text-[#64748B]">{children}</p>
+  );
+}
+
+function AvoidBody({ text }: { text: string }) {
+  const lines = text
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (lines.length > 1) {
+    return (
+      <ul className="list-inside list-disc space-y-2">
+        {lines.map((line) => (
+          <li key={line}>{line}</li>
+        ))}
+      </ul>
+    );
+  }
+  return <p>{text}</p>;
+}
+
 export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageData }) {
   const { data } = props;
   const bridgeMap = getBuiltBridgeMap();
@@ -73,55 +119,128 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
     data.quickAnswer?.trim() || snippetAnswer(data.whatItUsuallyIs, 2, 260);
   const productContext = resolveProductRecommendationContextForProblemPage(data.slug);
 
+  const beforeClean = data.beforeYouClean ?? DEFAULT_BEFORE_YOU_CLEAN;
+  const voice = data.diagnosticVoiceLines ?? [];
+
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
-      <main className="mx-auto max-w-3xl px-6 py-16 md:px-8">
+      <main className="mx-auto max-w-3xl scroll-smooth px-6 py-16 md:px-8">
         <AuthorityBreadcrumbs items={crumbs} />
-        <AuthorityHero eyebrow="Cleaning problem" title={data.title} description={data.summary} />
-        <AuthorityQuickAnswer text={quickAnswerText} />
-        <AuthorityTopicalCrossLinks pageKey={`problem-${data.slug}`} problemSlug={data.slug} />
-        <div className="mt-8">
-          <AuthorityProblemDecisionShortcuts data={data} />
+
+        <nav
+          aria-label="On this page"
+          className="sticky top-0 z-30 -mx-6 mb-12 flex flex-wrap gap-x-5 gap-y-2 border-b border-[#C9B27C]/15 bg-[#FFF9F3]/95 px-6 py-3 text-sm font-medium text-[#0D9488] backdrop-blur-sm md:-mx-8 md:px-8"
+        >
+          <a href="#problem-overview" className="hover:underline">
+            Overview
+          </a>
+          <a href="#problem-why" className="hover:underline">
+            Why
+          </a>
+          <a href="#problem-methods" className="hover:underline">
+            Methods
+          </a>
+          <a href="#problem-products" className="hover:underline">
+            Products
+          </a>
+          <a href="#problem-faq" className="hover:underline">
+            FAQ
+          </a>
+        </nav>
+
+        <div id="problem-overview" className="scroll-mt-28">
+          <AuthorityHero
+            eyebrow="Cleaning problem"
+            title={data.title}
+            description={data.summary}
+            subline={data.heroSubline}
+          />
+          <AuthorityQuickAnswer text={quickAnswerText} />
+          <AuthorityTopicalCrossLinks pageKey={`problem-${data.slug}`} problemSlug={data.slug} />
+          <div className="mt-8">
+            <AuthorityProblemDecisionShortcuts data={data} />
+          </div>
         </div>
-        <AuthoritySection title="What it usually is">
-          <p>{data.whatItUsuallyIs}</p>
+
+        <AuthoritySection title="What this usually is">
+          <ProseBlocks text={data.whatItUsuallyIs} />
         </AuthoritySection>
-        <AuthoritySection title="Why it happens">
-          <p>{data.whyItHappens}</p>
-        </AuthoritySection>
-        <AuthoritySection title="Common on">
-          <p>{data.commonOn}</p>
-        </AuthoritySection>
-        <AuthoritySection title="Best methods">
-          <p>{data.bestMethods}</p>
-        </AuthoritySection>
-        <AuthoritySection title="Avoid">
-          <AuthorityCallout variant="warning">{data.avoidMethods}</AuthorityCallout>
-        </AuthoritySection>
-        <AuthoritySection title="Recommended tools">
-          <ul className="list-inside list-disc space-y-1">
-            {data.recommendedTools.map((t) => (
-              <li key={t.name}>
-                <span className="font-medium text-[#0F172A]">{t.name}</span>
-                {t.note ? <span> — {t.note}</span> : null}
-              </li>
-            ))}
-          </ul>
-        </AuthoritySection>
-        <AuthoritySection title="Recommended chemicals">
-          <ul className="list-inside list-disc space-y-1">
-            {data.recommendedChemicals.map((c) => (
-              <li key={c.name}>
-                <span className="font-medium text-[#0F172A]">{c.name}</span>
-                {c.note ? <span> — {c.note}</span> : null}
-              </li>
-            ))}
-          </ul>
-        </AuthoritySection>
+
+        <div id="problem-why" className="scroll-mt-28">
+          <AuthoritySection title="Why this keeps happening">
+            <ProseBlocks text={data.whyItHappens} />
+          </AuthoritySection>
+          <AuthoritySection title="Where you'll see it most">
+            <ProseBlocks text={data.commonOn} />
+          </AuthoritySection>
+        </div>
+
+        <div id="problem-methods" className="scroll-mt-28 space-y-0">
+          <AuthoritySection title="Before you start cleaning">
+            <ProseBlocks text={beforeClean} />
+            {voice[0] ? <HumanSignal>{voice[0]}</HumanSignal> : null}
+          </AuthoritySection>
+
+          <AuthoritySection title="Best way to remove it">
+            <ProseBlocks text={data.bestMethods} />
+          </AuthoritySection>
+
+          <AuthoritySection title="What to avoid">
+            <AuthorityCallout variant="warning">
+              <AvoidBody text={data.avoidMethods} />
+            </AuthorityCallout>
+            {voice[1] ? <HumanSignal>{voice[1]}</HumanSignal> : null}
+          </AuthoritySection>
+
+          <AuthoritySection title="When it's not just buildup">
+            <AuthorityCallout variant="failure">
+              <ProseBlocks text={data.whenItFails} />
+            </AuthorityCallout>
+            {voice[2] ? <HumanSignal>{voice[2]}</HumanSignal> : null}
+          </AuthoritySection>
+
+          <AuthoritySection title="Recommended tools">
+            <ul className="list-inside list-disc space-y-1">
+              {data.recommendedTools.map((t) => (
+                <li key={t.name}>
+                  <span className="font-medium text-[#0F172A]">{t.name}</span>
+                  {t.note ? <span> — {t.note}</span> : null}
+                </li>
+              ))}
+            </ul>
+          </AuthoritySection>
+
+          <AuthoritySection title="Recommended chemicals">
+            <ul className="list-inside list-disc space-y-1">
+              {data.recommendedChemicals.map((c) => (
+                <li key={c.name}>
+                  <span className="font-medium text-[#0F172A]">{c.name}</span>
+                  {c.note ? <span> — {c.note}</span> : null}
+                </li>
+              ))}
+            </ul>
+          </AuthoritySection>
+
+          <AuthoritySection title="Common mistakes">
+            <div className="space-y-2">
+              {data.commonMistakes.map((m) => (
+                <AuthorityCallout key={m} variant="mistake">
+                  {m}
+                </AuthorityCallout>
+              ))}
+            </div>
+          </AuthoritySection>
+
+          <AuthoritySection title="When to escalate">
+            <AuthorityCallout variant="escalate">{data.whenToEscalate}</AuthorityCallout>
+          </AuthoritySection>
+        </div>
+
         <ContextualProductRecommendations
           context={productContext}
+          presentation="problemHubSupporting"
           trackingContext={{
             pageType: "problem_page",
             sourcePageType: productContext?.sourcePageType ?? "problem",
@@ -129,21 +248,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             intent: productContext?.intent != null ? String(productContext.intent) : null,
           }}
         />
-        <AuthoritySection title="Common mistakes">
-          <div className="space-y-2">
-            {data.commonMistakes.map((m) => (
-              <AuthorityCallout key={m} variant="mistake">
-                {m}
-              </AuthorityCallout>
-            ))}
-          </div>
-        </AuthoritySection>
-        <AuthoritySection title="When it fails">
-          <AuthorityCallout variant="failure">{data.whenItFails}</AuthorityCallout>
-        </AuthoritySection>
-        <AuthoritySection title="When to escalate">
-          <AuthorityCallout variant="escalate">{data.whenToEscalate}</AuthorityCallout>
-        </AuthoritySection>
+
         {getMethodSlugsForProblem(data.slug).length > 0 ? (
           <AuthoritySection title="Method + problem playbooks">
             <ul className="list-inside list-disc space-y-2">
@@ -176,6 +281,11 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             </ul>
           </AuthoritySection>
         ) : null}
+
+        <div id="problem-faq" className="scroll-mt-28">
+          <AuthorityFaq block={faqBlock} />
+        </div>
+
         <AuthorityRelatedLinks
           problemGroups={[{ heading: "Related problems", problems: data.relatedProblems }]}
           afterProblems={[
@@ -222,8 +332,8 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
         <AuthoritySection title="Product vs product comparisons">
           <p className="font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">
-            Head-to-head dossier pages use the same picks as recommendations—useful when two bottles look interchangeable
-            but sit in different chemistry lanes.
+            Head-to-head dossier pages use the same picks as recommendations—useful when two bottles look
+            interchangeable but sit in different chemistry lanes.
           </p>
           <p className="mt-3">
             <Link href="/compare/products" className="font-medium text-[#0D9488] hover:underline">
@@ -234,7 +344,6 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
         <AuthorityProblemExploreMore problemSlug={data.slug} data={data} />
 
-        <AuthorityFaq block={faqBlock} />
         <AuthoritySeeAlso groups={seeAlso} />
         {encyclopediaBridge ?
           <AuthorityToEncyclopediaBridge

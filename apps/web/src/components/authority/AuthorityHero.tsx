@@ -2,10 +2,13 @@ export function AuthorityHero({
   eyebrow,
   title,
   description,
+  subline,
 }: {
   eyebrow: string;
   title: string;
   description: string;
+  /** Optional second paragraph under the hero lead (diagnostic framing). */
+  subline?: string;
 }) {
   return (
     <header className="mb-10 border-b border-[#C9B27C]/20 pb-6">
@@ -16,6 +19,11 @@ export function AuthorityHero({
         {title}
       </h1>
       <p className="max-w-3xl font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">{description}</p>
+      {subline ? (
+        <p className="mt-4 max-w-3xl font-[var(--font-manrope)] text-base leading-7 text-[#64748B]">
+          {subline}
+        </p>
+      ) : null}
     </header>
   );
 }
