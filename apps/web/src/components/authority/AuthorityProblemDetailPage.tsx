@@ -120,7 +120,15 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             ))}
           </ul>
         </AuthoritySection>
-        <ContextualProductRecommendations context={productContext} />
+        <ContextualProductRecommendations
+          context={productContext}
+          trackingContext={{
+            pageType: "problem_page",
+            sourcePageType: productContext?.sourcePageType ?? "problem",
+            problemSlug: data.slug,
+            intent: productContext?.intent != null ? String(productContext.intent) : null,
+          }}
+        />
         <AuthoritySection title="Common mistakes">
           <div className="space-y-2">
             {data.commonMistakes.map((m) => (

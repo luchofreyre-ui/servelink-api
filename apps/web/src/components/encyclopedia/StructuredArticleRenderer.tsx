@@ -93,6 +93,11 @@ export function StructuredArticleRenderer({
             problem={taxonomyProblem}
             surface={taxonomySurface}
             intent={inferRecommendationIntent(taxonomyProblem)}
+            trackingContext={{
+              pageType: "encyclopedia_article",
+              sourcePageType: "encyclopedia",
+              intent: String(inferRecommendationIntent(taxonomyProblem)),
+            }}
           />
         </div>
       ) : null}

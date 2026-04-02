@@ -1,15 +1,18 @@
 import RecommendedProductsForTopic from "@/components/products/RecommendedProductsForTopic";
 import { RECOMMENDATION_EMPTY_STATE_LINE } from "@/components/products/recommendationEmptyStateCopy";
 import type { ProductRecommendationContext } from "@/lib/products/productRecommendationContext";
+import type { ProductRecommendationTrackingContext } from "@/lib/products/productRecommendationTrackingTypes";
 
 const DEFAULT_SURFACE = "tile";
 
 export function ContextualProductRecommendations({
   context,
   pinnedProductSlugs,
+  trackingContext,
 }: {
   context: ProductRecommendationContext | null;
   pinnedProductSlugs?: readonly string[];
+  trackingContext?: ProductRecommendationTrackingContext;
 }) {
   return (
     <section className="mt-10">
@@ -22,6 +25,7 @@ export function ContextualProductRecommendations({
           densityAuthorityProblemSlug={context.densityAuthorityProblemSlug}
           contextTone={context.contextTone}
           pinnedProductSlugs={pinnedProductSlugs}
+          trackingContext={trackingContext}
           showScores
           showReasons
           showComparisons

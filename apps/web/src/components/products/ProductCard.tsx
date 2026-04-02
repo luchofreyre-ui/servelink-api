@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 import Link from "next/link";
 
@@ -17,9 +19,20 @@ export type ProductCardProps = {
   label?: string;
   fitLabel?: string;
   highlight?: boolean;
+  onTitleLinkClick?: () => void;
+  onPrimaryPurchaseClick?: () => void;
+  onSecondaryPurchaseClick?: () => void;
 };
 
-export function ProductCard({ product, label, fitLabel, highlight = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  label,
+  fitLabel,
+  highlight = false,
+  onTitleLinkClick,
+  onPrimaryPurchaseClick,
+  onSecondaryPurchaseClick,
+}: ProductCardProps) {
   const scoreNum = product.rating.finalScore;
 
   const rootClass = clsx(
@@ -73,7 +86,7 @@ export function ProductCard({ product, label, fitLabel, highlight = false }: Pro
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
       />
 
-      <Link href={`/products/${product.slug}`} className="mt-3 block">
+      <Link href={`/products/${product.slug}`} className="mt-3 block" onClick={onTitleLinkClick}>
         <h3 className="text-base font-semibold leading-tight text-zinc-900">{product.title}</h3>
         <p className="mt-1 text-xs uppercase tracking-[0.18em] text-neutral-500">{product.brand}</p>
       </Link>
@@ -111,6 +124,8 @@ export function ProductCard({ product, label, fitLabel, highlight = false }: Pro
           viewHref={`/products/${product.slug}`}
           forcePrimary
           highlight={highlight}
+          onPrimaryNavigationClick={onPrimaryPurchaseClick}
+          onSecondaryNavigationClick={onSecondaryPurchaseClick}
         />
       </div>
     </div>

@@ -147,6 +147,24 @@ export function AuthorityCombinationPage(props: { data: AuthorityCombinationPage
       : data.type === "method_problem" && data.methodSlug && data.problemSlug
         ? resolveProductRecommendationContextForMethodProblemPage(data.methodSlug, data.problemSlug)
         : null;
+
+  const recommendationTrackingContext =
+    productContext && data.type === "surface_problem" && data.surfaceSlug && data.problemSlug
+      ? {
+          pageType: "surface_problem_page" as const,
+          sourcePageType: productContext.sourcePageType ?? "surface_problem",
+          problemSlug: data.problemSlug,
+          surfaceSlug: data.surfaceSlug,
+          intent: String(productContext.intent),
+        }
+      : productContext && data.type === "method_problem" && data.problemSlug
+        ? {
+            pageType: "method_problem_page" as const,
+            sourcePageType: productContext.sourcePageType ?? "method_problem",
+            problemSlug: data.problemSlug,
+            intent: String(productContext.intent),
+          }
+        : undefined;
   const jsonLd: Record<string, unknown>[] = [
     buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(crumbs)),
     buildArticleSchema({ title: data.title, description: data.description, path }),
@@ -193,7 +211,10 @@ export function AuthorityCombinationPage(props: { data: AuthorityCombinationPage
           </ul>
         </div>
 
-        <ContextualProductRecommendations context={productContext} />
+        <ContextualProductRecommendations
+          context={productContext}
+          trackingContext={recommendationTrackingContext}
+        />
 
         <AuthoritySection title="Common mistakes">
           <div className="space-y-2">

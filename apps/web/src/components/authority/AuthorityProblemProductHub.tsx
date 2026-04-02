@@ -8,8 +8,15 @@ import {
   productSurfaceStringForAuthoritySurfaceSlug,
 } from "@/lib/authority/authorityProductTaxonomyBridge";
 import RecommendedProductsForTopic from "@/components/products/RecommendedProductsForTopic";
+import { inferRecommendationIntent } from "@/lib/products/getRecommendedProducts";
 
-type Scenario = { problem: string; surface: string; playbookHref: string; label: string };
+type Scenario = {
+  problem: string;
+  surface: string;
+  playbookHref: string;
+  label: string;
+  authoritySurfaceSlug?: string;
+};
 
 function buildScenarios(slug: string, data: AuthorityProblemPageData): Scenario[] {
   if (data.productScenarios?.length) {
@@ -31,6 +38,7 @@ function buildScenarios(slug: string, data: AuthorityProblemPageData): Scenario[
       surface: s,
       playbookHref: `/surfaces/${surfaceSlug}/${slug}`,
       label: `${p} on ${s}`,
+      authoritySurfaceSlug: surfaceSlug,
     });
   }
   return out.slice(0, 6);
@@ -60,6 +68,13 @@ export function AuthorityProblemProductHub({ data }: { data: AuthorityProblemPag
               problem={sc.problem}
               surface={sc.surface}
               densityAuthorityProblemSlug={data.slug}
+              trackingContext={{
+                pageType: "problem_hub_scenario_page",
+                sourcePageType: "problem",
+                problemSlug: data.slug,
+                surfaceSlug: sc.authoritySurfaceSlug ?? null,
+                intent: String(inferRecommendationIntent(sc.problem)),
+              }}
             />
           </div>
         ))}

@@ -401,6 +401,18 @@ export function AuthorityComparisonPage({
           <ContextualProductRecommendations
             context={comparisonProductContext}
             pinnedProductSlugs={[data.leftSlug, data.rightSlug]}
+            trackingContext={
+              comparisonProductContext
+                ? {
+                    pageType: "product_comparison_page",
+                    sourcePageType: comparisonProductContext.sourcePageType ?? "comparison",
+                    problemSlug: data.topSharedProblemSlug ?? null,
+                    surfaceSlug: data.topSharedSurfaceSlug ?? null,
+                    intent: String(comparisonProductContext.intent),
+                    pinnedProductSlugs: [data.leftSlug, data.rightSlug],
+                  }
+                : undefined
+            }
           />
         ) : null}
 

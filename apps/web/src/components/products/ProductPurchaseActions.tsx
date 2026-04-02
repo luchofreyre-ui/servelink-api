@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
@@ -19,6 +21,8 @@ type ProductPurchaseActionsProps = {
   forcePrimary?: boolean;
   /** Stronger emerald styling for hero recommendation card. */
   highlight?: boolean;
+  onPrimaryNavigationClick?: () => void;
+  onSecondaryNavigationClick?: () => void;
 };
 
 export function ProductPurchaseActions({
@@ -28,6 +32,8 @@ export function ProductPurchaseActions({
   usedForSummary,
   forcePrimary = false,
   highlight = false,
+  onPrimaryNavigationClick,
+  onSecondaryNavigationClick,
 }: ProductPurchaseActionsProps) {
   const purchaseAvailable = Boolean(product.isPurchaseAvailable);
   const purchaseUrl = getProductPurchaseUrl(product);
@@ -66,6 +72,7 @@ export function ProductPurchaseActions({
             target="_blank"
             rel="noopener noreferrer sponsored"
             className={primaryButtonClass}
+            onClick={onPrimaryNavigationClick}
           >
             {amazonLabel}
           </a>
@@ -73,6 +80,7 @@ export function ProductPurchaseActions({
             <a
               href={viewHref}
               className={`${secondaryButtonClass} ${forcePrimary ? "w-full justify-center" : ""}`}
+              onClick={onSecondaryNavigationClick}
             >
               Full details
             </a>
@@ -91,6 +99,7 @@ export function ProductPurchaseActions({
         <a
           href={viewHref!}
           className={`${secondaryButtonClass} ${forcePrimary ? "w-full justify-center" : ""}`}
+          onClick={onSecondaryNavigationClick ?? onPrimaryNavigationClick}
         >
           Full details
         </a>

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
@@ -30,6 +32,13 @@ import {
 import { whenThisLosesOnPlaybook } from "@/lib/products/productWhenThisLoses";
 import { getPublishedProductBySlug } from "@/lib/products/productPublishing";
 import type { ProductCleaningIntent } from "@/lib/products/productTypes";
+import type { ProductRecommendationTrackingContext } from "@/lib/products/productRecommendationTrackingTypes";
+import {
+  getRecommendationDestinationType,
+  normalizeRoleLabel,
+  trackProductRecommendationClick,
+} from "@/lib/products/productRecommendationTracking";
+import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 import { ProductCard } from "@/components/products/ProductCard";
 
 export type RecommendationContextTone =
@@ -54,7 +63,36 @@ type Props = {
   showComparisons?: boolean;
   /** On `/compare/products/A-vs-B`, both dossier SKUs must appear in this list. */
   pinnedProductSlugs?: readonly string[];
+  trackingContext?: ProductRecommendationTrackingContext;
 };
+
+function buildRecommendationClickHandler(args: {
+  productSlug: string;
+  roleLabel?: string | null;
+  position: number;
+  href: string;
+  trackingContext?: ProductRecommendationTrackingContext;
+  pinnedSlugs?: readonly string[];
+}) {
+  const { productSlug, roleLabel, position, href, trackingContext, pinnedSlugs } = args;
+
+  return function handleRecommendationClick() {
+    trackProductRecommendationClick({
+      eventName: "product_recommendation_click",
+      productSlug,
+      roleLabel: normalizeRoleLabel(roleLabel),
+      position,
+      pageType: trackingContext?.pageType ?? "unknown",
+      sourcePageType: trackingContext?.sourcePageType ?? null,
+      problemSlug: trackingContext?.problemSlug ?? null,
+      surfaceSlug: trackingContext?.surfaceSlug ?? null,
+      intent: trackingContext?.intent ?? null,
+      isPinned: Boolean(pinnedSlugs?.includes(productSlug)),
+      destinationType: getRecommendationDestinationType(href),
+      destinationUrl: href,
+    });
+  };
+}
 
 function getScore(product: {
   finalScore?: number;
@@ -140,6 +178,9 @@ type RecommendationProductColumnProps = {
   showComparisons: boolean;
   cardLabel?: string;
   highlight?: boolean;
+  recommendationPosition: number;
+  trackingContext?: ProductRecommendationTrackingContext;
+  pinnedSlugsForTracking?: readonly string[];
 };
 
 function RecommendationProductColumn({
@@ -155,6 +196,9 @@ function RecommendationProductColumn({
   showComparisons,
   cardLabel,
   highlight,
+  recommendationPosition,
+  trackingContext,
+  pinnedSlugsForTracking,
 }: RecommendationProductColumnProps) {
   const reasons = buildRecommendationReasons({
     slug: product.slug,
@@ -186,6 +230,18 @@ function RecommendationProductColumn({
     : null;
 
   const published = getPublishedProductBySlug(product.slug);
+  const viewHref = `/products/${product.slug}`;
+  const purchaseUrl = getProductPurchaseUrl(published ?? product);
+
+  const track = (href: string) =>
+    buildRecommendationClickHandler({
+      productSlug: product.slug,
+      roleLabel: cardLabel ?? null,
+      position: recommendationPosition,
+      href,
+      trackingContext,
+      pinnedSlugs: pinnedSlugsForTracking,
+    })();
 
   return (
     <div className="space-y-3">
@@ -195,15 +251,20 @@ function RecommendationProductColumn({
           label={cardLabel}
           highlight={highlight}
           fitLabel={recommendationConfidenceLabel(conf)}
+          onTitleLinkClick={() => track(viewHref)}
+          onPrimaryPurchaseClick={purchaseUrl ? () => track(purchaseUrl) : undefined}
+          onSecondaryPurchaseClick={() => track(viewHref)}
         />
       ) : (
         <div className="space-y-2 rounded-2xl border border-[#C9B27C] bg-white p-4 shadow-sm">
           <p className="text-sm font-medium text-neutral-800">{product.title ?? product.slug}</p>
           <ProductPurchaseActions
             product={{ ...product, name: product.title }}
-            viewHref={`/products/${product.slug}`}
+            viewHref={viewHref}
             forcePrimary
             highlight={highlight}
+            onPrimaryNavigationClick={purchaseUrl ? () => track(purchaseUrl) : () => track(viewHref)}
+            onSecondaryNavigationClick={() => track(viewHref)}
           />
         </div>
       )}
@@ -253,6 +314,7 @@ function RecommendationProductColumn({
             <Link
               href={`/compare/products/${compare.compareSlug}`}
               className="inline-block text-sm font-medium text-[#0F172A] underline decoration-[#C9B27C]/60 underline-offset-2 hover:text-neutral-700"
+              onClick={() => track(`/compare/products/${compare.compareSlug}`)}
             >
               Compare with {compare.peerTitle} →
             </Link>
@@ -274,8 +336,15 @@ export default function RecommendedProductsForTopic({
   showReasons = true,
   showComparisons = true,
   pinnedProductSlugs,
+  trackingContext,
 }: Props) {
   const effectiveIntent = intent ?? inferRecommendationIntent(problem);
+  const pinnedSlugsForTracking = [
+    ...new Set([
+      ...(trackingContext?.pinnedProductSlugs ?? []),
+      ...(pinnedProductSlugs ?? []),
+    ]),
+  ];
   const products = getRecommendedProductsForDisplay({
     problem,
     surface,
@@ -382,6 +451,9 @@ export default function RecommendedProductsForTopic({
             index={heroIndex >= 0 ? heroIndex : 0}
             highlight
             cardLabel={recommendationShortcutLabel(bestOverallProduct.slug, labels)}
+            recommendationPosition={heroIndex >= 0 ? heroIndex + 1 : 1}
+            trackingContext={trackingContext}
+            pinnedSlugsForTracking={pinnedSlugsForTracking}
           />
         </div>
       ) : null}
@@ -396,6 +468,9 @@ export default function RecommendedProductsForTopic({
               product={product}
               index={index >= 0 ? index : 0}
               cardLabel={recommendationShortcutLabel(product.slug, labels)}
+              recommendationPosition={index >= 0 ? index + 1 : 1}
+              trackingContext={trackingContext}
+              pinnedSlugsForTracking={pinnedSlugsForTracking}
             />
           );
         })}

@@ -133,7 +133,21 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
             ))}
           </div>
         ) : null}
-        {data.category === "anti_pattern" ? <ContextualProductRecommendations context={productContext} /> : null}
+        {data.category === "anti_pattern" ? (
+          <ContextualProductRecommendations
+            context={productContext}
+            trackingContext={
+              productContext
+                ? {
+                    pageType: "guide_anti_pattern_page",
+                    sourcePageType: productContext.sourcePageType ?? "anti_pattern",
+                    problemSlug: data.primaryProblemSlug ?? null,
+                    intent: String(productContext.intent),
+                  }
+                : undefined
+            }
+          />
+        ) : null}
         <AuthorityRelatedLinks
           beforeProblems={[
             { heading: "Related methods", links: data.relatedMethods },
