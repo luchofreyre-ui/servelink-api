@@ -445,8 +445,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       {/* RELATED PRODUCTS */}
       <section className="space-y-10">
         <h2 className="text-xl font-semibold">Related products</h2>
-        <RelatedProducts product={product} mode="better" />
-        <RelatedProducts product={product} mode="similar" />
+        <RelatedProducts
+          product={product}
+          mode="better"
+          trackingContext={{
+            pageType: "product_page",
+            sourcePageType: "related_products",
+          }}
+        />
+        <RelatedProducts
+          product={product}
+          mode="similar"
+          trackingContext={{
+            pageType: "product_page",
+            sourcePageType: "related_products",
+          }}
+        />
       </section>
     </div>
   );

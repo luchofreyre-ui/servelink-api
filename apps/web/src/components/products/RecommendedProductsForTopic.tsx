@@ -33,11 +33,7 @@ import { whenThisLosesOnPlaybook } from "@/lib/products/productWhenThisLoses";
 import { getPublishedProductBySlug } from "@/lib/products/productPublishing";
 import type { ProductCleaningIntent } from "@/lib/products/productTypes";
 import type { ProductRecommendationTrackingContext } from "@/lib/products/productRecommendationTrackingTypes";
-import {
-  getRecommendationDestinationType,
-  normalizeRoleLabel,
-  trackProductRecommendationClick,
-} from "@/lib/products/productRecommendationTracking";
+import { buildProductRecommendationClickHandler } from "@/lib/products/productRecommendationTracking";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 import { ProductCard } from "@/components/products/ProductCard";
 
@@ -65,34 +61,6 @@ type Props = {
   pinnedProductSlugs?: readonly string[];
   trackingContext?: ProductRecommendationTrackingContext;
 };
-
-function buildRecommendationClickHandler(args: {
-  productSlug: string;
-  roleLabel?: string | null;
-  position: number;
-  href: string;
-  trackingContext?: ProductRecommendationTrackingContext;
-  pinnedSlugs?: readonly string[];
-}) {
-  const { productSlug, roleLabel, position, href, trackingContext, pinnedSlugs } = args;
-
-  return function handleRecommendationClick() {
-    trackProductRecommendationClick({
-      eventName: "product_recommendation_click",
-      productSlug,
-      roleLabel: normalizeRoleLabel(roleLabel),
-      position,
-      pageType: trackingContext?.pageType ?? "unknown",
-      sourcePageType: trackingContext?.sourcePageType ?? null,
-      problemSlug: trackingContext?.problemSlug ?? null,
-      surfaceSlug: trackingContext?.surfaceSlug ?? null,
-      intent: trackingContext?.intent ?? null,
-      isPinned: Boolean(pinnedSlugs?.includes(productSlug)),
-      destinationType: getRecommendationDestinationType(href),
-      destinationUrl: href,
-    });
-  };
-}
 
 function getScore(product: {
   finalScore?: number;
@@ -234,7 +202,7 @@ function RecommendationProductColumn({
   const purchaseUrl = getProductPurchaseUrl(published ?? product);
 
   const track = (href: string) =>
-    buildRecommendationClickHandler({
+    buildProductRecommendationClickHandler({
       productSlug: product.slug,
       roleLabel: cardLabel ?? null,
       position: recommendationPosition,

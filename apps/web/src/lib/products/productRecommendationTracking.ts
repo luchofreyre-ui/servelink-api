@@ -5,6 +5,8 @@ export type ProductRecommendationRoleLabel =
   | "professional"
   | "unlabeled";
 
+import type { ProductRecommendationTrackingContext } from "@/lib/products/productRecommendationTrackingTypes";
+
 export type ProductRecommendationClickEvent = {
   eventName: "product_recommendation_click";
   productSlug: string;
@@ -52,6 +54,34 @@ export function normalizeRoleLabel(label?: string | null): ProductRecommendation
   if (normalized === "professional" || normalized === "professional-grade option") return "professional";
 
   return "unlabeled";
+}
+
+export function buildProductRecommendationClickHandler(args: {
+  productSlug: string;
+  roleLabel?: string | null;
+  position: number;
+  href: string;
+  trackingContext?: ProductRecommendationTrackingContext;
+  pinnedSlugs?: readonly string[];
+}) {
+  const { productSlug, roleLabel, position, href, trackingContext, pinnedSlugs } = args;
+
+  return function handleRecommendationClick() {
+    trackProductRecommendationClick({
+      eventName: "product_recommendation_click",
+      productSlug,
+      roleLabel: normalizeRoleLabel(roleLabel),
+      position,
+      pageType: trackingContext?.pageType ?? "unknown",
+      sourcePageType: trackingContext?.sourcePageType ?? null,
+      problemSlug: trackingContext?.problemSlug ?? null,
+      surfaceSlug: trackingContext?.surfaceSlug ?? null,
+      intent: trackingContext?.intent ?? null,
+      isPinned: Boolean(pinnedSlugs?.includes(productSlug)),
+      destinationType: getRecommendationDestinationType(href),
+      destinationUrl: href,
+    });
+  };
 }
 
 export function trackProductRecommendationClick(payload: ProductRecommendationClickEvent) {
