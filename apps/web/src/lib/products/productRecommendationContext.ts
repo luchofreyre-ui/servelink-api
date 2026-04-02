@@ -8,6 +8,7 @@ import {
   productSurfaceStringForAuthoritySurfaceSlug,
 } from "@/lib/authority/authorityProductTaxonomyBridge";
 import { getSurfaceSlugsForMethod, getSurfaceSlugsForProblem } from "@/authority/data/authorityGraphSelectors";
+import { getMappedProblemLabel, getMappedSurfaceLabel } from "./productTaxonomyMaps";
 
 export type ProductRecommendationSourcePageType =
   | "problem"
@@ -32,6 +33,12 @@ export type ProductRecommendationContext = {
     | "comparison_fallback";
 };
 
+function warnMissingProductTaxonomy(kind: "problem" | "surface", slug?: string | null) {
+  if (process.env.NODE_ENV === "production") return;
+  if (!slug) return;
+  console.warn(`[productRecommendationContext] Missing ${kind} taxonomy mapping for slug: ${slug}`);
+}
+
 function sorted(values: string[]): string[] {
   return [...values].sort((a, b) => a.localeCompare(b));
 }
@@ -55,26 +62,40 @@ function normalizeAuthorityProblemSlug(problemSlug: string): string {
     .replace(/-for-[a-z0-9-]+$/i, "");
 }
 
+function resolveSurfaceLabels(surfaceSlug: string | null | undefined): string | undefined {
+  if (!surfaceSlug) return undefined;
+  const directSurface = productSurfaceStringForAuthoritySurfaceSlug(surfaceSlug);
+  const mappedSurface = getMappedSurfaceLabel(surfaceSlug);
+  const resolvedSurface = directSurface ?? mappedSurface ?? null;
+
+  if (!resolvedSurface && surfaceSlug) {
+    warnMissingProductTaxonomy("surface", surfaceSlug);
+  }
+
+  return resolvedSurface ?? undefined;
+}
+
 export function resolveProductRecommendationContextForProblemPage(
   problemSlug: string,
 ): ProductRecommendationContext | null {
   const directProblem = productProblemStringForAuthorityProblemSlug(problemSlug);
   const normalizedProblem = productProblemStringForAuthorityProblemSlug(normalizeAuthorityProblemSlug(problemSlug));
+  const mappedProblem = getMappedProblemLabel(problemSlug);
+  const resolvedProblem = directProblem ?? normalizedProblem ?? mappedProblem ?? null;
 
-  const problem =
-    directProblem ?? normalizedProblem ?? problemSlug.replace(/-/g, " ");
-
-  if (!directProblem && !normalizedProblem) {
-    console.warn("[ProductContextFallback] using raw slug:", problemSlug);
+  if (!resolvedProblem && problemSlug) {
+    warnMissingProductTaxonomy("problem", problemSlug);
   }
 
+  if (!resolvedProblem) return null;
+
   const authSurface = firstAuthoritySurfaceForProblem(problemSlug);
-  const surface = authSurface ? productSurfaceStringForAuthoritySurfaceSlug(authSurface) ?? undefined : undefined;
+  const resolvedSurface = resolveSurfaceLabels(authSurface);
 
   return {
-    problem,
-    surface,
-    intent: inferRecommendationIntent(problem),
+    problem: resolvedProblem,
+    surface: resolvedSurface ?? undefined,
+    intent: inferRecommendationIntent(resolvedProblem),
     sourcePageType: "problem",
     heading: "Best products for this problem",
     densityAuthorityProblemSlug: problemSlug,
@@ -88,34 +109,31 @@ export function resolveProductRecommendationContextForSurfaceProblemPage(
 ): ProductRecommendationContext | null {
   const directProblem = productProblemStringForAuthorityProblemSlug(problemSlug);
   const directSurface = productSurfaceStringForAuthoritySurfaceSlug(surfaceSlug);
-
-  if (directProblem && directSurface) {
-    return {
-      problem: directProblem,
-      surface: directSurface,
-      intent: inferRecommendationIntent(directProblem),
-      sourcePageType: "surface_problem",
-      heading: "Recommended products for this situation",
-      densityAuthorityProblemSlug: problemSlug,
-      contextTone: "direct",
-    };
-  }
-
   const normalizedProblem = productProblemStringForAuthorityProblemSlug(normalizeAuthorityProblemSlug(problemSlug));
+  const mappedProblem = getMappedProblemLabel(problemSlug);
+  const mappedSurface = getMappedSurfaceLabel(surfaceSlug);
 
-  if (normalizedProblem && directSurface) {
-    return {
-      problem: normalizedProblem,
-      surface: directSurface,
-      intent: inferRecommendationIntent(normalizedProblem),
-      sourcePageType: "surface_problem",
-      heading: "Recommended products for this situation",
-      densityAuthorityProblemSlug: problemSlug,
-      contextTone: "surface_wording_match",
-    };
+  const resolvedProblem = directProblem ?? normalizedProblem ?? mappedProblem ?? null;
+  const resolvedSurface = directSurface ?? mappedSurface ?? null;
+
+  if (!resolvedProblem && problemSlug) {
+    warnMissingProductTaxonomy("problem", problemSlug);
+  }
+  if (!resolvedSurface && surfaceSlug) {
+    warnMissingProductTaxonomy("surface", surfaceSlug);
   }
 
-  return null;
+  if (!resolvedProblem || !resolvedSurface) return null;
+
+  return {
+    problem: resolvedProblem,
+    surface: resolvedSurface,
+    intent: inferRecommendationIntent(resolvedProblem),
+    sourcePageType: "surface_problem",
+    heading: "Recommended products for this situation",
+    densityAuthorityProblemSlug: problemSlug,
+    contextTone: directProblem && directSurface ? "direct" : "surface_wording_match",
+  };
 }
 
 export function resolveProductRecommendationContextForMethodProblemPage(
@@ -124,19 +142,23 @@ export function resolveProductRecommendationContextForMethodProblemPage(
 ): ProductRecommendationContext | null {
   const directProblem = productProblemStringForAuthorityProblemSlug(problemSlug);
   const normalizedProblem = productProblemStringForAuthorityProblemSlug(normalizeAuthorityProblemSlug(problemSlug));
-  const problem = directProblem ?? normalizedProblem;
-  if (!problem) return null;
+  const mappedProblem = getMappedProblemLabel(problemSlug);
+  const resolvedProblem = directProblem ?? normalizedProblem ?? mappedProblem ?? null;
+
+  if (!resolvedProblem && problemSlug) {
+    warnMissingProductTaxonomy("problem", problemSlug);
+  }
+
+  if (!resolvedProblem) return null;
 
   const intersectedSurfaceSlug = intersectAuthoritySurfaceForMethodProblem(methodSlug, problemSlug);
   const fallbackSurfaceSlug = intersectedSurfaceSlug ?? firstAuthoritySurfaceForProblem(problemSlug);
-  const surface = fallbackSurfaceSlug
-    ? productSurfaceStringForAuthoritySurfaceSlug(fallbackSurfaceSlug) ?? undefined
-    : undefined;
+  const resolvedSurface = resolveSurfaceLabels(fallbackSurfaceSlug ?? undefined);
 
   return {
-    problem,
-    surface,
-    intent: inferRecommendationIntentForMethodPlaybook(methodSlug, problem),
+    problem: resolvedProblem,
+    surface: resolvedSurface ?? undefined,
+    intent: inferRecommendationIntentForMethodPlaybook(methodSlug, resolvedProblem),
     sourcePageType: "method_problem",
     heading: "Products that fit this method",
     densityAuthorityProblemSlug: problemSlug,
@@ -152,16 +174,22 @@ export function resolveProductRecommendationContextForAntiPatternPage(
   const normalizedProblem = productProblemStringForAuthorityProblemSlug(
     normalizeAuthorityProblemSlug(primaryProblemSlug),
   );
-  const problem = directProblem ?? normalizedProblem;
-  if (!problem) return null;
+  const mappedProblem = getMappedProblemLabel(primaryProblemSlug);
+  const resolvedProblem = directProblem ?? normalizedProblem ?? mappedProblem ?? null;
+
+  if (!resolvedProblem && primaryProblemSlug) {
+    warnMissingProductTaxonomy("problem", primaryProblemSlug);
+  }
+
+  if (!resolvedProblem) return null;
 
   const authSurface = firstAuthoritySurfaceForProblem(primaryProblemSlug);
-  const surface = authSurface ? productSurfaceStringForAuthoritySurfaceSlug(authSurface) ?? undefined : undefined;
+  const resolvedSurface = resolveSurfaceLabels(authSurface);
 
   return {
-    problem,
-    surface,
-    intent: inferRecommendationIntent(problem),
+    problem: resolvedProblem,
+    surface: resolvedSurface ?? undefined,
+    intent: inferRecommendationIntent(resolvedProblem),
     sourcePageType: "anti_pattern",
     heading: "Use these instead",
     densityAuthorityProblemSlug: primaryProblemSlug,
@@ -175,15 +203,30 @@ export function resolveProductRecommendationContextForComparisonFallback(
 ): ProductRecommendationContext | null {
   const directProblem = productProblemStringForAuthorityProblemSlug(problemSlug);
   const normalizedProblem = productProblemStringForAuthorityProblemSlug(normalizeAuthorityProblemSlug(problemSlug));
-  const problem = directProblem ?? normalizedProblem;
-  if (!problem) return null;
+  const mappedProblem = getMappedProblemLabel(problemSlug);
+  const resolvedProblem = directProblem ?? normalizedProblem ?? mappedProblem ?? null;
 
-  const surface = surfaceSlug ? productSurfaceStringForAuthoritySurfaceSlug(surfaceSlug) ?? undefined : undefined;
+  if (!resolvedProblem && problemSlug) {
+    warnMissingProductTaxonomy("problem", problemSlug);
+  }
+
+  if (!resolvedProblem) return null;
+
+  let surface: string | undefined;
+  if (surfaceSlug) {
+    const directSurface = productSurfaceStringForAuthoritySurfaceSlug(surfaceSlug);
+    const mappedSurface = getMappedSurfaceLabel(surfaceSlug);
+    const resolvedSurface = directSurface ?? mappedSurface ?? null;
+    if (!resolvedSurface && surfaceSlug) {
+      warnMissingProductTaxonomy("surface", surfaceSlug);
+    }
+    surface = resolvedSurface ?? undefined;
+  }
 
   return {
-    problem,
+    problem: resolvedProblem,
     surface,
-    intent: inferRecommendationIntent(problem),
+    intent: inferRecommendationIntent(resolvedProblem),
     sourcePageType: "comparison",
     heading: "Better options for this scenario",
     densityAuthorityProblemSlug: problemSlug,
