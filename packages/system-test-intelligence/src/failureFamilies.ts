@@ -1,4 +1,4 @@
-import type { SystemTestRichEvidence } from "./types";
+import type { SystemTestRichEvidence } from "./types.js";
 
 /** Bump when family signature / clustering rules change (triggers re-sync). */
 export const SYSTEM_TEST_FAILURE_FAMILY_VERSION = "v1" as const;

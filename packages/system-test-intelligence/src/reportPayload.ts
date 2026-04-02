@@ -1,5 +1,5 @@
-import { isFailedStatus } from "./status";
-import type { SystemTestCaseRowInput, SystemTestRunRowInput } from "./types";
+import { isFailedStatus } from "./status.js";
+import type { SystemTestCaseRowInput, SystemTestRunRowInput } from "./types.js";
 
 /** Run row plus ingest metadata for operator-facing diagnostic text. */
 export type DiagnosticReportRunInput = SystemTestRunRowInput & {

@@ -1,6 +1,6 @@
-import { fingerprintForCase, shortMessageFromCase } from "./fingerprint";
-import { isFailedStatus } from "./status";
-import type { FailureGroup, IntelCase } from "./types";
+import { fingerprintForCase, shortMessageFromCase } from "./fingerprint.js";
+import { isFailedStatus } from "./status.js";
+import type { FailureGroup, IntelCase } from "./types.js";
 
 export function groupFailures(cases: IntelCase[]): FailureGroup[] {
   const failed = cases.filter((c) => isFailedStatus(c.status));

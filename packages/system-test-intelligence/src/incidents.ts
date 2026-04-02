@@ -1,5 +1,5 @@
-import { buildIncidentFixTrack, type IncidentRootCauseCategory } from "./fixTracks";
-import { normalizeLocatorOrSelector, normalizeRouteUrl } from "./failureFamilies";
+import { buildIncidentFixTrack, type IncidentRootCauseCategory } from "./fixTracks.js";
+import { normalizeLocatorOrSelector, normalizeRouteUrl } from "./failureFamilies.js";
 
 /** Bump when incident synthesis / clustering rules change. */
 export const SYSTEM_TEST_INCIDENT_VERSION = "v1" as const;

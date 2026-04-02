@@ -1,5 +1,5 @@
-import { isFailedStatus } from "./status";
-import type { IntelRunSnapshot, SpecSummaryRow, SystemTestCaseRowInput, SystemTestRunRowInput } from "./types";
+import { isFailedStatus } from "./status.js";
+import type { IntelRunSnapshot, SpecSummaryRow, SystemTestCaseRowInput, SystemTestRunRowInput } from "./types.js";
 
 /** Canonical JSON-serializable payload for content hashing (caller applies SHA-256 or similar). */
 export function buildRunSourceContentPayload(

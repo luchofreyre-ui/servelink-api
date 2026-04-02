@@ -1,4 +1,4 @@
-import type { ChronologyDiagnosticsV1, SystemTestCaseRowInput, SystemTestRunRowInput } from "./types";
+import type { ChronologyDiagnosticsV1, SystemTestCaseRowInput, SystemTestRunRowInput } from "./types.js";
 
 function tryParseIso(value: unknown): string | null {
   if (value == null) return null;

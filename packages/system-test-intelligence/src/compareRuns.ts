@@ -1,5 +1,5 @@
-import { passRateFromSnapshot } from "./normalizeRun";
-import type { ComparisonResult, FailureGroup, IntelRunSnapshot } from "./types";
+import { passRateFromSnapshot } from "./normalizeRun.js";
+import type { ComparisonResult, FailureGroup, IntelRunSnapshot } from "./types.js";
 
 export function compareFailureGroups(
   base: { run: IntelRunSnapshot; groups: FailureGroup[] },

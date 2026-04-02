@@ -2,7 +2,7 @@ import type {
   SystemTestArtifactRef,
   SystemTestCaseRowInput,
   SystemTestRichEvidence,
-} from "./types";
+} from "./types.js";
 
 export function emptyRichEvidence(): SystemTestRichEvidence {
   return {

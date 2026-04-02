@@ -1,5 +1,5 @@
-import { isFailedStatus } from "./status";
-import type { FailureGroup, IntelCase } from "./types";
+import { isFailedStatus } from "./status.js";
+import type { FailureGroup, IntelCase } from "./types.js";
 
 export function rerunScoreForGroup(
   g: FailureGroup,

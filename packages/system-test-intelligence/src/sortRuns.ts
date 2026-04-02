@@ -1,4 +1,4 @@
-import type { SystemTestRunRowInput } from "./types";
+import type { SystemTestRunRowInput } from "./types.js";
 
 /** Stable ascending order for cursor backfills and deterministic scans. */
 export function compareRunIdAsc(a: { id: string }, b: { id: string }): number {

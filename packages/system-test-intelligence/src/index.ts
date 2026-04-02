@@ -1,15 +1,15 @@
 export {
   SYSTEM_TEST_INTELLIGENCE_VERSION,
   type SystemTestIntelligenceAnalysisStatus,
-} from "./constants";
-export * from "./types";
-export { isFailedStatus } from "./status";
+} from "./constants.js";
+export * from "./types.js";
+export { isFailedStatus } from "./status.js";
 export {
   normalizeMessageForFingerprint,
   fingerprintForCase,
   shortMessageFromCase,
-} from "./fingerprint";
-export { groupFailures } from "./groupFailures";
+} from "./fingerprint.js";
+export { groupFailures } from "./groupFailures.js";
 export {
   intelCaseFromRow,
   evidenceSummaryFromRow,
@@ -17,45 +17,45 @@ export {
   casesByFingerprintKey,
   diagnosticPreviewForGroup,
   filterFailedCases,
-} from "./evidence";
-export { buildChronologyDiagnostics } from "./chronology";
+} from "./evidence.js";
+export { buildChronologyDiagnostics } from "./chronology.js";
 export {
   buildRunSourceContentPayload,
   passRateFromRunRow,
   passRateFromSnapshot,
   buildSpecSummaryRows,
   withSpecSortOrder,
-} from "./normalizeRun";
-export { compareFailureGroups } from "./compareRuns";
+} from "./normalizeRun.js";
+export { compareFailureGroups } from "./compareRuns.js";
 export {
   rerunScoreForGroup,
   buildImmediatePriorMaps,
   fileFailedDeltaMap,
   unstableFilesFromRuns,
   stableFileSharpRegression,
-} from "./analyzeHistory";
+} from "./analyzeHistory.js";
 export {
   compareRunIdAsc,
   sortRunsByIdAsc,
   runRowToInput,
-} from "./sortRuns";
+} from "./sortRuns.js";
 export {
   buildDiagnosticReportPlainText,
   type DiagnosticReportRunInput,
-} from "./reportPayload";
+} from "./reportPayload.js";
 export {
   ARTIFACT_TYPE_PRIORITY,
   extractArtifactRefsFromCase,
   extractArtifactRefsFromCaseDeep,
   mergeArtifactRefsForGroup,
-} from "./artifactRefs";
+} from "./artifactRefs.js";
 export {
   emptyRichEvidence,
   parseRichEvidenceFromCase,
   mergeRichEvidenceForGroup,
   enrichRichEvidenceWithPrimary,
   buildCompactDebuggingHint,
-} from "./richEvidence";
+} from "./richEvidence.js";
 export {
   SYSTEM_TEST_FAILURE_FAMILY_VERSION,
   type FailureFamilyMatchBasis,
@@ -76,7 +76,7 @@ export {
   normalizeRouteUrl,
   normalizedMessageHead,
   selectFailureFamilySignature,
-} from "./failureFamilies";
+} from "./failureFamilies.js";
 export {
   SYSTEM_TEST_INCIDENT_VERSION,
   type IncidentFamilyPairEdge,
@@ -102,6 +102,6 @@ export {
   inferSurfaceAreaFromRoute,
   selectLeadFamilyId,
   titleAnchorOverlapCount,
-} from "./incidents";
-export type { IncidentRootCauseCategory, SystemTestIncidentFixTrack } from "./fixTracks";
-export { buildIncidentFixTrack } from "./fixTracks";
+} from "./incidents.js";
+export type { IncidentRootCauseCategory, SystemTestIncidentFixTrack } from "./fixTracks.js";
+export { buildIncidentFixTrack } from "./fixTracks.js";

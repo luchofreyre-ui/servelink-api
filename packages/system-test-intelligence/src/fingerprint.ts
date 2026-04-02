@@ -1,4 +1,4 @@
-import type { IntelCase } from "./types";
+import type { IntelCase } from "./types.js";
 
 function normalizeWhitespace(s: string): string {
   return s.trim().replace(/\s+/g, " ");

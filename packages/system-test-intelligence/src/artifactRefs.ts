@@ -2,7 +2,7 @@ import type {
   SystemTestArtifactRef,
   SystemTestArtifactRefType,
   SystemTestCaseRowInput,
-} from "./types";
+} from "./types.js";
 
 /** Lower index = higher priority for primary artifact selection. */
 export const ARTIFACT_TYPE_PRIORITY: SystemTestArtifactRefType[] = [

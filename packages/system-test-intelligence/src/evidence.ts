@@ -1,6 +1,6 @@
-import { fingerprintForCase, shortMessageFromCase } from "./fingerprint";
-import { isFailedStatus } from "./status";
-import type { GroupEvidenceSummary, IntelCase, SystemTestCaseRowInput } from "./types";
+import { fingerprintForCase, shortMessageFromCase } from "./fingerprint.js";
+import { isFailedStatus } from "./status.js";
+import type { GroupEvidenceSummary, IntelCase, SystemTestCaseRowInput } from "./types.js";
 
 function artifactPaths(artifactJson: unknown): string[] {
   if (
