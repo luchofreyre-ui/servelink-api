@@ -2,7 +2,7 @@
   Aligns replayed migration state with current schema.prisma:
   - Prune tables/columns/enums removed from schema but still created by older migrations
   - Rename truncated PostgreSQL index names to Prisma-expected names for monitoring tables
-  Must run after 20260331183000_system_test_runs so shadow replay order is valid.
+  Must run after 20260327102000_system_test_runs (SystemTestRun / SystemTestCaseResult) so shadow replay order is valid.
 */
 -- DropForeignKey
 ALTER TABLE "BookingDocument" DROP CONSTRAINT "BookingDocument_bookingId_fkey";
