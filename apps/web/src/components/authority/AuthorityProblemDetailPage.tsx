@@ -45,6 +45,7 @@ import { getBuiltBridgeMap } from "@/lib/encyclopedia/bridgeMap";
 import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
 import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
 import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
+import { AuthorityProblemQuickFix } from "./AuthorityProblemQuickFix";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
 import { AuthorityProblemInlineAssistTracked } from "./AuthorityProblemInlineAssistTracked";
@@ -107,6 +108,39 @@ function parseTopMethodSteps(raw: string): { summary: string; steps: string[] } 
     summary: sentences[0] ?? first,
     steps: sentences.length > 1 ? sentences.slice(1, 4) : lines.slice(1, 4),
   };
+}
+
+function ProblemBestMethodCard({
+  methodParsed,
+  className = "",
+}: {
+  methodParsed: ReturnType<typeof parseTopMethodSteps>;
+  className?: string;
+}) {
+  return (
+    <article
+      id="problem-methods"
+      className={`scroll-mt-28 space-y-4 rounded-2xl border border-stone-200/80 bg-white p-4 md:p-6 ${className}`}
+    >
+      <h2 className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A] md:text-2xl lg:text-3xl">
+        Best way to remove it
+      </h2>
+      {methodParsed.summary ?
+        <p className="font-[var(--font-manrope)] text-base leading-[1.3] text-[#475569] md:text-lg">
+          {methodParsed.summary}
+        </p>
+      : null}
+      {methodParsed.steps.length > 0 ?
+        <ol className="list-inside list-decimal space-y-2 font-[var(--font-manrope)] text-[1.02rem] leading-[1.3] text-[#475569]">
+          {methodParsed.steps.map((step, idx) => (
+            <li key={idx} className="pl-1">
+              {step}
+            </li>
+          ))}
+        </ol>
+      : null}
+    </article>
+  );
 }
 
 function buildDiagnosticRows(
@@ -269,6 +303,25 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
   const methodParsed = parseTopMethodSteps(data.bestMethods);
   const diagnosticRows = buildDiagnosticRows(data.whatItUsuallyIs, data.commonOn);
   const precheckBullets = buildPrecheckBullets(beforeClean, voice);
+  const soapScumExecutionHub =
+    data.slug === "soap-scum" && Boolean(data.executionQuickFix && data.problemDefinitionLine);
+
+  const anchorNavItems: { href: string; label: string }[] = soapScumExecutionHub
+    ? [
+        { href: "#problem-overview", label: "Overview" },
+        { href: "#problem-why", label: "Why" },
+        { href: "#problem-methods", label: "Methods" },
+        { href: "#problem-products", label: "Products" },
+        { href: "#problem-faq", label: "FAQ" },
+      ]
+    : [
+        { href: "#problem-overview", label: "Overview" },
+        { href: "#problem-context", label: "What it is" },
+        { href: "#problem-why", label: "Why" },
+        { href: "#problem-methods", label: "Methods" },
+        { href: "#problem-products", label: "Products" },
+        { href: "#problem-faq", label: "FAQ" },
+      ];
 
   // SYSTEM RULE:
   // Education-first; products stay after method + avoid on this template.
@@ -279,100 +332,125 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
       <main className="mx-auto max-w-6xl scroll-smooth px-4 pb-12 pt-4 sm:px-6 sm:pt-5 lg:px-8">
-        <section
-          className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(420px,0.8fr)] lg:items-start"
-          aria-label="Problem overview"
-        >
-          <div id="problem-overview" className="space-y-3 scroll-mt-28">
-            <AuthorityBreadcrumbs items={crumbs} />
-            <nav
-              aria-label="On this page"
-              className="sticky top-16 z-20 border-b border-zinc-200 bg-white/95 py-2 backdrop-blur"
-            >
-              <div className="flex flex-wrap items-center gap-5 text-sm text-zinc-600 md:gap-6 md:text-base">
-                <a href="#problem-overview" className="transition hover:text-zinc-900">
-                  Overview
-                </a>
-                <a href="#problem-context" className="transition hover:text-zinc-900">
-                  What it is
-                </a>
-                <a href="#problem-why" className="transition hover:text-zinc-900">
-                  Why
-                </a>
-                <a href="#problem-methods" className="transition hover:text-zinc-900">
-                  Methods
-                </a>
-                <a href="#problem-products" className="transition hover:text-zinc-900">
-                  Products
-                </a>
-                <a href="#problem-faq" className="transition hover:text-zinc-900">
-                  FAQ
-                </a>
-              </div>
-            </nav>
-            <AuthorityHero
-              variant="problemCompact"
-              eyebrow="Cleaning problem"
-              title={data.title}
-              description={data.summary}
-              subline={data.heroSubline}
-            />
-          </div>
-          <div className="lg:pt-10">
-            <AuthorityQuickAnswer text={quickAnswerText} variant="problemAnchor" methodsHref="#problem-methods" />
-          </div>
-        </section>
-
-        <section
-          id="problem-top-rail"
-          className="mb-6 mt-4 grid scroll-mt-28 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.9fr)]"
-          aria-label="Primary method and diagnostic context"
-        >
-          <div className="space-y-4">
-            <article
-              id="problem-methods"
-              className="rounded-2xl border border-stone-200/80 bg-white p-4 md:p-6 space-y-4 scroll-mt-28"
-            >
-              <h2 className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A] md:text-2xl lg:text-3xl">
-                Best way to remove it
-              </h2>
-              {methodParsed.summary ? (
-                <p className="font-[var(--font-manrope)] text-base leading-[1.3] text-[#475569] md:text-lg">
-                  {methodParsed.summary}
-                </p>
-              ) : null}
-              {methodParsed.steps.length > 0 ? (
-                <ol className="list-inside list-decimal space-y-2 font-[var(--font-manrope)] text-[1.02rem] leading-[1.3] text-[#475569]">
-                  {methodParsed.steps.map((step, idx) => (
-                    <li key={idx} className="pl-1">
-                      {step}
-                    </li>
+        {soapScumExecutionHub ?
+          <section className="space-y-4" aria-label="Problem overview">
+            <div id="problem-overview" className="scroll-mt-28 space-y-3">
+              <AuthorityBreadcrumbs items={crumbs} />
+              <nav
+                aria-label="On this page"
+                className="sticky top-16 z-20 border-b border-zinc-100/90 bg-[#FFF9F3]/90 py-1.5 backdrop-blur-[2px] md:py-2"
+              >
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-zinc-500 md:gap-x-5 md:text-xs">
+                  {anchorNavItems.map((item) => (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      className="uppercase tracking-wide text-zinc-500 transition hover:text-zinc-900"
+                    >
+                      {item.label}
+                    </a>
                   ))}
-                </ol>
-              ) : null}
-            </article>
-          </div>
-
-          <aside className="space-y-4">
-            <article id="problem-context" className={`${railCard} scroll-mt-28`}>
-              <h2 className="font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A] md:text-xl">
-                What this usually is
-              </h2>
-              <div className="space-y-4">
-                {diagnosticRows.map((row) => (
-                  <div key={row.title} className="flex items-start gap-3">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-base font-semibold leading-[1.2] text-[#0F172A] md:text-xl">
-                        {row.title}
-                      </p>
-                      <p className="mt-1 text-sm leading-[1.3] text-[#475569] md:text-base">{row.body}</p>
-                    </div>
-                  </div>
-                ))}
+                </div>
+              </nav>
+              <AuthorityHero
+                variant="problemCompact"
+                eyebrow="Cleaning problem"
+                title={data.title}
+                description={data.problemDefinitionLine!}
+              />
+              <div
+                className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start lg:gap-5"
+                data-testid="soap-scum-top-fold"
+              >
+                <AuthorityProblemQuickFix {...data.executionQuickFix!} />
+                <ProblemBestMethodCard methodParsed={methodParsed} />
               </div>
-            </article>
+            </div>
+          </section>
+        : <>
+            <section
+              className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(420px,0.8fr)] lg:items-start"
+              aria-label="Problem overview"
+            >
+              <div id="problem-overview" className="space-y-3 scroll-mt-28">
+                <AuthorityBreadcrumbs items={crumbs} />
+                <nav
+                  aria-label="On this page"
+                  className="sticky top-16 z-20 border-b border-zinc-200 bg-white/95 py-2 backdrop-blur"
+                >
+                  <div className="flex flex-wrap items-center gap-5 text-sm text-zinc-600 md:gap-6 md:text-base">
+                    {anchorNavItems.map((item) => (
+                      <a key={item.href} href={item.href} className="transition hover:text-zinc-900">
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                </nav>
+                <AuthorityHero
+                  variant="problemCompact"
+                  eyebrow="Cleaning problem"
+                  title={data.title}
+                  description={data.summary}
+                  subline={data.heroSubline}
+                />
+              </div>
+              <div className="lg:pt-10">
+                <AuthorityQuickAnswer text={quickAnswerText} variant="problemAnchor" methodsHref="#problem-methods" />
+              </div>
+            </section>
 
-            <article id="problem-before-clean" className={`${railCard} scroll-mt-28`}>
+            <section
+              id="problem-top-rail"
+              className="mb-6 mt-4 grid scroll-mt-28 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.9fr)]"
+              aria-label="Primary method and diagnostic context"
+            >
+              <div className="space-y-4">
+                <ProblemBestMethodCard methodParsed={methodParsed} />
+              </div>
+
+              <aside className="space-y-4">
+                <article id="problem-context" className={`${railCard} scroll-mt-28`}>
+                  <h2 className="font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A] md:text-xl">
+                    What this usually is
+                  </h2>
+                  <div className="space-y-4">
+                    {diagnosticRows.map((row) => (
+                      <div key={row.title} className="flex items-start gap-3">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-base font-semibold leading-[1.2] text-[#0F172A] md:text-xl">
+                            {row.title}
+                          </p>
+                          <p className="mt-1 text-sm leading-[1.3] text-[#475569] md:text-base">{row.body}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+
+                <article id="problem-before-clean" className={`${railCard} scroll-mt-28`}>
+                  <h2 className="font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A] md:text-xl">
+                    Before you clean
+                  </h2>
+                  <ul className="space-y-2">
+                    {precheckBullets.map((b) => (
+                      <li key={b} className="text-sm leading-[1.3] text-[#475569] md:text-base">
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </aside>
+            </section>
+          </>
+        }
+
+        {soapScumExecutionHub ?
+          <section
+            id="problem-top-rail"
+            className="mb-6 mt-4 scroll-mt-28"
+            aria-label="Before you clean"
+          >
+            <article id="problem-before-clean" className={`${railCard} scroll-mt-28 max-w-3xl`}>
               <h2 className="font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A] md:text-xl">
                 Before you clean
               </h2>
@@ -384,8 +462,8 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
                 ))}
               </ul>
             </article>
-          </aside>
-        </section>
+          </section>
+        : null}
 
         <div id="problem-why" className="scroll-mt-28 space-y-0">
           <AuthoritySection density="compact" title="Why this keeps happening">

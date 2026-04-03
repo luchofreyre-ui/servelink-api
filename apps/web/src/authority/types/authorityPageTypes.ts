@@ -13,6 +13,13 @@ export type AuthorityEntitySummary = {
 export type AuthorityToolSummary = { name: string; note?: string };
 export type AuthorityChemicalSummary = { name: string; note?: string };
 
+/** Execution-first “quick fix” block (problem hubs that opt in, e.g. soap scum pilot). */
+export type AuthorityProblemExecutionQuickFix = {
+  use: string;
+  do: string;
+  ifNeeded?: string;
+};
+
 export type AuthorityProblemSummary = {
   slug: string;
   title: string;
@@ -87,6 +94,10 @@ export type AuthorityProblemPageData = {
   heroSubline?: string;
   /** Featured-snippet style direct answer; falls back to a trimmed “what it usually is” if omitted. */
   quickAnswer?: string;
+  /** Single definition line under the title when using execution-first layout. */
+  problemDefinitionLine?: string;
+  /** Use + do + optional escalation; paired with problemDefinitionLine for pilot layouts. */
+  executionQuickFix?: AuthorityProblemExecutionQuickFix;
   category: AuthorityProblemCategory;
   symptoms: string[];
   causes: string[];

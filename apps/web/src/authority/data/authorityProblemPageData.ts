@@ -118,9 +118,16 @@ function prob(
 const PROBLEMS: Record<string, AuthorityProblemPageData> = {
   "soap-scum": {
     ...prob("soap-scum", "Soap scum", "residue"),
-    summary: "Soap scum is one of the most common—and most misidentified—bathroom problems.",
-    heroSubline:
-      "Most cases are removable with the right method. The key is knowing what you're actually dealing with before you clean.",
+    summary:
+      "Soap scum is a grabby bathroom film from soap, minerals, and oils—remove it with the right cleaner order, not guesswork.",
+    problemDefinitionLine:
+      "A film of soap residue, hard-water minerals, and body oils on wet surfaces—often mistaken for permanent damage.",
+    executionQuickFix: {
+      use: "Bathroom-rated neutral or mild surfactant cleaner matched to the surface.",
+      do: "Spray, brief dwell, soft scrub, rinse completely.",
+      ifNeeded:
+        "Still there? Use a labeled soap-scum remover—never mix products. If the finish dulls or feels rough, stop—that’s damage, not more scum.",
+    },
     whatItUsuallyIs:
       "Soap scum is a surface film made from soap residue, minerals in water, and body oils.\n\nIt builds up in layers and can look like staining or damage, especially on grout, tile, and glass.",
     whyItHappens:
@@ -128,7 +135,7 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
     commonOn:
       "Showers, grout lines, glass, and any surface that regularly stays wet.\n\nHigh-use areas build it faster, especially where airflow is limited.",
     beforeYouClean:
-      "Most people go too aggressive too early.\n\nSoap scum is usually removable, but using the wrong method can make it worse or cause surface damage.\n\nStart neutral, test first, and only escalate if needed.",
+      "Spot-test first. Go gentle → stronger; don’t guess acids on stone or coated glass.\n\nIf the look or feel changes after a pass, stop immediately—more chemistry usually makes it worse.",
     bestMethods:
       "Start with a neutral cleaner and a soft tool to break up the film.\n\nIf buildup remains, step up gradually—don't jump straight to harsh chemicals.\n\nRinsing thoroughly matters just as much as the cleaner you use.",
     avoidMethods:
