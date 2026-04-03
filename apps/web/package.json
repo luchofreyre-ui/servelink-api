@@ -88,7 +88,6 @@
     "report:amazon-catalog-ops": "tsx scripts/report-amazon-catalog-ops.ts"
   },
   "dependencies": {
-    "@servelink/system-test-intelligence": "file:../../packages/system-test-intelligence",
     "@stripe/react-stripe-js": "^5.6.1",
     "@stripe/stripe-js": "^8.11.0",
     "clsx": "^2.1.1",
