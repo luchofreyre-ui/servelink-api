@@ -1,3 +1,5 @@
+import { GlobalSearchForm } from "@/components/search/GlobalSearchForm";
+
 export function ServiceHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white">
@@ -23,13 +25,18 @@ export function ServiceHeader() {
           </a>
         </nav>
 
-        {/* RIGHT — CTA */}
-        <a
-          href="/book"
-          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition"
-        >
-          Book Now
-        </a>
+        {/* RIGHT — SEARCH + CTA */}
+        <div className="flex items-center">
+          <div className="hidden md:block mr-3">
+            <GlobalSearchForm />
+          </div>
+          <a
+            href="/book"
+            className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition"
+          >
+            Book Now
+          </a>
+        </div>
       </div>
     </header>
   );
