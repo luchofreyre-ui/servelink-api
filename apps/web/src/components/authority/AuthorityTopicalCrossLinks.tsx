@@ -9,13 +9,32 @@ type Props = {
   pageKey: string;
   /** When set (e.g. problem hub or surface+problem playbook), biases entry-cluster picks. */
   problemSlug?: string | null;
+  /** Single row of text links — no featured card chrome. */
+  variant?: "default" | "quiet";
 };
 
 export function AuthorityTopicalCrossLinks(props: Props) {
-  const { pageKey, problemSlug } = props;
+  const { pageKey, problemSlug, variant = "default" } = props;
   const entry = pickEntryClusterCrossLinks(pageKey, problemSlug);
   const anti = pickAntiPatternCrossLinks(pageKey);
   if (!entry.length && !anti.length) return null;
+
+  const all = [...entry, ...anti];
+
+  if (variant === "quiet") {
+    return (
+      <section id="problem-also-explore" className="mb-5 scroll-mt-28 space-y-2">
+        <h2 className="text-lg font-semibold text-[#0F172A]">Also explore</h2>
+        <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-[#475569]">
+          {all.map((l) => (
+            <Link key={l.href} href={l.href} className="font-medium text-[#0D9488] hover:underline">
+              {l.title}
+            </Link>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <aside
