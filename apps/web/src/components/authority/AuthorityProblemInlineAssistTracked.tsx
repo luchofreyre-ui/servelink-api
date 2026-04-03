@@ -1,61 +1,76 @@
 "use client";
 
-import { InlineProductAssist } from "@/components/products/InlineProductAssist";
+import { InlineProductAssist, type InlineAssistProduct } from "@/components/products/InlineProductAssist";
 import { buildProductRecommendationClickHandler } from "@/lib/products/productRecommendationTracking";
 
 type Props = {
-  viewHref: string;
+  topPick: InlineAssistProduct | null;
+  secondaryPick: InlineAssistProduct | null;
   buyHref: string | null;
-  topProductSlug: string | null;
   problemSlug: string;
   intent: string | null;
 };
 
+const trackingBase = (problemSlug: string, intent: string | null) => ({
+  pageType: "problem_page" as const,
+  sourcePageType: "inline_product_assist" as const,
+  problemSlug,
+  intent,
+});
+
 /**
  * Client boundary: click handlers for inline assist (cannot be created in the server problem page).
- * Handler logic matches AuthorityProblemDetailPage spec (inline_product_assist).
  */
 export function AuthorityProblemInlineAssistTracked({
-  viewHref,
+  topPick,
+  secondaryPick,
   buyHref,
-  topProductSlug,
   problemSlug,
   intent,
 }: Props) {
-  const handleInlineAssistViewClick = buildProductRecommendationClickHandler({
-    productSlug: topProductSlug ?? "unknown",
-    roleLabel: "Start here",
-    position: 1,
-    href: viewHref,
-    trackingContext: {
-      pageType: "problem_page",
-      sourcePageType: "inline_product_assist",
-      problemSlug,
-      intent,
-    },
-  });
+  const t = trackingBase(problemSlug, intent);
 
-  const handleInlineAssistBuyClick = topProductSlug
-    ? buildProductRecommendationClickHandler({
-        productSlug: topProductSlug,
-        roleLabel: "Start here",
-        position: 1,
-        href: buyHref ?? "",
-        trackingContext: {
-          pageType: "problem_page",
-          sourcePageType: "inline_product_assist",
-          problemSlug,
-          intent,
-        },
-      })
-    : undefined;
+  const handleBuyClick =
+    topPick && buyHref
+      ? buildProductRecommendationClickHandler({
+          productSlug: topPick.slug,
+          roleLabel: "Start here",
+          position: 1,
+          href: buyHref,
+          trackingContext: t,
+        })
+      : undefined;
+
+  const handleCompareClick = () => {
+    buildProductRecommendationClickHandler({
+      productSlug: topPick?.slug ?? "unknown",
+      roleLabel: "Start here",
+      position: 1,
+      href: "#problem-products",
+      trackingContext: t,
+    })();
+    document.getElementById("problem-products")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleThumbnailClick = (slug: string) => {
+    const position = slug === topPick?.slug ? 1 : 2;
+    buildProductRecommendationClickHandler({
+      productSlug: slug,
+      roleLabel: "Start here",
+      position,
+      href: `/products/${slug}`,
+      trackingContext: t,
+    })();
+  };
 
   return (
     <InlineProductAssist
-      viewHref={viewHref}
+      topPick={topPick}
+      secondaryPick={secondaryPick}
       buyHref={buyHref}
-      onViewClick={handleInlineAssistViewClick}
-      onBuyClick={handleInlineAssistBuyClick}
+      onBuyClick={handleBuyClick}
+      onCompareClick={handleCompareClick}
+      onThumbnailClick={handleThumbnailClick}
     />
   );
 }
