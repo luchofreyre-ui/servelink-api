@@ -142,6 +142,12 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
   const compareSlugs = getComparisonSlugsForEntity("problem_comparison", data.slug).slice(0, 4);
   const relatedClusterSlugs = getRelatedClusterSlugsForProblemCategory(data.category);
+  const hasRelatedLinkColumn =
+    data.relatedProblems.length > 0 ||
+    data.relatedMethods.length > 0 ||
+    data.relatedSurfaces.length > 0;
+  const showRelatedNetworkSection =
+    hasRelatedLinkColumn || compareSlugs.length > 0 || relatedClusterSlugs.length > 0;
   const quickAnswerText =
     data.quickAnswer?.trim() || snippetAnswer(data.whatItUsuallyIs, 2, 260);
   const productContext = resolveProductRecommendationContextForProblemPage(data.slug);
@@ -187,7 +193,8 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
   // SYSTEM RULE:
   // This page is education-first.
   // Products assist decisions — they do not drive them.
-  // Do not move product components above diagnostic or method sections.
+  // Flow: explain what/why before advisory (before you clean, diagnostics).
+  // Inline assist and hub recommendations stay after method + avoid — never above that core.
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
@@ -206,11 +213,14 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             <a href="#problem-overview" className="transition hover:text-zinc-900">
               Overview
             </a>
+            <a href="#problem-context" className="transition hover:text-zinc-900">
+              What it is
+            </a>
+            <a href="#problem-why" className="transition hover:text-zinc-900">
+              Why
+            </a>
             <a href="#problem-before-clean" className="transition hover:text-zinc-900">
               Before you clean
-            </a>
-            <a href="#problem-context" className="transition hover:text-zinc-900">
-              Context
             </a>
             <a href="#problem-methods" className="transition hover:text-zinc-900">
               Methods
@@ -224,7 +234,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           </div>
         </nav>
 
-        <div id="problem-overview" className="mb-6 scroll-mt-28">
+        <div id="problem-overview" className="mb-8 scroll-mt-28">
           <AuthorityHero
             eyebrow="Cleaning problem"
             title={data.title}
@@ -233,6 +243,21 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           />
           <AuthorityQuickAnswer text={quickAnswerText} />
           <AuthorityTopicalCrossLinks pageKey={`problem-${data.slug}`} problemSlug={data.slug} />
+        </div>
+
+        <div id="problem-context" className="scroll-mt-28 space-y-0">
+          <AuthoritySection title="What this usually is">
+            <ProseBlocks text={data.whatItUsuallyIs} />
+          </AuthoritySection>
+        </div>
+
+        <div id="problem-why" className="scroll-mt-28 space-y-0">
+          <AuthoritySection title="Why this keeps happening">
+            <ProseBlocks text={data.whyItHappens} />
+          </AuthoritySection>
+          <AuthoritySection title="Where you'll see it most">
+            <ProseBlocks text={data.commonOn} />
+          </AuthoritySection>
         </div>
 
         <div id="problem-before-clean" className="scroll-mt-28 space-y-0">
@@ -255,39 +280,10 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           </div>
         </div>
 
-        <div id="problem-context" className="scroll-mt-28 space-y-0">
-          <AuthoritySection title="What this usually is">
-            <ProseBlocks text={data.whatItUsuallyIs} />
-          </AuthoritySection>
-        </div>
-
-        <div id="problem-why" className="scroll-mt-28 space-y-0">
-          <AuthoritySection title="Why this keeps happening">
-            <ProseBlocks text={data.whyItHappens} />
-          </AuthoritySection>
-          <AuthoritySection title="Where you'll see it most">
-            <ProseBlocks text={data.commonOn} />
-          </AuthoritySection>
-        </div>
-
         <div id="problem-methods" className="scroll-mt-28 space-y-0">
           <AuthoritySection title="Best way to remove it">
             <ProseBlocks text={data.bestMethods} />
           </AuthoritySection>
-
-          {recommendationContext ? (
-            <AuthorityProblemInlineAssistTracked
-              topPick={inlineAssistTopPick}
-              secondaryPick={inlineAssistSecondaryPick}
-              buyHref={inlineAssistBuyHref}
-              problemSlug={data.slug}
-              intent={
-                recommendationContext?.intent != null
-                  ? String(recommendationContext.intent)
-                  : null
-              }
-            />
-          ) : null}
 
           <AuthoritySection title="Recommended tools">
             <ul className="list-inside list-disc space-y-1 text-sm leading-relaxed text-[#475569] md:text-base">
@@ -317,6 +313,20 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             </MutedAside>
           </AuthoritySection>
         </div>
+
+        {recommendationContext ? (
+          <AuthorityProblemInlineAssistTracked
+            topPick={inlineAssistTopPick}
+            secondaryPick={inlineAssistSecondaryPick}
+            buyHref={inlineAssistBuyHref}
+            problemSlug={data.slug}
+            intent={
+              recommendationContext?.intent != null
+                ? String(recommendationContext.intent)
+                : null
+            }
+          />
+        ) : null}
 
         {getMethodSlugsForProblem(data.slug).length > 0 ? (
           <AuthoritySection title="Method + problem playbooks">
@@ -392,44 +402,61 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           <AuthorityFaq block={faqBlock} />
         </div>
 
-        <AuthorityRelatedLinks
-          problemGroups={[{ heading: "Related problems", problems: data.relatedProblems }]}
-          afterProblems={[
-            { heading: "Related methods", links: data.relatedMethods },
-            { heading: "Related surfaces", links: data.relatedSurfaces },
-          ]}
-        />
-        {compareSlugs.length ? (
-          <AuthoritySection title="Compare related items">
-            <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
-              {compareSlugs.map((comparisonSlug) => (
-                <li key={comparisonSlug}>
-                  <Link
-                    href={`/compare/problems/${comparisonSlug}`}
-                    className="font-medium text-[#0D9488] hover:underline"
-                  >
-                    {formatComparisonLinkLabel("problem_comparison", comparisonSlug)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </AuthoritySection>
-        ) : null}
-        {relatedClusterSlugs.length ? (
-          <AuthoritySection title="Related clusters">
-            <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
-              {relatedClusterSlugs.map((clusterSlug) => (
-                <li key={clusterSlug}>
-                  <Link
-                    href={`/clusters/${clusterSlug}`}
-                    className="font-medium text-[#0D9488] hover:underline"
-                  >
-                    {getClusterTitleBySlug(clusterSlug)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </AuthoritySection>
+        {showRelatedNetworkSection ? (
+          <section
+            id="problem-related-network"
+            aria-label="Related problems, comparisons, and clusters"
+            className="mt-8 scroll-mt-28 rounded-2xl border border-zinc-200/60 bg-white/50 p-5 sm:p-7"
+          >
+            <h2 className="mb-5 font-[var(--font-poppins)] text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">
+              Related & comparisons
+            </h2>
+            <div className="flex flex-col gap-6">
+              {hasRelatedLinkColumn ? (
+                <div className="[&>div]:mt-0 [&_section]:mt-6 [&_section:first-of-type]:mt-0">
+                  <AuthorityRelatedLinks
+                    problemGroups={[{ heading: "Related problems", problems: data.relatedProblems }]}
+                    afterProblems={[
+                      { heading: "Related methods", links: data.relatedMethods },
+                      { heading: "Related surfaces", links: data.relatedSurfaces },
+                    ]}
+                  />
+                </div>
+              ) : null}
+              {compareSlugs.length ? (
+                <AuthoritySection className="!mb-0" title="Compare related items">
+                  <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
+                    {compareSlugs.map((comparisonSlug) => (
+                      <li key={comparisonSlug}>
+                        <Link
+                          href={`/compare/problems/${comparisonSlug}`}
+                          className="font-medium text-[#0D9488] hover:underline"
+                        >
+                          {formatComparisonLinkLabel("problem_comparison", comparisonSlug)}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </AuthoritySection>
+              ) : null}
+              {relatedClusterSlugs.length ? (
+                <AuthoritySection className="!mb-0" title="Related clusters">
+                  <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
+                    {relatedClusterSlugs.map((clusterSlug) => (
+                      <li key={clusterSlug}>
+                        <Link
+                          href={`/clusters/${clusterSlug}`}
+                          className="font-medium text-[#0D9488] hover:underline"
+                        >
+                          {getClusterTitleBySlug(clusterSlug)}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </AuthoritySection>
+              ) : null}
+            </div>
+          </section>
         ) : null}
 
         <AuthorityProblemBestBySurface problemSlug={data.slug} data={data} />
