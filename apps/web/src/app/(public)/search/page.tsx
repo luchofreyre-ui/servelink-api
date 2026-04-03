@@ -27,8 +27,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     ? await searchSiteIndexIncludingApiLivePages({ query })
     : [];
 
-  console.log("[search-page] renderedResults:", results.length);
-
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />

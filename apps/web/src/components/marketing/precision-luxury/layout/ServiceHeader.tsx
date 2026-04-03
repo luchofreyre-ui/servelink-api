@@ -27,8 +27,8 @@ export function ServiceHeader() {
 
         {/* RIGHT — SEARCH + CTA */}
         <div className="flex items-center">
-          <div className="hidden md:block mr-3">
-            <GlobalSearchForm />
+          <div className="mr-3 w-full max-w-xs">
+            <GlobalSearchForm className="w-full" />
           </div>
           <a
             href="/book"
