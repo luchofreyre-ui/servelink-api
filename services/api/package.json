@@ -8,6 +8,7 @@
     "build:system-test-intelligence": "npx tsc -p ../../packages/system-test-intelligence/tsconfig.json",
     "build": "npm run build:system-test-intelligence && tsc -p tsconfig.json",
     "start": "node dist/main.js",
+    "start:prod": "node dist/main.js",
     "test": "npm run build:system-test-intelligence && NODE_ENV=test NODE_OPTIONS=\"--localstorage-file=./.jest-localstorage.json\" jest --runInBand",
     "typecheck": "npm run build:system-test-intelligence && tsc -p tsconfig.typecheck.json",
     "backfill:fo-providers": "ts-node src/scripts/backfill-fo-providers.ts",
