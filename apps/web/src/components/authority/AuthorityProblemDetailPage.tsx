@@ -48,6 +48,10 @@ import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
 import { AuthorityProblemInlineAssistTracked } from "./AuthorityProblemInlineAssistTracked";
+import type { InlineAssistProduct } from "@/components/products/InlineProductAssist";
+import { getProductImageUrl } from "@/lib/products/getProductImageUrl";
+import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
+import { getPublishedProductBySlug } from "@/lib/products/productPublishing";
 import {
   getRecommendedProductsForDisplay,
 } from "@/lib/products/productRecommendationDensity";
@@ -84,6 +88,17 @@ function HumanSignal({ children }: { children: string }) {
   return (
     <p className="mt-4 border-l-2 border-[#C9B27C]/50 pl-3 text-sm italic text-[#64748B]">{children}</p>
   );
+}
+
+function buildProblemInlineAssistPick(
+  like: PublishedProductLike | null | undefined,
+): InlineAssistProduct | null {
+  if (!like) return null;
+  const published = getPublishedProductBySlug(like.slug);
+  const name = (published?.title ?? like.title ?? like.slug).trim();
+  const image = getProductImageUrl(published ?? like);
+  if (!image) return null;
+  return { slug: like.slug, name, image };
 }
 
 function AvoidBody({ text }: { text: string }) {
@@ -154,11 +169,13 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
     ];
   }
 
-  const inlineAssistViewHref = "#problem-products";
-
   const inlineAssistTopProduct = recommendationProducts?.[0] ?? null;
 
-  const inlineAssistBuyHref = inlineAssistTopProduct?.amazonUrl ?? null;
+  const inlineAssistTopPick = buildProblemInlineAssistPick(inlineAssistTopProduct);
+  const inlineAssistSecondaryPick = buildProblemInlineAssistPick(recommendationProducts?.[1] ?? null);
+  const inlineAssistBuyHref = inlineAssistTopProduct
+    ? getProductPurchaseUrl(getPublishedProductBySlug(inlineAssistTopProduct.slug) ?? inlineAssistTopProduct)
+    : null;
 
   const beforeClean = data.beforeYouClean ?? DEFAULT_BEFORE_YOU_CLEAN;
   const voice = data.diagnosticVoiceLines ?? [];
@@ -167,31 +184,35 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
-      <main className="mx-auto max-w-3xl scroll-smooth px-6 py-16 md:px-8">
-        <AuthorityBreadcrumbs items={crumbs} />
+      <main className="mx-auto max-w-6xl px-4 pb-12 pt-4 scroll-smooth sm:px-6 sm:pt-5 lg:px-8">
+        <div className="mb-3">
+          <AuthorityBreadcrumbs items={crumbs} />
+        </div>
 
         <nav
           aria-label="On this page"
-          className="sticky top-0 z-30 -mx-6 mb-12 flex flex-wrap gap-x-5 gap-y-2 border-b border-[#C9B27C]/15 bg-[#FFF9F3]/95 px-6 py-3 text-sm font-medium text-[#0D9488] backdrop-blur-sm md:-mx-8 md:px-8"
+          className="sticky top-16 z-20 mb-4 border-b border-zinc-200 bg-white/95 pb-3 backdrop-blur"
         >
-          <a href="#problem-overview" className="hover:underline">
-            Overview
-          </a>
-          <a href="#problem-why" className="hover:underline">
-            Why
-          </a>
-          <a href="#problem-methods" className="hover:underline">
-            Methods
-          </a>
-          <a href="#problem-products" className="hover:underline">
-            Products
-          </a>
-          <a href="#problem-faq" className="hover:underline">
-            FAQ
-          </a>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-600">
+            <a href="#problem-overview" className="transition hover:text-zinc-900">
+              Overview
+            </a>
+            <a href="#problem-why" className="transition hover:text-zinc-900">
+              Why
+            </a>
+            <a href="#problem-methods" className="transition hover:text-zinc-900">
+              Methods
+            </a>
+            <a href="#problem-products" className="transition hover:text-zinc-900">
+              Products
+            </a>
+            <a href="#problem-faq" className="transition hover:text-zinc-900">
+              FAQ
+            </a>
+          </div>
         </nav>
 
-        <div id="problem-overview" className="scroll-mt-28">
+        <div id="problem-overview" className="mb-6 scroll-mt-28">
           <AuthorityHero
             eyebrow="Cleaning problem"
             title={data.title}
@@ -200,7 +221,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           />
           <AuthorityQuickAnswer text={quickAnswerText} />
           <AuthorityTopicalCrossLinks pageKey={`problem-${data.slug}`} problemSlug={data.slug} />
-          <div className="mt-8">
+          <div>
             <AuthorityProblemDecisionShortcuts data={data} />
           </div>
         </div>
@@ -230,9 +251,9 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
           {recommendationContext ? (
             <AuthorityProblemInlineAssistTracked
-              viewHref={inlineAssistViewHref}
+              topPick={inlineAssistTopPick}
+              secondaryPick={inlineAssistSecondaryPick}
               buyHref={inlineAssistBuyHref}
-              topProductSlug={inlineAssistTopProduct?.slug ?? null}
               problemSlug={data.slug}
               intent={
                 recommendationContext?.intent != null
