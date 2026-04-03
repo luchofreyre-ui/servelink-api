@@ -2,6 +2,74 @@ import type { AuthorityProblemPageData } from "@/authority/types/authorityPageTy
 import type { AuthorityProblemCategory } from "@/authority/types/authorityPageTypes";
 import { AUTHORITY_PROBLEM_SLUGS, type AuthorityProblemSlug } from "@/authority/data/authorityTaxonomy";
 
+/** Reusable voice + guardrails for core problem hubs (merged at read time). */
+export type AuthorityToneBlock = {
+  lead: string;
+  subline: string;
+  beforeYouClean: string[];
+  diagnosticVoiceLines: string[];
+};
+
+export const AUTHORITY_CORE_PROBLEM_TONES = {
+  "grease-buildup": {
+    subline: "This is buildup, not damage. Remove it cleanly without spreading it around.",
+    lead: "Grease buildup looks worse than it is. It's usually just layered oils that haven't been fully removed.",
+    beforeYouClean: [
+      "Do not start with a heavy degreaser. You'll smear it.",
+      "Warm water matters more than people think here.",
+      "You need removal, not redistribution.",
+    ],
+    diagnosticVoiceLines: [
+      "If it feels slick, it's grease—not damage.",
+      "If it smears, you're not breaking it down yet.",
+      "If it keeps coming back, you're leaving residue behind.",
+    ],
+  },
+  "hard-water-deposits": {
+    subline: "Minerals sit on top. You dissolve them—you don't scrub them off.",
+    lead: "Hard water deposits are mineral buildup. Scrubbing alone won't remove them, and can damage the surface.",
+    beforeYouClean: [
+      "Do not dry scrub this.",
+      "Let chemistry do the work first.",
+      "Time-on-surface matters more than pressure.",
+    ],
+    diagnosticVoiceLines: [
+      "If it's chalky, it's mineral—not dirt.",
+      "If it doesn't budge with scrubbing, you need acid—not force.",
+      "If it comes back quickly, water source is the issue.",
+    ],
+  },
+  "mold-growth": {
+    subline: "You're not just removing it—you're preventing it from returning.",
+    lead: "Mold growth is a moisture problem first, and a cleaning problem second.",
+    beforeYouClean: [
+      "Do not just wipe the surface.",
+      "You need to address moisture, not just visibility.",
+      "Disinfecting alone is not enough.",
+    ],
+    diagnosticVoiceLines: [
+      "If it keeps coming back, moisture is still present.",
+      "If it spreads, you're disturbing spores without removal.",
+      "If it stains, you're dealing with both growth and residue.",
+    ],
+  },
+} as const satisfies Record<string, AuthorityToneBlock>;
+
+function applyCoreProblemTone(
+  slug: string,
+  base: AuthorityProblemPageData,
+): AuthorityProblemPageData {
+  const tone = AUTHORITY_CORE_PROBLEM_TONES[slug as keyof typeof AUTHORITY_CORE_PROBLEM_TONES];
+  if (!tone) return base;
+  return {
+    ...base,
+    heroSubline: tone.subline,
+    whatItUsuallyIs: tone.lead,
+    beforeYouClean: tone.beforeYouClean.join("\n\n"),
+    diagnosticVoiceLines: [...tone.diagnosticVoiceLines],
+  };
+}
+
 const M = (slug: string) => `/methods/${slug}`;
 const S = (slug: string) => `/surfaces/${slug}`;
 const P = (slug: string) => `/problems/${slug}`;
@@ -903,11 +971,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 };
 
 export function getProblemPageBySlug(slug: string): AuthorityProblemPageData | undefined {
-  return PROBLEMS[slug];
+  const base = PROBLEMS[slug];
+  if (!base) return undefined;
+  return applyCoreProblemTone(slug, base);
 }
 
 export function getAllProblemPages(): AuthorityProblemPageData[] {
-  return AUTHORITY_PROBLEM_SLUGS.map((s) => PROBLEMS[s]);
+  return AUTHORITY_PROBLEM_SLUGS.map((s) => {
+    const base = PROBLEMS[s];
+    return applyCoreProblemTone(s, base);
+  });
 }
 
 export function problemSlugExists(slug: string): boolean {

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { AuthorityProblemPageData } from "@/authority/types/authorityPageTypes";
 import {
   formatComparisonLinkLabel,
@@ -29,7 +30,6 @@ import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
 import { MarketingLinkButton } from "@/components/marketing/precision-luxury/shared/MarketingLinkButton";
 import { AuthorityBreadcrumbs } from "./AuthorityBreadcrumbs";
-import { AuthorityCallout } from "./AuthorityCallout";
 import { AuthorityFaq } from "./AuthorityFaq";
 import { AuthorityHero } from "./AuthorityHero";
 import { AuthorityJsonLd } from "./AuthorityJsonLd";
@@ -78,15 +78,19 @@ function ProseBlocks({ text }: { text: string }) {
   return (
     <>
       {splitBlocks(text).map((para, i) => (
-        <p key={i}>{para}</p>
+        <p key={i} className="text-sm leading-relaxed md:text-base">
+          {para}
+        </p>
       ))}
     </>
   );
 }
 
-function HumanSignal({ children }: { children: string }) {
+function MutedAside({ children }: { children: ReactNode }) {
   return (
-    <p className="mt-4 border-l-2 border-[#C9B27C]/50 pl-3 text-sm italic text-[#64748B]">{children}</p>
+    <div className="border-l border-zinc-200 pl-3 text-sm text-zinc-600 [&_ul]:mt-2 [&_ul]:list-inside [&_ul]:list-disc [&_ul]:space-y-1.5">
+      {children}
+    </div>
   );
 }
 
@@ -180,11 +184,16 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
   const beforeClean = data.beforeYouClean ?? DEFAULT_BEFORE_YOU_CLEAN;
   const voice = data.diagnosticVoiceLines ?? [];
 
+  // SYSTEM RULE:
+  // This page is education-first.
+  // Products assist decisions — they do not drive them.
+  // Do not move product components above diagnostic or method sections.
+
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
-      <main className="mx-auto max-w-6xl px-4 pb-12 pt-4 scroll-smooth sm:px-6 sm:pt-5 lg:px-8">
+      <main className="mx-auto max-w-6xl scroll-smooth px-4 pb-12 pt-4 sm:px-6 sm:pt-5 lg:px-8">
         <div className="mb-3">
           <AuthorityBreadcrumbs items={crumbs} />
         </div>
@@ -197,8 +206,11 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             <a href="#problem-overview" className="transition hover:text-zinc-900">
               Overview
             </a>
-            <a href="#problem-why" className="transition hover:text-zinc-900">
-              Why
+            <a href="#problem-before-clean" className="transition hover:text-zinc-900">
+              Before you clean
+            </a>
+            <a href="#problem-context" className="transition hover:text-zinc-900">
+              Context
             </a>
             <a href="#problem-methods" className="transition hover:text-zinc-900">
               Methods
@@ -221,16 +233,35 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           />
           <AuthorityQuickAnswer text={quickAnswerText} />
           <AuthorityTopicalCrossLinks pageKey={`problem-${data.slug}`} problemSlug={data.slug} />
-          <div>
+        </div>
+
+        <div id="problem-before-clean" className="scroll-mt-28 space-y-0">
+          <AuthoritySection title="Before you start cleaning">
+            <ProseBlocks text={beforeClean} />
+          </AuthoritySection>
+          {voice.length > 0 ? (
+            <AuthoritySection title="Diagnostic signals">
+              <MutedAside>
+                <ul>
+                  {voice.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </MutedAside>
+            </AuthoritySection>
+          ) : null}
+          <div id="problem-shortcuts" className="scroll-mt-28">
             <AuthorityProblemDecisionShortcuts data={data} />
           </div>
         </div>
 
-        <AuthoritySection title="What this usually is">
-          <ProseBlocks text={data.whatItUsuallyIs} />
-        </AuthoritySection>
+        <div id="problem-context" className="scroll-mt-28 space-y-0">
+          <AuthoritySection title="What this usually is">
+            <ProseBlocks text={data.whatItUsuallyIs} />
+          </AuthoritySection>
+        </div>
 
-        <div id="problem-why" className="scroll-mt-28">
+        <div id="problem-why" className="scroll-mt-28 space-y-0">
           <AuthoritySection title="Why this keeps happening">
             <ProseBlocks text={data.whyItHappens} />
           </AuthoritySection>
@@ -240,11 +271,6 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         </div>
 
         <div id="problem-methods" className="scroll-mt-28 space-y-0">
-          <AuthoritySection title="Before you start cleaning">
-            <ProseBlocks text={beforeClean} />
-            {voice[0] ? <HumanSignal>{voice[0]}</HumanSignal> : null}
-          </AuthoritySection>
-
           <AuthoritySection title="Best way to remove it">
             <ProseBlocks text={data.bestMethods} />
           </AuthoritySection>
@@ -263,22 +289,8 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             />
           ) : null}
 
-          <AuthoritySection title="What to avoid">
-            <AuthorityCallout variant="warning">
-              <AvoidBody text={data.avoidMethods} />
-            </AuthorityCallout>
-            {voice[1] ? <HumanSignal>{voice[1]}</HumanSignal> : null}
-          </AuthoritySection>
-
-          <AuthoritySection title="When it's not just buildup">
-            <AuthorityCallout variant="failure">
-              <ProseBlocks text={data.whenItFails} />
-            </AuthorityCallout>
-            {voice[2] ? <HumanSignal>{voice[2]}</HumanSignal> : null}
-          </AuthoritySection>
-
           <AuthoritySection title="Recommended tools">
-            <ul className="list-inside list-disc space-y-1">
+            <ul className="list-inside list-disc space-y-1 text-sm leading-relaxed text-[#475569] md:text-base">
               {data.recommendedTools.map((t) => (
                 <li key={t.name}>
                   <span className="font-medium text-[#0F172A]">{t.name}</span>
@@ -289,7 +301,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           </AuthoritySection>
 
           <AuthoritySection title="Recommended chemicals">
-            <ul className="list-inside list-disc space-y-1">
+            <ul className="list-inside list-disc space-y-1 text-sm leading-relaxed text-[#475569] md:text-base">
               {data.recommendedChemicals.map((c) => (
                 <li key={c.name}>
                   <span className="font-medium text-[#0F172A]">{c.name}</span>
@@ -299,35 +311,16 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             </ul>
           </AuthoritySection>
 
-          <AuthoritySection title="Common mistakes">
-            <div className="space-y-2">
-              {data.commonMistakes.map((m) => (
-                <AuthorityCallout key={m} variant="mistake">
-                  {m}
-                </AuthorityCallout>
-              ))}
-            </div>
-          </AuthoritySection>
-
-          <AuthoritySection title="When to escalate">
-            <AuthorityCallout variant="escalate">{data.whenToEscalate}</AuthorityCallout>
+          <AuthoritySection title="What to avoid">
+            <MutedAside>
+              <AvoidBody text={data.avoidMethods} />
+            </MutedAside>
           </AuthoritySection>
         </div>
 
-        <ContextualProductRecommendations
-          context={productContext}
-          presentation="problemHubSupporting"
-          trackingContext={{
-            pageType: "problem_page",
-            sourcePageType: productContext?.sourcePageType ?? "problem",
-            problemSlug: data.slug,
-            intent: productContext?.intent != null ? String(productContext.intent) : null,
-          }}
-        />
-
         {getMethodSlugsForProblem(data.slug).length > 0 ? (
           <AuthoritySection title="Method + problem playbooks">
-            <ul className="list-inside list-disc space-y-2">
+            <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
               {getMethodSlugsForProblem(data.slug).map((slug) => (
                 <li key={slug}>
                   <Link
@@ -343,7 +336,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         ) : null}
         {getSurfaceSlugsForProblem(data.slug).length > 0 ? (
           <AuthoritySection title="Surface + problem playbooks">
-            <ul className="list-inside list-disc space-y-2">
+            <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
               {getSurfaceSlugsForProblem(data.slug).map((slug) => (
                 <li key={slug}>
                   <Link
@@ -358,6 +351,43 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           </AuthoritySection>
         ) : null}
 
+        <div id="problem-products" className="scroll-mt-28">
+          <ContextualProductRecommendations
+            context={productContext}
+            presentation="problemHubSupporting"
+            trackingContext={{
+              pageType: "problem_page",
+              sourcePageType: productContext?.sourcePageType ?? "problem",
+              problemSlug: data.slug,
+              intent: productContext?.intent != null ? String(productContext.intent) : null,
+            }}
+          />
+        </div>
+
+        <div id="problem-edge-notes" className="scroll-mt-28 space-y-0">
+          <AuthoritySection title="When it's not just buildup">
+            <MutedAside>
+              <ProseBlocks text={data.whenItFails} />
+            </MutedAside>
+          </AuthoritySection>
+
+          <AuthoritySection title="Common mistakes">
+            <MutedAside>
+              <ul>
+                {data.commonMistakes.map((m) => (
+                  <li key={m}>{m}</li>
+                ))}
+              </ul>
+            </MutedAside>
+          </AuthoritySection>
+
+          <AuthoritySection title="When to escalate">
+            <MutedAside>
+              <p>{data.whenToEscalate}</p>
+            </MutedAside>
+          </AuthoritySection>
+        </div>
+
         <div id="problem-faq" className="scroll-mt-28">
           <AuthorityFaq block={faqBlock} />
         </div>
@@ -371,7 +401,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         />
         {compareSlugs.length ? (
           <AuthoritySection title="Compare related items">
-            <ul className="list-inside list-disc space-y-2">
+            <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
               {compareSlugs.map((comparisonSlug) => (
                 <li key={comparisonSlug}>
                   <Link
@@ -387,7 +417,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         ) : null}
         {relatedClusterSlugs.length ? (
           <AuthoritySection title="Related clusters">
-            <ul className="list-inside list-disc space-y-2">
+            <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
               {relatedClusterSlugs.map((clusterSlug) => (
                 <li key={clusterSlug}>
                   <Link
@@ -407,7 +437,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         <AuthorityProblemProductHub data={data} />
 
         <AuthoritySection title="Product vs product comparisons">
-          <p className="font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">
+          <p className="font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569] md:text-base">
             Head-to-head dossier pages use the same picks as recommendations—useful when two bottles look
             interchangeable but sit in different chemistry lanes.
           </p>
@@ -427,7 +457,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             title="Learn the full breakdown"
           />
         : null}
-        <div className="mt-14 flex flex-wrap gap-4 border-t border-[#C9B27C]/20 pt-10">
+        <div className="mt-10 flex flex-wrap gap-4 border-t border-zinc-200/80 pt-8">
           <MarketingLinkButton href="/book" variant="primary">
             Book a cleaning
           </MarketingLinkButton>

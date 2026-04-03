@@ -1,5 +1,7 @@
 "use client";
 
+/** Problem pages: at most two thumbnails (topPick + secondaryPick); keep UI compact and non-dominant. */
+
 export type InlineAssistProduct = {
   slug: string;
   name: string;
@@ -33,20 +35,20 @@ export function InlineProductAssist({
   onThumbnailClick,
 }: InlineProductAssistProps) {
   return (
-    <div className="mt-4 rounded-2xl border border-zinc-200 bg-white/60 px-4 py-3 sm:px-5">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="min-w-0 lg:max-w-2xl">
-          <p className="text-[15px] font-semibold tracking-tight text-zinc-900">{title}</p>
-          <p className="mt-1 text-sm leading-6 text-zinc-600">{description}</p>
+    <div className="mt-3 rounded-lg border border-zinc-200/80 bg-white/50 px-3 py-2.5 sm:px-4">
+      <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0 lg:max-w-xl">
+          <p className="text-sm font-semibold tracking-tight text-zinc-900">{title}</p>
+          <p className="mt-0.5 text-xs leading-5 text-zinc-600 sm:text-sm">{description}</p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-4 lg:gap-3">
-          <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-3">
+          <div className="flex items-center gap-1.5">
             {topPick ? (
               <a
                 href={`/products/${topPick.slug}`}
                 onClick={() => onThumbnailClick?.(topPick.slug)}
-                className="block h-12 w-12 overflow-hidden rounded-md border border-zinc-200 bg-white transition hover:opacity-90"
+                className="block h-10 w-10 overflow-hidden rounded border border-zinc-200 bg-white transition hover:opacity-90"
               >
                 <img
                   src={topPick.image}
@@ -60,7 +62,7 @@ export function InlineProductAssist({
               <a
                 href={`/products/${secondaryPick.slug}`}
                 onClick={() => onThumbnailClick?.(secondaryPick.slug)}
-                className="block h-12 w-12 overflow-hidden rounded-md border border-zinc-200 bg-white transition hover:opacity-90"
+                className="block h-10 w-10 overflow-hidden rounded border border-zinc-200 bg-white transition hover:opacity-90"
               >
                 <img
                   src={secondaryPick.image}
@@ -71,14 +73,14 @@ export function InlineProductAssist({
             ) : null}
           </div>
 
-          <div className="flex flex-col items-start gap-1">
+          <div className="flex flex-col items-start gap-0.5">
             {buyHref ? (
               <a
                 href={buyHref}
                 onClick={onBuyClick}
                 target="_blank"
                 rel="noreferrer sponsored"
-                className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800"
+                className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-zinc-800 sm:text-sm"
               >
                 {buyLabel}
               </a>
@@ -87,7 +89,7 @@ export function InlineProductAssist({
             <button
               type="button"
               onClick={onCompareClick}
-              className="text-sm text-zinc-600 underline underline-offset-2 transition hover:text-zinc-900"
+              className="text-xs text-zinc-600 underline underline-offset-2 transition hover:text-zinc-900 sm:text-sm"
             >
               {compareLabel}
             </button>
