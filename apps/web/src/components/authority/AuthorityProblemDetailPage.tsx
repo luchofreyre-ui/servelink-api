@@ -47,6 +47,14 @@ import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
 import { AuthorityQuickAnswer } from "./AuthorityQuickAnswer";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
+import { AuthorityProblemInlineAssistTracked } from "./AuthorityProblemInlineAssistTracked";
+import {
+  getRecommendedProductsForDisplay,
+} from "@/lib/products/productRecommendationDensity";
+import {
+  assignRecommendationRoleLabels,
+} from "@/lib/products/recommendationRoles";
+import type { PublishedProductLike } from "@/lib/products/getRecommendedProducts";
 import { resolveProductRecommendationContextForProblemPage } from "@/lib/products/productRecommendationContext";
 
 const DEFAULT_BEFORE_YOU_CLEAN = `Most people go too aggressive too early.
@@ -118,6 +126,39 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
   const quickAnswerText =
     data.quickAnswer?.trim() || snippetAnswer(data.whatItUsuallyIs, 2, 260);
   const productContext = resolveProductRecommendationContextForProblemPage(data.slug);
+  const recommendationContext = productContext;
+
+  const DEFAULT_REC_SURFACE = "tile";
+  let recommendationProducts: readonly PublishedProductLike[] | null = null;
+  if (productContext) {
+    const surface = productContext.surface ?? DEFAULT_REC_SURFACE;
+    const products = getRecommendedProductsForDisplay({
+      problem: productContext.problem,
+      surface,
+      intent: productContext.intent,
+      densityAuthorityProblemSlug: productContext.densityAuthorityProblemSlug,
+    });
+    const labels = assignRecommendationRoleLabels(products, surface);
+    const priorityOrderRaw = [
+      labels.bestOverall,
+      labels.bestForHeavy,
+      labels.bestForMaintenance,
+      labels.professional,
+    ].filter((slug): slug is string => Boolean(slug));
+    const priorityOrder = [...new Set(priorityOrderRaw)];
+    recommendationProducts = [
+      ...priorityOrder
+        .map((slug) => products.find((p) => p.slug === slug))
+        .filter((p): p is PublishedProductLike => p != null),
+      ...products.filter((p) => !priorityOrder.includes(p.slug)),
+    ];
+  }
+
+  const inlineAssistViewHref = "#problem-products";
+
+  const inlineAssistTopProduct = recommendationProducts?.[0] ?? null;
+
+  const inlineAssistBuyHref = inlineAssistTopProduct?.amazonUrl ?? null;
 
   const beforeClean = data.beforeYouClean ?? DEFAULT_BEFORE_YOU_CLEAN;
   const voice = data.diagnosticVoiceLines ?? [];
@@ -186,6 +227,20 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           <AuthoritySection title="Best way to remove it">
             <ProseBlocks text={data.bestMethods} />
           </AuthoritySection>
+
+          {recommendationContext ? (
+            <AuthorityProblemInlineAssistTracked
+              viewHref={inlineAssistViewHref}
+              buyHref={inlineAssistBuyHref}
+              topProductSlug={inlineAssistTopProduct?.slug ?? null}
+              problemSlug={data.slug}
+              intent={
+                recommendationContext?.intent != null
+                  ? String(recommendationContext.intent)
+                  : null
+              }
+            />
+          ) : null}
 
           <AuthoritySection title="What to avoid">
             <AuthorityCallout variant="warning">
