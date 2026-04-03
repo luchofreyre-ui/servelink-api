@@ -279,53 +279,56 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
       <main className="mx-auto max-w-6xl scroll-smooth px-4 pb-12 pt-4 sm:px-6 sm:pt-5 lg:px-8">
-        <div className="mb-3">
-          <AuthorityBreadcrumbs items={crumbs} />
-        </div>
-
-        <nav
-          aria-label="On this page"
-          className="sticky top-16 z-20 mb-5 border-b border-zinc-200 bg-white/95 py-2 backdrop-blur"
+        <section
+          className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(420px,0.8fr)] lg:items-start"
+          aria-label="Problem overview"
         >
-          <div className="flex flex-wrap items-center gap-5 text-sm text-zinc-600 md:gap-6 md:text-base">
-            <a href="#problem-overview" className="transition hover:text-zinc-900">
-              Overview
-            </a>
-            <a href="#problem-context" className="transition hover:text-zinc-900">
-              What it is
-            </a>
-            <a href="#problem-why" className="transition hover:text-zinc-900">
-              Why
-            </a>
-            <a href="#problem-methods" className="transition hover:text-zinc-900">
-              Methods
-            </a>
-            <a href="#problem-products" className="transition hover:text-zinc-900">
-              Products
-            </a>
-            <a href="#problem-faq" className="transition hover:text-zinc-900">
-              FAQ
-            </a>
+          <div id="problem-overview" className="space-y-3 scroll-mt-28">
+            <AuthorityBreadcrumbs items={crumbs} />
+            <nav
+              aria-label="On this page"
+              className="sticky top-16 z-20 border-b border-zinc-200 bg-white/95 py-2 backdrop-blur"
+            >
+              <div className="flex flex-wrap items-center gap-5 text-sm text-zinc-600 md:gap-6 md:text-base">
+                <a href="#problem-overview" className="transition hover:text-zinc-900">
+                  Overview
+                </a>
+                <a href="#problem-context" className="transition hover:text-zinc-900">
+                  What it is
+                </a>
+                <a href="#problem-why" className="transition hover:text-zinc-900">
+                  Why
+                </a>
+                <a href="#problem-methods" className="transition hover:text-zinc-900">
+                  Methods
+                </a>
+                <a href="#problem-products" className="transition hover:text-zinc-900">
+                  Products
+                </a>
+                <a href="#problem-faq" className="transition hover:text-zinc-900">
+                  FAQ
+                </a>
+              </div>
+            </nav>
+            <AuthorityHero
+              variant="problemCompact"
+              eyebrow="Cleaning problem"
+              title={data.title}
+              description={data.summary}
+              subline={data.heroSubline}
+            />
           </div>
-        </nav>
-
-        <div id="problem-overview" className="mb-5 scroll-mt-28">
-          <AuthorityHero
-            variant="problemCompact"
-            eyebrow="Cleaning problem"
-            title={data.title}
-            description={data.summary}
-            subline={data.heroSubline}
-          />
-        </div>
+          <div className="lg:pt-10">
+            <AuthorityQuickAnswer text={quickAnswerText} variant="problemAnchor" methodsHref="#problem-methods" />
+          </div>
+        </section>
 
         <section
           id="problem-top-rail"
-          className="mb-6 grid scroll-mt-28 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.9fr)]"
-          aria-label="Quick answer and primary guidance"
+          className="mb-6 mt-4 grid scroll-mt-28 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.9fr)]"
+          aria-label="Primary method and diagnostic context"
         >
           <div className="space-y-4">
-            <AuthorityQuickAnswer text={quickAnswerText} variant="problemAnchor" methodsHref="#problem-methods" />
             <article
               id="problem-methods"
               className="rounded-2xl border border-stone-200/80 bg-white p-4 md:p-6 space-y-4 scroll-mt-28"

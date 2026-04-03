@@ -22,12 +22,12 @@ export function AuthorityQuickAnswer({
     return (
       <aside
         id="problem-quick-answer"
-        className="rounded-2xl border border-stone-200/80 bg-stone-50/70 p-4 md:p-6"
+        className="w-full max-w-[520px] rounded-2xl border border-stone-200/80 bg-stone-50/70 p-4 md:p-5"
         aria-label="Quick answer"
       >
         <div className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-stone-600">Quick answer</p>
-          <p className="font-[var(--font-manrope)] text-[1.05rem] leading-[1.35] text-[#0F172A] md:text-[1.15rem]">
+          <p className="font-[var(--font-manrope)] text-[1.05rem] leading-[1.35] text-[#0F172A]">
             {para}
           </p>
           {methodsHref ? (
