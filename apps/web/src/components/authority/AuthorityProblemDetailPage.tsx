@@ -398,6 +398,28 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           </AuthoritySection>
         </div>
 
+        <AuthoritySection density="compact" title="Recommended tools">
+          <ul className="list-inside list-disc space-y-1.5 text-sm leading-[1.3] text-[#475569] md:text-base">
+            {data.recommendedTools.map((t) => (
+              <li key={t.name}>
+                <span className="font-medium text-[#0F172A]">{t.name}</span>
+                {t.note ? <span> — {t.note}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </AuthoritySection>
+
+        <AuthoritySection density="compact" title="Recommended chemicals">
+          <ul className="list-inside list-disc space-y-1.5 text-sm leading-[1.3] text-[#475569] md:text-base">
+            {data.recommendedChemicals.map((c) => (
+              <li key={c.name}>
+                <span className="font-medium text-[#0F172A]">{c.name}</span>
+                {c.note ? <span> — {c.note}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </AuthoritySection>
+
         {recommendationContext ? (
           <AuthorityProblemInlineAssistTracked
             topPick={inlineAssistTopPick}
