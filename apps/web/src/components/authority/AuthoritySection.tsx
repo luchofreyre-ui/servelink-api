@@ -17,7 +17,7 @@ export function AuthoritySection({
       <h2 className="mb-3 font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A] md:text-2xl">
         {title}
       </h2>
-      <div className="space-y-4 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569] md:text-base">
+      <div className="space-y-4 font-[var(--font-manrope)] text-sm leading-[1.4] text-[#475569] md:text-base">
         {children}
       </div>
     </section>

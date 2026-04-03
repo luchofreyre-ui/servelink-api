@@ -7,7 +7,7 @@ export function AuthorityQuickAnswer(props: { text: string }) {
       aria-label="Quick answer"
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Quick answer</p>
-      <p className="mt-1 font-[var(--font-manrope)] text-sm leading-relaxed md:text-base">{text}</p>
+      <p className="mt-1 font-[var(--font-manrope)] text-sm leading-[1.4] md:text-base">{text}</p>
     </aside>
   );
 }

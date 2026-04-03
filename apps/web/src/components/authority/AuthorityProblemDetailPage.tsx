@@ -74,21 +74,32 @@ function splitBlocks(text: string) {
     .filter(Boolean);
 }
 
-function ProseBlocks({ text }: { text: string }) {
-  return (
-    <>
-      {splitBlocks(text).map((para, i) => (
-        <p key={i} className="text-sm leading-relaxed md:text-base">
-          {para}
-        </p>
-      ))}
-    </>
-  );
+function ProseBlocks({
+  text,
+  variant = "default",
+}: {
+  text: string;
+  /** Tighter rhythm for primary method copy only. */
+  variant?: "default" | "method";
+}) {
+  const pClass =
+    variant === "method"
+      ? "text-sm leading-[1.3] md:text-base"
+      : "text-sm leading-[1.4] md:text-base";
+  const paras = splitBlocks(text).map((para, i) => (
+    <p key={i} className={pClass}>
+      {para}
+    </p>
+  ));
+  if (variant === "method") {
+    return <div className="space-y-2">{paras}</div>;
+  }
+  return <>{paras}</>;
 }
 
 function MutedAside({ children }: { children: ReactNode }) {
   return (
-    <div className="border-l border-zinc-200 pl-3 text-sm text-zinc-600 [&_ul]:mt-2 [&_ul]:list-inside [&_ul]:list-disc [&_ul]:space-y-1.5">
+    <div className="border-l border-zinc-200 pl-3 text-sm text-zinc-600 leading-[1.35] [&_p]:leading-[1.35] [&_ul]:mt-2 [&_ul]:list-inside [&_ul]:list-disc [&_ul]:space-y-2 [&_li]:leading-[1.3]">
       {children}
     </div>
   );
@@ -112,14 +123,16 @@ function AvoidBody({ text }: { text: string }) {
     .filter(Boolean);
   if (lines.length > 1) {
     return (
-      <ul className="list-inside list-disc space-y-2">
+      <ul className="list-inside list-disc space-y-2 leading-[1.3]">
         {lines.map((line) => (
-          <li key={line}>{line}</li>
+          <li key={line} className="leading-[1.3]">
+            {line}
+          </li>
         ))}
       </ul>
     );
   }
-  return <p>{text}</p>;
+  return <p className="leading-[1.35]">{text}</p>;
 }
 
 export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageData }) {
@@ -282,11 +295,11 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
         <div id="problem-methods" className="scroll-mt-28 space-y-0">
           <AuthoritySection title="Best way to remove it">
-            <ProseBlocks text={data.bestMethods} />
+            <ProseBlocks text={data.bestMethods} variant="method" />
           </AuthoritySection>
 
           <AuthoritySection title="Recommended tools">
-            <ul className="list-inside list-disc space-y-1 text-sm leading-relaxed text-[#475569] md:text-base">
+            <ul className="list-inside list-disc space-y-2 text-sm leading-[1.3] text-[#475569] md:text-base">
               {data.recommendedTools.map((t) => (
                 <li key={t.name}>
                   <span className="font-medium text-[#0F172A]">{t.name}</span>
@@ -297,7 +310,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           </AuthoritySection>
 
           <AuthoritySection title="Recommended chemicals">
-            <ul className="list-inside list-disc space-y-1 text-sm leading-relaxed text-[#475569] md:text-base">
+            <ul className="list-inside list-disc space-y-2 text-sm leading-[1.3] text-[#475569] md:text-base">
               {data.recommendedChemicals.map((c) => (
                 <li key={c.name}>
                   <span className="font-medium text-[#0F172A]">{c.name}</span>
@@ -330,7 +343,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
         {getMethodSlugsForProblem(data.slug).length > 0 ? (
           <AuthoritySection title="Method + problem playbooks">
-            <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
+            <ul className="list-inside list-disc space-y-2 text-sm leading-[1.3] md:text-base">
               {getMethodSlugsForProblem(data.slug).map((slug) => (
                 <li key={slug}>
                   <Link
@@ -425,7 +438,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
               ) : null}
               {compareSlugs.length ? (
                 <AuthoritySection className="!mb-0" title="Compare related items">
-                  <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
+                  <ul className="list-inside list-disc space-y-2 text-sm leading-[1.3] md:text-base">
                     {compareSlugs.map((comparisonSlug) => (
                       <li key={comparisonSlug}>
                         <Link
@@ -441,7 +454,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
               ) : null}
               {relatedClusterSlugs.length ? (
                 <AuthoritySection className="!mb-0" title="Related clusters">
-                  <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed md:text-base">
+                  <ul className="list-inside list-disc space-y-2 text-sm leading-[1.3] md:text-base">
                     {relatedClusterSlugs.map((clusterSlug) => (
                       <li key={clusterSlug}>
                         <Link
@@ -464,7 +477,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         <AuthorityProblemProductHub data={data} />
 
         <AuthoritySection title="Product vs product comparisons">
-          <p className="font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569] md:text-base">
+          <p className="font-[var(--font-manrope)] text-sm leading-[1.4] text-[#475569] md:text-base">
             Head-to-head dossier pages use the same picks as recommendations—useful when two bottles look
             interchangeable but sit in different chemistry lanes.
           </p>
