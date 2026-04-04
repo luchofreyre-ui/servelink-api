@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { firstAuthorityProblemSlugForProductProblem } from "@/lib/authority/authorityProductTaxonomyBridge";
 
+import { ProductConversionLayer } from "@/components/products/ProductConversionLayer";
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
 import { ProductImageGallery } from "@/components/products/ProductImageGallery";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
@@ -126,6 +127,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <p key={i}>• {r}</p>
           ))}
         </div>
+
+        <ProductConversionLayer productSlug={product.slug} />
 
         {product.scoreWeaknesses && product.scoreWeaknesses.length > 0 && (
           <>
