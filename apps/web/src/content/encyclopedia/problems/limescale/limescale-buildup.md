@@ -54,4 +54,4 @@ Call a professional when stone surrounds are involved, when venting is inadequat
 - [Limescale on Tile](/encyclopedia/problems/limescale-on-tile)
 - [Dust Buildup](/encyclopedia/problems/dust-buildup)
 - [General Soil Buildup](/encyclopedia/problems/general-soil-buildup)
-- [Grease Buildup](/encyclopedia/problems/grease-buildup)
+- [Grease Buildup](/problems/grease-buildup)

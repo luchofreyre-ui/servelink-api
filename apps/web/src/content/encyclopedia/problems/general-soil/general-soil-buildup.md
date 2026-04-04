@@ -53,5 +53,5 @@ Call a professional when move-in/move-out loads, commercial traffic, or stone pr
 - [General Soil on Tile](/encyclopedia/problems/general-soil-on-tile)
 - [Tracked-In Soil on Floors](/encyclopedia/problems/tracked-in-soil-on-floors)
 - [Dust Buildup](/encyclopedia/problems/dust-buildup)
-- [Grease Buildup](/encyclopedia/problems/grease-buildup)
+- [Grease Buildup](/problems/grease-buildup)
 - [Limescale Buildup](/encyclopedia/problems/limescale-buildup)

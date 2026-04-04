@@ -151,6 +151,17 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
   },
   "grease-buildup": {
     ...prob("grease-buildup", "Grease buildup", "oil_based"),
+    summary:
+      "Kitchen grease: degrease with label-safe chemistry, rinse, protect finishes.",
+    problemDefinitionLine:
+      "Layered cooking oil on hoods, backsplashes, and appliances—degrease, then rinse.",
+    executionQuickFix: {
+      use: "Degreasing cleaner (kitchen-safe)",
+      do: "Spray → wait 1–2 min → wipe or soft scrub → rinse",
+      ifNeeded: "Repeat or use stronger degreaser. Avoid harsh scrubbing on finishes.",
+    },
+    whyThisWorksShort:
+      "Grease is oil-based. Degreasers break it down so it can be removed from the surface.",
     decisionShortcuts: [
       {
         label: "Light buildup on everyday hard surfaces",

@@ -38,7 +38,7 @@ describe("authoritySitemapSelectors", () => {
     const problemUrls = getAuthorityProblemDetailEntries().map((e) => e.url);
     expect(
       problemUrls.some(
-        (u) => u === "https://www.nustandardcleaning.com/encyclopedia/problems/grease-buildup",
+        (u) => u === "https://www.nustandardcleaning.com/problems/grease-buildup",
       ),
     ).toBe(true);
   });

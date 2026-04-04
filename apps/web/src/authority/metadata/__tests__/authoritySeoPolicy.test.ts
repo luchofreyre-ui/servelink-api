@@ -12,9 +12,9 @@ describe("authoritySeoPolicy", () => {
     expect(policy.canonicalPath).toBe("/methods/spot-treatment");
   });
 
-  it("prefers encyclopedia for migrated problem topics", () => {
+  it("keeps grease-buildup on the authority problem hub (no encyclopedia redirect)", () => {
     const policy = buildAuthoritySeoPolicy("problem_detail", "/problems/grease-buildup");
-    expect(policy.canonicalPath).toBe("/encyclopedia/problems/grease-buildup");
+    expect(policy.canonicalPath).toBe("/problems/grease-buildup");
   });
 
   it("marks current authority families as indexable", () => {

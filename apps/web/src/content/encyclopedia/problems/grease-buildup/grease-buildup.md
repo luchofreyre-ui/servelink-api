@@ -6,7 +6,7 @@ cluster: grease-buildup
 role: core
 slug: grease-buildup
 summary: Professional overview of kitchen grease buildup: formation, risks, and how operators approach removal without damaging finishes.
-status: published
+status: draft
 primaryImageAlt: Grease buildup on kitchen cabinet near stove
 imageQueries:
   - grease buildup kitchen cabinets stove area

@@ -53,5 +53,5 @@ Call a professional when post-construction mineral dust, large atriums, or comme
 - [Dust on Glass Surfaces](/encyclopedia/problems/dust-on-glass-surfaces)
 - [Dust Returning Quickly](/encyclopedia/problems/dust-returning-quickly)
 - [General Soil Buildup](/encyclopedia/problems/general-soil-buildup)
-- [Grease Buildup](/encyclopedia/problems/grease-buildup)
+- [Grease Buildup](/problems/grease-buildup)
 - [Limescale Buildup](/encyclopedia/problems/limescale-buildup)

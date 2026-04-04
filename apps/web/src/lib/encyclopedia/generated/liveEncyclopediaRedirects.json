@@ -25,11 +25,6 @@
     "permanent": true
   },
   {
-    "source": "/problems/grease-buildup",
-    "destination": "/encyclopedia/problems/grease-buildup",
-    "permanent": true
-  },
-  {
     "source": "/problems/limescale-buildup",
     "destination": "/encyclopedia/problems/limescale-buildup",
     "permanent": true

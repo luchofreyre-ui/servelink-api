@@ -10,6 +10,9 @@ function isInternalAbsolutePath(path: string): boolean {
   return path.startsWith("/") && !path.startsWith("//");
 }
 
+/** Legacy paths that must keep serving the authority problem hub (no redirect to pipeline MD). */
+const LEGACY_AUTHORITY_PROBLEM_HUBS = new Set<string>(["/problems/grease-buildup"]);
+
 /**
  * Next.js–ready redirects from the high-priority encyclopedia manifest only.
  * Dedupes by source; drops invalid or self-redirect rows; stable sort by source.
@@ -22,6 +25,7 @@ export function buildExecutableEncyclopediaRedirects(): ExecutableRedirect[] {
   for (const row of sorted) {
     const source = row.sourceHref.trim();
     const destination = row.destinationHref.trim();
+    if (LEGACY_AUTHORITY_PROBLEM_HUBS.has(source)) continue;
     if (!source || !destination) continue;
     if (source === destination) continue;
     if (!isInternalAbsolutePath(source) || !isInternalAbsolutePath(destination)) continue;

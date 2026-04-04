@@ -10,9 +10,7 @@ describe("encyclopediaCanonicalMetadataHref", () => {
     expect(resolveCanonicalMetadataHref("/methods/degreasing")).toBe(
       "/encyclopedia/methods/degreasing",
     );
-    expect(resolveCanonicalMetadataHref("/problems/grease-buildup")).toBe(
-      "/encyclopedia/problems/grease-buildup",
-    );
+    expect(resolveCanonicalMetadataHref("/problems/grease-buildup")).toBe("/problems/grease-buildup");
     expect(resolveCanonicalMetadataHref("/problems/dust-buildup")).toBe(
       "/encyclopedia/problems/dust-buildup",
     );
@@ -30,6 +28,6 @@ describe("encyclopediaCanonicalMetadataHref", () => {
       { label: "Grease", href: "/problems/grease-buildup" },
     ]);
     expect(out[0].href).toBe("/problems");
-    expect(out[1].href).toBe("/encyclopedia/problems/grease-buildup");
+    expect(out[1].href).toBe("/problems/grease-buildup");
   });
 });
