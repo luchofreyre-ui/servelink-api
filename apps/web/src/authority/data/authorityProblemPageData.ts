@@ -225,7 +225,46 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
       },
     ],
   },
-  "dust-buildup": prob("dust-buildup", "Dust buildup", "organic"),
+  "dust-buildup": {
+    ...prob("dust-buildup", "Dust buildup", "organic"),
+    problemDefinitionLine:
+      "Loose dry soil and fibers that resettle after wiping—capture first, then damp-clean only where the finish allows.",
+    executionQuickFix: {
+      use: "Dry microfiber or electrostatic duster; damp cleaner only after dry soil is lifted.",
+      do: "Top-down → edges → floors; vacuum or dry-dust first → then light damp pass on hard surfaces.",
+      ifNeeded:
+        "If dust returns in hours, check HVAC filters, textiles shedding, and whether you are smearing with a loaded cloth.",
+    },
+    whyThisWorksShort:
+      "Dust is mostly particles and lint. Dry capture removes bulk; damp passes lift what clings without turning it into muddy streaks.",
+    decisionShortcuts: [
+      {
+        label: "Hard floors and open areas",
+        body: "Dry soil first—neutral damp mopping beats soaking when the goal is dust, not disinfecting.",
+        productSlugs: ["bona-hard-surface-floor-cleaner", "zep-neutral-ph-floor-cleaner"],
+      },
+      {
+        label: "Counters, shelves, and baseboards",
+        body: "Light all-purpose pass after dry dusting; avoid heavy fragrance loads that leave film.",
+        productSlugs: ["simple-green-all-purpose-cleaner", "seventh-generation-disinfecting-multi-surface-cleaner"],
+      },
+      {
+        label: "Glass and glossy finishes showing dust trails",
+        body: "Finish with a dry buff; if haze persists, treat as residue—not more dust.",
+        productSlugs: ["windex-original-glass-cleaner", "invisible-glass-premium-glass-cleaner"],
+      },
+    ],
+    productScenarios: [
+      { problem: "dust buildup", surface: "hardwood" },
+      { problem: "dust buildup", surface: "laminate" },
+      { problem: "dust buildup", surface: "tile" },
+    ],
+    relatedProblems: [
+      rpRel("general-soil", "General soil"),
+      rpRel("floor-residue-buildup", "Floor residue buildup"),
+      rpRel("fingerprints-and-smudges", "Fingerprints and smudges"),
+    ],
+  },
   "fingerprints-and-smudges": prob("fingerprints-and-smudges", "Fingerprints and smudges", "transfer"),
   "stuck-on-residue": prob("stuck-on-residue", "Stuck-on residue", "residue"),
   "light-mildew": {
@@ -657,20 +696,87 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 
   "surface-haze": {
     ...prob("surface-haze", "Surface haze", "residue"),
-    relatedProblems: [rpRel("cloudy-glass", "Cloudy glass"), rpRel("product-residue-buildup", "Product residue buildup")],
-    relatedSurfaces: [esSurface("shower-glass", "Shower glass"), esSurface("laminate", "Laminate"), esSurface("quartz-countertops", "Quartz countertops")],
-    relatedMethods: [esMethod("glass-cleaning", "Glass cleaning"), esMethod("neutral-surface-cleaning", "Neutral surface cleaning")],
+    problemDefinitionLine:
+      "A dull or greasy-looking film that reads as ‘fog’ or uneven sheen—often residue, minerals, or stacked cleaners rather than true abrasion.",
+    executionQuickFix: {
+      use: "Neutral or label-correct glass / hard-surface cleaner; rinse water for layered products.",
+      do: "Dry dust or rinse loose soil → clean in one direction → fresh cloth dry buff → reassess before adding acid.",
+      ifNeeded:
+        "If haze survives neutral passes, separate mineral film from product film—misclassification drives the wrong chemistry.",
+    },
+    whyThisWorksShort:
+      "Haze is usually removable film. Removing soil and old product in thin layers restores clarity without grinding the finish.",
+    decisionShortcuts: [
+      {
+        label: "Glass and mirrors",
+        body: "Two-cloth technique: wet clean + dry buff; streaks often mean cloth or product load, not ‘more spray.’",
+        productSlugs: ["windex-original-glass-cleaner", "invisible-glass-premium-glass-cleaner"],
+      },
+      {
+        label: "Showers and glossy tile / quartz",
+        body: "Daily maintenance sprays reduce film stacking; heavy acids are a last resort when labels allow.",
+        productSlugs: ["method-daily-shower-spray", "tilex-daily-shower-cleaner"],
+      },
+      {
+        label: "Mineral or soap film suspected",
+        body: "Acid-capable products only when the surface allows—stone and sealed finishes need label discipline.",
+        productSlugs: ["clr-calcium-lime-rust", "granite-gold-daily-cleaner"],
+      },
+    ],
     productScenarios: [
       { problem: "surface haze", surface: "shower glass" },
       { problem: "surface haze", surface: "glass" },
+      { problem: "surface haze", surface: "quartz" },
     ],
+    relatedProblems: [
+      rpRel("cloudy-glass", "Cloudy glass"),
+      rpRel("product-residue-buildup", "Product residue buildup"),
+      rpRel("streaking-on-glass", "Streaking on glass"),
+    ],
+    relatedSurfaces: [esSurface("shower-glass", "Shower glass"), esSurface("laminate", "Laminate"), esSurface("quartz-countertops", "Quartz countertops")],
+    relatedMethods: [esMethod("glass-cleaning", "Glass cleaning"), esMethod("neutral-surface-cleaning", "Neutral surface cleaning")],
   },
   "product-residue-buildup": {
     ...prob("product-residue-buildup", "Product residue buildup", "residue"),
-    relatedProblems: [rpRel("surface-streaking", "Surface streaking"), rpRel("soap-film", "Soap film")],
+    problemDefinitionLine:
+      "Cleaner, polish, or fragrance left behind in layers—sticky, streaky, or dull—often from too much product or incomplete rinse.",
+    executionQuickFix: {
+      use: "Plain water rinse + fresh microfiber; mild surfactant only if labels agree.",
+      do: "Remove excess product → rinse → dry buff → repeat thin passes instead of stacking new chemistry.",
+      ifNeeded:
+        "If residue is baked on or wax-like, escalate to label-correct removers—never guess acids on stone or coatings.",
+    },
+    whyThisWorksShort:
+      "Residue problems are removal problems. Dilution and rinse break the film so you are not smearing old product into new streaks.",
+    decisionShortcuts: [
+      {
+        label: "Kitchen films on counters and appliances",
+        body: "Degrease gently, then rinse—heavy fragrance cleaners often leave the most visible film.",
+        productSlugs: ["dawn-platinum-dish-spray", "krud-kutter-kitchen-degreaser"],
+      },
+      {
+        label: "Daily stone or sealed tops",
+        body: "Stone-rated dailies beat all-purpose stacking on sensitive finishes.",
+        productSlugs: ["granite-gold-daily-cleaner", "stonetech-daily-cleaner"],
+      },
+      {
+        label: "Floors that feel tacky after mopping",
+        body: "Cut product ratio, change water often, and finish dry—tacky usually means leftover surfactant.",
+        productSlugs: ["bona-hard-surface-floor-cleaner", "zep-neutral-ph-floor-cleaner"],
+      },
+    ],
+    productScenarios: [
+      { problem: "product residue", surface: "laminate" },
+      { problem: "product residue", surface: "quartz" },
+      { problem: "product residue", surface: "glass" },
+    ],
+    relatedProblems: [
+      rpRel("surface-streaking", "Surface streaking"),
+      rpRel("soap-film", "Soap film"),
+      rpRel("surface-haze", "Surface haze"),
+    ],
     relatedSurfaces: [esSurface("laminate", "Laminate"), esSurface("quartz-countertops", "Quartz countertops")],
     relatedMethods: [esMethod("neutral-surface-cleaning", "Neutral surface cleaning"), esMethod("glass-cleaning", "Glass cleaning")],
-    productScenarios: [{ problem: "product residue", surface: "laminate" }],
   },
   "appliance-grime": {
     ...prob("appliance-grime", "Buildup on appliances", "oil_based"),

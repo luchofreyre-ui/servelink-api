@@ -12,6 +12,8 @@
  *   SYSTEM_TESTS_ADMIN_TOKEN — Bearer JWT (admin) [required]
  *   NEXT_PUBLIC_API_BASE_URL — API base (default http://localhost:3001)
  *   PLAYWRIGHT_UPLOAD_SOURCE — source string (default playwright-json)
+ *   PLAYWRIGHT_LANE — optional lane slug (e.g. fast, deep, full-suite, custom-abc12345); appended to `source` as `|lane=…` for triage
+ *   PLAYWRIGHT_LANE_LABEL — optional human label (logged only)
  *   GIT_BRANCH / GITHUB_REF_NAME — optional branch
  *   GITHUB_SHA / COMMIT_SHA — optional commit
  */
@@ -301,6 +303,10 @@ async function main() {
   console.log("UPLOAD DEBUG token length:", token.length);
   console.log("UPLOAD DEBUG token sha12:", tokenHash);
   console.log("UPLOAD DEBUG api base:", process.env.NEXT_PUBLIC_API_BASE_URL || "");
+  console.log("UPLOAD DEBUG source:", source);
+  if (laneLabel) {
+    console.log("UPLOAD DEBUG lane label:", laneLabel);
+  }
 
   if (!token) {
     throw new Error("Missing SYSTEM_TESTS_ADMIN_TOKEN in upload script");
@@ -318,7 +324,10 @@ async function main() {
   const stats = report.stats as Json | undefined;
   const summary = deriveRunFields(stats, cases);
 
-  const source = process.env.PLAYWRIGHT_UPLOAD_SOURCE?.trim() || "playwright-json";
+  const uploadBase = process.env.PLAYWRIGHT_UPLOAD_SOURCE?.trim() || "playwright-json";
+  const laneSlug = process.env.PLAYWRIGHT_LANE?.trim();
+  const laneLabel = process.env.PLAYWRIGHT_LANE_LABEL?.trim();
+  const source = laneSlug ? `${uploadBase}|lane=${laneSlug}` : uploadBase;
   const branch =
     process.env.GIT_BRANCH?.trim() ||
     process.env.GITHUB_REF_NAME?.trim() ||

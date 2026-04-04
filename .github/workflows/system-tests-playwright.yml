@@ -18,10 +18,19 @@ on:
     - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
-      playwright_paths:
-        description: "Arguments to `playwright test` (paths/grep), e.g. tests/playwright/smoke"
+      playwright_lane:
+        description: "When playwright_paths is empty — fast (default CI gate), deep only, or full (fast + deep)"
         required: false
-        default: "tests/playwright/smoke"
+        default: fast
+        type: choice
+        options:
+          - fast
+          - deep
+          - full
+      playwright_paths:
+        description: "Optional override for `playwright test` args (replaces lane). Example: tests/playwright/smoke"
+        required: false
+        default: ""
         type: string
       skip_upload:
         description: "Skip POST to hosted /api/v1/admin/system-tests/report"
@@ -171,19 +180,98 @@ jobs:
         id: playwright
         working-directory: apps/web
         continue-on-error: true
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_PATHS: ${{ github.event.inputs.playwright_paths }}
+          INPUT_LANE: ${{ github.event.inputs.playwright_lane }}
         run: |
           set +e
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            PW_ARGS='${{ github.event.inputs.playwright_paths }}'
+          PATHS_OVERRIDE=""
+          if [ "${EVENT_NAME}" = "schedule" ]; then
+            PW_ARGS="--project=fast --project=deep"
+            LANE_SLUG="full-suite"
+            LANE_LABEL="scheduled · fast + deep (full suite)"
+            PATHS_OVERRIDE=""
+          elif [ -n "${INPUT_PATHS:-}" ]; then
+            PW_ARGS="${INPUT_PATHS}"
+            HASH="$(printf '%s' "${PW_ARGS}" | sha256sum | awk '{print $1}' | cut -c1-8)"
+            LANE_SLUG="custom-${HASH}"
+            LANE_LABEL="custom · playwright_paths override"
+            PATHS_OVERRIDE="${INPUT_PATHS}"
           else
-            PW_ARGS=""
+            case "${INPUT_LANE:-fast}" in
+              deep)
+                PW_ARGS="--project=deep"
+                LANE_SLUG="deep"
+                LANE_LABEL="manual · deep project only"
+                ;;
+              full)
+                PW_ARGS="--project=fast --project=deep"
+                LANE_SLUG="full"
+                LANE_LABEL="manual · fast + deep"
+                ;;
+              *)
+                PW_ARGS="--project=fast"
+                LANE_SLUG="fast"
+                LANE_LABEL="manual · fast gate"
+                ;;
+            esac
+            PATHS_OVERRIDE=""
           fi
-          if [ -z "${PW_ARGS}" ]; then
-            PW_ARGS="tests/playwright/smoke"
-          fi
-          echo "Running: npx playwright test ${PW_ARGS} -c playwright.config.ts"
+
+          FINAL_CMD="npx playwright test ${PW_ARGS} -c playwright.config.ts --max-failures=1"
+
+          {
+            echo "## Playwright lane triage"
+            echo ""
+            echo "- **GitHub event:** \`${EVENT_NAME}\`"
+            echo "- **Lane:** ${LANE_LABEL}"
+            echo "- **lane_slug** (artifacts + upload metadata): \`${LANE_SLUG}\`"
+            if [ -n "${PATHS_OVERRIDE}" ]; then
+              echo "- **playwright_paths override:**"
+              echo '```'
+              echo "${PATHS_OVERRIDE}"
+              echo '```'
+            else
+              echo "- **playwright_paths override:** _none (lane selector used)_"
+            fi
+            echo "- **Final command:**"
+            echo '```'
+            echo "${FINAL_CMD}"
+            echo '```'
+            echo ""
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          {
+            echo "════════════════════════════════════════════════════════════"
+            echo "Playwright lane triage"
+            echo "════════════════════════════════════════════════════════════"
+            echo "GitHub event:     ${EVENT_NAME}"
+            echo "Lane:             ${LANE_LABEL}"
+            echo "lane_slug:        ${LANE_SLUG}"
+            echo "paths override:   ${PATHS_OVERRIDE:-<none>}"
+            echo "Final command:"
+            echo "  ${FINAL_CMD}"
+            echo "════════════════════════════════════════════════════════════"
+          }
+
+          echo "::notice title=Playwright lane::slug=${LANE_SLUG} · ${LANE_LABEL}"
+
+          echo "lane_slug=${LANE_SLUG}" >> "${GITHUB_OUTPUT}"
+          echo "lane_label=${LANE_LABEL}" >> "${GITHUB_OUTPUT}"
+          {
+            echo "paths_override<<EOF"
+            echo "${PATHS_OVERRIDE}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+          {
+            echo "final_command<<EOF"
+            echo "${FINAL_CMD}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
           # shellcheck disable=SC2086
-          npx playwright test ${PW_ARGS} -c playwright.config.ts
+          npx playwright test ${PW_ARGS} -c playwright.config.ts --max-failures=1
           PW_EXIT=$?
           echo "playwright_exit=${PW_EXIT}" >> "${GITHUB_OUTPUT}"
           exit ${PW_EXIT}
@@ -192,7 +280,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-artifacts
+          name: playwright-artifacts-${{ steps.playwright.outputs.lane_slug }}
           path: apps/web/test-results
           if-no-files-found: ignore
           retention-days: 14
@@ -201,7 +289,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-json-report
+          name: playwright-json-report-${{ steps.playwright.outputs.lane_slug }}
           path: ${{ env.PLAYWRIGHT_JSON_REPORT }}
           if-no-files-found: ignore
           retention-days: 14
@@ -240,6 +328,8 @@ jobs:
           SYSTEM_TESTS_ADMIN_PASSWORD: ${{ secrets.SYSTEM_TESTS_ADMIN_PASSWORD }}
           GIT_BRANCH: ${{ github.ref_name }}
           COMMIT_SHA: ${{ github.sha }}
+          PLAYWRIGHT_LANE: ${{ steps.playwright.outputs.lane_slug }}
+          PLAYWRIGHT_LANE_LABEL: ${{ steps.playwright.outputs.lane_label }}
         working-directory: apps/web
         run: |
           set -euo pipefail
@@ -248,6 +338,14 @@ jobs:
             echo "No JSON report at ${PLAYWRIGHT_JSON_REPORT}; skipping upload."
             exit 0
           fi
+
+          {
+            echo "## System-tests upload context"
+            echo ""
+            echo "- **PLAYWRIGHT_LANE** (slug): \`${PLAYWRIGHT_LANE:-}\`"
+            echo "- **PLAYWRIGHT_LANE_LABEL**: ${PLAYWRIGHT_LANE_LABEL:-}"
+            echo ""
+          } >> "${GITHUB_STEP_SUMMARY}"
 
           API_BASE="$(printf '%s' "${SYSTEM_TESTS_REPORT_URL}" | sed -E 's#(/api/v1/admin/system-tests/report)$##')"
           export NEXT_PUBLIC_API_BASE_URL="${API_BASE}"

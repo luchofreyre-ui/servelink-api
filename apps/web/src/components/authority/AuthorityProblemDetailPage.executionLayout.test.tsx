@@ -20,7 +20,7 @@ describe("AuthorityProblemDetailPage execution-first guardrails", () => {
 
     const dust = getProblemPageBySlug("dust-buildup");
     expect(dust).toBeDefined();
-    expect(isExecutionFirstProblemLayout(dust!)).toBe(false);
+    expect(isExecutionFirstProblemLayout(dust!)).toBe(true);
   });
 
   it("execution hub: single-column top fold — no legacy quick-answer / best-method / diagnostic rail", () => {
@@ -37,8 +37,9 @@ describe("AuthorityProblemDetailPage execution-first guardrails", () => {
   });
 
   it("legacy hub: renders legacy top-fold markers (not execution-first fold)", () => {
-    const data = getProblemPageBySlug("dust-buildup");
+    const data = getProblemPageBySlug("fingerprints-and-smudges");
     expect(data).toBeDefined();
+    expect(isExecutionFirstProblemLayout(data!)).toBe(false);
     render(<AuthorityProblemDetailPage data={data!} />);
 
     expect(screen.queryByTestId("execution-first-top-fold")).toBeNull();

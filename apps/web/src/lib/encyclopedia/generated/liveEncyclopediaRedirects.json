@@ -18,25 +18,5 @@
     "source": "/methods/touchpoint-sanitization",
     "destination": "/encyclopedia/methods/touchpoint-sanitization",
     "permanent": true
-  },
-  {
-    "source": "/problems/dust-buildup",
-    "destination": "/encyclopedia/problems/dust-buildup",
-    "permanent": true
-  },
-  {
-    "source": "/problems/limescale-buildup",
-    "destination": "/encyclopedia/problems/limescale-buildup",
-    "permanent": true
-  },
-  {
-    "source": "/problems/product-residue-buildup",
-    "destination": "/encyclopedia/problems/product-residue-buildup",
-    "permanent": true
-  },
-  {
-    "source": "/problems/surface-haze",
-    "destination": "/encyclopedia/problems/surface-haze",
-    "permanent": true
   }
 ]
