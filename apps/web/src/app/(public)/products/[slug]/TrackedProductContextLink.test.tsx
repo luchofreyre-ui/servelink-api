@@ -71,13 +71,13 @@ describe("product context tracking", () => {
     });
   });
 
-  it("tracks buy re-entry clicks", () => {
+  it("tracks primary buy re-entry clicks", () => {
     render(
       <TrackedProductContextBuyLink
         href="https://www.amazon.com/dp/TESTASIN?tag=YOUR_TAG"
         productSlug="bona-hard-surface-floor-cleaner"
         position={11}
-        label="product_context_buy:bona-hard-surface-floor-cleaner"
+        label="product_context_buy:bona-hard-surface-floor-cleaner:primary"
       >
         Buy this option →
       </TrackedProductContextBuyLink>,
@@ -91,7 +91,31 @@ describe("product context tracking", () => {
       sourcePageType: "product",
       pageType: "product_page",
       position: 11,
-      label: "product_context_buy:bona-hard-surface-floor-cleaner",
+      label: "product_context_buy:bona-hard-surface-floor-cleaner:primary",
+    });
+  });
+
+  it("tracks secondary buy re-entry clicks", () => {
+    render(
+      <TrackedProductContextBuyLink
+        href="https://www.amazon.com/dp/TESTASIN?tag=YOUR_TAG"
+        productSlug="bona-hard-surface-floor-cleaner"
+        position={12}
+        label="product_context_buy:bona-hard-surface-floor-cleaner:secondary"
+      >
+        Buy this product now →
+      </TrackedProductContextBuyLink>,
+    );
+
+    fireEvent.click(screen.getByText(/Buy this product now/i));
+
+    expect(trackSpy).toHaveBeenCalledTimes(1);
+    expect(trackSpy.mock.calls[0][0]).toMatchObject({
+      destinationUrl: "https://www.amazon.com/dp/TESTASIN?tag=YOUR_TAG",
+      sourcePageType: "product",
+      pageType: "product_page",
+      position: 12,
+      label: "product_context_buy:bona-hard-surface-floor-cleaner:secondary",
     });
   });
 });

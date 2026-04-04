@@ -23,7 +23,10 @@ export function ProductConversionLayer({ productSlug }: Props) {
     <div className="mt-6 space-y-4">
       {problemUseChips.length > 0 ? (
         <div className="rounded-xl border border-neutral-200 bg-white p-4">
-          <div className="mb-2 text-sm font-medium">Used for these problems</div>
+          <div className="mb-1 text-sm font-medium">Used for these problems</div>
+          <div className="mb-3 text-xs text-neutral-500">
+            Go straight to the exact cleaning problem this product is used for.
+          </div>
 
           <div className="flex flex-wrap gap-2">
             {problemUseChips.map((chip, index) => (
@@ -46,7 +49,6 @@ export function ProductConversionLayer({ productSlug }: Props) {
       {problemContext ? (
         <div className="rounded-xl border border-neutral-200 bg-white p-4">
           <div className="mb-1 text-sm font-medium">Why this works for your problem</div>
-
           <div className="text-xs text-neutral-600">{problemContext}</div>
         </div>
       ) : null}
@@ -57,14 +59,19 @@ export function ProductConversionLayer({ productSlug }: Props) {
       </div>
 
       {comparisonSlug ? (
-        <div className="text-xs">
+        <div className="rounded-xl border border-neutral-200 bg-white p-4">
+          <div className="mb-1 text-sm font-medium">Not fully sure yet?</div>
+          <div className="mb-3 text-xs text-neutral-500">
+            Compare this product against the strongest alternative before you buy.
+          </div>
+
           <TrackedProductContextLink
             href={`/compare/products/${comparisonSlug}`}
             productSlug={productSlug}
             roleLabel="comparison_entry"
             position={10}
             label={`product_context_compare:${comparisonSlug}`}
-            className="text-neutral-700 underline"
+            className="text-xs text-neutral-700 underline"
           >
             Compare with alternatives →
           </TrackedProductContextLink>
@@ -72,16 +79,33 @@ export function ProductConversionLayer({ productSlug }: Props) {
       ) : null}
 
       {hasPurchaseUrl ? (
-        <div>
+        <div className="space-y-3">
           <TrackedProductContextBuyLink
             href={purchaseUrl}
             productSlug={productSlug}
             position={11}
-            label={`product_context_buy:${productSlug}`}
+            label={`product_context_buy:${productSlug}:primary`}
             className="inline-block rounded-lg bg-black px-4 py-2 text-sm text-white"
           >
             Buy this option →
           </TrackedProductContextBuyLink>
+
+          <div className="rounded-xl border border-neutral-200 bg-white p-4">
+            <div className="mb-1 text-sm font-medium">Ready to move forward?</div>
+            <div className="mb-3 text-xs text-neutral-500">
+              This sends you straight to the current purchase page for this product.
+            </div>
+
+            <TrackedProductContextBuyLink
+              href={purchaseUrl}
+              productSlug={productSlug}
+              position={12}
+              label={`product_context_buy:${productSlug}:secondary`}
+              className="inline-block rounded-lg border border-neutral-900 px-4 py-2 text-sm text-neutral-900"
+            >
+              Buy this product now →
+            </TrackedProductContextBuyLink>
+          </div>
         </div>
       ) : null}
     </div>
