@@ -46,6 +46,14 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
       "Ranking should reward it on heavy mineral clusters while still penalizing stone, laminate, and grease/adhesive misuse.",
       "SDS verification matters because retail formulas can change while the brand name stays stable.",
     ],
+    commonMisusePatterns: [
+      "Alternating brands on the same thick scale without improving dwell, rinse, or mechanical removal.",
+      "Using CLR-class products as general bathroom sprays on mixed soils.",
+    ],
+    useInsteadOf: [
+      "Use this instead of dish soap when the soil class is mineral bond, not lipid grease.",
+      "Use this instead of vinegar when bonded scale needs a stronger labeled acid cycle and rinse discipline.",
+    ],
     verdictSummary:
       "Strong anchor for heavy mineral scenarios on label-safe hard surfaces; should track closely with CLR/Lime-A-Way with modest ‘commercial strength’ bias, not a new ruleset.",
     sources: [
@@ -500,11 +508,22 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     manufacturerSummary:
       "An enzyme-forward stain and odor product commonly used for pet urine and biological messes on surfaces and fibers.",
     activeIngredients: ["bacterial/enzyme blend", "surfactants", "fragrance (SKU-dependent)"],
-    safetyWarnings: ["Do not mix with incompatible disinfectants—enzyme inactivation risk", "Skin and eye irritation"],
+    safetyWarnings: [
+      "Do not mix with incompatible disinfectants—enzyme inactivation risk",
+      "Skin and eye irritation",
+    ],
     incompatibilities: ["bleach", "many quats and strong oxidizers when used simultaneously per label"],
     expertAnalysis: [
       "This is the enzyme chemistry anchor the catalog was missing for urine, pet odor, and organic stain narratives.",
       "It must win those clusters without being promoted as a grease cutter, descaler, or adhesive remover.",
+      "Escalate to extraction or professional scope when pad/subfloor saturation or hidden moisture drives recurrence—enzymes cannot dry an assembly.",
+    ],
+    commonMisusePatterns: [
+      "One light spray on dried grease or adhesive and blaming ‘weak enzymes’ instead of wrong chemistry class.",
+    ],
+    useInsteadOf: [
+      "Use this instead of Zero Odor when visible organic stain or digested residue still needs enzyme dwell.",
+      "Use this instead of disinfectant sprays when biology removal in fibers is the goal, not hard-surface kill claims.",
     ],
     verdictSummary:
       "High-trust biological soil SKU; sequencing and mix discipline are part of its identity.",
@@ -720,13 +739,25 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     manufacturerSummary:
       "Daily-use shower spray marketed for quick post-shower wipe or mist programs versus passive no-rinse maintenance SKUs.",
     activeIngredients: ["surfactants", "fragrance (SKU-dependent)"],
-    safetyWarnings: ["Ventilation in enclosed showers", "Slip hazard on wet tile"],
+    safetyWarnings: [
+      "Ventilation in enclosed showers",
+      "Slip hazard on wet tile until surfaces are rinsed or dried",
+    ],
     incompatibilities: ["bleach", "acids mixed simultaneously"],
     expertAnalysis: [
-      "Balances Wet & Forget under maintain intent: slightly more ‘active upkeep’ positioning.",
-      "Must crater on restore/mineral-heavy leaderboards.",
+      "Best understood as a surfactant maintenance mist that reduces soap film adhesion between deeper scrubs—stronger than ‘do nothing’ but weaker than CLR-class descaling.",
+      "Outperforms vinegar for consistent bathroom habit workflows; weaker than dedicated mold or heavy scale chemistry when those are the true soil classes.",
+      "Escalate to acid or soap-scum specialists when scale is bonded or mold is the primary failure mode.",
     ],
-    verdictSummary: "Daily shower maintenance comparator—not a descaler.",
+    commonMisusePatterns: [
+      "Expecting shower mist to melt thick limescale without dwell, rinse, or mechanical help.",
+    ],
+    useInsteadOf: [
+      "Use this instead of passive no-rinse lines when you want a light active upkeep habit on labeled surfaces.",
+      "Use this instead of heavy bathroom foam when the goal is maintenance film control, not restoration scrubbing.",
+    ],
+    verdictSummary:
+      "Daily shower maintenance comparator for surfactant film control—not a mold specialist, heavy descaler, or grease engine.",
     sources: [{ label: "Method", url: "https://methodhome.com/", type: "manufacturer" }],
     lastReviewed: new Date().toISOString(),
   },
@@ -956,12 +987,26 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     manufacturerSummary:
       "Concrobium mold control treatment marketed for mold/mildew maintenance on label-approved surfaces with EPA-registered claims on qualifying SKUs.",
     activeIngredients: ["inorganic salt-based mold treatment (verify SDS and EPA label)"],
-    safetyWarnings: ["Ventilation", "Follow EPA contact time and surface list"],
-    incompatibilities: ["bleach in the same application step"],
-    expertAnalysis: [
-      "Mold/biofilm maintenance lane—not a generic disinfect winner, not enzyme urine biology, not acid descaling.",
+    safetyWarnings: [
+      "Ventilate; follow label dwell, repeat-application limits, and surface lists",
+      "Do not substitute for moisture remediation inside walls, HVAC, or large-area remediation plans",
     ],
-    verdictSummary: "Mold-control maintenance specialist.",
+    incompatibilities: ["bleach in the same application step", "mixing with unrelated bathroom chemistry in one pass"],
+    expertAnalysis: [
+      "Fits labeled mold-staining and maintenance passes on hard surfaces where the goal is treatment-style chemistry plus drying—not a soap-scum surfactant story.",
+      "Beats weak DIY wipes on visible growth lanes but loses to surfactant bathroom cleaners when the soil is purely grease and soap film without growth.",
+      "Escalate when drywall is soft, growth is spreading in cavities, or moisture is uncontrolled—bottles do not dry the assembly.",
+    ],
+    commonMisusePatterns: [
+      "Spraying without ventilation or label dwell and expecting instant bleach-like whitening.",
+      "Using it as the only response to chronic leak moisture.",
+    ],
+    useInsteadOf: [
+      "Use this instead of generic bathroom foam when the failure mode is mold staining on label-listed areas.",
+      "Use this instead of acid descalers when the problem class is biological staining, not mineral scale.",
+    ],
+    verdictSummary:
+      "Strong mold-control lane SKU for label-correct maintenance and treatment passes; not a descaler, enzyme pet product, or substitute for fixing moisture.",
     sources: [{ label: "Concrobium", url: "https://www.concrobium.com/", type: "manufacturer" }],
     lastReviewed: new Date().toISOString(),
   },
@@ -1017,12 +1062,25 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     manufacturerSummary:
       "SC Johnson daily shower spray under Scrubbing Bubbles aimed at soap film between deeper cleans.",
     activeIngredients: ["surfactant system (verify SDS)"],
-    safetyWarnings: ["Slip hazard on wet tile"],
-    incompatibilities: ["bleach in same step unless label allows"],
-    expertAnalysis: [
-      "Completes a four-way maintain cluster with Wet & Forget, Method, and Tilex for habit splitting.",
+    safetyWarnings: [
+      "Slip hazard on wet tile",
+      "Ventilate in small enclosed showers when using spray formats",
     ],
-    verdictSummary: "Daily shower maintenance SKU.",
+    incompatibilities: ["bleach in same step unless label allows", "mixing with acids or mold products in one step"],
+    expertAnalysis: [
+      "Positions as a habit-based film reducer—useful when the story is recurring soap haze, not one-time mineral restoration.",
+      "Should lose to CLR/Lime-A-Way-class chemistry when the soil is bonded scale; should lose to mold SKUs when growth is the driver.",
+      "Pairs mentally with other daily shower lines; differentiation is brand, scent, and spray feel—not a different mineral chemistry family.",
+    ],
+    commonMisusePatterns: [
+      "Spraying daily on heavy scale and interpreting weak results as ‘needs more brand swaps’ instead of a descale workflow.",
+    ],
+    useInsteadOf: [
+      "Use this instead of skipping maintenance between weekly bathroom deep cleans.",
+      "Use this instead of vinegar-only DIY when you want a formulated surfactant rinse habit on label-safe surfaces.",
+    ],
+    verdictSummary:
+      "Daily shower maintenance SKU in the surfactant mist lane; not a descaler or mold remediation replacement.",
     sources: [{ label: "Scrubbing Bubbles", url: "https://www.scjohnson.com/", type: "manufacturer" }],
     lastReviewed: new Date().toISOString(),
   },
@@ -1092,12 +1150,25 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     manufacturerSummary:
       "Zero Odor positioned as molecular/neutral odor elimination versus perfume-forward fabric refresh marketing.",
     activeIngredients: ["proprietary neutralizers (verify label)"],
-    safetyWarnings: ["Ventilation in small rooms"],
-    incompatibilities: ["mixing with incompatible chemistries per label"],
-    expertAnalysis: [
-      "Pairs with Fresh Wave and Febreze so musty is not a single-SKU or single-style branch.",
+    safetyWarnings: [
+      "Ventilation in small rooms",
+      "Not a substitute for removing saturated biological soil from carpet pad or drywall",
     ],
-    verdictSummary: "Musty / neutral-odor specialist peer.",
+    incompatibilities: ["mixing with incompatible chemistries per label", "bleach or strong oxidizers unless label explicitly allows sequencing"],
+    expertAnalysis: [
+      "Wins when visible soil is reduced but odor molecules still bind in soft surfaces or enclosed rooms—neutralizer lane, not stain digestion.",
+      "Weaker than enzyme products for fresh protein or urine volume in fibers; stronger than fragrance masking when the goal is binding chemistry rather than perfume.",
+      "Escalate to extraction, pad replacement, or moisture fixes when smell tracks with water damage or hidden growth.",
+    ],
+    commonMisusePatterns: [
+      "Spraying on heavy organic soil without removal first and expecting permanent odor removal.",
+    ],
+    useInsteadOf: [
+      "Use this instead of Febreze-style refresh when the need is neutralization after cleaning, not a scent layer.",
+      "Use this instead of disinfectant sprays when the job is odor chemistry, not kill claims on hard surfaces.",
+    ],
+    verdictSummary:
+      "Musty / neutral-odor specialist peer for post-clean passes; not an enzyme digester or grease cleaner.",
     sources: [{ label: "Zero Odor", url: "https://www.zeroodor.com/", type: "manufacturer" }],
     lastReviewed: new Date().toISOString(),
   },
@@ -1144,6 +1215,34 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     ],
     verdictSummary: "Stainless appearance aerosol peer.",
     sources: [{ label: "Sprayway", url: "https://www.spraywayinc.com/", type: "manufacturer" }],
+    lastReviewed: new Date().toISOString(),
+  },
+
+  "method-all-purpose-cleaner": {
+    slug: "method-all-purpose-cleaner",
+    manufacturerSummary:
+      "Plant-forward all-purpose spray for counters, cabinets, and mixed hard surfaces—surfactant maintenance lane, not glass-specialist or descaler chemistry.",
+    activeIngredients: ["plant-derived surfactants", "fragrance (SKU-dependent)"],
+    safetyWarnings: [
+      "Eye and skin irritation if sprayed toward face or used without gloves on sensitive skin",
+      "Ventilate when using heavily fragranced variants in small rooms",
+    ],
+    incompatibilities: ["bleach", "ammonia", "mixing with other bathroom chemistry in one step"],
+    expertAnalysis: [
+      "Fits light soil and routine wipe-downs where the goal is surfactant pickup and cosmetic cleanliness—not mineral bond removal or streak-free glass physics.",
+      "Loses to Windex-class glass products on mirrors when the failure mode is evaporation streaking; loses to acids when the soil is scale.",
+      "Escalate to degreasers or labeled descalers when grease is polymerized or scale is thick—more all-purpose spray rarely fixes the chemistry class mismatch.",
+    ],
+    commonMisusePatterns: [
+      "Treating all-purpose spray as a mirror or shower-glass specialist and blaming ‘bad product’ for streak physics.",
+    ],
+    useInsteadOf: [
+      "Use this instead of glass-only SKUs when the job is mixed counters and splashes, not mirror finish quality.",
+      "Use this instead of vinegar DIY when you want a formulated surfactant bundle on label-listed surfaces.",
+    ],
+    verdictSummary:
+      "Capable daily all-purpose maintainer for labeled hard surfaces; wrong default for heavy scale, mold, or glass-streak specialization.",
+    sources: [{ label: "Method", url: "https://methodhome.com/", type: "manufacturer" }],
     lastReviewed: new Date().toISOString(),
   },
 };

@@ -291,6 +291,7 @@ export const PRODUCT_RESEARCH: Record<string, CleaningProductResearch> = {
     safetyWarnings: [
       "Can irritate eyes",
       "Can etch or dull sensitive stone and some finishes",
+      "Strong odor; ventilate and avoid mixing with bleach or chlorinated products",
     ],
     incompatibilities: ["bleach"],
     ppeRecommendations: [],
@@ -417,6 +418,7 @@ export const PRODUCT_RESEARCH: Record<string, CleaningProductResearch> = {
     safetyWarnings: [
       "Can irritate eyes",
       "Not a fit for every coated or specialty surface without label confirmation",
+      "Ammonia-class chemistry: avoid surfaces and coatings the label excludes",
     ],
     incompatibilities: [],
     ppeRecommendations: [],
@@ -482,8 +484,9 @@ export const PRODUCT_RESEARCH: Record<string, CleaningProductResearch> = {
     safetyWarnings: [
       "Can irritate eyes and skin",
       "Use carefully in enclosed bathrooms",
+      "Aerosol or spray formats: slip hazard on wet tile until rinsed or wiped dry",
     ],
-    incompatibilities: [],
+    incompatibilities: ["bleach", "ammonia", "chlorine products mixed in same step"],
     ppeRecommendations: ["gloves"],
     ventilationNotes:
       "Ventilation is helpful in bathrooms due to aerosol or stronger fragrance exposure.",

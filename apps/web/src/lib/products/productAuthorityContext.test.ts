@@ -8,6 +8,7 @@ describe("getProductAuthorityContext", () => {
 
     expect(context.problemContext).toBeTruthy();
     expect(context.problemUseChips.length).toBeGreaterThan(0);
+    expect(context.problemUseChips[0]?.href).toBe("/problems/dust-buildup");
     expect(context.problemUseChips.some((chip) => chip.href === "/problems/dust-buildup")).toBe(true);
     expect(context.comparisonSlug).toBeTruthy();
   });
