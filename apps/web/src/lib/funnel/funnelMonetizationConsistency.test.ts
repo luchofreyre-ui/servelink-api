@@ -5,6 +5,9 @@ vi.mock("react", async (importOriginal) => {
   return { ...mod, cache: <T>(fn: T) => fn };
 });
 
+import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
+import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
+import { getBestComparePair } from "@/lib/products/bestComparePair";
 import { getProductAuthorityContext } from "@/lib/products/productAuthorityContext";
 import { searchUnifiedDocuments } from "@/lib/search/searchSiteIndex";
 
@@ -29,5 +32,17 @@ describe("funnel monetization consistency", () => {
     expect(results[0]?.href).toBe("/problems/limescale-buildup");
     expect(results[1]?.href).toMatch(/^\/compare\/products\//);
     expect(results[2]?.href).toBe("/products/clr-calcium-lime-rust");
+  });
+
+  it("Case C — injected compare URL matches getBestComparePair for the limescale scenario (not blind first-two)", () => {
+    const problem = getProblemPageBySlug("limescale-buildup");
+    const scenario = problem?.productScenarios?.find((row) => row.products?.length);
+    const products = (scenario?.products ?? []).slice(0, 3);
+    const pair = getBestComparePair(products);
+    const expectedHref = pair.length === 2 ? buildCompareProductsHref(pair) : null;
+    expect(expectedHref).toBeTruthy();
+
+    const results = searchUnifiedDocuments("scale buildup", { limit: 12 });
+    expect(results[1]?.href).toBe(expectedHref);
   });
 });

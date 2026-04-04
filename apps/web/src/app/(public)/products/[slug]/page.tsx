@@ -8,6 +8,7 @@ import { ProductComparisonPriorityStrip } from "./ProductComparisonPriorityStrip
 import { ProductConversionLayer } from "./ProductConversionLayer";
 import { deriveComparisonSlug } from "./productConversionDerives";
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
+import { ProductResearchDecisionPanels } from "@/components/products/ProductResearchDecisionPanels";
 import { ProductImageGallery } from "@/components/products/ProductImageGallery";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import ProductSummaryRail from "@/components/products/ProductSummaryRail";
@@ -133,6 +134,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
         <ProductConversionLayer productSlug={product.slug} />
 
+        {research ? <ProductResearchDecisionPanels research={research} /> : null}
+
         {priorityComparisonSlug ? (
           <ProductComparisonPriorityStrip
             productSlug={product.slug}
@@ -173,22 +176,55 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </section>
 
       {research && (
-        <section className="space-y-8">
-          <section>
-            <h2 className="mb-3 text-xl font-semibold">Detailed analysis</h2>
+        <section className="space-y-8" data-testid="product-research-detail">
+          <h2 className="mb-3 text-xl font-semibold">Research</h2>
 
-            {research.manufacturerSummary ? (
-              <p className="mb-4 text-gray-700">{research.manufacturerSummary}</p>
-            ) : null}
+          {research.verdictSummary ? (
+            <section>
+              <h3 className="mb-2 text-lg font-semibold">Verdict</h3>
+              <p className="text-gray-700">{research.verdictSummary}</p>
+            </section>
+          ) : null}
 
-            {research.expertAnalysis?.length ? (
+          {research.useInsteadOf?.length ? (
+            <section>
+              <h3 className="mb-2 text-lg font-semibold">Best uses</h3>
+              <ul className="space-y-1 text-gray-700">
+                {research.useInsteadOf.map((item, i) => (
+                  <li key={i}>• {item}</li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          {research.commonMisusePatterns?.length ? (
+            <section>
+              <h3 className="mb-2 text-lg font-semibold">Avoid uses</h3>
+              <ul className="space-y-1 text-gray-700">
+                {research.commonMisusePatterns.map((item, i) => (
+                  <li key={i}>• {item}</li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          {research.manufacturerSummary ? (
+            <section>
+              <h3 className="mb-2 text-lg font-semibold">Manufacturer summary</h3>
+              <p className="text-gray-700">{research.manufacturerSummary}</p>
+            </section>
+          ) : null}
+
+          {research.expertAnalysis?.length ? (
+            <section>
+              <h3 className="mb-2 text-lg font-semibold">Expert analysis</h3>
               <div className="space-y-2 text-gray-700">
                 {research.expertAnalysis.map((item, i) => (
                   <p key={i}>• {item}</p>
                 ))}
               </div>
-            ) : null}
-          </section>
+            </section>
+          ) : null}
 
           {research.manufacturerClaims?.length ? (
             <section>
@@ -257,7 +293,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           {!!(
             research.safetyWarnings?.length ||
-            research.incompatibilities?.length ||
             research.ppeRecommendations?.length ||
             research.ventilationNotes ||
             research.epaRegistered ||
@@ -272,17 +307,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     <div className="mb-2 font-semibold text-gray-900">Safety notes</div>
                     <ul className="space-y-1">
                       {research.safetyWarnings.map((item, i) => (
-                        <li key={i}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-
-                {research.incompatibilities?.length ? (
-                  <div>
-                    <div className="mb-2 font-semibold text-gray-900">Do not mix with</div>
-                    <ul className="space-y-1">
-                      {research.incompatibilities.map((item, i) => (
                         <li key={i}>• {item}</li>
                       ))}
                     </ul>
@@ -317,51 +341,25 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </section>
           ) : null}
 
-          {!!(
-            research.commonMisusePatterns?.length ||
-            research.useInsteadOf?.length ||
-            research.bestAlternatives?.length ||
-            research.verdictSummary
-          ) ? (
+          {research.incompatibilities?.length ? (
             <section>
-              <h3 className="mb-3 text-lg font-semibold">Interpretation and comparisons</h3>
+              <h3 className="mb-3 text-lg font-semibold">Do not mix with</h3>
+              <ul className="space-y-1 text-gray-700">
+                {research.incompatibilities.map((item, i) => (
+                  <li key={i}>• {item}</li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
-              <div className="space-y-5 text-gray-700">
-                {research.verdictSummary ? <p>{research.verdictSummary}</p> : null}
-
-                {research.commonMisusePatterns?.length ? (
-                  <div>
-                    <div className="mb-2 font-semibold text-gray-900">Common misuse patterns</div>
-                    <ul className="space-y-1">
-                      {research.commonMisusePatterns.map((item, i) => (
-                        <li key={i}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-
-                {research.useInsteadOf?.length ? (
-                  <div>
-                    <div className="mb-2 font-semibold text-gray-900">Use this instead of</div>
-                    <ul className="space-y-1">
-                      {research.useInsteadOf.map((item, i) => (
-                        <li key={i}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-
-                {research.bestAlternatives?.length ? (
-                  <div>
-                    <div className="mb-2 font-semibold text-gray-900">Best alternatives</div>
-                    <ul className="space-y-1">
-                      {research.bestAlternatives.map((item, i) => (
-                        <li key={i}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-              </div>
+          {research.bestAlternatives?.length ? (
+            <section>
+              <h3 className="mb-2 text-lg font-semibold">Use instead of / common alternatives</h3>
+              <ul className="space-y-1 text-gray-700">
+                {research.bestAlternatives.map((item, i) => (
+                  <li key={i}>• {item}</li>
+                ))}
+              </ul>
             </section>
           ) : null}
 

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { deriveComparisonSlug } from "@/app/(public)/products/[slug]/productConversionDerives";
+
 import { getComparisonOpponentSlug, getProductAuthorityContext } from "./productAuthorityContext";
 
 describe("getProductAuthorityContext", () => {
@@ -23,5 +25,10 @@ describe("getProductAuthorityContext", () => {
     expect(context.problemContext).toBeNull();
     expect(context.comparisonSlug).toBeNull();
     expect(context.problemUseChips).toEqual([]);
+  });
+
+  it("deriveComparisonSlug mirrors authority context comparisonSlug (best-pair resolution)", () => {
+    const ctx = getProductAuthorityContext("clr-calcium-lime-rust");
+    expect(deriveComparisonSlug("clr-calcium-lime-rust")).toBe(ctx.comparisonSlug);
   });
 });

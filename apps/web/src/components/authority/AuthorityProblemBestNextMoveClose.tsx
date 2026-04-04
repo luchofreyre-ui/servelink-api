@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 
+import { getBestComparePair } from "@/lib/products/bestComparePair";
 import { buildCompareProductsHref, buildCompareSlug } from "@/lib/products/compareSlugBuilder";
-import { hasComparePage } from "@/lib/products/compareAvailability";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 import {
   getRecommendationDestinationType,
@@ -18,10 +18,10 @@ type Props = {
 };
 
 export function AuthorityProblemBestNextMoveClose({ problemSlug, bestProductSlug, compareProducts }: Props) {
-  const topTwo = compareProducts.slice(0, 2);
-  const canCompare = topTwo.length >= 2 && hasComparePage(topTwo);
-  const compareHref = canCompare ? buildCompareProductsHref(topTwo) : null;
-  const compareSegment = canCompare ? buildCompareSlug(topTwo) : null;
+  const comparePair = getBestComparePair(compareProducts);
+  const canCompare = comparePair.length === 2;
+  const compareHref = canCompare ? buildCompareProductsHref(comparePair) : null;
+  const compareSegment = canCompare ? buildCompareSlug(comparePair) : null;
 
   const purchaseHref = getProductPurchaseUrl(bestProductSlug);
   const purchaseOk = purchaseHref !== "#";
@@ -92,7 +92,7 @@ export function AuthorityProblemBestNextMoveClose({ problemSlug, bestProductSlug
             onClick={() => {
               trackProductRecommendationClick({
                 eventName: "product_recommendation_click",
-                productSlug: topTwo[0]!.slug,
+                productSlug: comparePair[0]!.slug,
                 roleLabel: normalizeRoleLabel("comparison_entry"),
                 position: 31,
                 pageType: base.pageType,

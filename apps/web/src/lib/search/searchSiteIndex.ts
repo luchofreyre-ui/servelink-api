@@ -8,7 +8,7 @@ import { detectSearchIntent } from "@/lib/encyclopedia/searchIntent";
 import { rankEncyclopediaResults } from "@/lib/encyclopedia/searchRanking";
 import type { EncyclopediaCategory, EncyclopediaResolvedIndexEntry } from "@/lib/encyclopedia/types";
 import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
-import { hasComparePage } from "@/lib/products/compareAvailability";
+import { getBestComparePair } from "@/lib/products/bestComparePair";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { buildUnifiedSearchIndex } from "@/search/buildUnifiedSearchIndex";
 import {
@@ -214,11 +214,11 @@ function buildProblemContextInjections(problemSlug: string, _authorityProblemFin
 
   const products = (scenario.products ?? []).slice(0, 3);
   const bestProduct = products[0];
-  const comparePair = products.slice(0, 2);
+  const comparePair = getBestComparePair(products);
 
   const injections: ScoredSearchHit[] = [];
 
-  if (comparePair.length >= 2 && hasComparePage(comparePair)) {
+  if (comparePair.length === 2) {
     const compareHref = buildCompareProductsHref(comparePair);
     if (compareHref) {
       const doc: SiteSearchDocument = {

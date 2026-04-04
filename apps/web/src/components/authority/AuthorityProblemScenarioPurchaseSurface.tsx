@@ -6,7 +6,7 @@ import {
   buildProductRecommendationClickHandler,
   trackProductRecommendationClick,
 } from "@/lib/products/productRecommendationTracking";
-import { hasComparePage } from "@/lib/products/compareAvailability";
+import { getBestComparePair } from "@/lib/products/bestComparePair";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 
@@ -47,15 +47,15 @@ export function AuthorityProblemScenarioTopBuyCard({
   if (products.length === 0) return null;
 
   const t = tracking(problemSlug);
-  const topTwo = products.slice(0, 2);
-  const canCompare = products.length >= 2 && hasComparePage(topTwo);
-  const compareHref = canCompare ? buildCompareProductsHref(topTwo) : null;
+  const comparePair = getBestComparePair(products);
+  const compareHref = comparePair.length === 2 ? buildCompareProductsHref(comparePair) : null;
+  const canCompare = Boolean(compareHref);
   const onCompareClick =
     compareHref ?
       () => {
         trackProductRecommendationClick({
           eventName: "product_recommendation_click",
-          productSlug: products[0]!.slug,
+          productSlug: comparePair[0]!.slug,
           roleLabel: "comparison_entry",
           position: 0,
           pageType: t.pageType,
@@ -156,7 +156,7 @@ export function AuthorityProblemScenarioMethodReinforceLink({
   problemSlug: string;
   /** Tracking role aligned with the reinforced row (best / heavy / maintenance). */
   roleLabel?: string;
-  /** Same scenario list as the top card; used for optional compare link (top two only). */
+  /** Same scenario list as the top card; used for optional compare link (best valid pair). */
   compareProducts?: { slug: string }[];
 }) {
   const href = getProductPurchaseUrl(productSlug);
@@ -172,15 +172,15 @@ export function AuthorityProblemScenarioMethodReinforceLink({
   });
 
   const t = tracking(problemSlug);
-  const compareSlice = compareProducts?.slice(0, 2) ?? [];
-  const canCompare = compareSlice.length >= 2 && hasComparePage(compareSlice);
-  const compareHref = canCompare ? buildCompareProductsHref(compareSlice) : null;
+  const comparePair = getBestComparePair(compareProducts ?? []);
+  const compareHref = comparePair.length === 2 ? buildCompareProductsHref(comparePair) : null;
+  const canCompare = Boolean(compareHref);
   const onCompareFromReinforceClick =
     compareHref ?
       () => {
         trackProductRecommendationClick({
           eventName: "product_recommendation_click",
-          productSlug: compareSlice[0]!.slug,
+          productSlug: comparePair[0]!.slug,
           roleLabel: "comparison_entry",
           position: 2,
           pageType: t.pageType,

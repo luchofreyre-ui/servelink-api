@@ -3,8 +3,8 @@ import type {
   AuthorityProblemExecutionQuickFix,
   AuthorityProblemPageData,
 } from "@/authority/types/authorityPageTypes";
+import { getBestComparePair } from "@/lib/products/bestComparePair";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
-import { hasComparePage } from "@/lib/products/compareAvailability";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 
 export type ProblemUseChip = {
@@ -120,9 +120,8 @@ export function getProductAuthorityContext(productSlug: string): ProductAuthorit
 
     const products = scenario.products ?? [];
     const productIndex = products.findIndex((product) => product.slug === productSlug);
-    const comparePair = products.slice(0, 2);
-    const compareHref =
-      comparePair.length >= 2 && hasComparePage(comparePair) ? buildCompareProductsHref(comparePair) : null;
+    const comparePair = getBestComparePair(products);
+    const compareHref = comparePair.length === 2 ? buildCompareProductsHref(comparePair) : null;
     const bestProductSlug = products[0]?.slug ?? null;
 
     const score = scoreMatchedProblem({
