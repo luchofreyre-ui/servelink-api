@@ -35,6 +35,7 @@ import { ProductAffiliateDisclosure } from "@/components/products/ProductAffilia
 import { ProductComparisonMediaCard } from "@/components/products/ProductComparisonMediaCard";
 import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
 import { resolveProductRecommendationContextForComparisonFallback } from "@/lib/products/productRecommendationContext";
+import { AuthorityComparisonTrackedBuyLink } from "./AuthorityComparisonTrackedBuyLink";
 
 function buildComparisonEyebrow(type: AuthorityComparisonPageData["type"]) {
   switch (type) {
@@ -257,6 +258,20 @@ export function AuthorityComparisonPage({
       : null;
   const leftComparisonProduct = data.type === "product_comparison" ? getProductBySlug(data.leftSlug) : null;
   const rightComparisonProduct = data.type === "product_comparison" ? getProductBySlug(data.rightSlug) : null;
+  const winnerSlug = data.type === "product_comparison" ? data.winnerBlock?.product : undefined;
+  const comparePurchaseTracking =
+    data.type === "product_comparison"
+      ? {
+          pageType: "product_comparison_page" as const,
+          sourcePageType: "compare" as const,
+          problemSlug: data.topSharedProblemSlug ?? null,
+          surfaceSlug: data.topSharedSurfaceSlug ?? null,
+          intent:
+            comparisonProductContext?.intent != null ? String(comparisonProductContext.intent) : null,
+        }
+      : undefined;
+  const comparePinnedSlugs =
+    data.type === "product_comparison" ? ([data.leftSlug, data.rightSlug] as const) : undefined;
   const schemas = [
     buildBreadcrumbListSchema(resolveJsonLdBreadcrumbHrefs(breadcrumbs)),
     buildArticleSchema({
@@ -278,6 +293,138 @@ export function AuthorityComparisonPage({
           title={data.title}
           description={data.description}
         />
+
+        {data.type === "product_comparison" && data.oneLineVerdict ? (
+          <p className="mb-4 text-base font-semibold text-[#0F172A]">{data.oneLineVerdict}</p>
+        ) : null}
+
+        {data.type === "product_comparison" && data.winnerBlock ? (
+          <div className="mb-6 rounded-xl border border-neutral-200 bg-white p-4">
+            <div className="mb-1 text-sm font-medium text-[#0F172A]">{data.winnerBlock.title}</div>
+            <div className="text-sm font-semibold text-[#0F172A]">
+              {getProductBySlug(data.winnerBlock.product)?.name ?? data.winnerBlock.product}
+            </div>
+            <div className="mt-1 text-xs text-neutral-600">{data.winnerBlock.reason}</div>
+            <AuthorityComparisonTrackedBuyLink
+              productSlug={data.winnerBlock.product}
+              roleLabel="Best overall"
+              position={0}
+              trackingContext={comparePurchaseTracking}
+              pinnedSlugs={comparePinnedSlugs}
+              className="mt-3 inline-block rounded-lg bg-black px-4 py-2 text-sm text-white"
+            >
+              Buy now →
+            </AuthorityComparisonTrackedBuyLink>
+          </div>
+        ) : null}
+
+        {data.type === "product_comparison" && data.objectionBlock ? (
+          <div
+            className="mt-6 rounded-xl border border-neutral-200 bg-white p-4"
+            data-testid="comparison-objection-block"
+          >
+            <div className="mb-2 text-sm font-medium text-[#0F172A]">{data.objectionBlock.title}</div>
+            <div className="space-y-2">
+              {data.objectionBlock.reasons.map((reason, i) => (
+                <div key={`${reason}-${i}`} className="text-xs text-neutral-600">
+                  - {reason}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {data.type === "product_comparison" && data.winnerBlock ? (
+          <div className="mt-4">
+            <AuthorityComparisonTrackedBuyLink
+              productSlug={data.winnerBlock.product}
+              roleLabel="Best overall"
+              position={2}
+              trackingContext={comparePurchaseTracking}
+              pinnedSlugs={comparePinnedSlugs}
+              className="inline-block rounded-lg bg-black px-4 py-2 text-sm text-white"
+            >
+              Buy the better choice →
+            </AuthorityComparisonTrackedBuyLink>
+          </div>
+        ) : null}
+
+        {data.type === "product_comparison" && data.productPickLines?.length ? (
+          <div className="mb-8">
+            <p className="mb-3 text-sm font-semibold text-[#0F172A]">Who should choose what</p>
+            <div className="grid gap-4">
+            {data.productPickLines.map((line) => {
+              const product = getProductBySlug(line.slug);
+              const isWinnerRow = Boolean(winnerSlug && line.slug === winnerSlug);
+              return (
+                <div key={line.slug} className="rounded-lg border border-neutral-200 p-3">
+                  <div className="text-sm font-medium text-[#0F172A]">{product?.name ?? line.slug}</div>
+                  <div className="mt-1 text-xs text-neutral-600">{line.bestFor}</div>
+                  <AuthorityComparisonTrackedBuyLink
+                    productSlug={line.slug}
+                    roleLabel={isWinnerRow ? "Best overall" : "comparison_entry"}
+                    position={isWinnerRow ? 0 : 1}
+                    trackingContext={comparePurchaseTracking}
+                    pinnedSlugs={comparePinnedSlugs}
+                    className={
+                      isWinnerRow
+                        ? "mt-3 inline-block rounded-lg bg-black px-4 py-2 text-sm text-white"
+                        : "mt-3 inline-block text-xs text-neutral-600 underline"
+                    }
+                  >
+                    {isWinnerRow ? "Buy now →" : "Buy →"}
+                  </AuthorityComparisonTrackedBuyLink>
+                </div>
+              );
+            })}
+            </div>
+          </div>
+        ) : null}
+
+        {data.type === "product_comparison" && data.winnerBlock ? (
+          <div
+            className="mb-8 rounded-xl border border-neutral-200 bg-white p-4"
+            data-testid="comparison-best-next-move"
+          >
+            <div className="mb-1 text-sm font-semibold text-[#0F172A]">Best next move</div>
+            <p className="mb-4 text-xs text-neutral-600">
+              For this problem, the stronger default choice is already selected above.
+            </p>
+            <AuthorityComparisonTrackedBuyLink
+              productSlug={data.winnerBlock.product}
+              roleLabel="Best overall"
+              position={20}
+              trackingContext={
+                comparePurchaseTracking
+                  ? { ...comparePurchaseTracking, pageType: "product_comparison_page" }
+                  : undefined
+              }
+              pinnedSlugs={comparePinnedSlugs}
+              className="inline-block rounded-lg bg-black px-4 py-2 text-sm text-white"
+            >
+              Buy the recommended option →
+            </AuthorityComparisonTrackedBuyLink>
+            <div className="mt-3">
+              <AuthorityComparisonTrackedBuyLink
+                productSlug={
+                  data.winnerBlock.product === data.leftSlug ? data.rightSlug : data.leftSlug
+                }
+                roleLabel="comparison_entry"
+                position={21}
+                trackingContext={
+                  comparePurchaseTracking
+                    ? { ...comparePurchaseTracking, pageType: "product_comparison_page" }
+                    : undefined
+                }
+                pinnedSlugs={comparePinnedSlugs}
+                className="text-xs text-neutral-600 underline"
+              >
+                Still want the alternative?
+              </AuthorityComparisonTrackedBuyLink>
+            </div>
+          </div>
+        ) : null}
+
         <AuthorityQuickAnswer text={quickAnswerText} />
         <AuthorityTopicalCrossLinks pageKey={`compare-${data.slug}`} problemSlug={topicalProblemHint} />
 

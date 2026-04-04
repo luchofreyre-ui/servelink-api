@@ -21,14 +21,14 @@ describe("product context tracking", () => {
     trackSpy.mockClear();
   });
 
-  it("tracks problem chip clicks", () => {
+  it("tracks primary problem hub CTA clicks", () => {
     render(
       <TrackedProductContextLink
         href="/problems/dust-buildup"
         productSlug="bona-hard-surface-floor-cleaner"
         roleLabel="product_problem_chip"
         position={0}
-        label="product_context_chip:dust-buildup:position_0"
+        label="product_primary_problem:dust-buildup"
       >
         Dust buildup
       </TrackedProductContextLink>,
@@ -43,7 +43,7 @@ describe("product context tracking", () => {
       pageType: "product_page",
       position: 0,
       isPinned: true,
-      label: "product_context_chip:dust-buildup:position_0",
+      label: "product_primary_problem:dust-buildup",
     });
   });
 
@@ -68,6 +68,31 @@ describe("product context tracking", () => {
       sourcePageType: "product",
       pageType: "product_page",
       position: 10,
+    });
+  });
+
+  it("tracks priority compare strip clicks", () => {
+    render(
+      <TrackedProductContextLink
+        href="/compare/products/clr-calcium-lime-rust-vs-zep-calcium-lime-rust-remover"
+        productSlug="clr-calcium-lime-rust"
+        roleLabel="comparison_entry"
+        position={13}
+        label="product_priority_compare:clr-calcium-lime-rust-vs-zep-calcium-lime-rust-remover"
+      >
+        Open comparison →
+      </TrackedProductContextLink>,
+    );
+
+    fireEvent.click(screen.getByText(/Open comparison/i));
+
+    expect(trackSpy).toHaveBeenCalledTimes(1);
+    expect(trackSpy.mock.calls[0][0]).toMatchObject({
+      destinationType: "compare",
+      sourcePageType: "product",
+      pageType: "product_page",
+      position: 13,
+      label: "product_priority_compare:clr-calcium-lime-rust-vs-zep-calcium-lime-rust-remover",
     });
   });
 

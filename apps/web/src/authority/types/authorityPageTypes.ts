@@ -121,7 +121,15 @@ export type AuthorityProblemPageData = {
   relatedMethods: AuthorityEntitySummary[];
   relatedSurfaces: AuthorityEntitySummary[];
   /** When set, drives “best products” scenarios instead of only graph surface slugs. */
-  productScenarios?: { problem: string; surface: string }[];
+  productScenarios?: {
+    problem: string;
+    surface: string;
+    /**
+     * Optional pinned SKUs for top-fold / inline CTAs (first scenario with `products` wins).
+     * Order: [0] best overall, [1] heavy / stronger, [2] maintenance (max three).
+     */
+    products?: { slug: string; name?: string }[];
+  }[];
   /** Quick routing at the top of the problem hub. */
   decisionShortcuts?: { label: string; body: string; productSlugs?: string[] }[];
   /** Extra “best by surface” lines (e.g. cooktops not in the authority surface graph). */
@@ -147,7 +155,28 @@ export interface AuthorityProductScenarioWinner {
   winnerName: string;
   runnerUp?: string;
   note?: string;
+  /** Short line for compare-page winner card (scenario context). */
+  reason?: string;
 }
+
+export interface AuthorityComparisonWinnerBlock {
+  title: string;
+  /** Product slug (catalog). */
+  product: string;
+  reason: string;
+}
+
+/** Per-SKU “who should pick this” line on product comparison pages. */
+export interface AuthorityComparisonProductPickLine {
+  slug: string;
+  bestFor: string;
+}
+
+export type AuthorityComparisonObjectionBlock = {
+  losingProduct: string;
+  title: string;
+  reasons: string[];
+};
 
 export interface AuthorityComparisonPageData {
   type: AuthorityComparisonType;
@@ -161,6 +190,16 @@ export interface AuthorityComparisonPageData {
   intro: string;
   /** 1–2 sentence direct answer for snippets and summaries. */
   quickAnswer?: string;
+
+  /** Product vs product: decisive one-liner above the fold. */
+  oneLineVerdict?: string;
+  /** Product vs product: winner callout + buy CTA. */
+  winnerBlock?: AuthorityComparisonWinnerBlock;
+  /** Product vs product: two cards below the winner (left + right). */
+  productPickLines?: AuthorityComparisonProductPickLine[];
+
+  /** Product vs product: why the non-default pick is not the starting choice. */
+  objectionBlock?: AuthorityComparisonObjectionBlock;
 
   rows: AuthorityComparisonRow[];
 

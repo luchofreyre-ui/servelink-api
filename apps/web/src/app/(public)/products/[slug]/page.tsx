@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 
 import { firstAuthorityProblemSlugForProductProblem } from "@/lib/authority/authorityProductTaxonomyBridge";
 
+import { ProductComparisonPriorityStrip } from "./ProductComparisonPriorityStrip";
 import { ProductConversionLayer } from "./ProductConversionLayer";
+import { deriveComparisonSlug } from "./productConversionDerives";
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
 import { ProductImageGallery } from "@/components/products/ProductImageGallery";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
@@ -49,6 +51,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const research = getProductResearch(product.slug);
   const whereItFits = getTopAuthorityContextsForProduct(product.slug, { maxRank: 2, limit: 5 });
   const whenLoses = getWhenProductLosesScenarios(product.slug, { limit: 5 });
+  const priorityComparisonSlug = deriveComparisonSlug(product.slug);
 
   return (
     <div className="mx-auto max-w-5xl space-y-10 px-6 py-10">
@@ -130,6 +133,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
         <ProductConversionLayer productSlug={product.slug} />
 
+        {priorityComparisonSlug ? (
+          <ProductComparisonPriorityStrip
+            productSlug={product.slug}
+            comparisonSlug={priorityComparisonSlug}
+          />
+        ) : null}
+
         {product.scoreWeaknesses && product.scoreWeaknesses.length > 0 && (
           <>
             <h3 className="mb-2 mt-6 text-lg font-semibold">Weaknesses</h3>
@@ -140,6 +150,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
           </>
         )}
+      </section>
+
+      <section className="space-y-10" data-testid="product-related-products">
+        <h2 className="text-xl font-semibold">Related products</h2>
+        <RelatedProducts
+          product={product}
+          mode="better"
+          trackingContext={{
+            pageType: "product_page",
+            sourcePageType: "related_products",
+          }}
+        />
+        <RelatedProducts
+          product={product}
+          mode="similar"
+          trackingContext={{
+            pageType: "product_page",
+            sourcePageType: "related_products",
+          }}
+        />
       </section>
 
       {research && (
@@ -444,26 +474,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </section>
       )}
 
-      {/* RELATED PRODUCTS */}
-      <section className="space-y-10">
-        <h2 className="text-xl font-semibold">Related products</h2>
-        <RelatedProducts
-          product={product}
-          mode="better"
-          trackingContext={{
-            pageType: "product_page",
-            sourcePageType: "related_products",
-          }}
-        />
-        <RelatedProducts
-          product={product}
-          mode="similar"
-          trackingContext={{
-            pageType: "product_page",
-            sourcePageType: "related_products",
-          }}
-        />
-      </section>
     </div>
   );
 }

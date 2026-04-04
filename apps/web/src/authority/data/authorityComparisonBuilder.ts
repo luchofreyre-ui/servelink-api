@@ -3,6 +3,7 @@ import type {
   AuthorityComparisonRow,
   AuthorityMethodPageData,
   AuthorityProblemPageData,
+  AuthorityProductScenarioWinner,
   AuthoritySurfacePageData,
 } from "../types/authorityPageTypes";
 import {
@@ -13,7 +14,10 @@ import {
 import type { ProductDetailView } from "@/lib/products/productRegistry";
 import { getProductBySlug } from "@/lib/products/productRegistry";
 import { getProductResearch } from "@/lib/products/getProductResearch";
-import { buildProductComparisonScenarioWinners } from "@/lib/products/productComparisonScenarioWinners";
+import {
+  buildProductComparisonScenarioWinners,
+  type ComparisonScenarioWinner,
+} from "@/lib/products/productComparisonScenarioWinners";
 import {
   getMethodSlugsForProblem,
   getMethodSlugsForSurface,
@@ -82,6 +86,21 @@ const PRODUCT_COMPARISON_EXPERT_COPY: Record<
     ],
     commonMistake: `Spraying Zero Odor on fresh pet accidents without blotting and enzyme work, or using Bac-Out once on dried grease and calling enzymes “weak”—confusing odor chemistry with lipid removal.`,
     whenNeitherWorks: `When carpet pad is saturated, drywall is stained from behind, or HVAC is recirculating odor, bottles will not replace extraction, drying, and source removal—escalate physically before buying more SKUs.`,
+  },
+  "dawn-platinum-dish-spray-vs-simple-green-all-purpose-cleaner": {
+    quickAnswer: `Dawn Platinum Dish Spray is the surfactant-first lane for cutting oily films and dish-adjacent residue with controlled foam and rinse; Simple Green All-Purpose is the broader multi-surface workhorse when you want one labeled bottle across counters, appliances, and light grease—still not a stone or heavy-degrease substitute without label checks.`,
+    notInterchangeable: {
+      leftWins: `Dawn wins when the story is kitchen grease film, dishware, or tacky films where a rinseable surfactant cycle beats spreading a fragranced all-purpose layer.`,
+      rightWins: `Simple Green wins when you need one neutral all-purpose pass across mixed hard surfaces after dry soil removal—especially routine cleaning where Dawn’s dish-first positioning is the wrong mental model.`,
+      bothFail: `Both fail as openers on unsealed stone, inside ovens on baked carbon, or when the real issue is failing coatings—route through the matching problem hub.`,
+    },
+    quickDecision: [
+      `If the film is clearly oil or food grease near the sink or range → Dawn with rinse and fresh cloth discipline.`,
+      `If you are doing a whole-kitchen wipe-down on label-listed surfaces → Simple Green at label dilution.`,
+      `If residue keeps returning as tacky haze → reduce product load, rinse more, then reassess as stacked chemistry—not stronger sprays.`,
+    ],
+    commonMistake: `Stacking all-purpose fragrance on top of dish spray without a water rinse pass—then interpreting haze as “needs more cleaner” instead of incomplete removal.`,
+    whenNeitherWorks: `When surfaces are natural stone, coated quartz with unknown sealers, or films are mineral or adhesive-class, neither SKU replaces label-specific routing from the right authority page.`,
   },
   "dawn-platinum-dish-spray-vs-easy-off-kitchen-degreaser": {
     quickAnswer: `Dawn Platinum is the surfactant-first lane for fresh to moderate kitchen grease on label-safe hard surfaces; Easy-Off Kitchen is the alkaline degreaser lane when films are polymerized on hoods, backsplashes, and range-adjacent verticals—still not a substitute for oven-baked carbon chemistry.`,
@@ -158,6 +177,96 @@ const PRODUCT_COMPARISON_EXPERT_COPY: Record<
     commonMistake: `Spraying either product into HVAC returns, behind wallpaper, or over thick carpet without removing the wet layer—treating mold like a countertop stain.`,
     whenNeitherWorks: `When occupancy includes respiratory vulnerability, staining covers multiple rooms, or insurance documentation is required, consumer SKUs are not the whole plan—document, dry, and escalate per local guidance.`,
   },
+  "concrobium-mold-control-vs-scrubbing-bubbles-bathroom-grime-fighter": {
+    quickAnswer: `Concrobium Mold Control is the dedicated mold-treatment lane for label-covered staining you are treating as mold risk; Scrubbing Bubbles Bathroom Grime Fighter is the surfactant bathroom cleaner lane for soap scum and greasy films—not a substitute for a mold workflow.`,
+    notInterchangeable: {
+      leftWins: `Concrobium wins when the job is visible mold staining on hard surfaces its label allows, you want a treatment-style pass with repeat applications, and you are pairing it with drying and ventilation—not expecting bathroom foam to “bleach it away.”`,
+      rightWins: `Scrubbing Bubbles wins when the story is routine bathroom soil—soap film, body oils, and grimy tile or tub films—where a bathroom cleaner’s surfactant bundle beats a mold SKU that is not aimed at that grease-and-soap job.`,
+      bothFail: `Both fail when mold is inside cavities, drywall is soft, or humidity is uncontrolled—spraying either bottle without fixing moisture turns remediation into theater.`,
+    },
+    quickDecision: [
+      `If the spots look like black/green growth on grout or corners and you are following label dwell + ventilation → Concrobium.`,
+      `If the shower is mostly gray haze and soap rings with minimal mold suspicion → Scrubbing Bubbles and better rinse cadence.`,
+      `If stains return in the same wet line after drying → treat moisture first; open the mold hub before swapping brands.`,
+    ],
+    commonMistake: `People spray Scrubbing Bubbles on obvious mold, see foam, and assume the problem is “cleaned,” then grab Concrobium when the stain returns—skipping the moisture story that decides whether either SKU belongs.`,
+    whenNeitherWorks: `When HVAC, insulation, or wall cavities are involved, or the occupant needs documented remediation, consumer bottles are not the end state—dry the assembly and escalate per local guidance.`,
+  },
+  "heinz-distilled-white-vinegar-5pct-vs-method-daily-shower-spray": {
+    quickAnswer: `5% vinegar is the cheap acid pass for mineral-linked films and light scale when surfaces tolerate acetic acid; Method Daily Shower Spray is the maintenance surfactant mist for keeping soap from baking in—not a descaler for bonded scale.`,
+    notInterchangeable: {
+      leftWins: `Vinegar wins when you want a controlled acid rinse on label-safe glass, chrome, or plastic after a neutral wipe, especially for thin hard-water haze where you can rinse thoroughly and ventilate.`,
+      rightWins: `Method Daily Shower wins when the goal is post-shower misting to reduce soap film buildup on surfaces its label covers—where a daily spray cadence beats repeating full vinegar sessions.`,
+      bothFail: `Both fail on stone or coatings that forbid acids, on silicone failure, or when scale is thick enough to need a stronger labeled descaler or mechanical removal.`,
+    },
+    quickDecision: [
+      `If you can feel grit or see white scale after a neutral wipe → vinegar test on a tiny area only where acid is allowed, then rinse.`,
+      `If buildup is thin and returns weekly unless you mist after use → Method Daily Shower on its labeled program.`,
+      `If vinegar smells linger or finishes dull → stop; you may be on the wrong surface class for acid.`,
+    ],
+    commonMistake: `Misting Method Daily Shower on heavy scale and expecting vinegar-class results—or running vinegar on stone because “natural” feels safer—ignoring label chemistry for the surface.`,
+    whenNeitherWorks: `When etching, failing caulk, or grout is crumbling, neither bottle replaces repair or stone-safe routing from the hub.`,
+  },
+  "bar-keepers-friend-cleanser-vs-clr-calcium-lime-rust": {
+    quickAnswer: `Bar Keepers Friend Cleanser is the oxalic-acid plus mild abrasive lane for stainless, porcelain, and fixtures where controlled scrubbing helps; CLR Calcium, Lime & Rust Remover is the liquid acid descaler lane for mineral film on label-listed surfaces—without relying on abrasive work.`,
+    notInterchangeable: {
+      leftWins: `BKF wins when you need stain removal with gentle abrasion on sinks, cookware, and hard surfaces its label allows—especially where a paste-and-rinse cycle fits the geometry.`,
+      rightWins: `CLR wins when the soil is mineral film or rust staining on surfaces its label explicitly covers and you want a soak-and-rinse acid workflow instead of powder abrasion.`,
+      bothFail: `Both fail on stone or coatings outside their labels, inside electronics, or when the issue is grease-heavy kitchen soil without a mineral component.`,
+    },
+    quickDecision: [
+      `If the mark is rust or chalky mineral on a CLR-listed fixture → CLR with label dwell and rinse.`,
+      `If the sink shows gray streaks or metal transfer that benefits from a gentle abrasive polish → BKF where allowed.`,
+      `If you see etching or hazing after either → stop; reassess surface class and hub routing.`,
+    ],
+    commonMistake: `Using BKF like a powder “CLR” on thick scale without dwell discipline, or using CLR on brushed metal where abrasion from prior attempts already changed the finish—then blaming the wrong brand instead of the wrong tool.`,
+    whenNeitherWorks: `When finishes are unknown, stone is involved, or damage is mechanical, neither SKU replaces manufacturer guidance or a specialist assessment.`,
+  },
+  "method-all-purpose-cleaner-vs-windex-original-glass-cleaner": {
+    quickAnswer: `Method All-Purpose Cleaner is the general multi-surface lane for light soil after dry removal; Windex Original is the glass-specialist lane for streak-free film pickup on windows and mirrors—not a substitute for labeled all-purpose jobs on mixed soils.`,
+    notInterchangeable: {
+      leftWins: `Method wins when you are cleaning countertops, cabinets, or other labeled hard surfaces with light grease and grime where you want one bottle with a broader surface story than glass-only.`,
+      rightWins: `Windex wins when the surface is glass or mirrors and the failure mode is streaks, smudges, and oily fingerprints—where glass-formulation surfactants and solvents are the point.`,
+      bothFail: `Both fail as oven cleaners, mold removers, or heavy degreasers on hoods, and neither replaces stone-safe or coating-specific routing.`,
+    },
+    quickDecision: [
+      `If the job is only windows and mirrors → Windex.`,
+      `If you are doing a whole-kitchen wipe on labeled surfaces with mixed light soil → Method at label dilution.`,
+      `If glass looks worse after either → reduce product load, rinse more, then reassess as residue or coating damage.`,
+    ],
+    commonMistake: `Using all-purpose cleaner on mirrors and blaming “bad glass,” or using Windex on greasy counters and wondering why soil smears—swapping bottles without changing the surface class.`,
+    whenNeitherWorks: `When coatings are unknown, films are mineral-bonded, or etching appears, you need a different hub—not a stronger spray of the same category.`,
+  },
+  "natures-miracle-stain-and-odor-remover-vs-zero-odor-eliminator-spray": {
+    quickAnswer: `Nature’s Miracle Stain & Odor Remover is the enzyme/bio-based lane for organic stains and digested residues on fabrics and soft surfaces; Zero Odor is the pairing neutralizer when visible soil is gone but odor molecules persist—think chemistry binding, not stain digestion.`,
+    notInterchangeable: {
+      leftWins: `Nature’s Miracle wins on fresh or set organic stains—pet urine, vomit, food—where repeat dwell and blotting can reduce residue trapped in fibers or porous areas.`,
+      rightWins: `Zero Odor wins when washing and cleaning have removed soil but odor still ghosts on soft surfaces—especially after extraction and drying where you want a neutralizer pass, not another surfactant cycle.`,
+      bothFail: `Both fail as first moves on set grease, adhesive, mold inside walls, or heavy bathroom scale—those need different chemistry classes.`,
+    },
+    quickDecision: [
+      `If you still see a stain outline after blotting → Nature’s Miracle with label dwell and patience.`,
+      `If the area looks clean but still smells → Zero Odor after airflow and drying.`,
+      `If pad or subfloor is saturated → extraction and drying beat another SKU.`,
+    ],
+    commonMistake: `Spraying Zero Odor on a fresh stain without blotting and enzyme work, or using Nature’s Miracle once on dried grease and blaming enzymes—mixing odor neutralization with soil removal.`,
+    whenNeitherWorks: `When contamination is structural, HVAC recirculates odor, or mold is visible, bottles do not replace source removal or professional scope.`,
+  },
+  "clr-calcium-lime-rust-vs-zep-calcium-lime-rust-remover": {
+    quickAnswer: `CLR and Zep Calcium, Lime & Rust Remover are both mineral-acid descaler lanes for similar label-covered jobs; pick by surface list, label dwell, ventilation tolerance, and what you already trust for your fixtures—not by assuming one is “milder” without reading the bottle.`,
+    notInterchangeable: {
+      leftWins: `CLR wins when its label and instructions match your exact fixture and finish, and you want the widely documented household CLR workflow for routine descale and rust staining on approved surfaces.`,
+      rightWins: `Zep wins when the job is the same mineral class but its label better matches your surface set or you already use Zep for maintenance—especially if you need a consistent commercial-grade line in the garage.`,
+      bothFail: `Both fail on natural stone, damaged chrome, electronics, and any surface either label excludes—also when buildup is silicone failure or etching mistaken for scale.`,
+    },
+    quickDecision: [
+      `If you can verify both labels allow your surface → pick the one whose dwell and rinse steps you will actually follow.`,
+      `If scale is thick or recurring → improve rinse and mechanical removal, then reassess moisture before brand-swapping.`,
+      `If acid makes finishes dull or spotty → stop; you may be off-label.`,
+    ],
+    commonMistake: `Alternating CLR and Zep on the same thick scale without dwell discipline, or using either as a “general bathroom cleaner” on mixed soils—then interpreting streaks as needing the other brand.`,
+    whenNeitherWorks: `When finishes are unknown, stone is involved, or damage is etched glass, mineral chemistry from the wrong hub makes things worse—stop and route to surface-specific guidance.`,
+  },
 };
 
 function mergeExpertProductRouting(
@@ -174,6 +283,139 @@ function mergeExpertProductRouting(
     commonMistake: expert.commonMistake ?? base.commonMistake,
     whenNeitherWorks: expert.whenNeitherWorks ?? base.whenNeitherWorks,
     quickAnswer: expert.quickAnswer,
+  };
+}
+
+function firstConversionLine(text: string | undefined, maxLen: number): string {
+  if (!text?.trim()) return "";
+  const first = text.trim().split(/[.;\n]/)[0]?.trim() ?? text.trim();
+  if (first.length <= maxLen) return first;
+  return `${first.slice(0, maxLen - 1)}…`;
+}
+
+function deriveScenarioReasonRow(r: ComparisonScenarioWinner): string {
+  if (r.note?.trim()) return r.note.trim();
+  return `${r.winnerName} leads for ${r.scenarioLabel} in this library’s recommendation ranking.`;
+}
+
+function buildObjectionReasons(args: {
+  loserName: string;
+  routingQuickAnswer?: string | null;
+  leftHeroVerdict?: string | null;
+  rightHeroVerdict?: string | null;
+  /** Used when hero text does not literally include the product display name. */
+  loserHeroVerdict?: string | null;
+  scenarioReason?: string | null;
+}): string[] {
+  const reasons: string[] = [];
+
+  if (args.scenarioReason?.trim()) {
+    const s = firstConversionLine(args.scenarioReason, 220);
+    if (s) reasons.push(s);
+  }
+
+  if (args.routingQuickAnswer) {
+    const line = firstConversionLine(args.routingQuickAnswer, 220);
+    if (line && !reasons.includes(line)) reasons.push(line);
+  }
+
+  let loserVerdict =
+    args.leftHeroVerdict && args.loserName && args.leftHeroVerdict.includes(args.loserName)
+      ? args.leftHeroVerdict
+      : args.rightHeroVerdict && args.loserName && args.rightHeroVerdict.includes(args.loserName)
+        ? args.rightHeroVerdict
+        : null;
+
+  if (!loserVerdict?.trim() && args.loserHeroVerdict?.trim()) {
+    loserVerdict = args.loserHeroVerdict;
+  }
+
+  if (loserVerdict) {
+    const line = firstConversionLine(loserVerdict, 220);
+    if (line && !reasons.includes(line)) reasons.push(line);
+  }
+
+  if (reasons.length === 0) {
+    reasons.push(`${args.loserName} is less ideal as the default choice for this problem.`);
+  }
+
+  return reasons.slice(0, 3);
+}
+
+function buildProductComparisonConversionLayer(
+  left: ProductDetailView,
+  right: ProductDetailView,
+  routing: ProductComparisonRouting & { quickAnswer?: string },
+  scenarioRows: AuthorityProductScenarioWinner[],
+): Pick<
+  AuthorityComparisonPageData,
+  "oneLineVerdict" | "winnerBlock" | "productPickLines" | "objectionBlock"
+> {
+  const first = scenarioRows[0];
+  const scenarioWinnerSlug = first?.winnerSlug;
+
+  const winnerFromScenario =
+    scenarioWinnerSlug === left.slug ? left : scenarioWinnerSlug === right.slug ? right : null;
+
+  const winner =
+    winnerFromScenario ?? (left.finalScore >= right.finalScore ? left : right);
+  const winnerName = winner.name;
+
+  const scenarioReason =
+    winnerFromScenario && first?.reason?.trim() ? first.reason.trim() : undefined;
+
+  const fallbackReason =
+    firstConversionLine(routing.quickAnswer, 200) ||
+    firstConversionLine(winner.heroVerdict, 140) ||
+    `${winnerName} ranks higher in this library for typical labeled uses—pick it when the label matches your soil and surface.`;
+
+  const reason = scenarioReason
+    ? firstConversionLine(scenarioReason, 200)
+    : fallbackReason;
+
+  const oneLineVerdict = `${winnerName} is the better choice for this problem.`;
+
+  const loser = winner.slug === left.slug ? right : left;
+  const loserName = loser.name;
+
+  const objectionBlock = {
+    losingProduct: loser.slug,
+    title: `Why not start with ${loserName}?`,
+    reasons: buildObjectionReasons({
+      loserName,
+      routingQuickAnswer: routing.quickAnswer ?? null,
+      leftHeroVerdict: left.heroVerdict ?? null,
+      rightHeroVerdict: right.heroVerdict ?? null,
+      loserHeroVerdict: loser.heroVerdict ?? null,
+      scenarioReason: scenarioReason ?? null,
+    }),
+  };
+
+  const leftWins = routing.notInterchangeable?.leftWins;
+  const rightWins = routing.notInterchangeable?.rightWins;
+
+  return {
+    oneLineVerdict,
+    winnerBlock: {
+      title: "Best choice for most people",
+      product: winner.slug,
+      reason,
+    },
+    objectionBlock,
+    productPickLines: [
+      {
+        slug: left.slug,
+        bestFor:
+          firstConversionLine(leftWins, 220) ||
+          `Choose ${left.name} when its labeled lane matches your soil and surface.`,
+      },
+      {
+        slug: right.slug,
+        bestFor:
+          firstConversionLine(rightWins, 220) ||
+          `Choose ${right.name} when its labeled lane matches your soil and surface.`,
+      },
+    ],
   };
 }
 
@@ -422,6 +664,7 @@ export function buildProductComparisonPage(comparisonSlug: string): AuthorityCom
     winnerName: r.winnerName,
     runnerUp: r.runnerUp,
     note: r.note,
+    reason: deriveScenarioReasonRow(r),
   }));
 
   let topSharedProblemSlug: string | undefined;
@@ -437,6 +680,7 @@ export function buildProductComparisonPage(comparisonSlug: string): AuthorityCom
 
   const slug = normalizeComparisonSlug(left.slug, right.slug);
   const routing = mergeExpertProductRouting(slug, buildProductComparisonRouting(left, right));
+  const conversion = buildProductComparisonConversionLayer(left, right, routing, productScenarioWinners);
 
   return {
     type: "product_comparison",
@@ -446,6 +690,7 @@ export function buildProductComparisonPage(comparisonSlug: string): AuthorityCom
     title: `${left.name} vs ${right.name}`,
     description: `Side-by-side cleaning product comparison: chemistry, best fits, and safety cues from the Servelink product library.`,
     intro: `Both products appear in the same decision system, but they win in different lanes. Use this page to see chemistry class, labeled use cases, and where each SKU is intentionally weaker—then jump into the full dossiers for implementation detail.`,
+    ...conversion,
     quickAnswer:
       routing.quickAnswer ??
       `Choose between ${left.name} and ${right.name} by matching visible soil to each product’s labeled lane—if the failure is mineral scale, hidden moisture, or an off-label surface, neither SKU is the right next step until the problem hub names the issue.`,

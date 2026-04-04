@@ -1,7 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
+import { ProductComparisonPriorityStrip } from "./ProductComparisonPriorityStrip";
 import { ProductConversionLayer } from "./ProductConversionLayer";
+import { deriveComparisonSlug } from "./productConversionDerives";
+import RelatedProducts from "@/components/products/RelatedProducts";
+import { getProductBySlug } from "@/lib/products/productRegistry";
 
 describe("ProductConversionLayer", () => {
   it("renders reinforced product-page funnel elements for bona", () => {
@@ -31,5 +35,41 @@ describe("ProductConversionLayer", () => {
     expect(screen.queryByText(/Ready to move forward/i)).toBeNull();
     expect(screen.queryByText(/Buy this option/i)).toBeNull();
     expect(screen.queryByText(/Buy this product now/i)).toBeNull();
+  });
+});
+
+describe("product page funnel order (compare strip before related)", () => {
+  it("shows primary problem CTA, priority compare strip, then related products in document order", () => {
+    const product = getProductBySlug("clr-calcium-lime-rust");
+    expect(product).not.toBeNull();
+
+    const comparisonSlug = deriveComparisonSlug(product!.slug);
+    expect(comparisonSlug).toBeTruthy();
+
+    render(
+      <div>
+        <ProductConversionLayer productSlug={product!.slug} />
+        <ProductComparisonPriorityStrip
+          productSlug={product!.slug}
+          comparisonSlug={comparisonSlug!}
+        />
+        <section data-testid="product-related-products">
+          <h2>Related products</h2>
+          <RelatedProducts
+            product={product!}
+            mode="better"
+            trackingContext={{ pageType: "product_page", sourcePageType: "related_products" }}
+          />
+        </section>
+      </div>,
+    );
+
+    expect(screen.getByText(/Best fit problem page/i)).toBeInTheDocument();
+    expect(screen.getByTestId("product-priority-compare-strip")).toBeInTheDocument();
+    expect(screen.getByText(/Compare before you buy/i)).toBeInTheDocument();
+
+    const strip = screen.getByTestId("product-priority-compare-strip");
+    const related = screen.getByTestId("product-related-products");
+    expect(strip.compareDocumentPosition(related) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

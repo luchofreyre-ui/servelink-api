@@ -18,9 +18,30 @@ export function ProductConversionLayer({ productSlug }: Props) {
   const problemUseChips = deriveProblemUseChips(productSlug);
   const purchaseUrl = getProductPurchaseUrl(productSlug);
   const hasPurchaseUrl = Boolean(purchaseUrl && purchaseUrl !== "#");
+  const primaryProblem = problemUseChips[0] ?? null;
 
   return (
     <div className="mt-6 space-y-4">
+      {primaryProblem ? (
+        <div className="rounded-xl border border-neutral-200 bg-white p-4">
+          <div className="mb-1 text-sm font-medium">Best fit problem page</div>
+          <div className="mb-3 text-xs text-neutral-500">
+            Start with the exact cleaning guide this product is most closely tied to.
+          </div>
+
+          <TrackedProductContextLink
+            href={primaryProblem.href}
+            productSlug={productSlug}
+            roleLabel="product_problem_chip"
+            position={0}
+            label={`product_primary_problem:${primaryProblem.slug}`}
+            className="inline-block rounded-lg border border-neutral-900 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-neutral-50"
+          >
+            {primaryProblem.title}
+          </TrackedProductContextLink>
+        </div>
+      ) : null}
+
       {problemUseChips.length > 0 ? (
         <div className="rounded-xl border border-neutral-200 bg-white p-4">
           <div className="mb-1 text-sm font-medium">Used for these problems</div>
@@ -35,8 +56,8 @@ export function ProductConversionLayer({ productSlug }: Props) {
                 href={chip.href}
                 productSlug={productSlug}
                 roleLabel="product_problem_chip"
-                position={index}
-                label={`product_context_chip:${chip.slug}:position_${index}`}
+                position={index + 1}
+                label={`product_context_chip:${chip.slug}:position_${index + 1}`}
                 className="rounded-full border border-neutral-200 px-3 py-1 text-xs text-neutral-700 hover:bg-neutral-50"
               >
                 {chip.title}
