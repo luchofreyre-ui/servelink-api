@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import { AUTHORITY_PROBLEM_SLUGS } from "@/authority/data/authorityTaxonomy";
-import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
-import { buildAuthorityProblemDetailMetadata } from "@/authority/metadata/authorityMetadata";
 import { AuthorityProblemDetailPage } from "@/components/authority/AuthorityProblemDetailPage";
 import { PublicEncyclopediaDocumentPage } from "@/components/encyclopedia/PublicEncyclopediaDocumentPage";
-import { isAuthorityOwnedProblemHub } from "@/lib/authority/authorityOwnedProblemHubs";
+import { buildAuthorityProblemDetailMetadata } from "@/lib/authority/buildAuthorityProblemDetailMetadata";
+import { AUTHORITY_OWNED_PROBLEM_SLUGS } from "@/lib/authority/authorityOwnedProblemHubs";
+import { getProblemPageBySlug } from "@/lib/authority/authorityProblemPageData";
 import {
   getEncyclopediaDocumentByCategoryAndSlug,
   getPublishedEncyclopediaSlugsByCategory,
@@ -25,17 +25,17 @@ export function generateStaticParams() {
   return Array.from(deduped.values());
 }
 
-export async function generateMetadata({
-  params,
-}: {
+type Props = {
   params: Promise<{ problemSlug: string }>;
-}) {
+};
+
+export async function generateMetadata({ params }: Props) {
   const { problemSlug } = await params;
 
-  if (isAuthorityOwnedProblemHub(problemSlug)) {
-    const page = getProblemPageBySlug(problemSlug);
-    if (!page) return {};
-    return buildAuthorityProblemDetailMetadata(page);
+  if (AUTHORITY_OWNED_PROBLEM_SLUGS.has(problemSlug)) {
+    const data = getProblemPageBySlug(problemSlug);
+    if (!data) return {};
+    return buildAuthorityProblemDetailMetadata(data);
   }
 
   const pipelineDocument = getEncyclopediaDocumentByCategoryAndSlug(
@@ -55,14 +55,10 @@ export async function generateMetadata({
   return buildAuthorityProblemDetailMetadata(page);
 }
 
-export default async function ProblemDetailRoute({
-  params,
-}: {
-  params: Promise<{ problemSlug: string }>;
-}) {
+export default async function ProblemPage({ params }: Props) {
   const { problemSlug } = await params;
 
-  if (isAuthorityOwnedProblemHub(problemSlug)) {
+  if (AUTHORITY_OWNED_PROBLEM_SLUGS.has(problemSlug)) {
     const data = getProblemPageBySlug(problemSlug);
     if (!data) notFound();
     return <AuthorityProblemDetailPage data={data} />;

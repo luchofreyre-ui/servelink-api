@@ -4,16 +4,14 @@
  *
  * Keep aligned with `buildExecutableEncyclopediaRedirects` (no Next redirect away from these paths).
  */
-export const AUTHORITY_OWNED_PROBLEM_SLUGS: readonly string[] = [
+export const AUTHORITY_OWNED_PROBLEM_SLUGS = new Set<string>([
   "dust-buildup",
   "grease-buildup",
   "limescale-buildup",
   "product-residue-buildup",
   "surface-haze",
-];
-
-const slugSet = new Set<string>(AUTHORITY_OWNED_PROBLEM_SLUGS);
+]);
 
 export function isAuthorityOwnedProblemHub(slug: string): boolean {
-  return slugSet.has(slug);
+  return AUTHORITY_OWNED_PROBLEM_SLUGS.has(slug);
 }

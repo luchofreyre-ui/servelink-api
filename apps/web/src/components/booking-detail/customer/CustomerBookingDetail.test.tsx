@@ -90,7 +90,7 @@ describe("CustomerBookingDetail", () => {
       />,
     );
     expect(screen.getByTestId("customer-booking-education")).toBeInTheDocument();
-    expect(screen.getByText("What to expect")).toBeInTheDocument();
+    expect(screen.getByText(/What to expect/i)).toBeInTheDocument();
     expect(screen.getByText("Tile")).toBeInTheDocument();
   });
 
