@@ -1,5 +1,6 @@
-import Link from "next/link";
 import type { SiteSearchDocument } from "@/types/search";
+
+import TrackedSearchResultLink from "./TrackedSearchResultLink";
 
 interface SearchResultsPageProps {
   query: string;
@@ -38,6 +39,30 @@ function formatTypeLabel(type: SiteSearchDocument["type"]): string {
   }
 }
 
+function isAuthorityProblem(result: SiteSearchDocument): boolean {
+  return result.source === "authority" && result.type === "problem";
+}
+
+function getSearchIntentSublabel(result: SiteSearchDocument): string | null {
+  if (isAuthorityProblem(result)) {
+    return "Start here";
+  }
+  if (result.type === "product_comparison") {
+    return "Compare options";
+  }
+  if (result.type === "product") {
+    return "Buy recommended product";
+  }
+  return null;
+}
+
+function getSearchDisplayTitle(result: SiteSearchDocument): string {
+  if (result.type === "product_comparison" && result.title.startsWith("Compare ")) {
+    return result.title;
+  }
+  return result.title;
+}
+
 function groupResultsByType(
   results: SiteSearchDocument[],
 ): { type: SiteSearchDocument["type"]; items: SiteSearchDocument[] }[] {
@@ -64,40 +89,69 @@ function groupResultsByType(
 function ResultArticle({
   result,
   bestMatchId,
+  isTopResult,
+  index,
 }: {
   result: SiteSearchDocument;
   bestMatchId: string | null;
+  isTopResult: boolean;
+  index: number;
 }) {
   const isBest = bestMatchId !== null && result.id === bestMatchId;
+  const intentSublabel = getSearchIntentSublabel(result);
+  const displayTitle = getSearchDisplayTitle(result);
 
   return (
     <article
-      className="rounded-2xl border border-[#C9B27C]/20 bg-white/80 p-6"
+      className={
+        isTopResult
+          ? "rounded-xl border border-neutral-900 bg-white p-4"
+          : "rounded-xl border border-neutral-200 bg-white p-4"
+      }
       data-testid={isBest ? "search-best-match" : undefined}
     >
+      {isTopResult && isAuthorityProblem(result) ? (
+        <div className="mb-2 text-xs font-medium text-neutral-700">Best place to start</div>
+      ) : null}
+
       <div className="flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">
         <span>{formatTypeLabel(result.type)}</span>
         <span>•</span>
         <span>{formatSourceLabel(result.source)}</span>
       </div>
 
+      {intentSublabel ? (
+        <div className="mt-1 text-xs text-neutral-500">{intentSublabel}</div>
+      ) : null}
+
       <h2 className="mt-3 font-[var(--font-poppins)] text-2xl font-semibold text-[#0F172A]">
-        <Link href={result.href} className="hover:text-[#0D9488]">
-          {result.title}
-        </Link>
+        <TrackedSearchResultLink result={result} index={index} className="hover:text-[#0D9488]">
+          {displayTitle}
+        </TrackedSearchResultLink>
       </h2>
 
-      <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#475569]">
-        {result.description}
-      </p>
+      {result.type === "product_comparison" ? (
+        <div className="mt-1 text-xs text-neutral-500">See which option is better for this problem.</div>
+      ) : null}
+
+      {result.type === "product" ? (
+        <div className="mt-1 text-xs text-neutral-500">Direct buy path from the recommended solution.</div>
+      ) : null}
+
+      {result.description ? (
+        <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#475569]">
+          {result.description}
+        </p>
+      ) : null}
 
       <div className="mt-4">
-        <Link
-          href={result.href}
+        <TrackedSearchResultLink
+          result={result}
+          index={index}
           className="font-[var(--font-manrope)] text-sm font-medium text-[#0D9488] hover:underline"
         >
           Open page
-        </Link>
+        </TrackedSearchResultLink>
       </div>
     </article>
   );
@@ -108,6 +162,8 @@ export function SearchResultsPage({
   results,
 }: SearchResultsPageProps) {
   const bestMatchId = results.length > 0 ? results[0]!.id : null;
+  const topId = results[0]?.id ?? null;
+  const indexById = new Map(results.map((r, i) => [r.id, i] as const));
   const groups = groupResultsByType(results);
 
   return (
@@ -149,6 +205,8 @@ export function SearchResultsPage({
                     key={result.id}
                     result={result}
                     bestMatchId={bestMatchId}
+                    isTopResult={topId !== null && result.id === topId}
+                    index={indexById.get(result.id) ?? 0}
                   />
                 ))}
               </div>

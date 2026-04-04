@@ -3,6 +3,7 @@ export type ProductRecommendationRoleLabel =
   | "heavy"
   | "maintenance"
   | "professional"
+  | "comparison_entry"
   | "unlabeled";
 
 import type { ProductRecommendationTrackingContext } from "@/lib/products/productRecommendationTrackingTypes";
@@ -18,7 +19,7 @@ export type ProductRecommendationClickEvent = {
   surfaceSlug?: string | null;
   intent?: string | null;
   isPinned?: boolean;
-  destinationType: "amazon" | "internal_product" | "external" | "unknown";
+  destinationType: "amazon" | "internal_product" | "compare" | "external" | "unknown";
   destinationUrl: string;
 };
 
@@ -38,6 +39,7 @@ export function getRecommendationDestinationType(
 ): ProductRecommendationClickEvent["destinationType"] {
   if (!url) return "unknown";
   if (/amazon\./i.test(url)) return "amazon";
+  if (url.startsWith("/compare/")) return "compare";
   if (url.startsWith("/products/")) return "internal_product";
   if (isExternalUrl(url)) return "external";
   return "unknown";
@@ -49,6 +51,7 @@ export function normalizeRoleLabel(label?: string | null): ProductRecommendation
   const normalized = label.trim().toLowerCase();
 
   if (normalized === "best overall" || normalized === "start here") return "best_overall";
+  if (normalized === "heavy") return "heavy";
   if (
     normalized === "heavy buildup" ||
     normalized === "best for heavy buildup" ||
@@ -63,6 +66,9 @@ export function normalizeRoleLabel(label?: string | null): ProductRecommendation
     normalized === "stronger option"
   )
     return "professional";
+  if (normalized === "comparison entry" || normalized === "comparison_entry") return "comparison_entry";
+  if (normalized === "search_problem_result") return "comparison_entry";
+  if (normalized === "search_result") return "comparison_entry";
 
   return "unlabeled";
 }

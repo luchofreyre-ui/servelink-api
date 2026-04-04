@@ -15,6 +15,9 @@ export type SearchDocumentType =
   | "product"
   | "product_comparison";
 
+/** Alias for search result rows (e.g. tracking + UI). */
+export type SearchDocument = SiteSearchDocument;
+
 export interface SiteSearchDocument {
   id: string;
   source: SearchDocumentSource;
