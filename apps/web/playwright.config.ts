@@ -8,7 +8,7 @@ export default defineConfig({
   workers: 1,
   reporter: [
     ["list"],
-    ["html", { open: "never" }],
+    ["json", { outputFile: process.env.PLAYWRIGHT_JSON_REPORT || "/tmp/playwright-report.json" }],
   ],
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",

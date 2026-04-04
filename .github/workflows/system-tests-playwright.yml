@@ -178,14 +178,10 @@ jobs:
           if [ -z "${PW_ARGS}" ]; then
             PW_ARGS="tests/playwright/smoke"
           fi
-          # CLI `--reporter=list,json > "${PLAYWRIGHT_JSON_REPORT}"` redirects ALL stdout into the file, so the list reporter never appears in Actions logs.
-          # Merge config: list prints to the log; json with outputFile writes only to the file (valid JSON for upload:playwright).
-          python3 -c "open('playwright.github-actions.reporter.ts','w').write('import { defineConfig } from \\\"@playwright/test\\\";\\n\\n' + 'export default defineConfig({\\n' + '  reporter: [\\n' + '    [\\\"list\\\"],\\n' + '    [\\\"json\\\", { outputFile: process.env.PLAYWRIGHT_JSON_REPORT || \\\"/tmp/playwright-report.json\\\" }],\\n' + '  ],\\n' + '});\\n')" || exit 1
-          echo "Running: npx playwright test ${PW_ARGS} -c playwright.config.ts -c playwright.github-actions.reporter.ts (list + json file)"
+          echo "Running: npx playwright test ${PW_ARGS} -c playwright.config.ts"
           # shellcheck disable=SC2086
-          npx playwright test ${PW_ARGS} -c playwright.config.ts -c playwright.github-actions.reporter.ts
+          npx playwright test ${PW_ARGS} -c playwright.config.ts
           PW_EXIT=$?
-          rm -f playwright.github-actions.reporter.ts
           echo "playwright_exit=${PW_EXIT}" >> "${GITHUB_OUTPUT}"
           exit ${PW_EXIT}
 
