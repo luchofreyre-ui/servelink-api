@@ -98,6 +98,8 @@ export type AuthorityProblemPageData = {
   problemDefinitionLine?: string;
   /** Use + do + optional escalation; paired with problemDefinitionLine for pilot layouts. */
   executionQuickFix?: AuthorityProblemExecutionQuickFix;
+  /** Short mechanism line(s) for execution-first layouts (replaces “best method” above the fold). */
+  whyThisWorksShort?: string;
   category: AuthorityProblemCategory;
   symptoms: string[];
   causes: string[];

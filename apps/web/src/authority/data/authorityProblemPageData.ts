@@ -123,11 +123,12 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
     problemDefinitionLine:
       "A film of soap residue, hard-water minerals, and body oils on wet surfaces—often mistaken for permanent damage.",
     executionQuickFix: {
-      use: "Bathroom-rated neutral or mild surfactant cleaner matched to the surface.",
-      do: "Spray, brief dwell, soft scrub, rinse completely.",
-      ifNeeded:
-        "Still there? Use a labeled soap-scum remover—never mix products. If the finish dulls or feels rough, stop—that’s damage, not more scum.",
+      use: "Neutral bathroom cleaner (non-abrasive).",
+      do: "Spray → wait 1–2 min → soft scrub → rinse.",
+      ifNeeded: "Stronger cleaner if needed. No abrasives on delicate surfaces.",
     },
+    whyThisWorksShort:
+      "Soap scum is a surface film. Gentle cleaners break it up without damaging the material.",
     whatItUsuallyIs:
       "Soap scum is a surface film made from soap residue, minerals in water, and body oils.\n\nIt builds up in layers and can look like staining or damage, especially on grout, tile, and glass.",
     whyItHappens:

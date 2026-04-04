@@ -358,12 +358,17 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
                 title={data.title}
                 description={data.problemDefinitionLine!}
               />
-              <div
-                className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start lg:gap-5"
-                data-testid="soap-scum-top-fold"
-              >
+              <div className="w-full space-y-0" data-testid="soap-scum-top-fold">
                 <AuthorityProblemQuickFix {...data.executionQuickFix!} />
-                <ProblemBestMethodCard methodParsed={methodParsed} />
+                {data.whyThisWorksShort ?
+                  <div
+                    id="problem-methods"
+                    className="mt-6 scroll-mt-28 text-sm text-zinc-600"
+                  >
+                    <div className="mb-1 font-semibold">Why this works</div>
+                    <div>{data.whyThisWorksShort}</div>
+                  </div>
+                : null}
               </div>
             </div>
           </section>
