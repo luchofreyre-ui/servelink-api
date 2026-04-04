@@ -1,6 +1,7 @@
 export type SearchDocumentSource =
   | "authority"
-  | "encyclopedia";
+  | "encyclopedia"
+  | "injected";
 
 export type SearchDocumentType =
   | "problem"
@@ -10,7 +11,9 @@ export type SearchDocumentType =
   | "question"
   | "cluster"
   | "comparison"
-  | "encyclopedia";
+  | "encyclopedia"
+  | "product"
+  | "product_comparison";
 
 export interface SiteSearchDocument {
   id: string;

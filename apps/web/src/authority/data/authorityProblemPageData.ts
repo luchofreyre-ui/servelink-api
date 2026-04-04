@@ -193,6 +193,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
         href: "/products/weiman-stainless-steel-cleaner-polish",
       },
     ],
+    productScenarios: [
+      {
+        problem: "grease buildup",
+        surface: "kitchen",
+        products: [
+          { slug: "dawn-platinum-dish-spray", name: "Dawn Platinum EZ-Squeeze Dish Spray" },
+          { slug: "krud-kutter-kitchen-degreaser", name: "Krud Kutter Kitchen Degreaser" },
+        ],
+      },
+    ],
   },
   "hard-water-deposits": {
     ...prob("hard-water-deposits", "Hard water deposits", "mineral"),
@@ -222,6 +232,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
         label: "Stone or unknown sealers",
         body: "Pause and use stone-rated products; vinegar and CLR-class acids can etch or dull the wrong finish.",
         productSlugs: ["granite-gold-daily-cleaner"],
+      },
+    ],
+    productScenarios: [
+      {
+        problem: "hard water",
+        surface: "fixtures",
+        products: [
+          { slug: "clr-calcium-lime-rust", name: "CLR Calcium, Lime & Rust Remover" },
+          { slug: "zep-calcium-lime-rust-remover", name: "Zep Calcium, Lime & Rust Remover" },
+        ],
       },
     ],
   },
@@ -255,7 +275,15 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
       },
     ],
     productScenarios: [
-      { problem: "dust buildup", surface: "hardwood" },
+      {
+        problem: "dust buildup",
+        surface: "hardwood",
+        products: [
+          { slug: "bona-hard-surface-floor-cleaner", name: "Bona Hard-Surface Floor Cleaner" },
+          { slug: "zep-neutral-ph-floor-cleaner", name: "Zep Neutral pH Floor Cleaner" },
+          { slug: "method-all-purpose-cleaner", name: "Method All-Purpose Cleaner (Pink Grapefruit)" },
+        ],
+      },
       { problem: "dust buildup", surface: "laminate" },
       { problem: "dust buildup", surface: "tile" },
     ],
@@ -724,7 +752,15 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
       },
     ],
     productScenarios: [
-      { problem: "surface haze", surface: "shower glass" },
+      {
+        problem: "surface haze",
+        surface: "shower glass",
+        products: [
+          { slug: "windex-original-glass-cleaner", name: "Windex Original Glass Cleaner" },
+          { slug: "invisible-glass-premium-glass-cleaner", name: "Invisible Glass Premium Glass Cleaner" },
+          { slug: "method-daily-shower-spray", name: "Method Daily Shower Spray" },
+        ],
+      },
       { problem: "surface haze", surface: "glass" },
       { problem: "surface haze", surface: "quartz" },
     ],
@@ -752,7 +788,7 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
       {
         label: "Kitchen films on counters and appliances",
         body: "Degrease gently, then rinse—heavy fragrance cleaners often leave the most visible film.",
-        productSlugs: ["dawn-platinum-dish-spray", "krud-kutter-kitchen-degreaser"],
+        productSlugs: ["dawn-platinum-dish-spray", "simple-green-all-purpose-cleaner"],
       },
       {
         label: "Daily stone or sealed tops",
@@ -766,7 +802,15 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
       },
     ],
     productScenarios: [
-      { problem: "product residue", surface: "laminate" },
+      {
+        problem: "product residue",
+        surface: "laminate",
+        products: [
+          { slug: "dawn-platinum-dish-spray", name: "Dawn Platinum EZ-Squeeze Dish Spray" },
+          { slug: "simple-green-all-purpose-cleaner", name: "Simple Green All-Purpose Cleaner" },
+          { slug: "granite-gold-daily-cleaner", name: "Granite Gold Daily Cleaner" },
+        ],
+      },
       { problem: "product residue", surface: "quartz" },
       { problem: "product residue", surface: "glass" },
     ],

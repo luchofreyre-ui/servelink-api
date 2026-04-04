@@ -6,6 +6,11 @@ interface SearchResultsPageProps {
   results: SiteSearchDocument[];
 }
 
+function formatSourceLabel(source: SiteSearchDocument["source"]): string {
+  if (source === "injected") return "Authority stack";
+  return source;
+}
+
 function formatTypeLabel(type: SiteSearchDocument["type"]): string {
   switch (type) {
     case "problem":
@@ -22,6 +27,10 @@ function formatTypeLabel(type: SiteSearchDocument["type"]): string {
       return "Cluster";
     case "comparison":
       return "Comparison";
+    case "product_comparison":
+      return "Compare";
+    case "product":
+      return "Product";
     case "encyclopedia":
       return "Encyclopedia";
     default:
@@ -69,7 +78,7 @@ function ResultArticle({
       <div className="flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">
         <span>{formatTypeLabel(result.type)}</span>
         <span>•</span>
-        <span>{result.source}</span>
+        <span>{formatSourceLabel(result.source)}</span>
       </div>
 
       <h2 className="mt-3 font-[var(--font-poppins)] text-2xl font-semibold text-[#0F172A]">
