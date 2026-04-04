@@ -67,8 +67,15 @@ export function autoResolveGaps(): void {
   }
 }
 
-/** Lightweight summary for dashboards and cron checks. */
-export function summarizeMonetizationHealth(): { gapCount: number; hasGaps: boolean } {
-  const gaps = buildFunnelGapReport();
-  return { gapCount: gaps.length, hasGaps: gaps.length > 0 };
+/**
+ * Lightweight summary for dashboards and cron checks.
+ * Pass `gapData` to summarize a known list; omit to use the live `buildFunnelGapReport()` snapshot.
+ */
+export function summarizeMonetizationHealth(
+  gapData?: readonly unknown[] | null,
+): { gapCount: number; hasGaps: boolean } {
+  const gaps =
+    gapData !== undefined && gapData !== null ? gapData : buildFunnelGapReport();
+  const gapCount = Array.isArray(gaps) ? gaps.length : 0;
+  return { gapCount, hasGaps: gapCount > 0 };
 }

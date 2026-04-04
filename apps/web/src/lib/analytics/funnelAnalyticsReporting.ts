@@ -1,47 +1,73 @@
-import { getFunnelUserPreferences } from "@/lib/analytics/funnelSync";
+import type { FunnelUserPreferences } from "@/lib/analytics/funnelSync";
 import {
   countFunnelStageInteractions,
+  getFunnelUserPreferences,
   listRecentFunnelStageEvents,
-} from "@/lib/analytics/funnelStageAnalytics";
+  type FunnelStageEvent,
+} from "@/lib/analytics/funnelAnalytics";
 
 export type FunnelReportOptions = {
-  /** Optional label for the report header (e.g. admin session id). */
   sessionLabel?: string;
 };
 
+export type FunnelReportData = {
+  sessionLabel: string;
+  /** True when built on the server — no localStorage reads. */
+  serverOnly?: boolean;
+  preferences: FunnelUserPreferences;
+  interactions: Record<string, number>;
+  events: FunnelStageEvent[];
+};
+
 /**
- * Builds a text summary of local funnel prefs + recent stage events (browser only).
- * On the server, returns a short notice—no localStorage.
+ * Structured funnel snapshot: preferences, per-stage counts, and recent events.
+ * In the browser reads localStorage; on the server returns empty structures + `serverOnly`.
  */
-export function generateFunnelReport(options?: FunnelReportOptions): string {
-  const label = options?.sessionLabel ?? "local session";
+export function generateFunnelReport(options?: FunnelReportOptions): FunnelReportData {
+  const sessionLabel = options?.sessionLabel ?? "";
 
   if (typeof window === "undefined") {
+    return {
+      sessionLabel,
+      serverOnly: true,
+      preferences: {},
+      interactions: {},
+      events: [],
+    };
+  }
+
+  return {
+    sessionLabel,
+    preferences: getFunnelUserPreferences(),
+    interactions: countFunnelStageInteractions(),
+    events: listRecentFunnelStageEvents(25),
+  };
+}
+
+/** Plain-text view for logs or copy/export. */
+export function formatFunnelReportAsText(data: FunnelReportData): string {
+  if (data.serverOnly) {
     return [
-      `Funnel performance report (${label})`,
+      `Funnel performance report (${data.sessionLabel || "local session"})`,
       "",
       "Detailed metrics are collected in the browser (localStorage).",
       "Open this view client-side to see preferences and recent stage actions.",
     ].join("\n");
   }
 
-  const prefs = getFunnelUserPreferences();
-  const counts = countFunnelStageInteractions();
-  const recent = listRecentFunnelStageEvents(25);
-
   const lines: string[] = [
-    `Funnel performance report (${label})`,
+    `Funnel performance report (${data.sessionLabel || "local session"})`,
     "",
     "Preferences:",
-    JSON.stringify(prefs, null, 2),
+    JSON.stringify(data.preferences, null, 2),
     "",
     "Stage interaction counts:",
-    JSON.stringify(counts, null, 2),
+    JSON.stringify(data.interactions, null, 2),
     "",
-    `Recent stage events (up to ${recent.length}):`,
+    `Recent stage events (up to ${data.events.length}):`,
   ];
 
-  for (const e of recent) {
+  for (const e of data.events) {
     lines.push(`- ${e.at} | ${e.stage} | ${JSON.stringify(e.detail)}`);
   }
 

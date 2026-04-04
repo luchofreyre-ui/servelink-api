@@ -1,4 +1,5 @@
 import { formatFunnelGapLines } from "@/lib/funnel/funnelGapAudit";
+import { summarizeMonetizationHealth } from "@/lib/funnel/funnelGapExpansion";
 import type { FunnelGap } from "@/lib/funnel/funnelGapReport";
 
 type Props = {
@@ -10,12 +11,12 @@ type Props = {
  * Server-fed monetization snapshot (gap report is not available in the browser bundle).
  */
 export function MonetizationHealthDashboard({ monetizationGaps, monetizationGapLines }: Props) {
-  const gapCount = monetizationGaps.length;
+  const { gapCount, hasGaps } = summarizeMonetizationHealth(monetizationGaps);
   const lines =
     monetizationGapLines.length > 0 ?
       monetizationGapLines
     : formatFunnelGapLines(monetizationGaps);
-  const status = gapCount === 0 ? "Healthy" : "Issues detected";
+  const status = !hasGaps ? "Healthy" : "Issues detected";
 
   return (
     <div className="space-y-3 rounded-xl border border-neutral-200 bg-white p-4">

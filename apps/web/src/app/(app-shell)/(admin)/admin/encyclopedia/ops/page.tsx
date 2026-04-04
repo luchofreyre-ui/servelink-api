@@ -6,7 +6,7 @@ import ApiEncyclopediaMigrationPanel from "@/components/admin/encyclopedia/ApiEn
 import ApiEncyclopediaOpsPanel from "@/components/admin/encyclopedia/ApiEncyclopediaOpsPanel";
 import EncyclopediaOpsDashboard from "@/components/admin/encyclopedia/EncyclopediaOpsDashboard";
 import EncyclopediaWeakPageRepairPanel from "@/components/admin/encyclopedia/EncyclopediaWeakPageRepairPanel";
-import { FunnelAnalyticsReport } from "@/components/admin/analytics/FunnelAnalyticsReport";
+import FunnelAnalyticsReport from "@/components/admin/analytics/FunnelAnalyticsReport";
 import { FunnelStageDashboard } from "@/components/admin/FunnelStageDashboard";
 import { MonetizationGapActionReport } from "@/components/admin/MonetizationGapActionReport";
 import { MonetizationHealthDashboard } from "@/components/admin/MonetizationHealthDashboard";

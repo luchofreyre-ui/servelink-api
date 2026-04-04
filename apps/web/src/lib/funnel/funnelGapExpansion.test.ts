@@ -22,6 +22,19 @@ describe("summarizeMonetizationHealth", () => {
     expect(s.gapCount).toBe(gaps.length);
     expect(s.hasGaps).toBe(gaps.length > 0);
   });
+
+  it("summarizes monetization health from explicit gap data", () => {
+    const mockGapData = ["gap1", "gap2"];
+    const result = summarizeMonetizationHealth(mockGapData);
+    expect(result.gapCount).toBe(2);
+    expect(result.hasGaps).toBe(true);
+  });
+
+  it("reports no gaps for empty explicit list", () => {
+    const result = summarizeMonetizationHealth([]);
+    expect(result.gapCount).toBe(0);
+    expect(result.hasGaps).toBe(false);
+  });
 });
 
 describe("warnMonetizationExpansionGaps", () => {
