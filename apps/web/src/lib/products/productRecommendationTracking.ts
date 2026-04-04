@@ -83,10 +83,13 @@ export function buildProductRecommendationClickHandler(args: {
   trackingContext?: ProductRecommendationTrackingContext;
   pinnedSlugs?: readonly string[];
   label?: string;
+  beforeTrack?: () => void;
 }) {
-  const { productSlug, roleLabel, position, href, trackingContext, pinnedSlugs, label } = args;
+  const { productSlug, roleLabel, position, href, trackingContext, pinnedSlugs, label, beforeTrack } =
+    args;
 
   return function handleRecommendationClick() {
+    beforeTrack?.();
     trackProductRecommendationClick({
       eventName: "product_recommendation_click",
       productSlug,

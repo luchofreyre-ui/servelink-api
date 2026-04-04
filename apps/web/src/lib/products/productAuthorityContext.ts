@@ -7,6 +7,7 @@ import { getBestComparePair } from "@/lib/products/bestComparePair";
 import { getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
+import { sortProblemChipsByProductClickRank } from "@/lib/products/productClickData";
 
 export type ProblemUseChip = {
   slug: string;
@@ -156,11 +157,14 @@ export function getProductAuthorityContext(productSlug: string): ProductAuthorit
 
   const comparisonSlug = primary?.compareHref ? primary.compareHref.replace("/compare/products/", "") : null;
 
-  const problemUseChips = sorted.slice(0, 6).map(({ page }) => ({
-    slug: page.slug,
-    title: page.title,
-    href: `/problems/${page.slug}`,
-  }));
+  const problemUseChips = sortProblemChipsByProductClickRank(
+    sorted.slice(0, 6).map(({ page }) => ({
+      slug: page.slug,
+      title: page.title,
+      href: `/problems/${page.slug}`,
+    })),
+    productSlug,
+  );
 
   return {
     problemContext: primary?.problemContext ?? null,

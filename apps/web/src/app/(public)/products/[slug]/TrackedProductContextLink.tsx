@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { recordProductClick } from "@/lib/products/productClickData";
 import {
   getRecommendationDestinationType,
   normalizeRoleLabel,
@@ -46,6 +47,10 @@ export function TrackedProductContextLink({
       href={href}
       className={className}
       onClick={() => {
+        const problemMatch = /^\/problems\/([^/]+)/.exec(href);
+        if (problemMatch?.[1]) {
+          recordProductClick(problemMatch[1], productSlug);
+        }
         trackProductRecommendationClick({
           eventName: "product_recommendation_click",
           productSlug,

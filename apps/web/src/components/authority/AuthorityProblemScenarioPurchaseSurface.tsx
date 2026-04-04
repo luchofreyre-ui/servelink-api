@@ -10,6 +10,7 @@ import { getBestComparePair } from "@/lib/products/bestComparePair";
 import { getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
+import { recordProductClick, sortProductsByClickRank } from "@/lib/products/productClickData";
 
 const tracking = (problemSlug: string) => ({
   pageType: "problem_page" as const,
@@ -45,14 +46,20 @@ export function AuthorityProblemScenarioTopBuyCard({
   scenario: ScenarioProducts;
   problemSlug: string;
 }) {
-  const products = getOrderedScenarioProducts((scenario.products ?? []).slice(0, 3), {
+  const ordered = getOrderedScenarioProducts((scenario.products ?? []).slice(0, 3), {
     problemSlug,
     surface: scenario.surface ?? null,
   });
-  if (products.length === 0) return null;
+  if (ordered.length === 0) return null;
+
+  const products = sortProductsByClickRank(ordered, problemSlug);
+  const editorialIndexForSlug = (slug: string) => {
+    const i = ordered.findIndex((p) => p.slug === slug);
+    return i >= 0 ? i : 0;
+  };
 
   const t = tracking(problemSlug);
-  const comparePair = getBestComparePair(products, {
+  const comparePair = getBestComparePair(ordered, {
     problemSlug,
     surface: scenario.surface ?? null,
   });
@@ -93,12 +100,16 @@ export function AuthorityProblemScenarioTopBuyCard({
           const internalHref = `/products/${p.slug}`;
           const purchaseOk = href !== "#";
           const trackHref = purchaseOk ? href : internalHref;
+          const editorialIdx = editorialIndexForSlug(p.slug);
           const onClick = buildProductRecommendationClickHandler({
             productSlug: p.slug,
-            roleLabel: trackingRoleLabelForRow(index),
+            roleLabel: trackingRoleLabelForRow(editorialIdx),
             position: index,
             href: trackHref,
             trackingContext: t,
+            beforeTrack: () => {
+              recordProductClick(problemSlug, p.slug);
+            },
           });
           const displayName = p.name?.trim() || p.slug;
 
@@ -109,7 +120,7 @@ export function AuthorityProblemScenarioTopBuyCard({
             >
               <div className="min-w-0 text-sm">
                 <div className="font-medium text-[#0F172A]">{displayName}</div>
-                <div className="text-xs text-neutral-500">{displayRoleLabelForRow(index)}</div>
+                <div className="text-xs text-neutral-500">{displayRoleLabelForRow(editorialIdx)}</div>
               </div>
 
               {purchaseOk ?
