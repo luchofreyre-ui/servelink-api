@@ -1,5 +1,7 @@
-import { tryResolveAuthorityProblemSlugForQuery } from "@/lib/search/searchAuthorityProblemAlias";
+import { syncFunnelInteraction } from "@/lib/analytics/funnelSync";
+import { trackFunnelStageAction } from "@/lib/analytics/funnelStageAnalytics";
 import { recordProductClick } from "@/lib/products/productClickData";
+import { tryResolveAuthorityProblemSlugForQuery } from "@/lib/search/searchAuthorityProblemAlias";
 
 export type SearchResultClickPayload = {
   productSlug: string;
@@ -14,6 +16,11 @@ export type SearchResultClickPayload = {
 export function trackSearchResultClick(payload: SearchResultClickPayload): void {
   if (payload.problemSlug) {
     recordProductClick(payload.problemSlug, payload.productSlug);
+    trackFunnelStageAction("search_result_click", payload);
+    syncFunnelInteraction("search_result_click", {
+      problemSlug: payload.problemSlug,
+      productSlug: payload.productSlug,
+    });
   }
   if (process.env.NODE_ENV !== "production") {
     console.log("[searchClickAnalysis]", payload);

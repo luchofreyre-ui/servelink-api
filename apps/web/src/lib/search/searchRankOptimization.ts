@@ -3,7 +3,11 @@ import {
   type ProductRef,
 } from "@/lib/products/bestProductForContext";
 import { sortProductsByClickRank } from "@/lib/products/productClickData";
-import { calculateSearchRank, type UserBehaviorData } from "@/lib/search/searchOptimization";
+import {
+  calculateSearchRank,
+  type SearchRankingPreferenceContext,
+  type UserBehaviorData,
+} from "@/lib/search/searchOptimization";
 
 export type SearchRankingContext = {
   problemSlug: string;
@@ -22,9 +26,13 @@ export function optimizeSearchRanking(
   const editorial = getOrderedScenarioProducts([...products], context);
   const clickSorted = sortProductsByClickRank(editorial, context.problemSlug);
   if (!userBehavior) return clickSorted;
+  const pref: SearchRankingPreferenceContext = {
+    problemSlug: context.problemSlug,
+    surface: context.surface ?? null,
+  };
   return [...clickSorted].sort((a, b) => {
-    const da = calculateSearchRank(a.slug, userBehavior);
-    const db = calculateSearchRank(b.slug, userBehavior);
+    const da = calculateSearchRank(a.slug, userBehavior, pref);
+    const db = calculateSearchRank(b.slug, userBehavior, pref);
     return db - da;
   });
 }

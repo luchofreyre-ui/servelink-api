@@ -1,6 +1,8 @@
 import { countFunnelStageInteractions } from "@/lib/analytics/funnelStageAnalytics";
 import { parseFunnelStageFromLabel } from "@/lib/analytics/funnelLabelSummary";
 
+export { getFunnelUserPreferences, syncFunnelInteraction } from "@/lib/analytics/funnelSync";
+
 type Counter = Record<string, number>;
 
 export function accumulateFunnelMetrics(labels: string[]): Counter {

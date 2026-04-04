@@ -10,6 +10,7 @@ import { getBestComparePair } from "@/lib/products/bestComparePair";
 import { getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
+import { trackProductInteraction } from "@/lib/analytics/funnelStageAnalytics";
 import { recordProductClick, sortProductsByClickRank } from "@/lib/products/productClickData";
 
 const tracking = (problemSlug: string) => ({
@@ -68,6 +69,11 @@ export function AuthorityProblemScenarioTopBuyCard({
   const onCompareClick =
     compareHref ?
       () => {
+        recordProductClick(problemSlug, comparePair[0]!.slug);
+        trackProductInteraction("compare_entry", comparePair[0]!.slug, {
+          problemSlug,
+          surface: scenario.surface ?? null,
+        });
         trackProductRecommendationClick({
           eventName: "product_recommendation_click",
           productSlug: comparePair[0]!.slug,
@@ -109,6 +115,10 @@ export function AuthorityProblemScenarioTopBuyCard({
             trackingContext: t,
             beforeTrack: () => {
               recordProductClick(problemSlug, p.slug);
+              trackProductInteraction("view_product_row", p.slug, {
+                problemSlug,
+                surface: scenario.surface ?? null,
+              });
             },
           });
           const displayName = p.name?.trim() || p.slug;
@@ -191,6 +201,13 @@ export function AuthorityProblemScenarioMethodReinforceLink({
     position: 1,
     href: trackHref,
     trackingContext: tracking(problemSlug),
+    beforeTrack: () => {
+      recordProductClick(problemSlug, productSlug);
+      trackProductInteraction("reinforce_product_link", productSlug, {
+        problemSlug,
+        surface: scenarioSurface ?? null,
+      });
+    },
   });
 
   const t = tracking(problemSlug);
@@ -203,6 +220,11 @@ export function AuthorityProblemScenarioMethodReinforceLink({
   const onCompareFromReinforceClick =
     compareHref ?
       () => {
+        recordProductClick(problemSlug, comparePair[0]!.slug);
+        trackProductInteraction("compare_entry", comparePair[0]!.slug, {
+          problemSlug,
+          surface: scenarioSurface ?? null,
+        });
         trackProductRecommendationClick({
           eventName: "product_recommendation_click",
           productSlug: comparePair[0]!.slug,

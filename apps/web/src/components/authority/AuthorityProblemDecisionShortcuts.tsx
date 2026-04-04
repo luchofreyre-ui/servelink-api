@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
 
 import type { AuthorityProblemPageData } from "@/authority/types/authorityPageTypes";
+import { trackProductInteraction } from "@/lib/analytics/funnelStageAnalytics";
 import { getProductBySlug } from "@/lib/products/productRegistry";
+import { recordProductClick } from "@/lib/products/productClickData";
 
 type Props = {
   data: AuthorityProblemPageData;
@@ -60,7 +64,7 @@ export function AuthorityProblemDecisionShortcuts({
               {s.label}
             </div>
             <p className="mt-1 font-[var(--font-manrope)] text-sm leading-[1.35] text-[#475569]">{s.body}</p>
-            {showProductLinks && s.productSlugs?.length ? (
+            {showProductLinks && s.productSlugs?.length ?
               <ul className="mt-2 flex flex-wrap gap-2 text-sm">
                 {s.productSlugs.map((slug) => {
                   const p = getProductBySlug(slug);
@@ -69,6 +73,12 @@ export function AuthorityProblemDecisionShortcuts({
                       <Link
                         href={`/products/${slug}`}
                         className="rounded-full border border-[#C9B27C]/40 px-3 py-1 font-medium text-[#0D9488] hover:bg-[#FFF9F3]"
+                        onClick={() => {
+                          recordProductClick(data.slug, slug);
+                          trackProductInteraction("problem_decision_chip", slug, {
+                            problemSlug: data.slug,
+                          });
+                        }}
                       >
                         {p?.name ?? slug}
                       </Link>
@@ -76,17 +86,17 @@ export function AuthorityProblemDecisionShortcuts({
                   );
                 })}
               </ul>
-            ) : null}
+            : null}
           </li>
         ))}
       </ul>
-      {!showProductLinks ? (
+      {!showProductLinks ?
         <p className="mt-4 flex justify-end">
           <Link href="#problem-products" className="text-sm font-medium text-[#0D9488] hover:underline">
             See product hub →
           </Link>
         </p>
-      ) : null}
+      : null}
     </section>
   );
 }

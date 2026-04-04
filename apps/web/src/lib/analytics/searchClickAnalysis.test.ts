@@ -2,6 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { resetProductClickDataForTests } from "@/lib/products/productClickData";
 
+vi.mock("@/lib/analytics/funnelStageAnalytics", () => ({
+  trackFunnelStageAction: vi.fn(),
+}));
+
+vi.mock("@/lib/analytics/funnelSync", () => ({
+  syncFunnelInteraction: vi.fn(),
+}));
+
 import {
   trackSearchResultClick,
   trackSearchResultClickWithQuery,

@@ -42,6 +42,8 @@ describe("optimizeSearchRanking", () => {
       userSessionId: "s",
       timeSpentSeconds: 200,
       previousClicks: ["a"],
+      lastEngagedProblemSlug: null,
+      lastEngagedSurface: null,
     };
     const out = optimizeSearchRanking([...products], { problemSlug: "dust-buildup" }, behavior);
     expect(out[0]?.slug).toBe("a");

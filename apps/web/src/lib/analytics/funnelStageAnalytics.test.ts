@@ -1,10 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("@/lib/analytics/funnelSync", () => ({
+  syncFunnelInteraction: vi.fn(),
+}));
+
 import {
-  clearFunnelStageEvents,
   countFunnelStageInteractions,
   listRecentFunnelStageEvents,
   trackFunnelStageAction,
+  trackProductInteraction,
 } from "./funnelStageAnalytics";
 
 describe("funnelStageAnalytics", () => {
@@ -37,6 +41,12 @@ describe("funnelStageAnalytics", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it("trackProductInteraction records a stage event", () => {
+    trackProductInteraction("test_stage", "sku-a", { problemSlug: "dust-buildup" });
+    const counts = countFunnelStageInteractions();
+    expect(counts["product_interaction:test_stage"]).toBe(1);
   });
 
   it("trackFunnelStageAction stores client events", () => {

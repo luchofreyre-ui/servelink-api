@@ -1,3 +1,5 @@
+import { syncFunnelInteraction } from "@/lib/analytics/funnelSync";
+
 const FUNNEL_EVENTS_KEY = "servelink.funnelStageEvents.v1";
 const MAX_EVENTS = 500;
 
@@ -28,6 +30,27 @@ function writeEvents(events: FunnelStageEvent[]): void {
   }
 }
 
+export function trackProductInteraction(
+  stage: string,
+  productSlug: string,
+  funnelContext?: { problemSlug?: string; surface?: string | null },
+): void {
+  if (typeof window === "undefined") {
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Product Interaction: ${stage}`, { productSlug, ...funnelContext });
+    }
+    return;
+  }
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`Product Interaction: ${stage}`, { productSlug, ...funnelContext });
+  }
+  trackFunnelStageAction(`product_interaction:${stage}`, { productSlug, ...funnelContext });
+  syncFunnelInteraction(`product_interaction:${stage}`, {
+    productSlug,
+    ...funnelContext,
+  });
+}
+
 export function trackFunnelStageAction(stage: string, actionDetails: object): void {
   if (typeof window === "undefined") {
     if (process.env.NODE_ENV !== "production") {
@@ -43,6 +66,7 @@ export function trackFunnelStageAction(stage: string, actionDetails: object): vo
     console.log(`Funnel Stage Action: ${stage}`, actionDetails);
   }
 }
+
 
 export function listRecentFunnelStageEvents(limit = 100): FunnelStageEvent[] {
   return readEvents().slice(0, limit);

@@ -39,6 +39,7 @@ import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
 import { AuthorityToEncyclopediaBridge } from "./AuthorityToEncyclopediaBridge";
 import { AuthorityProblemProductHub } from "./AuthorityProblemProductHub";
 import { AuthorityProblemBestBySurface } from "./AuthorityProblemBestBySurface";
+/** Product “chips” in decision shortcuts call `recordProductClick` + funnel tracking (client component). */
 import { AuthorityProblemDecisionShortcuts } from "./AuthorityProblemDecisionShortcuts";
 import { AuthorityProblemExploreMore } from "./AuthorityProblemExploreMore";
 import { getBuiltBridgeMap } from "@/lib/encyclopedia/bridgeMap";

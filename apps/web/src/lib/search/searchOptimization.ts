@@ -1,9 +1,20 @@
+import { getFunnelUserPreferences } from "@/lib/analytics/funnelSync";
+
 export type UserBehaviorData = {
   userSessionId: string;
   /** Time spent in this search session (seconds). */
   timeSpentSeconds: number;
   /** Product slugs the user clicked from search or related surfaces in-session. */
   previousClicks: string[];
+  /** From cross-funnel sync (problem chips, product context, etc.). */
+  lastEngagedProblemSlug?: string | null;
+  lastEngagedSurface?: string | null;
+};
+
+/** Optional problem + surface slice for preference alignment in ranking. */
+export type SearchRankingPreferenceContext = {
+  problemSlug?: string;
+  surface?: string | null;
 };
 
 const SESSION_STORAGE_KEY = "servelink.searchUserBehaviorSession.v1";
@@ -75,12 +86,15 @@ export function recordSearchProductClick(productSlug: string): void {
 }
 
 export function getSearchUserBehavior(): UserBehaviorData {
+  const prefs = getFunnelUserPreferences();
   const s = readSession();
   if (!s) {
     return {
       userSessionId: "anonymous",
       timeSpentSeconds: 0,
       previousClicks: [],
+      lastEngagedProblemSlug: prefs.lastEngagedProblemSlug ?? null,
+      lastEngagedSurface: prefs.lastEngagedSurface ?? null,
     };
   }
   const dwellSinceEnter = Math.max(0, (Date.now() - s.searchPageEnteredAt) / 1000);
@@ -88,6 +102,8 @@ export function getSearchUserBehavior(): UserBehaviorData {
     userSessionId: s.userSessionId,
     timeSpentSeconds: Math.floor(s.accumulatedSeconds + dwellSinceEnter),
     previousClicks: s.previousClicks,
+    lastEngagedProblemSlug: prefs.lastEngagedProblemSlug ?? null,
+    lastEngagedSurface: prefs.lastEngagedSurface ?? null,
   };
 }
 
@@ -95,9 +111,27 @@ export function getSearchUserBehavior(): UserBehaviorData {
  * Heuristic score used to break ties after editorial + click ordering.
  * Higher is better.
  */
-export function calculateSearchRank(productSlug: string, userBehavior: UserBehaviorData): number {
+export function calculateSearchRank(
+  productSlug: string,
+  userBehavior: UserBehaviorData,
+  preferenceContext?: SearchRankingPreferenceContext,
+): number {
   let rank = 0;
   if (userBehavior.previousClicks.includes(productSlug)) rank += 10;
   if (userBehavior.timeSpentSeconds > 120) rank += 5;
+  if (
+    preferenceContext?.problemSlug &&
+    userBehavior.lastEngagedProblemSlug &&
+    userBehavior.lastEngagedProblemSlug === preferenceContext.problemSlug
+  ) {
+    rank += 6;
+  }
+  if (
+    preferenceContext?.surface &&
+    userBehavior.lastEngagedSurface &&
+    userBehavior.lastEngagedSurface === preferenceContext.surface
+  ) {
+    rank += 4;
+  }
   return rank;
 }

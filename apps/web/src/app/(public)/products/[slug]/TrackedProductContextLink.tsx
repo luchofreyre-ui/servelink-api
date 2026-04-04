@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { trackProductInteraction } from "@/lib/analytics/funnelStageAnalytics";
 import { recordProductClick } from "@/lib/products/productClickData";
 import {
   getRecommendationDestinationType,
@@ -48,8 +49,10 @@ export function TrackedProductContextLink({
       className={className}
       onClick={() => {
         const problemMatch = /^\/problems\/([^/]+)/.exec(href);
-        if (problemMatch?.[1]) {
-          recordProductClick(problemMatch[1], productSlug);
+        const hubSlug = problemMatch?.[1];
+        if (hubSlug) {
+          recordProductClick(hubSlug, productSlug);
+          trackProductInteraction("product_problem_chip", productSlug, { problemSlug: hubSlug });
         }
         trackProductRecommendationClick({
           eventName: "product_recommendation_click",

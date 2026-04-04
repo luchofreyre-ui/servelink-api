@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { accumulateFunnelMetrics, computeCTR } from "./funnelMetrics";
+import { accumulateFunnelMetrics, computeCTR, mergeFunnelStageCounts } from "./funnelMetrics";
 
 describe("accumulateFunnelMetrics", () => {
   it("aggregates multiple labels into stage counts", () => {
@@ -22,6 +22,20 @@ describe("accumulateFunnelMetrics", () => {
   it("counts unknown for unrecognized labels", () => {
     expect(accumulateFunnelMetrics(["", "totally:unknown:label"])).toEqual({
       unknown: 2,
+    });
+  });
+});
+
+describe("mergeFunnelStageCounts", () => {
+  it("adds live counts onto label-derived counts", () => {
+    expect(
+      mergeFunnelStageCounts(
+        { search_top_result: 1 },
+        { product_context: 2 },
+      ),
+    ).toEqual({
+      search_top_result: 1,
+      product_context: 2,
     });
   });
 });

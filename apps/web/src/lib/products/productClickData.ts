@@ -1,3 +1,4 @@
+/** In-memory click aggregates: problem hubs ↔ products (search, chips, hub rows). */
 type ProductClickData = {
   problemSlug: string;
   productSlug: string;
