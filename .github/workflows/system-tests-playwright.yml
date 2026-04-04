@@ -1,4 +1,4 @@
-# System tests: API + web, Playwright (JSON reporter), upload to persistent system-tests API, artifacts.
+# System tests: API + web, Playwright (list to logs + JSON file for upload), upload to persistent system-tests API, artifacts.
 #
 # Required GitHub repo secrets:
 #   SYSTEM_TESTS_REPORT_URL      e.g. https://YOUR_HOSTED_API/api/v1/admin/system-tests/report
@@ -164,7 +164,7 @@ jobs:
         working-directory: apps/web
         run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright (JSON to RUNNER_TEMP)
+      - name: Run Playwright (list + JSON report)
         id: playwright
         working-directory: apps/web
         continue-on-error: true
@@ -178,11 +178,14 @@ jobs:
           if [ -z "${PW_ARGS}" ]; then
             PW_ARGS="tests/playwright/smoke"
           fi
-          # Intentional word-splitting so inputs can pass multiple args (paths, --grep, etc.)
-          echo "Running: npx playwright test (args) --reporter=json"
+          # CLI `--reporter=list,json > "${PLAYWRIGHT_JSON_REPORT}"` redirects ALL stdout into the file, so the list reporter never appears in Actions logs.
+          # Merge config: list prints to the log; json with outputFile writes only to the file (valid JSON for upload:playwright).
+          python3 -c "open('playwright.github-actions.reporter.ts','w').write('import { defineConfig } from \\\"@playwright/test\\\";\\n\\n' + 'export default defineConfig({\\n' + '  reporter: [\\n' + '    [\\\"list\\\"],\\n' + '    [\\\"json\\\", { outputFile: process.env.PLAYWRIGHT_JSON_REPORT || \\\"/tmp/playwright-report.json\\\" }],\\n' + '  ],\\n' + '});\\n')" || exit 1
+          echo "Running: npx playwright test ${PW_ARGS} -c playwright.config.ts -c playwright.github-actions.reporter.ts (list + json file)"
           # shellcheck disable=SC2086
-          npx playwright test ${PW_ARGS} --reporter=json > "${PLAYWRIGHT_JSON_REPORT}"
+          npx playwright test ${PW_ARGS} -c playwright.config.ts -c playwright.github-actions.reporter.ts
           PW_EXIT=$?
+          rm -f playwright.github-actions.reporter.ts
           echo "playwright_exit=${PW_EXIT}" >> "${GITHUB_OUTPUT}"
           exit ${PW_EXIT}
 
