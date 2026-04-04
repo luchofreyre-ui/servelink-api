@@ -3,6 +3,7 @@ import {
   type ProductRef,
 } from "@/lib/products/bestProductForContext";
 import { sortProductsByClickRank } from "@/lib/products/productClickData";
+import { calculateSearchRank, type UserBehaviorData } from "@/lib/search/searchOptimization";
 
 export type SearchRankingContext = {
   problemSlug: string;
@@ -10,13 +11,20 @@ export type SearchRankingContext = {
 };
 
 /**
- * Applies editorial best-product ordering, then re-orders by in-session clickthrough
- * for the same problem hub (data-driven tie-break).
+ * Applies editorial best-product ordering, then clickthrough order, then optional
+ * multi-dimensional behavior scores (session dwell + repeat product interest).
  */
 export function optimizeSearchRanking(
   products: readonly ProductRef[],
   context: SearchRankingContext,
+  userBehavior?: UserBehaviorData | null,
 ): ProductRef[] {
   const editorial = getOrderedScenarioProducts([...products], context);
-  return sortProductsByClickRank(editorial, context.problemSlug);
+  const clickSorted = sortProductsByClickRank(editorial, context.problemSlug);
+  if (!userBehavior) return clickSorted;
+  return [...clickSorted].sort((a, b) => {
+    const da = calculateSearchRank(a.slug, userBehavior);
+    const db = calculateSearchRank(b.slug, userBehavior);
+    return db - da;
+  });
 }

@@ -5,7 +5,11 @@ vi.mock("./funnelGapReport", () => ({
 }));
 
 import { buildFunnelGapReport } from "./funnelGapReport";
-import { buildFunnelGapAuditLines, buildFunnelGapAuditText } from "./funnelGapAudit";
+import {
+  buildFunnelGapAuditLines,
+  buildFunnelGapAuditText,
+  formatGapResolutionAuditLines,
+} from "./funnelGapAudit";
 
 describe("funnel gap audit", () => {
   beforeEach(() => {
@@ -31,5 +35,23 @@ describe("funnel gap audit", () => {
     expect(buildFunnelGapAuditText()).toBe(
       "test-problem | missing_compare | No valid compare pair resolved.",
     );
+  });
+
+  it("formats gap resolution audit entries", () => {
+    expect(formatGapResolutionAuditLines([])).toEqual([
+      "No gap resolution actions recorded in this browser yet.",
+    ]);
+    const lines = formatGapResolutionAuditLines([
+      {
+        id: "1",
+        problemSlug: "dust-buildup",
+        action: "resolve",
+        at: "2026-01-01T00:00:00.000Z",
+        gapCode: "missing_compare",
+        note: "fixed upstream",
+      },
+    ]);
+    expect(lines[0]).toContain("dust-buildup");
+    expect(lines[0]).toContain("resolve");
   });
 });

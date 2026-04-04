@@ -1,3 +1,4 @@
+import { trackFunnelStageAction } from "@/lib/analytics/funnelStageAnalytics";
 import { parseSearchResultLabel } from "@/lib/analytics/searchResultLabelParser";
 
 export type FunnelStage =
@@ -9,7 +10,7 @@ export type FunnelStage =
   | "product_buy"
   | "unknown";
 
-export function summarizeFunnelLabel(label: string | null | undefined): FunnelStage {
+export function parseFunnelStageFromLabel(label: string | null | undefined): FunnelStage {
   if (!label) return "unknown";
 
   const parsedSearch = parseSearchResultLabel(label);
@@ -27,4 +28,10 @@ export function summarizeFunnelLabel(label: string | null | undefined): FunnelSt
   if (label.startsWith("product_priority_compare:")) return "compare_entry";
 
   return "unknown";
+}
+
+export function summarizeFunnelLabel(label: string | null | undefined): FunnelStage {
+  const stage = parseFunnelStageFromLabel(label);
+  trackFunnelStageAction(stage, { label });
+  return stage;
 }

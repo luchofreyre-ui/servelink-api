@@ -1,5 +1,6 @@
 import type { SiteSearchDocument } from "@/types/search";
 
+import SearchResultsSessionTracker from "./SearchResultsSessionTracker";
 import TrackedSearchResultLink from "./TrackedSearchResultLink";
 
 interface SearchResultsPageProps {
@@ -187,6 +188,7 @@ export function SearchResultsPage({
       className="mx-auto max-w-5xl px-6 py-16 md:px-8"
       data-testid="search-results-page"
     >
+      <SearchResultsSessionTracker />
       <div className="space-y-3">
         <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.14em] text-[#64748B]">
           Search

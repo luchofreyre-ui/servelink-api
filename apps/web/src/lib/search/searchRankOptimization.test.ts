@@ -5,6 +5,7 @@ import {
   resetProductClickDataForTests,
 } from "@/lib/products/productClickData";
 
+import type { UserBehaviorData } from "./searchOptimization";
 import { optimizeSearchRanking } from "./searchRankOptimization";
 
 describe("optimizeSearchRanking", () => {
@@ -30,5 +31,19 @@ describe("optimizeSearchRanking", () => {
     recordProductClick("dust-buildup", "b");
     const out = optimizeSearchRanking([...products], { problemSlug: "dust-buildup" });
     expect(out[0]?.slug).toBe("b");
+  });
+
+  it("applies multi-dimensional behavior scores as a tie-break", () => {
+    const products = [
+      { slug: "a", name: "A" },
+      { slug: "b", name: "B" },
+    ] as const;
+    const behavior: UserBehaviorData = {
+      userSessionId: "s",
+      timeSpentSeconds: 200,
+      previousClicks: ["a"],
+    };
+    const out = optimizeSearchRanking([...products], { problemSlug: "dust-buildup" }, behavior);
+    expect(out[0]?.slug).toBe("a");
   });
 });

@@ -1,3 +1,4 @@
+import type { GapResolutionAuditEntry } from "./funnelGapResolution";
 import { buildFunnelGapReport, type FunnelGap } from "./funnelGapReport";
 
 export function formatFunnelGapLines(gaps: FunnelGap[]): string[] {
@@ -14,4 +15,20 @@ export function buildFunnelGapAuditLines(): string[] {
 
 export function buildFunnelGapAuditText(): string {
   return buildFunnelGapAuditLines().join("\n");
+}
+
+export function formatGapResolutionAuditLines(entries: GapResolutionAuditEntry[]): string[] {
+  if (entries.length === 0) {
+    return ["No gap resolution actions recorded in this browser yet."];
+  }
+  return entries.map((e) => {
+    const parts = [
+      e.at,
+      e.problemSlug,
+      e.action,
+      e.gapCode ? `[${e.gapCode}]` : "",
+      e.note ? `— ${e.note}` : "",
+    ].filter(Boolean);
+    return parts.join(" | ");
+  });
 }

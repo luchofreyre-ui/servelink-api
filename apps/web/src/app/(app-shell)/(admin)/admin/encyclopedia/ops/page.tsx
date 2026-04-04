@@ -6,6 +6,8 @@ import ApiEncyclopediaMigrationPanel from "@/components/admin/encyclopedia/ApiEn
 import ApiEncyclopediaOpsPanel from "@/components/admin/encyclopedia/ApiEncyclopediaOpsPanel";
 import EncyclopediaOpsDashboard from "@/components/admin/encyclopedia/EncyclopediaOpsDashboard";
 import EncyclopediaWeakPageRepairPanel from "@/components/admin/encyclopedia/EncyclopediaWeakPageRepairPanel";
+import { FunnelStageDashboard } from "@/components/admin/FunnelStageDashboard";
+import { MonetizationGapActionReport } from "@/components/admin/MonetizationGapActionReport";
 import MonetizationFunnelGapsPanel from "@/components/admin/encyclopedia/MonetizationFunnelGapsPanel";
 import { buildEncyclopediaOpsSnapshot } from "@/lib/encyclopedia/opsPipeline.server";
 
@@ -27,6 +29,11 @@ export default function AdminEncyclopediaOpsPage() {
         monetizationGaps={snapshot.monetizationGaps}
         monetizationGapLines={snapshot.monetizationGapLines}
       />
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <MonetizationGapActionReport />
+        <FunnelStageDashboard />
+      </div>
 
       <div className="space-y-6">
         <ApiEncyclopediaMigrationPanel />

@@ -1,4 +1,5 @@
 import { buildFunnelGapReport, type FunnelGap } from "./funnelGapReport";
+import { resolveGap } from "./funnelGapResolution";
 
 /**
  * Expansion / ops hook: same data as {@link buildFunnelGapReport}.
@@ -39,6 +40,29 @@ export function warnMonetizationExpansionGaps(): void {
       console.warn(
         `[monetization:expansion] ${gap.problemSlug} [${gap.code}] ${gap.detail}`,
       );
+    }
+  }
+}
+
+/** Narrow check for catalog research coverage gaps (ops / cron). */
+export function checkForResearchGaps(): void {
+  const gaps = buildFunnelGapReport();
+  for (const gap of gaps) {
+    if (gap.code === "missing_research") {
+      console.warn(`Missing research for ${gap.problemSlug}`);
+    }
+  }
+}
+
+/**
+ * Programmatic “resolve” signals for compare gaps (e.g. scheduled job).
+ * Does not mutate server catalog; records local audit when run in a browser.
+ */
+export function autoResolveGaps(): void {
+  const gaps = buildFunnelGapReport();
+  for (const gap of gaps) {
+    if (gap.code === "missing_compare") {
+      resolveGap(gap.problemSlug, "resolve");
     }
   }
 }

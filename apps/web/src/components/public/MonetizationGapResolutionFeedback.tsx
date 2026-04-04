@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   dismissMonetizationGapInAdmin,
   loadGapResolutionFeedback,
-  resolveGap,
   saveGapResolutionFeedback,
   type ResolutionAction,
 } from "@/lib/funnel/funnelGapResolution";
@@ -57,7 +56,6 @@ export function MonetizationGapResolutionFeedback({
 
   const handleAction = (action: ResolutionAction) => {
     saveGapResolutionFeedback(problemSlug, action, note, gapCode);
-    resolveGap(problemSlug, action);
     dismissMonetizationGapInAdmin(problemSlug);
     setSaved(loadGapResolutionFeedback(problemSlug));
     setNote("");

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, type ReactNode } from "react";
 import { trackSearchResultClick } from "@/lib/analytics/searchClickAnalysis";
+import { recordSearchProductClick } from "@/lib/search/searchOptimization";
 import {
   getRecommendationDestinationType,
   normalizeRoleLabel,
@@ -114,6 +115,7 @@ export default function TrackedSearchResultLink({
         if (productSlug && searchQuery !== undefined && searchQuery !== "") {
           const problemSlug = tryResolveAuthorityProblemSlugForQuery(searchQuery);
           trackSearchResultClick({ productSlug, problemSlug, searchQuery });
+          recordSearchProductClick(productSlug);
         }
       }}
     >
