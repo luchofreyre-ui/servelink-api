@@ -21,6 +21,8 @@ export type ProductRecommendationClickEvent = {
   isPinned?: boolean;
   destinationType: "amazon" | "internal_product" | "compare" | "external" | "unknown";
   destinationUrl: string;
+  /** Search result UI analytics (e.g. click surface + row bucket). */
+  label?: string;
 };
 
 declare global {

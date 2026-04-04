@@ -25,6 +25,7 @@ describe("TrackedSearchResultLink", () => {
     render(
       <TrackedSearchResultLink
         index={1}
+        clickSurface="title"
         result={{
           id: "cmp-1",
           title: "Compare Bona vs Zep",
@@ -54,6 +55,7 @@ describe("TrackedSearchResultLink", () => {
     render(
       <TrackedSearchResultLink
         index={2}
+        clickSurface="title"
         result={{
           id: "prd-1",
           title: "Bona Hard-Surface Floor Cleaner",

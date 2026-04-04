@@ -63,6 +63,12 @@ function getSearchDisplayTitle(result: SiteSearchDocument): string {
   return result.title;
 }
 
+function getSearchAnalyticsSourceBucket(result: SiteSearchDocument): "injected" | "organic" {
+  return result.source === "injected" ? "injected" : "organic";
+}
+
+void getSearchAnalyticsSourceBucket;
+
 function groupResultsByType(
   results: SiteSearchDocument[],
 ): { type: SiteSearchDocument["type"]; items: SiteSearchDocument[] }[] {
@@ -125,7 +131,12 @@ function ResultArticle({
       ) : null}
 
       <h2 className="mt-3 font-[var(--font-poppins)] text-2xl font-semibold text-[#0F172A]">
-        <TrackedSearchResultLink result={result} index={index} className="hover:text-[#0D9488]">
+        <TrackedSearchResultLink
+          result={result}
+          index={index}
+          clickSurface="title"
+          className="hover:text-[#0D9488]"
+        >
           {displayTitle}
         </TrackedSearchResultLink>
       </h2>
@@ -148,6 +159,7 @@ function ResultArticle({
         <TrackedSearchResultLink
           result={result}
           index={index}
+          clickSurface="open_page"
           className="font-[var(--font-manrope)] text-sm font-medium text-[#0D9488] hover:underline"
         >
           Open page

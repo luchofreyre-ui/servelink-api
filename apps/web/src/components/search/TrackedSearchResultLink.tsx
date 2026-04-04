@@ -7,27 +7,35 @@ import {
   normalizeRoleLabel,
   trackProductRecommendationClick,
 } from "@/lib/products/trackProductRecommendationClick";
-import type { SearchDocument } from "@/types/search";
+import type { SiteSearchDocument } from "@/types/search";
+
+type SearchClickSurface = "title" | "open_page";
 
 type Props = {
-  result: SearchDocument;
+  result: SiteSearchDocument;
   index: number;
+  clickSurface: SearchClickSurface;
   children: ReactNode;
   className?: string;
 };
 
-function isAuthorityProblem(result: SearchDocument): boolean {
-  return result.source === "authority" && result.type === "problem";
-}
+function mapSearchRoleLabel(result: SiteSearchDocument): string {
+  if (result.source === "authority" && result.type === "problem") {
+    return "search_problem_result";
+  }
 
-function mapSearchRoleLabel(result: SearchDocument): string {
-  if (isAuthorityProblem(result)) return "search_problem_result";
-  if (result.type === "product_comparison") return "comparison_entry";
-  if (result.type === "product") return "Best overall";
+  if (result.type === "product_comparison") {
+    return "comparison_entry";
+  }
+
+  if (result.type === "product") {
+    return "Best overall";
+  }
+
   return "search_result";
 }
 
-function tryInferProductSlug(result: SearchDocument): string | null {
+function tryInferProductSlug(result: SiteSearchDocument): string | null {
   if (result.type === "product" && result.href.startsWith("/products/")) {
     return result.href.replace("/products/", "").split("/")[0] || null;
   }
@@ -40,9 +48,33 @@ function tryInferProductSlug(result: SearchDocument): string | null {
   return null;
 }
 
+function buildSearchResultAnalyticsLabel(args: {
+  result: SiteSearchDocument;
+  index: number;
+  clickSurface: SearchClickSurface;
+}): string {
+  const rowType =
+    args.result.source === "authority" && args.result.type === "problem"
+      ? "authority_problem"
+      : args.result.type;
+
+  const sourceBucket = args.result.source === "injected" ? "injected" : "organic";
+  const topBucket = args.index === 0 ? "top_result" : "non_top_result";
+
+  return [
+    "search_result_click",
+    rowType,
+    sourceBucket,
+    args.clickSurface,
+    topBucket,
+    `position_${args.index}`,
+  ].join(":");
+}
+
 export default function TrackedSearchResultLink({
   result,
   index,
+  clickSurface,
   children,
   className,
 }: Props) {
@@ -59,8 +91,13 @@ export default function TrackedSearchResultLink({
       roleLabel: normalizeRoleLabel(mapSearchRoleLabel(result)),
       position: index,
       isPinned: result.source === "injected",
+      label: buildSearchResultAnalyticsLabel({
+        result,
+        index,
+        clickSurface,
+      }),
     };
-  }, [result, index]);
+  }, [result, index, clickSurface]);
 
   return (
     <Link

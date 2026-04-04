@@ -46,5 +46,6 @@ describe("SearchResultsPage stacking funnel", () => {
     expect(screen.getByText(/Compare options/i)).toBeInTheDocument();
     expect(screen.getByText(/Buy recommended product/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /dust buildup/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /Open page/i }).length).toBeGreaterThan(0);
   });
 });
