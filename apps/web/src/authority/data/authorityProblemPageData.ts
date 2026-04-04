@@ -306,6 +306,17 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
     },
     whyThisWorksShort:
       "On non-porous surfaces, labeled chemistry removes the film; drying and ventilation remove what lets it come back.",
+    productScenarios: [
+      {
+        problem: "light mildew cleanup",
+        surface: "bathroom",
+        products: [
+          { slug: "method-daily-shower-spray", name: "Method Daily Shower Spray" },
+          { slug: "heinz-distilled-white-vinegar-5pct", name: "White Vinegar (5%)" },
+          { slug: "scrubbing-bubbles-daily-shower-cleaner", name: "Scrubbing Bubbles Daily Shower Cleaner" },
+        ],
+      },
+    ],
   },
   "streaking-on-glass": {
     ...prob("streaking-on-glass", "Streaking on glass", "residue"),
@@ -318,6 +329,17 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
     },
     whyThisWorksShort:
       "Streaks are usually leftover product or water minerals. Less chemistry, fresh cloth, and a true dry pass stop the smear loop.",
+    productScenarios: [
+      {
+        problem: "streak-free glass cleaning",
+        surface: "glass",
+        products: [
+          { slug: "invisible-glass-premium-glass-cleaner", name: "Invisible Glass" },
+          { slug: "windex-original-glass-cleaner", name: "Windex Original" },
+          { slug: "rubbermaid-microfiber-cleaning-cloths", name: "Microfiber Cleaning Cloths" },
+        ],
+      },
+    ],
   },
   "general-soil": prob("general-soil", "General soil", "organic"),
   "touchpoint-contamination": prob("touchpoint-contamination", "Touchpoint contamination", "biological"),
@@ -415,6 +437,15 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
       },
     ],
     productScenarios: [
+      {
+        problem: "neutralize lingering odors",
+        surface: "home",
+        products: [
+          { slug: "zero-odor-eliminator-spray", name: "Zero Odor Eliminator" },
+          { slug: "natures-miracle-stain-and-odor-remover", name: "Nature's Miracle Stain & Odor Remover" },
+          { slug: "fresh-wave-odor-removing-spray", name: "Fresh Wave Odor Removing Spray" },
+        ],
+      },
       { problem: "odor retention", surface: "carpet" },
       { problem: "odor retention", surface: "laundry" },
       { problem: "odor retention", surface: "garbage cans" },
@@ -461,6 +492,15 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
       },
     ],
     productScenarios: [
+      {
+        problem: "bathroom mold removal",
+        surface: "bathroom",
+        products: [
+          { slug: "scrubbing-bubbles-bathroom-grime-fighter", name: "Scrubbing Bubbles Bathroom Cleaner" },
+          { slug: "concrobium-mold-control", name: "Concrobium Mold Control" },
+          { slug: "method-daily-shower-spray", name: "Method Daily Shower Spray" },
+        ],
+      },
       { problem: "mold growth", surface: "tile" },
       { problem: "mold growth", surface: "countertops" },
       { problem: "mildew stains", surface: "shower glass" },
@@ -540,6 +580,15 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
       },
     ],
     productScenarios: [
+      {
+        problem: "restore cloudy glass",
+        surface: "glass",
+        products: [
+          { slug: "bar-keepers-friend-cleanser", name: "Bar Keepers Friend" },
+          { slug: "clr-calcium-lime-rust", name: "CLR Calcium, Lime & Rust Remover" },
+          { slug: "rubbermaid-microfiber-cleaning-cloths", name: "Microfiber Cleaning Cloths" },
+        ],
+      },
       { problem: "cloudy film", surface: "shower glass" },
       { problem: "cloudy film", surface: "glass" },
     ],
@@ -636,6 +685,15 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
       },
     ],
     productScenarios: [
+      {
+        problem: "remove fingerprints and smudges",
+        surface: "surfaces",
+        products: [
+          { slug: "windex-original-glass-cleaner", name: "Windex Original" },
+          { slug: "method-all-purpose-cleaner", name: "Method All-Purpose Cleaner" },
+          { slug: "rubbermaid-microfiber-cleaning-cloths", name: "Microfiber Cleaning Cloths" },
+        ],
+      },
       { problem: "smudge marks", surface: "laminate" },
       { problem: "smudge marks", surface: "stainless steel" },
     ],
@@ -879,7 +937,18 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
     relatedProblems: [rpRel("hard-water-deposits", "Hard water deposits"), rpRel("water-spotting", "Water spotting")],
     relatedSurfaces: [esSurface("shower-glass", "Shower glass"), esSurface("grout", "Grout")],
     relatedMethods: [esMethod("hard-water-deposit-removal", "Hard water deposit removal"), esMethod("soap-scum-removal", "Soap scum removal")],
-    productScenarios: [{ problem: "limescale", surface: "tile" }],
+    productScenarios: [
+      {
+        problem: "remove limescale",
+        surface: "fixtures",
+        products: [
+          { slug: "clr-calcium-lime-rust", name: "CLR Calcium, Lime & Rust Remover" },
+          { slug: "zep-calcium-lime-rust-remover", name: "Zep Calcium, Lime & Rust Remover" },
+          { slug: "method-daily-shower-spray", name: "Method Daily Shower Spray" },
+        ],
+      },
+      { problem: "limescale", surface: "tile" },
+    ],
   },
   "greasy-grime": {
     ...prob("greasy-grime", "Greasy grime", "oil_based"),
