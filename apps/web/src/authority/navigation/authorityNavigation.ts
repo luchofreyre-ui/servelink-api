@@ -88,7 +88,7 @@ export function buildProblemBreadcrumbs(problemSlug: string): AuthorityBreadcrum
   return [
     { label: "Cleaning encyclopedia", href: "/encyclopedia" },
     { label: "Problems", href: "/problems" },
-    { label: problem.title, href: preferEncyclopediaCanonicalHref(`/problems/${problem.slug}`) },
+    { label: problem.title, href: `/problems/${problem.slug}` },
   ];
 }
 
