@@ -303,11 +303,9 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
   const methodParsed = parseTopMethodSteps(data.bestMethods);
   const diagnosticRows = buildDiagnosticRows(data.whatItUsuallyIs, data.commonOn);
   const precheckBullets = buildPrecheckBullets(beforeClean, voice);
-  const executionFirstHub =
-    (data.slug === "soap-scum" || data.slug === "grease-buildup") &&
-    Boolean(data.executionQuickFix && data.problemDefinitionLine);
+  const useExecutionLayout = Boolean(data.executionQuickFix && data.problemDefinitionLine);
 
-  const anchorNavItems: { href: string; label: string }[] = executionFirstHub
+  const anchorNavItems: { href: string; label: string }[] = useExecutionLayout
     ? [
         { href: "#problem-overview", label: "Overview" },
         { href: "#problem-why", label: "Why" },
@@ -333,7 +331,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
       <main className="mx-auto max-w-6xl scroll-smooth px-4 pb-12 pt-4 sm:px-6 sm:pt-5 lg:px-8">
-        {executionFirstHub ?
+        {useExecutionLayout ?
           <section className="space-y-4" aria-label="Problem overview">
             <div id="problem-overview" className="scroll-mt-28 space-y-3">
               <AuthorityBreadcrumbs items={crumbs} />
@@ -450,7 +448,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           </>
         }
 
-        {executionFirstHub ?
+        {useExecutionLayout ?
           <section
             id="problem-top-rail"
             className="mb-6 mt-4 scroll-mt-28"
@@ -471,7 +469,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           </section>
         : null}
 
-        {executionFirstHub && data.slug === "grease-buildup" ?
+        {useExecutionLayout && data.slug === "grease-buildup" ?
           <div id="problem-context" className="scroll-mt-28">
             <AuthoritySection density="compact" title="What this is">
               <ProseBlocks text={data.whatItUsuallyIs} />

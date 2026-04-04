@@ -196,6 +196,17 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
   },
   "hard-water-deposits": {
     ...prob("hard-water-deposits", "Hard water deposits", "mineral"),
+    summary:
+      "Hard water leaves mineral residue—dissolve with surface-safe acids, then rinse.",
+    problemDefinitionLine:
+      "Mineral buildup left behind when water evaporates, often appearing as white or cloudy residue.",
+    executionQuickFix: {
+      use: "Acid-based cleaner (safe for the surface)",
+      do: "Apply → wait 1–3 min → light scrub → rinse",
+      ifNeeded: "Repeat or increase dwell time. Avoid acids on stone.",
+    },
+    whyThisWorksShort:
+      "Hard water deposits are mineral-based. Acids dissolve the minerals so they can be removed.",
     decisionShortcuts: [
       {
         label: "Light spotting on glass or chrome",
