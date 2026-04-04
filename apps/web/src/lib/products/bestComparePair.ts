@@ -28,11 +28,14 @@ export function getBestComparePair(products: ProductRef[], context?: CompareCont
   ];
 
   if (context?.problemSlug) {
-    const preference = PROBLEM_COMPARE_PREFERENCES.find(
-      (item) =>
-        item.problemSlug === context.problemSlug &&
-        (item.surface == null || item.surface === context.surface),
+    const matchingPreferences = PROBLEM_COMPARE_PREFERENCES.filter(
+      (item) => item.problemSlug === context.problemSlug,
     );
+
+    const preference =
+      matchingPreferences.find(
+        (item) => item.surface && context?.surface && item.surface === context.surface,
+      ) ?? matchingPreferences.find((item) => !item.surface);
 
     if (preference) {
       for (const preferredPair of preference.preferredPairs) {
@@ -41,6 +44,11 @@ export function getBestComparePair(products: ProductRef[], context?: CompareCont
           (pair) => normalizeComparisonSlug(pair[0]!.slug, pair[1]!.slug) === preferredSlug,
         );
         if (match && hasComparePage(match)) {
+          const left = match.find((p) => p.slug === preferredPair[0]);
+          const right = match.find((p) => p.slug === preferredPair[1]);
+          if (left && right) {
+            return [left, right];
+          }
           return match;
         }
       }

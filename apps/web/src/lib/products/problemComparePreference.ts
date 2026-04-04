@@ -7,6 +7,7 @@ export type ComparePreference = {
 /**
  * Editorial “decision tension” pairs per problem hub. When both SKUs appear in the
  * scenario triple, this pair wins over generic (0,1)/(0,2)/(1,2) mechanical order.
+ * Surface-specific rows precede generic rows for the same problem slug.
  */
 export const PROBLEM_COMPARE_PREFERENCES: ComparePreference[] = [
   {
@@ -35,11 +36,31 @@ export const PROBLEM_COMPARE_PREFERENCES: ComparePreference[] = [
   },
   {
     problemSlug: "smudge-marks",
+    surface: "glass",
+    preferredPairs: [["windex-original-glass-cleaner", "rubbermaid-microfiber-cleaning-cloths"]],
+  },
+  {
+    problemSlug: "smudge-marks",
+    surface: "stainless steel",
+    preferredPairs: [["method-all-purpose-cleaner", "rubbermaid-microfiber-cleaning-cloths"]],
+  },
+  {
+    problemSlug: "smudge-marks",
     preferredPairs: [["windex-original-glass-cleaner", "method-all-purpose-cleaner"]],
   },
   {
     problemSlug: "odor-retention",
     preferredPairs: [["zero-odor-eliminator-spray", "natures-miracle-stain-and-odor-remover"]],
+  },
+  {
+    problemSlug: "limescale-buildup",
+    surface: "glass",
+    preferredPairs: [["clr-calcium-lime-rust", "zep-calcium-lime-rust-remover"]],
+  },
+  {
+    problemSlug: "limescale-buildup",
+    surface: "tile",
+    preferredPairs: [["zep-calcium-lime-rust-remover", "clr-calcium-lime-rust"]],
   },
   {
     problemSlug: "limescale-buildup",

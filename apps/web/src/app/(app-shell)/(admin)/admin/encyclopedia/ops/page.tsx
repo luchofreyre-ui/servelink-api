@@ -6,6 +6,7 @@ import ApiEncyclopediaMigrationPanel from "@/components/admin/encyclopedia/ApiEn
 import ApiEncyclopediaOpsPanel from "@/components/admin/encyclopedia/ApiEncyclopediaOpsPanel";
 import EncyclopediaOpsDashboard from "@/components/admin/encyclopedia/EncyclopediaOpsDashboard";
 import EncyclopediaWeakPageRepairPanel from "@/components/admin/encyclopedia/EncyclopediaWeakPageRepairPanel";
+import MonetizationFunnelGapsPanel from "@/components/admin/encyclopedia/MonetizationFunnelGapsPanel";
 import { buildEncyclopediaOpsSnapshot } from "@/lib/encyclopedia/opsPipeline.server";
 
 export default function AdminEncyclopediaOpsPage() {
@@ -21,6 +22,11 @@ export default function AdminEncyclopediaOpsPage() {
           Content ops dashboard
         </h1>
       </div>
+
+      <MonetizationFunnelGapsPanel
+        monetizationGaps={snapshot.monetizationGaps}
+        monetizationGapLines={snapshot.monetizationGapLines}
+      />
 
       <div className="space-y-6">
         <ApiEncyclopediaMigrationPanel />

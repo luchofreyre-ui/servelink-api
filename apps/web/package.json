@@ -87,7 +87,8 @@
     "preview:amazon-paste-import": "tsx scripts/preview-amazon-paste-import.ts",
     "report:amazon-catalog-health": "tsx scripts/report-amazon-catalog-health.ts",
     "report:amazon-catalog-fill-status": "tsx scripts/report-amazon-catalog-fill-status.ts",
-    "report:amazon-catalog-ops": "tsx scripts/report-amazon-catalog-ops.ts"
+    "report:amazon-catalog-ops": "tsx scripts/report-amazon-catalog-ops.ts",
+    "show:funnel-gap-audit": "tsx scripts/show-funnel-gap-audit.ts"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^5.6.1",

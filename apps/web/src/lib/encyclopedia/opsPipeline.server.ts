@@ -5,6 +5,8 @@ import { buildEncyclopediaThroughputCounts } from "./encyclopediaThroughputMetri
 import { getPublishQueueRecords } from "./publishQueue.server";
 import { buildOpsMetrics } from "./opsMetrics";
 import { buildWeakPageRepairWorkflow } from "./repairWorkflow.server";
+import { buildFunnelGapReport } from "@/lib/funnel/funnelGapReport";
+import { buildFunnelGapAuditLines } from "@/lib/funnel/funnelGapAudit";
 
 export function buildEncyclopediaOpsSnapshot() {
   const pages = buildStoredAdminReviewPages();
@@ -116,6 +118,9 @@ export function buildEncyclopediaOpsSnapshot() {
       (page.editorialNotesCount ?? 0) === 0
   ).length;
 
+  const monetizationGaps = buildFunnelGapReport();
+  const monetizationGapLines = buildFunnelGapAuditLines();
+
   return {
     pages,
     queue,
@@ -134,5 +139,7 @@ export function buildEncyclopediaOpsSnapshot() {
     notReadyForApprovalCount,
     repairReadinessLeaderboard,
     batchActionEligibleCount,
+    monetizationGaps,
+    monetizationGapLines,
   };
 }
