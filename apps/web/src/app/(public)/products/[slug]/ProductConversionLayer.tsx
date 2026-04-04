@@ -1,10 +1,12 @@
-import Link from "next/link";
+import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 
 import {
   deriveComparisonSlug,
   deriveProblemContext,
   deriveProblemUseChips,
 } from "./productConversionDerives";
+import { TrackedProductContextBuyLink } from "./TrackedProductContextBuyLink";
+import { TrackedProductContextLink } from "./TrackedProductContextLink";
 
 type Props = {
   productSlug: string;
@@ -14,6 +16,8 @@ export function ProductConversionLayer({ productSlug }: Props) {
   const problemContext = deriveProblemContext(productSlug);
   const comparisonSlug = deriveComparisonSlug(productSlug);
   const problemUseChips = deriveProblemUseChips(productSlug);
+  const purchaseUrl = getProductPurchaseUrl(productSlug);
+  const hasPurchaseUrl = Boolean(purchaseUrl && purchaseUrl !== "#");
 
   return (
     <div className="mt-6 space-y-4">
@@ -22,14 +26,18 @@ export function ProductConversionLayer({ productSlug }: Props) {
           <div className="mb-2 text-sm font-medium">Used for these problems</div>
 
           <div className="flex flex-wrap gap-2">
-            {problemUseChips.map((chip) => (
-              <Link
+            {problemUseChips.map((chip, index) => (
+              <TrackedProductContextLink
                 key={chip.slug}
                 href={chip.href}
+                productSlug={productSlug}
+                roleLabel="product_problem_chip"
+                position={index}
+                label={`product_context_chip:${chip.slug}:position_${index}`}
                 className="rounded-full border border-neutral-200 px-3 py-1 text-xs text-neutral-700 hover:bg-neutral-50"
               >
                 {chip.title}
-              </Link>
+              </TrackedProductContextLink>
             ))}
           </div>
         </div>
@@ -50,9 +58,30 @@ export function ProductConversionLayer({ productSlug }: Props) {
 
       {comparisonSlug ? (
         <div className="text-xs">
-          <Link href={`/compare/products/${comparisonSlug}`} className="text-neutral-700 underline">
+          <TrackedProductContextLink
+            href={`/compare/products/${comparisonSlug}`}
+            productSlug={productSlug}
+            roleLabel="comparison_entry"
+            position={10}
+            label={`product_context_compare:${comparisonSlug}`}
+            className="text-neutral-700 underline"
+          >
             Compare with alternatives →
-          </Link>
+          </TrackedProductContextLink>
+        </div>
+      ) : null}
+
+      {hasPurchaseUrl ? (
+        <div>
+          <TrackedProductContextBuyLink
+            href={purchaseUrl}
+            productSlug={productSlug}
+            position={11}
+            label={`product_context_buy:${productSlug}`}
+            className="inline-block rounded-lg bg-black px-4 py-2 text-sm text-white"
+          >
+            Buy this option →
+          </TrackedProductContextBuyLink>
         </div>
       ) : null}
     </div>
