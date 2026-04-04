@@ -4,7 +4,7 @@ import type {
   AuthorityProblemPageData,
 } from "@/authority/types/authorityPageTypes";
 import { getBestComparePair } from "@/lib/products/bestComparePair";
-import { getBestProductForContext } from "@/lib/products/bestProductForContext";
+import { getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 
@@ -119,18 +119,12 @@ export function getProductAuthorityContext(productSlug: string): ProductAuthorit
 
     if (!scenario) continue;
 
-    const products = scenario.products ?? [];
-    const productIndex = products.findIndex((product) => product.slug === productSlug);
-    const comparePair = getBestComparePair(products, {
-      problemSlug: page.slug,
-      surface: scenario.surface ?? null,
-    });
+    const ctx = { problemSlug: page.slug, surface: scenario.surface ?? null };
+    const orderedProducts = getOrderedScenarioProducts(scenario.products ?? [], ctx);
+    const productIndex = orderedProducts.findIndex((product) => product.slug === productSlug);
+    const comparePair = getBestComparePair(orderedProducts, ctx);
     const compareHref = comparePair.length === 2 ? buildCompareProductsHref(comparePair) : null;
-    const bestProductSlug =
-      getBestProductForContext(products, {
-        problemSlug: page.slug,
-        surface: scenario.surface ?? null,
-      })?.slug ?? null;
+    const bestProductSlug = orderedProducts[0]?.slug ?? null;
 
     const score = scoreMatchedProblem({
       page,

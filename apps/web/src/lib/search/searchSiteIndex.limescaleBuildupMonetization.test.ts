@@ -8,11 +8,12 @@ vi.mock("react", async (importOriginal) => {
 import { searchUnifiedDocuments } from "./searchSiteIndex";
 
 describe("searchSiteIndex limescale-buildup monetization", () => {
-  it("stacks authority problem, compare, then best scenario product", () => {
+  it("stacks authority problem, compare, then resolver best (not raw scenario index 0)", () => {
     const results = searchUnifiedDocuments("scale buildup", { limit: 24 });
 
     expect(results[0]?.href).toBe("/problems/limescale-buildup");
     expect(results[1]?.href).toMatch(/^\/compare\/products\//);
+    // First scenario lists Zep before CLR; surface-aware preference picks CLR on glass.
     expect(results[2]?.href).toBe("/products/clr-calcium-lime-rust");
   });
 });

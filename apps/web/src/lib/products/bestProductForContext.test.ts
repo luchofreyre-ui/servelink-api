@@ -28,6 +28,26 @@ describe("getBestProductForContext", () => {
     expect(best?.slug).toBe("clr-calcium-lime-rust");
   });
 
+  it("prefers surface-specific preference over generic problem fallback", () => {
+    const products = [
+      { slug: "zep-calcium-lime-rust-remover", name: "Zep" },
+      { slug: "clr-calcium-lime-rust", name: "CLR" },
+      { slug: "method-daily-shower-spray", name: "Method" },
+    ];
+    expect(
+      getBestProductForContext(products, {
+        problemSlug: "limescale-buildup",
+        surface: "glass",
+      })?.slug,
+    ).toBe("clr-calcium-lime-rust");
+    expect(
+      getBestProductForContext(products, {
+        problemSlug: "limescale-buildup",
+        surface: "tile",
+      })?.slug,
+    ).toBe("zep-calcium-lime-rust-remover");
+  });
+
   it("falls back to first purchasable SKU when no preference applies", () => {
     const products = [
       { slug: "a", name: "A" },

@@ -16,11 +16,14 @@ export function getBestProductForContext(
   if (!cleaned.length) return null;
 
   if (context?.problemSlug) {
-    const pref = PROBLEM_BEST_PRODUCT_PREFERENCES.find(
-      (p) =>
-        p.problemSlug === context.problemSlug &&
-        (p.surface == null || p.surface === context.surface),
+    const matchingPreferences = PROBLEM_BEST_PRODUCT_PREFERENCES.filter(
+      (p) => p.problemSlug === context.problemSlug,
     );
+
+    const pref =
+      matchingPreferences.find(
+        (p) => p.surface && context?.surface && p.surface === context.surface,
+      ) ?? matchingPreferences.find((p) => !p.surface);
 
     if (pref) {
       for (const slug of pref.preferredOrder) {

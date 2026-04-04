@@ -9,7 +9,7 @@ import { rankEncyclopediaResults } from "@/lib/encyclopedia/searchRanking";
 import type { EncyclopediaCategory, EncyclopediaResolvedIndexEntry } from "@/lib/encyclopedia/types";
 import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
 import { getBestComparePair } from "@/lib/products/bestComparePair";
-import { getBestProductForContext } from "@/lib/products/bestProductForContext";
+import { getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { buildUnifiedSearchIndex } from "@/search/buildUnifiedSearchIndex";
 import {
@@ -213,15 +213,11 @@ function buildProblemContextInjections(problemSlug: string, _authorityProblemFin
   const scenario = problem.productScenarios?.find((row) => row.products?.length);
   if (!scenario) return [];
 
-  const products = (scenario.products ?? []).slice(0, 3);
-  const bestProduct = getBestProductForContext(products, {
-    problemSlug,
-    surface: scenario.surface ?? null,
-  });
-  const comparePair = getBestComparePair(products, {
-    problemSlug,
-    surface: scenario.surface ?? null,
-  });
+  const rawProducts = (scenario.products ?? []).slice(0, 3);
+  const ctx = { problemSlug, surface: scenario.surface ?? null };
+  const orderedProducts = getOrderedScenarioProducts(rawProducts, ctx);
+  const bestProduct = orderedProducts[0] ?? null;
+  const comparePair = getBestComparePair(orderedProducts, ctx);
 
   const injections: ScoredSearchHit[] = [];
 

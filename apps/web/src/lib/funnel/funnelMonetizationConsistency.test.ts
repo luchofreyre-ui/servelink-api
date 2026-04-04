@@ -9,9 +9,11 @@ import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData"
 import { deriveComparisonSlug } from "@/app/(public)/products/[slug]/productConversionDerives";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { getBestComparePair } from "@/lib/products/bestComparePair";
-import { getBestProductForContext } from "@/lib/products/bestProductForContext";
+import { getBestProductForContext, getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
+import { hasComparePage } from "@/lib/products/compareAvailability";
 import { getProductAuthorityContext } from "@/lib/products/productAuthorityContext";
 import { searchUnifiedDocuments } from "@/lib/search/searchSiteIndex";
+import { buildFunnelGapReport } from "@/lib/funnel/funnelGapReport";
 
 describe("funnel monetization consistency", () => {
   it("Case A — Bona / dust: chips, compare, and search align", () => {
@@ -39,11 +41,10 @@ describe("funnel monetization consistency", () => {
   it("Case C — injected compare URL matches graph-aware getBestComparePair (limescale preference)", () => {
     const problem = getProblemPageBySlug("limescale-buildup");
     const scenario = problem?.productScenarios?.find((row) => row.products?.length);
-    const products = (scenario?.products ?? []).slice(0, 3);
-    const pair = getBestComparePair(products, {
-      problemSlug: "limescale-buildup",
-      surface: scenario?.surface ?? null,
-    });
+    const raw = (scenario?.products ?? []).slice(0, 3);
+    const ctx = { problemSlug: "limescale-buildup" as const, surface: scenario?.surface ?? null };
+    const ordered = getOrderedScenarioProducts(raw, ctx);
+    const pair = getBestComparePair(ordered, ctx);
     const expectedHref = pair.length === 2 ? buildCompareProductsHref(pair) : null;
     expect(expectedHref).toBeTruthy();
 
@@ -54,12 +55,13 @@ describe("funnel monetization consistency", () => {
   it("Case D — CLR / limescale: best product, compare pair, search product, and chips align", () => {
     const problem = getProblemPageBySlug("limescale-buildup");
     const scenario = problem?.productScenarios?.find((row) => row.products?.length);
-    const products = (scenario?.products ?? []).slice(0, 3);
+    const raw = (scenario?.products ?? []).slice(0, 3);
     const ctx = { problemSlug: "limescale-buildup" as const, surface: scenario?.surface ?? null };
+    const ordered = getOrderedScenarioProducts(raw, ctx);
 
-    expect(getBestProductForContext(products, ctx)?.slug).toBe("clr-calcium-lime-rust");
+    expect(getBestProductForContext(ordered, ctx)?.slug).toBe("clr-calcium-lime-rust");
 
-    const pair = getBestComparePair(products, ctx);
+    const pair = getBestComparePair(ordered, ctx);
     expect(pair.some((p) => p.slug === "clr-calcium-lime-rust")).toBe(true);
 
     const results = searchUnifiedDocuments("scale buildup", { limit: 12 });
@@ -68,5 +70,46 @@ describe("funnel monetization consistency", () => {
     const auth = getProductAuthorityContext("clr-calcium-lime-rust");
     expect(auth.problemUseChips.some((c) => c.href === "/problems/limescale-buildup")).toBe(true);
     expect(deriveComparisonSlug("clr-calcium-lime-rust")).toBeTruthy();
+  });
+
+  it("Case E — limescale: glass vs tile surface preferences + ordered compare + clean gap report", () => {
+    const products = [
+      { slug: "zep-calcium-lime-rust-remover" },
+      { slug: "clr-calcium-lime-rust" },
+      { slug: "method-daily-shower-spray" },
+    ];
+    expect(
+      getBestProductForContext(products, {
+        problemSlug: "limescale-buildup",
+        surface: "glass",
+      })?.slug,
+    ).toBe("clr-calcium-lime-rust");
+    expect(
+      getBestProductForContext(products, {
+        problemSlug: "limescale-buildup",
+        surface: "tile",
+      })?.slug,
+    ).toBe("zep-calcium-lime-rust-remover");
+
+    const orderedGlass = getOrderedScenarioProducts(products, {
+      problemSlug: "limescale-buildup",
+      surface: "glass",
+    });
+    const orderedTile = getOrderedScenarioProducts(products, {
+      problemSlug: "limescale-buildup",
+      surface: "tile",
+    });
+    expect(
+      hasComparePage(
+        getBestComparePair(orderedGlass, { problemSlug: "limescale-buildup", surface: "glass" }),
+      ),
+    ).toBe(true);
+    expect(
+      hasComparePage(
+        getBestComparePair(orderedTile, { problemSlug: "limescale-buildup", surface: "tile" }),
+      ),
+    ).toBe(true);
+
+    expect(buildFunnelGapReport()).toEqual([]);
   });
 });

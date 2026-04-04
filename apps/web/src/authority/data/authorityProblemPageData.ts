@@ -687,6 +687,24 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
     productScenarios: [
       {
         problem: "remove fingerprints and smudges",
+        surface: "glass",
+        products: [
+          { slug: "windex-original-glass-cleaner", name: "Windex Original" },
+          { slug: "rubbermaid-microfiber-cleaning-cloths", name: "Microfiber Cleaning Cloths" },
+          { slug: "method-all-purpose-cleaner", name: "Method All-Purpose Cleaner" },
+        ],
+      },
+      {
+        problem: "remove fingerprints and smudges",
+        surface: "stainless steel",
+        products: [
+          { slug: "method-all-purpose-cleaner", name: "Method All-Purpose Cleaner" },
+          { slug: "rubbermaid-microfiber-cleaning-cloths", name: "Microfiber Cleaning Cloths" },
+          { slug: "windex-original-glass-cleaner", name: "Windex Original" },
+        ],
+      },
+      {
+        problem: "remove fingerprints and smudges",
         surface: "surfaces",
         products: [
           { slug: "windex-original-glass-cleaner", name: "Windex Original" },
@@ -812,6 +830,15 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
     productScenarios: [
       {
         problem: "surface haze",
+        surface: "glass",
+        products: [
+          { slug: "windex-original-glass-cleaner", name: "Windex Original Glass Cleaner" },
+          { slug: "invisible-glass-premium-glass-cleaner", name: "Invisible Glass Premium Glass Cleaner" },
+          { slug: "method-daily-shower-spray", name: "Method Daily Shower Spray" },
+        ],
+      },
+      {
+        problem: "surface haze",
         surface: "shower glass",
         products: [
           { slug: "windex-original-glass-cleaner", name: "Windex Original Glass Cleaner" },
@@ -819,7 +846,6 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
           { slug: "method-daily-shower-spray", name: "Method Daily Shower Spray" },
         ],
       },
-      { problem: "surface haze", surface: "glass" },
       { problem: "surface haze", surface: "quartz" },
     ],
     relatedProblems: [
@@ -940,10 +966,19 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
     productScenarios: [
       {
         problem: "remove limescale",
-        surface: "fixtures",
+        surface: "glass",
         products: [
-          { slug: "clr-calcium-lime-rust", name: "CLR Calcium, Lime & Rust Remover" },
           { slug: "zep-calcium-lime-rust-remover", name: "Zep Calcium, Lime & Rust Remover" },
+          { slug: "clr-calcium-lime-rust", name: "CLR Calcium, Lime & Rust Remover" },
+          { slug: "method-daily-shower-spray", name: "Method Daily Shower Spray" },
+        ],
+      },
+      {
+        problem: "remove limescale",
+        surface: "tile",
+        products: [
+          { slug: "zep-calcium-lime-rust-remover", name: "Zep Calcium, Lime & Rust Remover" },
+          { slug: "clr-calcium-lime-rust", name: "CLR Calcium, Lime & Rust Remover" },
           { slug: "method-daily-shower-spray", name: "Method Daily Shower Spray" },
         ],
       },

@@ -13,6 +13,6 @@ describe("searchSiteIndex mold-growth monetization", () => {
 
     expect(results[0]?.href).toBe("/problems/mold-growth");
     expect(results[1]?.href).toMatch(/^\/compare\/products\//);
-    expect(results[2]?.href).toBe("/products/scrubbing-bubbles-bathroom-grime-fighter");
+    expect(results[2]?.href).toBe("/products/concrobium-mold-control");
   });
 });

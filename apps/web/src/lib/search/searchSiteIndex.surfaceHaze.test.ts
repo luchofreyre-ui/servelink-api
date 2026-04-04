@@ -16,6 +16,6 @@ describe("search stacking - surface haze", () => {
 
     expect(results[0]?.href).toBe("/problems/surface-haze");
     expect(results[1]?.href).toMatch(/^\/compare\/products\//);
-    expect(results[2]?.href).toBe("/products/windex-original-glass-cleaner");
+    expect(results[2]?.href).toBe("/products/invisible-glass-premium-glass-cleaner");
   });
 });
