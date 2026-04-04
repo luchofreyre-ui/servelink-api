@@ -120,7 +120,10 @@ export function getProductAuthorityContext(productSlug: string): ProductAuthorit
 
     const products = scenario.products ?? [];
     const productIndex = products.findIndex((product) => product.slug === productSlug);
-    const comparePair = getBestComparePair(products);
+    const comparePair = getBestComparePair(products, {
+      problemSlug: page.slug,
+      surface: scenario.surface ?? null,
+    });
     const compareHref = comparePair.length === 2 ? buildCompareProductsHref(comparePair) : null;
     const bestProductSlug = products[0]?.slug ?? null;
 

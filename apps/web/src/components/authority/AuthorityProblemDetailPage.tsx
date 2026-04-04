@@ -403,6 +403,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
                     problemSlug={data.slug}
                     roleLabel={reinforceRoleLabel}
                     compareProducts={roleProducts}
+                    scenarioSurface={scenarioWithProducts?.surface ?? null}
                   />
                 : null}
               </div>
@@ -455,6 +456,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
                     problemSlug={data.slug}
                     roleLabel={reinforceRoleLabel}
                     compareProducts={roleProducts}
+                    scenarioSurface={scenarioWithProducts?.surface ?? null}
                   />
                 : null}
               </div>
@@ -579,6 +581,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             problemSlug={data.slug}
             bestProductSlug={best.slug}
             compareProducts={roleProducts}
+            scenarioSurface={scenarioWithProducts?.surface ?? null}
           />
         : null}
 

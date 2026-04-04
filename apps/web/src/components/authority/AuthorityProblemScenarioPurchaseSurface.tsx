@@ -30,6 +30,7 @@ function displayRoleLabelForRow(index: number): string {
 
 type ScenarioProducts = {
   products?: { slug: string; name?: string }[];
+  surface?: string;
 };
 
 /**
@@ -47,7 +48,10 @@ export function AuthorityProblemScenarioTopBuyCard({
   if (products.length === 0) return null;
 
   const t = tracking(problemSlug);
-  const comparePair = getBestComparePair(products);
+  const comparePair = getBestComparePair(products, {
+    problemSlug,
+    surface: scenario.surface ?? null,
+  });
   const compareHref = comparePair.length === 2 ? buildCompareProductsHref(comparePair) : null;
   const canCompare = Boolean(compareHref);
   const onCompareClick =
@@ -151,6 +155,7 @@ export function AuthorityProblemScenarioMethodReinforceLink({
   problemSlug,
   roleLabel = "Best overall",
   compareProducts,
+  scenarioSurface,
 }: {
   productSlug: string;
   problemSlug: string;
@@ -158,6 +163,8 @@ export function AuthorityProblemScenarioMethodReinforceLink({
   roleLabel?: string;
   /** Same scenario list as the top card; used for optional compare link (best valid pair). */
   compareProducts?: { slug: string }[];
+  /** Matches scenario surface for graph-aware compare preference. */
+  scenarioSurface?: string | null;
 }) {
   const href = getProductPurchaseUrl(productSlug);
   const internalHref = `/products/${productSlug}`;
@@ -172,7 +179,10 @@ export function AuthorityProblemScenarioMethodReinforceLink({
   });
 
   const t = tracking(problemSlug);
-  const comparePair = getBestComparePair(compareProducts ?? []);
+  const comparePair = getBestComparePair(compareProducts ?? [], {
+    problemSlug,
+    surface: scenarioSurface ?? null,
+  });
   const compareHref = comparePair.length === 2 ? buildCompareProductsHref(comparePair) : null;
   const canCompare = Boolean(compareHref);
   const onCompareFromReinforceClick =

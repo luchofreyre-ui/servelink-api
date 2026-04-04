@@ -34,11 +34,14 @@ describe("funnel monetization consistency", () => {
     expect(results[2]?.href).toBe("/products/clr-calcium-lime-rust");
   });
 
-  it("Case C — injected compare URL matches getBestComparePair for the limescale scenario (not blind first-two)", () => {
+  it("Case C — injected compare URL matches graph-aware getBestComparePair (limescale preference)", () => {
     const problem = getProblemPageBySlug("limescale-buildup");
     const scenario = problem?.productScenarios?.find((row) => row.products?.length);
     const products = (scenario?.products ?? []).slice(0, 3);
-    const pair = getBestComparePair(products);
+    const pair = getBestComparePair(products, {
+      problemSlug: "limescale-buildup",
+      surface: scenario?.surface ?? null,
+    });
     const expectedHref = pair.length === 2 ? buildCompareProductsHref(pair) : null;
     expect(expectedHref).toBeTruthy();
 

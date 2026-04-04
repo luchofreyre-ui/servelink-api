@@ -91,6 +91,7 @@ export const PRODUCT_RESEARCH: Record<string, CleaningProductResearch> = {
     safetyWarnings: [
       "Can irritate eyes",
       "May dry skin with repeated exposure",
+      "Harmful if swallowed; keep out of reach of children",
     ],
     ppeRecommendations: [],
     ventilationNotes: "No unusual ventilation requirements for routine use.",
@@ -420,7 +421,7 @@ export const PRODUCT_RESEARCH: Record<string, CleaningProductResearch> = {
       "Not a fit for every coated or specialty surface without label confirmation",
       "Ammonia-class chemistry: avoid surfaces and coatings the label excludes",
     ],
-    incompatibilities: [],
+    incompatibilities: ["bleach", "chlorine-based cleaners (never mix; toxic gases)"],
     ppeRecommendations: [],
     ventilationNotes:
       "Routine room ventilation is generally enough for normal use.",

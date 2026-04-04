@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { normalizeComparisonSlug } from "@/authority/data/authorityComparisonSelectors";
 import { deriveComparisonSlug } from "@/app/(public)/products/[slug]/productConversionDerives";
 
 import { getComparisonOpponentSlug, getProductAuthorityContext } from "./productAuthorityContext";
@@ -30,5 +31,12 @@ describe("getProductAuthorityContext", () => {
   it("deriveComparisonSlug mirrors authority context comparisonSlug (best-pair resolution)", () => {
     const ctx = getProductAuthorityContext("clr-calcium-lime-rust");
     expect(deriveComparisonSlug("clr-calcium-lime-rust")).toBe(ctx.comparisonSlug);
+  });
+
+  it("CLR comparison slug matches editorial limescale pair when that hub wins context", () => {
+    const slug = getProductAuthorityContext("clr-calcium-lime-rust").comparisonSlug;
+    expect(slug).toBe(
+      normalizeComparisonSlug("clr-calcium-lime-rust", "zep-calcium-lime-rust-remover"),
+    );
   });
 });

@@ -77,7 +77,9 @@ export default function RelatedProducts({
   const rawItems =
     usedPeerFallback ? getRelatedProducts(product!, { mode: "similar", limit }) : primary;
   const items =
-    product != null ? prioritizeComparisonOpponentFirst(product.slug, rawItems, limit) : rawItems;
+    product != null ?
+      prioritizeComparisonOpponentFirst<RelatedProductLike>(product.slug, [...rawItems], limit)
+    : rawItems;
 
   if (!items.length) return null;
 

@@ -49,7 +49,9 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     commonMisusePatterns: [
       "Alternating brands on the same thick scale without improving dwell, rinse, or mechanical removal.",
       "Using CLR-class products as general bathroom sprays on mixed soils.",
+      "Leaving acid on chrome, stone, or laminate trims without label-approved dwell and rinse",
     ],
+    bestAlternatives: ["CLR Calcium, Lime & Rust Remover", "Lime-A-Way Cleaner"],
     useInsteadOf: [
       "Use this instead of dish soap when the soil class is mineral bond, not lipid grease.",
       "Use this instead of vinegar when bonded scale needs a stronger labeled acid cycle and rinse discipline.",
@@ -147,12 +149,26 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     manufacturerSummary:
       "A dilutable all-purpose cleaner with mainstream recognition, often misunderstood as a disinfectant or descaler by casual users.",
     activeIngredients: ["surfactants", "alkaline builders (verify SDS)"],
-    safetyWarnings: ["Eye and skin irritation at use concentration", "Residue or slip risk if used too strong on floors"],
+    safetyWarnings: [
+      "Eye and skin irritation at labeled use concentration",
+      "Residue or slip risk if used too strong on floors",
+      "Keep out of reach of children; do not mix with bleach or unknown chemicals",
+    ],
     incompatibilities: ["bleach", "strong acids unless label explicitly allows"],
     expertAnalysis: [
       "The engine should use this SKU to correct misuse patterns: it is primarily a general soil and light-grease tool at correct dilution.",
       "It strengthens coverage for ‘default mainstream cleaner’ comparisons without adding a new chemistry family.",
       "Positioning against disinfectants and descalers should be explicit to prevent trust erosion.",
+    ],
+    commonMisusePatterns: [
+      "Diluting incorrectly and blaming the product for streaking or residue",
+      "Expecting disinfectant or descaler performance from a general-purpose surfactant line",
+      "Using full strength on delicate finishes without label spot tests",
+    ],
+    bestAlternatives: ["Method All-Purpose Cleaner", "Mr. Clean Multi-Surfaces Liquid"],
+    useInsteadOf: [
+      "Use this instead of dish spray when the job is broad hard-surface wiping, not dishware grease",
+      "Use this instead of acidic descalers when the soil is not mineral-bonded scale",
     ],
     verdictSummary:
       "Important mainstream benchmark for general cleaning intent, not for disinfection leadership or heavy mineral removal.",
@@ -199,12 +215,25 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     manufacturerSummary:
       "A clarity-positioned glass cleaner marketed heavily around low-residue and ammonia-free narratives compared with legacy ammoniated brands.",
     activeIngredients: ["solvents", "surfactants"],
-    safetyWarnings: ["Flammable components common—check SDS", "Eye irritation"],
-    incompatibilities: ["bleach"],
+    safetyWarnings: [
+      "Flammable components common—check SDS and avoid ignition sources",
+      "Eye and respiratory irritation in poorly ventilated spaces",
+      "Spot-test coated, tinted, or specialty glass per label",
+    ],
+    incompatibilities: ["bleach", "mixing with other reactive cleaners in one step"],
     expertAnalysis: [
       "This SKU helps the engine separate ‘ammonia glass’ from ‘solvent-forward clarity glass’ without claiming safety equivalence to water-only cleaning.",
       "It should not outrank descalers on mineral-heavy shower glass problems.",
       "Automotive and household variants may differ; treat labeling as authoritative.",
+    ],
+    commonMisusePatterns: [
+      "Using it as a shower-scale or etch fix when the bond is mineral, not film",
+      "Over-wiping and blaming streaks on brand rather than cloth and product load",
+    ],
+    bestAlternatives: ["Windex Original Glass Cleaner", "Sprayway Glass Cleaner"],
+    useInsteadOf: [
+      "Use this instead of ammonia glass SKUs when fragrance or ammonia sensitivity is the constraint",
+      "Use this instead of all-purpose spray when mirror or window clarity is the goal",
     ],
     verdictSummary:
       "Best used to explain ammonia-free glass choices and streak mechanics, not mineral restoration.",
@@ -457,11 +486,25 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     manufacturerSummary:
       "A neutral pH floor cleaner concentrate commonly used in commercial and residential maintenance programs.",
     activeIngredients: ["surfactants", "neutral builders (verify SDS)"],
-    safetyWarnings: ["Dilution errors change performance and residue", "Slip hazard when floors stay wet"],
+    safetyWarnings: [
+      "Dilution errors change performance and residue",
+      "Slip hazard when floors stay wet",
+      "Eye and skin irritation from concentrate—measure carefully",
+    ],
     incompatibilities: ["acids", "bleach unless explicitly approved"],
     expertAnalysis: [
       "Should track as the Zep peer to Bona for neutral floor programs, especially on tile and multi-surface finished floors.",
       "Must lose to drain openers on clogs and to descalers on mineral bond—by design.",
+      "Commercial-tone labeling should not be read as permission for stone or finish risks outside the approved surface list.",
+    ],
+    commonMisusePatterns: [
+      "Using neutral floor cleaner as a descaler on shower glass or fixtures",
+      "Over-wetting LVT or wood-adjacent transitions without dry-buff discipline",
+    ],
+    bestAlternatives: ["Bona Hard-Surface Floor Cleaner", "Murphy Oil Soap (wood-only contexts)"],
+    useInsteadOf: [
+      "Use this instead of acidic bathroom sprays when the floor soil is residue and dust, not scale",
+      "Use this instead of dish soap for large floor programs that need predictable dilution",
     ],
     verdictSummary:
       "Strong neutral-floor comparator; keep it in floor residue clusters, not bathroom scale restoration.",
@@ -511,6 +554,7 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     safetyWarnings: [
       "Do not mix with incompatible disinfectants—enzyme inactivation risk",
       "Skin and eye irritation",
+      "Test hidden fibers and delicate dyes before full treatment",
     ],
     incompatibilities: ["bleach", "many quats and strong oxidizers when used simultaneously per label"],
     expertAnalysis: [
@@ -520,7 +564,9 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     ],
     commonMisusePatterns: [
       "One light spray on dried grease or adhesive and blaming ‘weak enzymes’ instead of wrong chemistry class.",
+      "Layering bleach or disinfectant immediately before or after enzymes and killing efficacy",
     ],
+    bestAlternatives: ["Rocco & Roxie Stain & Odor Eliminator", "Biokleen Bac-Out Stain+Odor Remover"],
     useInsteadOf: [
       "Use this instead of Zero Odor when visible organic stain or digested residue still needs enzyme dwell.",
       "Use this instead of disinfectant sprays when biology removal in fibers is the goal, not hard-surface kill claims.",
@@ -742,6 +788,7 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     safetyWarnings: [
       "Ventilation in enclosed showers",
       "Slip hazard on wet tile until surfaces are rinsed or dried",
+      "Eye irritation if sprayed toward face; rinse skin contact per label",
     ],
     incompatibilities: ["bleach", "acids mixed simultaneously"],
     expertAnalysis: [
@@ -815,13 +862,28 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     manufacturerSummary:
       "Bona’s hard-surface floor line for tile, stone-tolerant finished floors, and LVT-style programs separate from hardwood-only SKUs.",
     activeIngredients: ["neutral surfactant system (verify SDS)"],
-    safetyWarnings: ["Slip hazard when over-wetted"],
-    incompatibilities: ["wax strippers unless label allows"],
+    safetyWarnings: [
+      "Slip hazard when over-wetted",
+      "Eye irritation from concentrate or heavy spray mist",
+      "Keep children and pets off until floors are dry where label requires it",
+    ],
+    incompatibilities: ["wax strippers unless label allows", "bleach or acids in the same mop bucket unless approved"],
     expertAnalysis: [
       "Third floor comparator that lets hardwood Bona, vinyl Rejuvenate, and Zep neutral each have a lane.",
       "Ranking should punish hardwood-only contexts and reward sealed hard-surface floor contexts.",
+      "Versus Zep neutral pH, the fork is brand/program fit and residue feel on grout and LVT—both stay out of descaler and grease-leaderboards.",
     ],
-    verdictSummary: "Hard-surface floor maintenance anchor.",
+    commonMisusePatterns: [
+      "Using hard-surface floor cleaner on shower glass or fixtures expecting scale removal",
+      "Saturating expansion gaps or wood-adjacent trim without dry time",
+    ],
+    bestAlternatives: ["Zep Neutral pH Floor Cleaner", "Bona Hardwood Floor Cleaner (wood-only)"],
+    useInsteadOf: [
+      "Use this instead of dish soap for large sealed-tile and LVT programs",
+      "Use this instead of acidic bathroom cleaners when the soil is dust and residue, not mineral scale",
+    ],
+    verdictSummary:
+      "Hard-surface floor maintenance anchor for sealed tile and resilient floors; wrong tool for scale, mold, or heavy grease.",
     sources: [{ label: "Bona floor care", url: "https://us.bona.com/", type: "manufacturer" }],
     lastReviewed: new Date().toISOString(),
   },
@@ -990,6 +1052,7 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     safetyWarnings: [
       "Ventilate; follow label dwell, repeat-application limits, and surface lists",
       "Do not substitute for moisture remediation inside walls, HVAC, or large-area remediation plans",
+      "Eye and skin irritation possible; avoid misting toward face",
     ],
     incompatibilities: ["bleach in the same application step", "mixing with unrelated bathroom chemistry in one pass"],
     expertAnalysis: [
@@ -1153,6 +1216,7 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     safetyWarnings: [
       "Ventilation in small rooms",
       "Not a substitute for removing saturated biological soil from carpet pad or drywall",
+      "Eye irritation if sprayed toward face; spot-test delicate fabrics",
     ],
     incompatibilities: ["mixing with incompatible chemistries per label", "bleach or strong oxidizers unless label explicitly allows sequencing"],
     expertAnalysis: [
@@ -1167,6 +1231,7 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
       "Use this instead of Febreze-style refresh when the need is neutralization after cleaning, not a scent layer.",
       "Use this instead of disinfectant sprays when the job is odor chemistry, not kill claims on hard surfaces.",
     ],
+    bestAlternatives: ["Nature's Miracle Stain and Odor Remover", "Rocco & Roxie Stain & Odor Eliminator"],
     verdictSummary:
       "Musty / neutral-odor specialist peer for post-clean passes; not an enzyme digester or grease cleaner.",
     sources: [{ label: "Zero Odor", url: "https://www.zeroodor.com/", type: "manufacturer" }],
@@ -1226,6 +1291,7 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
     safetyWarnings: [
       "Eye and skin irritation if sprayed toward face or used without gloves on sensitive skin",
       "Ventilate when using heavily fragranced variants in small rooms",
+      "Slip hazard if oversprayed on floors and not dried",
     ],
     incompatibilities: ["bleach", "ammonia", "mixing with other bathroom chemistry in one step"],
     expertAnalysis: [
@@ -1240,6 +1306,7 @@ export const PRODUCT_RESEARCH_EXTRA: Record<string, CleaningProductResearch> = {
       "Use this instead of glass-only SKUs when the job is mixed counters and splashes, not mirror finish quality.",
       "Use this instead of vinegar DIY when you want a formulated surfactant bundle on label-listed surfaces.",
     ],
+    bestAlternatives: ["Mrs. Meyer's Multi-Surface Cleaner", "Simple Green All-Purpose Cleaner"],
     verdictSummary:
       "Capable daily all-purpose maintainer for labeled hard surfaces; wrong default for heavy scale, mold, or glass-streak specialization.",
     sources: [{ label: "Method", url: "https://methodhome.com/", type: "manufacturer" }],

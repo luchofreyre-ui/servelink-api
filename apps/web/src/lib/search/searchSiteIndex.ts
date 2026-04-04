@@ -214,7 +214,10 @@ function buildProblemContextInjections(problemSlug: string, _authorityProblemFin
 
   const products = (scenario.products ?? []).slice(0, 3);
   const bestProduct = products[0];
-  const comparePair = getBestComparePair(products);
+  const comparePair = getBestComparePair(products, {
+    problemSlug,
+    surface: scenario.surface ?? null,
+  });
 
   const injections: ScoredSearchHit[] = [];
 

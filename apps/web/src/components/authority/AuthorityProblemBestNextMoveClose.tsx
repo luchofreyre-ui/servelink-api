@@ -15,10 +15,20 @@ type Props = {
   problemSlug: string;
   bestProductSlug: string;
   compareProducts: { slug: string }[];
+  /** Scenario surface for graph-aware compare preference (execution-first hubs). */
+  scenarioSurface?: string | null;
 };
 
-export function AuthorityProblemBestNextMoveClose({ problemSlug, bestProductSlug, compareProducts }: Props) {
-  const comparePair = getBestComparePair(compareProducts);
+export function AuthorityProblemBestNextMoveClose({
+  problemSlug,
+  bestProductSlug,
+  compareProducts,
+  scenarioSurface,
+}: Props) {
+  const comparePair = getBestComparePair(compareProducts, {
+    problemSlug,
+    surface: scenarioSurface ?? null,
+  });
   const canCompare = comparePair.length === 2;
   const compareHref = canCompare ? buildCompareProductsHref(comparePair) : null;
   const compareSegment = canCompare ? buildCompareSlug(comparePair) : null;
