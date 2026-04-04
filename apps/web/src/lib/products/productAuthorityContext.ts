@@ -4,6 +4,7 @@ import type {
   AuthorityProblemPageData,
 } from "@/authority/types/authorityPageTypes";
 import { getBestComparePair } from "@/lib/products/bestComparePair";
+import { getBestProductForContext } from "@/lib/products/bestProductForContext";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 
@@ -125,7 +126,11 @@ export function getProductAuthorityContext(productSlug: string): ProductAuthorit
       surface: scenario.surface ?? null,
     });
     const compareHref = comparePair.length === 2 ? buildCompareProductsHref(comparePair) : null;
-    const bestProductSlug = products[0]?.slug ?? null;
+    const bestProductSlug =
+      getBestProductForContext(products, {
+        problemSlug: page.slug,
+        surface: scenario.surface ?? null,
+      })?.slug ?? null;
 
     const score = scoreMatchedProblem({
       page,

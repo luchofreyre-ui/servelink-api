@@ -7,6 +7,7 @@ import {
   trackProductRecommendationClick,
 } from "@/lib/products/productRecommendationTracking";
 import { getBestComparePair } from "@/lib/products/bestComparePair";
+import { getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
 
@@ -44,7 +45,10 @@ export function AuthorityProblemScenarioTopBuyCard({
   scenario: ScenarioProducts;
   problemSlug: string;
 }) {
-  const products = (scenario.products ?? []).slice(0, 3);
+  const products = getOrderedScenarioProducts((scenario.products ?? []).slice(0, 3), {
+    problemSlug,
+    surface: scenario.surface ?? null,
+  });
   if (products.length === 0) return null;
 
   const t = tracking(problemSlug);

@@ -26,6 +26,7 @@ import { AuthoritySection } from "./AuthoritySection";
 import { AuthoritySeeAlso } from "./AuthoritySeeAlso";
 import { getGuidePageBySlug } from "@/authority/data/authorityGuidePageData";
 import { getProductComparisonNavExtras } from "@/authority/data/authorityProductComparisonNav";
+import { getBestProductForContext } from "@/lib/products/bestProductForContext";
 import { getProductBySlug, type ProductDetailView } from "@/lib/products/productRegistry";
 import { AuthorityProductComparisonExplore } from "./AuthorityProductComparisonExplore";
 import { snippetAnswer } from "@/lib/authority/authoritySnippetText";
@@ -258,7 +259,21 @@ export function AuthorityComparisonPage({
       : null;
   const leftComparisonProduct = data.type === "product_comparison" ? getProductBySlug(data.leftSlug) : null;
   const rightComparisonProduct = data.type === "product_comparison" ? getProductBySlug(data.rightSlug) : null;
-  const winnerSlug = data.type === "product_comparison" ? data.winnerBlock?.product : undefined;
+  const resolvedComparisonWinner =
+    data.type === "product_comparison" && data.topSharedProblemSlug
+      ? getBestProductForContext(
+          [{ slug: data.leftSlug }, { slug: data.rightSlug }],
+          {
+            problemSlug: data.topSharedProblemSlug,
+            surface: data.topSharedSurfaceSlug ?? null,
+          },
+        )
+      : null;
+  const winnerProductSlug =
+    data.type === "product_comparison"
+      ? resolvedComparisonWinner?.slug ?? data.winnerBlock?.product
+      : undefined;
+  const winnerSlug = winnerProductSlug;
   const comparePurchaseTracking =
     data.type === "product_comparison"
       ? {
@@ -298,15 +313,20 @@ export function AuthorityComparisonPage({
           <p className="mb-4 text-base font-semibold text-[#0F172A]">{data.oneLineVerdict}</p>
         ) : null}
 
-        {data.type === "product_comparison" && data.winnerBlock ? (
+        {data.type === "product_comparison" && winnerProductSlug ? (
           <div className="mb-6 rounded-xl border border-neutral-200 bg-white p-4">
-            <div className="mb-1 text-sm font-medium text-[#0F172A]">{data.winnerBlock.title}</div>
-            <div className="text-sm font-semibold text-[#0F172A]">
-              {getProductBySlug(data.winnerBlock.product)?.name ?? data.winnerBlock.product}
+            <div className="mb-1 text-sm font-medium text-[#0F172A]">
+              {data.winnerBlock?.title ?? "Recommended starting point"}
             </div>
-            <div className="mt-1 text-xs text-neutral-600">{data.winnerBlock.reason}</div>
+            <div className="text-sm font-semibold text-[#0F172A]">
+              {getProductBySlug(winnerProductSlug)?.name ?? winnerProductSlug}
+            </div>
+            <div className="mt-1 text-xs text-neutral-600">
+              {data.winnerBlock?.reason ??
+                "Aligned with the primary problem hub for this comparison when a graph preference applies."}
+            </div>
             <AuthorityComparisonTrackedBuyLink
-              productSlug={data.winnerBlock.product}
+              productSlug={winnerProductSlug}
               roleLabel="Best overall"
               position={0}
               trackingContext={comparePurchaseTracking}
@@ -334,10 +354,10 @@ export function AuthorityComparisonPage({
           </div>
         ) : null}
 
-        {data.type === "product_comparison" && data.winnerBlock ? (
+        {data.type === "product_comparison" && winnerProductSlug ? (
           <div className="mt-4">
             <AuthorityComparisonTrackedBuyLink
-              productSlug={data.winnerBlock.product}
+              productSlug={winnerProductSlug}
               roleLabel="Best overall"
               position={2}
               trackingContext={comparePurchaseTracking}
@@ -381,7 +401,7 @@ export function AuthorityComparisonPage({
           </div>
         ) : null}
 
-        {data.type === "product_comparison" && data.winnerBlock ? (
+        {data.type === "product_comparison" && winnerProductSlug ? (
           <div
             className="mb-8 rounded-xl border border-neutral-200 bg-white p-4"
             data-testid="comparison-best-next-move"
@@ -391,7 +411,7 @@ export function AuthorityComparisonPage({
               For this problem, the stronger default choice is already selected above.
             </p>
             <AuthorityComparisonTrackedBuyLink
-              productSlug={data.winnerBlock.product}
+              productSlug={winnerProductSlug}
               roleLabel="Best overall"
               position={20}
               trackingContext={
@@ -407,7 +427,7 @@ export function AuthorityComparisonPage({
             <div className="mt-3">
               <AuthorityComparisonTrackedBuyLink
                 productSlug={
-                  data.winnerBlock.product === data.leftSlug ? data.rightSlug : data.leftSlug
+                  winnerProductSlug === data.leftSlug ? data.rightSlug : data.leftSlug
                 }
                 roleLabel="comparison_entry"
                 position={21}

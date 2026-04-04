@@ -6,8 +6,10 @@ vi.mock("react", async (importOriginal) => {
 });
 
 import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
+import { deriveComparisonSlug } from "@/app/(public)/products/[slug]/productConversionDerives";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { getBestComparePair } from "@/lib/products/bestComparePair";
+import { getBestProductForContext } from "@/lib/products/bestProductForContext";
 import { getProductAuthorityContext } from "@/lib/products/productAuthorityContext";
 import { searchUnifiedDocuments } from "@/lib/search/searchSiteIndex";
 
@@ -47,5 +49,24 @@ describe("funnel monetization consistency", () => {
 
     const results = searchUnifiedDocuments("scale buildup", { limit: 12 });
     expect(results[1]?.href).toBe(expectedHref);
+  });
+
+  it("Case D — CLR / limescale: best product, compare pair, search product, and chips align", () => {
+    const problem = getProblemPageBySlug("limescale-buildup");
+    const scenario = problem?.productScenarios?.find((row) => row.products?.length);
+    const products = (scenario?.products ?? []).slice(0, 3);
+    const ctx = { problemSlug: "limescale-buildup" as const, surface: scenario?.surface ?? null };
+
+    expect(getBestProductForContext(products, ctx)?.slug).toBe("clr-calcium-lime-rust");
+
+    const pair = getBestComparePair(products, ctx);
+    expect(pair.some((p) => p.slug === "clr-calcium-lime-rust")).toBe(true);
+
+    const results = searchUnifiedDocuments("scale buildup", { limit: 12 });
+    expect(results[2]?.href).toBe("/products/clr-calcium-lime-rust");
+
+    const auth = getProductAuthorityContext("clr-calcium-lime-rust");
+    expect(auth.problemUseChips.some((c) => c.href === "/problems/limescale-buildup")).toBe(true);
+    expect(deriveComparisonSlug("clr-calcium-lime-rust")).toBeTruthy();
   });
 });

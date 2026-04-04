@@ -8,6 +8,7 @@ import { ProductComparisonPriorityStrip } from "./ProductComparisonPriorityStrip
 import { ProductConversionLayer } from "./ProductConversionLayer";
 import { deriveComparisonSlug } from "./productConversionDerives";
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
+import { ProductResearchCollapsibleDetail } from "@/components/products/ProductResearchCollapsibleDetail";
 import { ProductResearchDecisionPanels } from "@/components/products/ProductResearchDecisionPanels";
 import { ProductImageGallery } from "@/components/products/ProductImageGallery";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
@@ -176,38 +177,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </section>
 
       {research && (
-        <section className="space-y-8" data-testid="product-research-detail">
+        <section className="space-y-4" data-testid="product-research-section">
           <h2 className="mb-3 text-xl font-semibold">Research</h2>
 
-          {research.verdictSummary ? (
-            <section>
-              <h3 className="mb-2 text-lg font-semibold">Verdict</h3>
-              <p className="text-gray-700">{research.verdictSummary}</p>
-            </section>
-          ) : null}
-
-          {research.useInsteadOf?.length ? (
-            <section>
-              <h3 className="mb-2 text-lg font-semibold">Best uses</h3>
-              <ul className="space-y-1 text-gray-700">
-                {research.useInsteadOf.map((item, i) => (
-                  <li key={i}>• {item}</li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-
-          {research.commonMisusePatterns?.length ? (
-            <section>
-              <h3 className="mb-2 text-lg font-semibold">Avoid uses</h3>
-              <ul className="space-y-1 text-gray-700">
-                {research.commonMisusePatterns.map((item, i) => (
-                  <li key={i}>• {item}</li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-
+          <ProductResearchCollapsibleDetail>
           {research.manufacturerSummary ? (
             <section>
               <h3 className="mb-2 text-lg font-semibold">Manufacturer summary</h3>
@@ -352,6 +325,17 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </section>
           ) : null}
 
+          {research.commonMisusePatterns?.length ? (
+            <section>
+              <h3 className="mb-2 text-lg font-semibold">Misuse patterns</h3>
+              <ul className="space-y-1 text-gray-700">
+                {research.commonMisusePatterns.map((item, i) => (
+                  <li key={i}>• {item}</li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
           {research.bestAlternatives?.length ? (
             <section>
               <h3 className="mb-2 text-lg font-semibold">Use instead of / common alternatives</h3>
@@ -409,6 +393,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </ul>
             </section>
           ) : null}
+          </ProductResearchCollapsibleDetail>
         </section>
       )}
 

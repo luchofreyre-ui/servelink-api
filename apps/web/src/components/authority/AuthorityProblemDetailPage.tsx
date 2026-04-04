@@ -67,6 +67,7 @@ import {
 import type { PublishedProductLike } from "@/lib/products/getRecommendedProducts";
 import { resolveProductRecommendationContextForProblemPage } from "@/lib/products/productRecommendationContext";
 import { isExecutionFirstProblemLayout } from "@/lib/authority/authorityProblemExecutionLayout";
+import { getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
 
 const DEFAULT_BEFORE_YOU_CLEAN = `Most people go too aggressive too early.
 
@@ -307,7 +308,11 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
     inlineAssistPurchaseRaw && inlineAssistPurchaseRaw !== "#" ? inlineAssistPurchaseRaw : null;
 
   const scenarioWithProducts = data.productScenarios?.find((s) => s.products?.length);
-  const roleProducts = scenarioWithProducts?.products?.slice(0, 3) ?? [];
+  const roleProductsRaw = scenarioWithProducts?.products?.slice(0, 3) ?? [];
+  const roleProducts = getOrderedScenarioProducts(roleProductsRaw, {
+    problemSlug: data.slug,
+    surface: scenarioWithProducts?.surface ?? null,
+  });
   const best = roleProducts[0];
   const heavy = roleProducts[1];
   const maintenance = roleProducts[2];

@@ -45,6 +45,9 @@ export function ProductResearchDecisionPanels({ research }: Props) {
               <li key={item}>- {item}</li>
             ))}
           </ul>
+          <div className="mt-2 text-xs text-neutral-500">
+            If results plateau, switch to a stronger chemistry instead of repeating the same approach.
+          </div>
         </div>
       : null}
     </div>

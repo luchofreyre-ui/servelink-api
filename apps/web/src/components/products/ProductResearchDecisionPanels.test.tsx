@@ -16,5 +16,8 @@ describe("ProductResearchDecisionPanels", () => {
       screen.getByText(/A strong targeted descaler and rust remover with real value/i),
     ).toBeInTheDocument();
     expect(screen.getByText(/Use this instead of dish soap for calcium/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/If results plateau, switch to a stronger chemistry/i),
+    ).toBeInTheDocument();
   });
 });
