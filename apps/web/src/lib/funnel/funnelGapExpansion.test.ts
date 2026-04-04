@@ -4,6 +4,7 @@ import {
   autoResolveGaps,
   checkForMonetizationGaps,
   checkForResearchGaps,
+  summarizeMonetizationHealth,
   warnMonetizationExpansionGaps,
 } from "./funnelGapExpansion";
 import { buildFunnelGapReport } from "./funnelGapReport";
@@ -11,6 +12,15 @@ import { buildFunnelGapReport } from "./funnelGapReport";
 describe("checkForMonetizationGaps", () => {
   it("matches buildFunnelGapReport output", () => {
     expect(checkForMonetizationGaps()).toEqual(buildFunnelGapReport());
+  });
+});
+
+describe("summarizeMonetizationHealth", () => {
+  it("aligns gap count with buildFunnelGapReport", () => {
+    const gaps = buildFunnelGapReport();
+    const s = summarizeMonetizationHealth();
+    expect(s.gapCount).toBe(gaps.length);
+    expect(s.hasGaps).toBe(gaps.length > 0);
   });
 });
 

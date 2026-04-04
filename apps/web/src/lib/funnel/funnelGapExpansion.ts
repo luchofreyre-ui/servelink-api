@@ -66,3 +66,9 @@ export function autoResolveGaps(): void {
     }
   }
 }
+
+/** Lightweight summary for dashboards and cron checks. */
+export function summarizeMonetizationHealth(): { gapCount: number; hasGaps: boolean } {
+  const gaps = buildFunnelGapReport();
+  return { gapCount: gaps.length, hasGaps: gaps.length > 0 };
+}

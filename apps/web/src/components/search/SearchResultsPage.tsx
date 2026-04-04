@@ -1,3 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { getFunnelUserPreferences } from "@/lib/analytics/funnelSync";
+import { getSearchRecommendations } from "@/lib/search/searchRecommendation";
 import type { SiteSearchDocument } from "@/types/search";
 
 import SearchResultsSessionTracker from "./SearchResultsSessionTracker";
@@ -178,10 +184,16 @@ export function SearchResultsPage({
   query,
   results,
 }: SearchResultsPageProps) {
-  const bestMatchId = results.length > 0 ? results[0]!.id : null;
-  const topId = results[0]?.id ?? null;
-  const indexById = new Map(results.map((r, i) => [r.id, i] as const));
-  const groups = groupResultsByType(results);
+  const [displayResults, setDisplayResults] = useState(results);
+
+  useEffect(() => {
+    setDisplayResults(getSearchRecommendations(results, query, getFunnelUserPreferences()));
+  }, [results, query]);
+
+  const bestMatchId = displayResults.length > 0 ? displayResults[0]!.id : null;
+  const topId = displayResults[0]?.id ?? null;
+  const indexById = new Map(displayResults.map((r, i) => [r.id, i] as const));
+  const groups = groupResultsByType(displayResults);
 
   return (
     <main
@@ -197,12 +209,12 @@ export function SearchResultsPage({
           Results for “{query}”
         </h1>
         <p className="font-[var(--font-manrope)] text-base leading-7 text-[#475569]">
-          {results.length} result{results.length === 1 ? "" : "s"} found across
+          {displayResults.length} result{displayResults.length === 1 ? "" : "s"} found across
           authority pages and pipeline-backed encyclopedia content.
         </p>
       </div>
 
-      {results.length === 0 ? (
+      {displayResults.length === 0 ? (
         <div className="mt-10 rounded-2xl border border-[#C9B27C]/20 bg-white/80 p-6 font-[var(--font-manrope)] text-sm text-[#64748B]">
           No results matched this search yet.
         </div>
