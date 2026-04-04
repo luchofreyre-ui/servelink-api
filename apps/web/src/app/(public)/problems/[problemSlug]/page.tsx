@@ -4,6 +4,7 @@ import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData"
 import { buildAuthorityProblemDetailMetadata } from "@/authority/metadata/authorityMetadata";
 import { AuthorityProblemDetailPage } from "@/components/authority/AuthorityProblemDetailPage";
 import { PublicEncyclopediaDocumentPage } from "@/components/encyclopedia/PublicEncyclopediaDocumentPage";
+import { isAuthorityOwnedProblemHub } from "@/lib/authority/authorityOwnedProblemHubs";
 import {
   getEncyclopediaDocumentByCategoryAndSlug,
   getPublishedEncyclopediaSlugsByCategory,
@@ -31,6 +32,12 @@ export async function generateMetadata({
 }) {
   const { problemSlug } = await params;
 
+  if (isAuthorityOwnedProblemHub(problemSlug)) {
+    const page = getProblemPageBySlug(problemSlug);
+    if (!page) return {};
+    return buildAuthorityProblemDetailMetadata(page);
+  }
+
   const pipelineDocument = getEncyclopediaDocumentByCategoryAndSlug(
     "problems",
     problemSlug,
@@ -54,6 +61,12 @@ export default async function ProblemDetailRoute({
   params: Promise<{ problemSlug: string }>;
 }) {
   const { problemSlug } = await params;
+
+  if (isAuthorityOwnedProblemHub(problemSlug)) {
+    const data = getProblemPageBySlug(problemSlug);
+    if (!data) notFound();
+    return <AuthorityProblemDetailPage data={data} />;
+  }
 
   const pipelineDocument = getEncyclopediaDocumentByCategoryAndSlug(
     "problems",
