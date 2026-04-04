@@ -69,13 +69,11 @@ export function autoResolveGaps(): void {
 
 /**
  * Lightweight summary for dashboards and cron checks.
- * Pass `gapData` to summarize a known list; omit to use the live `buildFunnelGapReport()` snapshot.
+ * Omit the argument to use the live `buildFunnelGapReport()` snapshot.
  */
 export function summarizeMonetizationHealth(
-  gapData?: readonly unknown[] | null,
+  gapData: readonly unknown[] = buildFunnelGapReport(),
 ): { gapCount: number; hasGaps: boolean } {
-  const gaps =
-    gapData !== undefined && gapData !== null ? gapData : buildFunnelGapReport();
-  const gapCount = Array.isArray(gaps) ? gaps.length : 0;
+  const gapCount = gapData.length;
   return { gapCount, hasGaps: gapCount > 0 };
 }

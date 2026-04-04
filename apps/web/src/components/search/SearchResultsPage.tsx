@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 import { getFunnelUserPreferences } from "@/lib/analytics/funnelSync";
 import { getSearchRecommendations } from "@/lib/search/searchRecommendation";
@@ -184,11 +184,18 @@ export function SearchResultsPage({
   query,
   results,
 }: SearchResultsPageProps) {
-  const [displayResults, setDisplayResults] = useState(results);
+  const [reorderedResults, setReorderedResults] = useState<SiteSearchDocument[]>([]);
 
-  useEffect(() => {
-    setDisplayResults(getSearchRecommendations(results, query, getFunnelUserPreferences()));
+  useLayoutEffect(() => {
+    if (results.length === 0) {
+      setReorderedResults([]);
+      return;
+    }
+    setReorderedResults(getSearchRecommendations(results, query, getFunnelUserPreferences()));
   }, [results, query]);
+
+  /** Until layout effect runs, fall back to server order so we do not flash an empty state. */
+  const displayResults = reorderedResults.length > 0 ? reorderedResults : results;
 
   const bestMatchId = displayResults.length > 0 ? displayResults[0]!.id : null;
   const topId = displayResults[0]?.id ?? null;
