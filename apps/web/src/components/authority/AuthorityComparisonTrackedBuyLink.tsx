@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { buildProductRecommendationClickHandler } from "@/lib/products/productRecommendationTracking";
@@ -25,25 +26,36 @@ export function AuthorityComparisonTrackedBuyLink({
   className,
   children,
 }: AuthorityComparisonTrackedBuyLinkProps) {
-  const href = getProductPurchaseUrl(productSlug);
+  const outbound = getProductPurchaseUrl(productSlug);
+  const internalHref = `/products/${productSlug}`;
+  const purchaseOk = outbound !== "#";
+  const trackHref = purchaseOk ? outbound : internalHref;
   const onClick = buildProductRecommendationClickHandler({
     productSlug,
     roleLabel,
     position,
-    href,
+    href: trackHref,
     trackingContext,
     pinnedSlugs,
   });
 
+  if (purchaseOk) {
+    return (
+      <a
+        href={outbound}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        onClick={onClick}
+      >
+        {children}
+      </a>
+    );
+  }
+
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={className}
-      onClick={onClick}
-    >
+    <Link href={internalHref} className={className} onClick={onClick}>
       {children}
-    </a>
+    </Link>
   );
 }

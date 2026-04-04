@@ -4,8 +4,10 @@ import Link from "next/link";
 
 import { ProductImage } from "@/components/products/ProductImage";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
+import { getComparisonOpponentSlug } from "@/lib/products/productAuthorityContext";
 import { getRelatedProducts } from "@/lib/products/productRelated";
 import type { ProductLike } from "@/lib/products/productRelated";
+import { getAllPublishedProducts } from "@/lib/products/productPublishing";
 import type { ProductRecommendationTrackingContext } from "@/lib/products/productRecommendationTrackingTypes";
 import { buildProductRecommendationClickHandler } from "@/lib/products/productRecommendationTracking";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
@@ -37,18 +39,45 @@ function normalizeScore(product: RelatedProductLike) {
   return product.finalScore ?? product.score ?? product.rating?.finalScore ?? null;
 }
 
+/** Comparison opponent first when a primary compare route exists (funnel relevance). */
+function prioritizeComparisonOpponentFirst<T extends { slug: string }>(
+  currentSlug: string,
+  items: T[],
+  limit: number,
+): T[] {
+  const opponent = getComparisonOpponentSlug(currentSlug);
+  if (!opponent || items.length === 0) return items;
+
+  const idx = items.findIndex((i) => i.slug === opponent);
+  if (idx === 0) return items;
+  if (idx > 0) {
+    const copy = [...items];
+    const [row] = copy.splice(idx, 1);
+    return [row, ...copy].slice(0, limit);
+  }
+
+  const published = getAllPublishedProducts().find((p) => p.slug === opponent);
+  if (!published) return items;
+
+  const rest = items.filter((i) => i.slug !== opponent);
+  return [published as unknown as T, ...rest].slice(0, limit);
+}
+
 export default function RelatedProducts({
   product,
   mode = "similar",
   products = [],
   trackingContext,
 }: Props) {
+  const limit = 3;
   const primary =
-    product != null ? getRelatedProducts(product, { mode, limit: 3 }) : products.slice(0, 3);
+    product != null ? getRelatedProducts(product, { mode, limit }) : products.slice(0, limit);
   const usedPeerFallback =
     Boolean(product && mode === "better" && !primary.length);
+  const rawItems =
+    usedPeerFallback ? getRelatedProducts(product!, { mode: "similar", limit }) : primary;
   const items =
-    usedPeerFallback ? getRelatedProducts(product!, { mode: "similar", limit: 3 }) : primary;
+    product != null ? prioritizeComparisonOpponentFirst(product.slug, rawItems, limit) : rawItems;
 
   if (!items.length) return null;
 
@@ -65,7 +94,8 @@ export default function RelatedProducts({
       <div className="grid gap-4 md:grid-cols-3">
         {items.map((item, index) => {
           const viewHref = `/products/${item.slug}`;
-          const purchaseUrl = getProductPurchaseUrl(item);
+          const purchaseUrlRaw = getProductPurchaseUrl(item.slug);
+          const purchaseUrl = purchaseUrlRaw !== "#" ? purchaseUrlRaw : null;
           const track = (href: string) =>
             buildProductRecommendationClickHandler({
               productSlug: item.slug,

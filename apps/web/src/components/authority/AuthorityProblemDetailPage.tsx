@@ -49,6 +49,11 @@ import { AuthorityProblemQuickFix } from "./AuthorityProblemQuickFix";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 import { ContextualProductRecommendations } from "@/components/products/ContextualProductRecommendations";
 import { AuthorityProblemInlineAssistTracked } from "./AuthorityProblemInlineAssistTracked";
+import { AuthorityProblemBestNextMoveClose } from "./AuthorityProblemBestNextMoveClose";
+import {
+  AuthorityProblemScenarioMethodReinforceLink,
+  AuthorityProblemScenarioTopBuyCard,
+} from "./AuthorityProblemScenarioPurchaseSurface";
 import type { InlineAssistProduct } from "@/components/products/InlineProductAssist";
 import { getProductImageUrl } from "@/lib/products/getProductImageUrl";
 import { getProductPurchaseUrl } from "@/lib/products/getProductPurchaseUrl";
@@ -295,9 +300,24 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
   const inlineAssistTopPick = buildProblemInlineAssistPick(inlineAssistTopProduct);
   const inlineAssistSecondaryPick = buildProblemInlineAssistPick(recommendationProducts?.[1] ?? null);
-  const inlineAssistBuyHref = inlineAssistTopProduct
-    ? getProductPurchaseUrl(getPublishedProductBySlug(inlineAssistTopProduct.slug) ?? inlineAssistTopProduct)
+  const inlineAssistPurchaseRaw = inlineAssistTopProduct
+    ? getProductPurchaseUrl(inlineAssistTopProduct.slug)
     : null;
+  const inlineAssistBuyHref =
+    inlineAssistPurchaseRaw && inlineAssistPurchaseRaw !== "#" ? inlineAssistPurchaseRaw : null;
+
+  const scenarioWithProducts = data.productScenarios?.find((s) => s.products?.length);
+  const roleProducts = scenarioWithProducts?.products?.slice(0, 3) ?? [];
+  const best = roleProducts[0];
+  const heavy = roleProducts[1];
+  const maintenance = roleProducts[2];
+  const reinforceProduct = best ?? heavy ?? maintenance;
+  const reinforceRoleLabel =
+    reinforceProduct && best && reinforceProduct.slug === best.slug
+      ? "Best overall"
+      : reinforceProduct && heavy && reinforceProduct.slug === heavy.slug
+        ? "Heavy"
+        : "Maintenance";
 
   const beforeClean = data.beforeYouClean ?? DEFAULT_BEFORE_YOU_CLEAN;
   const voice = data.diagnosticVoiceLines ?? [];
@@ -362,6 +382,12 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
               />
               <div className="w-full space-y-0" data-testid="execution-first-top-fold">
                 <AuthorityProblemQuickFix {...data.executionQuickFix!} />
+                {scenarioWithProducts && roleProducts.length > 0 ?
+                  <AuthorityProblemScenarioTopBuyCard
+                    scenario={scenarioWithProducts}
+                    problemSlug={data.slug}
+                  />
+                : null}
                 {data.whyThisWorksShort ?
                   <div
                     id="problem-methods"
@@ -370,6 +396,14 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
                     <div className="mb-1 font-semibold">Why this works</div>
                     <div>{data.whyThisWorksShort}</div>
                   </div>
+                : null}
+                {reinforceProduct ?
+                  <AuthorityProblemScenarioMethodReinforceLink
+                    productSlug={reinforceProduct.slug}
+                    problemSlug={data.slug}
+                    roleLabel={reinforceRoleLabel}
+                    compareProducts={roleProducts}
+                  />
                 : null}
               </div>
             </div>
@@ -415,6 +449,14 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             >
               <div className="space-y-4">
                 <ProblemBestMethodCard methodParsed={methodParsed} />
+                {reinforceProduct ?
+                  <AuthorityProblemScenarioMethodReinforceLink
+                    productSlug={reinforceProduct.slug}
+                    problemSlug={data.slug}
+                    roleLabel={reinforceRoleLabel}
+                    compareProducts={roleProducts}
+                  />
+                : null}
               </div>
 
               <aside className="space-y-4">
@@ -531,6 +573,14 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
             }
           />
         ) : null}
+
+        {useExecutionLayout && best ?
+          <AuthorityProblemBestNextMoveClose
+            problemSlug={data.slug}
+            bestProductSlug={best.slug}
+            compareProducts={roleProducts}
+          />
+        : null}
 
         <div id="problem-products" className="scroll-mt-28">
           <ContextualProductRecommendations

@@ -226,7 +226,8 @@ function RecommendationProductColumn({
 
   const published = getPublishedProductBySlug(product.slug);
   const viewHref = `/products/${product.slug}`;
-  const purchaseUrl = getProductPurchaseUrl(published ?? product);
+  const purchaseUrlRaw = getProductPurchaseUrl(product.slug);
+  const purchaseUrl = purchaseUrlRaw !== "#" ? purchaseUrlRaw : null;
 
   const track = (href: string) =>
     buildProductRecommendationClickHandler({

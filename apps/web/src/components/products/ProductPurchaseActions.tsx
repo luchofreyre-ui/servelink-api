@@ -42,7 +42,8 @@ export function ProductPurchaseActions({
   inlineCtas = false,
 }: ProductPurchaseActionsProps) {
   const purchaseAvailable = Boolean(product.isPurchaseAvailable);
-  const purchaseUrl = getProductPurchaseUrl(product);
+  const purchaseUrl = product.slug ? getProductPurchaseUrl(product.slug) : null;
+  const hasPurchase = purchaseUrl && purchaseUrl !== "#";
   const usedForTrimmed = usedForSummary?.trim();
   const suppressCtaCopy = compact || forcePrimary;
 
@@ -63,14 +64,14 @@ export function ProductPurchaseActions({
     inlineCtas ? "px-3 py-2 text-xs" : "px-4 py-2.5 text-sm",
   );
 
-  if (!purchaseUrl && !viewHref) return null;
+  if (!hasPurchase && !viewHref) return null;
 
   const amazonLabel = purchaseAvailable ? "Buy on Amazon" : "View on Amazon";
 
   const stackVertically = (compact || forcePrimary) && !inlineCtas;
   const buttonRowClass = stackVertically ? "flex flex-col space-y-2" : "flex flex-wrap gap-2";
 
-  if (purchaseUrl) {
+  if (hasPurchase && purchaseUrl) {
     return (
       <div className={suppressCtaCopy ? "pt-0" : compact ? "pt-2" : "pt-3"}>
         {!suppressCtaCopy && usedForTrimmed ? (

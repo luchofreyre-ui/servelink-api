@@ -47,6 +47,21 @@ function buildProblemContextFromPage(page: {
   return `Used when dealing with ${page.title.toLowerCase()}.`;
 }
 
+const COMPARISON_PAIR_MARKER = "-vs-";
+
+/** Other product slug in the primary comparison pair for this catalog SKU, if any. */
+export function getComparisonOpponentSlug(productSlug: string): string | null {
+  const { comparisonSlug } = getProductAuthorityContext(productSlug);
+  if (!comparisonSlug) return null;
+  const i = comparisonSlug.indexOf(COMPARISON_PAIR_MARKER);
+  if (i === -1) return null;
+  const left = comparisonSlug.slice(0, i);
+  const right = comparisonSlug.slice(i + COMPARISON_PAIR_MARKER.length);
+  if (left === productSlug) return right;
+  if (right === productSlug) return left;
+  return null;
+}
+
 export function getProductAuthorityContext(productSlug: string): ProductAuthorityContext {
   const problemPages = getAllProblemPages();
 

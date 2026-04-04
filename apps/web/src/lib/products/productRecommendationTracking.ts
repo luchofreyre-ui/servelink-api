@@ -82,8 +82,9 @@ export function buildProductRecommendationClickHandler(args: {
   href: string;
   trackingContext?: ProductRecommendationTrackingContext;
   pinnedSlugs?: readonly string[];
+  label?: string;
 }) {
-  const { productSlug, roleLabel, position, href, trackingContext, pinnedSlugs } = args;
+  const { productSlug, roleLabel, position, href, trackingContext, pinnedSlugs, label } = args;
 
   return function handleRecommendationClick() {
     trackProductRecommendationClick({
@@ -99,6 +100,7 @@ export function buildProductRecommendationClickHandler(args: {
       isPinned: Boolean(pinnedSlugs?.includes(productSlug)),
       destinationType: getRecommendationDestinationType(href),
       destinationUrl: href,
+      label,
     });
   };
 }
