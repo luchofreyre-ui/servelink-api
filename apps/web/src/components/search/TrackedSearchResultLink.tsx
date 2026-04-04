@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useMemo, type ReactNode } from "react";
+import { trackSearchResultClick } from "@/lib/analytics/searchClickAnalysis";
 import {
   getRecommendationDestinationType,
   normalizeRoleLabel,
   trackProductRecommendationClick,
 } from "@/lib/products/trackProductRecommendationClick";
+import { tryResolveAuthorityProblemSlugForQuery } from "@/lib/search/searchAuthorityProblemAlias";
 import type { SiteSearchDocument } from "@/types/search";
 
 type SearchClickSurface = "title" | "open_page";
@@ -15,6 +17,8 @@ type Props = {
   result: SiteSearchDocument;
   index: number;
   clickSurface: SearchClickSurface;
+  /** When set, records clickthrough for hub ranking when the result maps to a product slug. */
+  searchQuery?: string;
   children: ReactNode;
   className?: string;
 };
@@ -75,6 +79,7 @@ export default function TrackedSearchResultLink({
   result,
   index,
   clickSurface,
+  searchQuery,
   children,
   className,
 }: Props) {
@@ -105,6 +110,11 @@ export default function TrackedSearchResultLink({
       className={className}
       onClick={() => {
         trackProductRecommendationClick(trackingPayload);
+        const productSlug = tryInferProductSlug(result);
+        if (productSlug && searchQuery !== undefined && searchQuery !== "") {
+          const problemSlug = tryResolveAuthorityProblemSlugForQuery(searchQuery);
+          trackSearchResultClick({ productSlug, problemSlug, searchQuery });
+        }
       }}
     >
       {children}

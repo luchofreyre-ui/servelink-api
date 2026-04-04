@@ -9,7 +9,7 @@ import { rankEncyclopediaResults } from "@/lib/encyclopedia/searchRanking";
 import type { EncyclopediaCategory, EncyclopediaResolvedIndexEntry } from "@/lib/encyclopedia/types";
 import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
 import { getBestComparePair } from "@/lib/products/bestComparePair";
-import { getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
+import { optimizeSearchRanking } from "@/lib/search/searchRankOptimization";
 import { buildCompareProductsHref } from "@/lib/products/compareSlugBuilder";
 import { buildUnifiedSearchIndex } from "@/search/buildUnifiedSearchIndex";
 import {
@@ -74,7 +74,7 @@ function buildProblemContextInjections(problemSlug: string, _authorityProblemFin
 
   const rawProducts = (scenario.products ?? []).slice(0, 3);
   const ctx = { problemSlug, surface: scenario.surface ?? null };
-  const orderedProducts = getOrderedScenarioProducts(rawProducts, ctx);
+  const orderedProducts = optimizeSearchRanking(rawProducts, ctx);
   const bestProduct = orderedProducts[0] ?? null;
   const comparePair = getBestComparePair(orderedProducts, ctx);
 

@@ -2,11 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { MonetizationGapResolutionFeedback } from "@/components/public/MonetizationGapResolutionFeedback";
 import { formatFunnelGapLines } from "@/lib/funnel/funnelGapAudit";
 import type { FunnelGap } from "@/lib/funnel/funnelGapReport";
+import { warnMonetizationExpansionGaps } from "@/lib/funnel/funnelGapExpansion";
 import {
-  clearDismissedMonetizationGapsInAdmin,
+  clearAllMonetizationGapLocalState,
   dismissMonetizationGapInAdmin,
+  loadAllGapResolutionFeedback,
   loadDismissedMonetizationGapSlugs,
   resolveGap,
   type ResolutionAction,
@@ -17,20 +20,48 @@ type Props = {
   monetizationGapLines: string[];
 };
 
+function actionLabel(action: ResolutionAction): string {
+  switch (action) {
+    case "acknowledge":
+      return "Acknowledged";
+    case "resolve":
+      return "Resolved";
+    case "suppress":
+      return "Suppressed";
+    default:
+      return action;
+  }
+}
+
 export default function MonetizationFunnelGapsPanel({
   monetizationGaps,
   monetizationGapLines,
 }: Props) {
   const [dismissedSlugs, setDismissedSlugs] = useState<Set<string>>(() => new Set());
+  const [feedbackTick, setFeedbackTick] = useState(0);
 
   useEffect(() => {
     setDismissedSlugs(loadDismissedMonetizationGapSlugs());
+  }, []);
+
+  const refreshLocal = useCallback(() => {
+    setDismissedSlugs(loadDismissedMonetizationGapSlugs());
+    setFeedbackTick((n) => n + 1);
   }, []);
 
   const visibleGaps = useMemo(
     () => monetizationGaps.filter((g) => !dismissedSlugs.has(g.problemSlug)),
     [monetizationGaps, dismissedSlugs],
   );
+
+  const recentFeedback = useMemo(() => {
+    void feedbackTick;
+    const all = loadAllGapResolutionFeedback();
+    return Object.entries(all)
+      .map(([slug, rec]) => ({ slug, ...rec }))
+      .sort((a, b) => b.at.localeCompare(a.at))
+      .slice(0, 8);
+  }, [feedbackTick, dismissedSlugs]);
 
   const displayLines = useMemo(() => {
     if (monetizationGaps.length === 0) {
@@ -43,12 +74,6 @@ export default function MonetizationFunnelGapsPanel({
     }
     return formatFunnelGapLines(visibleGaps);
   }, [monetizationGaps.length, monetizationGapLines, visibleGaps]);
-
-  const handleAction = useCallback((problemSlug: string, action: ResolutionAction) => {
-    resolveGap(problemSlug, action);
-    dismissMonetizationGapInAdmin(problemSlug);
-    setDismissedSlugs(loadDismissedMonetizationGapSlugs());
-  }, []);
 
   const handleBulk = useCallback(
     (action: ResolutionAction) => {
@@ -63,8 +88,13 @@ export default function MonetizationFunnelGapsPanel({
   );
 
   const handleResetDismissed = useCallback(() => {
-    clearDismissedMonetizationGapsInAdmin();
+    clearAllMonetizationGapLocalState();
     setDismissedSlugs(new Set());
+    setFeedbackTick((n) => n + 1);
+  }, []);
+
+  const handleExpansionCheck = useCallback(() => {
+    warnMonetizationExpansionGaps();
   }, []);
 
   const countLabel =
@@ -108,6 +138,13 @@ export default function MonetizationFunnelGapsPanel({
             >
               Reset dismissed
             </button>
+            <button
+              type="button"
+              className="rounded border border-neutral-200 px-2 py-1 text-xs text-neutral-500 hover:bg-neutral-50"
+              onClick={handleExpansionCheck}
+            >
+              Run expansion check
+            </button>
           </div>
         : null}
       </div>
@@ -119,34 +156,17 @@ export default function MonetizationFunnelGapsPanel({
           visibleGaps.slice(0, 10).map((gap) => (
             <div
               key={`${gap.problemSlug}-${gap.code}`}
-              className="flex flex-col gap-2 border-b border-neutral-100 pb-2 last:border-0 sm:flex-row sm:items-center sm:justify-between"
+              className="border-b border-neutral-100 pb-3 last:border-0"
             >
-              <div className="min-w-0 text-xs text-neutral-700">
+              <div className="mb-2 min-w-0 text-xs text-neutral-700">
                 {[gap.problemSlug, gap.code, gap.detail].join(" | ")}
               </div>
-              <div className="flex shrink-0 flex-wrap gap-1">
-                <button
-                  type="button"
-                  className="rounded border border-neutral-200 px-2 py-1 text-xs text-neutral-700 hover:bg-neutral-50"
-                  onClick={() => handleAction(gap.problemSlug, "acknowledge")}
-                >
-                  Acknowledge
-                </button>
-                <button
-                  type="button"
-                  className="rounded border border-neutral-200 px-2 py-1 text-xs text-neutral-700 hover:bg-neutral-50"
-                  onClick={() => handleAction(gap.problemSlug, "resolve")}
-                >
-                  Resolve
-                </button>
-                <button
-                  type="button"
-                  className="rounded border border-neutral-200 px-2 py-1 text-xs text-neutral-700 hover:bg-neutral-50"
-                  onClick={() => handleAction(gap.problemSlug, "suppress")}
-                >
-                  Suppress
-                </button>
-              </div>
+              <MonetizationGapResolutionFeedback
+                problemSlug={gap.problemSlug}
+                gapCode={gap.code}
+                variant="admin"
+                onAfterAction={refreshLocal}
+              />
             </div>
           ))
         : displayLines.slice(0, 10).map((line, i) => (
@@ -154,6 +174,28 @@ export default function MonetizationFunnelGapsPanel({
               {line}
             </div>
           ))}
+      </div>
+
+      <div className="mt-4 border-t border-neutral-100 pt-3">
+        <div className="mb-1 text-xs font-medium text-neutral-600">Recent gap actions (this browser)</div>
+        {recentFeedback.length === 0 ?
+          <p className="text-xs text-neutral-400">No recorded notes yet.</p>
+        : <ul className="space-y-1 text-xs text-neutral-600">
+            {recentFeedback.map((row) => (
+              <li key={row.slug}>
+                <span className="font-medium text-neutral-800">{row.slug}</span>
+                {" — "}
+                {actionLabel(row.action)}
+                {row.note ? ` — ${row.note}` : ""}
+                {row.gapCode ? ` [${row.gapCode}]` : ""}
+                <span className="text-neutral-400">
+                  {" "}
+                  ({new Date(row.at).toLocaleString()})
+                </span>
+              </li>
+            ))}
+          </ul>
+        }
       </div>
     </div>
   );

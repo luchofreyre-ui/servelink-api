@@ -97,11 +97,13 @@ function ResultArticle({
   bestMatchId,
   isTopResult,
   index,
+  searchQuery,
 }: {
   result: SiteSearchDocument;
   bestMatchId: string | null;
   isTopResult: boolean;
   index: number;
+  searchQuery: string;
 }) {
   const isBest = bestMatchId !== null && result.id === bestMatchId;
   const intentSublabel = getSearchIntentSublabel(result);
@@ -135,6 +137,7 @@ function ResultArticle({
           result={result}
           index={index}
           clickSurface="title"
+          searchQuery={searchQuery}
           className="hover:text-[#0D9488]"
         >
           {displayTitle}
@@ -160,6 +163,7 @@ function ResultArticle({
           result={result}
           index={index}
           clickSurface="open_page"
+          searchQuery={searchQuery}
           className="font-[var(--font-manrope)] text-sm font-medium text-[#0D9488] hover:underline"
         >
           Open page
@@ -219,6 +223,7 @@ export function SearchResultsPage({
                     bestMatchId={bestMatchId}
                     isTopResult={topId !== null && result.id === topId}
                     index={indexById.get(result.id) ?? 0}
+                    searchQuery={query}
                   />
                 ))}
               </div>
