@@ -36,6 +36,9 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   playwright-system-tests:
     name: Stack + Playwright + upload

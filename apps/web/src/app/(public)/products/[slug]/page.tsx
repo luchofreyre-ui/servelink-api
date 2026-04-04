@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { firstAuthorityProblemSlugForProductProblem } from "@/lib/authority/authorityProductTaxonomyBridge";
 
 import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
@@ -416,7 +415,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             return hub ? (
               <Link
                 key={p}
-                href={preferEncyclopediaCanonicalHref(`/problems/${hub}`)}
+                href={`/problems/${hub}`}
                 className="rounded-full bg-gray-100 px-3 py-1 text-sm text-neutral-800 hover:bg-gray-200 hover:underline"
               >
                 {p}

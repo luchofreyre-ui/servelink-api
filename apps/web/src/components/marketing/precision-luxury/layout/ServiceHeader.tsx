@@ -14,6 +14,9 @@ export function ServiceHeader() {
           <a href="/" className="hover:text-zinc-900 transition">
             Home
           </a>
+          <a href="/problems" className="hover:text-zinc-900 transition">
+            Problems
+          </a>
           <a href="/services" className="hover:text-zinc-900 transition">
             Services
           </a>

@@ -109,7 +109,7 @@ function buildSeeAlsoGroups(data: AuthorityComparisonPageData): AuthoritySeeAlso
         title: "Problem hubs",
         links: extras.problemSlugs.map((slug) => ({
           title: getProblemPageBySlug(slug)?.title ?? slug,
-          href: preferEncyclopediaCanonicalHref(`/problems/${slug}`),
+          href: `/problems/${slug}`,
         })),
       });
     }
@@ -158,7 +158,7 @@ function buildSeeAlsoGroups(data: AuthorityComparisonPageData): AuthoritySeeAlso
             title: "Related problems",
             links: data.relatedProblems.map((slug) => ({
               title: getProblemPageBySlug(slug)?.title ?? slug,
-              href: preferEncyclopediaCanonicalHref(`/problems/${slug}`),
+              href: `/problems/${slug}`,
             })),
           },
         ]

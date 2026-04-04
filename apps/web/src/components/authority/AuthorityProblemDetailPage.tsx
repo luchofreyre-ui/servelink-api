@@ -61,6 +61,7 @@ import {
 } from "@/lib/products/recommendationRoles";
 import type { PublishedProductLike } from "@/lib/products/getRecommendedProducts";
 import { resolveProductRecommendationContextForProblemPage } from "@/lib/products/productRecommendationContext";
+import { isExecutionFirstProblemLayout } from "@/lib/authority/authorityProblemExecutionLayout";
 
 const DEFAULT_BEFORE_YOU_CLEAN = `Most people go too aggressive too early.
 
@@ -303,7 +304,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
   const methodParsed = parseTopMethodSteps(data.bestMethods);
   const diagnosticRows = buildDiagnosticRows(data.whatItUsuallyIs, data.commonOn);
   const precheckBullets = buildPrecheckBullets(beforeClean, voice);
-  const useExecutionLayout = Boolean(data.executionQuickFix && data.problemDefinitionLine);
+  const useExecutionLayout = isExecutionFirstProblemLayout(data);
 
   const anchorNavItems: { href: string; label: string }[] = useExecutionLayout
     ? [
@@ -322,9 +323,8 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
         { href: "#problem-faq", label: "FAQ" },
       ];
 
-  // SYSTEM RULE:
   // Education-first; products stay after method + avoid on this template.
-  // Top rail = fast diagnosis + primary method; shortcuts and topical links are demoted.
+  // Shortcuts and topical links are demoted below primary guidance.
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
@@ -332,6 +332,9 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
       <AuthorityJsonLd data={jsonLd} />
       <main className="mx-auto max-w-6xl scroll-smooth px-4 pb-12 pt-4 sm:px-6 sm:pt-5 lg:px-8">
         {useExecutionLayout ?
+          // EXECUTION-FIRST TOP FOLD (see `isExecutionFirstProblemLayout`):
+          // Single column only — H1 + definition line + full-width Quick fix + optional “Why this works”.
+          // Never add Quick Answer, ProblemBestMethodCard, or the diagnostic “What this usually is” rail here.
           <section className="space-y-4" aria-label="Problem overview">
             <div id="problem-overview" className="scroll-mt-28 space-y-3">
               <AuthorityBreadcrumbs items={crumbs} />
@@ -373,6 +376,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
           </section>
         : <>
             <section
+              data-testid="legacy-problem-top-fold-hero"
               className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(420px,0.8fr)] lg:items-start"
               aria-label="Problem overview"
             >
@@ -405,6 +409,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
 
             <section
               id="problem-top-rail"
+              data-testid="legacy-problem-top-fold-rail"
               className="mb-6 mt-4 grid scroll-mt-28 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.9fr)]"
               aria-label="Primary method and diagnostic context"
             >

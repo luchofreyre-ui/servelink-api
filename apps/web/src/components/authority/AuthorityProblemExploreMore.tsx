@@ -8,7 +8,6 @@ import { getSurfacePageBySlug } from "@/authority/data/authoritySurfacePageData"
 import { ProductImage } from "@/components/products/ProductImage";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
 import { getProductBySlug } from "@/lib/products/productRegistry";
-import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import {
   productProblemStringForAuthorityProblemSlug,
   productSurfaceStringForAuthoritySurfaceSlug,
@@ -78,7 +77,7 @@ export function AuthorityProblemExploreMore({
               {relatedProbLinks.map((p) => (
                 <li key={p.slug}>
                   <Link
-                    href={preferEncyclopediaCanonicalHref(`/problems/${p.slug}`)}
+                    href={`/problems/${p.slug}`}
                     className="font-medium text-[#0D9488] hover:underline"
                   >
                     {p.title}

@@ -8,7 +8,6 @@ import {
 } from "@/authority/data/authorityComparisonSelectors";
 import { getProblemPageBySlug } from "@/authority/data/authorityProblemPageData";
 import { getSurfacePageBySlug } from "@/authority/data/authoritySurfacePageData";
-import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import {
   authorityProblemSlugsForProductProblems,
   authoritySurfaceSlugsForProductSurfaces,
@@ -72,7 +71,7 @@ export function AuthorityProductComparisonExplore({ data }: { data: AuthorityCom
               {problemHubSlugs.map((ps) => (
                 <li key={ps}>
                   <Link
-                    href={preferEncyclopediaCanonicalHref(`/problems/${ps}`)}
+                    href={`/problems/${ps}`}
                     className="font-medium text-[#0D9488] hover:underline"
                   >
                     {getProblemPageBySlug(ps)?.title ?? ps}

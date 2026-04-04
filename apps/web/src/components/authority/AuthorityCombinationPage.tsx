@@ -78,7 +78,7 @@ function buildComboSeeAlso(data: AuthorityCombinationPageData): AuthoritySeeAlso
     .map((slug) => {
       const p = getProblemPageBySlug(slug);
       if (!p) return null;
-      let href = preferEncyclopediaCanonicalHref(`/problems/${slug}`);
+      let href = `/problems/${slug}`;
       if (
         data.type === "method_problem" &&
         data.methodSlug &&

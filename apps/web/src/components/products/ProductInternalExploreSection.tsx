@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { authorityProblemSlugsForProductProblems } from "@/lib/authority/authorityProductTaxonomyBridge";
 import {
   formatComparisonLinkLabel,
@@ -49,7 +48,7 @@ export function ProductInternalExploreSection(props: {
               {problemSlugs.map((ps) => (
                 <li key={ps}>
                   <Link
-                    href={preferEncyclopediaCanonicalHref(`/problems/${ps}`)}
+                    href={`/problems/${ps}`}
                     className="text-[#0D9488] hover:underline"
                   >
                     {getProblemPageBySlug(ps)?.title ?? ps}

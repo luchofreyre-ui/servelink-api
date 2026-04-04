@@ -97,7 +97,7 @@ function buildSeeAlsoGroups(data: AuthorityClusterPageData): AuthoritySeeAlsoGro
     .slice(0, 8)
     .map((page) => ({
       title: page!.title,
-      href: preferEncyclopediaCanonicalHref(`/problems/${page!.slug}`),
+      href: `/problems/${page!.slug}`,
     }));
 
   const guideLinks = (data.relatedGuides ?? [])

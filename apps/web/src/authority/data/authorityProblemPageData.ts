@@ -228,13 +228,44 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
   "dust-buildup": prob("dust-buildup", "Dust buildup", "organic"),
   "fingerprints-and-smudges": prob("fingerprints-and-smudges", "Fingerprints and smudges", "transfer"),
   "stuck-on-residue": prob("stuck-on-residue", "Stuck-on residue", "residue"),
-  "light-mildew": prob("light-mildew", "Light mildew appearance", "biological"),
-  "streaking-on-glass": prob("streaking-on-glass", "Streaking on glass", "residue"),
+  "light-mildew": {
+    ...prob("light-mildew", "Light mildew appearance", "biological"),
+    problemDefinitionLine:
+      "A thin biofilm on damp bathroom surfaces—usually surface-level, not the same as heavy mold growth.",
+    executionQuickFix: {
+      use: "Bathroom disinfectant or mildew cleaner labeled for the surface.",
+      do: "Ventilate → spray → dwell per label → soft scrub → rinse and dry thoroughly.",
+      ifNeeded: "Improve airflow and fix lingering moisture. If it spreads or returns fast, reassess as broader growth—not just ‘wipe harder.’",
+    },
+    whyThisWorksShort:
+      "On non-porous surfaces, labeled chemistry removes the film; drying and ventilation remove what lets it come back.",
+  },
+  "streaking-on-glass": {
+    ...prob("streaking-on-glass", "Streaking on glass", "residue"),
+    problemDefinitionLine:
+      "Wipe trails and haze from cleaner residue, cloth friction, or minerals—often technique and rinse, not ‘dirtier glass.’",
+    executionQuickFix: {
+      use: "Glass cleaner or very light surfactant; two clean microfibers (wet wipe + dry buff).",
+      do: "Mist lightly → wipe in one direction → flip cloth or switch to dry side → buff dry.",
+      ifNeeded: "Swap cloths if product loads up; rinse first if layers stack. Treat mineral spots with label-safe steps separately.",
+    },
+    whyThisWorksShort:
+      "Streaks are usually leftover product or water minerals. Less chemistry, fresh cloth, and a true dry pass stop the smear loop.",
+  },
   "general-soil": prob("general-soil", "General soil", "organic"),
   "touchpoint-contamination": prob("touchpoint-contamination", "Touchpoint contamination", "biological"),
 
   "adhesive-residue": {
     ...prob("adhesive-residue", "Adhesive residue", "residue"),
+    problemDefinitionLine:
+      "Sticky tape, label, or glue residue that grabs dust—needs dwell and the right solvent, not blind scraping.",
+    executionQuickFix: {
+      use: "Adhesive remover or petroleum/citrus solvent labeled for the finish (start mild).",
+      do: "Spot-test → apply → short dwell → lift with plastic edge or cloth → wipe clean.",
+      ifNeeded: "Step up only if the label allows; skip metal razors on soft plastics and coated glass.",
+    },
+    whyThisWorksShort:
+      "Solvents soften the adhesive so it releases; controlled lift avoids driving gum deeper or scratching the finish.",
     whatItUsuallyIs:
       "Tape, label, or sticker residue that re-gums when heated, plus light tacky films that attract dust.",
     bestMethods: "Start with the least aggressive solvent that the label allows; dwell, then lift—don’t gouge.",
@@ -279,6 +310,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 
   "odor-retention": {
     ...prob("odor-retention", "Odor retention", "organic"),
+    problemDefinitionLine:
+      "Smells that return because organic film or soil is still hiding in fibers, drains, or bins—not a missing ‘fresh scent.’",
+    executionQuickFix: {
+      use: "Remove visible soil first; then odor neutralizer, enzyme, or disinfectant matched to the source (per label).",
+      do: "Clean the surface or container → apply product → dwell → ventilate, rinse, or extract as the label directs.",
+      ifNeeded:
+        "Laundry: proper rinse/extract. Drains: remove debris, then labeled drain care. Skip fragrance-only cover-ups.",
+    },
+    whyThisWorksShort:
+      "Odor compounds cling to film and porous material. Hitting the labeled source beats perfume that masks without removing what holds the smell.",
     whatItUsuallyIs:
       "Smells that return after cleaning—often from soft surfaces, drains, or garbage zones holding organic film.",
     bestMethods:
@@ -317,6 +358,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 
   "mold-growth": {
     ...prob("mold-growth", "Mold growth", "biological"),
+    problemDefinitionLine:
+      "Active or recurring fungal growth on damp surfaces—moisture control matters as much as cleaning.",
+    executionQuickFix: {
+      use: "Mold-control or remediation product labeled for the surface (follow the label exactly).",
+      do: "Ventilate → apply per label → wait → wipe and bag visible debris → dry the area.",
+      ifNeeded:
+        "If it returns, find and fix the moisture source. Large areas, hidden cavities, or HVAC involvement → professional help.",
+    },
+    whyThisWorksShort:
+      "Mold needs moisture to persist. Labeled removal steps address visible growth while drying and source control reduce what grows back.",
     whatItUsuallyIs:
       "Active or recurring microbial growth—distinct from a single light mildew film—often tied to moisture and ventilation.",
     bestMethods: "Identify moisture, reduce humidity, then use label-correct remediation chemistry; escalate large areas.",
@@ -392,6 +443,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 
   "cloudy-glass": {
     ...prob("cloudy-glass", "Cloudy glass", "residue"),
+    problemDefinitionLine:
+      "Dull or foggy glass from mineral film, soap residue, or product buildup—sometimes confused with permanent etching.",
+    executionQuickFix: {
+      use: "Glass cleaner or neutral bath spray; acid descalers only when labels allow and you are targeting mineral film.",
+      do: "Rinse → spray → short dwell → soft scrub → squeegee or dry buff → re-check under light.",
+      ifNeeded:
+        "If appearance does not improve after careful passes, assume possible etch or coating damage—not more aggressive scrubbing.",
+    },
+    whyThisWorksShort:
+      "Removable haze is usually film on the surface. Matched chemistry and rinse lift that film; etched damage will not wipe away.",
     whatItUsuallyIs:
       "A dull or foggy appearance from mineral film, etched damage, or cleaner residue—not always removable with glass spray alone.",
     bestMethods: "Separate mineral film from damage: tolerant glass can accept descale steps; damage needs replacement or professional polish.",
@@ -419,6 +480,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 
   "cooked-on-grease": {
     ...prob("cooked-on-grease", "Cooked-on grease", "oil_based"),
+    problemDefinitionLine:
+      "Heat-set oil and food residue on cooktops, hoods, and backsplashes—tougher than fresh splatter.",
+    executionQuickFix: {
+      use: "Kitchen degreaser or surfactant-forward cleaner labeled for the surface.",
+      do: "Ventilate → spray → dwell 2–5 min → wipe or soft scrub → rinse.",
+      ifNeeded:
+        "Repeat or use a stronger labeled degreaser. Keep oven-class caustics off open food-prep surfaces unless the label allows it.",
+    },
+    whyThisWorksShort:
+      "Heat polymerizes oils into a film. Surfactants and degreasers break that film so it lifts and rinses away instead of smearing.",
     whatItUsuallyIs:
       "Heat-set lipid films that resist quick wipes—different from light kitchen dust or fresh splatter.",
     bestMethods: "Dwell with surfactant-forward or labeled degreasers; finish with rinse passes so residue does not attract soil.",
@@ -468,6 +539,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 
   "smudge-marks": {
     ...prob("smudge-marks", "Smudge marks", "transfer"),
+    problemDefinitionLine:
+      "Oils and fingerprints that smear on brushed stainless and glossy fronts—often a film problem, not missing pressure.",
+    executionQuickFix: {
+      use: "Stainless cleaner–polish labeled for appliance fronts, or mild surfactant + clean microfiber when soil is heavy.",
+      do: "Wipe with the grain → dry buff with a fresh cloth; flip or swap cloths instead of re-smearing.",
+      ifNeeded:
+        "Heavy kitchen grease: degrease first where labels allow, then a separate polish pass—don’t turn polish into your only soil removal step.",
+    },
+    whyThisWorksShort:
+      "Smudges are oil film caught in the grain or on gloss. Grain-direction passes and dry buffing lift film instead of spreading it.",
     whatItUsuallyIs:
       "Oils and films that redistribute under wiping—common on glossy laminates, appliances, and some walls.",
     bestMethods: "Low-residue damp passes with clean microfiber; escalate chemistry only when the label matches the finish.",
@@ -495,6 +576,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 
   "soap-film": {
     ...prob("soap-film", "Soap film (light mineral + surfactant haze)", "residue"),
+    problemDefinitionLine:
+      "A clingy bath and shower film from soaps, conditioners, and minerals—lighter than chunky soap scum but still layer-forming.",
+    executionQuickFix: {
+      use: "Neutral bathroom cleaner or daily shower spray (non-abrasive).",
+      do: "Rinse with warm water → spray → short dwell → soft scrub → rinse thoroughly.",
+      ifNeeded:
+        "If film remains, step up gradually (soap-scum–class cleaners). Spot-test stone, coatings, and delicate glass.",
+    },
+    whyThisWorksShort:
+      "The film is surfactant + mineral residue on the surface. Short dwell and rinse cycles let chemistry work without grinding soil into the finish.",
     whatItUsuallyIs:
       "A clingy film from soaps and conditioners that reads differently than chunky soap scum—often on glass and tile.",
     bestMethods: "Rinse-first passes, then bath or glass maintenance lines that match label chemistry.",
@@ -625,6 +716,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
   },
   "limescale-buildup": {
     ...prob("limescale-buildup", "Limescale buildup", "mineral"),
+    problemDefinitionLine:
+      "Mineral scale left behind by hard water, usually bonding in layers on fixtures, glass, and tile.",
+    executionQuickFix: {
+      use: "Label-safe descaler or acid-based cleaner approved for the surface",
+      do: "Apply → wait briefly → light scrub → rinse thoroughly",
+      ifNeeded:
+        "Repeat for buildup in layers. Avoid acids on natural stone and other acid-sensitive finishes.",
+    },
+    whyThisWorksShort:
+      "Limescale is mineral-based. Compatible acids dissolve the deposit so it can be lifted and rinsed away.",
     relatedProblems: [rpRel("hard-water-deposits", "Hard water deposits"), rpRel("water-spotting", "Water spotting")],
     relatedSurfaces: [esSurface("shower-glass", "Shower glass"), esSurface("grout", "Grout")],
     relatedMethods: [esMethod("hard-water-deposit-removal", "Hard water deposit removal"), esMethod("soap-scum-removal", "Soap scum removal")],
@@ -781,6 +882,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
   },
   "water-spots": {
     ...prob("water-spots", "Water spots", "mineral"),
+    problemDefinitionLine:
+      "Mineral rings after water dries on glass, chrome, or glossy tile—light film vs bonded scale need different chemistry.",
+    executionQuickFix: {
+      use: "Glass cleaner or damp microfiber for light spots; label-approved descaler only where acids are explicitly allowed.",
+      do: "Wet wipe → dry buff → if haze remains, short dwell with compatible chemistry → rinse thoroughly.",
+      ifNeeded:
+        "Do not guess acids on stone or coated finishes. If the surface etches or dulls, stop—treat as damage, not more scrubbing.",
+    },
+    whyThisWorksShort:
+      "Spots are minerals left on the surface. The right cleaner lifts or dissolves that film on tolerant materials; wrong surfaces need non-acid lanes.",
     quickAnswer:
       "Water spots are minerals left after evaporation—mild spots lift with glass maintenance; bonded scale needs label-approved descalers on tolerant surfaces only.",
     whatItUsuallyIs: "Round marks on glass, chrome, or glossy tile after drying.",
@@ -824,6 +935,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
   },
   "sticky-film": {
     ...prob("sticky-film", "Sticky film", "residue"),
+    problemDefinitionLine:
+      "Tacky, dust-grabbing film on counters and edges—often sugar, soap, or adhesive residue, not ordinary dust.",
+    executionQuickFix: {
+      use: "Neutral all-purpose or surfactant cleaner; mild citrus or label-safe solvent if it behaves like adhesive.",
+      do: "Dwell briefly → wipe with a clean cloth → rinse or dry buff. Warm (not hot) water can help sugary films.",
+      ifNeeded:
+        "Persistent gum: use adhesive-style remover with ventilation and spot tests on paint, stone, and plastics.",
+    },
+    whyThisWorksShort:
+      "Surfactants break oily and sugary films; solvents soften adhesive-style tack so it lifts instead of smearing into the finish.",
     quickAnswer:
       "Sticky film is often sugar, soap, or adhesive plasticizers—pick solvent or surfactant lane based on whether it gums when warm or smears when wet.",
     whatItUsuallyIs: "Tack that grabs dust; common near handles, edges, and plastics.",
@@ -851,6 +972,16 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
   },
   "bathroom-buildup": {
     ...prob("bathroom-buildup", "Bathroom buildup", "residue"),
+    problemDefinitionLine:
+      "Layered soap, minerals, and biofilm in wet zones—corners, grout, and glass dingy before open tile fields look obviously dirty.",
+    executionQuickFix: {
+      use: "Bathroom cleaner or foam spray labeled for tile and glass; daily shower spray for lighter maintenance passes.",
+      do: "Ventilate → spray → dwell per label → scrub corners and grout lines → rinse thoroughly.",
+      ifNeeded:
+        "Step up between deep cleans with daily spray; spot-test stone, coatings, and delicate finishes before stronger chemistry.",
+    },
+    whyThisWorksShort:
+      "Buildup is staged residue in water paths. Dwell plus rinse breaks the film; wiping only tile fields misses where soil actually bonds.",
     quickAnswer:
       "Bathroom buildup is usually soap + mineral complexes plus biofilm in corners—ventilate, stage chemistry, and detail grout lines instead of only wiping tile fields.",
     whatItUsuallyIs: "Dingy corners, pink or gray films, and texture change along caulk.",

@@ -49,7 +49,6 @@ import {
   resolveCanonicalMetadataHref,
   resolveJsonLdBreadcrumbHrefs,
 } from "@/lib/encyclopedia/encyclopediaCanonicalMetadataHref";
-import { preferEncyclopediaCanonicalHref } from "@/lib/encyclopedia/encyclopediaCanonicalHref";
 import { getBuiltBridgeMap } from "@/lib/encyclopedia/bridgeMap";
 import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
@@ -209,7 +208,7 @@ function SurfaceBody({ data }: { data: AuthoritySurfacePageData }) {
                 </Link>
                 <span className="text-[#64748B]"> · </span>
                 <Link
-                  href={preferEncyclopediaCanonicalHref(`/problems/${slug}`)}
+                  href={`/problems/${slug}`}
                   className="text-[#64748B] hover:text-[#0D9488] hover:underline"
                 >
                   Problem guide

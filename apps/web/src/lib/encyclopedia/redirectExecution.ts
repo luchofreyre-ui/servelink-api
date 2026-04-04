@@ -11,7 +11,10 @@ function isInternalAbsolutePath(path: string): boolean {
 }
 
 /** Legacy paths that must keep serving the authority problem hub (no redirect to pipeline MD). */
-const LEGACY_AUTHORITY_PROBLEM_HUBS = new Set<string>(["/problems/grease-buildup"]);
+const LEGACY_AUTHORITY_PROBLEM_HUBS = new Set<string>([
+  "/problems/grease-buildup",
+  "/problems/limescale-buildup",
+]);
 
 /**
  * Next.js–ready redirects from the high-priority encyclopedia manifest only.
