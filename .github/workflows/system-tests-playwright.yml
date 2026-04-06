@@ -176,6 +176,12 @@ jobs:
         working-directory: apps/web
         run: npx playwright install --with-deps chromium
 
+      - name: Clear port 3000
+        run: |
+          set +e
+          lsof -ti :3000 | xargs kill -9
+          true
+
       - name: Run Playwright (list + JSON report)
         id: playwright
         working-directory: apps/web

@@ -299,6 +299,11 @@ async function main() {
   const token = process.env.SYSTEM_TESTS_ADMIN_TOKEN || "";
   const tokenHash = createHash("sha256").update(token).digest("hex").slice(0, 12);
 
+  const uploadBase = process.env.PLAYWRIGHT_UPLOAD_SOURCE?.trim() || "playwright-json";
+  const laneSlug = process.env.PLAYWRIGHT_LANE?.trim();
+  const laneLabel = process.env.PLAYWRIGHT_LANE_LABEL?.trim();
+  const source = laneSlug ? `${uploadBase}|lane=${laneSlug}` : uploadBase;
+
   console.log("UPLOAD DEBUG token exists:", !!token);
   console.log("UPLOAD DEBUG token length:", token.length);
   console.log("UPLOAD DEBUG token sha12:", tokenHash);
@@ -323,11 +328,6 @@ async function main() {
 
   const stats = report.stats as Json | undefined;
   const summary = deriveRunFields(stats, cases);
-
-  const uploadBase = process.env.PLAYWRIGHT_UPLOAD_SOURCE?.trim() || "playwright-json";
-  const laneSlug = process.env.PLAYWRIGHT_LANE?.trim();
-  const laneLabel = process.env.PLAYWRIGHT_LANE_LABEL?.trim();
-  const source = laneSlug ? `${uploadBase}|lane=${laneSlug}` : uploadBase;
   const branch =
     process.env.GIT_BRANCH?.trim() ||
     process.env.GITHUB_REF_NAME?.trim() ||

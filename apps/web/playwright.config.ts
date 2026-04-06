@@ -4,12 +4,32 @@ import { PLAYWRIGHT_NEST_API_ORIGIN } from "./tests/playwright/helpers/env";
 /** Full-corpus / pipeline / long-running checks (scheduled deep-integrity lane). */
 const DEEP_TEST_GLOBS = ["**/content.quality.spec.ts", "**/pipeline.integrity.spec.ts"] as const;
 
+function resolvePlaywrightWebPort(): string {
+  if (process.env.PLAYWRIGHT_WEB_PORT) {
+    return process.env.PLAYWRIGHT_WEB_PORT;
+  }
+  const base = process.env.PLAYWRIGHT_BASE_URL;
+  if (base) {
+    try {
+      const u = new URL(base);
+      if (u.port) {
+        return u.port;
+      }
+      return u.protocol === "https:" ? "443" : "80";
+    } catch {
+      // fall through
+    }
+  }
+  return "3002";
+}
+
 /**
  * Dedicated port for `next start` so Playwright does not hit a stale dev server whose HTML
  * references chunk hashes that no longer exist under `.next` (static assets then return 400 and
  * React never hydrates — AuthRoleGate stays on the SSR guest shell).
+ * When CI sets PLAYWRIGHT_BASE_URL to :3000, the command must use the same port (see workflow).
  */
-const PLAYWRIGHT_WEB_PORT = process.env.PLAYWRIGHT_WEB_PORT || "3002";
+const PLAYWRIGHT_WEB_PORT = resolvePlaywrightWebPort();
 if (!process.env.PLAYWRIGHT_BASE_URL) {
   process.env.PLAYWRIGHT_BASE_URL = `http://127.0.0.1:${PLAYWRIGHT_WEB_PORT}`;
 }
@@ -35,7 +55,7 @@ export default defineConfig({
         webServer: {
           command: `npx next start -p ${PLAYWRIGHT_WEB_PORT}`,
           url: baseURL,
-          reuseExistingServer: process.env.PLAYWRIGHT_REUSE_SERVER === "1",
+          reuseExistingServer: !process.env.CI,
           timeout: 120_000,
           // Align with CI (`NEXT_PUBLIC_API_BASE_URL` → Nest). Client bundle still comes from
           // `npm run build`; this helps any server/runtime paths and keeps env explicit.
