@@ -320,6 +320,18 @@ async function main() {
   const raw = fs.readFileSync(file, "utf8");
   const report = JSON.parse(raw) as Json;
 
+  const totalTests =
+    (report?.stats?.expected ?? 0) +
+    (report?.stats?.unexpected ?? 0) +
+    (report?.stats?.skipped ?? 0) +
+    (report?.stats?.flaky ?? 0);
+
+  if (totalTests === 0) {
+    throw new Error(
+      "Playwright report contains zero tests — failing upload to avoid false pass.",
+    );
+  }
+
   const cases: CaseOut[] = [];
   const suites = (report.suites as Json[] | undefined) ?? [];
   for (const s of suites) {

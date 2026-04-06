@@ -176,17 +176,13 @@ jobs:
         working-directory: apps/web
         run: npx playwright install --with-deps chromium
 
-      - name: Clear port 3000
-        run: |
-          set +e
-          lsof -ti :3000 | xargs kill -9
-          true
-
       - name: Run Playwright (list + JSON report)
         id: playwright
         working-directory: apps/web
         continue-on-error: true
         env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+          PLAYWRIGHT_SKIP_WEBSERVER: "true"
           EVENT_NAME: ${{ github.event_name }}
           INPUT_PATHS: ${{ github.event.inputs.playwright_paths }}
           INPUT_LANE: ${{ github.event.inputs.playwright_lane }}

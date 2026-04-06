@@ -35,7 +35,8 @@ if (!process.env.PLAYWRIGHT_BASE_URL) {
 }
 const baseURL = process.env.PLAYWRIGHT_BASE_URL.replace(/\/$/, "");
 
-const skipWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER === "1";
+const skipWebServer =
+  process.env.CI === "true" || process.env.PLAYWRIGHT_SKIP_WEBSERVER === "true";
 
 export default defineConfig({
   testDir: "./tests/playwright",
@@ -55,16 +56,12 @@ export default defineConfig({
         webServer: {
           command: `npx next start -p ${PLAYWRIGHT_WEB_PORT}`,
           url: baseURL,
-          reuseExistingServer: !process.env.CI,
+          reuseExistingServer: false,
           timeout: 120_000,
-          // Align with CI (`NEXT_PUBLIC_API_BASE_URL` → Nest). Client bundle still comes from
-          // `npm run build`; this helps any server/runtime paths and keeps env explicit.
           env: {
             ...process.env,
             NEXT_PUBLIC_API_BASE_URL: PLAYWRIGHT_NEST_API_ORIGIN,
-            // Not inlined at build time — RSC `apiFetch` reads this at `next start` runtime.
             SERVELINK_INTERNAL_API_BASE_URL: PLAYWRIGHT_NEST_API_ORIGIN,
-            // Strict `loadAdminOpsPageData` SSR (rethrow vs empty fallback) when NODE_ENV=production.
             PLAYWRIGHT: "true",
           },
         },
