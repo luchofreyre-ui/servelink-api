@@ -1,99 +1,98 @@
-import { apiFetch } from "@/lib/api";
-import { readApiJson } from "@/lib/api-response";
-import { describePageLoadError } from "@/lib/page-errors";
-import { roleThemes } from "@/lib/role-theme";
-import { emptyCopy } from "@/lib/empty-copy";
-import { RoleShell } from "@/components/shared/RoleShell";
-import { AutoRefresh } from "@/components/shared/AutoRefresh";
-import { buildCustomerKnowledgeContextFromSummary } from "@/customer/customerKnowledgeRecommendations";
-import { CustomerDashboard } from "@/components/dashboard/customer/CustomerDashboard";
-import { buildCustomerDashboardViewModel } from "@/dashboard/customer/customerDashboardViewModel";
-import { DashboardEscalationSeed } from "@/components/notifications/DashboardEscalationSeed";
-import { CustomerActiveBookingCard } from "@/components/operations/customer/CustomerActiveBookingCard";
-import { CustomerBookingUpdatesPanel } from "@/components/operations/customer/CustomerBookingUpdatesPanel";
+"use client";
 
-export const dynamic = "force-dynamic";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { AuthRoleGate } from "@/components/auth/AuthRoleGate";
+import { BookingStatusBadge } from "@/components/booking/BookingStatusBadge";
+import { getAuthUser } from "@/lib/auth/authClient";
+import type { BookingRecord } from "@/lib/bookings/bookingApiTypes";
+import { displayBookingPrice } from "@/lib/bookings/bookingDisplay";
+import { listBookings } from "@/lib/bookings/bookingStore";
 
-export default async function CustomerDashboardPage() {
-  const theme = roleThemes.customer;
-  try {
-    const summaryRes = await apiFetch("/api/v1/customer/screen-summary");
-    const { summary } = await readApiJson<{ summary: any }>(summaryRes);
-    const vm = buildCustomerDashboardViewModel(summary, {
-      emptyMessage: emptyCopy.customer.dashboard,
-    });
-    const knowledgeContext = buildCustomerKnowledgeContextFromSummary(summary);
-    const counts = summary?.counts ?? {};
-    const actionRequired = Number(counts.actionRequired ?? 0);
-    const completionReady = Number(counts.completionReady ?? 0);
-    const escalationLevel =
-      actionRequired > 0 ? "warning" : completionReady > 0 ? "watch" : "none";
-    const refreshTier =
-      escalationLevel === "warning"
-        ? "at_risk"
-        : escalationLevel === "watch"
-          ? "active"
-          : "idle";
+function CustomerDashboardContent() {
+  const user = typeof window !== "undefined" ? getAuthUser() : null;
 
-    const activeBookingIds: string[] = (summary?.rows ?? [])
-      .filter((r: any) => String(r?.status ?? "").toLowerCase() !== "completed")
-      .map((r: any) => String(r?.bookingId ?? ""))
-      .filter(Boolean)
-      .slice(0, 3);
+  const [bookings, setBookings] = useState<BookingRecord[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
-    const activeBookingScreens = await Promise.all(
-      Array.from(new Set(activeBookingIds)).map(async (id) => {
-        const screenRes = await apiFetch(`/api/v1/bookings/${id}/screen`);
-        const { screen: raw } = await readApiJson<{ screen: any }>(screenRes);
-        return raw;
-      }),
-    );
+  useEffect(() => {
+    if (!user?.email) {
+      setBookings([]);
+      return;
+    }
+    let cancelled = false;
+    void listBookings({
+      view: "customer",
+      userId: user?.id,
+    })
+      .then((rows) => {
+        if (!cancelled) {
+          setBookings(rows);
+          setLoadError(null);
+        }
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) {
+          setLoadError(e instanceof Error ? e.message : "Failed to load bookings.");
+          setBookings([]);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.email]);
 
-    const nextActive =
-      activeBookingScreens
-        .slice()
-        .sort((a: any, b: any) => {
-          const ta = a?.booking?.scheduledStart ? new Date(a.booking.scheduledStart).getTime() : Number.MAX_SAFE_INTEGER;
-          const tb = b?.booking?.scheduledStart ? new Date(b.booking.scheduledStart).getTime() : Number.MAX_SAFE_INTEGER;
-          return ta - tb;
-        })[0] ?? null;
+  return (
+    <main className="min-h-screen px-6 py-10">
+      <h1 className="text-2xl font-semibold">Your Bookings</h1>
+      <p className="text-sm text-slate-600">Customer-safe view</p>
 
-    return (
-      <RoleShell
-        theme={theme}
-        nav={[
-          { href: "/customer", label: "Bookings" },
-          { href: "/notifications", label: "Updates" },
-          { href: "/", label: "Home" },
-        ]}
+      {loadError ? (
+        <p className="mt-4 text-sm text-amber-700">{loadError}</p>
+      ) : null}
+
+      <div
+        data-testid="customer-dashboard-knowledge-card"
+        className="mt-6 rounded-xl border border-slate-200 p-4"
       >
-        <AutoRefresh interval={10000} tier={refreshTier as any} />
-        <DashboardEscalationSeed
-          role="customer"
-          escalationLevel={escalationLevel as any}
-          headline={
-            actionRequired > 0
-              ? "Your booking needs one step"
-              : completionReady > 0
-                ? "Upcoming booking is ready"
-                : "All clear"
-          }
-          detail="We’ll update this page automatically when new information arrives."
-        />
-        {nextActive ? <CustomerActiveBookingCard screen={nextActive} /> : null}
-        {nextActive ? <CustomerBookingUpdatesPanel screen={nextActive} /> : null}
-        <CustomerDashboard theme={theme} vm={vm} knowledgeContext={knowledgeContext} />
-      </RoleShell>
-    );
-  } catch (e: unknown) {
-    const { message } = describePageLoadError(e);
-    return (
-      <RoleShell theme={theme} subtitle="Could not load your bookings">
-        <p className="text-sm text-red-700">{message}</p>
-        <a className="mt-3 inline-block text-sm font-medium text-emerald-900 underline" href="/">
-          Back to home
-        </a>
-      </RoleShell>
-    );
-  }
+        <h2 className="text-lg font-medium">Cleaning Encyclopedia</h2>
+        <div className="mt-3 flex gap-3">
+          <Link href="/search">Search</Link>
+          <Link href="/encyclopedia">Browse</Link>
+        </div>
+      </div>
+
+      <div className="mt-8 space-y-4">
+        {bookings.length === 0 ? (
+          <div className="rounded-xl border border-slate-200 p-4">
+            No bookings yet.
+          </div>
+        ) : (
+          bookings.map((booking) => (
+            <Link
+              key={booking.id}
+              href={`/customer/bookings/${booking.id}`}
+              className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4"
+            >
+              <div>
+                <p className="font-medium">{booking.id}</p>
+                <p className="text-sm text-slate-600">
+                  {displayBookingPrice(booking)} · FO {booking.foId ?? "Unassigned"}
+                </p>
+              </div>
+              <BookingStatusBadge status={booking.status} />
+            </Link>
+          ))
+        )}
+      </div>
+    </main>
+  );
+}
+
+export default function CustomerPage() {
+  return (
+    <AuthRoleGate role="customer">
+      <CustomerDashboardContent />
+    </AuthRoleGate>
+  );
 }

@@ -1753,11 +1753,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /webhooks/stripe:
+  /stripe/webhook:
     post:
       tags: [Webhooks]
-      summary: Stripe webhook
-      description: Stripe payment events (payment_intent.succeeded, charge.refunded, payout.paid)
+      summary: Stripe webhook (canonical ingress)
+      description: >
+        Single public Stripe webhook URL. Requires raw JSON body and Stripe-Signature header.
+        Booking reconciliation, ledger entries, and dispute flows run after verified events.
       requestBody:
         required: true
         content:
@@ -1767,4 +1769,4 @@ paths:
               description: Stripe webhook event payload
       responses:
         "200":
-          description: Webhook processed
+          description: Webhook processed or duplicate (idempotent)

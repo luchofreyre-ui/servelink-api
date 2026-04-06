@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { WEB_ENV } from "@/lib/env";
+import { getBookingUiTelemetrySnapshot } from "@/lib/telemetry/bookingEvents";
 
 interface StoredEvent {
   event: string;
@@ -14,14 +15,7 @@ export function BookingUiTelemetryCard() {
 
   useEffect(() => {
     if (!WEB_ENV.enableBookingUiTelemetry) return;
-
-    try {
-      const raw = window.localStorage.getItem("servelink_booking_ui_events");
-      const parsed = raw ? (JSON.parse(raw) as StoredEvent[]) : [];
-      setItems(parsed.slice().reverse().slice(0, 20));
-    } catch {
-      setItems([]);
-    }
+    setItems(getBookingUiTelemetrySnapshot());
   }, []);
 
   if (!WEB_ENV.enableBookingUiTelemetry) {

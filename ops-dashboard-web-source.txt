@@ -1,0 +1,815 @@
+
+===== FILE: src/app/(app-shell)/(admin)/admin/page.tsx =====
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { AuthRoleGate } from "@/components/auth/AuthRoleGate";
+import { BookingStatusBadge } from "@/components/booking/BookingStatusBadge";
+import type { AdminPaymentOpsSummary, BookingRecord } from "@/lib/bookings/bookingApiTypes";
+import { displayBookingPrice } from "@/lib/bookings/bookingDisplay";
+import {
+  getAdminPaymentOpsSummary,
+  listAdminPaymentAnomalies,
+  listBookings,
+} from "@/lib/bookings/bookingStore";
+
+function AdminDashboardContent() {
+  const [bookings, setBookings] = useState<BookingRecord[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [paymentOps, setPaymentOps] = useState<AdminPaymentOpsSummary | null>(null);
+  const [paymentOpsError, setPaymentOpsError] = useState<string | null>(null);
+  const [latestAnomalies, setLatestAnomalies] = useState<
+    { id: string; bookingId: string | null; kind: string; message: string; detectedAt: string }[]
+  >([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void listBookings({ view: "dispatch" })
+      .then((rows) => {
+        if (!cancelled) {
+          setBookings(rows);
+          setLoadError(null);
+        }
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) {
+          setLoadError(e instanceof Error ? e.message : "Failed to load bookings.");
+          setBookings([]);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    void Promise.all([getAdminPaymentOpsSummary(), listAdminPaymentAnomalies()])
+      .then(([summary, anomalies]) => {
+        if (!cancelled) {
+          setPaymentOps(summary);
+          setLatestAnomalies(anomalies.slice(0, 5));
+          setPaymentOpsError(null);
+        }
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) {
+          setPaymentOpsError(e instanceof Error ? e.message : "Failed to load payment ops.");
+          setPaymentOps(null);
+          setLatestAnomalies([]);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return (
+    <main className="min-h-screen px-6 py-10">
+      <h1 className="text-2xl font-semibold">
+        Operations Control Center
+      </h1>
+
+      {loadError ? (
+        <p className="mt-4 text-sm text-amber-700">{loadError}</p>
+      ) : null}
+
+      <section
+        className="mt-6 rounded-xl border border-slate-200 bg-slate-50/80 p-4"
+        aria-label="Payment operations"
+      >
+        <h2 className="text-lg font-medium">Payment operations</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Single Stripe ingress (POST /api/v1/stripe/webhook): webhook health, anomalies, and stuck
+          checkouts (read-only; computed on load). Older anomaly rows may reference legacy paths.
+        </p>
+        {paymentOpsError ? (
+          <p className="mt-3 text-sm text-amber-700">{paymentOpsError}</p>
+        ) : paymentOps ? (
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+              <div className="text-xs uppercase tracking-wide text-slate-500">Open anomalies</div>
+              <div className="mt-1 font-semibold text-slate-900">{paymentOps.openAnomalyCount}</div>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+              <div className="text-xs uppercase tracking-wide text-slate-500">
+                Webhook failures (24h)
+              </div>
+              <div className="mt-1 font-semibold text-slate-900">
+                {paymentOps.recentWebhookFailureCount}
+              </div>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+              <div className="text-xs uppercase tracking-wide text-slate-500">
+                Stuck pending (&gt;30m)
+              </div>
+              <div className="mt-1 font-semibold text-slate-900">
+                {paymentOps.stuckPendingPaymentShortCount}
+              </div>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+              <div className="text-xs uppercase tracking-wide text-slate-500">
+                Duplicate events (7d)
+              </div>
+              <div className="mt-1 font-semibold text-slate-900">
+                {paymentOps.duplicateWebhookRecentCount}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="mt-3 text-sm text-slate-500">Loading payment metrics…</p>
+        )}
+        {latestAnomalies.length > 0 ? (
+          <div className="mt-4">
+            <h3 className="text-sm font-medium text-slate-800">Latest open anomalies</h3>
+            <ul className="mt-2 space-y-2 text-sm text-slate-700">
+              {latestAnomalies.map((a) => (
+                <li key={a.id} className="flex flex-wrap gap-x-2 border-b border-slate-100 pb-2 last:border-0">
+                  <span className="font-mono text-xs text-slate-500">{a.kind}</span>
+                  {a.bookingId ? (
+                    <Link
+                      href={`/admin/bookings/${encodeURIComponent(a.bookingId)}`}
+                      className="text-blue-700 underline"
+                    >
+                      {a.bookingId.slice(0, 12)}…
+                    </Link>
+                  ) : (
+                    <span className="text-slate-400">—</span>
+                  )}
+                  <span className="text-slate-600">{a.message}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="mt-6">
+        <h2 className="text-lg font-medium">
+          Recent Dispatch Exceptions
+        </h2>
+
+        <div className="mt-4 text-sm text-slate-600">
+          No recent exceptions.
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="text-lg font-medium">Recent admin activity</h2>
+        <div className="mt-4 text-sm text-slate-600">
+          No recent activity.
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="text-lg font-medium">Recent Bookings</h2>
+
+        <div className="mt-4 space-y-3">
+          {bookings.length === 0 ? (
+            <div className="rounded-xl border border-slate-200 p-4 text-sm text-slate-600">
+              No bookings recorded yet.
+            </div>
+          ) : (
+            bookings.slice(0, 8).map((booking) => (
+              <Link
+                key={booking.id}
+                href={`/admin/bookings/${booking.id}`}
+                className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4"
+              >
+                <div>
+                  <p className="font-medium">{booking.id}</p>
+                  <p className="text-sm text-slate-600">
+                    {booking.foId ? (
+                      <>
+                        FO {String(booking.foId).slice(0, 10)}
+                        {String(booking.foId).length > 10 ? "…" : ""}
+                      </>
+                    ) : (
+                      <span className="font-medium text-amber-800">Unassigned</span>
+                    )}
+                    {" · "}
+                    {booking.customerId.slice(0, 8)}… · {displayBookingPrice(booking)}
+                  </p>
+                  {!booking.foId ? (
+                    <p className="mt-1 text-xs text-slate-500">
+                      Open booking detail for ranked assignees and one-click assign.
+                    </p>
+                  ) : null}
+                </div>
+                <BookingStatusBadge status={booking.status} />
+              </Link>
+            ))
+          )}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+export default function AdminRootPage() {
+  return (
+    <AuthRoleGate role="admin">
+      <AdminDashboardContent />
+    </AuthRoleGate>
+  );
+}
+
+===== FILE: src/app/(app-shell)/(admin)/layout.tsx =====
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
+}
+
+===== FILE: src/app/(app-shell)/(admin)/admin/bookings/[id]/page.tsx =====
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { getStoredAccessToken } from "@/lib/auth";
+import { WEB_ENV } from "@/lib/env";
+import type { AdminBookingCommandCenterPayload } from "@/lib/api/adminBookingCommandCenter";
+import { useAdminBookingCommandCenterMutations } from "@/hooks/admin/useAdminBookingCommandCenterMutations";
+import { AdminBookingOperationalDetailCard } from "@/components/admin/AdminBookingOperationalDetailCard";
+import { AdminBookingAuthorityActionSurface } from "@/components/admin/AdminBookingAuthorityActionSurface";
+import { AdminDeepCleanBookingSection } from "@/components/booking-detail/admin/AdminDeepCleanBookingSection";
+import { AdminBookingLifecyclePanel } from "@/components/booking/AdminBookingLifecyclePanel";
+import { dispatchAdminActivityRefresh } from "@/lib/adminActivityRefresh";
+import type {
+  AdminPaymentAnomalyRow,
+  AssignmentRecommendation,
+  BookingEvent,
+  BookingPaymentStatus,
+  BookingRecord,
+} from "@/lib/bookings/bookingApiTypes";
+import {
+  assignBooking,
+  assignRecommendedBooking,
+  createBookingCheckout,
+  fetchAssignmentRecommendations,
+  listAdminPaymentAnomalies,
+  updateBookingPaymentStatus,
+} from "@/lib/bookings/bookingStore";
+
+const API_BASE_URL = WEB_ENV.apiBaseUrl;
+
+type TimelineDecision = {
+  trigger?: string | null;
+  createdAt?: string | null;
+  [key: string]: unknown;
+};
+
+type DispatchTimelineResponse = {
+  decisions?: TimelineDecision[];
+  [key: string]: unknown;
+};
+
+type DispatchExplainerResponse = {
+  summary?: string | null;
+  [key: string]: unknown;
+};
+
+type DispatchExceptionDetailResponse = {
+  bookingId?: string;
+  bookingStatus?: string | null;
+  exceptionReasons?: string[] | null;
+  latestCreatedAt?: string | null;
+  dispatchPasses?: number | null;
+  requiresFollowUp?: boolean | null;
+  priorityBucket?: string | null;
+  [key: string]: unknown;
+};
+
+type BookingScreenEnvelope = {
+  kind?: string;
+  screen?: unknown;
+};
+
+type Loadable<T> = {
+  loading: boolean;
+  error: string | null;
+  data: T | null;
+};
+
+function workflowStateLabel(
+  state: AdminBookingCommandCenterPayload["workflowState"],
+): string {
+  switch (state) {
+    case "held":
+      return "Held";
+    case "in_review":
+      return "In review";
+    case "approved":
+      return "Approved";
+    case "reassign_requested":
+      return "Pending reassign / re-dispatch";
+    default:
+      return "Open";
+  }
+}
+
+type ActionState = {
+  loading: string | null;
+  error: string | null;
+  success: string | null;
+};
+
+function deriveAdminPaymentSourceLine(
+  events: BookingEvent[] | undefined,
+  paymentStatus: BookingPaymentStatus | undefined,
+): string {
+  const pending =
+    paymentStatus === "unpaid" ||
+    paymentStatus === "checkout_created" ||
+    paymentStatus === "payment_pending";
+
+  if (!events?.length) {
+    return pending
+      ? "Payment source: Pending / unresolved"
+      : "Payment source: Pending / unresolved";
+  }
+
+  const sorted = [...events].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+
+  const paymentish = sorted.filter(
+    (e) =>
+      e.type === "PAYMENT_STATUS_CHANGED" ||
+      e.type === "PAYMENT_ADMIN_OVERRIDE" ||
+      e.type === "PAYMENT_CHECKOUT_CREATED",
+  );
+
+  for (const ev of paymentish) {
+    if (ev.type === "PAYMENT_ADMIN_OVERRIDE") {
+      return "Payment source: Admin override";
+    }
+    if (ev.type === "PAYMENT_STATUS_CHANGED") {
+      const p = ev.payload as Record<string, unknown> | null | undefined;
+      if (p?.source === "stripe_webhook") {
+        return "Payment source: Stripe webhook";
+      }
+      if (String(ev.actorRole ?? "").toLowerCase() === "admin") {
+        return "Payment source: Admin override";
+      }
+    }
+  }
+
+  if (pending) {
+    return "Payment source: Pending / unresolved";
+  }
+  return "Payment source: Pending / unresolved";
+}
+
+function formatDateTime(value: string | null | undefined) {
+  if (!value) {
+    return "—";
+  }
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return value;
+  }
+
+  return parsed.toLocaleString();
+}
+
+function readApiErrorMessage(payload: unknown, fallback: string) {
+  if (payload && typeof payload === "object") {
+    const maybeMessage = (payload as { message?: unknown }).message;
+    if (typeof maybeMessage === "string" && maybeMessage.trim()) {
+      return maybeMessage;
+    }
+
+    const maybeError = (payload as { error?: { message?: unknown } }).error;
+    if (
+      maybeError &&
+      typeof maybeError === "object" &&
+      typeof maybeError.message === "string" &&
+      maybeError.message.trim()
+    ) {
+      return maybeError.message;
+    }
+  }
+
+  return fallback;
+}
+
+async function fetchJson<T>(url: string, token: string): Promise<T> {
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
+
+  let payload: unknown = null;
+
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      readApiErrorMessage(payload, `Request failed with status ${response.status}`),
+    );
+  }
+
+  if (
+    payload &&
+    typeof payload === "object" &&
+    "ok" in payload &&
+    (payload as { ok?: unknown }).ok === true &&
+    "item" in payload
+  ) {
+    return (payload as { item: T }).item;
+  }
+
+  return payload as T;
+}
+
+export default function AdminBookingDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const bookingId = String(params?.id ?? "");
+
+  const [token, setToken] = useState<string | null>(null);
+
+  const [booking, setBooking] = useState<Loadable<BookingRecord>>({
+    loading: true,
+    error: null,
+    data: null,
+  });
+
+  const [exceptionDetail, setExceptionDetail] =
+    useState<Loadable<DispatchExceptionDetailResponse>>({
+      loading: true,
+      error: null,
+      data: null,
+    });
+
+  const [timeline, setTimeline] = useState<Loadable<DispatchTimelineResponse>>({
+    loading: true,
+    error: null,
+    data: null,
+  });
+
+  const [explainer, setExplainer] =
+    useState<Loadable<DispatchExplainerResponse>>({
+      loading: true,
+      error: null,
+      data: null,
+    });
+
+  const [actionState, setActionState] = useState<ActionState>({
+    loading: null,
+    error: null,
+    success: null,
+  });
+
+  const [operatorNote, setOperatorNote] = useState("");
+  const [serverOperatorNote, setServerOperatorNote] = useState<string | null>(null);
+  const [noteSaving, setNoteSaving] = useState(false);
+  const [noteResult, setNoteResult] = useState<string | null>(null);
+
+  const [commandCenter, setCommandCenter] = useState<
+    Loadable<AdminBookingCommandCenterPayload>
+  >({
+    loading: true,
+    error: null,
+    data: null,
+  });
+
+
+===== FILE: src/app/(app-shell)/(admin)/admin/system-tests/page.tsx =====
+"use client";
+
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { getStoredAccessToken } from "@/lib/auth";
+import {
+  buildSystemTestsTrendInsights,
+  buildSystemTestsTrendPoints,
+  fetchAdminSystemTestRunDetail,
+  fetchAdminSystemTestRuns,
+  fetchAdminSystemTestsSummary,
+} from "@/lib/api/systemTests";
+import { analyzeSystemTestHistory } from "@/lib/systemTests/analyzeSystemTestHistory";
+import { buildSystemTestReportFromPayload } from "@/lib/systemTests/buildSystemTestReport";
+import { buildSystemTestReportPayload } from "@/lib/systemTests/buildSystemTestReportPayload";
+import { buildSystemTestTriageReportFromPayload } from "@/lib/systemTests/buildSystemTestTriageReport";
+import {
+  buildTrendPointsFromRuns,
+  normalizeRunSummaryFromListItem,
+  normalizeSystemTestRunDetail,
+  trendVsPrevious,
+} from "@/lib/systemTests/normalizeSystemTestRun";
+import { mergeFixOpportunitiesIntoTopProblems } from "@/lib/system-tests/prioritization";
+import { buildEnrichedDiagnosticExport } from "@/lib/system-tests/export";
+import { fixOpportunityToResolutionPreview } from "@/lib/system-tests/fixOpportunityPreview";
+import { sortSystemTestRunsListNewestFirst } from "@/lib/systemTests/sortSystemTestRuns";
+import { SystemTestsCopyReportButton } from "@/components/admin/system-tests/SystemTestsCopyReportButton";
+import { SystemTestsHistoricalInsightsPanel } from "@/components/admin/system-tests/SystemTestsHistoricalInsightsPanel";
+import { SystemTestsOverviewPanels } from "@/components/admin/system-tests/SystemTestsOverviewPanels";
+import { SystemTestsPageHeader } from "@/components/admin/system-tests/SystemTestsPageHeader";
+import { SystemTestsRerunPriorityPanel } from "@/components/admin/system-tests/SystemTestsRerunPriorityPanel";
+import { SystemTestsRunsTable } from "@/components/admin/system-tests/SystemTestsRunsTable";
+import { SystemTestsSummaryCards } from "@/components/admin/system-tests/SystemTestsSummaryCards";
+import { SystemTestsTrendStrip } from "@/components/admin/system-tests/SystemTestsTrendStrip";
+import { SystemTestIncidentOperationsSection } from "@/components/admin/system-tests/SystemTestIncidentOperationsSection";
+import { SystemTestsUnstableFilesPanel } from "@/components/admin/system-tests/SystemTestsUnstableFilesPanel";
+import type {
+  SystemTestRunDetailResponse,
+  SystemTestRunsListItem,
+  SystemTestsRunsResponse,
+  SystemTestsSummaryResponse,
+} from "@/types/systemTests";
+import type {
+  SystemTestFamilyLifecycle,
+  SystemTestFamilyOperatorState,
+} from "@/types/systemTestResolution";
+
+export default function AdminSystemTestsPage() {
+  const [tokenChecked, setTokenChecked] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [runs, setRuns] = useState<SystemTestRunsListItem[]>([]);
+  const [latestDetail, setLatestDetail] = useState<SystemTestRunDetailResponse | null>(null);
+  const [priorDetails, setPriorDetails] = useState<SystemTestRunDetailResponse[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [detailError, setDetailError] = useState<string | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [dashboardSummary, setDashboardSummary] = useState<SystemTestsSummaryResponse | null>(null);
+  const [showDismissedDashboard, setShowDismissedDashboard] = useState(false);
+  const [includeDormantDashboard, setIncludeDormantDashboard] = useState(true);
+  const [includeResolvedDashboard, setIncludeResolvedDashboard] = useState(false);
+  const [familyOperatorOverlay, setFamilyOperatorOverlay] = useState<
+    Record<string, SystemTestFamilyOperatorState>
+  >({});
+
+  useEffect(() => {
+    setToken(getStoredAccessToken());
+    setTokenChecked(true);
+  }, []);
+
+  useEffect(() => {
+    if (!tokenChecked || !token) {
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [runsResult, summaryResult] = await Promise.allSettled([
+          fetchAdminSystemTestRuns(token, { limit: 25, page: 1 }),
+          fetchAdminSystemTestsSummary(token, {
+            showDismissed: showDismissedDashboard,
+            includeDormant: includeDormantDashboard,
+            includeResolved: includeResolvedDashboard,
+          }),
+        ]);
+        if (cancelled) return;
+
+        if (runsResult.status === "fulfilled") {
+          setRuns(runsResult.value.items);
+        } else {
+          setRuns([]);
+          setError(
+            runsResult.reason instanceof Error ?
+              runsResult.reason.message
+            : "Failed to load system tests.",
+          );
+        }
+
+        if (summaryResult.status === "fulfilled") {
+          setDashboardSummary(summaryResult.value);
+        } else {
+          setDashboardSummary(null);
+        }
+      } catch (e) {
+        if (!cancelled) {
+          setError(e instanceof Error ? e.message : "Failed to load system tests.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, tokenChecked, showDismissedDashboard, includeDormantDashboard, includeResolvedDashboard]);
+
+  useEffect(() => {
+    setFamilyOperatorOverlay({});
+  }, [showDismissedDashboard, includeDormantDashboard, includeResolvedDashboard]);
+
+  const { sorted: sortedRuns, listChronologyNote } = useMemo(
+    () => sortSystemTestRunsListNewestFirst(runs),
+    [runs],
+  );
+
+  const latestRun = sortedRuns[0] ?? null;
+  const previousRun = sortedRuns[1] ?? null;
+
+  useEffect(() => {
+    if (!tokenChecked || !token || !latestRun) {
+      setLatestDetail(null);
+      setDetailError(null);
+      setDetailLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      setDetailError(null);
+      setDetailLoading(true);
+      try {
+        const d = await fetchAdminSystemTestRunDetail(token, latestRun.id);
+        if (!cancelled) setLatestDetail(d);
+      } catch (e) {
+        if (!cancelled) {
+          setLatestDetail(null);
+          setDetailError(e instanceof Error ? e.message : "Failed to load latest run detail.");
+        }
+      } finally {
+        if (!cancelled) setDetailLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, tokenChecked, latestRun?.id]);
+
+  useEffect(() => {
+    if (!tokenChecked || !token || !latestRun || !sortedRuns.length) {
+      setPriorDetails([]);
+      setHistoryLoading(false);
+      return;
+    }
+
+    const idx = sortedRuns.findIndex((r) => r.id === latestRun.id);
+    if (idx < 0) {
+      setPriorDetails([]);
+      return;
+    }
+
+    const older = sortedRuns.slice(idx + 1, idx + 10);
+    if (!older.length) {
+      setPriorDetails([]);
+      setHistoryLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      setHistoryLoading(true);
+      try {
+        const settled = await Promise.allSettled(
+          older.map((r) => fetchAdminSystemTestRunDetail(token, r.id)),
+        );
+        if (cancelled) return;
+        const ok = settled
+          .filter((s): s is PromiseFulfilledResult<SystemTestRunDetailResponse> => s.status === "fulfilled")
+          .map((s) => s.value);
+        setPriorDetails(ok);
+      } finally {
+        if (!cancelled) setHistoryLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, tokenChecked, latestRun?.id, sortedRuns]);
+
+  const latestSummary = useMemo(
+    () => (latestRun ? normalizeRunSummaryFromListItem(latestRun) : null),
+    [latestRun],
+  );
+
+  const prevSummary = useMemo(
+    () => (previousRun ? normalizeRunSummaryFromListItem(previousRun) : null),
+    [previousRun],
+  );
+
+  const trendVsPrev = useMemo(
+    () => (latestSummary ? trendVsPrevious(latestSummary, prevSummary) : null),
+    [latestSummary, prevSummary],
+  );
+
+  const trendPoints = useMemo(() => buildTrendPointsFromRuns(sortedRuns, { limit: 20 }), [sortedRuns]);
+
+  const runsAsListResponse = useMemo(
+    (): SystemTestsRunsResponse => ({
+      items: sortedRuns,
+      total: sortedRuns.length,
+      page: 1,
+      limit: sortedRuns.length || 25,
+    }),
+    [sortedRuns],
+  );
+
+  const adminTrendPoints = useMemo(
+    () => buildSystemTestsTrendPoints(runsAsListResponse),
+    [runsAsListResponse],
+  );
+
+  const trendInsights = useMemo(
+    () => buildSystemTestsTrendInsights(adminTrendPoints),
+    [adminTrendPoints],
+  );
+
+  const patchFamilyOperatorState = useCallback(
+    (familyId: string, next: SystemTestFamilyOperatorState) => {
+      setFamilyOperatorOverlay((prev) => ({ ...prev, [familyId]: next }));
+      setDashboardSummary((prev) => {
+        if (!prev) return prev;
+        const idx = prev.fixOpportunities.findIndex((o) => o.familyId === familyId);
+        let fixOpportunities =
+          idx >= 0 ?
+            prev.fixOpportunities.map((o) =>
+              o.familyId === familyId ? { ...o, operatorState: next, lifecycle: o.lifecycle } : o,
+            )
+          : prev.fixOpportunities;
+        if (!showDismissedDashboard && next.state === "dismissed") {
+          fixOpportunities = fixOpportunities.filter((o) => o.familyId !== familyId);
+        }
+        return { ...prev, fixOpportunities };
+      });
+
+===== FILE: src/app/(app-shell)/(admin)/admin/anomalies/page.tsx =====
+"use client";
+
+import { AdminLaunchReadinessCard } from "@/components/admin/AdminLaunchReadinessCard";
+import { AdminBookingRevenueReadinessCard } from "@/components/admin/AdminBookingRevenueReadinessCard";
+import { AdminAnomaliesQueue } from "@/components/admin/anomalies/AdminAnomaliesQueue";
+import { AdminOpsAnomaliesPanel } from "@/components/admin/AdminOpsAnomaliesPanel";
+
+export default function AdminAnomaliesPage() {
+  return (
+    <main className="min-h-screen bg-neutral-950 px-6 py-12 text-white">
+      <div className="mx-auto max-w-5xl space-y-10">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Admin anomalies &amp; ops queues
+          </h1>
+          <p className="max-w-3xl text-sm text-white/70">
+            This page shows <strong>two different systems</strong>: a fingerprinted{" "}
+            <em>ops anomaly</em> queue (alerts + SLA + ownership) and a separate{" "}
+            <em>payment / Prisma ops anomaly</em> list. They use different API endpoints and
+            data models—treat them as independent work queues.
+          </p>
+        </div>
+
+        <AdminLaunchReadinessCard />
+        <AdminBookingRevenueReadinessCard />
+
+        <section className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+          <div>
+            <h2 className="text-lg font-semibold text-white">
+              1. Ops anomaly queue (fingerprints)
+            </h2>
+            <p className="mt-1 text-sm text-white/65">
+              Source:{" "}
+              <code className="rounded bg-black/40 px-1 py-0.5 text-xs text-emerald-100/90">
+                GET /api/v1/admin/ops/anomalies
+              </code>
+              . Fingerprinted ops alerts with filters in the URL, &ldquo;Load more&rdquo;
+              pagination, and links into booking command center where applicable.
+            </p>
+          </div>
+          <AdminAnomaliesQueue />
+        </section>
+
+        <section className="space-y-4">
+          <div>
+            <h2 className="text-lg font-semibold text-white">
+              2. Payment &amp; Prisma ops anomalies
+            </h2>
+            <p className="mt-1 text-sm text-white/65">
+              Source:{" "}
+              <code className="rounded bg-black/40 px-1 py-0.5 text-xs text-cyan-100/90">
+                GET /api/v1/admin/anomalies
+              </code>
+              . Operational records such as payment / intent issues—acknowledge or resolve
+              here. This is <strong>not</strong> the fingerprinted queue in section 1.
+            </p>
+          </div>
+          <AdminOpsAnomaliesPanel />
+        </section>
+      </div>
+    </main>
+  );
+}
+MISSING: src/components/admin/AdminLayout.tsx

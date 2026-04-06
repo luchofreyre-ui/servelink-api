@@ -14,6 +14,7 @@ import { join } from "path";
 import * as yaml from "js-yaml";
 import * as swaggerUi from "swagger-ui-express";
 import express from "express";
+import { STRIPE_WEBHOOK_HTTP_PATH } from "./modules/billing/stripe-webhook.constants";
 
 function parseAllowedOrigins() {
   const configured = process.env.CORS_ORIGINS?.trim();
@@ -82,14 +83,9 @@ async function bootstrap() {
   expressApp.use(requestLoggingMiddleware);
   expressApp.use(rateLimitMiddleware);
 
-  // Stripe requires raw body for webhook signature verification.
-  // Limit raw parsing to these exact routes to avoid impacting the rest of the API.
+  // Stripe requires raw body for webhook signature verification (single ingress: STRIPE_WEBHOOK_HTTP_PATH).
   expressApp.use(
-    "/api/v1/webhooks/stripe",
-    express.raw({ type: "application/json", limit: "1mb" }),
-  );
-  expressApp.use(
-    "/api/v1/stripe/webhook",
+    STRIPE_WEBHOOK_HTTP_PATH,
     express.raw({ type: "application/json", limit: "1mb" }),
   );
 

@@ -2,18 +2,14 @@
  * Mirrors API `BookingPaymentStatus` — include full enum so we never lie to the UI.
  */
 export type BookingPaymentStatus =
-  | "none"
-  | "authorized_initial"
-  | "additional_authorization_required"
-  | "additional_authorization_pending"
-  | "additional_authorization_approved"
-  | "additional_authorization_declined"
-  | "ready_for_capture"
-  | "captured"
-  | "quote_ready"
-  | "requires_payment"
+  | "unpaid"
+  | "checkout_created"
+  | "payment_pending"
+  | "authorized"
   | "paid"
-  | "failed";
+  | "failed"
+  | "refunded"
+  | "waived";
 
 export interface BookingCommercialFields {
   quotedSubtotal: number | null;

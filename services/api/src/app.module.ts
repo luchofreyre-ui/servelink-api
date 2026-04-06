@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { ReliabilityModule } from "./common/reliability/reliability.module";
 import { BullModule } from "@nestjs/bullmq";
 import { ConfigModule } from "@nestjs/config";
 import { ScheduleModule } from "@nestjs/schedule";
@@ -42,6 +43,7 @@ const enableDevScenarioApi =
 
 @Module({
   imports: [
+    ReliabilityModule,
     ConfigModule.forRoot({ isGlobal: true }),
     ScheduleModule.forRoot(),
     ...(enableQueue

@@ -17,6 +17,8 @@
 | Daily integrity / scheduled automation | **Full** (see CI below) |
 | Local debugging one area | Use existing path scripts (`test:e2e:smoke`, etc.) or `playwright test <path>`; lane still applies if you use `--project` |
 
+**Admin ops inline actions** (`regression/admin/admin-ops-inline-actions.spec.ts`): the spec extends the admin fixture with `fetchFreshPlaywrightScenario()` so each run re-seeds `GET /api/v1/dev/playwright/admin-scenario` and restores `bookingIds.review` for a deterministic “Clear review” path (SSR row must show an enabled button). If that row is missing and the drilldown probe finds no eligible action, the test skips.
+
 **Local commands (`apps/web`):**
 
 - Fast: `npm run test:e2e:fast`

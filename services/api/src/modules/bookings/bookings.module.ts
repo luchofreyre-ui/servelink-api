@@ -32,14 +32,20 @@ import { FinancialModule } from "../financial/financial.module";
 import { DeepCleanEstimatorConfigModule } from "./deep-clean-estimator-config.module";
 import { DeepCleanEstimatorConfigAdminController } from "./deep-clean-estimator-config.admin.controller";
 import { AuthorityModule } from "../authority/authority.module";
+import { AdminBookingsModule } from "../admin/bookings/admin-bookings.module";
+import { AssignmentService } from "./assignment/assignment.service";
+import { BookingPaymentService } from "./payment/payment.service";
+import { StripeBookingPaymentModule } from "./stripe/stripe-booking-payment.module";
 
 @Module({
   imports: [
     PrismaModule,
     AuthorityModule,
+    AdminBookingsModule,
     FoModule,
     DispatchModule,
     BillingModule,
+    StripeBookingPaymentModule,
     DeepCleanEstimatorConfigModule,
     EstimateModule,
     LedgerModule,
@@ -72,6 +78,8 @@ import { AuthorityModule } from "../authority/authority.module";
     BookingDispatchControlService,
     BookingReviewControlService,
     ExecutionService,
+    AssignmentService,
+    BookingPaymentService,
   ],
   exports: [
     BookingsService,
@@ -82,6 +90,8 @@ import { AuthorityModule } from "../authority/authority.module";
     BookingDispatchControlService,
     BookingReviewControlService,
     ExecutionService,
+    AssignmentService,
+    BookingPaymentService,
   ],
 })
 export class BookingsModule {}

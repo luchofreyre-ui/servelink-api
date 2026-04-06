@@ -1,97 +1,82 @@
-import { apiFetch } from "@/lib/api";
-import { readApiJson } from "@/lib/api-response";
-import { describePageLoadError } from "@/lib/page-errors";
-import { roleThemes } from "@/lib/role-theme";
-import { emptyCopy } from "@/lib/empty-copy";
-import { RoleShell } from "@/components/shared/RoleShell";
-import { AutoRefresh } from "@/components/shared/AutoRefresh";
-import { FranchiseOwnerDashboard } from "@/components/dashboard/franchise-owner/FranchiseOwnerDashboard";
-import { buildFranchiseOwnerDashboardViewModel } from "@/dashboard/franchise-owner/franchiseOwnerDashboardViewModel";
-import { DashboardEscalationSeed } from "@/components/notifications/DashboardEscalationSeed";
-import { FranchiseOwnerWorkloadBoard } from "@/components/operations/franchise-owner/FranchiseOwnerWorkloadBoard";
-import { computeBookingBilling } from "@/booking-screen/billing/computeBookingBilling";
-import { buildPortfolioOperationalSnapshot } from "@/portfolio/portfolioOperationalSelectors";
+"use client";
 
-export const dynamic = "force-dynamic";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { AuthRoleGate } from "@/components/auth/AuthRoleGate";
+import { BookingStatusBadge } from "@/components/booking/BookingStatusBadge";
+import type { BookingRecord } from "@/lib/bookings/bookingApiTypes";
+import { displayBookingPrice } from "@/lib/bookings/bookingDisplay";
+import { getAuthUser } from "@/lib/auth/authClient";
+import { listBookings } from "@/lib/bookings/bookingStore";
 
-export default async function FoDashboard() {
-  const theme = roleThemes.fo;
-  try {
-    const summaryRes = await apiFetch("/api/v1/fo/screen-summary");
-    const { summary } = await readApiJson<{ summary: any }>(summaryRes);
-    const vm = buildFranchiseOwnerDashboardViewModel(summary, {
-      emptyQueueMessage: emptyCopy.fo.dashboard,
-    });
-    const counts = summary?.counts ?? {};
-    const paymentIssues = Number(counts.paymentActionRequired ?? 0);
-    const completionReady = Number(counts.completionReady ?? 0);
-    const escalationLevel = paymentIssues > 0 ? "warning" : completionReady > 0 ? "watch" : "none";
-    const refreshTier =
-      escalationLevel === "warning"
-        ? "at_risk"
-        : escalationLevel === "watch"
-          ? "active"
-          : "idle";
+function FOHomeContent() {
+  const [bookings, setBookings] = useState<BookingRecord[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
-    const bookingIds: string[] = (summary?.queue?.rows ?? [])
-      .map((r: any) => String(r?.bookingId ?? ""))
-      .filter(Boolean)
-      .slice(0, 15);
+  useEffect(() => {
+    let cancelled = false;
+    const user = getAuthUser();
+    void listBookings({
+      view: "fo",
+      userId: user?.id,
+    })
+      .then((rows) => {
+        if (!cancelled) {
+          setBookings(rows);
+          setLoadError(null);
+        }
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) {
+          setLoadError(e instanceof Error ? e.message : "Failed to load queue.");
+          setBookings([]);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-    const bookingScreens = await Promise.all(
-      Array.from(new Set(bookingIds)).map(async (id) => {
-        const screenRes = await apiFetch(`/api/v1/bookings/${id}/screen`);
-        const { screen: raw } = await readApiJson<{ screen: any }>(screenRes);
-        return { ...raw, billing: computeBookingBilling(raw) };
-      }),
-    );
+  return (
+    <main className="min-h-screen px-6 py-10">
+      <h1 className="text-2xl font-semibold">My Work</h1>
+      <p>Queue rows: {bookings.length}</p>
 
-    const portfolioSnapshot = buildPortfolioOperationalSnapshot({
-      bookingScreens,
-      source: "fo_console",
-    });
+      {loadError ? (
+        <p className="mt-4 text-sm text-amber-700">{loadError}</p>
+      ) : null}
 
-    return (
-      <RoleShell
-        theme={theme}
-        nav={[
-          { href: "/fo", label: "My work" },
-          { href: "/fo/knowledge", label: "Knowledge" },
-          { href: "/notifications", label: "Alerts" },
-          { href: "/", label: "Home" },
-        ]}
-      >
-        <AutoRefresh interval={10000} tier={refreshTier as any} />
-        <DashboardEscalationSeed
-          role="fo"
-          escalationLevel={escalationLevel as any}
-          headline={
-            paymentIssues > 0
-              ? "Critical work items need your action"
-              : completionReady > 0
-                ? "Some jobs are ready to complete"
-                : "All clear"
-          }
-          detail="We’ll keep your queue updated as system risk changes."
-        />
-        <FranchiseOwnerDashboard
-          theme={theme}
-          vm={vm}
-          bookingScreens={bookingScreens}
-          portfolioSnapshot={portfolioSnapshot}
-        />
-        <FranchiseOwnerWorkloadBoard bookingScreens={bookingScreens} />
-      </RoleShell>
-    );
-  } catch (e: unknown) {
-    const { message } = describePageLoadError(e);
-    return (
-      <RoleShell theme={theme} subtitle="Could not load your queue">
-        <p className="text-sm text-red-700">{message}</p>
-        <a className="mt-3 inline-block text-sm font-medium text-blue-900 underline" href="/">
-          Back to home
-        </a>
-      </RoleShell>
-    );
-  }
+      <div className="mt-8 space-y-4">
+        {bookings.length === 0 ? (
+          <div className="rounded-xl border border-slate-200 p-4">
+            No assigned bookings yet.
+          </div>
+        ) : (
+          bookings.map((booking) => (
+            <Link
+              key={booking.id}
+              href={`/fo/bookings/${booking.id}`}
+              className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4"
+            >
+              <div>
+                <p className="font-medium">{booking.id}</p>
+                <p className="text-sm text-slate-600">
+                  {displayBookingPrice(booking)} · customer {booking.customerId.slice(0, 8)}…
+                </p>
+              </div>
+              <BookingStatusBadge status={booking.status} />
+            </Link>
+          ))
+        )}
+      </div>
+    </main>
+  );
+}
+
+export default function FOPage() {
+  return (
+    <AuthRoleGate role="fo">
+      <FOHomeContent />
+    </AuthRoleGate>
+  );
 }

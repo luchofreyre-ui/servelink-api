@@ -6,6 +6,7 @@ import { AppModule } from "../src/app.module";
 import { PrismaService } from "../src/prisma";
 import {
   BookingEventType,
+  BookingPaymentStatus,
   BookingStatus,
   FoStatus,
   JournalEntryType,
@@ -13,8 +14,31 @@ import {
   LineDirection,
   Role,
 } from "@prisma/client";
+import { seedBookingPaymentAuthorized } from "./helpers/booking-payment-test-helpers";
 
 jest.setTimeout(15000);
+
+jest.mock("stripe", () => {
+  let n = 0;
+  return jest.fn().mockImplementation(() => ({
+    checkout: {
+      sessions: {
+        create: jest.fn().mockImplementation(() => {
+          n += 1;
+          return Promise.resolve({
+            id: `cs_test_mock_${n}`,
+            url: `https://checkout.stripe.com/c/pay/cs_test_mock_${n}`,
+            payment_intent: `pi_test_mock_${n}`,
+            customer: null,
+          });
+        }),
+      },
+    },
+    webhooks: {
+      constructEvent: jest.fn((payload: Buffer) => JSON.parse(payload.toString())),
+    },
+  }));
+});
 
 const FO_ID = `fo-trans-${Date.now()}`;
 
@@ -23,8 +47,12 @@ describe("Booking transitions (E2E)", () => {
   let prisma: PrismaService;
   let customerToken: string;
   let adminToken: string;
+  let customerId: string;
 
   beforeAll(async () => {
+    process.env.STRIPE_SECRET_KEY =
+      process.env.STRIPE_SECRET_KEY || "sk_test_bookings_transition_e2e";
+
     const modRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -41,6 +69,7 @@ describe("Booking transitions (E2E)", () => {
     const customer = await prisma.user.create({
       data: { email: customerEmail, passwordHash, role: "customer" },
     });
+    customerId = customer.id;
 
     const customerLoginRes = await request(app.getHttpServer())
       .post("/api/v1/auth/login")
@@ -151,6 +180,8 @@ describe("Booking transitions (E2E)", () => {
       },
     });
 
+    await seedBookingPaymentAuthorized(prisma, booking.id);
+
     const idemKey = `idem-replay-${Date.now()}`;
 
     const res1 = await request(app.getHttpServer())
@@ -204,6 +235,8 @@ describe("Booking transitions (E2E)", () => {
       },
     });
 
+    await seedBookingPaymentAuthorized(prisma, booking.id);
+
     const idemKey = `idem-concurrent-${Date.now()}`;
 
     const scheduleReq = () =>
@@ -247,6 +280,8 @@ describe("Booking transitions (E2E)", () => {
         status: BookingStatus.pending_payment,
       },
     });
+
+    await seedBookingPaymentAuthorized(prisma, booking.id);
 
     const scheduleReq = () =>
       request(app.getHttpServer())
@@ -314,6 +349,8 @@ describe("Booking transitions (E2E)", () => {
         status: BookingStatus.pending_payment,
       },
     });
+
+    await seedBookingPaymentAuthorized(prisma, booking.id);
 
     const scheduleIdem = `idem-assign-schedule-${Date.now()}`;
     await request(app.getHttpServer())
@@ -383,6 +420,8 @@ describe("Booking transitions (E2E)", () => {
         status: BookingStatus.pending_payment,
       },
     });
+
+    await seedBookingPaymentAuthorized(prisma, booking.id);
 
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${booking.id}/schedule`)
@@ -457,6 +496,8 @@ describe("Booking transitions (E2E)", () => {
         status: BookingStatus.pending_payment,
       },
     });
+
+    await seedBookingPaymentAuthorized(prisma, booking.id);
 
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${booking.id}/schedule`)
@@ -548,6 +589,8 @@ describe("Booking transitions (E2E)", () => {
         status: BookingStatus.pending_payment,
       },
     });
+
+    await seedBookingPaymentAuthorized(prisma, booking.id);
 
     // Create ended billing session and finalize to post CHARGE (with LIAB_DEFERRED_REVENUE)
     await prisma.billingSession.create({
@@ -683,6 +726,8 @@ describe("Booking transitions (E2E)", () => {
       .send({ idempotencyKey: `e2e-reopen-finalize-${Date.now()}` })
       .expect(201);
 
+    await seedBookingPaymentAuthorized(prisma, bookingId);
+
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${bookingId}/schedule`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -750,5 +795,101 @@ describe("Booking transitions (E2E)", () => {
 
     expect(snap.body.totals.deferredPlatformCents).toBe(0);
     expect(snap.body.totals.earnedPlatformCents).toBeGreaterThan(0);
+  });
+
+  it("create-checkout returns Stripe session and updates booking payment fields", async () => {
+    const booking = await prisma.booking.create({
+      data: {
+        customerId,
+        hourlyRateCents: 5000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: BookingStatus.pending_payment,
+      },
+    });
+
+    const res = await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/create-checkout`)
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({
+        successUrl: "http://127.0.0.1:3000/customer/bookings/{CHECKOUT_SESSION_ID}",
+        cancelUrl: "http://127.0.0.1:3000/customer/bookings/canceled",
+      });
+
+    expect(res.status).toBeGreaterThanOrEqual(200);
+    expect(res.status).toBeLessThan(300);
+    expect(res.body?.ok).toBe(true);
+    expect(res.body?.item?.provider).toBe("stripe");
+    expect(String(res.body?.item?.checkoutUrl ?? "")).toContain("checkout.stripe.com");
+    expect(String(res.body?.item?.reference ?? "")).toMatch(/^cs_/);
+
+    const row = await prisma.booking.findUnique({ where: { id: booking.id } });
+    expect(row?.paymentStatus).toBe(BookingPaymentStatus.checkout_created);
+    expect(row?.paymentProvider).toBe("stripe");
+    expect(row?.paymentReference).toBeTruthy();
+
+    const payEvents = await prisma.bookingEvent.findMany({
+      where: {
+        bookingId: booking.id,
+        type: BookingEventType.PAYMENT_CHECKOUT_CREATED,
+      },
+    });
+    expect(payEvents.length).toBe(1);
+  });
+
+  it("rejects schedule from pending_payment when payment is unpaid", async () => {
+    const booking = await prisma.booking.create({
+      data: {
+        customerId,
+        hourlyRateCents: 5000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: BookingStatus.pending_payment,
+        paymentStatus: BookingPaymentStatus.unpaid,
+      },
+    });
+
+    const res = await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/schedule`)
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({ note: "Should fail without payment" });
+
+    expect(res.status).toBe(400);
+    expect(String(res.body?.message ?? "")).toContain(
+      "Booking cannot be confirmed until payment is authorized, paid, or waived",
+    );
+  });
+
+  it("allows schedule when payment is authorized via admin payment-status", async () => {
+    const booking = await prisma.booking.create({
+      data: {
+        customerId,
+        hourlyRateCents: 5000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: BookingStatus.pending_payment,
+        paymentStatus: BookingPaymentStatus.unpaid,
+      },
+    });
+
+    const payRes = await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/payment-status`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        nextStatus: BookingPaymentStatus.authorized,
+        note: "E2E authorize for schedule",
+      });
+
+    expect(payRes.status).toBeGreaterThanOrEqual(200);
+    expect(payRes.status).toBeLessThan(300);
+
+    const res = await request(app.getHttpServer())
+      .post(`/api/v1/bookings/${booking.id}/schedule`)
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({ note: "After payment authorized" });
+
+    expect(res.status).toBeGreaterThanOrEqual(200);
+    expect(res.status).toBeLessThan(300);
+    expect(res.body?.status).toBe(BookingStatus.pending_dispatch);
   });
 });

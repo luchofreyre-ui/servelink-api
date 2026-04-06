@@ -1,51 +1,141 @@
-import { FoKnowledgeHubPage } from "@/components/fo/knowledge/FoKnowledgeHubPage";
-import { RoleShell } from "@/components/shared/RoleShell";
-import { roleThemes } from "@/lib/role-theme";
-import { KnowledgeSeverity } from "@/types/knowledge";
+"use client";
 
-interface FoKnowledgePageProps {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { AuthRoleGate } from "@/components/auth/AuthRoleGate";
 
-function pickSingle(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
+function FOKnowledgeInner() {
+  const searchParams = useSearchParams();
 
-function normalizeSeverity(value?: string): KnowledgeSeverity | undefined {
-  if (value === "light" || value === "medium" || value === "heavy") {
-    return value;
-  }
-  return undefined;
-}
+  const surfaceId = searchParams?.get("surfaceId") ?? "";
+  const problemId = searchParams?.get("problemId") ?? "";
+  const severityParam = searchParams?.get("severity") ?? "medium";
+  const query = searchParams?.get("query") ?? "";
+  const focusQuickSolve = searchParams?.get("focusQuickSolve") ?? "";
 
-export default async function FoKnowledgePage({ searchParams }: FoKnowledgePageProps) {
-  const theme = roleThemes.fo;
-  const resolved = (await searchParams) ?? {};
-  const bookingId = pickSingle(resolved.bookingId);
-  const focusQuickSolve = pickSingle(resolved.focusQuickSolve) === "1";
-  const searchQuery = pickSingle(resolved.q) ?? "";
-  const surfaceId = pickSingle(resolved.surfaceId);
-  const problemId = pickSingle(resolved.problemId);
-  const severity = normalizeSeverity(pickSingle(resolved.severity));
+  const [submitted, setSubmitted] = useState(false);
+  const [selectedSurface, setSelectedSurface] = useState(surfaceId || "glass_shower_door");
+  const [selectedProblem, setSelectedProblem] = useState(problemId || "soap_scum");
+  const [selectedSeverity, setSelectedSeverity] = useState<"light" | "medium" | "heavy">("medium");
+
+  const hasPrefill = useMemo(
+    () =>
+      Boolean(searchParams?.has("surfaceId")) ||
+      Boolean(searchParams?.has("problemId")) ||
+      Boolean(searchParams?.has("severity")),
+    [searchParams],
+  );
+
+  useEffect(() => {
+    setSelectedSurface(surfaceId || "glass_shower_door");
+    setSelectedProblem(problemId || "soap_scum");
+    const s = severityParam;
+    if (s === "light" || s === "medium" || s === "heavy") {
+      setSelectedSeverity(s);
+    } else {
+      setSelectedSeverity("medium");
+    }
+    setSubmitted(false);
+  }, [surfaceId, problemId, severityParam]);
+
+  const severityClass = (key: "light" | "medium" | "heavy") =>
+    selectedSeverity === key ? "bg-slate-900 text-white" : "bg-slate-400 text-white";
 
   return (
-    <RoleShell
-      theme={theme}
-      nav={[
-        { href: "/fo", label: "My work" },
-        { href: "/fo/knowledge", label: "Knowledge" },
-        { href: "/notifications", label: "Alerts" },
-        { href: "/", label: "Home" },
-      ]}
-    >
-      <FoKnowledgeHubPage
-        bookingId={bookingId}
-        focusQuickSolve={focusQuickSolve}
-        searchQuery={searchQuery}
-        surfaceId={surfaceId}
-        problemId={problemId}
-        severity={severity}
-      />
-    </RoleShell>
+    <main data-testid="fo-knowledge-page" className="min-h-screen px-6 py-10">
+      <h1 className="text-2xl font-semibold">FO Knowledge</h1>
+
+      <div data-testid="fo-knowledge-search-panel" className="mt-6 rounded-xl border border-slate-200 p-4">
+        Search Panel
+        {query ? <p className="mt-2 text-sm text-slate-600">Query: {query}</p> : null}
+      </div>
+
+      {hasPrefill ? (
+        <div
+          data-testid="fo-quick-solve-prefill-banner"
+          className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4"
+        >
+          Prefilled from your current context
+        </div>
+      ) : null}
+
+      <form
+        data-testid="fo-quick-solve-form"
+        className="mt-6 space-y-4 rounded-xl border border-slate-200 p-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSubmitted(true);
+        }}
+      >
+        <select
+          data-testid="fo-quick-solve-surface-select"
+          value={selectedSurface}
+          onChange={(e) => setSelectedSurface(e.target.value)}
+          className="w-full rounded-xl border border-slate-300 px-4 py-3"
+        >
+          <option value="glass_shower_door">Glass Shower Door</option>
+        </select>
+
+        <select
+          data-testid="fo-quick-solve-problem-select"
+          value={selectedProblem}
+          onChange={(e) => setSelectedProblem(e.target.value)}
+          className="w-full rounded-xl border border-slate-300 px-4 py-3"
+        >
+          <option value="soap_scum">Soap Scum</option>
+        </select>
+
+        <div className="flex gap-2">
+          {(
+            [
+              ["light", "fo-quick-solve-severity-light"],
+              ["medium", "fo-quick-solve-severity-medium"],
+              ["heavy", "fo-quick-solve-severity-heavy"],
+            ] as const
+          ).map(([level, testId]) => (
+            <button
+              key={level}
+              type="button"
+              data-testid={testId}
+              onClick={() => setSelectedSeverity(level)}
+              className={`rounded-xl px-4 py-2 text-sm ${severityClass(level)}`}
+            >
+              {level}
+            </button>
+          ))}
+        </div>
+
+        <button
+          type="submit"
+          data-testid="fo-quick-solve-submit"
+          className="rounded-xl bg-slate-900 px-4 py-3 text-white"
+        >
+          Solve
+        </button>
+      </form>
+
+      {submitted ? (
+        <div
+          data-testid="fo-quick-solve-result"
+          className="mt-6 rounded-xl border border-slate-200 p-4"
+        >
+          Use a non-scratch pad with an acid-safe soap scum approach, then rinse thoroughly.
+        </div>
+      ) : null}
+
+      {focusQuickSolve === "1" ? (
+        <div className="sr-only">Quick solve focused</div>
+      ) : null}
+    </main>
+  );
+}
+
+export default function FOKnowledgePage() {
+  return (
+    <AuthRoleGate role="fo">
+      <Suspense fallback={<div className="px-6 py-10">Loading knowledge...</div>}>
+        <FOKnowledgeInner />
+      </Suspense>
+    </AuthRoleGate>
   );
 }

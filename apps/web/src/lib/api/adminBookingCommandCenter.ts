@@ -138,16 +138,23 @@ export async function postAdminBookingHold(
   token: string,
   bookingId: string,
 ): Promise<AdminBookingCommandCenterPayload> {
-  const response = await fetch(`${apiBase}/api/v1/admin/bookings/${bookingId}/hold`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
-    cache: "no-store",
-  });
+  const response = await fetch(
+    `${apiBase}/api/v1/bookings/${encodeURIComponent(bookingId)}/hold`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ actorRole: "admin" }),
+      cache: "no-store",
+    },
+  );
   const payload = await parseJsonResponse(response);
   if (!response.ok) {
     throw new Error(readApiErrorMessage(payload, `Hold failed (${response.status})`));
   }
-  return payload as AdminBookingCommandCenterPayload;
+  return fetchAdminCommandCenter(apiBase, token, bookingId);
 }
 
 export async function postAdminBookingReview(

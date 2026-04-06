@@ -9,21 +9,25 @@ import { useAdminBookingCommandCenterMutations } from "@/hooks/admin/useAdminBoo
 import { AdminBookingOperationalDetailCard } from "@/components/admin/AdminBookingOperationalDetailCard";
 import { AdminBookingAuthorityActionSurface } from "@/components/admin/AdminBookingAuthorityActionSurface";
 import { AdminDeepCleanBookingSection } from "@/components/booking-detail/admin/AdminDeepCleanBookingSection";
+import { AdminBookingLifecyclePanel } from "@/components/booking/AdminBookingLifecyclePanel";
 import { dispatchAdminActivityRefresh } from "@/lib/adminActivityRefresh";
+import type {
+  AdminPaymentAnomalyRow,
+  AssignmentRecommendation,
+  BookingEvent,
+  BookingPaymentStatus,
+  BookingRecord,
+} from "@/lib/bookings/bookingApiTypes";
+import {
+  assignBooking,
+  assignRecommendedBooking,
+  createBookingCheckout,
+  fetchAssignmentRecommendations,
+  listAdminPaymentAnomalies,
+  updateBookingPaymentStatus,
+} from "@/lib/bookings/bookingStore";
 
 const API_BASE_URL = WEB_ENV.apiBaseUrl;
-
-type BookingRecord = {
-  id: string;
-  status?: string | null;
-  foId?: string | null;
-  customerId?: string | null;
-  scheduledStart?: string | null;
-  scheduledEnd?: string | null;
-  createdAt?: string | null;
-  updatedAt?: string | null;
-  [key: string]: unknown;
-};
 
 type TimelineDecision = {
   trigger?: string | null;
@@ -86,6 +90,53 @@ type ActionState = {
   success: string | null;
 };
 
+function deriveAdminPaymentSourceLine(
+  events: BookingEvent[] | undefined,
+  paymentStatus: BookingPaymentStatus | undefined,
+): string {
+  const pending =
+    paymentStatus === "unpaid" ||
+    paymentStatus === "checkout_created" ||
+    paymentStatus === "payment_pending";
+
+  if (!events?.length) {
+    return pending
+      ? "Payment source: Pending / unresolved"
+      : "Payment source: Pending / unresolved";
+  }
+
+  const sorted = [...events].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+
+  const paymentish = sorted.filter(
+    (e) =>
+      e.type === "PAYMENT_STATUS_CHANGED" ||
+      e.type === "PAYMENT_ADMIN_OVERRIDE" ||
+      e.type === "PAYMENT_CHECKOUT_CREATED",
+  );
+
+  for (const ev of paymentish) {
+    if (ev.type === "PAYMENT_ADMIN_OVERRIDE") {
+      return "Payment source: Admin override";
+    }
+    if (ev.type === "PAYMENT_STATUS_CHANGED") {
+      const p = ev.payload as Record<string, unknown> | null | undefined;
+      if (p?.source === "stripe_webhook") {
+        return "Payment source: Stripe webhook";
+      }
+      if (String(ev.actorRole ?? "").toLowerCase() === "admin") {
+        return "Payment source: Admin override";
+      }
+    }
+  }
+
+  if (pending) {
+    return "Payment source: Pending / unresolved";
+  }
+  return "Payment source: Pending / unresolved";
+}
+
 function formatDateTime(value: string | null | undefined) {
   if (!value) {
     return "—";
@@ -140,6 +191,16 @@ async function fetchJson<T>(url: string, token: string): Promise<T> {
     throw new Error(
       readApiErrorMessage(payload, `Request failed with status ${response.status}`),
     );
+  }
+
+  if (
+    payload &&
+    typeof payload === "object" &&
+    "ok" in payload &&
+    (payload as { ok?: unknown }).ok === true &&
+    "item" in payload
+  ) {
+    return (payload as { item: T }).item;
   }
 
   return payload as T;
@@ -199,6 +260,23 @@ export default function AdminBookingDetailPage() {
 
   const [ccActionError, setCcActionError] = useState<string | null>(null);
 
+  const [assignmentRecs, setAssignmentRecs] = useState<
+    Loadable<AssignmentRecommendation[]>
+  >({
+    loading: true,
+    error: null,
+    data: null,
+  });
+  const [assignBusy, setAssignBusy] = useState(false);
+  const [assignmentActionError, setAssignmentActionError] = useState<
+    string | null
+  >(null);
+  const [paymentBusy, setPaymentBusy] = useState(false);
+  const [paymentActionError, setPaymentActionError] = useState<string | null>(
+    null,
+  );
+  const [paymentAnomalies, setPaymentAnomalies] = useState<AdminPaymentAnomalyRow[]>([]);
+
   const [bookingScreen, setBookingScreen] = useState<Loadable<unknown>>({
     loading: true,
     error: null,
@@ -208,6 +286,25 @@ export default function AdminBookingDetailPage() {
   useEffect(() => {
     setToken(getStoredAccessToken());
   }, []);
+
+  const refreshBookingSnapshot = useCallback(async () => {
+    const authToken = token;
+    if (!authToken || !bookingId) return;
+    try {
+      const data = await fetchJson<BookingRecord>(
+        `${API_BASE_URL}/api/v1/bookings/${bookingId}?includeEvents=true`,
+        authToken,
+      );
+      setBooking({ loading: false, error: null, data });
+    } catch (error) {
+      setBooking({
+        loading: false,
+        error:
+          error instanceof Error ? error.message : "Failed to refresh booking snapshot.",
+        data: null,
+      });
+    }
+  }, [token, bookingId]);
 
   const applyCommandCenterPayload = useCallback((data: AdminBookingCommandCenterPayload) => {
     setCommandCenter({ loading: false, error: null, data });
@@ -252,6 +349,7 @@ export default function AdminBookingDetailPage() {
       setExplainer({ loading: true, error: null, data: null });
       setCommandCenter((prev) => ({ ...prev, loading: true, error: null }));
       setBookingScreen({ loading: true, error: null, data: null });
+      setAssignmentRecs({ loading: true, error: null, data: null });
 
       const commandCenterPromise = fetchJson<AdminBookingCommandCenterPayload>(
         `${API_BASE_URL}/api/v1/admin/bookings/${bookingId}/command-center`,
@@ -299,8 +397,30 @@ export default function AdminBookingDetailPage() {
           }
         });
 
+      const anomaliesPromise = fetch(
+        `${API_BASE_URL}/api/v1/admin/payments/anomalies?bookingId=${encodeURIComponent(bookingId)}`,
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+          cache: "no-store",
+        },
+      )
+        .then(async (res) => {
+          const body = (await res.json().catch(() => null)) as {
+            ok?: boolean;
+            items?: AdminPaymentAnomalyRow[];
+          } | null;
+          if (!cancelled && res.ok && body?.ok && Array.isArray(body.items)) {
+            setPaymentAnomalies(body.items);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setPaymentAnomalies([]);
+          }
+        });
+
       const bookingPromise = fetchJson<BookingRecord>(
-        `${API_BASE_URL}/api/v1/bookings/${bookingId}`,
+        `${API_BASE_URL}/api/v1/bookings/${bookingId}?includeEvents=true`,
         authToken,
       )
         .then((data) => {
@@ -385,6 +505,25 @@ export default function AdminBookingDetailPage() {
           }
         });
 
+      const assignmentPromise = fetchAssignmentRecommendations(bookingId)
+        .then((items) => {
+          if (!cancelled) {
+            setAssignmentRecs({ loading: false, error: null, data: items });
+          }
+        })
+        .catch((error) => {
+          if (!cancelled) {
+            setAssignmentRecs({
+              loading: false,
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Failed to load assignment recommendations.",
+              data: null,
+            });
+          }
+        });
+
       await Promise.allSettled([
         bookingPromise,
         exceptionPromise,
@@ -392,6 +531,8 @@ export default function AdminBookingDetailPage() {
         explainerPromise,
         commandCenterPromise,
         screenPromise,
+        assignmentPromise,
+        anomaliesPromise,
       ]);
     }
 
@@ -415,9 +556,11 @@ export default function AdminBookingDetailPage() {
         explainerData,
         ccData,
         screenData,
+        assignmentData,
+        anomaliesReload,
       ] = await Promise.allSettled([
         fetchJson<BookingRecord>(
-          `${API_BASE_URL}/api/v1/bookings/${bookingId}`,
+          `${API_BASE_URL}/api/v1/bookings/${bookingId}?includeEvents=true`,
           token,
         ),
         fetchJson<DispatchExceptionDetailResponse>(
@@ -440,6 +583,8 @@ export default function AdminBookingDetailPage() {
           `${API_BASE_URL}/api/v1/bookings/${bookingId}/screen`,
           token,
         ),
+        fetchAssignmentRecommendations(bookingId),
+        listAdminPaymentAnomalies({ bookingId }),
       ]);
 
       if (bookingData.status === "fulfilled") {
@@ -467,6 +612,26 @@ export default function AdminBookingDetailPage() {
           error: null,
           data: screenData.value?.screen ?? null,
         });
+      }
+      if (assignmentData.status === "fulfilled") {
+        setAssignmentRecs({
+          loading: false,
+          error: null,
+          data: assignmentData.value,
+        });
+      } else if (assignmentData.status === "rejected") {
+        const reason = assignmentData.reason;
+        setAssignmentRecs({
+          loading: false,
+          error:
+            reason instanceof Error
+              ? reason.message
+              : "Failed to load assignment recommendations.",
+          data: null,
+        });
+      }
+      if (anomaliesReload.status === "fulfilled") {
+        setPaymentAnomalies(anomaliesReload.value);
       }
     } catch {
       // no-op
@@ -608,6 +773,85 @@ export default function AdminBookingDetailPage() {
       setCcActionError(
         error instanceof Error ? error.message : `${label} failed.`,
       );
+    }
+  }
+
+  async function runAssignTopRecommendation() {
+    setAssignmentActionError(null);
+    setAssignBusy(true);
+    try {
+      await assignRecommendedBooking(bookingId);
+      await reloadReadModels();
+      dispatchAdminActivityRefresh();
+      router.refresh();
+    } catch (error) {
+      setAssignmentActionError(
+        error instanceof Error ? error.message : "Assign recommended failed.",
+      );
+    } finally {
+      setAssignBusy(false);
+    }
+  }
+
+  async function runAssignCandidate(foId: string) {
+    setAssignmentActionError(null);
+    setAssignBusy(true);
+    try {
+      await assignBooking(bookingId, {
+        foId,
+        assignmentSource: "manual",
+      });
+      await reloadReadModels();
+      dispatchAdminActivityRefresh();
+      router.refresh();
+    } catch (error) {
+      setAssignmentActionError(
+        error instanceof Error ? error.message : "Assign failed.",
+      );
+    } finally {
+      setAssignBusy(false);
+    }
+  }
+
+  function paymentAllowsSchedule(ps: string | undefined): boolean {
+    return ps === "authorized" || ps === "paid" || ps === "waived";
+  }
+
+  async function runCreateCheckoutAdmin() {
+    setPaymentActionError(null);
+    setPaymentBusy(true);
+    try {
+      await createBookingCheckout(bookingId, { actorRole: "admin" });
+      await reloadReadModels();
+      dispatchAdminActivityRefresh();
+      router.refresh();
+    } catch (error) {
+      setPaymentActionError(
+        error instanceof Error ? error.message : "Checkout failed.",
+      );
+    } finally {
+      setPaymentBusy(false);
+    }
+  }
+
+  async function runPaymentStatus(nextStatus: BookingPaymentStatus) {
+    setPaymentActionError(null);
+    setPaymentBusy(true);
+    try {
+      await updateBookingPaymentStatus(bookingId, {
+        nextStatus,
+        actorRole: "admin",
+        note: `Admin payment update: ${nextStatus}`,
+      });
+      await reloadReadModels();
+      dispatchAdminActivityRefresh();
+      router.refresh();
+    } catch (error) {
+      setPaymentActionError(
+        error instanceof Error ? error.message : "Payment update failed.",
+      );
+    } finally {
+      setPaymentBusy(false);
     }
   }
 
@@ -818,8 +1062,13 @@ export default function AdminBookingDetailPage() {
                   </div>
                   <div className="mt-2 text-sm font-semibold text-white">
                     {formatDateTime(
-                      typeof booking.data.scheduledEnd === "string"
-                        ? booking.data.scheduledEnd
+                      typeof booking.data.scheduledStart === "string" &&
+                        typeof booking.data.estimatedHours === "number" &&
+                        Number.isFinite(booking.data.estimatedHours)
+                        ? new Date(
+                            new Date(booking.data.scheduledStart).getTime() +
+                              booking.data.estimatedHours * 60 * 60 * 1000,
+                          ).toISOString()
                         : null,
                     )}
                   </div>
@@ -912,6 +1161,97 @@ export default function AdminBookingDetailPage() {
             ) : null}
           </section>
         </div>
+
+        <section
+          role="region"
+          aria-label="Assignment recommendations"
+          className="rounded-[28px] border border-white/10 bg-white/5 p-6"
+        >
+          <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold">Assignment recommendations</h2>
+              <p className="mt-1 text-sm text-white/60">
+                Deterministic v1 ranking from workload and coverage fit (no road
+                mileage or ETAs). Manual assign remains available in lifecycle
+                controls.
+              </p>
+            </div>
+            {assignmentRecs.data?.[0]?.recommended ? (
+              <button
+                type="button"
+                disabled={assignBusy}
+                onClick={() => void runAssignTopRecommendation()}
+                className="shrink-0 rounded-2xl bg-emerald-500/90 px-4 py-2 text-sm font-semibold text-neutral-950 transition hover:bg-emerald-400 disabled:opacity-50"
+              >
+                Assign top pick
+              </button>
+            ) : null}
+          </div>
+
+          {assignmentRecs.loading ? (
+            <div className="text-sm text-white/60">Loading recommendations…</div>
+          ) : assignmentRecs.error ? (
+            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+              {assignmentRecs.error}
+            </div>
+          ) : assignmentRecs.data && assignmentRecs.data.length > 0 ? (
+            <div className="space-y-3">
+              {assignmentRecs.data.map((row) => (
+                <div
+                  key={row.candidate.foId}
+                  className={`rounded-2xl border px-4 py-3 ${
+                    row.recommended
+                      ? "border-emerald-500/40 bg-emerald-500/10"
+                      : "border-white/10 bg-black/20"
+                  }`}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm font-semibold text-white">
+                          {row.candidate.displayName}
+                        </span>
+                        {row.recommended ? (
+                          <span className="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-100">
+                            Recommended
+                          </span>
+                        ) : null}
+                        <span className="text-xs text-white/50">
+                          Score {Math.round(row.candidate.finalRecommendationScore)}{" "}
+                          · coverage fit{" "}
+                          {Math.round(row.candidate.serviceAreaFitScore * 100)}%
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-white/55">
+                        {row.candidate.reasons
+                          .slice(0, 2)
+                          .map((r) => r.message)
+                          .join(" · ")}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={assignBusy}
+                      onClick={() => void runAssignCandidate(row.candidate.foId)}
+                      className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/15 disabled:opacity-50"
+                    >
+                      Assign
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-sm text-white/60">
+              No eligible franchise owners found for ranking.
+            </div>
+          )}
+          {assignmentActionError ? (
+            <div className="mt-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              {assignmentActionError}
+            </div>
+          ) : null}
+        </section>
 
         <div className="grid gap-6 xl:grid-cols-2">
           <section className="rounded-[28px] border border-white/10 bg-white/5 p-6">
@@ -1122,6 +1462,167 @@ export default function AdminBookingDetailPage() {
             <div className="text-sm text-white/60">No command center activity yet.</div>
           )}
         </section>
+
+        {booking.data ? (
+          <>
+            <section
+              role="region"
+              aria-label="Booking payment"
+              className="rounded-[28px] border border-white/10 bg-white/5 p-6"
+            >
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold">
+                  Payment
+                  {paymentAnomalies.length > 0 ? (
+                    <span className="ml-2 rounded-full bg-amber-500/25 px-2 py-0.5 text-xs font-semibold text-amber-100">
+                      {paymentAnomalies.length} anomaly
+                      {paymentAnomalies.length === 1 ? "" : "ies"}
+                    </span>
+                  ) : null}
+                </h2>
+                <p className="mt-1 text-sm text-white/60">
+                  Stripe-backed payment status (webhooks) with admin waive override. Scheduling to
+                  dispatch requires authorized, paid, or waived.
+                </p>
+                <p className="mt-3 text-sm text-white/80">
+                  {deriveAdminPaymentSourceLine(
+                    booking.data.events,
+                    booking.data.paymentStatus,
+                  )}
+                </p>
+                {paymentAnomalies.length > 0 ? (
+                  <div
+                    className="mt-3 rounded-2xl border border-amber-500/35 bg-amber-500/10 px-4 py-3 text-sm text-amber-50"
+                    role="status"
+                  >
+                    <div className="font-semibold text-amber-100">Latest payment anomaly</div>
+                    <p className="mt-1 text-amber-50/95">{paymentAnomalies[0]?.message}</p>
+                  </div>
+                ) : null}
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                    Status
+                  </div>
+                  <div className="mt-1 text-sm font-semibold text-white">
+                    {String(booking.data.paymentStatus ?? "—")}
+                    {booking.data.paymentStatus === "waived" ? (
+                      <span className="ml-2 text-amber-200">(admin override)</span>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                    Amount (cents)
+                  </div>
+                  <div className="mt-1 text-sm font-semibold text-white">
+                    {booking.data.paymentAmountCents != null
+                      ? String(booking.data.paymentAmountCents)
+                      : "—"}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 sm:col-span-2 lg:col-span-1">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                    Reference
+                  </div>
+                  <div className="mt-1 break-all text-sm font-semibold text-white">
+                    {booking.data.paymentReference ?? "—"}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 sm:col-span-2 lg:col-span-1">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                    Stripe checkout session
+                  </div>
+                  <div className="mt-1 break-all text-sm font-semibold text-white">
+                    {booking.data.stripeCheckoutSessionId ?? "—"}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 sm:col-span-2 lg:col-span-1">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                    Stripe payment intent
+                  </div>
+                  <div className="mt-1 break-all text-sm font-semibold text-white">
+                    {booking.data.stripePaymentIntentId ?? "—"}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 sm:col-span-2 lg:col-span-1">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                    Stripe customer
+                  </div>
+                  <div className="mt-1 break-all text-sm font-semibold text-white">
+                    {booking.data.stripeCustomerId ?? "—"}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 sm:col-span-2 lg:col-span-1">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                    Last Stripe event id
+                  </div>
+                  <div className="mt-1 break-all text-sm font-semibold text-white">
+                    {booking.data.stripeLastEventId ?? "—"}
+                  </div>
+                </div>
+              </div>
+              <div
+                className={`mt-4 rounded-2xl border px-4 py-3 text-sm ${
+                  paymentAllowsSchedule(booking.data.paymentStatus)
+                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-100"
+                    : "border-amber-500/40 bg-amber-500/10 text-amber-100"
+                }`}
+              >
+                {paymentAllowsSchedule(booking.data.paymentStatus)
+                  ? "Confirmation-ready: payment is authorized, paid, or waived."
+                  : "Confirmation blocked: authorize, collect payment, or waive before scheduling to dispatch."}
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  disabled={paymentBusy}
+                  onClick={() => void runCreateCheckoutAdmin()}
+                  className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
+                >
+                  Create checkout
+                </button>
+                <button
+                  type="button"
+                  disabled={paymentBusy}
+                  onClick={() => void runPaymentStatus("authorized")}
+                  className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
+                >
+                  Mark authorized
+                </button>
+                <button
+                  type="button"
+                  disabled={paymentBusy}
+                  onClick={() => void runPaymentStatus("failed")}
+                  className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-100 disabled:opacity-50"
+                >
+                  Mark failed
+                </button>
+                <button
+                  type="button"
+                  disabled={paymentBusy}
+                  onClick={() => void runPaymentStatus("waived")}
+                  className="rounded-xl border border-amber-500/40 bg-amber-500/15 px-3 py-2 text-xs font-semibold text-amber-100 disabled:opacity-50"
+                >
+                  Waive payment (admin override)
+                </button>
+              </div>
+              {paymentActionError ? (
+                <div className="mt-3 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                  {paymentActionError}
+                </div>
+              ) : null}
+            </section>
+
+            <div className="rounded-[28px] border border-white/10 bg-slate-50 p-5 text-slate-900 shadow-sm">
+              <AdminBookingLifecyclePanel
+                booking={booking.data}
+                onBookingUpdated={refreshBookingSnapshot}
+              />
+            </div>
+          </>
+        ) : null}
       </div>
     </main>
   );

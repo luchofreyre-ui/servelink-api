@@ -30,9 +30,9 @@ export function BookingStripePaymentSection(props: {
   }, [props.booking.paymentIntentId]);
 
   const canStartCheckout =
-    props.booking.paymentStatus === "quote_ready" ||
+    props.booking.paymentStatus === "payment_pending" ||
     props.booking.paymentStatus === "failed" ||
-    props.booking.paymentStatus === "requires_payment";
+    props.booking.paymentStatus === "unpaid";
 
   const options = useMemo(() => {
     if (!clientSecret) return undefined;

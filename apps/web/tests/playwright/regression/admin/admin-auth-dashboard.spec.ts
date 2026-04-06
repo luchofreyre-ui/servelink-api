@@ -37,5 +37,8 @@ test.describe("admin auth + dashboard", () => {
     await expect(
       page.getByRole("heading", { name: /recent admin activity/i }),
     ).toBeVisible();
+
+    await expect(page.getByRole("region", { name: /payment operations/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /payment operations/i })).toBeVisible();
   });
 });

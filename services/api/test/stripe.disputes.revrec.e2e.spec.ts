@@ -8,6 +8,7 @@ import { AppModule } from "../src/app.module";
 import { PrismaService } from "../src/prisma";
 import { StripeService } from "../src/modules/billing/stripe.service";
 import { JournalEntryType, LedgerAccount, LineDirection } from "@prisma/client";
+import { seedBookingPaymentAuthorized } from "./helpers/booking-payment-test-helpers";
 
 const WEBHOOK_SECRET = "whsec_test_revrec";
 
@@ -144,6 +145,8 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       .set("Authorization", `Bearer ${customerToken}`)
       .send({ idempotencyKey: `e2e-disputes-revrec-finalize-${uniq("f")}` })
       .expect(201);
+
+    await seedBookingPaymentAuthorized(prisma, booking.id);
 
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${booking.id}/schedule`)
@@ -448,6 +451,8 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       .send({ idempotencyKey: `e2e-a2-finalize-${uniq("f")}` })
       .expect(201);
 
+    await seedBookingPaymentAuthorized(prisma, booking.id);
+
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${booking.id}/schedule`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -729,6 +734,8 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       .send({ idempotencyKey: `e2e-wd-finalize-${uniq("f")}` })
       .expect(201);
 
+    await seedBookingPaymentAuthorized(prisma, booking.id);
+
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${booking.id}/schedule`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -888,6 +895,8 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       .send({ idempotencyKey: `e2e-refund-finalize-${uniq("f")}` })
       .expect(201);
 
+    await seedBookingPaymentAuthorized(prisma, booking.id);
+
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${booking.id}/schedule`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -1027,6 +1036,8 @@ describe("Stripe disputes + rev-rec interleaving (E2E)", () => {
       .set("Authorization", `Bearer ${customerToken}`)
       .send({ idempotencyKey: `finalize-${Date.now()}` })
       .expect(201);
+
+    await seedBookingPaymentAuthorized(prisma, booking.id);
 
     const ok2xx = (r: any) => {
       expect(r.status).toBeGreaterThanOrEqual(200);

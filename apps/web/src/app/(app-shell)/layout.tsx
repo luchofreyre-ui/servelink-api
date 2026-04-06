@@ -1,15 +1,34 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AuthRoleGate } from "@/components/auth/AuthRoleGate";
 import { DevRoleSwitcher } from "@/components/dev/DevRoleSwitcher";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { SessionSignOutButton } from "@/components/auth/SessionSignOutButton";
 import { ShellSearchBar } from "@/components/search/ShellSearchBar";
+
+function gatedContent(pathname: string, children: ReactNode) {
+  if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/auth")) {
+    return <AuthRoleGate role="admin">{children}</AuthRoleGate>;
+  }
+  if (pathname.startsWith("/fo") && !pathname.startsWith("/fo/auth")) {
+    return <AuthRoleGate role="fo">{children}</AuthRoleGate>;
+  }
+  if (pathname.startsWith("/customer") && !pathname.startsWith("/customer/auth")) {
+    return <AuthRoleGate role="customer">{children}</AuthRoleGate>;
+  }
+  return <>{children}</>;
+}
 
 export default function AppShellLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  const pathname = usePathname() ?? "";
+
   return (
     <>
       <div className="border-b border-gray-200 bg-white p-3 md:p-4">
@@ -44,7 +63,9 @@ export default function AppShellLayout({
         </div>
       </div>
 
-      <div className="w-full min-h-screen bg-white text-gray-900">{children}</div>
+      <div className="w-full min-h-screen bg-white text-gray-900">
+        {gatedContent(pathname, children)}
+      </div>
     </>
   );
 }

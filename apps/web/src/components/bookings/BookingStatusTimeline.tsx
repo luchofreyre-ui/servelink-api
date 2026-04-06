@@ -10,26 +10,35 @@ function getTimelineItems(booking: BookingStatusResponse) {
     {
       label: "Quote",
       value:
-        booking.paymentStatus === "none"
+        booking.paymentStatus === "unpaid"
           ? "Preparing quote"
           : "Quote available",
       complete:
-        booking.paymentStatus === "quote_ready" ||
-        booking.paymentStatus === "requires_payment" ||
+        booking.paymentStatus === "payment_pending" ||
+        booking.paymentStatus === "checkout_created" ||
+        booking.paymentStatus === "authorized" ||
         booking.paymentStatus === "paid" ||
-        booking.paymentStatus === "failed",
+        booking.paymentStatus === "failed" ||
+        booking.paymentStatus === "waived",
     },
     {
       label: "Payment",
       value:
         booking.paymentStatus === "paid"
           ? "Payment complete"
-          : booking.paymentStatus === "requires_payment"
-            ? "Waiting for payment"
-            : booking.paymentStatus === "failed"
-              ? "Payment issue"
-              : "Not started",
-      complete: booking.paymentStatus === "paid",
+          : booking.paymentStatus === "waived"
+            ? "Waived by admin"
+            : booking.paymentStatus === "authorized"
+              ? "Authorized"
+              : booking.paymentStatus === "payment_pending" ||
+                  booking.paymentStatus === "checkout_created"
+                ? "Waiting for payment"
+                : booking.paymentStatus === "failed"
+                  ? "Payment issue"
+                  : "Not started",
+      complete:
+        booking.paymentStatus === "paid" ||
+        booking.paymentStatus === "waived",
     },
     {
       label: "Service start",

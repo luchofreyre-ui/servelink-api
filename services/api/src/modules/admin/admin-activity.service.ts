@@ -235,6 +235,11 @@ export class AdminActivityService {
       admin_booking_marked_in_review: "Command center review",
       admin_booking_approved: "Command center approval",
       admin_booking_reassign_requested: "Command center reassign",
+      OPERATOR_RELEASE_DISPATCH_LOCK: "Operator: release dispatch lock",
+      OPERATOR_CLEAR_REVIEW_REQUIRED: "Operator: clear review required",
+      OPERATOR_TRIGGER_REDISPATCH: "Operator: trigger redispatch",
+      OPERATOR_EXCEPTION_ASSIGN_TO_ME: "Operator: exception assign to me",
+      OPERATOR_EXCEPTION_RESOLVED: "Operator: exception resolved",
     };
 
     return rows.map((r) =>

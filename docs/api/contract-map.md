@@ -714,9 +714,9 @@ Test email/sms/push templates.
 
 ## 16) Webhooks (External)
 
-### POST /webhooks/stripe
+### POST /stripe/webhook
 
-Stripe payment events:
+Canonical Stripe ingress (`POST /api/v1/stripe/webhook`). Events include:
 
 - `payment_intent.succeeded`
 - `charge.refunded`

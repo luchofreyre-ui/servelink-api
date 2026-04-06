@@ -1,0 +1,2089 @@
+
+===== FILE: src/modules/admin/admin-anomalies.controller.ts =====
+import {
+  Controller,
+  Get,
+  Param,
+  Patch,
+  UseGuards,
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { AdminGuard } from "../../guards/admin.guard";
+import { AdminPermissions } from "../../common/admin/admin-permissions.decorator";
+import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
+import { AdminAnomaliesService } from "./admin-anomalies.service";
+
+@Controller("api/v1/admin/anomalies")
+@UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+export class AdminAnomaliesController {
+  constructor(
+    private readonly adminAnomaliesService: AdminAnomaliesService,
+  ) {}
+
+  @Get()
+  @AdminPermissions("exceptions.read")
+  async listOpen() {
+    return this.adminAnomaliesService.listOpen();
+  }
+
+  @Patch(":id/ack")
+  @AdminPermissions("exceptions.write")
+  async acknowledge(@Param("id") id: string) {
+    return this.adminAnomaliesService.acknowledge(id);
+  }
+
+  @Patch(":id/resolve")
+  @AdminPermissions("exceptions.write")
+  async resolve(@Param("id") id: string) {
+    return this.adminAnomaliesService.resolve(id);
+  }
+}
+
+===== FILE: src/modules/admin/admin-anomalies.service.ts =====
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma/prisma.service";
+
+@Injectable()
+export class AdminAnomaliesService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async listOpen() {
+    return this.prisma.opsAnomaly.findMany({
+      where: { status: "open" },
+      orderBy: { createdAt: "desc" },
+      include: {
+        booking: {
+          select: {
+            id: true,
+            status: true,
+            scheduledStart: true,
+          },
+        },
+        fo: {
+          select: {
+            id: true,
+            displayName: true,
+          },
+        },
+      },
+    });
+  }
+
+  async acknowledge(id: string) {
+    return this.prisma.opsAnomaly.update({
+      where: { id },
+      data: { status: "acknowledged" },
+    });
+  }
+
+  async resolve(id: string) {
+    return this.prisma.opsAnomaly.update({
+      where: { id },
+      data: {
+        status: "resolved",
+        resolvedAt: new Date(),
+      },
+    });
+  }
+}
+
+===== FILE: src/modules/admin/admin-activity.controller.ts =====
+import { Controller, Get, Header, Query, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { AdminGuard } from "../../guards/admin.guard";
+import { AdminPermissions } from "../../common/admin/admin-permissions.decorator";
+import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
+import { AdminActivityService } from "./admin-activity.service";
+
+@Controller("/api/v1/admin")
+@UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+@AdminPermissions("audit.read")
+export class AdminActivityController {
+  constructor(private readonly activity: AdminActivityService) {}
+
+  @Get("activity")
+  @Header("Cache-Control", "private, no-store, max-age=0, must-revalidate")
+  getActivity(@Query("limit") limit?: string, @Query("cursor") cursor?: string) {
+    const parsed = limit ? parseInt(limit, 10) : undefined;
+    const limitNum =
+      parsed != null && Number.isFinite(parsed)
+        ? Math.min(Math.max(parsed, 1), 100)
+        : undefined;
+    const offsetParsed = cursor ? parseInt(String(cursor), 10) : 0;
+    const offset =
+      Number.isFinite(offsetParsed) && offsetParsed >= 0 ? Math.min(offsetParsed, 200) : 0;
+    return this.activity.getActivity({ limit: limitNum, offset });
+  }
+}
+
+===== FILE: src/modules/admin/admin-activity.service.ts =====
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+import type { AdminActivityItem, AdminActivityResponse } from "./admin-activity.types";
+
+/** Raised so merged newest-first feed still includes fresh command-center rows on page 1. */
+const PER_SOURCE_LIMIT = 80;
+const DEFAULT_PAGE_LIMIT = 25;
+
+/**
+ * Newest-first feeds must not rank bogus far-future `createdAt` values (bad imports / seeds) above
+ * real operations. Those rows sink to the end so the first page stays actionable.
+ */
+function activityFeedSortTime(createdAtIso: string, nowMs: number): number {
+  const t = new Date(createdAtIso).getTime();
+  if (!Number.isFinite(t)) {
+    return 0;
+  }
+  const maxPlausibleFutureMs = nowMs + 24 * 60 * 60 * 1000;
+  if (t > maxPlausibleFutureMs) {
+    return 0;
+  }
+  return t;
+}
+
+@Injectable()
+export class AdminActivityService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async getActivity(args?: { limit?: number; offset?: number }): Promise<AdminActivityResponse> {
+    const limit = Math.min(Math.max(args?.limit ?? DEFAULT_PAGE_LIMIT, 1), 100);
+    const offset = Math.min(Math.max(args?.offset ?? 0, 0), 200);
+    const windowNeed = offset + limit + 50;
+    const perSourceTake = Math.min(500, Math.max(PER_SOURCE_LIMIT, windowNeed));
+
+    const commandCenterTake = Math.min(
+      500,
+      Math.max(perSourceTake, offset + limit + 120),
+    );
+
+    const [
+      publishAudits,
+      operatorNotes,
+      manualDecisions,
+      adminDispatchDecisions,
+      anomalyAudits,
+      commandCenter,
+    ] = await Promise.all([
+      this.fetchPublishAuditItems(perSourceTake),
+      this.fetchOperatorNoteItems(perSourceTake),
+      this.fetchManualDispatchItems(perSourceTake),
+      this.fetchAdminDispatchDecisionItems(perSourceTake),
+      this.fetchAnomalyAuditItems(perSourceTake),
+      this.fetchCommandCenterActivityItems(commandCenterTake),
+    ]);
+
+    const nowMs = Date.now();
+    const merged: AdminActivityItem[] = [
+      ...publishAudits,
+      ...operatorNotes,
+      ...manualDecisions,
+      ...adminDispatchDecisions,
+      ...anomalyAudits,
+      ...commandCenter,
+    ].sort((a, b) => {
+      const tb =
+        activityFeedSortTime(b.createdAt, nowMs) - activityFeedSortTime(a.createdAt, nowMs);
+      if (tb !== 0) return tb;
+      // Same-ms ties: prefer command-center / admin dispatch rows so fresh mutations surface on page 1.
+      const pri = (t: string) =>
+        t.startsWith("admin_booking_") ||
+        t === "admin_operator_note_saved" ||
+        t.startsWith("dispatch_admin_")
+          ? 1
+          : 0;
+      const tie = pri(b.type) - pri(a.type);
+      if (tie !== 0) return tie;
+      return b.id.localeCompare(a.id);
+    });
+
+    const items = merged.slice(offset, offset + limit);
+    const nextCursor =
+      offset + items.length < merged.length ? String(offset + items.length) : null;
+
+    return {
+      items,
+      nextCursor,
+    };
+  }
+
+  private withActivityLinks(item: Omit<AdminActivityItem, "summary" | "detailPath" | "anomalyId">): AdminActivityItem {
+    const description = item.description;
+    return {
+      ...item,
+      description,
+      summary: description,
+      detailPath: item.bookingId ? `/admin/bookings/${item.bookingId}` : null,
+      anomalyId: null,
+    };
+  }
+
+  private async fetchPublishAuditItems(take: number): Promise<AdminActivityItem[]> {
+    const audits = await this.prisma.dispatchConfigPublishAudit.findMany({
+      orderBy: { publishedAt: "desc" },
+      take,
+    });
+
+    return audits.map((a) =>
+      this.withActivityLinks({
+        id: a.id,
+        type: "dispatch_config_published",
+        actorAdminUserId: a.publishedByAdminUserId ?? null,
+        createdAt: a.publishedAt.toISOString(),
+        bookingId: null as string | null,
+        dispatchConfigId: a.dispatchConfigId,
+        title: "Dispatch config published",
+        description: `Published dispatch config v${a.toVersion}${a.fromVersion != null ? ` from v${a.fromVersion}` : ""}.`,
+        metadata: { fromVersion: a.fromVersion, toVersion: a.toVersion },
+      }),
+    );
+  }
+
+  private async fetchOperatorNoteItems(take: number): Promise<AdminActivityItem[]> {
+    const notes = await this.prisma.dispatchOperatorNote.findMany({
+      orderBy: { createdAt: "desc" },
+      take,
+    });
+
+    return notes.map((n) =>
+      this.withActivityLinks({
+        id: n.id,
+        type: "dispatch_operator_note_added",
+        actorAdminUserId: n.adminUserId ?? null,
+        createdAt: n.createdAt.toISOString(),
+        bookingId: n.bookingId,
+        dispatchConfigId: null as string | null,
+        title: "Operator note added",
+        description: `Added operator note to booking ${n.bookingId}.`,
+        metadata: {},
+      }),
+    );
+  }
+
+  private async fetchManualDispatchItems(take: number): Promise<AdminActivityItem[]> {
+    const decisions = await (this.prisma as any).dispatchDecision.findMany({
+      where: {
+        trigger: { in: ["manual_assign", "redispatch_manual", "manual_exclusion"] },
+      },
+      orderBy: { createdAt: "desc" },
+      take,
+    });
+
+    return decisions.map((d: any) => {
+      const type =
+        d.trigger === "manual_assign"
+          ? "dispatch_manual_assign"
+          : d.trigger === "redispatch_manual"
+            ? "dispatch_manual_redispatch"
+            : "dispatch_manual_exclude_provider";
+      const title =
+        d.trigger === "manual_assign"
+          ? "Manual dispatch assignment"
+          : d.trigger === "redispatch_manual"
+            ? "Manual redispatch"
+            : "Manual provider exclusion";
+      const description =
+        d.trigger === "manual_assign"
+          ? `Booking ${d.bookingId} manually assigned.`
+          : d.trigger === "redispatch_manual"
+            ? `Booking ${d.bookingId} manually redispatched.`
+            : `Provider excluded for booking ${d.bookingId}.`;
+      const meta = (d.decisionMeta as Record<string, unknown>) ?? {};
+      const actorAdminUserId =
+        typeof meta.adminId === "string" ? meta.adminId : null;
+
+      return this.withActivityLinks({
+        id: d.id,
+        type,
+        actorAdminUserId,
+        createdAt: d.createdAt.toISOString(),
+        bookingId: d.bookingId,
+        dispatchConfigId: null as string | null,
+        title,
+        description,
+        metadata: { trigger: d.trigger },
+      });
+    });
+  }
+
+  private async fetchAdminDispatchDecisionItems(take: number): Promise<AdminActivityItem[]> {
+    const decisions = await this.prisma.adminDispatchDecision.findMany({
+      where: {
+        action: { in: ["hold", "request_review"] },
+        executionStatus: "applied",
+      },
+      orderBy: { createdAt: "desc" },
+      take,
+    });
+
+    return decisions.map((d) =>
+      this.withActivityLinks({
+        id: d.id,
+        type:
+          d.action === "hold"
+            ? "dispatch_admin_hold_applied"
+            : "dispatch_admin_review_requested",
+        actorAdminUserId: d.submittedByUserId,
+        createdAt: d.createdAt.toISOString(),
+        bookingId: d.bookingId,
+        dispatchConfigId: null as string | null,
+        title:
+          d.action === "hold"
+            ? "Admin hold applied"
+            : "Dispatch review requested",
+        description:
+          d.action === "hold"
+            ? `Booking ${d.bookingId} placed on admin hold.`
+            : `Booking ${d.bookingId} marked for required review.`,
+        metadata: {
+          action: d.action,
+          source: d.source,
+        },
+      }),
+    );
+  }
+
+  private async fetchCommandCenterActivityItems(take: number): Promise<AdminActivityItem[]> {
+    const rows = await this.prisma.adminCommandCenterActivity.findMany({
+      orderBy: { createdAt: "desc" },
+      take,
+    });
+
+    const titleByType: Record<string, string> = {
+      admin_operator_note_saved: "Command center operator note saved",
+      admin_booking_held: "Command center hold",
+      admin_booking_marked_in_review: "Command center review",
+      admin_booking_approved: "Command center approval",
+      admin_booking_reassign_requested: "Command center reassign",
+    };
+
+    return rows.map((r) =>
+      this.withActivityLinks({
+        id: r.id,
+        type: r.type,
+        actorAdminUserId: r.actorUserId,
+        createdAt: r.createdAt.toISOString(),
+        bookingId: r.bookingId,
+        dispatchConfigId: null as string | null,
+        title: titleByType[r.type] ?? "Command center activity",
+        description: r.summary,
+        metadata: (r.metadata as Record<string, unknown>) ?? {},
+      }),
+    );
+  }
+
+  private async fetchAnomalyAuditItems(take: number): Promise<AdminActivityItem[]> {
+    const audits = await this.prisma.opsAlertAudit.findMany({
+      where: {
+        action: { in: ["ack", "resolve", "assign", "unassign"] },
+      },
+      orderBy: { createdAt: "desc" },
+
+===== FILE: src/modules/bookings/payment-reliability/payment-reliability.service.ts =====
+import { Injectable } from "@nestjs/common";
+import {
+  BookingEventType,
+  BookingPaymentStatus,
+  Prisma,
+} from "@prisma/client";
+
+import { PrismaService } from "../../../prisma";
+import type {
+  RecordPaymentAnomalyInput,
+  RecordWebhookFailureInput,
+} from "./payment-reliability.types";
+
+const DUPLICATE_ANOMALY_KIND = "duplicate_stripe_webhook_event";
+/** Legacy anomaly kind from removed compatibility webhook; DB rows may still exist — do not create new ones. */
+
+export type PaymentOpsSummary = {
+  openAnomalyCount: number;
+  recentWebhookFailureCount: number;
+  stuckPendingPaymentShortCount: number;
+  stuckPendingPaymentLongCount: number;
+  duplicateWebhookRecentCount: number;
+  paidMissingStripeIdsCount: number;
+  stripeIdsButUnpaidCount: number;
+  webhookReceiptsMissingBookingEventCount: number;
+};
+
+@Injectable()
+export class PaymentReliabilityService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async recordAnomaly(input: RecordPaymentAnomalyInput) {
+    return this.prisma.paymentAnomaly.create({
+      data: {
+        bookingId: input.bookingId ?? undefined,
+        stripeEventId: input.stripeEventId ?? undefined,
+        kind: input.kind,
+        severity: input.severity ?? "warning",
+        status: input.status ?? "open",
+        message: input.message,
+        details:
+          input.details === undefined || input.details === null
+            ? Prisma.JsonNull
+            : (input.details as Prisma.InputJsonValue),
+      },
+    });
+  }
+
+  async recordWebhookFailure(input: RecordWebhookFailureInput) {
+    return this.prisma.paymentWebhookFailure.create({
+      data: {
+        stripeEventId: input.stripeEventId ?? undefined,
+        eventType: input.eventType ?? undefined,
+        endpointPath: input.endpointPath,
+        failureKind: input.failureKind,
+        message: input.message,
+        payload:
+          input.payload === undefined || input.payload === null
+            ? Prisma.JsonNull
+            : (input.payload as Prisma.InputJsonValue),
+      },
+    });
+  }
+
+  async resolveAnomaliesForBooking(bookingId: string) {
+    const now = new Date();
+    return this.prisma.paymentAnomaly.updateMany({
+      where: { bookingId, status: "open" },
+      data: { status: "resolved", resolvedAt: now },
+    });
+  }
+
+  async getOpenAnomalies(args?: { take?: number; bookingId?: string }) {
+    const take = Math.min(args?.take ?? 50, 200);
+    return this.prisma.paymentAnomaly.findMany({
+      where: {
+        status: "open",
+        ...(args?.bookingId ? { bookingId: args.bookingId } : {}),
+      },
+      orderBy: { detectedAt: "desc" },
+      take,
+    });
+  }
+
+  async getPaymentOpsSummary(): Promise<PaymentOpsSummary> {
+    const now = new Date();
+    const ms30 = 30 * 60 * 1000;
+    const ms24h = 24 * 60 * 60 * 1000;
+    const t30 = new Date(now.getTime() - ms30);
+    const t24h = new Date(now.getTime() - ms24h);
+    const t7d = new Date(now.getTime() - 7 * ms24h);
+
+    const [
+      openAnomalyCount,
+      recentWebhookFailureCount,
+      duplicateWebhookRecentCount,
+      stuckShort,
+      stuckLong,
+      paidMissingStripeIds,
+      stripeIdsButUnpaid,
+    ] = await Promise.all([
+      this.prisma.paymentAnomaly.count({ where: { status: "open" } }),
+      this.prisma.paymentWebhookFailure.count({
+        where: {
+          createdAt: { gte: t24h },
+        },
+      }),
+      this.prisma.paymentAnomaly.count({
+        where: {
+          kind: DUPLICATE_ANOMALY_KIND,
+          detectedAt: { gte: t7d },
+        },
+      }),
+      this.prisma.booking.count({
+        where: {
+          paymentStatus: {
+            in: [
+              BookingPaymentStatus.checkout_created,
+              BookingPaymentStatus.payment_pending,
+            ],
+          },
+          updatedAt: { lt: t30 },
+        },
+      }),
+      this.prisma.booking.count({
+        where: {
+          paymentStatus: {
+            in: [
+              BookingPaymentStatus.checkout_created,
+              BookingPaymentStatus.payment_pending,
+            ],
+          },
+          updatedAt: { lt: t24h },
+        },
+      }),
+      this.prisma.booking.count({
+        where: {
+          paymentStatus: BookingPaymentStatus.paid,
+          stripePaymentIntentId: null,
+        },
+      }),
+      this.prisma.booking.count({
+        where: {
+          paymentStatus: {
+            in: [
+              BookingPaymentStatus.unpaid,
+              BookingPaymentStatus.checkout_created,
+              BookingPaymentStatus.payment_pending,
+            ],
+          },
+          AND: [
+            { stripePaymentIntentId: { not: null } },
+            { stripeCheckoutSessionId: { not: null } },
+          ],
+        },
+      }),
+    ]);
+
+    const webhookReceiptsMissingBookingEventCount =
+      await this.countReceiptsMissingPaymentEvent();
+
+    return {
+      openAnomalyCount,
+      recentWebhookFailureCount,
+      stuckPendingPaymentShortCount: stuckShort,
+      stuckPendingPaymentLongCount: stuckLong,
+      duplicateWebhookRecentCount,
+      paidMissingStripeIdsCount: paidMissingStripeIds,
+      stripeIdsButUnpaidCount: stripeIdsButUnpaid,
+      webhookReceiptsMissingBookingEventCount,
+    };
+  }
+
+  /**
+   * Receipts for booking-affecting Stripe events that resolved a booking but have no
+   * PAYMENT_STATUS_CHANGED row referencing the same stripeEventId in payload.
+   */
+  private async countReceiptsMissingPaymentEvent(): Promise<number> {
+    const types = [
+      "checkout.session.completed",
+      "checkout.session.async_payment_succeeded",
+      "payment_intent.succeeded",
+    ];
+    const receipts = await this.prisma.stripeWebhookReceipt.findMany({
+      where: {
+        type: { in: types },
+        bookingResolvedId: { not: null },
+      },
+      select: {
+        id: true,
+        stripeEventId: true,
+        bookingResolvedId: true,
+      },
+      take: 500,
+    });
+    if (receipts.length === 0) return 0;
+
+    const bookingIds = [
+      ...new Set(
+        receipts
+          .map((r) => r.bookingResolvedId)
+          .filter((id): id is string => Boolean(id)),
+      ),
+    ];
+    if (bookingIds.length === 0) return 0;
+
+    const events = await this.prisma.bookingEvent.findMany({
+      where: {
+        bookingId: { in: bookingIds },
+        type: BookingEventType.PAYMENT_STATUS_CHANGED,
+      },
+      select: {
+        bookingId: true,
+        payload: true,
+      },
+    });
+
+    const keys = new Set<string>();
+    for (const ev of events) {
+      const p = ev.payload as Record<string, unknown> | null;
+      const se = p?.stripeEventId;
+      if (typeof se === "string" && se) {
+        keys.add(`${ev.bookingId}:${se}`);
+      }
+    }
+
+    let missing = 0;
+    for (const r of receipts) {
+      if (!r.bookingResolvedId || !r.stripeEventId) continue;
+      if (!keys.has(`${r.bookingResolvedId}:${r.stripeEventId}`)) {
+        missing += 1;
+      }
+    }
+    return missing;
+  }
+
+  async recordDuplicateStripeEvent(stripeEventId: string, eventType: string) {
+    return this.recordAnomaly({
+      stripeEventId,
+      kind: DUPLICATE_ANOMALY_KIND,
+      severity: "info",
+      message: `Duplicate Stripe event id received (${eventType}); processing skipped (idempotent).`,
+      details: { eventType },
+    });
+  }
+}
+
+===== FILE: src/modules/bookings/payment-reliability/payment-reliability.module.ts =====
+import { Module } from "@nestjs/common";
+
+import { PrismaModule } from "../../../prisma.module";
+import { PaymentReliabilityService } from "./payment-reliability.service";
+
+@Module({
+  imports: [PrismaModule],
+  providers: [PaymentReliabilityService],
+  exports: [PaymentReliabilityService],
+})
+export class PaymentReliabilityModule {}
+
+===== FILE: src/modules/bookings/admin-dispatch-ops.controller.ts =====
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { AdminGuard } from "../../guards/admin.guard";
+import { AdminPermissions } from "../../common/admin/admin-permissions.decorator";
+import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
+import { DispatchOpsService } from "./dispatch-ops.service";
+
+@Controller("/api/v1/admin/bookings")
+@UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+@AdminPermissions("dispatch.ops")
+export class AdminDispatchOpsController {
+  constructor(private readonly service: DispatchOpsService) {}
+
+  @Post(":id/dispatch/manual-redispatch")
+  manualRedispatch(@Param("id") id: string, @Body() body: { adminId?: string }) {
+    return this.service.manualRedispatch(id, body.adminId ?? "");
+  }
+
+  @Post(":id/dispatch/manual-assign")
+  manualAssign(@Param("id") id: string, @Body() body: { franchiseOwnerId?: string; adminId?: string }) {
+    return this.service.manualAssign(
+      id,
+      body.franchiseOwnerId ?? "",
+      body.adminId ?? "",
+    );
+  }
+
+  @Post(":id/dispatch/exclude-provider")
+  excludeProvider(@Param("id") id: string, @Body() body: { franchiseOwnerId?: string; adminId?: string }) {
+    return this.service.excludeProvider(
+      id,
+      body.franchiseOwnerId ?? "",
+      body.adminId ?? "",
+    );
+  }
+
+  @Post(":id/dispatch/clear-exclusions")
+  clearExclusions(@Param("id") id: string, @Body() body: { adminId?: string }) {
+    return this.service.clearExclusions(id, body.adminId ?? "");
+  }
+}
+
+===== FILE: src/modules/bookings/dispatch-ops.service.ts =====
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { BookingStatus } from "@prisma/client";
+import { PrismaService } from "../../prisma";
+import { BookingDispatchControlService } from "./booking-dispatch-control.service";
+import { BookingReviewControlService } from "./booking-review-control.service";
+import {
+  isAssignedState,
+  isInvalidAssignmentState,
+} from "./utils/assignment-state.util";
+
+const NON_ASSIGNABLE_STATUSES: BookingStatus[] = [
+  "in_progress",
+  "completed",
+  "canceled",
+];
+
+function bookingSnapshotFromBooking(booking: {
+  id: string;
+  status: BookingStatus;
+  scheduledStart: Date | null;
+  estimatedHours: number | null;
+  siteLat: number | null;
+  siteLng: number | null;
+  foId: string | null;
+}) {
+  return {
+    bookingId: booking.id,
+    status: booking.status,
+    scheduledStart: booking.scheduledStart?.toISOString() ?? null,
+    siteLat: booking.siteLat ?? null,
+    siteLng: booking.siteLng ?? null,
+    estimatedDurationMin:
+      booking.estimatedHours != null
+        ? Math.round(booking.estimatedHours * 60)
+        : null,
+    foId: booking.foId ?? null,
+  };
+}
+
+@Injectable()
+export class DispatchOpsService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly bookingDispatchControlService: BookingDispatchControlService,
+    private readonly bookingReviewControlService: BookingReviewControlService,
+  ) {}
+
+  private async assertDispatchAllowed(bookingId: string): Promise<void> {
+    await this.bookingDispatchControlService.assertNotHeld(bookingId);
+    await this.bookingReviewControlService.assertReviewNotRequired(bookingId);
+  }
+
+  private async assertBookingStillAssignableInWritePath(bookingId: string) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      select: {
+        id: true,
+        status: true,
+        foId: true,
+        dispatchLockedAt: true,
+      },
+    });
+
+    if (!booking) {
+      throw new NotFoundException("Booking not found");
+    }
+
+    if (booking.dispatchLockedAt) {
+      throw new BadRequestException("Booking is currently dispatch locked");
+    }
+
+    if (booking.foId || booking.status === BookingStatus.assigned) {
+      throw new BadRequestException("Booking is already assigned");
+    }
+
+    if (NON_ASSIGNABLE_STATUSES.includes(booking.status)) {
+      throw new BadRequestException(
+        `Booking cannot be assigned when status is ${booking.status}`,
+      );
+    }
+
+    return booking;
+  }
+
+  private async getNextDispatchSequence(bookingId: string): Promise<{
+    dispatchSequence: number;
+    redispatchSequence: number;
+  }> {
+    const latest = await (this.prisma as any).dispatchDecision.findFirst({
+      where: { bookingId },
+      orderBy: { dispatchSequence: "desc" },
+    });
+    return {
+      dispatchSequence: latest ? latest.dispatchSequence + 1 : 1,
+      redispatchSequence: latest?.redispatchSequence ?? 0,
+    };
+  }
+
+  async manualRedispatch(bookingId: string, adminId: string) {
+    await this.assertDispatchAllowed(bookingId);
+
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking) throw new NotFoundException("Booking not found");
+
+    const { dispatchSequence, redispatchSequence } =
+      await this.getNextDispatchSequence(bookingId);
+
+    const bookingSnapshot = bookingSnapshotFromBooking(booking);
+
+    return (this.prisma as any).dispatchDecision.create({
+      data: {
+        bookingId,
+        trigger: "redispatch_manual",
+        dispatchSequence,
+        redispatchSequence: redispatchSequence + 1,
+        decisionStatus: "deferred",
+        scoringVersion: "provider-aware-dispatch-v1",
+        bookingSnapshot,
+        decisionMeta: {
+          adminId,
+          reason: "manual redispatch",
+          bookingStatusAtTime: booking.status,
+          foIdAtTime: booking.foId ?? null,
+          scheduledStartAtTime: booking.scheduledStart?.toISOString() ?? null,
+        },
+      },
+    });
+  }
+
+  async manualAssign(
+    bookingId: string,
+    franchiseOwnerId: string,
+    adminId: string,
+  ) {
+    await this.assertDispatchAllowed(bookingId);
+
+    await this.assertBookingStillAssignableInWritePath(bookingId);
+
+    if (!franchiseOwnerId || franchiseOwnerId.trim() === "") {
+      throw new BadRequestException("franchiseOwnerId is required");
+    }
+
+    const fo = await this.prisma.franchiseOwner.findUnique({
+      where: { id: franchiseOwnerId },
+    });
+
+    if (!fo) throw new NotFoundException("Franchise owner not found");
+
+    const { dispatchSequence, redispatchSequence } =
+      await this.getNextDispatchSequence(bookingId);
+
+    return this.prisma.$transaction(async (tx) => {
+      const current = await tx.booking.findUnique({
+        where: { id: bookingId },
+        select: {
+          id: true,
+          status: true,
+          foId: true,
+          scheduledStart: true,
+          estimatedHours: true,
+          siteLat: true,
+          siteLng: true,
+        },
+      });
+
+      if (!current) throw new NotFoundException("Booking not found");
+      if (isInvalidAssignmentState(current)) {
+        throw new BadRequestException("BOOKING_INVALID_STATE");
+      }
+      if (isAssignedState(current)) {
+        throw new BadRequestException("Booking is already assigned");
+      }
+      if (NON_ASSIGNABLE_STATUSES.includes(current.status)) {
+        throw new BadRequestException(
+          `Booking cannot be assigned when status is ${current.status}`,
+        );
+      }
+
+      const bookingSnapshot = bookingSnapshotFromBooking(current);
+
+      await tx.booking.update({
+        where: { id: bookingId },
+        data: {
+          foId: franchiseOwnerId,
+          status: BookingStatus.assigned,
+        },
+      });
+
+      return (tx as any).dispatchDecision.create({
+        data: {
+          bookingId,
+          trigger: "manual_assign",
+          dispatchSequence,
+          redispatchSequence,
+          decisionStatus: "manual_assigned",
+          selectedFranchiseOwnerId: franchiseOwnerId,
+          selectedRank: 1,
+          scoringVersion: "provider-aware-dispatch-v1",
+          bookingStatusAtDecision: current.status,
+          scheduledStart: current.scheduledStart,
+          estimatedDurationMin:
+            current.estimatedHours != null
+              ? Math.round(current.estimatedHours * 60)
+              : null,
+          bookingSnapshot,
+          decisionMeta: {
+            adminId,
+            reason: "manual assignment",
+            writePath: "dispatch_ops_manual_assign_transaction",
+          },
+        },
+      });
+    });
+  }
+
+  async excludeProvider(
+    bookingId: string,
+    franchiseOwnerId: string,
+    adminId: string,
+  ) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking) throw new NotFoundException("Booking not found");
+
+    const { dispatchSequence, redispatchSequence } =
+      await this.getNextDispatchSequence(bookingId);
+
+    const bookingSnapshot = bookingSnapshotFromBooking(booking);
+
+    const decision = await (this.prisma as any).dispatchDecision.create({
+      data: {
+        bookingId,
+        trigger: "manual_exclusion",
+        dispatchSequence,
+        redispatchSequence,
+        decisionStatus: "deferred",
+        scoringVersion: "provider-aware-dispatch-v1",
+        bookingSnapshot,
+        decisionMeta: {
+          adminId,
+          reason: "manual provider exclusion",
+        },
+      },
+    });
+
+    await (this.prisma as any).dispatchDecisionCandidate.create({
+      data: {
+        dispatchDecisionId: decision.id,
+        franchiseOwnerId,
+        candidateStatus: "excluded",
+        reasonCode: "excluded_manual_block",
+
+===== FILE: src/modules/bookings/booking-screen.service.ts =====
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import {
+  BookingAuthorityReviewStatus,
+  BookingOfferStatus,
+  BookingPaymentStatus,
+  BookingStatus,
+  Prisma,
+} from "@prisma/client";
+import { PrismaService } from "../../prisma";
+import { BillingService } from "../billing/billing.service";
+import { DeepCleanCalibrationService } from "./deep-clean-calibration.service";
+import { DeepCleanVisitExecutionService } from "./deep-clean-visit-execution.service";
+import { serializeDeepCleanCalibrationForScreen } from "./serializers/deep-clean-calibration.serializer";
+import { serializeDeepCleanProgramForScreen } from "./serializers/deep-clean-program-screen.serializer";
+import { buildDeepCleanExecutionForScreen } from "./serializers/deep-clean-program-progress.serializer";
+import { parseAuthorityStringArrayJson } from "../authority/booking-authority-json.util";
+import { buildCustomerAuthorityEducationalContext } from "../authority/customer-authority-education.mapper";
+import { mapAuthorityTagsToFoKnowledgeLinks } from "../authority/fo-authority-knowledge.mapper";
+import { BookingIntelligenceService } from "../authority/booking-intelligence.service";
+import { BookingAuthorityPersistenceService } from "../authority/booking-authority-persistence.service";
+
+type JwtViewer = { userId: string; role: string };
+
+type BookingAuthorityTagSource = {
+  notes: string | null;
+  estimateSnapshot: { inputJson: string; outputJson: string } | null;
+};
+
+function numFromDecimal(
+  v: Prisma.Decimal | number | null | undefined,
+): number | undefined {
+  if (v == null) return undefined;
+  if (typeof v === "number") return Number.isFinite(v) ? v : undefined;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+const CUSTOMER_PAYMENT_ATTENTION: BookingPaymentStatus[] = [
+  BookingPaymentStatus.unpaid,
+  BookingPaymentStatus.checkout_created,
+  BookingPaymentStatus.payment_pending,
+  BookingPaymentStatus.failed,
+];
+
+const CUSTOMER_COMPLETION_READY_STATUS: BookingStatus[] = [
+  BookingStatus.assigned,
+  BookingStatus.accepted,
+  BookingStatus.en_route,
+  BookingStatus.active,
+  BookingStatus.in_progress,
+];
+
+const FO_PAYMENT_ATTENTION: BookingPaymentStatus[] = [
+  BookingPaymentStatus.unpaid,
+  BookingPaymentStatus.checkout_created,
+  BookingPaymentStatus.payment_pending,
+  BookingPaymentStatus.failed,
+];
+
+const FO_COMPLETION_READY_STATUS: BookingStatus[] = [
+  BookingStatus.active,
+  BookingStatus.in_progress,
+];
+
+/** Cap FO `knowledgeLinks` per booking row / screen to keep payloads small. */
+const MAX_FO_BOOKING_KNOWLEDGE_LINKS = 12;
+
+@Injectable()
+export class BookingScreenService {
+  constructor(
+    private readonly db: PrismaService,
+    private readonly billing: BillingService,
+    private readonly deepCleanExecution: DeepCleanVisitExecutionService,
+    private readonly deepCleanCalibration: DeepCleanCalibrationService,
+    private readonly bookingIntelligence: BookingIntelligenceService,
+    private readonly bookingAuthorityPersistence: BookingAuthorityPersistenceService,
+  ) {}
+
+  private async resolveAuthorityTagsForBookingRow(
+    bookingId: string,
+    source: BookingAuthorityTagSource,
+  ): Promise<{
+    surfaces: string[];
+    problems: string[];
+    methods: string[];
+  }> {
+    const resolved = this.bookingIntelligence.resolveTags({
+      notes: source.notes,
+      metadata: source.estimateSnapshot
+        ? {
+            estimateInputJson: source.estimateSnapshot.inputJson,
+            estimateOutputJson: source.estimateSnapshot.outputJson,
+          }
+        : null,
+    });
+    await this.bookingAuthorityPersistence.persistResolvedAuthorityIfChanged(
+      bookingId,
+      resolved,
+    );
+    return {
+      surfaces: resolved.surfaces,
+      problems: resolved.problems,
+      methods: resolved.methods,
+    };
+  }
+
+  /**
+   * Prefer persisted `BookingAuthorityResult` (admin/overrides included).
+   * **Fallback:** `BookingIntelligenceService.resolveTags` from `notes` + estimate snapshot
+   * metadata, then `persistResolvedAuthorityIfChanged` (skipped when status is `overridden`).
+   * Used for FO knowledge links and customer educational context.
+   */
+  private async resolveAuthorityTagsPreferringPersisted(
+    bookingId: string,
+    source: BookingAuthorityTagSource,
+  ): Promise<{
+    surfaces: string[];
+    problems: string[];
+    methods: string[];
+    authorityTagSource: "persisted" | "derived";
+    /** Present when a `BookingAuthorityResult` row exists; `null` when tags are resolver-only. */
+    authorityReviewStatus: BookingAuthorityReviewStatus | null;
+  }> {
+    const row =
+      await this.bookingAuthorityPersistence.findLatestByBookingId(bookingId);
+    if (row) {
+      return {
+        surfaces: parseAuthorityStringArrayJson(row.surfacesJson),
+        problems: parseAuthorityStringArrayJson(row.problemsJson),
+        methods: parseAuthorityStringArrayJson(row.methodsJson),
+        authorityTagSource: "persisted",
+        authorityReviewStatus: row.status,
+      };
+    }
+    const derived = await this.resolveAuthorityTagsForBookingRow(
+      bookingId,
+      source,
+    );
+    return {
+      ...derived,
+      authorityTagSource: "derived",
+      authorityReviewStatus: null,
+    };
+  }
+
+  private buildCappedFoKnowledgeLinks(tags: {
+    surfaces: string[];
+    problems: string[];
+    methods: string[];
+  }): ReturnType<typeof mapAuthorityTagsToFoKnowledgeLinks> {
+    return mapAuthorityTagsToFoKnowledgeLinks(tags).slice(
+      0,
+      MAX_FO_BOOKING_KNOWLEDGE_LINKS,
+    );
+  }
+
+  async assertCanViewBooking(viewer: JwtViewer, bookingId: string): Promise<void> {
+    const booking = await this.db.booking.findUnique({
+      where: { id: bookingId },
+      select: { id: true, customerId: true, foId: true },
+    });
+    if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
+
+    const role = String(viewer.role ?? "");
+    if (role === "admin") return;
+
+    if (role === "customer") {
+      if (booking.customerId !== viewer.userId) {
+        throw new ForbiddenException("BOOKING_FORBIDDEN");
+      }
+      return;
+    }
+
+    if (role === "fo") {
+      const fo = await this.db.franchiseOwner.findUnique({
+        where: { userId: viewer.userId },
+        select: { id: true },
+      });
+      if (!fo) throw new ForbiddenException("FO_PROFILE_REQUIRED");
+
+      if (booking.foId === fo.id) return;
+
+      const linked = await this.db.bookingOffer.findFirst({
+        where: { bookingId, foId: fo.id },
+        select: { id: true },
+      });
+      if (linked) return;
+
+      throw new ForbiddenException("BOOKING_FORBIDDEN");
+    }
+
+    throw new ForbiddenException("BOOKING_FORBIDDEN");
+  }
+
+  /**
+   * Aggregated read model for booking detail UIs (customer / FO / admin).
+   * When `includeFoKnowledgeLinks`, FO clients receive `knowledgeLinks`, `authorityTagSource`,
+   * `authorityReviewStatus` (null when derived-only), and `authorityHasTaggedRows`.
+   * When `includeCustomerAuthorityEducation`, customers may receive `authorityEducationalContext`.
+   */
+  async buildBookingScreen(
+    bookingId: string,
+    options?: {
+      includeFoKnowledgeLinks?: boolean;
+      includeCustomerAuthorityEducation?: boolean;
+    },
+  ): Promise<Record<string, unknown>> {
+    const booking = await this.db.booking.findUnique({
+      where: { id: bookingId },
+      include: {
+        estimateSnapshot: true,
+        deepCleanProgram: true,
+        fo: { select: { id: true, displayName: true } },
+        customer: { select: { id: true, email: true } },
+      },
+    });
+
+    if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
+
+    const billingLedger = await this.billing
+      .summarizeBooking({ bookingId })
+      .catch(() => null);
+
+    const events = await this.db.bookingEvent.findMany({
+      where: { bookingId },
+      orderBy: { createdAt: "asc" },
+      take: 200,
+    });
+
+    const lastDecision = await this.db.dispatchDecision.findFirst({
+      where: { bookingId },
+      orderBy: { createdAt: "desc" },
+      include: {
+        candidates: {
+          orderBy: [{ finalRank: "asc" }, { baseRank: "asc" }],
+          include: {
+            franchiseOwner: {
+              select: { id: true, displayName: true, reliabilityScore: true },
+            },
+          },
+        },
+      },
+    });
+
+    const estimate = this.parseEstimateSnapshot(booking.estimateSnapshot);
+    const deepCleanProgram = serializeDeepCleanProgramForScreen({
+      bookingDeepCleanProgram: booking.deepCleanProgram,
+    });
+
+    let deepCleanExecution: ReturnType<typeof buildDeepCleanExecutionForScreen> =
+      null;
+    let deepCleanCalibration: ReturnType<
+      typeof serializeDeepCleanCalibrationForScreen
+    > | null = null;
+    if (booking.deepCleanProgram) {
+      await this.deepCleanExecution.ensureExecutionRowsForBooking(bookingId);
+
+===== FILE: src/modules/bookings/bookings.controller.ts =====
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { AdminGuard } from "../../guards/admin.guard";
+import { AdminPermissions } from "../../common/admin/admin-permissions.decorator";
+import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
+import { BillingService } from "../billing/billing.service";
+import { DispatchService } from "../dispatch/dispatch.service";
+import { SlotAvailabilityService } from "../slot-holds/slot-availability.service";
+import { SlotHoldsService } from "../slot-holds/slot-holds.service";
+import { DispatchDecisionService } from "./dispatch-decision.service";
+import { PrismaService } from "../../prisma";
+import { BookingsService } from "./bookings.service";
+import { DeepCleanVisitExecutionService } from "./deep-clean-visit-execution.service";
+import { CompleteDeepCleanVisitDto } from "./dto/deep-clean-visit-execution.dto";
+import { BookingScreenService } from "./booking-screen.service";
+import { AdminBookingsService } from "../admin/bookings/admin-bookings.service";
+import { AssignmentService } from "./assignment/assignment.service";
+import { AssignBookingDto } from "./dto/assign-booking.dto";
+import { AvailabilityWindowsQueryDto } from "./dto/availability-windows-query.dto";
+import { BookingMainTransitionDto } from "./dto/booking-main-transition.dto";
+import { ConfirmHoldParamsDto } from "./dto/confirm-hold-params.dto";
+import { CreateBookingDto } from "./dto/create-booking.dto";
+import { CreateSlotHoldDto } from "./dto/create-slot-hold.dto";
+import { HoldBookingDto } from "./dto/hold-booking.dto";
+import { ListBookingsDto } from "./dto/list-bookings.dto";
+import { TransitionBookingDto } from "./dto/transition-booking.dto";
+import { UpdateBookingPatchDto } from "./dto/update-booking-patch.dto";
+import { CreateBookingCheckoutDto } from "./dto/create-booking-checkout.dto";
+import { UpdateBookingPaymentStatusDto } from "./dto/update-booking-payment-status.dto";
+
+@UseGuards(JwtAuthGuard)
+@Controller("/api/v1/bookings")
+export class BookingsController {
+  constructor(
+    private readonly bookings: BookingsService,
+    private readonly billing: BillingService,
+    private readonly dispatch: DispatchService,
+    private readonly dispatchDecisionService: DispatchDecisionService,
+    private readonly slotAvailability: SlotAvailabilityService,
+    private readonly slotHolds: SlotHoldsService,
+    private readonly prisma: PrismaService,
+    private readonly bookingScreens: BookingScreenService,
+    private readonly deepCleanVisitExecution: DeepCleanVisitExecutionService,
+    private readonly adminBookings: AdminBookingsService,
+    private readonly assignmentService: AssignmentService,
+  ) {}
+
+  @Post()
+  async create(
+    @Req() req: any,
+    @Body() dto: CreateBookingDto,
+    @Headers("idempotency-key") idempotencyKey?: string,
+  ) {
+    return this.bookings.createBooking({
+      customerId: String(req.user.userId),
+      estimateInput: dto.estimateInput as any,
+      note: dto.note,
+      idempotencyKey: idempotencyKey ?? null,
+    });
+  }
+
+  @Get()
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: false,
+    }),
+  )
+  async listBookingsApi(@Req() req: any, @Query() query: ListBookingsDto) {
+    const rows = await this.bookings.listBookingsForApi(query, {
+      userId: String(req.user?.userId ?? ""),
+      role: String(req.user?.role ?? ""),
+    });
+    return {
+      ok: true,
+      items: rows.map((b) =>
+        this.bookings.mapBookingWithEvents(b as Record<string, unknown>),
+      ),
+    };
+  }
+
+  @Patch(":id")
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
+  async patchBooking(
+    @Param("id") id: string,
+    @Body() body: UpdateBookingPatchDto,
+  ) {
+    const updated = await this.bookings.patchBookingForApi(id, body);
+    return {
+      ok: true,
+      item: this.bookings.mapBookingWithEvents({
+        ...updated,
+        BookingEvent: [],
+      } as Record<string, unknown>),
+    };
+  }
+
+  @Post(":id/transition")
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
+  async transitionMain(
+    @Param("id") id: string,
+    @Body() body: BookingMainTransitionDto,
+    @Headers("idempotency-key") idempotencyKey?: string,
+  ) {
+    await this.bookings.transitionToNextStatusForApi(
+      id,
+      body,
+      this.normalizeIdempotencyKey(idempotencyKey),
+    );
+    const row = await this.prisma.booking.findUnique({
+      where: { id },
+      include: { BookingEvent: { orderBy: { createdAt: "asc" } } },
+    });
+    if (!row) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+    return {
+      ok: true,
+      item: this.bookings.mapBookingWithEvents(row as Record<string, unknown>),
+    };
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+  @AdminPermissions("exceptions.write")
+  @Post(":id/hold")
+  async holdBookingMain(
+    @Req() req: { user?: { userId?: string } },
+    @Param("id") bookingId: string,
+    @Body() _body: HoldBookingDto,
+  ) {
+    const adminUserId = req.user?.userId;
+    if (!adminUserId) {
+      throw new UnauthorizedException("Missing admin user");
+    }
+    await this.adminBookings.holdBooking(adminUserId, bookingId);
+    const row = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { BookingEvent: { orderBy: { createdAt: "asc" } } },
+    });
+    if (!row) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+    return {
+      ok: true,
+      item: this.bookings.mapBookingWithEvents(row as Record<string, unknown>),
+    };
+  }
+
+  @Get("availability/windows")
+  async listAvailabilityWindows(@Query() query: AvailabilityWindowsQueryDto) {
+    return this.slotAvailability.listAvailableWindows(query);
+  }
+
+  @Post("availability/holds")
+  async createSlotHold(@Body() dto: CreateSlotHoldDto) {
+    return this.slotHolds.createHold({
+      bookingId: dto.bookingId,
+      foId: dto.foId,
+      startAt: dto.startAt,
+      endAt: dto.endAt,
+    });
+  }
+
+  @Post(":id/confirm-hold")
+  async confirmHold(
+    @Param() params: ConfirmHoldParamsDto,
+    @Body()
+    body: {
+      holdId: string;
+      note?: string;
+    },
+    @Headers("idempotency-key") idempotencyKey?: string,
+  ) {
+    return this.bookings.confirmBookingFromHold({
+      bookingId: params.id,
+      holdId: String(body?.holdId ?? "").trim(),
+      note: body?.note,
+      idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
+    });
+  }
+
+  @Get(":id/status")
+  async getStatus(@Param("id") id: string) {
+    return this.prisma.booking.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        scheduledStart: true,
+        startedAt: true,
+        completedAt: true,
+        paymentStatus: true,
+        paymentIntentId: true,
+        quotedSubtotal: true,
+        quotedMargin: true,
+        quotedTotal: true,
+      },
+    });
+  }
+
+  @Get(":id/screen")
+  async getScreen(@Param("id") id: string, @Req() req: any) {
+    await this.bookingScreens.assertCanViewBooking(
+      {
+        userId: String(req.user?.userId ?? ""),
+        role: String(req.user?.role ?? ""),
+      },
+      id,
+    );
+    const role = String(req.user?.role ?? "");
+    const screen = await this.bookingScreens.buildBookingScreen(id, {
+      includeFoKnowledgeLinks: role === "fo",
+      includeCustomerAuthorityEducation: role === "customer",
+    });
+    return { kind: "booking_screen" as const, screen };
+  }
+
+  @Post(":id/deep-clean/visits/:visitNumber/start")
+  async startDeepCleanVisit(
+    @Param("id") id: string,
+    @Param("visitNumber", ParseIntPipe) visitNumber: number,
+    @Req() req: { user?: { userId?: string; role?: string } },
+  ) {
+    await this.bookingScreens.assertCanViewBooking(
+      {
+        userId: String(req.user?.userId ?? ""),
+        role: String(req.user?.role ?? ""),
+      },
+      id,
+    );
+    const execution = await this.deepCleanVisitExecution.startVisit({
+
+===== FILE: src/modules/dispatch/dispatch.admin.controller.ts =====
+import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { AdminGuard } from "../../guards/admin.guard";
+import { AdminPermissions } from "../../common/admin/admin-permissions.decorator";
+import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
+import type { GetAdminDispatchExceptionsQueryDto } from "./dto/admin-dispatch-exceptions.dto";
+import { DispatchDecisionService } from "../bookings/dispatch-decision.service";
+import { DispatchExceptionLifecycleService } from "./dispatch-exception-lifecycle.service";
+
+@Controller("/api/v1/admin/dispatch")
+@UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+@AdminPermissions("exceptions.read")
+export class DispatchAdminController {
+  constructor(
+    private readonly dispatchDecisionService: DispatchDecisionService,
+    private readonly dispatchExceptionLifecycle: DispatchExceptionLifecycleService,
+  ) {}
+
+  @Get("exceptions")
+  async getDispatchExceptions(
+    @Query() query: GetAdminDispatchExceptionsQueryDto,
+  ) {
+    const requiresFollowUp =
+      query.requiresFollowUp === "1" || query.requiresFollowUp === "true";
+    const limit = query.limit ? Math.min(Math.max(Number(query.limit), 1), 100) : 25;
+    return this.dispatchDecisionService.getDispatchExceptions({
+      type: query.type ?? "all",
+      bookingStatus: query.bookingStatus ?? null,
+      minDispatchPasses: query.minDispatchPasses
+        ? Number(query.minDispatchPasses)
+        : 3,
+      limit,
+      cursor: query.cursor ?? null,
+      sortBy: query.sortBy ?? undefined,
+      sortOrder: query.sortOrder === "asc" ? "asc" : "desc",
+      requiresFollowUp: requiresFollowUp || undefined,
+      priorityBucket: query.priorityBucket ?? null,
+      onFiltered: (items) =>
+        this.dispatchExceptionLifecycle.syncAfterExceptionsRefreshed(
+          items,
+          null,
+        ),
+    });
+  }
+}
+
+===== FILE: src/modules/dispatch/dispatch-exception-actions.service.ts =====
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import {
+  DispatchExceptionActionPriority,
+  DispatchExceptionActionStatus,
+  DispatchExceptionActionEventType,
+  Prisma,
+} from "@prisma/client";
+
+import { PrismaService } from "../../prisma";
+import type { AdminDispatchExceptionItemDto } from "./dto/admin-dispatch-exceptions.dto";
+import { DispatchExceptionAutomationService } from "./dispatch-exception-automation.service";
+import { buildDispatchExceptionKeyFromBookingId } from "./dispatch-exception-key";
+import type {
+  DispatchExceptionActionDetailDto,
+  DispatchExceptionActionEventDto,
+  DispatchExceptionActionListItemDto,
+  DispatchExceptionActionNoteDto,
+} from "./dto/dispatch-exception-actions.dto";
+
+const PRIORITY_RANK: Record<DispatchExceptionActionPriority, number> = {
+  critical: 0,
+  high: 1,
+  medium: 2,
+  low: 3,
+};
+
+const ALLOWED_STATUS_TRANSITIONS: Record<
+  DispatchExceptionActionStatus,
+  DispatchExceptionActionStatus[]
+> = {
+  open: ["investigating", "waiting", "dismissed", "resolved"],
+  investigating: ["open", "waiting", "resolved", "dismissed"],
+  waiting: ["investigating", "resolved", "dismissed"],
+  resolved: ["investigating"],
+  dismissed: ["open"],
+};
+
+function isResolvedLike(status: DispatchExceptionActionStatus): boolean {
+  return status === "resolved" || status === "dismissed";
+}
+
+function slaOrderingRank(status: string | null | undefined): number {
+  if (!status) return 5;
+  switch (status) {
+    case "overdue":
+      return 0;
+    case "due_soon":
+      return 1;
+    case "on_track":
+      return 2;
+    case "paused":
+      return 3;
+    case "completed":
+      return 4;
+    default:
+      return 5;
+  }
+}
+
+function mapBucketToPriority(
+  bucket: string,
+): DispatchExceptionActionPriority {
+  switch (bucket) {
+    case "urgent":
+      return "critical";
+    case "high":
+      return "high";
+    case "low":
+      return "low";
+    default:
+      return "medium";
+  }
+}
+
+function readMeta(json: unknown): Record<string, unknown> {
+  if (json && typeof json === "object" && !Array.isArray(json)) {
+    return json as Record<string, unknown>;
+  }
+  return {};
+}
+
+type DbClient = Prisma.TransactionClient | PrismaService;
+
+@Injectable()
+export class DispatchExceptionActionsService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly automation: DispatchExceptionAutomationService,
+  ) {}
+
+  coerceEnumArray<T extends string>(
+    raw: string | string[] | undefined,
+    allowed: readonly T[],
+    field: string,
+  ): T[] | undefined {
+    if (raw === undefined) return undefined;
+    const arr = (Array.isArray(raw) ? raw : [raw]).map(String);
+    const out: T[] = [];
+    for (const x of arr) {
+      if (!allowed.includes(x as T)) {
+        throw new BadRequestException(`INVALID_QUERY_${field.toUpperCase()}: ${x}`);
+      }
+      out.push(x as T);
+    }
+    return out.length ? out : undefined;
+  }
+
+  assertTransitionAllowed(
+    from: DispatchExceptionActionStatus,
+    to: DispatchExceptionActionStatus,
+  ): void {
+    const allowed = ALLOWED_STATUS_TRANSITIONS[from];
+    if (!allowed?.includes(to)) {
+      throw new BadRequestException(`INVALID_STATUS_TRANSITION: ${from} → ${to}`);
+    }
+  }
+
+  buildMetadataSnapshot(item: AdminDispatchExceptionItemDto): Record<string, unknown> {
+    return {
+      bookingId: item.bookingId,
+      foId: item.latestSelectedFranchiseOwnerId,
+      exceptionReasons: item.exceptionReasons,
+      latestDecisionStatus: item.latestDecisionStatus,
+      latestTrigger: item.latestTrigger,
+      latestTriggerDetail: item.latestTriggerDetail,
+      severity: item.severity,
+      recommendedAction: item.recommendedAction,
+      totalDispatchPasses: item.totalDispatchPasses,
+      priorityBucket: item.priorityBucket,
+      absentStreak: 0,
+    };
+  }
+
+  async createEvent(
+    tx: DbClient,
+    params: {
+      dispatchExceptionActionId: string;
+      dispatchExceptionKey: string;
+      type: DispatchExceptionActionEventType;
+      actorUserId?: string | null;
+      metadataJson?: Record<string, unknown> | null;
+    },
+  ): Promise<void> {
+    await tx.dispatchExceptionActionEvent.create({
+      data: {
+        dispatchExceptionActionId: params.dispatchExceptionActionId,
+        dispatchExceptionKey: params.dispatchExceptionKey,
+        type: params.type,
+        actorUserId: params.actorUserId ?? null,
+        metadataJson:
+          params.metadataJson === undefined ? undefined
+          : params.metadataJson === null ? Prisma.JsonNull
+          : (params.metadataJson as Prisma.InputJsonValue),
+      },
+    });
+  }
+
+  /**
+   * Create or refresh action row from computed exception signal (lifecycle entry).
+   */
+  async bootstrapOrRefreshFromExceptionItem(
+    item: AdminDispatchExceptionItemDto,
+    actorUserId?: string | null,
+  ): Promise<{ id: string; dispatchExceptionKey: string; created: boolean }> {
+    const dispatchExceptionKey = buildDispatchExceptionKeyFromBookingId(
+      item.bookingId,
+    );
+    const latestDecision = await this.prisma.dispatchDecision.findFirst({
+      where: { bookingId: item.bookingId },
+      orderBy: [{ createdAt: "desc" }, { dispatchSequence: "desc" }],
+      select: { id: true },
+    });
+    const snapshot = this.buildMetadataSnapshot(item);
+    const priority = mapBucketToPriority(item.priorityBucket);
+
+    const existing = await this.prisma.dispatchExceptionAction.findUnique({
+      where: { dispatchExceptionKey },
+    });
+
+    if (!existing) {
+      const created = await this.prisma.$transaction(async (tx) => {
+        const action = await tx.dispatchExceptionAction.create({
+          data: {
+            dispatchExceptionKey,
+            status: "open",
+            priority,
+            lastSeenAt: new Date(),
+            lastSeenExceptionId: latestDecision?.id ?? null,
+            metadataJson: snapshot as Prisma.InputJsonValue,
+          },
+        });
+        await this.createEvent(tx, {
+          dispatchExceptionActionId: action.id,
+          dispatchExceptionKey,
+          type: "action_created",
+          actorUserId: actorUserId ?? null,
+          metadataJson: { bookingId: item.bookingId },
+        });
+        return action;
+      });
+      await this.automation.handleActionChanged({ dispatchExceptionKey });
+      return {
+        id: created.id,
+        dispatchExceptionKey,
+        created: true,
+      };
+    }
+
+    const meta = readMeta(existing.metadataJson);
+    const nextMeta = {
+      ...meta,
+      ...snapshot,
+      absentStreak: 0,
+    };
+
+    const prevEx = existing.lastSeenExceptionId;
+    const nextEx = latestDecision?.id ?? null;
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.dispatchExceptionAction.update({
+        where: { id: existing.id },
+        data: {
+          lastSeenAt: new Date(),
+          lastSeenExceptionId: nextEx,
+          metadataJson: nextMeta as Prisma.InputJsonValue,
+          priority:
+            PRIORITY_RANK[priority] < PRIORITY_RANK[existing.priority] ?
+              priority
+            : existing.priority,
+        },
+      });
+
+      if (prevEx !== nextEx && nextEx) {
+        await this.createEvent(tx, {
+          dispatchExceptionActionId: existing.id,
+          dispatchExceptionKey,
+          type: "exception_seen",
+          actorUserId: actorUserId ?? null,
+          metadataJson: {
+            lastSeenExceptionId: nextEx,
+            bookingId: item.bookingId,
+          },
+        });
+      }
+    });
+
+    await this.automation.handleActionChanged({ dispatchExceptionKey });
+    return {
+      id: existing.id,
+      dispatchExceptionKey,
+      created: false,
+    };
+  }
+
+  async getActionByKey(dispatchExceptionKey: string) {
+    return this.prisma.dispatchExceptionAction.findUnique({
+
+===== FILE: src/modules/dispatch/dispatch-exception-lifecycle.service.ts =====
+import { Injectable } from "@nestjs/common";
+import { DispatchExceptionActionStatus, Prisma } from "@prisma/client";
+
+import { PrismaService } from "../../prisma";
+import type { AdminDispatchExceptionItemDto } from "./dto/admin-dispatch-exceptions.dto";
+import { DispatchExceptionActionsService } from "./dispatch-exception-actions.service";
+import { DispatchExceptionAutomationService } from "./dispatch-exception-automation.service";
+import { buildDispatchExceptionKeyFromBookingId } from "./dispatch-exception-key";
+
+function readMeta(json: unknown): Record<string, unknown> {
+  if (json && typeof json === "object" && !Array.isArray(json)) {
+    return json as Record<string, unknown>;
+  }
+  return {};
+}
+
+@Injectable()
+export class DispatchExceptionLifecycleService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly actions: DispatchExceptionActionsService,
+    private readonly automation: DispatchExceptionAutomationService,
+  ) {}
+
+  /**
+   * After dispatch exceptions are computed for the admin surface, sync the action layer.
+   * Order: sync presence → evaluate resolved → automation runs inside actions/bootstrap.
+   */
+  async syncAfterExceptionsRefreshed(
+    activeItems: AdminDispatchExceptionItemDto[],
+    actorUserId?: string | null,
+  ): Promise<void> {
+    const activeKeys = new Set(
+      activeItems.map((i) => buildDispatchExceptionKeyFromBookingId(i.bookingId)),
+    );
+
+    for (const item of activeItems) {
+      await this.actions.bootstrapOrRefreshFromExceptionItem(item, actorUserId);
+    }
+
+    await this.evaluateResolvedAndDismissedAgainstActiveSet(activeKeys, actorUserId);
+
+    await this.automation.syncAllActiveActionSlaStates();
+    const activeRows = await this.prisma.dispatchExceptionAction.findMany({
+      where: { status: { notIn: ["resolved", "dismissed"] } },
+      select: { dispatchExceptionKey: true },
+    });
+    for (const r of activeRows) {
+      await this.automation.evaluateActionAutomation({
+        dispatchExceptionKey: r.dispatchExceptionKey,
+      });
+    }
+  }
+
+  private async evaluateResolvedAndDismissedAgainstActiveSet(
+    activeKeys: Set<string>,
+    actorUserId?: string | null,
+  ): Promise<void> {
+    const candidates = await this.prisma.dispatchExceptionAction.findMany({
+      where: {
+        status: { in: ["resolved", "dismissed"] },
+      },
+    });
+
+    const now = new Date();
+
+    for (const row of candidates) {
+      const key = row.dispatchExceptionKey;
+      const inActive = activeKeys.has(key);
+
+      if (row.status === "dismissed") {
+        continue;
+      }
+
+      if (row.status === "resolved" && inActive) {
+        await this.reopenResolvedToInvestigating(key, actorUserId);
+        continue;
+      }
+
+      if (row.status === "resolved" && !inActive) {
+        const meta = readMeta(row.metadataJson);
+        const streak = typeof meta.absentStreak === "number" ? meta.absentStreak : 0;
+        const nextStreak = streak + 1;
+        const nextMeta = {
+          ...meta,
+          absentStreak: nextStreak,
+        } as Prisma.InputJsonValue;
+
+        await this.prisma.dispatchExceptionAction.update({
+          where: { id: row.id },
+          data: {
+            metadataJson: nextMeta,
+            validationLastCheckedAt: now,
+          },
+        });
+
+        if (nextStreak >= 2) {
+          await this.prisma.$transaction(async (tx) => {
+            await tx.dispatchExceptionAction.update({
+              where: { id: row.id },
+              data: {
+                validationState: "passed",
+                validationLastPassedAt: now,
+                validationLastFailedAt: null,
+              },
+            });
+            await this.actions.createEvent(tx, {
+              dispatchExceptionActionId: row.id,
+              dispatchExceptionKey: key,
+              type: "validation_passed",
+              actorUserId: actorUserId ?? null,
+              metadataJson: {
+                absentStreak: nextStreak,
+              },
+            });
+          });
+          await this.automation.handleActionChanged({ dispatchExceptionKey: key });
+        }
+      }
+    }
+  }
+
+  private async reopenResolvedToInvestigating(
+    dispatchExceptionKey: string,
+    actorUserId?: string | null,
+  ): Promise<void> {
+    const row = await this.prisma.dispatchExceptionAction.findUnique({
+      where: { dispatchExceptionKey },
+    });
+    if (!row || row.status !== "resolved") return;
+
+    const meta = readMeta(row.metadataJson);
+    const nextMeta = { ...meta, absentStreak: 0 } as Prisma.InputJsonValue;
+    const nextReopen = row.reopenCount + 1;
+
+    await this.prisma.$transaction(async (tx) => {
+      await this.actions.setValidationState({
+        dispatchExceptionKey,
+        validationState: "failed",
+        checkedAt: new Date(),
+        failedAt: new Date(),
+        incrementReopenCount: true,
+        reopenedAt: new Date(),
+        tx,
+      });
+
+      await tx.dispatchExceptionAction.update({
+        where: { id: row.id },
+        data: {
+          metadataJson: nextMeta,
+          resolvedAt: null,
+          status: "investigating" satisfies DispatchExceptionActionStatus,
+        },
+      });
+
+      await this.actions.createEvent(tx, {
+        dispatchExceptionActionId: row.id,
+        dispatchExceptionKey,
+        type: "reopened",
+        actorUserId: actorUserId ?? null,
+        metadataJson: {
+          reason: "exception_reappeared",
+          reopenCount: nextReopen,
+        },
+      });
+    });
+
+    await this.automation.emitLifecycleNotificationQueued({
+      dispatchExceptionKey,
+      reason: "reopened",
+      reopenCount: nextReopen,
+    });
+    await this.automation.handleActionChanged({ dispatchExceptionKey });
+  }
+}
+
+===== FILE: src/modules/system/system.controller.ts =====
+import { Controller, Get } from "@nestjs/common";
+
+import { PrismaService } from "../../prisma/prisma.service";
+
+@Controller("/api/v1/system")
+export class SystemController {
+  constructor(private readonly prisma: PrismaService) {}
+
+  @Get("health")
+  health() {
+    return {
+      ok: true,
+      service: "servelink-api",
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Get("readiness")
+  async readiness() {
+    await this.prisma.$queryRaw`SELECT 1`;
+
+    return {
+      ok: true,
+      database: "reachable",
+      stripeConfigured: Boolean(process.env.STRIPE_SECRET_KEY),
+      webBaseUrl: process.env.WEB_BASE_URL ?? null,
+      timestamp: new Date().toISOString(),
+    };
+  }
+}
+
+===== FILE: src/modules/telemetry/telemetry.controller.ts =====
+import { Body, Controller, Post, Req, UseGuards } from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { BillingService } from "../billing/billing.service";
+
+/**
+ * FO telemetry ingestion. Writes LocationPing and reconciles billing sessions.
+ */
+@UseGuards(JwtAuthGuard)
+@Controller("/api/v1/telemetry")
+export class TelemetryController {
+  constructor(
+    private readonly db: PrismaService,
+    private readonly billing: BillingService,
+  ) {}
+
+  @Post("ping")
+  async ping(
+    @Req() req: any,
+    @Body()
+    body: {
+      bookingId: string;
+      lat: number;
+      lng: number;
+      accuracyM: number;
+      capturedAt: string;
+    },
+  ) {
+    // FO-only: role comes from JWT
+    if (req.user.role !== "fo") {
+      return { ignored: true };
+    }
+
+    const foId = String(req.user.userId);
+    const capturedAt = new Date(body.capturedAt);
+
+    const ping = await this.db.locationPing.create({
+      data: {
+        bookingId: body.bookingId,
+        foId,
+        lat: body.lat,
+        lng: body.lng,
+        accuracyM: body.accuracyM,
+        capturedAt,
+      },
+    });
+
+    const billingResult = await this.billing.reconcileFromPing({
+      bookingId: body.bookingId,
+      foId,
+      pingLat: body.lat,
+      pingLng: body.lng,
+      accuracyM: body.accuracyM ?? undefined,
+      capturedAt,
+    });
+
+    return { ping, billing: billingResult };
+  }
+}
+
+===== FILE: src/common/admin/admin-permissions.guard.ts =====
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { ADMIN_PERMISSIONS_KEY } from "./admin-permissions.decorator";
+
+@Injectable()
+export class AdminPermissionsGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const req = context.switchToHttp().getRequest();
+    const role = String(req?.user?.role ?? "");
+    if (role !== "admin") {
+      throw new ForbiddenException("ADMIN_ONLY");
+    }
+
+    const required = this.reflector.get<string[] | undefined>(
+      ADMIN_PERMISSIONS_KEY,
+      context.getHandler(),
+    );
+    if (!required || required.length === 0) {
+      return true;
+    }
+
+    // Launch behavior: any role=admin user gets all permissions.
+    // Later: read actual permissions from user/admin profile.
+    return true;
+  }
+}

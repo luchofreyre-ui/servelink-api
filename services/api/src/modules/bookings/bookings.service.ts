@@ -22,12 +22,23 @@ import {
 import { LedgerService } from "../ledger/ledger.service";
 import { DispatchService } from "../dispatch/dispatch.service";
 import { ReputationService } from "../dispatch/reputation.service";
+import { BookingPaymentService } from "./payment/payment.service";
 import { SlotHoldMetrics } from "../slot-holds/slot-holds.metrics";
 import {
   CLEANING_PRICING_POLICY_V1,
   PLATFORM_FEE_POLICY_V1,
 } from "../pricing/pricing-policy";
 import { splitCharge } from "../billing/pricing.policy";
+import type { ListBookingsDto } from "./dto/list-bookings.dto";
+import type { BookingMainTransitionDto } from "./dto/booking-main-transition.dto";
+import { CreateBookingCheckoutDto } from "./dto/create-booking-checkout.dto";
+import { UpdateBookingPaymentStatusDto } from "./dto/update-booking-payment-status.dto";
+import type { UpdateBookingPatchDto } from "./dto/update-booking-patch.dto";
+import { resolveTransitionName } from "./booking-status-flow";
+import {
+  isAssignedState,
+  isInvalidAssignmentState,
+} from "./utils/assignment-state.util";
 
 @Injectable()
 export class BookingsService {
@@ -39,6 +50,7 @@ export class BookingsService {
     private readonly ledger: LedgerService,
     private readonly dispatch: DispatchService,
     private readonly reputationService: ReputationService,
+    private readonly bookingPaymentService: BookingPaymentService,
   ) {}
 
   async createBooking(input: {
@@ -150,7 +162,7 @@ export class BookingsService {
           priceSubtotal: subtotalDollars,
           priceTotal: totalDollars,
           margin: marginDollars,
-          paymentStatus: BookingPaymentStatus.quote_ready,
+          paymentStatus: BookingPaymentStatus.payment_pending,
           quotedSubtotal: new Prisma.Decimal(subtotalDollars.toFixed(2)),
           quotedMargin: new Prisma.Decimal(marginDollars.toFixed(2)),
           quotedTotal: new Prisma.Decimal(totalDollars.toFixed(2)),
@@ -169,6 +181,16 @@ export class BookingsService {
     const booking = await this.db.booking.findUnique({ where: { id } });
     if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
     return booking;
+  }
+
+  async createCheckout(id: string, dto: CreateBookingCheckoutDto) {
+    const booking = await this.getBooking(id);
+    return this.bookingPaymentService.createCheckout(booking, dto);
+  }
+
+  async updatePaymentStatus(id: string, dto: UpdateBookingPaymentStatusDto) {
+    const booking = await this.getBooking(id);
+    return this.bookingPaymentService.updatePaymentStatus(booking, dto);
   }
 
   async getEvents(id: string) {
@@ -530,6 +552,18 @@ export class BookingsService {
       throw e;
     }
 
+    if (
+      args.transition === "schedule" &&
+      expectedCurrentStatus === BookingStatus.pending_payment &&
+      to === BookingStatus.pending_dispatch
+    ) {
+      if (!this.bookingPaymentService.canConfirm(booking.paymentStatus)) {
+        throw new BadRequestException(
+          "Booking cannot be confirmed until payment is authorized, paid, or waived",
+        );
+      }
+    }
+
     if (booking.foId && args.scheduledStart) {
       await this.assertFoAvailableForWindow({
         bookingId: booking.id,
@@ -723,6 +757,10 @@ export class BookingsService {
     foId: string;
     note?: string;
     idempotencyKey?: string | null;
+    assignmentSource?: "manual" | "recommended";
+    actorUserId?: string | null;
+    actorRole?: string | null;
+    recommendationSummary?: Record<string, unknown> | null;
   }) {
     const foId = params.foId != null ? String(params.foId).trim() : "";
     if (!foId) {
@@ -748,11 +786,37 @@ export class BookingsService {
       throw e;
     }
 
-    const isAssigned = booking.status === BookingStatus.assigned;
     const currentFoId = booking.foId ?? null;
 
-    if (isAssigned && currentFoId === foId) {
-      return { ...booking, alreadyApplied: true };
+    const currentBooking = await this.db.booking.findUnique({
+      where: { id: params.bookingId },
+      select: {
+        id: true,
+        status: true,
+        foId: true,
+        dispatchLockedAt: true,
+      },
+    });
+
+    if (!currentBooking) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+
+    if (currentBooking.dispatchLockedAt) {
+      throw new BadRequestException("BOOKING_DISPATCH_LOCKED");
+    }
+
+    if (isInvalidAssignmentState(currentBooking)) {
+      throw new BadRequestException("BOOKING_INVALID_STATE");
+    }
+
+    // IMPORTANT: allow reassignment
+    // only block if already assigned AND same FO target
+    if (isAssignedState(currentBooking) && currentBooking.foId === foId) {
+      return {
+        ok: true,
+        alreadyAssigned: true,
+      };
     }
 
     const ok = await this.fo.getEligibility(foId);
@@ -771,6 +835,32 @@ export class BookingsService {
 
     try {
       return await this.db.$transaction(async (tx: any) => {
+        const txBooking = await tx.booking.findUnique({
+          where: { id: booking.id },
+          select: {
+            id: true,
+            status: true,
+            foId: true,
+            dispatchLockedAt: true,
+          },
+        });
+
+        if (!txBooking) {
+          throw new NotFoundException("BOOKING_NOT_FOUND");
+        }
+
+        if (txBooking.dispatchLockedAt) {
+          throw new BadRequestException("BOOKING_DISPATCH_LOCKED");
+        }
+
+        if (isInvalidAssignmentState(txBooking)) {
+          throw new BadRequestException("BOOKING_INVALID_STATE");
+        }
+
+        if (isAssignedState(txBooking) && txBooking.foId === foId) {
+          return { ok: true, alreadyAssigned: true };
+        }
+
         const where: any = {
           id: booking.id,
           status: expectedCurrentStatus,
@@ -795,6 +885,34 @@ export class BookingsService {
                 toStatus: to,
                 note: params.note ?? null,
                 idempotencyKey: params.idempotencyKey ?? null,
+              },
+            });
+          } catch (e: any) {
+            if (e?.code === "P2002") {
+              throw new IdempotencyReplayError(booking.id);
+            }
+            throw e;
+          }
+
+          const assignmentPayload = {
+            kind: "booking_assigned" as const,
+            assignmentSource: params.assignmentSource ?? "manual",
+            actorUserId: String(params.actorUserId ?? "").trim(),
+            actorRole: String(params.actorRole ?? "").trim(),
+            selectedFoId: foId,
+            recommendationSummary: params.recommendationSummary ?? null,
+          };
+          try {
+            await tx.bookingEvent.create({
+              data: {
+                bookingId: booking.id,
+                type: BookingEventType.BOOKING_ASSIGNED,
+                fromStatus: null,
+                toStatus: null,
+                note: JSON.stringify(assignmentPayload),
+                idempotencyKey: params.idempotencyKey
+                  ? `${params.idempotencyKey}:booking_assigned`
+                  : null,
               },
             });
           } catch (e: any) {
@@ -866,6 +984,180 @@ export class BookingsService {
       }
       throw e;
     }
+  }
+
+  async listBookingsForApi(
+    dto: ListBookingsDto,
+    actor: { userId: string; role: string },
+  ) {
+    const where: Prisma.BookingWhereInput = {};
+    const includeEvents = dto.includeEvents === "true";
+    const include: Prisma.BookingInclude | undefined = includeEvents
+      ? {
+          BookingEvent: {
+            orderBy: { createdAt: "asc" },
+          },
+        }
+      : undefined;
+
+    const role = actor.role;
+    const uid = actor.userId;
+
+    if (dto.status) {
+      where.status = dto.status;
+    }
+
+    if (role === "customer") {
+      where.customerId = uid;
+    } else if (role === "fo") {
+      const fo = await this.db.franchiseOwner.findUnique({
+        where: { userId: uid },
+        select: { id: true },
+      });
+      if (!fo) {
+        return [];
+      }
+      where.foId = fo.id;
+      if (dto.view === "fo" || !dto.view) {
+        where.status = {
+          in: [
+            BookingStatus.assigned,
+            BookingStatus.accepted,
+            BookingStatus.en_route,
+            BookingStatus.in_progress,
+            BookingStatus.completed,
+          ],
+        };
+      }
+    } else if (role === "admin") {
+      if (dto.customerUserId) {
+        where.customerId = dto.customerUserId;
+      }
+      if (dto.assignedFoUserId) {
+        const fo = await this.db.franchiseOwner.findUnique({
+          where: { userId: dto.assignedFoUserId },
+          select: { id: true },
+        });
+        if (!fo) {
+          return [];
+        }
+        where.foId = fo.id;
+      }
+      if (dto.view === "dispatch") {
+        where.status = {
+          in: [
+            BookingStatus.pending_dispatch,
+            BookingStatus.offered,
+            BookingStatus.assigned,
+            BookingStatus.hold,
+            BookingStatus.review,
+            BookingStatus.in_progress,
+            BookingStatus.accepted,
+            BookingStatus.en_route,
+            BookingStatus.active,
+          ],
+        };
+      }
+      if (dto.view === "fo" && dto.userId) {
+        const fo = await this.db.franchiseOwner.findUnique({
+          where: { userId: dto.userId },
+          select: { id: true },
+        });
+        if (!fo) {
+          return [];
+        }
+        where.foId = fo.id;
+        where.status = {
+          in: [
+            BookingStatus.assigned,
+            BookingStatus.accepted,
+            BookingStatus.en_route,
+            BookingStatus.in_progress,
+            BookingStatus.completed,
+          ],
+        };
+      }
+      if (dto.view === "customer" && dto.userId) {
+        where.customerId = dto.userId;
+      }
+    }
+
+    return this.db.booking.findMany({
+      where,
+      orderBy: [{ scheduledStart: "asc" }, { createdAt: "desc" }],
+      take: role === "admin" ? 100 : 50,
+      include,
+    });
+  }
+
+  mapBookingWithEvents(
+    booking: Record<string, unknown> & {
+      BookingEvent?: Array<Record<string, unknown>>;
+    },
+  ) {
+    const { BookingEvent, ...rest } = booking;
+    return {
+      ...rest,
+      events: BookingEvent ?? [],
+    };
+  }
+
+  async patchBookingForApi(id: string, dto: UpdateBookingPatchDto) {
+    const booking = await this.getBooking(id);
+    return this.db.booking.update({
+      where: { id: booking.id },
+      data: {
+        notes: dto.notes === undefined ? undefined : dto.notes,
+        scheduledStart:
+          dto.scheduledStart === undefined
+            ? undefined
+            : dto.scheduledStart
+              ? new Date(dto.scheduledStart)
+              : null,
+        status: dto.status ?? undefined,
+        estimatedHours: dto.estimatedHours ?? undefined,
+      },
+    });
+  }
+
+  async transitionToNextStatusForApi(
+    id: string,
+    dto: BookingMainTransitionDto,
+    idempotencyKey: string | null,
+  ) {
+    const booking = await this.getBooking(id);
+    if (dto.nextStatus === booking.status) {
+      return booking;
+    }
+
+    if (dto.nextStatus === BookingStatus.assigned && dto.foId) {
+      return this.assignBooking({
+        bookingId: id,
+        foId: dto.foId,
+        note: dto.note,
+        idempotencyKey,
+      });
+    }
+
+    const transitionName = resolveTransitionName(booking.status, dto.nextStatus);
+    if (!transitionName) {
+      throw new BadRequestException(
+        `Invalid booking transition: ${booking.status} -> ${dto.nextStatus}`,
+      );
+    }
+    if (transitionName === "assign") {
+      throw new BadRequestException(
+        "Assignment requires foId on the transition payload.",
+      );
+    }
+
+    return this.transitionBooking({
+      id,
+      transition: transitionName,
+      note: dto.note,
+      scheduledStart: dto.scheduledStart,
+      idempotencyKey,
+    });
   }
 }
 

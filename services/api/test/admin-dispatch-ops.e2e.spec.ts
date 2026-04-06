@@ -4,6 +4,7 @@ import request from "supertest";
 import * as bcrypt from "bcrypt";
 import { AppModule } from "../src/app.module";
 import { PrismaService } from "../src/prisma";
+import { seedBookingPaymentAuthorized } from "./helpers/booking-payment-test-helpers";
 
 jest.setTimeout(35000);
 
@@ -94,6 +95,8 @@ describe("Admin dispatch ops (E2E)", () => {
     const scheduledStart = new Date(
       Date.now() + 25 * 24 * 60 * 60 * 1000,
     ).toISOString();
+
+    await seedBookingPaymentAuthorized(prisma, bookingId);
 
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${bookingId}/schedule`)

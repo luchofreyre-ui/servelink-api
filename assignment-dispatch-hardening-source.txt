@@ -1,0 +1,2527 @@
+
+===== FILE: src/modules/bookings/assignment/assignment.service.ts =====
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { BookingStatus } from "@prisma/client";
+import { PrismaService } from "../../../prisma";
+import { FoService } from "../../fo/fo.service";
+import { BookingsService } from "../bookings.service";
+import type {
+  AssignmentCandidate,
+  AssignmentReason,
+  AssignmentRecommendation,
+  AssignmentWorkloadSnapshot,
+} from "./assignment.types";
+
+const ACTIVE_ASSIGNED: BookingStatus[] = [BookingStatus.assigned];
+
+const IN_PROGRESS_PIPELINE: BookingStatus[] = [
+  BookingStatus.en_route,
+  BookingStatus.in_progress,
+  BookingStatus.active,
+];
+
+/** Same-day “booked load” — `confirmed` mapped to `accepted` (schema has no `confirmed`). */
+const SAME_DAY_STATUSES: BookingStatus[] = [
+  BookingStatus.accepted,
+  BookingStatus.assigned,
+  BookingStatus.en_route,
+  BookingStatus.in_progress,
+  BookingStatus.active,
+];
+
+function haversineKm(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function dayBoundsUtc(ref: Date): { start: Date; end: Date } {
+  const y = ref.getUTCFullYear();
+  const m = ref.getUTCMonth();
+  const d = ref.getUTCDate();
+  const start = new Date(Date.UTC(y, m, d, 0, 0, 0, 0));
+  const end = new Date(start.getTime() + 86400000);
+  return { start, end };
+}
+
+@Injectable()
+export class AssignmentService {
+  constructor(
+    private readonly db: PrismaService,
+    private readonly fo: FoService,
+    private readonly bookings: BookingsService,
+  ) {}
+
+  async getRecommendations(bookingId: string): Promise<AssignmentRecommendation[]> {
+    return this.buildRecommendations(bookingId);
+  }
+
+  async assignRecommended(params: {
+    bookingId: string;
+    actorUserId: string;
+    actorRole: string;
+    idempotencyKey?: string | null;
+  }) {
+    const items = await this.buildRecommendations(params.bookingId);
+    if (items.length === 0) {
+      throw new BadRequestException({
+        code: "NO_ASSIGNMENT_CANDIDATES",
+        message: "No eligible franchise owners available for assignment.",
+      });
+    }
+    const top = items[0];
+    const summary: Record<string, unknown> = {
+      engineVersion: "v1",
+      rank: top.rank,
+      finalRecommendationScore: top.candidate.finalRecommendationScore,
+      selectedFoId: top.candidate.foId,
+      selectedFoUserId: top.candidate.foUserId,
+      reasonCodes: top.candidate.reasons.map((r) => r.code),
+    };
+    return this.bookings.assignBooking({
+      bookingId: params.bookingId,
+      foId: top.candidate.foId,
+      note: undefined,
+      idempotencyKey: params.idempotencyKey ?? null,
+      assignmentSource: "recommended",
+      actorUserId: params.actorUserId,
+      actorRole: params.actorRole,
+      recommendationSummary: summary,
+    });
+  }
+
+  private async buildRecommendations(
+    bookingId: string,
+  ): Promise<AssignmentRecommendation[]> {
+    const booking = await this.db.booking.findUnique({
+      where: { id: bookingId },
+      select: {
+        id: true,
+        foId: true,
+        scheduledStart: true,
+        siteLat: true,
+        siteLng: true,
+      },
+    });
+    if (!booking) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+
+    const fos = await this.db.franchiseOwner.findMany({
+      where: {
+        status: "active",
+        safetyHold: false,
+      },
+      include: {
+        user: { select: { id: true, email: true } },
+      },
+      orderBy: { id: "asc" },
+    });
+
+    const eligible = [] as typeof fos;
+    for (const fo of fos) {
+      const e = await this.fo.getEligibility(fo.id);
+      if (e.canAcceptBooking) {
+        eligible.push(fo);
+      }
+    }
+
+    if (eligible.length === 0) {
+      return [];
+    }
+
+    const foIds = eligible.map((f) => f.id);
+    const related = await this.db.booking.findMany({
+      where: {
+        foId: { in: foIds },
+        id: { not: bookingId },
+      },
+      select: {
+        foId: true,
+        status: true,
+        scheduledStart: true,
+      },
+    });
+
+    const refDay = booking.scheduledStart
+      ? new Date(booking.scheduledStart)
+      : new Date();
+    const { start: dayStart, end: dayEnd } = dayBoundsUtc(refDay);
+
+    const byFo = new Map<
+      string,
+      Array<{ status: BookingStatus; scheduledStart: Date | null }>
+    >();
+    for (const foId of foIds) {
+      byFo.set(foId, []);
+    }
+    for (const row of related) {
+      if (!row.foId) continue;
+      const list = byFo.get(row.foId);
+      if (!list) continue;
+      list.push({
+        status: row.status,
+        scheduledStart: row.scheduledStart,
+      });
+    }
+
+    const siteLat =
+      booking.siteLat != null && Number.isFinite(booking.siteLat)
+        ? booking.siteLat
+        : null;
+    const siteLng =
+      booking.siteLng != null && Number.isFinite(booking.siteLng)
+        ? booking.siteLng
+        : null;
+    const hasSite = siteLat != null && siteLng != null;
+
+    const candidates: AssignmentCandidate[] = [];
+
+    for (const fo of eligible) {
+      const rows = byFo.get(fo.id) ?? [];
+      let activeAssignedCount = 0;
+      let inProgressPipelineCount = 0;
+      let todayScheduledCount = 0;
+
+      for (const r of rows) {
+        if (ACTIVE_ASSIGNED.includes(r.status)) {
+          activeAssignedCount += 1;
+        }
+        if (IN_PROGRESS_PIPELINE.includes(r.status)) {
+          inProgressPipelineCount += 1;
+        }
+        if (
+          SAME_DAY_STATUSES.includes(r.status) &&
+          r.scheduledStart != null
+        ) {
+          const t = new Date(r.scheduledStart);
+          if (t >= dayStart && t < dayEnd) {
+            todayScheduledCount += 1;
+          }
+        }
+      }
+
+      const workload: AssignmentWorkloadSnapshot = {
+        activeAssignedCount,
+        inProgressPipelineCount,
+        todayScheduledCount,
+      };
+
+      const capacityScore = Math.max(
+        0,
+        Math.min(
+          100,
+          100 -
+            5 * activeAssignedCount -
+            8 * inProgressPipelineCount -
+            2 * todayScheduledCount,
+        ),
+      );
+
+      const regionMatchScore = 0.5;
+      let serviceAreaFitScore = 0.5;
+      let geographyPlaceholderScore = 0.5;
+      const reasons: AssignmentReason[] = [];
+
+      if (
+        hasSite &&
+        fo.homeLat != null &&
+        fo.homeLng != null &&
+        Number.isFinite(fo.homeLat) &&
+        Number.isFinite(fo.homeLng)
+      ) {
+        const distKm = haversineKm(
+          siteLat as number,
+          siteLng as number,
+          fo.homeLat,
+          fo.homeLng,
+        );
+        const band = Math.min(1, distKm / 120);
+        serviceAreaFitScore = Math.max(0, Math.min(1, 1 - band));
+        geographyPlaceholderScore = serviceAreaFitScore;
+        reasons.push({
+          code: "coverage_fit_from_coordinates",
+          message:
+            "Coverage fit from site vs FO home coordinates (not travel time or road distance).",
+        });
+
+===== FILE: src/modules/bookings/assignment/assignment.types.ts =====
+/**
+ * Assignment Engine v1 — recommendation + scoring (deterministic, no randomness).
+ * Geography uses honest placeholders unless real routing exists; never fake mileage in product copy.
+ */
+
+export type AssignmentReasonCode =
+  | "workload_active_assigned"
+  | "workload_in_progress"
+  | "same_day_scheduled_load"
+  | "current_owner_preference"
+  | "placeholder_region_match"
+  | "placeholder_service_area_fit"
+  | "placeholder_geography_score"
+  | "coverage_fit_from_coordinates"
+  | "capacity_balance";
+
+export type AssignmentReason = {
+  code: AssignmentReasonCode;
+  message: string;
+};
+
+export type AssignmentWorkloadSnapshot = {
+  /** Bookings in `assigned` for this FO (excluding this booking). */
+  activeAssignedCount: number;
+  /** Bookings in en_route, in_progress, or active (excluding this booking). */
+  inProgressPipelineCount: number;
+  /** Same calendar day (UTC) as target booking’s scheduled day: accepted/assigned/en_route/in_progress/active. */
+  todayScheduledCount: number;
+};
+
+export type AssignmentCandidate = {
+  foUserId: string;
+  foId: string;
+  displayName: string;
+  workload: AssignmentWorkloadSnapshot;
+  /** 0–100 — higher is more capacity headroom (inverse of penalized load). */
+  capacityScore: number;
+  /** 0–1 placeholder until region directory exists. */
+  regionMatchScore: number;
+  /** 0–1 placeholder or derived from coordinate band when lat/lng exist (not travel time). */
+  serviceAreaFitScore: number;
+  /** 0–1 honest placeholder when no geo; otherwise normalized distance band. */
+  geographyPlaceholderScore: number;
+  finalRecommendationScore: number;
+  reasons: AssignmentReason[];
+};
+
+export type AssignmentRecommendation = {
+  rank: number;
+  recommended: boolean;
+  candidate: AssignmentCandidate;
+};
+
+export type BookingAssignedEventPayload = {
+  kind: "booking_assigned";
+  assignmentSource: "manual" | "recommended";
+  actorUserId: string;
+  actorRole: string;
+  selectedFoId: string;
+  recommendationSummary: Record<string, unknown> | null;
+};
+
+===== FILE: src/modules/bookings/dispatch-decision.service.ts =====
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { BookingStatus, Prisma, PrismaClient } from "@prisma/client";
+
+import { PrismaService } from "../../prisma";
+import {
+  RecordDispatchDecisionInput,
+  DispatchDecisionCandidateInput,
+} from "./types/dispatch-decision.types";
+import type {
+  AdminDispatchTimelineDto,
+  AdminDispatchTimelineDecisionDto,
+  AdminDispatchTimelineCandidateDto,
+} from "../dispatch/dto/admin-dispatch-timeline.dto";
+import type {
+  AdminDispatchExceptionsResponseDto,
+  AdminDispatchExceptionItemDto,
+  AdminDispatchExceptionsSortBy,
+  AdminDispatchPriorityBucket,
+  AdminDispatchRecommendedAction,
+  AdminDispatchSeverity,
+  DispatchExceptionType,
+} from "../dispatch/dto/admin-dispatch-exceptions.dto";
+import type { AdminDispatchExceptionDetailDto } from "../dispatch/dto/admin-dispatch-exception-detail.dto";
+import type {
+  DispatchExplainerResponseDto,
+  DispatchExplainerCandidateDto,
+} from "../dispatch/dto/dispatch-explainer.dto";
+
+type TxClient = Omit<
+  PrismaClient,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+>;
+
+@Injectable()
+export class DispatchDecisionService {
+  private static readonly DECIMAL_FIELDS: Array<keyof DispatchDecisionCandidateInput> = [
+    "baseScore",
+    "finalScore",
+    "distanceMiles",
+    "acceptanceRate",
+    "completionRate",
+    "cancellationRate",
+    "acceptancePenalty",
+    "completionPenalty",
+    "cancellationPenalty",
+    "loadPenalty",
+    "reliabilityBonus",
+    "finalPenalty",
+  ];
+
+  constructor(private readonly prisma: PrismaService) {}
+
+  async getDispatchExplainer(
+    bookingId: string,
+  ): Promise<DispatchExplainerResponseDto> {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      select: {
+        id: true,
+        status: true,
+        scheduledStart: true,
+        foId: true,
+      },
+    });
+
+    if (!booking) {
+      throw new NotFoundException("Booking not found");
+    }
+
+    const latestDecision = await this.prisma.dispatchDecision.findFirst({
+      where: { bookingId },
+      include: { candidates: true },
+      orderBy: [{ dispatchSequence: "desc" }, { createdAt: "desc" }],
+    });
+
+    const notes = await this.prisma.dispatchOperatorNote.findMany({
+      where: { bookingId },
+      orderBy: { createdAt: "asc" },
+    });
+
+    const configVersion = latestDecision
+      ? this.parseConfigVersionFromScoringVersion(latestDecision.scoringVersion)
+      : null;
+
+    if (!latestDecision) {
+      return {
+        booking: {
+          id: booking.id,
+          status: booking.status,
+          scheduledStart: booking.scheduledStart?.toISOString() ?? null,
+          foId: booking.foId ?? null,
+        },
+        scoringVersion: "",
+        configVersion: null,
+        selectedCandidateId: null,
+        selectedFoId: null,
+        dispatchSequence: null,
+        trigger: null,
+        summary:
+          "No dispatch decision history is available for this booking.",
+        candidates: [],
+        notes: notes.map((n) => n.note),
+      };
+    }
+
+    const selectedFoId = latestDecision.selectedFranchiseOwnerId ?? null;
+    const candidates = this.buildExplainerCandidates(
+      latestDecision.candidates,
+      selectedFoId,
+      latestDecision.decisionStatus,
+    );
+    const summary = this.buildDispatchExplainerSummary(
+      latestDecision.decisionStatus,
+      selectedFoId,
+      candidates,
+    );
+
+    return {
+      booking: {
+        id: booking.id,
+        status: booking.status,
+        scheduledStart: booking.scheduledStart?.toISOString() ?? null,
+        foId: booking.foId ?? null,
+      },
+      scoringVersion: latestDecision.scoringVersion,
+      configVersion,
+      selectedCandidateId: null,
+      selectedFoId,
+      dispatchSequence: latestDecision.dispatchSequence,
+      trigger: latestDecision.trigger ?? null,
+      summary,
+      candidates,
+      notes: notes.map((n) => n.note),
+    };
+  }
+
+  private parseConfigVersionFromScoringVersion(scoringVersion: string): number | null {
+    const match = /^dispatch-config-v(\d+)$/i.exec(scoringVersion);
+    return match ? parseInt(match[1], 10) : null;
+  }
+
+  private buildExplainerCandidates(
+    candidates: Array<{
+      id: string;
+      franchiseOwnerId: string;
+      candidateStatus: string;
+      baseRank: number | null;
+      finalRank: number | null;
+      baseScore: Prisma.Decimal | null;
+      finalScore: Prisma.Decimal | null;
+      loadPenalty: Prisma.Decimal | null;
+      acceptancePenalty: Prisma.Decimal | null;
+      completionPenalty: Prisma.Decimal | null;
+      cancellationPenalty: Prisma.Decimal | null;
+      reliabilityBonus: Prisma.Decimal | null;
+      reasonCode: string | null;
+      reasonDetail: string | null;
+    }>,
+    selectedFoId: string | null,
+    decisionStatus: string,
+  ): DispatchExplainerCandidateDto[] {
+    const sorted = [...candidates].sort((a, b) =>
+      this.compareCandidates(a as any, b as any),
+    );
+    const effectiveRanks = sorted
+      .filter((c) => c.candidateStatus !== "excluded")
+      .map((c) => c.finalRank ?? c.baseRank ?? Infinity);
+    const minEffectiveRank =
+      effectiveRanks.length === 0
+        ? Infinity
+        : Math.min(...effectiveRanks);
+
+    return sorted.map((c) => {
+      const excluded = c.candidateStatus === "excluded";
+      const selected = c.franchiseOwnerId === selectedFoId && c.candidateStatus === "selected";
+      const loadPenalty = c.loadPenalty != null ? Number(c.loadPenalty) : 0;
+      const acceptancePenalty = c.acceptancePenalty != null ? Number(c.acceptancePenalty) : 0;
+      const completionPenalty = c.completionPenalty != null ? Number(c.completionPenalty) : 0;
+      const cancellationPenalty =
+        c.cancellationPenalty != null ? Number(c.cancellationPenalty) : 0;
+      const reliabilityBonus = c.reliabilityBonus != null ? Number(c.reliabilityBonus) : 0;
+      const effectiveRank = c.finalRank ?? c.baseRank ?? null;
+      const explanation = this.buildCandidateExplanation({
+        candidate: c,
+        excluded,
+        selected,
+        loadPenalty,
+        acceptancePenalty,
+        completionPenalty,
+        cancellationPenalty,
+        reliabilityBonus,
+        effectiveRank,
+        minEffectiveRank,
+        isLowestRank:
+          effectiveRank != null &&
+          !excluded &&
+          effectiveRank === minEffectiveRank,
+      });
+      return {
+        providerId: null,
+        foId: c.franchiseOwnerId,
+        baseRank: c.baseRank ?? null,
+        effectiveRank,
+        selected,
+        excluded,
+        exclusionReason: excluded ? c.reasonDetail ?? c.reasonCode ?? null : null,
+        factors: {
+          loadPenalty,
+          acceptancePenalty,
+          completionPenalty,
+          cancellationPenalty,
+          reliabilityBonus,
+          responseSpeedAdjustment: 0,
+          multiPassPenalty: 0,
+        },
+        explanation,
+      };
+    });
+  }
+
+  private buildCandidateExplanation(args: {
+    candidate: { reasonCode: string | null; candidateStatus: string };
+    excluded: boolean;
+    selected: boolean;
+    loadPenalty: number;
+    acceptancePenalty: number;
+    completionPenalty: number;
+    cancellationPenalty: number;
+    reliabilityBonus: number;
+    effectiveRank: number | null;
+    minEffectiveRank: number;
+    isLowestRank: boolean;
+  }): string[] {
+    const lines: string[] = [];
+    if (args.excluded) {
+      if (args.candidate.reasonCode === "excluded_manual_block") {
+        lines.push("Excluded from selection due to manual block.");
+      } else {
+        lines.push(
+          args.candidate.reasonCode
+            ? `Excluded: ${args.candidate.reasonCode}`
+            : "Excluded from selection.",
+        );
+      }
+      return lines;
+    }
+    if (args.isLowestRank && args.selected) {
+      lines.push("Lowest effective rank among eligible candidates.");
+    }
+    if (args.loadPenalty > 0) {
+      lines.push("Penalized by current load.");
+    }
+    if (args.acceptancePenalty > 0) {
+      lines.push("Penalized by low acceptance history.");
+    }
+    if (args.completionPenalty > 0) {
+
+===== FILE: src/modules/bookings/booking-dispatch-control.service.ts =====
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+
+@Injectable()
+export class BookingDispatchControlService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async getControl(bookingId: string) {
+    return this.prisma.bookingDispatchControl.findUnique({
+      where: { bookingId },
+    });
+  }
+
+  async isHoldActive(bookingId: string): Promise<boolean> {
+    const control = await this.getControl(bookingId);
+    return Boolean(control?.holdActive);
+  }
+
+  async assertNotHeld(bookingId: string): Promise<void> {
+    const held = await this.isHoldActive(bookingId);
+
+    if (held) {
+      throw new BadRequestException(
+        "Booking is currently on admin hold and cannot be dispatched.",
+      );
+    }
+  }
+
+  async applyHold(input: {
+    bookingId: string;
+    adminUserId: string;
+    reason: string;
+    source: string;
+  }) {
+    return this.prisma.bookingDispatchControl.upsert({
+      where: { bookingId: input.bookingId },
+      update: {
+        holdActive: true,
+        holdReason: input.reason,
+        holdSource: input.source,
+        holdSetByAdminId: input.adminUserId,
+        holdSetAt: new Date(),
+        holdReleasedAt: null,
+      },
+      create: {
+        bookingId: input.bookingId,
+        holdActive: true,
+        holdReason: input.reason,
+        holdSource: input.source,
+        holdSetByAdminId: input.adminUserId,
+        holdSetAt: new Date(),
+        holdReleasedAt: null,
+      },
+    });
+  }
+
+  async releaseHold(input: { bookingId: string }) {
+    return this.prisma.bookingDispatchControl.upsert({
+      where: { bookingId: input.bookingId },
+      update: {
+        holdActive: false,
+        holdReleasedAt: new Date(),
+      },
+      create: {
+        bookingId: input.bookingId,
+        holdActive: false,
+        holdReleasedAt: new Date(),
+      },
+    });
+  }
+}
+
+===== FILE: src/modules/bookings/dispatch-ops.service.ts =====
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { BookingStatus } from "@prisma/client";
+import { PrismaService } from "../../prisma";
+import { BookingDispatchControlService } from "./booking-dispatch-control.service";
+import { BookingReviewControlService } from "./booking-review-control.service";
+
+const NON_ASSIGNABLE_STATUSES: BookingStatus[] = [
+  "in_progress",
+  "completed",
+  "canceled",
+];
+
+function bookingSnapshotFromBooking(booking: {
+  id: string;
+  status: BookingStatus;
+  scheduledStart: Date | null;
+  estimatedHours: number | null;
+  siteLat: number | null;
+  siteLng: number | null;
+  foId: string | null;
+}) {
+  return {
+    bookingId: booking.id,
+    status: booking.status,
+    scheduledStart: booking.scheduledStart?.toISOString() ?? null,
+    siteLat: booking.siteLat ?? null,
+    siteLng: booking.siteLng ?? null,
+    estimatedDurationMin:
+      booking.estimatedHours != null
+        ? Math.round(booking.estimatedHours * 60)
+        : null,
+    foId: booking.foId ?? null,
+  };
+}
+
+@Injectable()
+export class DispatchOpsService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly bookingDispatchControlService: BookingDispatchControlService,
+    private readonly bookingReviewControlService: BookingReviewControlService,
+  ) {}
+
+  private async assertDispatchAllowed(bookingId: string): Promise<void> {
+    await this.bookingDispatchControlService.assertNotHeld(bookingId);
+    await this.bookingReviewControlService.assertReviewNotRequired(bookingId);
+  }
+
+  private async getNextDispatchSequence(bookingId: string): Promise<{
+    dispatchSequence: number;
+    redispatchSequence: number;
+  }> {
+    const latest = await (this.prisma as any).dispatchDecision.findFirst({
+      where: { bookingId },
+      orderBy: { dispatchSequence: "desc" },
+    });
+    return {
+      dispatchSequence: latest ? latest.dispatchSequence + 1 : 1,
+      redispatchSequence: latest?.redispatchSequence ?? 0,
+    };
+  }
+
+  async manualRedispatch(bookingId: string, adminId: string) {
+    await this.assertDispatchAllowed(bookingId);
+
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking) throw new NotFoundException("Booking not found");
+
+    const { dispatchSequence, redispatchSequence } =
+      await this.getNextDispatchSequence(bookingId);
+
+    const bookingSnapshot = bookingSnapshotFromBooking(booking);
+
+    return (this.prisma as any).dispatchDecision.create({
+      data: {
+        bookingId,
+        trigger: "redispatch_manual",
+        dispatchSequence,
+        redispatchSequence: redispatchSequence + 1,
+        decisionStatus: "deferred",
+        scoringVersion: "provider-aware-dispatch-v1",
+        bookingSnapshot,
+        decisionMeta: {
+          adminId,
+          reason: "manual redispatch",
+          bookingStatusAtTime: booking.status,
+          foIdAtTime: booking.foId ?? null,
+          scheduledStartAtTime: booking.scheduledStart?.toISOString() ?? null,
+        },
+      },
+    });
+  }
+
+  async manualAssign(
+    bookingId: string,
+    franchiseOwnerId: string,
+    adminId: string,
+  ) {
+    await this.assertDispatchAllowed(bookingId);
+
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking) throw new NotFoundException("Booking not found");
+
+    if (!franchiseOwnerId || franchiseOwnerId.trim() === "") {
+      throw new BadRequestException("franchiseOwnerId is required");
+    }
+
+    if (NON_ASSIGNABLE_STATUSES.includes(booking.status)) {
+      throw new BadRequestException(
+        `Booking cannot be assigned when status is ${booking.status}`,
+      );
+    }
+
+    const fo = await this.prisma.franchiseOwner.findUnique({
+      where: { id: franchiseOwnerId },
+    });
+
+    if (!fo) throw new NotFoundException("Franchise owner not found");
+
+    const { dispatchSequence, redispatchSequence } =
+      await this.getNextDispatchSequence(bookingId);
+
+    const bookingSnapshot = bookingSnapshotFromBooking(booking);
+
+    await this.prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        foId: franchiseOwnerId,
+        status: "assigned",
+      },
+    });
+
+    return (this.prisma as any).dispatchDecision.create({
+      data: {
+        bookingId,
+        trigger: "manual_assign",
+        dispatchSequence,
+        redispatchSequence,
+        decisionStatus: "manual_assigned",
+        selectedFranchiseOwnerId: franchiseOwnerId,
+        selectedRank: 1,
+        scoringVersion: "provider-aware-dispatch-v1",
+        bookingStatusAtDecision: booking.status,
+        scheduledStart: booking.scheduledStart,
+        estimatedDurationMin:
+          booking.estimatedHours != null
+            ? Math.round(booking.estimatedHours * 60)
+            : null,
+        bookingSnapshot,
+        decisionMeta: {
+          adminId,
+          reason: "manual assignment",
+        },
+      },
+    });
+  }
+
+  async excludeProvider(
+    bookingId: string,
+    franchiseOwnerId: string,
+    adminId: string,
+  ) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking) throw new NotFoundException("Booking not found");
+
+    const { dispatchSequence, redispatchSequence } =
+      await this.getNextDispatchSequence(bookingId);
+
+    const bookingSnapshot = bookingSnapshotFromBooking(booking);
+
+    const decision = await (this.prisma as any).dispatchDecision.create({
+      data: {
+        bookingId,
+        trigger: "manual_exclusion",
+        dispatchSequence,
+        redispatchSequence,
+        decisionStatus: "deferred",
+        scoringVersion: "provider-aware-dispatch-v1",
+        bookingSnapshot,
+        decisionMeta: {
+          adminId,
+          reason: "manual provider exclusion",
+        },
+      },
+    });
+
+    await (this.prisma as any).dispatchDecisionCandidate.create({
+      data: {
+        dispatchDecisionId: decision.id,
+        franchiseOwnerId,
+        candidateStatus: "excluded",
+        reasonCode: "excluded_manual_block",
+        eligibilitySnapshot: {},
+      },
+    });
+
+    return decision;
+  }
+
+  async clearExclusions(bookingId: string, _adminId: string) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking) throw new NotFoundException("Booking not found");
+
+    return { ok: true };
+  }
+}
+
+===== FILE: src/modules/dispatch/dispatch.service.ts =====
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+import { FoService } from "../fo/fo.service";
+import { ReputationService } from "./reputation.service";
+import { DispatchCandidateService } from "./dispatch-candidate.service";
+import { DispatchRankingService } from "./dispatch-ranking.service";
+import { ProviderDispatchResolverService } from "./provider-dispatch-resolver.service";
+import { DispatchDecisionService } from "../bookings/dispatch-decision.service";
+import {
+  BookingEventType,
+  BookingOfferStatus,
+  BookingStatus,
+  DispatchCandidateReasonCode,
+  DispatchCandidateStatus,
+  DispatchDecisionStatus,
+  OpsAnomalyStatus,
+  OpsAnomalyType,
+  Prisma,
+} from "@prisma/client";
+import type { DispatchDecisionCandidateInput } from "../bookings/types/dispatch-decision.types";
+import {
+  dispatchRoundsTotal,
+  dispatchOffersCreatedTotal,
+  dispatchExhaustedTotal,
+  dispatchAcceptTotal,
+  dispatchAcceptRaceLostTotal,
+} from "../../metrics.registry";
+import {
+  dispatchCandidatesTotal,
+  dispatchCandidatesGeoFiltered,
+  dispatchCandidatesScored,
+  dispatchCandidatesLimited,
+  dispatchOffersCreated,
+  dispatchOfferAccepted,
+  dispatchOfferAcceptSeconds,
+  dispatchRadiusMilesObserved,
+  dispatchRoundActivated,
+  dispatchRoundFallback,
+} from "../../metrics/dispatch.metrics";
+import { BookingTransitionService } from "../bookings/booking-transition.service";
+import { FoScheduleService } from "../franchise-owner/fo-schedule.service";
+import { DispatchScoringService } from "./dispatch-scoring.service";
+
+@Injectable()
+export class DispatchService {
+  private static readonly OFFER_WINDOW_SECONDS = 30;
+  private static readonly OFFER_STAGGER_SECONDS = 3;
+  private static readonly MAX_OFFERS_PER_ROUND = 5;
+  private static readonly MAX_SCORED_CANDIDATES = 25;
+  private static readonly ROUND_1_RADIUS_MILES = 20;
+  private static readonly ROUND_2_RADIUS_MILES = 30;
+  private static readonly ROUND_3_RADIUS_MILES = 45;
+  private static readonly ROUND_4_RADIUS_MILES = 60;
+  private static readonly BATCH_SIZE = 2;
+
+  constructor(
+    private readonly db: PrismaService,
+    private readonly foService: FoService,
+    private readonly reputationService: ReputationService,
+    private readonly candidateService: DispatchCandidateService,
+    private readonly rankingService: DispatchRankingService,
+    private readonly providerResolver: ProviderDispatchResolverService,
+    private readonly dispatchDecisionService: DispatchDecisionService,
+    private readonly transitionService: BookingTransitionService,
+    private readonly foScheduleService: FoScheduleService,
+    private readonly dispatchScoringService: DispatchScoringService,
+  ) {}
+
+  private toInputJson(value: unknown): Prisma.InputJsonValue | null {
+    if (value === undefined || value === null) {
+      return null;
+    }
+    return value as Prisma.InputJsonValue;
+  }
+
+  private toCandidateStatusSelected(
+    isSelected: boolean,
+  ): DispatchCandidateStatus {
+    return isSelected
+      ? DispatchCandidateStatus.selected
+      : DispatchCandidateStatus.rejected;
+  }
+
+  private toRankedReasonCode(
+    isSelected: boolean,
+  ): DispatchCandidateReasonCode {
+    return isSelected
+      ? DispatchCandidateReasonCode.selected_best_score
+      : DispatchCandidateReasonCode.not_selected_lower_rank;
+  }
+
+  private getLoadPenalty(
+    stats:
+      | {
+          activeAssignedCount?: number | null;
+          activeInProgressCount?: number | null;
+        }
+      | null
+      | undefined,
+  ): number {
+    const activeAssignedCount = stats?.activeAssignedCount ?? 0;
+    const activeInProgressCount = stats?.activeInProgressCount ?? 0;
+
+    const penalty = activeAssignedCount * 4 + activeInProgressCount * 8;
+
+    return Math.min(penalty, 40);
+  }
+
+  private async calculateDispatchPenalty(foId: string) {
+    const [dispatchStats, reliabilityStats, fo] = await Promise.all([
+      this.db.franchiseOwnerDispatchStats.findUnique({
+        where: { foId },
+      }),
+      this.db.franchiseOwnerReliabilityStats.findUnique({
+        where: { foId },
+      }),
+      this.db.franchiseOwner.findUnique({
+        where: { id: foId },
+        select: { reliabilityScore: true },
+      }),
+    ]);
+
+    const loadPenalty = this.getLoadPenalty(reliabilityStats);
+
+    const offersSent = dispatchStats?.offersSent ?? 0;
+    const offersAccepted = dispatchStats?.offersAccepted ?? 0;
+    const assignments = reliabilityStats?.assignmentsCount ?? 0;
+    const completions = reliabilityStats?.completionsCount ?? 0;
+    const cancellations = reliabilityStats?.cancellationsCount ?? 0;
+    const reliabilityScore = Number(fo?.reliabilityScore ?? 0);
+
+    let acceptancePenalty = 0;
+    if (offersSent >= 5) {
+      const acceptRate = offersAccepted / offersSent;
+      if (acceptRate < 0.3) {
+        acceptancePenalty = 3;
+      } else if (acceptRate < 0.5) {
+        acceptancePenalty = 1;
+      }
+    }
+
+    let completionPenalty = 0;
+    let cancellationPenalty = 0;
+
+    if (assignments >= 5) {
+      const completionRate = completions / assignments;
+      const cancellationRate = cancellations / assignments;
+
+      if (completionRate < 0.7) {
+        completionPenalty += 3;
+      } else if (completionRate < 0.85) {
+        completionPenalty += 1;
+      }
+
+      if (cancellationRate > 0.3) {
+        cancellationPenalty += 4;
+      } else if (cancellationRate > 0.15) {
+        cancellationPenalty += 2;
+      }
+    }
+
+    const reliabilityBonus =
+      reliabilityScore >= 4 ? -1 : reliabilityScore <= -2 ? 2 : 0;
+
+    return (
+      loadPenalty +
+      acceptancePenalty +
+      completionPenalty +
+      cancellationPenalty +
+      reliabilityBonus
+    );
+  }
+
+  private getReputationRankAdjustment(tier: string): number {
+    switch (tier) {
+      case "A":
+        return -15;
+      case "B":
+        return -5;
+      case "C":
+        return 5;
+      case "PROBATION":
+        return 20;
+      default:
+        return 0;
+    }
+  }
+
+  private getDefaultReputationRankAdjustment(): number {
+    return -5; // default new FO behavior = Tier B equivalent
+  }
+
+  private getDispatchRoundForTier(tier: string): number {
+    switch (tier) {
+      case "A":
+        return 1;
+      case "B":
+        return 2;
+      case "C":
+        return 3;
+      case "PROBATION":
+        return 4;
+      default:
+        return 2;
+    }
+  }
+
+  private getDispatchRadiusForRound(round: number): number {
+    switch (round) {
+      case 1:
+        return DispatchService.ROUND_1_RADIUS_MILES;
+      case 2:
+        return DispatchService.ROUND_2_RADIUS_MILES;
+      case 3:
+        return DispatchService.ROUND_3_RADIUS_MILES;
+      case 4:
+      default:
+        return DispatchService.ROUND_4_RADIUS_MILES;
+    }
+  }
+
+  private filterCandidatesByRadius<T extends { distanceMiles?: number | null }>(
+    candidates: T[],
+    radiusMiles: number,
+  ): T[] {
+    return candidates.filter((candidate) => {
+      const distanceMiles = candidate.distanceMiles;
+
+      if (distanceMiles == null) {
+        return false;
+      }
+
+      return distanceMiles <= radiusMiles;
+    });
+  }
+
+  private getDistancePenalty(distanceMiles: number | null | undefined): number {
+    if (distanceMiles == null) {
+      return 25;
+    }
+
+    if (distanceMiles <= 5) {
+      return 0;
+    }
+
+    if (distanceMiles <= 10) {
+      return 5;
+    }
+
+    if (distanceMiles <= 20) {
+      return 12;
+    }
+
+    if (distanceMiles <= 30) {
+      return 20;
+    }
+
+===== FILE: src/modules/dispatch/dispatch-ranking.service.ts =====
+import { Injectable } from "@nestjs/common";
+import {
+  DispatchCandidate,
+  RankedDispatchCandidate,
+} from "./dispatch-candidate.types";
+import { DispatchConfigService } from "./dispatch-config.service";
+
+export type RankResult = {
+  ranked: RankedDispatchCandidate[];
+  scoringVersion: string;
+};
+
+@Injectable()
+export class DispatchRankingService {
+  constructor(private readonly dispatchConfigService: DispatchConfigService) {}
+
+  async rank(candidates: DispatchCandidate[], limit = 10): Promise<RankResult> {
+    const cfg = await this.dispatchConfigService.getEngineConfig();
+
+    const responseSpeedPenaltyOrBonus = 0;
+
+    const ranked = candidates
+      .filter((c) => c.canReceiveDispatch && !!c.foId)
+      .map((c) => {
+        const acceptancePenalty = (1 - c.acceptanceRate) * 20;
+        const completionPenalty = (1 - c.completionRate) * 20;
+        const cancellationPenalty = c.cancellationRate * 25;
+        const loadPenalty = c.activeAssignedCount * 5 + c.activeInProgressCount * 8;
+        const reliabilityBonus =
+          ((c.foReliabilityScore + c.providerReliabilityScore) / 2) * -2;
+
+        const weightedAcceptancePenalty =
+          acceptancePenalty * cfg.acceptancePenaltyWeight;
+        const weightedCompletionPenalty =
+          completionPenalty * cfg.completionPenaltyWeight;
+        const weightedCancellationPenalty =
+          cancellationPenalty * cfg.cancellationPenaltyWeight;
+        const weightedLoadPenalty = loadPenalty * cfg.loadPenaltyWeight;
+        const weightedReliabilityBonus = cfg.enableReliabilityWeighting
+          ? reliabilityBonus * cfg.reliabilityBonusWeight
+          : 0;
+        const weightedResponseSpeed = cfg.enableResponseSpeedWeighting
+          ? responseSpeedPenaltyOrBonus * cfg.responseSpeedWeight
+          : 0;
+
+        const dispatchPenalty =
+          weightedLoadPenalty +
+          weightedAcceptancePenalty +
+          weightedCompletionPenalty +
+          weightedCancellationPenalty +
+          weightedResponseSpeed -
+          weightedReliabilityBonus;
+
+        const effectiveRank = c.baseRank + dispatchPenalty;
+
+        return {
+          ...c,
+          acceptancePenalty: weightedAcceptancePenalty,
+          completionPenalty: weightedCompletionPenalty,
+          cancellationPenalty: weightedCancellationPenalty,
+          loadPenalty: weightedLoadPenalty,
+          reliabilityBonus: weightedReliabilityBonus,
+          dispatchPenalty,
+          effectiveRank,
+        };
+      })
+      .sort((a, b) => a.effectiveRank - b.effectiveRank);
+
+    return {
+      ranked: ranked.slice(0, Math.max(1, Math.floor(limit))),
+      scoringVersion: cfg.scoringVersion,
+    };
+  }
+}
+
+===== FILE: src/modules/dispatch/dispatch-scoring.service.ts =====
+import { Injectable } from "@nestjs/common";
+import { FoScheduleService } from "../franchise-owner/fo-schedule.service";
+import { TrustService } from "../trust/trust.service";
+
+@Injectable()
+export class DispatchScoringService {
+  constructor(
+    private readonly foScheduleService: FoScheduleService,
+    private readonly trustService: TrustService,
+  ) {}
+
+  async scoreFoForBooking(input: { foId: string; scheduledStart: Date }) {
+    const available = await this.foScheduleService.isAvailable(
+      input.foId,
+      input.scheduledStart,
+    );
+
+    if (!available) {
+      return {
+        foId: input.foId,
+        available: false,
+        trustScore: 0,
+        dispatchScore: 0,
+      };
+    }
+
+    const trust = await this.trustService.getFoTrustScore(input.foId);
+
+    const dispatchScore = trust.score;
+
+    return {
+      foId: input.foId,
+      available: true,
+      trustScore: trust.score,
+      dispatchScore,
+    };
+  }
+
+  async rankFos(input: { foIds: string[]; scheduledStart: Date }) {
+    const scored = await Promise.all(
+      input.foIds.map((foId) =>
+        this.scoreFoForBooking({
+          foId,
+          scheduledStart: input.scheduledStart,
+        }),
+      ),
+    );
+
+    return scored.sort((a, b) => b.dispatchScore - a.dispatchScore);
+  }
+}
+
+===== FILE: src/modules/dispatch/dispatch-candidate.service.ts =====
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+import { DispatchCandidate, DispatchCandidateInput } from "./dispatch-candidate.types";
+
+@Injectable()
+export class DispatchCandidateService {
+  constructor(private readonly db: PrismaService) {}
+
+  private distanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  private travelMinutes(distanceKm: number) {
+    return (distanceKm / 40) * 60;
+  }
+
+  private ratio(num?: number | null, den?: number | null) {
+    if (!den || den <= 0) return 1;
+    return (num ?? 0) / den;
+  }
+
+  async getCandidates(input: DispatchCandidateInput): Promise<DispatchCandidate[]> {
+    const today = new Date();
+    const dayStart = new Date(today);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(today);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    const rows = await this.db.franchiseOwner.findMany({
+      where: {
+        providerId: { not: null },
+        status: "active",
+        safetyHold: false,
+      },
+      include: { provider: true, dispatchStats: true, reliabilityStats: true },
+    });
+
+    const candidates: DispatchCandidate[] = [];
+
+    for (const fo of rows) {
+      const reasons: string[] = [];
+      if (!fo.providerId) reasons.push("PROVIDER_ID_MISSING");
+      if (!fo.provider) reasons.push("PROVIDER_NOT_FOUND");
+      if (fo.provider && fo.provider.userId !== fo.userId) reasons.push("PROVIDER_USER_MISMATCH");
+      if (fo.homeLat == null || fo.homeLng == null) reasons.push("HOME_LOCATION_MISSING");
+
+      let travelMinutes = Number.POSITIVE_INFINITY;
+      if (fo.homeLat != null && fo.homeLng != null) {
+        const dist = this.distanceKm(input.lat, input.lng, fo.homeLat, fo.homeLng);
+        travelMinutes = this.travelMinutes(dist);
+        if (fo.maxTravelMinutes && travelMinutes > fo.maxTravelMinutes) reasons.push("TRAVEL_LIMIT_EXCEEDED");
+      }
+      if (fo.maxSquareFootage && input.squareFootage > fo.maxSquareFootage) reasons.push("MAX_SQUARE_FOOTAGE_EXCEEDED");
+      if (fo.maxLaborMinutes && input.estimatedLaborMinutes > fo.maxLaborMinutes) reasons.push("MAX_LABOR_EXCEEDED");
+      if (fo.teamSize && fo.teamSize < input.recommendedTeamSize) reasons.push("TEAM_SIZE_TOO_SMALL");
+
+      if (fo.maxDailyLaborMinutes) {
+        const todaysBookings = await this.db.booking.findMany({
+          where: {
+            foId: fo.id,
+            scheduledStart: { gte: dayStart, lte: dayEnd },
+          },
+          select: { estimatedHours: true },
+        });
+        const alreadyCommittedMinutes = todaysBookings.reduce(
+          (sum, b) => sum + Math.round((b.estimatedHours ?? 0) * 60),
+          0,
+        );
+        if (alreadyCommittedMinutes + input.estimatedLaborMinutes > fo.maxDailyLaborMinutes) {
+          reasons.push("DAILY_CAPACITY_EXCEEDED");
+        }
+      }
+
+      const ds = fo.dispatchStats;
+      const rs = fo.reliabilityStats;
+      const offersSent = ds?.offersSent ?? 0;
+      const offersAccepted = ds?.offersAccepted ?? 0;
+      const completions = rs?.completionsCount ?? 0;
+      const cancellations = rs?.cancellationsCount ?? 0;
+      const assignments = rs?.assignmentsCount ?? 0;
+      const acceptanceRate = this.ratio(offersAccepted, offersSent);
+      const completionRate = this.ratio(completions, assignments);
+      const cancellationRate = assignments > 0 ? cancellations / assignments : 0;
+
+      candidates.push({
+        providerId: fo.providerId ?? "",
+        providerType: String(fo.provider?.type ?? "unknown"),
+        providerStatus: String(fo.provider?.status ?? "unknown"),
+        providerUserId: fo.provider?.userId ?? "",
+        foId: fo.id,
+        foStatus: String(fo.status),
+        displayName: fo.displayName ?? fo.provider?.displayName ?? null,
+        photoUrl: fo.photoUrl ?? null,
+        bio: fo.bio ?? null,
+        yearsExperience: fo.yearsExperience ?? null,
+        completedJobsCount: fo.completedJobsCount ?? null,
+        teamSize: fo.teamSize ?? null,
+        providerReliabilityScore: fo.provider?.reliabilityScore ?? 0,
+        foReliabilityScore: fo.reliabilityScore ?? 0,
+        travelMinutes: Number.isFinite(travelMinutes) ? Math.round(travelMinutes) : 999999,
+        baseRank: (fo.reliabilityScore ?? 0) * 2 - (Number.isFinite(travelMinutes) ? travelMinutes : 999999),
+        acceptanceRate,
+        completionRate,
+        cancellationRate,
+        activeAssignedCount: rs?.activeAssignedCount ?? 0,
+        activeInProgressCount: rs?.activeInProgressCount ?? 0,
+        canReceiveDispatch: reasons.length === 0,
+        ineligibilityReasons: reasons,
+      });
+    }
+    return candidates;
+  }
+}
+
+===== FILE: src/modules/dispatch/provider-dispatch-resolver.service.ts =====
+import { Injectable, NotFoundException, ConflictException } from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+
+@Injectable()
+export class ProviderDispatchResolverService {
+  constructor(private readonly db: PrismaService) {}
+
+  async resolveFoIdForProvider(providerId: string): Promise<string> {
+    const fo = await this.db.franchiseOwner.findFirst({
+      where: {
+        providerId,
+        status: "active",
+        safetyHold: false,
+      },
+      select: { id: true, providerId: true },
+    });
+
+    if (!fo) {
+      throw new NotFoundException("DISPATCH_PROVIDER_FO_NOT_FOUND");
+    }
+
+    if (!fo.providerId) {
+      throw new ConflictException("DISPATCH_PROVIDER_LINK_INVALID");
+    }
+
+    return fo.id;
+  }
+}
+
+===== FILE: src/modules/dispatch/reputation.service.ts =====
+import { Injectable } from "@nestjs/common";
+import { ReputationTier } from "@prisma/client";
+
+import { PrismaService } from "../../prisma";
+
+type ReputationComputation = {
+  reputationScore: number;
+  reputationTier: ReputationTier;
+  reliabilityScore: number;
+  reliabilityLabel: "ELITE" | "STRONG" | "STANDARD" | "RISK";
+  acceptanceRate: number;
+  completionRate: number;
+  cancellationRate: number;
+  expirationRate: number;
+  averageResponseSeconds: number;
+};
+
+@Injectable()
+export class ReputationService {
+  constructor(private readonly db: PrismaService) {}
+
+  async recomputeForFo(foId: string): Promise<ReputationComputation> {
+    const [dispatchStats, reliabilityStats] = await Promise.all([
+      this.db.franchiseOwnerDispatchStats.findUnique({
+        where: { foId },
+      }),
+      this.db.franchiseOwnerReliabilityStats.findUnique({
+        where: { foId },
+      }),
+    ]);
+
+    const offersSent = dispatchStats?.offersSent ?? 0;
+    const offersAccepted = dispatchStats?.offersAccepted ?? 0;
+    const offersExpired = dispatchStats?.offersExpired ?? 0;
+    const averageResponseSeconds = dispatchStats?.averageResponseSeconds ?? 0;
+
+    const assignmentsCount = reliabilityStats?.assignmentsCount ?? 0;
+    const completionsCount = reliabilityStats?.completionsCount ?? 0;
+    const cancellationsCount = reliabilityStats?.cancellationsCount ?? 0;
+
+    const acceptanceRate = this.safeRate(offersAccepted, offersSent, 1);
+    const completionRate = this.safeRate(completionsCount, assignmentsCount, 1);
+    const cancellationRate = this.safeRate(cancellationsCount, assignmentsCount, 0);
+    const expirationRate = this.safeRate(offersExpired, offersSent, 0);
+
+    const rawScore =
+      completionRate * 60 +
+      acceptanceRate * 25 -
+      cancellationRate * 40 -
+      expirationRate * 10;
+
+    const reputationScore = this.roundScore(this.clamp(rawScore, 0, 100));
+    const reputationTier = this.mapTier(reputationScore);
+
+    const reliabilityRaw =
+      completionRate * 55 +
+      acceptanceRate * 20 -
+      cancellationRate * 35 -
+      expirationRate * 10 -
+      this.getResponseReliabilityPenalty(averageResponseSeconds);
+
+    const reliabilityScore = this.roundScore(this.clamp(reliabilityRaw, 0, 100));
+    const reliabilityLabel = this.mapReliabilityLabel(reliabilityScore);
+
+    await this.db.franchiseOwnerReputation.upsert({
+      where: { foId },
+      update: {
+        reputationScore,
+        reputationTier,
+        reliabilityScore,
+        reliabilityLabel,
+        lastCalculatedAt: new Date(),
+      },
+      create: {
+        foId,
+        reputationScore,
+        reputationTier,
+        reliabilityScore,
+        reliabilityLabel,
+        lastCalculatedAt: new Date(),
+      },
+    });
+
+    return {
+      reputationScore,
+      reputationTier,
+      reliabilityScore,
+      reliabilityLabel,
+      acceptanceRate: this.roundScore(acceptanceRate * 100),
+      completionRate: this.roundScore(completionRate * 100),
+      cancellationRate: this.roundScore(cancellationRate * 100),
+      expirationRate: this.roundScore(expirationRate * 100),
+      averageResponseSeconds: this.roundScore(averageResponseSeconds),
+    };
+  }
+
+  async recomputeForFoSafe(foId: string): Promise<void> {
+    try {
+      await this.recomputeForFo(foId);
+    } catch {
+      // swallow errors so operational flows never fail on reputation refresh
+    }
+  }
+
+  async getOrCreateForFo(foId: string) {
+    const existing = await this.db.franchiseOwnerReputation.findUnique({
+      where: { foId },
+    });
+
+    if (existing) {
+      return existing;
+    }
+
+    await this.recomputeForFo(foId);
+
+    return this.db.franchiseOwnerReputation.findUniqueOrThrow({
+      where: { foId },
+    });
+  }
+
+  private safeRate(numerator: number, denominator: number, fallback: number): number {
+    if (denominator <= 0) {
+      return fallback;
+    }
+
+    return numerator / denominator;
+  }
+
+  private mapTier(score: number): ReputationTier {
+    if (score >= 85) {
+      return ReputationTier.A;
+    }
+
+    if (score >= 70) {
+      return ReputationTier.B;
+    }
+
+    if (score >= 50) {
+      return ReputationTier.C;
+    }
+
+    return ReputationTier.PROBATION;
+  }
+
+  private mapReliabilityLabel(
+    score: number,
+  ): "ELITE" | "STRONG" | "STANDARD" | "RISK" {
+    if (score >= 90) {
+      return "ELITE";
+    }
+
+    if (score >= 75) {
+      return "STRONG";
+    }
+
+    if (score >= 55) {
+      return "STANDARD";
+    }
+
+    return "RISK";
+  }
+
+  private getResponseReliabilityPenalty(averageResponseSeconds: number): number {
+    if (averageResponseSeconds <= 0) {
+      return 0;
+    }
+
+    if (averageResponseSeconds <= 30) {
+      return 0;
+    }
+
+    if (averageResponseSeconds <= 90) {
+      return 4;
+    }
+
+    if (averageResponseSeconds <= 180) {
+      return 8;
+    }
+
+    if (averageResponseSeconds <= 300) {
+      return 12;
+    }
+
+    return 18;
+  }
+
+  private clamp(value: number, min: number, max: number): number {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  private roundScore(value: number): number {
+    return Math.round(value * 100) / 100;
+  }
+}
+
+===== FILE: src/modules/dispatch/dispatch.worker.ts =====
+import { Injectable } from "@nestjs/common";
+import { Cron } from "@nestjs/schedule";
+import { BookingEventType, BookingOfferStatus, BookingStatus } from "@prisma/client";
+import { PrismaService } from "../../prisma";
+import { dispatchOffersExpired } from "../../metrics/dispatch.metrics";
+import { DispatchService } from "./dispatch.service";
+import { ReputationService } from "./reputation.service";
+
+@Injectable()
+export class DispatchWorker {
+  private static readonly ASSIGNED_START_GRACE_MINUTES = 15;
+  private static readonly OFFER_WINDOW_SECONDS = 30;
+
+  constructor(
+    private readonly db: PrismaService,
+    private readonly dispatch: DispatchService,
+    private readonly reputationService: ReputationService,
+  ) {}
+
+  @Cron("*/1 * * * *")
+  async runOfferExpirySweep() {
+    if (process.env.ENABLE_DISPATCH_CRON !== "true") return;
+
+    try {
+      await this.expireOffersAndRedispatch();
+    } catch {
+      // swallow: cron is a safety net and must never crash the process
+    }
+  }
+
+  @Cron("*/1 * * * *")
+  async runAssignedStartSlaSweep() {
+    if (process.env.ENABLE_DISPATCH_CRON !== "true") return;
+
+    try {
+      await this.requeueAssignedBookingsMissingStart();
+    } catch {
+      // swallow: cron is a safety net and must never crash the process
+    }
+  }
+
+  /**
+   * Expire stale offers and re-dispatch bookings that no longer have any open offers.
+   */
+  async expireOffersAndRedispatch() {
+    const now = new Date();
+
+    const expiredOffers = await this.db.bookingOffer.findMany({
+      where: {
+        status: BookingOfferStatus.offered,
+        expiresAt: { lt: now },
+      },
+      orderBy: { expiresAt: "asc" },
+      take: 100,
+    });
+
+    if (!expiredOffers.length) {
+      return { expiredCount: 0, redispatchedCount: 0 };
+    }
+
+    const bookingIdsToRetry = new Set<string>();
+
+    for (const offer of expiredOffers) {
+      const updated = await this.db.bookingOffer.updateMany({
+        where: {
+          id: offer.id,
+          status: BookingOfferStatus.offered,
+        },
+        data: {
+          status: BookingOfferStatus.expired,
+          respondedAt: now,
+        },
+      });
+
+      if (updated.count !== 1) {
+        continue;
+      }
+
+      dispatchOffersExpired.inc();
+
+      bookingIdsToRetry.add(offer.bookingId);
+
+      await this.db.bookingEvent.create({
+        data: {
+          bookingId: offer.bookingId,
+          type: BookingEventType.OFFER_EXPIRED,
+          note: `Offer expired for FO ${offer.foId}`,
+        },
+      });
+
+      await this.db.franchiseOwnerDispatchStats.upsert({
+        where: { foId: offer.foId },
+        create: {
+          foId: offer.foId,
+          offersExpired: 1,
+        },
+        update: {
+          offersExpired: { increment: 1 },
+        },
+      });
+
+      void this.reputationService.recomputeForFoSafe(offer.foId);
+
+      await this.activateNextDormantRoundForBooking(offer.bookingId);
+    }
+
+    let redispatchedCount = 0;
+
+    for (const bookingId of bookingIdsToRetry) {
+      const booking = await this.db.booking.findUnique({
+        where: { id: bookingId },
+      });
+
+      if (!booking) {
+        continue;
+      }
+
+      if (booking.status !== BookingStatus.offered) {
+        continue;
+      }
+
+      const openOffers = await this.db.bookingOffer.count({
+        where: {
+          bookingId,
+          status: BookingOfferStatus.offered,
+          expiresAt: { gt: now },
+        },
+      });
+
+      if (openOffers > 0) {
+        continue;
+      }
+
+      await this.db.booking.updateMany({
+        where: {
+          id: bookingId,
+          status: BookingStatus.offered,
+        },
+        data: {
+          status: BookingStatus.pending_dispatch,
+        },
+      });
+
+      await this.dispatch.startDispatch(bookingId);
+      redispatchedCount += 1;
+    }
+
+    return {
+      expiredCount: expiredOffers.length,
+      redispatchedCount,
+    };
+  }
+
+  private async activateNextDormantRoundForBooking(bookingId: string): Promise<void> {
+    const booking = await this.db.booking.findUnique({
+      where: { id: bookingId },
+      select: {
+        id: true,
+        status: true,
+      },
+    });
+
+    if (!booking || booking.status !== BookingStatus.pending_dispatch) {
+      return;
+    }
+
+    const offers = await this.db.bookingOffer.findMany({
+      where: { bookingId },
+      orderBy: [
+        { dispatchRound: "asc" },
+        { rank: "asc" },
+        { createdAt: "asc" },
+      ],
+      select: {
+        id: true,
+        foId: true,
+        dispatchRound: true,
+        offeredAt: true,
+        expiresAt: true,
+        status: true,
+      },
+    });
+
+    if (!offers.length) {
+      return;
+    }
+
+    const hasActiveOffer = offers.some((offer) => {
+      return (
+        offer.status === BookingOfferStatus.offered &&
+        offer.offeredAt !== null &&
+        offer.expiresAt !== null &&
+        offer.expiresAt.getTime() > Date.now()
+      );
+    });
+
+    if (hasActiveOffer) {
+      return;
+    }
+
+    const dormantRounds = [...new Set(
+      offers
+        .filter((o) => o.offeredAt === null && o.expiresAt === null)
+        .map((o) => o.dispatchRound),
+    )].sort((a, b) => a - b);
+    const nextRound = dormantRounds[0];
+
+    if (nextRound === undefined) {
+      return;
+    }
+
+    const now = new Date();
+    const expiresAt = new Date(
+      now.getTime() + DispatchWorker.OFFER_WINDOW_SECONDS * 1000,
+    );
+
+    await this.db.bookingOffer.updateMany({
+      where: {
+        bookingId,
+        dispatchRound: nextRound,
+        offeredAt: null,
+        expiresAt: null,
+        status: BookingOfferStatus.offered,
+      },
+      data: {
+        offeredAt: now,
+        expiresAt,
+      },
+    });
+
+    await this.db.bookingEvent.create({
+      data: {
+        bookingId,
+        type: BookingEventType.DISPATCH_STARTED,
+        note: `Dispatch round ${nextRound} activated at ${now.toISOString()}`,
+      },
+    });
+  }
+
+  async requeueAssignedBookingsMissingStart() {
+    const now = new Date();
+    const threshold = new Date(
+      now.getTime() - DispatchWorker.ASSIGNED_START_GRACE_MINUTES * 60 * 1000,
+    );
+
+    const staleAssigned = await this.db.booking.findMany({
+      where: {
+        status: BookingStatus.assigned,
+        foId: { not: null },
+        scheduledStart: { not: null, lte: threshold },
+      },
+      orderBy: { scheduledStart: "asc" },
+      take: 100,
+    });
+
+    if (!staleAssigned.length) {
+      return { requeuedCount: 0 };
+    }
+
+    let requeuedCount = 0;
+
+===== FILE: src/modules/dispatch/dispatch-exception-automation.service.ts =====
+import { Injectable } from "@nestjs/common";
+import {
+  DispatchExceptionActionStatus,
+  DispatchExceptionActionEventType,
+  Prisma,
+} from "@prisma/client";
+
+import { PrismaService } from "../../prisma";
+import { getDispatchExceptionSlaPolicyHours } from "./dispatch-exception-sla.policy";
+import type { DispatchExceptionNotificationReason } from "./dispatch-exception-automation.types";
+
+const MS_PER_HOUR = 60 * 60 * 1000;
+
+function isResolvedLike(status: DispatchExceptionActionStatus): boolean {
+  return status === "resolved" || status === "dismissed";
+}
+
+@Injectable()
+export class DispatchExceptionAutomationService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  private async createEvent(
+    tx: Prisma.TransactionClient,
+    params: {
+      dispatchExceptionActionId: string;
+      dispatchExceptionKey: string;
+      type: DispatchExceptionActionEventType;
+      actorUserId?: string | null;
+      metadataJson?: Record<string, unknown> | null;
+    },
+  ): Promise<void> {
+    await tx.dispatchExceptionActionEvent.create({
+      data: {
+        dispatchExceptionActionId: params.dispatchExceptionActionId,
+        dispatchExceptionKey: params.dispatchExceptionKey,
+        type: params.type,
+        actorUserId: params.actorUserId ?? null,
+        metadataJson:
+          params.metadataJson === undefined ? undefined
+          : params.metadataJson === null ? Prisma.JsonNull
+          : (params.metadataJson as Prisma.InputJsonValue),
+      },
+    });
+  }
+
+  async syncActionSlaState(params: {
+    dispatchExceptionKey: string;
+  }): Promise<void> {
+    const now = new Date();
+    const row = await this.prisma.dispatchExceptionAction.findUnique({
+      where: { dispatchExceptionKey: params.dispatchExceptionKey },
+    });
+    if (!row) return;
+
+    if (isResolvedLike(row.status)) {
+      await this.prisma.dispatchExceptionAction.update({
+        where: { id: row.id },
+        data: {
+          slaPolicyHours: null,
+          slaStartedAt: null,
+          slaDueAt: null,
+          slaStatus: "completed",
+          slaLastEvaluatedAt: now,
+        },
+      });
+      return;
+    }
+
+    const policyHours = getDispatchExceptionSlaPolicyHours({
+      priority: row.priority as "critical" | "high" | "medium" | "low",
+      status: row.status as
+        | "open"
+        | "investigating"
+        | "waiting"
+        | "resolved"
+        | "dismissed",
+    });
+
+    if (policyHours == null) {
+      await this.prisma.dispatchExceptionAction.update({
+        where: { id: row.id },
+        data: {
+          slaPolicyHours: null,
+          slaStartedAt: null,
+          slaDueAt: null,
+          slaStatus: "paused",
+          slaLastEvaluatedAt: now,
+        },
+      });
+      return;
+    }
+
+    const startedAt = row.slaStartedAt ?? row.createdAt;
+    const policyMs = policyHours * MS_PER_HOUR;
+    const dueAt = new Date(startedAt.getTime() + policyMs);
+
+    const thresholdDueSoon = Math.max(policyMs * 0.25, MS_PER_HOUR);
+    const remainingMs = dueAt.getTime() - now.getTime();
+
+    let slaStatus: string;
+    if (remainingMs < 0) {
+      slaStatus = "overdue";
+    } else if (remainingMs <= thresholdDueSoon) {
+      slaStatus = "due_soon";
+    } else {
+      slaStatus = "on_track";
+    }
+
+    const policyOrDueChanged =
+      row.slaPolicyHours !== policyHours ||
+      !row.slaDueAt ||
+      row.slaDueAt.getTime() !== dueAt.getTime();
+
+    const firstStart = row.slaStartedAt == null;
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.dispatchExceptionAction.update({
+        where: { id: row.id },
+        data: {
+          slaPolicyHours: policyHours,
+          slaStartedAt: startedAt,
+          slaDueAt: dueAt,
+          slaStatus,
+          slaLastEvaluatedAt: now,
+          ...(policyOrDueChanged ?
+            {
+              slaDueSoonNotifiedAt: null,
+              slaOverdueNotifiedAt: null,
+              escalationReadyAt: null,
+            }
+          : {}),
+        },
+      });
+
+      if (firstStart) {
+        await this.createEvent(tx, {
+          dispatchExceptionActionId: row.id,
+          dispatchExceptionKey: row.dispatchExceptionKey,
+          type: "sla_started",
+          metadataJson: {
+            slaDueAt: dueAt.toISOString(),
+            slaPolicyHours: policyHours,
+          },
+        });
+      }
+    });
+  }
+
+  async syncAllActiveActionSlaStates(): Promise<void> {
+    const rows = await this.prisma.dispatchExceptionAction.findMany({
+      where: { status: { notIn: ["resolved", "dismissed"] } },
+      select: { dispatchExceptionKey: true },
+    });
+    for (const r of rows) {
+      await this.syncActionSlaState({
+        dispatchExceptionKey: r.dispatchExceptionKey,
+      });
+    }
+  }
+
+  private async shouldEmitCriticalUnassigned(actionId: string): Promise<boolean> {
+    const events = await this.prisma.dispatchExceptionActionEvent.findMany({
+      where: { dispatchExceptionActionId: actionId, type: "notification_queued" },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    });
+    let lastCritical: { createdAt: Date } | null = null;
+    for (const e of events) {
+      const m = e.metadataJson as Record<string, unknown> | null;
+      if (m?.reason === "new_unassigned_critical") {
+        lastCritical = e;
+        break;
+      }
+    }
+    if (!lastCritical) return true;
+
+    const lastAssign = await this.prisma.dispatchExceptionActionEvent.findFirst({
+      where: { dispatchExceptionActionId: actionId, type: "assigned" },
+      orderBy: { createdAt: "desc" },
+    });
+    if (!lastAssign) return false;
+    return lastAssign.createdAt > lastCritical.createdAt;
+  }
+
+  async evaluateActionAutomation(params: {
+    dispatchExceptionKey: string;
+  }): Promise<void> {
+    const load = () =>
+      this.prisma.dispatchExceptionAction.findUnique({
+        where: { dispatchExceptionKey: params.dispatchExceptionKey },
+      });
+
+    let row = await load();
+    if (!row || isResolvedLike(row.status)) return;
+
+    const now = new Date();
+
+    if (
+      row.priority === "critical" &&
+      !row.ownerUserId &&
+      (await this.shouldEmitCriticalUnassigned(row.id))
+    ) {
+      await this.prisma.$transaction(async (tx) => {
+        await this.createEvent(tx, {
+          dispatchExceptionActionId: row!.id,
+          dispatchExceptionKey: row!.dispatchExceptionKey,
+          type: "notification_queued",
+          metadataJson: {
+            reason: "new_unassigned_critical",
+            priority: row!.priority,
+            status: row!.status,
+            ownerUserId: null,
+            slaDueAt: row!.slaDueAt?.toISOString() ?? null,
+            reopenCount: row!.reopenCount,
+          },
+        });
+        await tx.dispatchExceptionAction.update({
+          where: { id: row!.id },
+          data: { lastNotificationQueuedAt: now },
+        });
+      });
+    }
+
+    row = await load();
+    if (!row || isResolvedLike(row.status)) return;
+
+    if (
+      row.slaStatus === "due_soon" &&
+      !row.slaDueSoonNotifiedAt &&
+      row.slaDueAt &&
+      row.slaPolicyHours != null
+    ) {
+      await this.prisma.$transaction(async (tx) => {
+        await this.createEvent(tx, {
+          dispatchExceptionActionId: row!.id,
+          dispatchExceptionKey: row!.dispatchExceptionKey,
+          type: "sla_due_soon",
+          metadataJson: {
+            slaDueAt: row!.slaDueAt!.toISOString(),
+            slaPolicyHours: row!.slaPolicyHours,
+          },
+        });
+        await this.createEvent(tx, {
+          dispatchExceptionActionId: row!.id,
+          dispatchExceptionKey: row!.dispatchExceptionKey,
+          type: "notification_queued",
+          metadataJson: {
+            reason: "sla_due_soon" satisfies DispatchExceptionNotificationReason,
+            priority: row!.priority,
+            status: row!.status,
+            ownerUserId: row!.ownerUserId,
+            slaDueAt: row!.slaDueAt!.toISOString(),
+            reopenCount: row!.reopenCount,
+          },
+        });
+        await tx.dispatchExceptionAction.update({
+          where: { id: row!.id },
+          data: {
+            slaDueSoonNotifiedAt: now,
+            lastNotificationQueuedAt: now,
+
+===== FILE: src/modules/dispatch/dispatch-exception-lifecycle.service.ts =====
+import { Injectable } from "@nestjs/common";
+import { DispatchExceptionActionStatus, Prisma } from "@prisma/client";
+
+import { PrismaService } from "../../prisma";
+import type { AdminDispatchExceptionItemDto } from "./dto/admin-dispatch-exceptions.dto";
+import { DispatchExceptionActionsService } from "./dispatch-exception-actions.service";
+import { DispatchExceptionAutomationService } from "./dispatch-exception-automation.service";
+import { buildDispatchExceptionKeyFromBookingId } from "./dispatch-exception-key";
+
+function readMeta(json: unknown): Record<string, unknown> {
+  if (json && typeof json === "object" && !Array.isArray(json)) {
+    return json as Record<string, unknown>;
+  }
+  return {};
+}
+
+@Injectable()
+export class DispatchExceptionLifecycleService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly actions: DispatchExceptionActionsService,
+    private readonly automation: DispatchExceptionAutomationService,
+  ) {}
+
+  /**
+   * After dispatch exceptions are computed for the admin surface, sync the action layer.
+   * Order: sync presence → evaluate resolved → automation runs inside actions/bootstrap.
+   */
+  async syncAfterExceptionsRefreshed(
+    activeItems: AdminDispatchExceptionItemDto[],
+    actorUserId?: string | null,
+  ): Promise<void> {
+    const activeKeys = new Set(
+      activeItems.map((i) => buildDispatchExceptionKeyFromBookingId(i.bookingId)),
+    );
+
+    for (const item of activeItems) {
+      await this.actions.bootstrapOrRefreshFromExceptionItem(item, actorUserId);
+    }
+
+    await this.evaluateResolvedAndDismissedAgainstActiveSet(activeKeys, actorUserId);
+
+    await this.automation.syncAllActiveActionSlaStates();
+    const activeRows = await this.prisma.dispatchExceptionAction.findMany({
+      where: { status: { notIn: ["resolved", "dismissed"] } },
+      select: { dispatchExceptionKey: true },
+    });
+    for (const r of activeRows) {
+      await this.automation.evaluateActionAutomation({
+        dispatchExceptionKey: r.dispatchExceptionKey,
+      });
+    }
+  }
+
+  private async evaluateResolvedAndDismissedAgainstActiveSet(
+    activeKeys: Set<string>,
+    actorUserId?: string | null,
+  ): Promise<void> {
+    const candidates = await this.prisma.dispatchExceptionAction.findMany({
+      where: {
+        status: { in: ["resolved", "dismissed"] },
+      },
+    });
+
+    const now = new Date();
+
+    for (const row of candidates) {
+      const key = row.dispatchExceptionKey;
+      const inActive = activeKeys.has(key);
+
+      if (row.status === "dismissed") {
+        continue;
+      }
+
+      if (row.status === "resolved" && inActive) {
+        await this.reopenResolvedToInvestigating(key, actorUserId);
+        continue;
+      }
+
+      if (row.status === "resolved" && !inActive) {
+        const meta = readMeta(row.metadataJson);
+        const streak = typeof meta.absentStreak === "number" ? meta.absentStreak : 0;
+        const nextStreak = streak + 1;
+        const nextMeta = {
+          ...meta,
+          absentStreak: nextStreak,
+        } as Prisma.InputJsonValue;
+
+        await this.prisma.dispatchExceptionAction.update({
+          where: { id: row.id },
+          data: {
+            metadataJson: nextMeta,
+            validationLastCheckedAt: now,
+          },
+        });
+
+        if (nextStreak >= 2) {
+          await this.prisma.$transaction(async (tx) => {
+            await tx.dispatchExceptionAction.update({
+              where: { id: row.id },
+              data: {
+                validationState: "passed",
+                validationLastPassedAt: now,
+                validationLastFailedAt: null,
+              },
+            });
+            await this.actions.createEvent(tx, {
+              dispatchExceptionActionId: row.id,
+              dispatchExceptionKey: key,
+              type: "validation_passed",
+              actorUserId: actorUserId ?? null,
+              metadataJson: {
+                absentStreak: nextStreak,
+              },
+            });
+          });
+          await this.automation.handleActionChanged({ dispatchExceptionKey: key });
+        }
+      }
+    }
+  }
+
+  private async reopenResolvedToInvestigating(
+    dispatchExceptionKey: string,
+    actorUserId?: string | null,
+  ): Promise<void> {
+    const row = await this.prisma.dispatchExceptionAction.findUnique({
+      where: { dispatchExceptionKey },
+    });
+    if (!row || row.status !== "resolved") return;
+
+    const meta = readMeta(row.metadataJson);
+    const nextMeta = { ...meta, absentStreak: 0 } as Prisma.InputJsonValue;
+    const nextReopen = row.reopenCount + 1;
+
+    await this.prisma.$transaction(async (tx) => {
+      await this.actions.setValidationState({
+        dispatchExceptionKey,
+        validationState: "failed",
+        checkedAt: new Date(),
+        failedAt: new Date(),
+        incrementReopenCount: true,
+        reopenedAt: new Date(),
+        tx,
+      });
+
+      await tx.dispatchExceptionAction.update({
+        where: { id: row.id },
+        data: {
+          metadataJson: nextMeta,
+          resolvedAt: null,
+          status: "investigating" satisfies DispatchExceptionActionStatus,
+        },
+      });
+
+      await this.actions.createEvent(tx, {
+        dispatchExceptionActionId: row.id,
+        dispatchExceptionKey,
+        type: "reopened",
+        actorUserId: actorUserId ?? null,
+        metadataJson: {
+          reason: "exception_reappeared",
+          reopenCount: nextReopen,
+        },
+      });
+    });
+
+    await this.automation.emitLifecycleNotificationQueued({
+      dispatchExceptionKey,
+      reason: "reopened",
+      reopenCount: nextReopen,
+    });
+    await this.automation.handleActionChanged({ dispatchExceptionKey });
+  }
+}
+
+===== FILE: src/modules/admin-dispatch-decisions/admin-dispatch-decisions.service.ts =====
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+import { CreateAdminDispatchDecisionDto } from "./dto/create-admin-dispatch-decision.dto";
+import type { AdminDispatchDecisionResult } from "./admin-dispatch-decisions.types";
+import { AdminDispatchDecisionsExecutionService } from "./admin-dispatch-decisions.execution.service";
+
+@Injectable()
+export class AdminDispatchDecisionsService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly executionService: AdminDispatchDecisionsExecutionService,
+  ) {}
+
+  private actionRequiresTargetFo(action: string): boolean {
+    return action === "approve_assignment" || action === "reassign";
+  }
+
+  async createDecision(
+    dto: CreateAdminDispatchDecisionDto,
+    submittedByUserId: string,
+  ): Promise<AdminDispatchDecisionResult> {
+    if (this.actionRequiresTargetFo(dto.action) && !dto.targetFoId) {
+      throw new BadRequestException(
+        "A target FO is required for approve_assignment and reassign.",
+      );
+    }
+
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: dto.bookingId },
+      select: { id: true },
+    });
+
+    if (!booking) {
+      throw new NotFoundException("Booking not found.");
+    }
+
+    const decision = await this.prisma.adminDispatchDecision.create({
+      data: {
+        bookingId: dto.bookingId,
+        action: dto.action,
+        rationale: dto.rationale.trim(),
+        targetFoId: dto.targetFoId?.trim() || null,
+        submittedByUserId,
+        submittedByRole: dto.submittedByRole,
+        source: dto.source,
+        submittedAt: new Date(dto.submittedAt),
+        status: "accepted",
+        executionStatus: "pending",
+        executionIdempotencyKey: [
+          dto.bookingId,
+          dto.action,
+          dto.targetFoId?.trim() || "none",
+          submittedByUserId,
+          dto.submittedAt,
+        ].join(":"),
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return this.executionService.executeDecision(decision.id);
+  }
+
+  async executeExistingDecision(decisionId: string): Promise<AdminDispatchDecisionResult> {
+    return this.executionService.executeDecision(decisionId);
+  }
+}
+
+===== FILE: src/modules/admin-dispatch-decisions/admin-dispatch-decisions.execution.service.ts =====
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { PrismaService } from "../../prisma";
+import { AdminDispatchDecisionsExecutionAdapter } from "./admin-dispatch-decisions.execution.adapter";
+import type { AdminDispatchDecisionResult } from "./admin-dispatch-decisions.types";
+
+@Injectable()
+export class AdminDispatchDecisionsExecutionService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly executionAdapter: AdminDispatchDecisionsExecutionAdapter,
+  ) {}
+
+  async executeDecision(decisionId: string): Promise<AdminDispatchDecisionResult> {
+    const decision = await this.prisma.adminDispatchDecision.findUnique({
+      where: { id: decisionId },
+      select: {
+        id: true,
+        bookingId: true,
+        action: true,
+        rationale: true,
+        targetFoId: true,
+        submittedByUserId: true,
+        executionStatus: true,
+        executionAttemptCount: true,
+      },
+    });
+
+    if (!decision) {
+      throw new NotFoundException("Admin dispatch decision not found.");
+    }
+
+    if (decision.executionStatus === "applied") {
+      return {
+        ok: true,
+        decisionId: decision.id,
+        status: "accepted",
+        message: "Dispatch decision was already executed successfully.",
+      };
+    }
+
+    if (decision.executionStatus === "executing") {
+      return {
+        ok: false,
+        decisionId: decision.id,
+        status: "rejected",
+        message: "Dispatch decision is already executing.",
+      };
+    }
+
+    await this.prisma.adminDispatchDecision.update({
+      where: { id: decision.id },
+      data: {
+        executionStatus: "executing",
+        executionStartedAt: new Date(),
+        executionAttemptCount: {
+          increment: 1,
+        },
+      },
+    });
+
+    try {
+      const execution = await this.executionAdapter.applyDecision({
+        id: decision.id,
+        bookingId: decision.bookingId,
+        action: decision.action,
+        rationale: decision.rationale,
+        targetFoId: decision.targetFoId,
+        submittedByUserId: decision.submittedByUserId,
+      });
+
+      if (execution.outcome === "rejected") {
+        await this.prisma.adminDispatchDecision.update({
+          where: { id: decision.id },
+          data: {
+            executionStatus: "rejected",
+            executionMessage: execution.message,
+            executionErrorCode: execution.errorCode ?? null,
+            executedAt: new Date(),
+          },
+        });
+
+        return {
+          ok: false,
+          decisionId: decision.id,
+          status: "rejected",
+          message: execution.message,
+        };
+      }
+
+      await this.prisma.adminDispatchDecision.update({
+        where: { id: decision.id },
+        data: {
+          executionStatus: "applied",
+          executionMessage: execution.message,
+          executionErrorCode: null,
+          executedAt: new Date(),
+        },
+      });
+
+      return {
+        ok: true,
+        decisionId: decision.id,
+        status: "accepted",
+        message: execution.message,
+      };
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Dispatch decision execution failed unexpectedly.";
+
+      await this.prisma.adminDispatchDecision.update({
+        where: { id: decision.id },
+        data: {
+          executionStatus: "failed",
+          executionMessage: message,
+          executionErrorCode: "EXECUTION_FAILED",
+        },
+      });
+
+      throw error;
+    }
+  }
+}

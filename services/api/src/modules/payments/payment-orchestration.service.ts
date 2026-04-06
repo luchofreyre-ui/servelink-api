@@ -29,7 +29,7 @@ export class PaymentOrchestrationService {
         quotedSubtotal: new Prisma.Decimal(input.subtotal),
         quotedMargin: new Prisma.Decimal(input.margin),
         quotedTotal: new Prisma.Decimal(input.total),
-        paymentStatus: BookingPaymentStatus.quote_ready,
+        paymentStatus: BookingPaymentStatus.payment_pending,
       },
     });
   }
@@ -116,7 +116,7 @@ export class PaymentOrchestrationService {
         where: { id: bookingId },
         data: {
           paymentIntentId: paymentIntent.id,
-          paymentStatus: BookingPaymentStatus.requires_payment,
+          paymentStatus: BookingPaymentStatus.payment_pending,
         },
       });
 

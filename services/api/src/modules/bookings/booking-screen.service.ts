@@ -40,10 +40,10 @@ function numFromDecimal(
 }
 
 const CUSTOMER_PAYMENT_ATTENTION: BookingPaymentStatus[] = [
-  BookingPaymentStatus.requires_payment,
+  BookingPaymentStatus.unpaid,
+  BookingPaymentStatus.checkout_created,
+  BookingPaymentStatus.payment_pending,
   BookingPaymentStatus.failed,
-  BookingPaymentStatus.additional_authorization_required,
-  BookingPaymentStatus.additional_authorization_declined,
 ];
 
 const CUSTOMER_COMPLETION_READY_STATUS: BookingStatus[] = [
@@ -55,7 +55,9 @@ const CUSTOMER_COMPLETION_READY_STATUS: BookingStatus[] = [
 ];
 
 const FO_PAYMENT_ATTENTION: BookingPaymentStatus[] = [
-  BookingPaymentStatus.requires_payment,
+  BookingPaymentStatus.unpaid,
+  BookingPaymentStatus.checkout_created,
+  BookingPaymentStatus.payment_pending,
   BookingPaymentStatus.failed,
 ];
 

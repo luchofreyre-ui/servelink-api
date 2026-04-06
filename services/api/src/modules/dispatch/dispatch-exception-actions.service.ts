@@ -13,6 +13,9 @@ import {
 import { PrismaService } from "../../prisma";
 import type { AdminDispatchExceptionItemDto } from "./dto/admin-dispatch-exceptions.dto";
 import { DispatchExceptionAutomationService } from "./dispatch-exception-automation.service";
+import {
+  canTransitionExceptionStatus,
+} from "./dispatch-exception-action-status.util";
 import { buildDispatchExceptionKeyFromBookingId } from "./dispatch-exception-key";
 import type {
   DispatchExceptionActionDetailDto,
@@ -26,17 +29,6 @@ const PRIORITY_RANK: Record<DispatchExceptionActionPriority, number> = {
   high: 1,
   medium: 2,
   low: 3,
-};
-
-const ALLOWED_STATUS_TRANSITIONS: Record<
-  DispatchExceptionActionStatus,
-  DispatchExceptionActionStatus[]
-> = {
-  open: ["investigating", "waiting", "dismissed", "resolved"],
-  investigating: ["open", "waiting", "resolved", "dismissed"],
-  waiting: ["investigating", "resolved", "dismissed"],
-  resolved: ["investigating"],
-  dismissed: ["open"],
 };
 
 function isResolvedLike(status: DispatchExceptionActionStatus): boolean {
@@ -113,8 +105,7 @@ export class DispatchExceptionActionsService {
     from: DispatchExceptionActionStatus,
     to: DispatchExceptionActionStatus,
   ): void {
-    const allowed = ALLOWED_STATUS_TRANSITIONS[from];
-    if (!allowed?.includes(to)) {
+    if (!canTransitionExceptionStatus(from, to)) {
       throw new BadRequestException(`INVALID_STATUS_TRANSITION: ${from} → ${to}`);
     }
   }

@@ -19,12 +19,14 @@ import { StripeReconcileService } from "./stripe.reconcile.service";
 import { StripeService } from "./stripe.service";
 import { StripeWebhookController } from "./stripe.webhook.controller";
 import { StripeWebhookHandlerService } from "./stripe.webhook.handler.service";
+import { StripeBookingPaymentModule } from "../bookings/stripe/stripe-booking-payment.module";
 
 const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
 
 @Module({
   imports: [
     LedgerModule,
+    StripeBookingPaymentModule,
     ...(enableQueue ? [BullModule.registerQueue({ name: "refunds" })] : []),
   ],
   controllers: [

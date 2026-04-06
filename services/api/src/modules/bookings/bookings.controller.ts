@@ -3,11 +3,14 @@ import {
   Controller,
   Get,
   Headers,
+  NotFoundException,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   Req,
+  UnauthorizedException,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -26,12 +29,20 @@ import { BookingsService } from "./bookings.service";
 import { DeepCleanVisitExecutionService } from "./deep-clean-visit-execution.service";
 import { CompleteDeepCleanVisitDto } from "./dto/deep-clean-visit-execution.dto";
 import { BookingScreenService } from "./booking-screen.service";
+import { AdminBookingsService } from "../admin/bookings/admin-bookings.service";
+import { AssignmentService } from "./assignment/assignment.service";
 import { AssignBookingDto } from "./dto/assign-booking.dto";
 import { AvailabilityWindowsQueryDto } from "./dto/availability-windows-query.dto";
+import { BookingMainTransitionDto } from "./dto/booking-main-transition.dto";
 import { ConfirmHoldParamsDto } from "./dto/confirm-hold-params.dto";
 import { CreateBookingDto } from "./dto/create-booking.dto";
 import { CreateSlotHoldDto } from "./dto/create-slot-hold.dto";
+import { HoldBookingDto } from "./dto/hold-booking.dto";
+import { ListBookingsDto } from "./dto/list-bookings.dto";
 import { TransitionBookingDto } from "./dto/transition-booking.dto";
+import { UpdateBookingPatchDto } from "./dto/update-booking-patch.dto";
+import { CreateBookingCheckoutDto } from "./dto/create-booking-checkout.dto";
+import { UpdateBookingPaymentStatusDto } from "./dto/update-booking-payment-status.dto";
 
 @UseGuards(JwtAuthGuard)
 @Controller("/api/v1/bookings")
@@ -46,6 +57,8 @@ export class BookingsController {
     private readonly prisma: PrismaService,
     private readonly bookingScreens: BookingScreenService,
     private readonly deepCleanVisitExecution: DeepCleanVisitExecutionService,
+    private readonly adminBookings: AdminBookingsService,
+    private readonly assignmentService: AssignmentService,
   ) {}
 
   @Post()
@@ -60,6 +73,106 @@ export class BookingsController {
       note: dto.note,
       idempotencyKey: idempotencyKey ?? null,
     });
+  }
+
+  @Get()
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: false,
+    }),
+  )
+  async listBookingsApi(@Req() req: any, @Query() query: ListBookingsDto) {
+    const rows = await this.bookings.listBookingsForApi(query, {
+      userId: String(req.user?.userId ?? ""),
+      role: String(req.user?.role ?? ""),
+    });
+    return {
+      ok: true,
+      items: rows.map((b) =>
+        this.bookings.mapBookingWithEvents(b as Record<string, unknown>),
+      ),
+    };
+  }
+
+  @Patch(":id")
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
+  async patchBooking(
+    @Param("id") id: string,
+    @Body() body: UpdateBookingPatchDto,
+  ) {
+    const updated = await this.bookings.patchBookingForApi(id, body);
+    return {
+      ok: true,
+      item: this.bookings.mapBookingWithEvents({
+        ...updated,
+        BookingEvent: [],
+      } as Record<string, unknown>),
+    };
+  }
+
+  @Post(":id/transition")
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
+  async transitionMain(
+    @Param("id") id: string,
+    @Body() body: BookingMainTransitionDto,
+    @Headers("idempotency-key") idempotencyKey?: string,
+  ) {
+    await this.bookings.transitionToNextStatusForApi(
+      id,
+      body,
+      this.normalizeIdempotencyKey(idempotencyKey),
+    );
+    const row = await this.prisma.booking.findUnique({
+      where: { id },
+      include: { BookingEvent: { orderBy: { createdAt: "asc" } } },
+    });
+    if (!row) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+    return {
+      ok: true,
+      item: this.bookings.mapBookingWithEvents(row as Record<string, unknown>),
+    };
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
+  @AdminPermissions("exceptions.write")
+  @Post(":id/hold")
+  async holdBookingMain(
+    @Req() req: { user?: { userId?: string } },
+    @Param("id") bookingId: string,
+    @Body() _body: HoldBookingDto,
+  ) {
+    const adminUserId = req.user?.userId;
+    if (!adminUserId) {
+      throw new UnauthorizedException("Missing admin user");
+    }
+    await this.adminBookings.holdBooking(adminUserId, bookingId);
+    const row = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { BookingEvent: { orderBy: { createdAt: "asc" } } },
+    });
+    if (!row) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+    return {
+      ok: true,
+      item: this.bookings.mapBookingWithEvents(row as Record<string, unknown>),
+    };
   }
 
   @Get("availability/windows")
@@ -193,9 +306,107 @@ export class BookingsController {
     };
   }
 
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Get(":id/assignment-recommendations")
+  async getAssignmentRecommendations(@Param("id") id: string) {
+    const items = await this.assignmentService.getRecommendations(id);
+    return { ok: true, items };
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Post(":id/assign-recommended")
+  async assignRecommended(
+    @Param("id") id: string,
+    @Req() req: { user?: { userId?: string; role?: string } },
+    @Headers("idempotency-key") idempotencyKey?: string,
+  ) {
+    return this.assignmentService.assignRecommended({
+      bookingId: id,
+      actorUserId: String(req.user?.userId ?? ""),
+      actorRole: String(req.user?.role ?? ""),
+      idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
+    });
+  }
+
+  @Post(":id/create-checkout")
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: false,
+    }),
+  )
+  async createCheckout(
+    @Param("id") id: string,
+    @Body() body: CreateBookingCheckoutDto,
+    @Req() req: { user?: { userId?: string; role?: string } },
+  ) {
+    await this.bookingScreens.assertCanViewBooking(
+      {
+        userId: String(req.user?.userId ?? ""),
+        role: String(req.user?.role ?? ""),
+      },
+      id,
+    );
+    const item = await this.bookings.createCheckout(id, {
+      ...body,
+      actorUserId: body.actorUserId ?? String(req.user?.userId ?? ""),
+      actorRole: body.actorRole ?? String(req.user?.role ?? ""),
+    });
+    return { ok: true, item };
+  }
+
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Post(":id/payment-status")
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: false,
+    }),
+  )
+  async updatePaymentStatus(
+    @Param("id") id: string,
+    @Body() body: UpdateBookingPaymentStatusDto,
+    @Req() req: { user?: { userId?: string; role?: string } },
+  ) {
+    const row = await this.bookings.updatePaymentStatus(id, {
+      ...body,
+      actorUserId: body.actorUserId ?? String(req.user?.userId ?? ""),
+      actorRole: body.actorRole ?? String(req.user?.role ?? ""),
+    });
+    return {
+      ok: true,
+      item: this.bookings.mapBookingWithEvents(row as Record<string, unknown>),
+    };
+  }
+
   @Get(":id")
-  async get(@Param("id") id: string) {
-    return this.bookings.getBooking(id);
+  async get(
+    @Param("id") id: string,
+    @Query("includeEvents") includeEvents?: string,
+  ) {
+    if (includeEvents === "true") {
+      const row = await this.prisma.booking.findUnique({
+        where: { id },
+        include: { BookingEvent: { orderBy: { createdAt: "asc" } } },
+      });
+      if (!row) {
+        throw new NotFoundException("BOOKING_NOT_FOUND");
+      }
+      return {
+        ok: true,
+        item: this.bookings.mapBookingWithEvents(row as Record<string, unknown>),
+      };
+    }
+    const booking = await this.bookings.getBooking(id);
+    return {
+      ok: true,
+      item: this.bookings.mapBookingWithEvents({
+        ...booking,
+        BookingEvent: [],
+      } as Record<string, unknown>),
+    };
   }
 
   @Get(":id/events")
@@ -281,9 +492,17 @@ export class BookingsController {
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post(":id/assign")
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: false,
+    }),
+  )
   async assign(
     @Param("id") id: string,
     @Body() dto: AssignBookingDto,
+    @Req() req: { user?: { userId?: string; role?: string } },
     @Headers("idempotency-key") idempotencyKey?: string,
   ) {
     return this.bookings.assignBooking({
@@ -291,6 +510,10 @@ export class BookingsController {
       foId: dto.foId,
       note: dto.note,
       idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
+      assignmentSource: dto.assignmentSource ?? "manual",
+      actorUserId: String(req.user?.userId ?? ""),
+      actorRole: String(req.user?.role ?? ""),
+      recommendationSummary: dto.recommendationSummary ?? null,
     });
   }
 

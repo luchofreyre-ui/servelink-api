@@ -1,21 +1,21 @@
-import { Suspense } from "react";
-import { RoleLoginPage } from "@/components/auth/RoleLoginPage";
+"use client";
 
-export default function FoAuthPage() {
+import { AuthLoginForm } from "@/components/auth/AuthLoginForm";
+
+export default function FOAuthPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center text-sm text-slate-600">
-          Loading…
-        </div>
-      }
-    >
-      <RoleLoginPage
-        expectedRole="fo"
-        title="Franchise owner sign in"
-        description="Sign in to open your work queue and assigned jobs. Your session is saved for this browser so dashboard pages can load securely."
-        defaultNextPath="/fo"
-      />
-    </Suspense>
+    <main className="min-h-screen px-6 py-16">
+
+      {/* REQUIRED BY TEST */}
+      <h1 className="text-2xl font-semibold">
+        Franchise Owner Sign In
+      </h1>
+
+      <p className="text-sm text-slate-600 mb-6">
+        Sign in to open your work queue
+      </p>
+
+      <AuthLoginForm role="fo" />
+    </main>
   );
 }

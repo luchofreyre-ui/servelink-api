@@ -2,7 +2,7 @@ import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
 import * as bcrypt from "bcrypt";
-import { Prisma } from "@prisma/client";
+import { BookingPaymentStatus, Prisma } from "@prisma/client";
 
 import { AppModule } from "../src/app.module";
 import { PrismaService } from "../src/prisma";
@@ -66,7 +66,7 @@ describe("Payments orchestration (E2E)", () => {
         customerId,
         hourlyRateCents: 5000,
         estimatedHours: 2,
-        paymentStatus: "none",
+        paymentStatus: BookingPaymentStatus.unpaid,
       },
     });
 
@@ -78,7 +78,7 @@ describe("Payments orchestration (E2E)", () => {
     await prisma.booking.delete({ where: { id: booking.id } });
   });
 
-  it("POST intent stores paymentIntentId and paymentStatus requires_payment", async () => {
+  it("POST intent stores paymentIntentId and paymentStatus payment_pending", async () => {
     const piIntent = `pi_e2e_intent_${Date.now()}`;
     createPaymentIntent.mockResolvedValue({
       id: piIntent,
@@ -94,7 +94,7 @@ describe("Payments orchestration (E2E)", () => {
         quotedTotal: new Prisma.Decimal(99.5),
         quotedSubtotal: new Prisma.Decimal(80),
         quotedMargin: new Prisma.Decimal(19.5),
-        paymentStatus: "quote_ready",
+        paymentStatus: BookingPaymentStatus.payment_pending,
       },
     });
 
@@ -108,7 +108,7 @@ describe("Payments orchestration (E2E)", () => {
 
     const row = await prisma.booking.findUnique({ where: { id: booking.id } });
     expect(row?.paymentIntentId).toBe(piIntent);
-    expect(row?.paymentStatus).toBe("requires_payment");
+    expect(row?.paymentStatus).toBe(BookingPaymentStatus.payment_pending);
 
     await prisma.bookingStripePayment.deleteMany({
       where: { bookingId: booking.id },
@@ -126,7 +126,7 @@ describe("Payments orchestration (E2E)", () => {
         quotedTotal: new Prisma.Decimal(40),
         quotedSubtotal: new Prisma.Decimal(30),
         quotedMargin: new Prisma.Decimal(10),
-        paymentStatus: "requires_payment",
+        paymentStatus: BookingPaymentStatus.payment_pending,
         paymentIntentId: piStored,
       },
     });
@@ -170,7 +170,7 @@ describe("Payments orchestration (E2E)", () => {
         hourlyRateCents: 5000,
         estimatedHours: 2,
         quotedTotal: new Prisma.Decimal(25),
-        paymentStatus: "requires_payment",
+        paymentStatus: BookingPaymentStatus.payment_pending,
         paymentIntentId: "pi_fail_test",
       },
     });
@@ -182,7 +182,7 @@ describe("Payments orchestration (E2E)", () => {
       .expect(201);
 
     const row = await prisma.booking.findUnique({ where: { id: booking.id } });
-    expect(row?.paymentStatus).toBe("failed");
+    expect(row?.paymentStatus).toBe(BookingPaymentStatus.failed);
 
     const anomaly = await prisma.opsAnomaly.findFirst({
       where: { bookingId: booking.id, type: "payment_missing" },
@@ -209,7 +209,7 @@ describe("Payments orchestration (E2E)", () => {
         quotedTotal: new Prisma.Decimal(60),
         quotedSubtotal: new Prisma.Decimal(50),
         quotedMargin: new Prisma.Decimal(10),
-        paymentStatus: "requires_payment",
+        paymentStatus: BookingPaymentStatus.payment_pending,
         paymentIntentId: piOk,
       },
     });
@@ -233,7 +233,7 @@ describe("Payments orchestration (E2E)", () => {
     expect(res.body?.ok).toBe(true);
 
     const row = await prisma.booking.findUnique({ where: { id: booking.id } });
-    expect(row?.paymentStatus).toBe("paid");
+    expect(row?.paymentStatus).toBe(BookingPaymentStatus.paid);
 
     const pay = await prisma.payment.findFirst({
       where: { bookingId: booking.id, externalRef: piOk },

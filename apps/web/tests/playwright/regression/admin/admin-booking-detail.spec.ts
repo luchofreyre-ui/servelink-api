@@ -11,6 +11,10 @@ test.describe("admin booking detail", () => {
     await expect(
       page.getByRole("region", { name: /command center authority/i }),
     ).toBeVisible();
+
+    const paymentRegion = page.getByRole("region", { name: /booking payment/i });
+    await expect(paymentRegion).toBeVisible();
+    await expect(paymentRegion.getByText(/payment source:/i)).toBeVisible();
   });
 
   test("opens hold booking detail", async ({ page, adminToken, scenario }) => {

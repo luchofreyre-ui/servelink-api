@@ -9,6 +9,7 @@ import {
   Prisma,
 } from "@prisma/client";
 import { PrismaService } from "../prisma";
+import { seedBookingPaymentAuthorized } from "../booking-payment-seed.util";
 import { DispatchDecisionService } from "../modules/bookings/dispatch-decision.service";
 import { DispatchConfigService } from "../modules/dispatch/dispatch-config.service";
 import { ADMIN_CC_ACTIVITY } from "../modules/admin/bookings/admin-bookings.service";
@@ -172,6 +173,8 @@ export class DevService {
       },
     });
 
+    // `bookingIds.review`: assigned + reviewRequired — used by Playwright admin ops
+    // (clear-review drilldown eligibility) when GET /dev/playwright/admin-scenario re-seeds.
     const bookingReview = await this.ensureBooking({
       customerId: customer.id,
       notes: NOTE_REVIEW,
@@ -292,28 +295,32 @@ export class DevService {
       where: { customerId: args.customerId, notes: args.notes },
     });
 
-    if (existing) {
-      return this.prisma.booking.update({
-        where: { id: existing.id },
-        data: {
-          status: args.status,
-          foId: args.foId,
-        },
-      });
-    }
+    const row = existing
+      ? await this.prisma.booking.update({
+          where: { id: existing.id },
+          data: {
+            status: args.status,
+            foId: args.foId,
+          },
+        })
+      : await this.prisma.booking.create({
+          data: {
+            customerId: args.customerId,
+            hourlyRateCents: 5000,
+            estimatedHours: 2,
+            currency: "usd",
+            status: args.status,
+            foId: args.foId,
+            notes: args.notes,
+            scheduledStart: new Date(Date.now() + 86400000),
+          },
+        });
 
-    return this.prisma.booking.create({
-      data: {
-        customerId: args.customerId,
-        hourlyRateCents: 5000,
-        estimatedHours: 2,
-        currency: "usd",
-        status: args.status,
-        foId: args.foId,
-        notes: args.notes,
-        scheduledStart: new Date(Date.now() + 86400000),
-      },
-    });
+    // Operational / dispatchable scenario bookings must be revenue-backed for
+    // payment-gated transitions and admin UIs; seed after direct status writes.
+    await seedBookingPaymentAuthorized(this.prisma, row.id);
+
+    return row;
   }
 
   private async ensureMultiPassDispatchDecisions(bookingId: string) {

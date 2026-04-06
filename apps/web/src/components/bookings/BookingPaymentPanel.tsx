@@ -22,16 +22,24 @@ function formatMoney(value: number | null) {
 
 function statusLabel(status: string | null) {
   switch (status) {
-    case "quote_ready":
-      return "Quote ready";
-    case "requires_payment":
-      return "Payment required";
+    case "unpaid":
+      return "Unpaid";
+    case "checkout_created":
+      return "Checkout created";
+    case "payment_pending":
+      return "Payment pending";
+    case "authorized":
+      return "Authorized";
     case "paid":
       return "Paid";
     case "failed":
       return "Payment failed";
+    case "refunded":
+      return "Refunded";
+    case "waived":
+      return "Waived (admin)";
     default:
-      return status && status !== "none" ? status.replace(/_/g, " ") : "Not started";
+      return status ? status.replace(/_/g, " ") : "Not started";
   }
 }
 
@@ -53,10 +61,12 @@ export function BookingPaymentPanel(props: {
   }, [booking.paymentIntentId]);
 
   const canCreateIntent =
-    booking.paymentStatus === "quote_ready" || booking.paymentStatus === "failed";
+    booking.paymentStatus === "payment_pending" ||
+    booking.paymentStatus === "failed" ||
+    booking.paymentStatus === "unpaid";
 
   const canConfirm =
-    booking.paymentStatus === "requires_payment" && Boolean(paymentIntentId);
+    booking.paymentStatus === "payment_pending" && Boolean(paymentIntentId);
 
   const total = useMemo(() => booking.quotedTotal, [booking.quotedTotal]);
 

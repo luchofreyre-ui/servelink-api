@@ -19,6 +19,11 @@ import { ProviderDispatchResolverService } from "./provider-dispatch-resolver.se
 import { DispatchDecisionService } from "../bookings/dispatch-decision.service";
 import { BookingTransitionService } from "../bookings/booking-transition.service";
 import { DispatchScoringService } from "./dispatch-scoring.service";
+import { DispatchLockService } from "./dispatch-lock.service";
+import { DispatchIdempotencyService } from "./dispatch-idempotency.service";
+import { DispatchOpsController } from "./dispatch-ops.controller";
+import { DispatchOpsExceptionController } from "./dispatch-ops-exception.controller";
+import { DispatchOpsService } from "./dispatch-ops.service";
 import { TrustModule } from "../trust/trust.module";
 
 @Module({
@@ -29,6 +34,8 @@ import { TrustModule } from "../trust/trust.module";
     DispatchConfigAdminController,
     DispatchFoController,
     DispatchFoOfferResponseController,
+    DispatchOpsController,
+    DispatchOpsExceptionController,
   ],
   providers: [
     AdminPermissionsGuard,
@@ -45,6 +52,9 @@ import { TrustModule } from "../trust/trust.module";
     DispatchDecisionService,
     BookingTransitionService,
     DispatchScoringService,
+    DispatchLockService,
+    DispatchIdempotencyService,
+    DispatchOpsService,
   ],
   exports: [DispatchService, ReputationService, DispatchConfigService],
 })

@@ -10,6 +10,17 @@ import {
 
 let cachedScenario: PlaywrightScenario | null = null;
 
+/** Clears cached GET /dev/playwright/admin-scenario so the next fetch re-runs the Nest seed. */
+export function clearPlaywrightScenarioCache(): void {
+  cachedScenario = null;
+}
+
+/** Forces a fresh scenario payload (re-seeds deterministic bookings/dispatch control). */
+export async function fetchFreshPlaywrightScenario(): Promise<PlaywrightScenario> {
+  clearPlaywrightScenarioCache();
+  return fetchPlaywrightScenario();
+}
+
 export type PlaywrightScenario = {
   ok: true;
   scenario: {

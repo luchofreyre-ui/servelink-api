@@ -4,6 +4,7 @@ import request from "supertest";
 import * as bcrypt from "bcrypt";
 import { AppModule } from "../src/app.module";
 import { PrismaService } from "../src/prisma";
+import { seedBookingPaymentAuthorized } from "./helpers/booking-payment-test-helpers";
 
 jest.setTimeout(25000);
 
@@ -240,6 +241,8 @@ describe("Admin booking dispatch timeline (E2E)", () => {
 
     const scheduledStart = new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString();
 
+    await seedBookingPaymentAuthorized(prisma, bookingId);
+
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${bookingId}/schedule`)
       .set("Authorization", `Bearer ${customerToken}`)
@@ -298,6 +301,8 @@ describe("Admin booking dispatch timeline (E2E)", () => {
     expect(bookingId).toBeTruthy();
 
     const scheduledStart = new Date(Date.now() + 22 * 24 * 60 * 60 * 1000).toISOString();
+
+    await seedBookingPaymentAuthorized(prisma, bookingId);
 
     await request(app.getHttpServer())
       .post(`/api/v1/bookings/${bookingId}/schedule`)

@@ -44,6 +44,12 @@ import {
 import { BookingTransitionService } from "../bookings/booking-transition.service";
 import { FoScheduleService } from "../franchise-owner/fo-schedule.service";
 import { DispatchScoringService } from "./dispatch-scoring.service";
+import { DispatchLockService } from "./dispatch-lock.service";
+import { DispatchIdempotencyService } from "./dispatch-idempotency.service";
+import {
+  isAssignedState,
+  isInvalidAssignmentState,
+} from "../bookings/utils/assignment-state.util";
 
 @Injectable()
 export class DispatchService {
@@ -68,6 +74,8 @@ export class DispatchService {
     private readonly transitionService: BookingTransitionService,
     private readonly foScheduleService: FoScheduleService,
     private readonly dispatchScoringService: DispatchScoringService,
+    private readonly dispatchLock: DispatchLockService,
+    private readonly dispatchIdempotency: DispatchIdempotencyService,
   ) {}
 
   private toInputJson(value: unknown): Prisma.InputJsonValue | null {
@@ -334,12 +342,7 @@ export class DispatchService {
     }
   }
 
-  /**
-   * Start a dispatch round for a booking.
-   * Uses the immutable estimate snapshot as the source of truth for dispatch candidates.
-   * If a booking is not dispatch-ready yet, fail soft and return [].
-   */
-  async startDispatch(bookingId: string) {
+  private async executeDispatchCore(bookingId: string, _trigger: string) {
     const booking = await this.db.booking.findUnique({
       where: { id: bookingId },
     });
@@ -880,6 +883,39 @@ export class DispatchService {
     return offers;
   }
 
+  async dispatchWithSafety(bookingId: string, trigger: string) {
+    const key = `${bookingId}:${trigger}`;
+
+    const cached = this.dispatchIdempotency.get(key);
+    if (cached) {
+      return cached;
+    }
+
+    const lockAcquired = await this.dispatchLock.acquireLock(bookingId);
+    if (!lockAcquired) {
+      return { ok: false, reason: "DISPATCH_LOCKED" };
+    }
+
+    try {
+      const result = await this.executeDispatchCore(bookingId, trigger);
+
+      this.dispatchIdempotency.set(key, result);
+
+      return result;
+    } finally {
+      await this.dispatchLock.releaseLock(bookingId);
+    }
+  }
+
+  /**
+   * Start a dispatch round for a booking.
+   * Uses the immutable estimate snapshot as the source of truth for dispatch candidates.
+   * If a booking is not dispatch-ready yet, fail soft and return [].
+   */
+  async startDispatch(bookingId: string) {
+    return this.dispatchWithSafety(bookingId, "start_dispatch");
+  }
+
   async acceptOfferForBooking(args: { bookingId: string; offerId: string }) {
     const offer = await this.db.bookingOffer.findUnique({
       where: { id: args.offerId },
@@ -892,6 +928,36 @@ export class DispatchService {
 
     if (offer.bookingId !== args.bookingId) {
       throw new ConflictException("OFFER_BOOKING_MISMATCH");
+    }
+
+    const bookingAssignment = await this.db.booking.findUnique({
+      where: { id: args.bookingId },
+      select: { status: true, foId: true, dispatchLockedAt: true },
+    });
+
+    if (!bookingAssignment) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+
+    if (bookingAssignment.dispatchLockedAt) {
+      return {
+        ok: false,
+        reason: "DISPATCH_LOCKED",
+      };
+    }
+
+    if (isInvalidAssignmentState(bookingAssignment)) {
+      return {
+        ok: false,
+        reason: "INVALID_STATE",
+      };
+    }
+
+    if (isAssignedState(bookingAssignment)) {
+      return {
+        ok: false,
+        reason: "ALREADY_ASSIGNED",
+      };
     }
 
     if (offer.booking.status !== BookingStatus.offered) {
@@ -944,7 +1010,37 @@ export class DispatchService {
       else jobSizeBand = "large";
     }
 
-    await this.db.$transaction(async (tx) => {
+    const txResult = await this.db.$transaction(async (tx) => {
+      const current = await tx.booking.findUnique({
+        where: { id: args.bookingId },
+        select: {
+          id: true,
+          status: true,
+          foId: true,
+          dispatchLockedAt: true,
+        },
+      });
+
+      if (!current) {
+        return { ok: false as const, reason: "BOOKING_NOT_FOUND" as const };
+      }
+
+      if (current.dispatchLockedAt) {
+        return { ok: false as const, reason: "DISPATCH_LOCKED" as const };
+      }
+
+      if (isInvalidAssignmentState(current)) {
+        return { ok: false as const, reason: "INVALID_STATE" as const };
+      }
+
+      if (isAssignedState(current)) {
+        return { ok: false as const, reason: "ALREADY_ASSIGNED" as const };
+      }
+
+      if (current.status !== BookingStatus.offered) {
+        return { ok: false as const, reason: "BOOKING_NOT_OFFERED" as const };
+      }
+
       const currentOffer = await tx.bookingOffer.findUnique({
         where: { id: args.offerId },
       });
@@ -1041,7 +1137,18 @@ export class DispatchService {
           activeAssignedCount: { increment: 1 },
         },
       });
+
+      return { ok: true as const };
     });
+
+    if (
+      txResult &&
+      typeof txResult === "object" &&
+      "ok" in txResult &&
+      txResult.ok === false
+    ) {
+      return txResult;
+    }
 
     void this.reputationService.recomputeForFoSafe(offer.foId);
 

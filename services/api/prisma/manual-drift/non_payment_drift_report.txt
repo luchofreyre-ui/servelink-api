@@ -1,0 +1,31 @@
+
+[+] Added tables
+  - EncyclopediaReviewRecord
+
+[*] Changed the `DispatchExceptionActionEvent` table
+  [*] Renamed index `DispatchExceptionActionEvent_dispatchExceptionActionId_createdA` to `DispatchExceptionActionEvent_dispatchExceptionActionId_crea_idx`
+
+[*] Changed the `DispatchExceptionActionNote` table
+  [*] Renamed index `DispatchExceptionActionNote_dispatchExceptionActionId_createdAt` to `DispatchExceptionActionNote_dispatchExceptionActionId_creat_idx`
+
+[*] Changed the `EncyclopediaReviewRecord` table
+  [+] Added unique index on columns (slug)
+
+[*] Changed the `SystemTestFailureFamilyMembership` table
+  [*] Renamed index `SystemTestFailureFamilyMembership_failureGroupId_familyVersion_` to `SystemTestFailureFamilyMembership_failureGroupId_familyVers_key`
+
+[*] Changed the `SystemTestIncidentAction` table
+  [*] Altered column `updatedAt` (default changed from `Some(Now)` to `None`)
+
+[*] Changed the `SystemTestIncidentIndex` table
+  [*] Altered column `lastSeenAt` (default changed from `Some(Now)` to `None`)
+
+[*] Changed the `SystemTestIncidentNote` table
+  [*] Altered column `updatedAt` (default changed from `Some(Now)` to `None`)
+
+[*] Changed the `SystemTestIncidentStepExecution` table
+  [*] Altered column `updatedAt` (default changed from `Some(Now)` to `None`)
+
+[*] Changed the `SystemTestRunIntelligence` table
+  [*] Altered column `analysisStatus` (default changed from `Some(Value(String("completed")))` to `Some(Value(String("pending")))`)
+

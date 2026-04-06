@@ -67,18 +67,14 @@ enum BookingAuthorityMismatchType {
 }
 
 enum BookingPaymentStatus {
-  none
-  authorized_initial
-  additional_authorization_required
-  additional_authorization_pending
-  additional_authorization_approved
-  additional_authorization_declined
-  ready_for_capture
-  captured
-  quote_ready
-  requires_payment
+  unpaid
+  checkout_created
+  payment_pending
+  authorized
   paid
   failed
+  refunded
+  waived
 }
 
 model Booking {
@@ -87,9 +83,12 @@ model Booking {
   status                BookingStatus               @default(pending_payment)
   hourlyRateCents       Int
   estimatedHours        Float
-  currency              String                      @default("usd")
-  stripePaymentIntentId String?                     @unique
-  stripeClientSecret    String?
+  currency                String                      @default("usd")
+  stripeCheckoutSessionId String?                     @unique
+  stripePaymentIntentId   String?                     @unique
+  stripeCustomerId        String?
+  stripeLastEventId       String?
+  stripeClientSecret      String?
   scheduledStart        DateTime?
   notes                 String?
   createdAt             DateTime                    @default(now())
@@ -108,9 +107,20 @@ model Booking {
   quotedSubtotal        Decimal?                    @db.Decimal(10, 2)
   quotedMargin          Decimal?                    @db.Decimal(10, 2)
   quotedTotal           Decimal?                    @db.Decimal(10, 2)
-  paymentStatus         BookingPaymentStatus        @default(none)
+  paymentStatus         BookingPaymentStatus        @default(unpaid)
+  paymentProvider       String?
+  paymentReference      String?
+  paymentCheckoutUrl    String?
+  paymentAmountCents    Int?
+  paymentCurrency       String?                     @default("usd")
+  paymentAuthorizedAt   DateTime?
+  paymentPaidAt         DateTime?
+  paymentFailedAt       DateTime?
+  paymentWaivedAt       DateTime?
+  paymentMeta           Json?
   paymentIntentId       String?
   acceptedAt            DateTime?
+  dispatchLockedAt      DateTime?
   enRouteAt             DateTime?
   billingSessions       BillingSession[]
   customer              User                        @relation(fields: [customerId], references: [id])
@@ -818,12 +828,49 @@ model StripeWebhookReceipt {
   type                  String
   livemode              Boolean  @default(false)
   bookingId             String?
+  /// When set, the booking id resolved from this webhook (mirrors bookingId when correlation succeeded).
+  bookingResolvedId     String?
   stripePaymentIntentId String?
+  payload               Json?
+  /// HTTP path that received the webhook (e.g. /api/v1/stripe/webhook).
+  endpointPath          String?
   createdAt             DateTime @default(now())
 
   @@index([type, createdAt])
   @@index([bookingId, createdAt])
   @@index([stripePaymentIntentId, createdAt])
+}
+
+model PaymentAnomaly {
+  id            String    @id @default(cuid())
+  bookingId     String?
+  stripeEventId String?
+  kind          String
+  severity      String    @default("warning")
+  status        String    @default("open")
+  message       String
+  details       Json?
+  detectedAt    DateTime  @default(now())
+  resolvedAt    DateTime?
+
+  @@index([bookingId, status])
+  @@index([stripeEventId])
+  @@index([kind, detectedAt])
+}
+
+model PaymentWebhookFailure {
+  id            String    @id @default(cuid())
+  stripeEventId String?
+  eventType     String?
+  endpointPath  String
+  failureKind   String
+  message       String
+  payload       Json?
+  createdAt     DateTime  @default(now())
+  resolvedAt    DateTime?
+
+  @@index([stripeEventId])
+  @@index([eventType, createdAt])
 }
 
 model SystemSetting {
@@ -1565,6 +1612,9 @@ model BookingEvent {
   toStatus       BookingStatus?
   note           String?
   idempotencyKey String?
+  actorUserId    String?
+  actorRole      String?
+  payload        Json?
   createdAt      DateTime         @default(now())
   Booking        Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   dispatchDecisions DispatchDecision[]
@@ -2136,6 +2186,11 @@ model Payout {
 enum BookingEventType {
   CREATED
   STATUS_CHANGED
+  BOOKING_ASSIGNED
+  BOOKING_HOLD
+  PAYMENT_CHECKOUT_CREATED
+  PAYMENT_STATUS_CHANGED
+  PAYMENT_ADMIN_OVERRIDE
   NOTE
   DISPATCH_STARTED
   OFFER_CREATED

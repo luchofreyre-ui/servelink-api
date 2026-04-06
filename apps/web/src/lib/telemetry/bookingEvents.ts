@@ -1,5 +1,22 @@
 import { WEB_ENV } from "@/lib/env";
 
+type BookingUiEventRow = {
+  event: string;
+  payload: Record<string, unknown>;
+  at: string;
+};
+
+const bookingUiEventBuffer: BookingUiEventRow[] = [];
+
+/** Clears the in-memory buffer (used by unit tests). */
+export function clearBookingUiTelemetryBufferForTests() {
+  bookingUiEventBuffer.length = 0;
+}
+
+export function getBookingUiTelemetrySnapshot(): BookingUiEventRow[] {
+  return [...bookingUiEventBuffer].reverse().slice(0, 20);
+}
+
 export function trackBookingUiEvent(
   event: string,
   payload?: Record<string, unknown>,
@@ -7,21 +24,15 @@ export function trackBookingUiEvent(
   if (typeof window === "undefined") return;
   if (!WEB_ENV.enableBookingUiTelemetry) return;
 
-  const next = {
+  const next: BookingUiEventRow = {
     event,
     payload: payload ?? {},
     at: new Date().toISOString(),
   };
 
-  const key = "servelink_booking_ui_events";
-
-  try {
-    const current = window.localStorage.getItem(key);
-    const parsed = current ? (JSON.parse(current) as unknown[]) : [];
-    parsed.push(next);
-    window.localStorage.setItem(key, JSON.stringify(parsed.slice(-100)));
-  } catch {
-    // no-op
+  bookingUiEventBuffer.push(next);
+  if (bookingUiEventBuffer.length > 100) {
+    bookingUiEventBuffer.splice(0, bookingUiEventBuffer.length - 100);
   }
 
   if (process.env.NODE_ENV !== "production") {

@@ -8,15 +8,15 @@ import {
 } from "../../metrics.registry";
 import { PrismaService } from "../../prisma";
 import { fail, ok } from "../../utils/http";
-import { StripeService } from "./stripe.service";
+import { StripePaymentService } from "../bookings/stripe/stripe-payment.service";
 import { StripeWebhookHandlerService } from "./stripe.webhook.handler.service";
 
 @Controller("/api/v1/stripe")
 export class StripeWebhookController {
   constructor(
     private readonly db: PrismaService,
-    private readonly stripeSvc: StripeService,
     private readonly webhookHandler: StripeWebhookHandlerService,
+    private readonly bookingStripePayment: StripePaymentService,
   ) {}
 
   @Post("webhook")
@@ -33,43 +33,41 @@ export class StripeWebhookController {
       return fail("INVALID_REQUEST", "Missing Stripe signature");
     }
 
-    const stripe = this.stripeSvc.stripe;
+    const raw =
+      Buffer.isBuffer(req.body)
+        ? (req.body as Buffer)
+        : process.env.NODE_ENV === "test"
+          ? Buffer.from(JSON.stringify(req.body ?? {}))
+          : (req.body as Buffer);
 
-    let event: any;
-    try {
-      const raw =
-        Buffer.isBuffer(req.body)
-          ? (req.body as any)
-          : process.env.NODE_ENV === "test"
-            ? Buffer.from(JSON.stringify(req.body ?? {}))
-            : (req.body as any);
+    const ingress = await this.bookingStripePayment.processBookingStripeWebhookIngress(
+      raw,
+      sig,
+    );
 
-      event = stripe.webhooks.constructEvent(raw, sig, webhookSecret);
-    } catch (e: any) {
-      stripeWebhookFailuresTotal.inc({ reason: "invalid_signature" });
-      stripeWebhookEventsTotal.inc({ type: "unknown", outcome: "rejected" });
-      return fail("WEBHOOK_INVALID_SIGNATURE", "Invalid Stripe webhook signature");
+    if (!ingress.ok) {
+      return ingress.response;
     }
 
+    // Stripe typings for webhook handlers expect concrete event shapes; runtime matches.
+    const event: any = ingress.event;
     const type = String(event?.type ?? "");
-    stripeWebhookEventsTotal.inc({ type: type || "unknown", outcome: "received" });
 
-    // ✅ Exactly-once processing gate (Stripe retries deliveries)
-    try {
-      await this.db.stripeWebhookReceipt.create({
-        data: {
-          stripeEventId: String(event.id),
-          type,
-          livemode: Boolean(event.livemode),
-        },
+    stripeWebhookEventsTotal.inc({ type: type || "unknown", outcome: "received" });
+    if (ingress.duplicate) {
+      stripeWebhookEventsTotal.inc({ type: type || "unknown", outcome: "duplicate" });
+      return ok({ duplicate: true, type });
+    }
+    if (ingress.applyFailed) {
+      stripeWebhookEventsTotal.inc({
+        type: type || "unknown",
+        outcome: "reconciliation_failed",
       });
-    } catch (err: any) {
-      // Unique violation => already processed
-      if (err?.code === "P2002") {
-        stripeWebhookEventsTotal.inc({ type: type || "unknown", outcome: "duplicate" });
-        return ok({ duplicate: true, type });
-      }
-      throw err;
+      return ok({
+        processed: false,
+        bookingReconciliationFailed: true,
+        type,
+      });
     }
 
     // Helper: idempotent NOTE append
@@ -87,13 +85,6 @@ export class StripeWebhookController {
         if (err?.code === "P2002") return; // idempotent
         throw err;
       }
-    };
-
-    // Helper: map payment_intent -> booking pointer
-    const findPointerByPi = async (paymentIntentId: string) => {
-      return this.db.bookingStripePayment.findFirst({
-        where: { stripePaymentIntentId: paymentIntentId },
-      });
     };
 
     // ✅ Event 1: payment_intent.succeeded (note + SETTLEMENT ledger entry)
@@ -133,7 +124,7 @@ export class StripeWebhookController {
 
     // ✅ Event: payment_intent.payment_failed
     if (type === "payment_intent.payment_failed") {
-      const pi = event.data?.object;
+      const pi = event.data?.object as { id?: string; last_payment_error?: unknown } | undefined;
       const paymentIntentId = String(pi?.id ?? "");
       if (!paymentIntentId) {
         stripeWebhookEventsTotal.inc({ type, outcome: "processed" });

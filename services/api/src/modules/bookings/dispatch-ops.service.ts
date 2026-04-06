@@ -7,6 +7,10 @@ import { BookingStatus } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { BookingDispatchControlService } from "./booking-dispatch-control.service";
 import { BookingReviewControlService } from "./booking-review-control.service";
+import {
+  isAssignedState,
+  isInvalidAssignmentState,
+} from "./utils/assignment-state.util";
 
 const NON_ASSIGNABLE_STATUSES: BookingStatus[] = [
   "in_progress",
@@ -48,6 +52,38 @@ export class DispatchOpsService {
   private async assertDispatchAllowed(bookingId: string): Promise<void> {
     await this.bookingDispatchControlService.assertNotHeld(bookingId);
     await this.bookingReviewControlService.assertReviewNotRequired(bookingId);
+  }
+
+  private async assertBookingStillAssignableInWritePath(bookingId: string) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      select: {
+        id: true,
+        status: true,
+        foId: true,
+        dispatchLockedAt: true,
+      },
+    });
+
+    if (!booking) {
+      throw new NotFoundException("Booking not found");
+    }
+
+    if (booking.dispatchLockedAt) {
+      throw new BadRequestException("Booking is currently dispatch locked");
+    }
+
+    if (booking.foId || booking.status === BookingStatus.assigned) {
+      throw new BadRequestException("Booking is already assigned");
+    }
+
+    if (NON_ASSIGNABLE_STATUSES.includes(booking.status)) {
+      throw new BadRequestException(
+        `Booking cannot be assigned when status is ${booking.status}`,
+      );
+    }
+
+    return booking;
   }
 
   private async getNextDispatchSequence(bookingId: string): Promise<{
@@ -105,20 +141,10 @@ export class DispatchOpsService {
   ) {
     await this.assertDispatchAllowed(bookingId);
 
-    const booking = await this.prisma.booking.findUnique({
-      where: { id: bookingId },
-    });
-
-    if (!booking) throw new NotFoundException("Booking not found");
+    await this.assertBookingStillAssignableInWritePath(bookingId);
 
     if (!franchiseOwnerId || franchiseOwnerId.trim() === "") {
       throw new BadRequestException("franchiseOwnerId is required");
-    }
-
-    if (NON_ASSIGNABLE_STATUSES.includes(booking.status)) {
-      throw new BadRequestException(
-        `Booking cannot be assigned when status is ${booking.status}`,
-      );
     }
 
     const fo = await this.prisma.franchiseOwner.findUnique({
@@ -130,38 +156,67 @@ export class DispatchOpsService {
     const { dispatchSequence, redispatchSequence } =
       await this.getNextDispatchSequence(bookingId);
 
-    const bookingSnapshot = bookingSnapshotFromBooking(booking);
-
-    await this.prisma.booking.update({
-      where: { id: bookingId },
-      data: {
-        foId: franchiseOwnerId,
-        status: "assigned",
-      },
-    });
-
-    return (this.prisma as any).dispatchDecision.create({
-      data: {
-        bookingId,
-        trigger: "manual_assign",
-        dispatchSequence,
-        redispatchSequence,
-        decisionStatus: "manual_assigned",
-        selectedFranchiseOwnerId: franchiseOwnerId,
-        selectedRank: 1,
-        scoringVersion: "provider-aware-dispatch-v1",
-        bookingStatusAtDecision: booking.status,
-        scheduledStart: booking.scheduledStart,
-        estimatedDurationMin:
-          booking.estimatedHours != null
-            ? Math.round(booking.estimatedHours * 60)
-            : null,
-        bookingSnapshot,
-        decisionMeta: {
-          adminId,
-          reason: "manual assignment",
+    return this.prisma.$transaction(async (tx) => {
+      const current = await tx.booking.findUnique({
+        where: { id: bookingId },
+        select: {
+          id: true,
+          status: true,
+          foId: true,
+          scheduledStart: true,
+          estimatedHours: true,
+          siteLat: true,
+          siteLng: true,
         },
-      },
+      });
+
+      if (!current) throw new NotFoundException("Booking not found");
+      if (isInvalidAssignmentState(current)) {
+        throw new BadRequestException("BOOKING_INVALID_STATE");
+      }
+      if (isAssignedState(current)) {
+        throw new BadRequestException("Booking is already assigned");
+      }
+      if (NON_ASSIGNABLE_STATUSES.includes(current.status)) {
+        throw new BadRequestException(
+          `Booking cannot be assigned when status is ${current.status}`,
+        );
+      }
+
+      const bookingSnapshot = bookingSnapshotFromBooking(current);
+
+      await tx.booking.update({
+        where: { id: bookingId },
+        data: {
+          foId: franchiseOwnerId,
+          status: BookingStatus.assigned,
+        },
+      });
+
+      return (tx as any).dispatchDecision.create({
+        data: {
+          bookingId,
+          trigger: "manual_assign",
+          dispatchSequence,
+          redispatchSequence,
+          decisionStatus: "manual_assigned",
+          selectedFranchiseOwnerId: franchiseOwnerId,
+          selectedRank: 1,
+          scoringVersion: "provider-aware-dispatch-v1",
+          bookingStatusAtDecision: current.status,
+          scheduledStart: current.scheduledStart,
+          estimatedDurationMin:
+            current.estimatedHours != null
+              ? Math.round(current.estimatedHours * 60)
+              : null,
+          bookingSnapshot,
+          decisionMeta: {
+            adminId,
+            reason: "manual assignment",
+            writePath: "dispatch_ops_manual_assign_transaction",
+          },
+        },
+      });
     });
   }
 

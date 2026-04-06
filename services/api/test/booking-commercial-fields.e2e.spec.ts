@@ -60,7 +60,7 @@ describe("Booking commercial fields (E2E)", () => {
     siteLng: -95.992,
   };
 
-  it("booking create persists quotedSubtotal, quotedMargin, quotedTotal and paymentStatus quote_ready", async () => {
+  it("booking create persists quotedSubtotal, quotedMargin, quotedTotal and paymentStatus payment_pending", async () => {
     const res = await request(app.getHttpServer())
       .post("/api/v1/bookings")
       .set("Authorization", `Bearer ${customerToken}`)
@@ -80,7 +80,7 @@ describe("Booking commercial fields (E2E)", () => {
     expect(row?.quotedSubtotal).not.toBeNull();
     expect(row?.quotedMargin).not.toBeNull();
     expect(row?.quotedTotal).not.toBeNull();
-    expect(row?.paymentStatus).toBe("quote_ready");
+    expect(row?.paymentStatus).toBe("payment_pending");
 
     expect(Number(row?.quotedSubtotal)).toBeCloseTo(
       Number(row?.priceSubtotal ?? 0),
