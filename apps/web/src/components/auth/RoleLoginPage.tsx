@@ -3,7 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { setStoredAccessToken } from "@/lib/auth";
+import { setStoredAccessToken } from "@/lib/auth/session";
 import { readJwtRole } from "@/lib/jwt-payload";
 import { WEB_ENV } from "@/lib/env";
 
@@ -56,7 +56,7 @@ export function RoleLoginPage({
     setErrorMessage(null);
 
     try {
-      const response = await fetch(`${WEB_ENV.apiBaseUrl}/api/v1/auth/login`, {
+      const response = await fetch(`${WEB_ENV.apiBaseUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

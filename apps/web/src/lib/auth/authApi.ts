@@ -1,5 +1,18 @@
-import type { AuthUser, UserRole } from "./authClient";
-import { clearAuthSession, setAuthSession } from "./authClient";
+import type { UserRole } from "@/lib/auth/authClient";
+import {
+  clearAuthSession,
+  getAuthToken,
+  getAuthUser,
+  setAuthSession,
+} from "@/lib/auth/authClient";
+import { WEB_ENV } from "@/lib/env";
+
+export type LoginResponse = {
+  id: string;
+  email: string;
+  role: string;
+  accessToken: string;
+};
 
 export interface LoginInput {
   email: string;
@@ -9,126 +22,68 @@ export interface LoginInput {
 
 export interface LoginResult {
   token: string;
-  user: AuthUser;
+  user: NonNullable<ReturnType<typeof getAuthUser>>;
 }
 
-function getApiBaseUrl() {
-  return (
-    process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ||
-    "http://127.0.0.1:3001/api/v1"
-  );
-}
-
-function normalizeRole(value: unknown): UserRole | null {
-  if (value === "admin" || value === "fo" || value === "customer") {
-    return value;
-  }
-  return null;
-}
-
-function coerceUser(payload: any, expectedRole: UserRole): AuthUser {
-  const id =
-    String(
-      payload?.id ??
-        payload?.userId ??
-        payload?.sub ??
-        payload?.uuid ??
-        payload?.profile?.id ??
-        "",
-    ) || crypto.randomUUID();
-
-  const email = String(
-    payload?.email ??
-      payload?.username ??
-      payload?.user?.email ??
-      payload?.profile?.email ??
-      "",
-  ).trim();
-
-  const role =
-    normalizeRole(payload?.role) ??
-    normalizeRole(payload?.user?.role) ??
-    normalizeRole(payload?.profile?.role) ??
-    expectedRole;
-
-  if (!email) {
-    throw new Error("Login response did not include a usable email.");
-  }
-
-  return {
-    id,
-    email,
-    role,
-  };
-}
-
-function coerceToken(payload: any): string {
-  const token = String(
-    payload?.token ??
-      payload?.accessToken ??
-      payload?.access_token ??
-      payload?.jwt ??
-      payload?.data?.token ??
-      "",
-  ).trim();
-
-  if (!token) {
-    throw new Error("Login response did not include an auth token.");
-  }
-
-  return token;
-}
-
-function extractPayload(raw: any) {
-  if (raw?.data && typeof raw.data === "object") return raw.data;
-  return raw;
-}
-
-export async function loginWithApi(input: LoginInput): Promise<LoginResult> {
-  const response = await fetch(`${getApiBaseUrl()}/auth/login`, {
+export async function loginWithRole(
+  email: string,
+  password: string,
+  expectedRole: string,
+) {
+  const response = await fetch(`${WEB_ENV.apiBaseUrl}/auth/login`, {
     method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      email: input.email,
-      password: input.password,
-      role: input.expectedRole,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
   });
 
-  const raw = await response.json().catch(() => null);
+  const payload = (await response.json().catch(() => null)) as LoginResponse | null;
 
-  if (!response.ok) {
-    const message =
-      raw?.error?.message ||
-      raw?.message ||
-      `Login failed with status ${response.status}.`;
-    throw new Error(String(message));
-  }
-
-  const payload = extractPayload(raw);
-  const token = coerceToken(payload);
-  const user = coerceUser(payload?.user ?? payload, input.expectedRole);
-
-  if (user.role !== input.expectedRole) {
+  if (!response.ok || !payload) {
     throw new Error(
-      `Authenticated as role "${user.role}" but expected "${input.expectedRole}".`,
+      payload && typeof payload === "object" ? JSON.stringify(payload) : "Login failed.",
     );
   }
 
-  setAuthSession(token, user);
-  return { token, user };
+  if (!payload.accessToken?.trim()) {
+    throw new Error("Login succeeded but no access token was returned.");
+  }
+
+  if (!payload.role?.trim()) {
+    throw new Error("Login succeeded but no user role was returned.");
+  }
+
+  if (payload.role !== expectedRole) {
+    throw new Error(`This account is not allowed for ${expectedRole} access.`);
+  }
+
+  setAuthSession(payload.accessToken, {
+    id: payload.id,
+    email: payload.email,
+    role: payload.role,
+  });
+
+  return payload;
+}
+
+/** Same contract as `loginWithRole`, shaped for `AuthLoginForm`. */
+export async function loginWithApi(input: LoginInput): Promise<LoginResult> {
+  const payload = await loginWithRole(
+    input.email,
+    input.password,
+    input.expectedRole,
+  );
+  const user = getAuthUser();
+  if (!user) {
+    throw new Error("Login succeeded but session user was not stored.");
+  }
+  return { token: payload.accessToken, user };
 }
 
 export async function logoutWithApi() {
-  const token =
-    typeof window !== "undefined"
-      ? window.localStorage.getItem("servelink_token")
-      : null;
+  const token = typeof window !== "undefined" ? getAuthToken() : null;
 
   try {
-    await fetch(`${getApiBaseUrl()}/auth/logout`, {
+    await fetch(`${WEB_ENV.apiBaseUrl}/auth/logout`, {
       method: "POST",
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
