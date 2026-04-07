@@ -46,35 +46,18 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
   app.useGlobalFilters(new ApiExceptionFilter());
 
-  const port = process.env.PORT ? Number(process.env.PORT) : 3001;
   const allowedOrigins = parseAllowedOrigins();
 
   app.enableCors({
-    origin(origin, callback) {
-      // Allow non-browser / same-origin requests with no Origin header
-      if (!origin) {
-        callback(null, true);
-        return;
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-
-      callback(new Error(`CORS blocked for origin: ${origin}`), false);
-    },
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+    origin: "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
       "Authorization",
       "X-Requested-With",
-      "Accept",
-      "Origin",
     ],
     exposedHeaders: ["x-request-id"],
-    credentials: false,
-    optionsSuccessStatus: 204,
   });
 
   const expressApp = app.getHttpAdapter().getInstance();
@@ -107,7 +90,8 @@ async function bootstrap() {
     console.warn("OpenAPI spec not found, Swagger UI disabled:", (err as Error).message);
   }
 
-  await app.listen(port);
+  const port = process.env.PORT ? Number(process.env.PORT) : 8080;
+  await app.listen(port, '0.0.0.0');
 
   console.log(`Servelink API running on http://localhost:${port}`);
   console.log("Allowed CORS origins:", allowedOrigins.join(", "));
