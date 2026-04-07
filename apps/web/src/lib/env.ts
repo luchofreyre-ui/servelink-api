@@ -1,5 +1,5 @@
 export const WEB_ENV = {
-  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001",
+  apiBaseUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001"}/api/v1`,
   appEnv: process.env.NEXT_PUBLIC_APP_ENV ?? "development",
   enableManualPaymentControls:
     process.env.NEXT_PUBLIC_ENABLE_MANUAL_PAYMENT_CONTROLS === "true",
