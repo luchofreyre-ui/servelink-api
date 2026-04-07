@@ -5,7 +5,7 @@ import {
   getStoredAccessToken,
   getStoredAuthUser,
   SERVELINK_ACCESS_TOKEN_COOKIE,
-} from "@/lib/auth/session";
+} from "@/lib/auth";
 import { getLoginRouteForRole } from "@/lib/auth/authRoutes";
 import { readJwtRole } from "@/lib/jwt-payload";
 
