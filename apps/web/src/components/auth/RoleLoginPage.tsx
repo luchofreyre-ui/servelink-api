@@ -3,7 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { setStoredAccessToken } from "@/lib/auth/session";
+import { setStoredAccessToken } from "@/lib/auth";
 import { readJwtRole } from "@/lib/jwt-payload";
 import { WEB_ENV } from "@/lib/env";
 

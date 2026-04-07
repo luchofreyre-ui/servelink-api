@@ -1,5 +1,5 @@
 import { Page, request } from "@playwright/test";
-import { SERVELINK_ACCESS_TOKEN_COOKIE } from "@/lib/auth/session";
+import { SERVELINK_ACCESS_TOKEN_COOKIE } from "@/lib/auth";
 import { WEB_ENV } from "@/lib/env";
 import { PLAYWRIGHT_BASE_URL } from "./env";
 

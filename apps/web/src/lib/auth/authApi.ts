@@ -59,7 +59,7 @@ export async function loginWithRole(
   setAuthSession(payload.accessToken, {
     id: payload.id,
     email: payload.email,
-    role: payload.role,
+    role: payload.role as UserRole,
   });
 
   return payload;
