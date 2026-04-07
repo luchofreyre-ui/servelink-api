@@ -90,10 +90,11 @@ async function bootstrap() {
     console.warn("OpenAPI spec not found, Swagger UI disabled:", (err as Error).message);
   }
 
-  const port = process.env.PORT ? Number(process.env.PORT) : 8080;
-  await app.listen(port, '0.0.0.0');
+  const port = Number(process.env.PORT) || 3001;
 
-  console.log(`Servelink API running on http://localhost:${port}`);
+  await app.listen(port, "0.0.0.0");
+
+  console.log(`Servelink API listening on port ${port}`);
   console.log("Allowed CORS origins:", allowedOrigins.join(", "));
 }
 
