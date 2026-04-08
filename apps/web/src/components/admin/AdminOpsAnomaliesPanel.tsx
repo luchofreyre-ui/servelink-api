@@ -28,7 +28,7 @@ export function AdminOpsAnomaliesPanel() {
     }
 
     try {
-      const next = await getAdminOpenPrismaOpsAnomalies(token);
+      const next = await getAdminOpenPrismaOpsAnomalies();
       setItems(next);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load anomalies");

@@ -80,7 +80,6 @@ export function useAdminAnomalies(query: AdminAnomaliesQuery) {
 
       try {
         const res = await fetchAdminAnomaliesPage({
-          token,
           limit: 50,
           cursor: append ? cursor : null,
           mine: query.mine,

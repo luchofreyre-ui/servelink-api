@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/lib/api";
+import { API_BASE_URL, apiFetch } from "@/lib/api";
 import { getStoredAccessToken } from "@/lib/auth";
 import type {
   AdminBookingOperationalDetail,
@@ -223,10 +223,10 @@ export async function getAdminBookingOperationalDetail(
  * API route: GET /admin/anomalies
  * (Distinct from fingerprinted queue at /admin/ops/anomalies.)
  */
-export async function getAdminOpenPrismaOpsAnomalies(
-  token: string,
-): Promise<AdminPrismaOpsAnomalyItem[]> {
-  const response = await authFetch(token, `/admin/anomalies`, {
+export async function getAdminOpenPrismaOpsAnomalies(): Promise<
+  AdminPrismaOpsAnomalyItem[]
+> {
+  const response = await apiFetch(`/admin/anomalies`, {
     method: "GET",
   });
   const payload = await parseJson<unknown>(response);

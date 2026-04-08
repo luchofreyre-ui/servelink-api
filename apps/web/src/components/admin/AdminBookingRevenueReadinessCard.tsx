@@ -26,7 +26,7 @@ export function AdminBookingRevenueReadinessCard() {
       }
 
       try {
-        const anomalies = await getAdminOpenOpsAnomalies(token);
+        const anomalies = await getAdminOpenOpsAnomalies();
         if (cancelled) return;
 
         setOpenCount(anomalies.length);

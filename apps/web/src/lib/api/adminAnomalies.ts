@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
 
 export type AdminAnomalySlaState = "dueSoon" | "overdue" | "breached";
 
@@ -36,7 +36,6 @@ export type AdminAnomaliesListResponse = {
 const FETCH_TIMEOUT_MS = 20_000;
 
 export async function fetchAdminAnomaliesPage(params: {
-  token: string;
   limit?: number;
   cursor?: string | null;
   sinceHours?: number;
@@ -61,8 +60,7 @@ export async function fetchAdminAnomaliesPage(params: {
 
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}/admin/ops/anomalies?${qs.toString()}`, {
-      headers: { Authorization: `Bearer ${params.token}` },
+    response = await apiFetch(`/admin/ops/anomalies?${qs.toString()}`, {
       cache: "no-store",
       signal: controller.signal,
     });
@@ -77,7 +75,9 @@ export async function fetchAdminAnomaliesPage(params: {
 
   const json = (await response.json()) as {
     ok?: boolean;
-    data?: AdminAnomaliesListResponse;
+    data?: AdminAnomaliesListResponse & {
+      rollups?: AdminAnomalyApiItem[];
+    };
     error?: { message?: string };
   };
 
@@ -90,8 +90,14 @@ export async function fetchAdminAnomaliesPage(params: {
     return { anomalies: [], page: {} };
   }
 
+  const rows = Array.isArray(data.anomalies)
+    ? data.anomalies
+    : Array.isArray(data.rollups)
+      ? data.rollups
+      : [];
+
   return {
-    anomalies: Array.isArray(data.anomalies) ? data.anomalies : [],
+    anomalies: rows,
     page: data.page,
   };
 }

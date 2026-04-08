@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
 import { AdminActivityFeed } from "@/components/admin/activity/AdminActivityFeed";
 import { AdminAnomaliesQueue } from "@/components/admin/anomalies/AdminAnomaliesQueue";
 import { AdminLaunchReadinessCard } from "@/components/admin/AdminLaunchReadinessCard";
@@ -530,7 +530,13 @@ export default function AdminPage() {
 
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <AdminOpsAnomaliesPanel />
-        <AdminAnomaliesQueue />
+        <Suspense
+          fallback={
+            <p className="text-sm text-white/60">Loading anomalies queue…</p>
+          }
+        >
+          <AdminAnomaliesQueue />
+        </Suspense>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
