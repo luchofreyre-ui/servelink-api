@@ -44,8 +44,11 @@ export default function AppShellLayout({
               <Link href="/customer" className="hover:underline">
                 Customer
               </Link>
-              <Link href="/admin/ops" className="hover:underline">
+              <Link href="/admin" className="hover:underline">
                 Admin
+              </Link>
+              <Link href="/admin/ops" className="hover:underline">
+                Ops
               </Link>
               <Link href="/admin/anomalies" className="hover:underline">
                 Anomalies
