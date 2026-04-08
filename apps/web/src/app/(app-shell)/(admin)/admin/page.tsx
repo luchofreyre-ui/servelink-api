@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
+import { BookingStatusBadge } from "@/components/booking/BookingStatusBadge";
 import { AdminActivityFeed } from "@/components/admin/activity/AdminActivityFeed";
 import { AdminAnomaliesQueue } from "@/components/admin/anomalies/AdminAnomaliesQueue";
 import { AdminLaunchReadinessCard } from "@/components/admin/AdminLaunchReadinessCard";
@@ -13,6 +14,17 @@ import {
   getStoredAccessToken,
 } from "@/lib/auth";
 import { fetchDispatchExceptionActions } from "@/lib/api/dispatchExceptionActions";
+import type {
+  AdminPaymentAnomalyRow,
+  AdminPaymentOpsSummary,
+  BookingRecord,
+} from "@/lib/bookings/bookingApiTypes";
+import { displayBookingPrice } from "@/lib/bookings/bookingDisplay";
+import {
+  getAdminPaymentOpsSummary,
+  listAdminPaymentAnomalies,
+  listBookings,
+} from "@/lib/bookings/bookingStore";
 import { buildDispatchExceptionKeyFromBookingId } from "@/types/dispatchExceptionActions";
 
 type DispatchExceptionItem = {
@@ -149,6 +161,17 @@ export default function AdminPage() {
     escalationReady: number;
   } | null>(null);
 
+  const [bookings, setBookings] = useState<BookingRecord[]>([]);
+  const [bookingsError, setBookingsError] = useState<string | null>(null);
+  const [paymentOps, setPaymentOps] = useState<AdminPaymentOpsSummary | null>(
+    null,
+  );
+  const [paymentOpsError, setPaymentOpsError] = useState<string | null>(null);
+  const [latestPaymentAnomalies, setLatestPaymentAnomalies] = useState<
+    AdminPaymentAnomalyRow[]
+  >([]);
+  const [paymentBookingsLoading, setPaymentBookingsLoading] = useState(true);
+
   useEffect(() => {
     const nextToken = getStoredAccessToken();
     setToken(nextToken);
@@ -259,6 +282,64 @@ export default function AdminPage() {
     };
   }, [token, tokenChecked]);
 
+  useEffect(() => {
+    if (!tokenChecked || !token) {
+      setPaymentBookingsLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setPaymentBookingsLoading(true);
+    setBookingsError(null);
+    setPaymentOpsError(null);
+
+    void Promise.allSettled([
+      listBookings({ view: "dispatch" }),
+      getAdminPaymentOpsSummary(),
+      listAdminPaymentAnomalies(),
+    ]).then((results) => {
+      if (cancelled) return;
+
+      const [bRes, pRes, aRes] = results;
+
+      if (bRes.status === "fulfilled") {
+        setBookings(bRes.value);
+        setBookingsError(null);
+      } else {
+        setBookings([]);
+        setBookingsError(
+          bRes.reason instanceof Error
+            ? bRes.reason.message
+            : "Failed to load bookings.",
+        );
+      }
+
+      if (pRes.status === "fulfilled") {
+        setPaymentOps(pRes.value);
+        setPaymentOpsError(null);
+      } else {
+        setPaymentOps(null);
+        setPaymentOpsError(
+          pRes.reason instanceof Error
+            ? pRes.reason.message
+            : "Failed to load payment operations.",
+        );
+      }
+
+      if (aRes.status === "fulfilled") {
+        setLatestPaymentAnomalies(aRes.value.slice(0, 5));
+      } else {
+        setLatestPaymentAnomalies([]);
+      }
+
+      if (!cancelled) setPaymentBookingsLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, tokenChecked]);
+
   const hasToken = useMemo(() => Boolean(token), [token]);
 
   const shell = (inner: ReactNode) => (
@@ -328,6 +409,30 @@ export default function AdminPage() {
               <div className="mt-1 max-w-[220px] text-xs leading-snug text-slate-400">
                 Weak pages, repair queue, and system health
               </div>
+            </Link>
+            <Link
+              href="/admin/knowledge-review"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Knowledge review
+            </Link>
+            <Link
+              href="/admin/knowledge-ops"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Knowledge ops
+            </Link>
+            <Link
+              href="/admin/dispatch-config"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              Dispatch config
+            </Link>
+            <Link
+              href="/admin/ops"
+              className="rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-slate-100"
+            >
+              System ops
             </Link>
             <Link
               href="/admin/anomalies"
@@ -409,6 +514,87 @@ export default function AdminPage() {
           </div>
         </div>
       </section>
+
+      <DashboardCard eyebrow="Billing" title="Payment operations">
+        {paymentBookingsLoading ? (
+          <p className="text-sm text-slate-400">Loading payment metrics…</p>
+        ) : paymentOpsError && !paymentOps ? (
+          <p className="text-sm text-amber-200/90">{paymentOpsError}</p>
+        ) : paymentOps ? (
+          <>
+            <p className="mb-4 text-sm text-slate-400">
+              Single Stripe ingress: webhook health, anomalies, and stuck checkouts
+              (read-only; computed on load).
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm">
+                <div className="text-xs uppercase tracking-wide text-slate-500">
+                  Open anomalies
+                </div>
+                <div className="mt-1 font-semibold text-slate-50">
+                  {paymentOps.openAnomalyCount}
+                </div>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm">
+                <div className="text-xs uppercase tracking-wide text-slate-500">
+                  Webhook failures (24h)
+                </div>
+                <div className="mt-1 font-semibold text-slate-50">
+                  {paymentOps.recentWebhookFailureCount}
+                </div>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm">
+                <div className="text-xs uppercase tracking-wide text-slate-500">
+                  Stuck pending (&gt;30m)
+                </div>
+                <div className="mt-1 font-semibold text-slate-50">
+                  {paymentOps.stuckPendingPaymentShortCount}
+                </div>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm">
+                <div className="text-xs uppercase tracking-wide text-slate-500">
+                  Duplicate events (7d)
+                </div>
+                <div className="mt-1 font-semibold text-slate-50">
+                  {paymentOps.duplicateWebhookRecentCount}
+                </div>
+              </div>
+            </div>
+            {latestPaymentAnomalies.length > 0 ? (
+              <div className="mt-4">
+                <h3 className="text-sm font-medium text-slate-200">
+                  Latest open anomalies
+                </h3>
+                <ul className="mt-2 space-y-2 text-sm text-slate-300">
+                  {latestPaymentAnomalies.map((a) => (
+                    <li
+                      key={a.id}
+                      className="flex flex-wrap gap-x-2 border-b border-white/10 pb-2 last:border-0"
+                    >
+                      <span className="font-mono text-xs text-slate-500">
+                        {a.kind}
+                      </span>
+                      {a.bookingId ? (
+                        <Link
+                          href={`/admin/bookings/${encodeURIComponent(a.bookingId)}`}
+                          className="text-sky-300 underline"
+                        >
+                          {a.bookingId.slice(0, 12)}…
+                        </Link>
+                      ) : (
+                        <span className="text-slate-500">—</span>
+                      )}
+                      <span className="text-slate-400">{a.message}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </>
+        ) : (
+          <p className="text-sm text-slate-400">No payment summary available.</p>
+        )}
+      </DashboardCard>
 
       <DashboardCard
         eyebrow="Quality"
@@ -651,6 +837,66 @@ export default function AdminPage() {
         </DashboardCard>
       </div>
 
+      <DashboardCard
+        eyebrow="Dispatch"
+        title="Recent dispatch bookings"
+        actions={
+          <Link
+            href="/admin/exceptions"
+            className="text-sm font-medium text-slate-300 hover:text-white"
+          >
+            Exceptions queue
+          </Link>
+        }
+      >
+        {paymentBookingsLoading ? (
+          <div className="text-sm text-slate-400">Loading bookings…</div>
+        ) : bookingsError ? (
+          <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-100">
+            {bookingsError}
+          </div>
+        ) : bookings.length === 0 ? (
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-slate-400">
+            No dispatch bookings returned.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {bookings.slice(0, 8).map((booking) => (
+              <Link
+                key={booking.id}
+                href={`/admin/bookings/${booking.id}`}
+                className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+              >
+                <div>
+                  <p className="font-medium text-slate-100">{booking.id}</p>
+                  <p className="text-sm text-slate-400">
+                    {booking.foId ? (
+                      <>
+                        FO {String(booking.foId).slice(0, 10)}
+                        {String(booking.foId).length > 10 ? "…" : ""}
+                      </>
+                    ) : (
+                      <span className="font-medium text-amber-200/90">
+                        Unassigned
+                      </span>
+                    )}
+                    {" · "}
+                    {booking.customerId.slice(0, 8)}… ·{" "}
+                    {displayBookingPrice(booking)}
+                  </p>
+                  {!booking.foId ? (
+                    <p className="mt-1 text-xs text-slate-500">
+                      Open booking detail for ranked assignees and one-click assign.
+                    </p>
+                  ) : null}
+                </div>
+                <BookingStatusBadge status={booking.status} />
+              </Link>
+            ))}
+          </div>
+        )}
+      </DashboardCard>
+
       <DashboardCard eyebrow="Navigation" title="Admin surfaces">
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
           <Link
@@ -670,6 +916,46 @@ export default function AdminPage() {
             <p className="text-sm font-semibold text-slate-100">Exceptions</p>
             <p className="mt-1 text-sm text-slate-400">
               Dispatch exception review and operational follow-up.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/dispatch-config"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Dispatch config</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Active/draft dispatch tuning, compare, and publish workflow.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/ops"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">System ops</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Deferred dispatch, locks, review-required backlog, and pressure metrics.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/knowledge-review"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Knowledge review</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Review scenarios, SOPs, and timing signals for knowledge quality.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/knowledge-ops"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Knowledge ops</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Operational knowledge pipelines and maintenance.
             </p>
           </Link>
 
@@ -721,17 +1007,7 @@ export default function AdminPage() {
             <p className="text-sm font-semibold text-slate-100">Estimator governance</p>
             <p className="mt-1 text-sm text-slate-400">
               Version history, restore prior configs to draft, rollback readiness, and decision intelligence vs
-              impact.
-            </p>
-          </Link>
-
-          <Link
-            href="/admin/deep-clean/estimator-monitoring"
-            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
-          >
-            <p className="text-sm font-semibold text-slate-100">Estimator monitoring</p>
-            <p className="mt-1 text-sm text-slate-400">
-              Open alerts, trend buckets, and recommendations alongside governance rollback context.
+              impact. Use this surface for estimator health context (there is no separate monitoring route yet).
             </p>
           </Link>
 
