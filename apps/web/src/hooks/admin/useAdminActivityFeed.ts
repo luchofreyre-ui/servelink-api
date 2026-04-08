@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { getStoredAccessToken } from "@/lib/auth";
 import {
@@ -46,7 +45,6 @@ function normalizeActivityRow(raw: AdminActivityApiItem): AdminActivityRowModel 
 }
 
 export function useAdminActivityFeed() {
-  const pathname = usePathname();
   const [items, setItems] = useState<AdminActivityRowModel[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -87,11 +85,8 @@ export function useAdminActivityFeed() {
   }, []);
 
   useEffect(() => {
-    if (pathname !== "/admin/activity") {
-      return;
-    }
     void loadPage(false, null);
-  }, [pathname, loadPage]);
+  }, [loadPage]);
 
   useEffect(() => {
     const handler = () => {

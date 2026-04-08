@@ -94,10 +94,6 @@ describe("DeepCleanEstimatorClient", () => {
       "href",
       "/admin/deep-clean/estimator-governance",
     );
-    expect(screen.getByTestId("deep-clean-estimator-link-monitoring")).toHaveAttribute(
-      "href",
-      "/admin/deep-clean/estimator-monitoring",
-    );
   });
 
   it("runs preview and shows delta", async () => {

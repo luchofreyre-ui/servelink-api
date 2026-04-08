@@ -218,13 +218,6 @@ export function DeepCleanEstimatorGovernanceClient() {
           >
             Estimator impact
           </Link>
-          <Link
-            href="/admin/deep-clean/estimator-monitoring"
-            className="text-blue-700 hover:underline"
-            data-testid="deep-clean-estimator-governance-link-monitoring"
-          >
-            Open monitoring
-          </Link>
         </p>
       </div>
 
