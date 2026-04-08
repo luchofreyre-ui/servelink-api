@@ -145,7 +145,8 @@ function mapAdminActivityApiItem(
   };
 }
 
-export function AdminOperationsCommandCenter() {
+export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
+  const { children } = props;
   const [tokenChecked, setTokenChecked] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -514,6 +515,8 @@ export function AdminOperationsCommandCenter() {
           </div>
         </div>
       </section>
+
+      {children}
 
       <DashboardCard eyebrow="Billing" title="Payment operations">
         {paymentBookingsLoading ? (

@@ -1,4 +1,5 @@
 import { AdminOperationsCommandCenter } from "@/components/admin/AdminOperationsCommandCenter";
+import { SystemAccessLayer } from "@/components/admin/SystemAccessLayer";
 import { loadAdminOpsPageData } from "@/lib/api/adminOps";
 import OpsSystemBacklog from "./_components/OpsSystemBacklog";
 
@@ -11,7 +12,9 @@ export default async function AdminOpsPage() {
 
   return (
     <>
-      <AdminOperationsCommandCenter />
+      <AdminOperationsCommandCenter>
+        <SystemAccessLayer />
+      </AdminOperationsCommandCenter>
       <OpsSystemBacklog {...data} />
     </>
   );
