@@ -21,7 +21,7 @@ export function AdminLaunchReadinessCard() {
     async function load() {
       try {
         const response = await fetch(
-          `${WEB_ENV.apiBaseUrl}/api/v1/system/readiness`,
+          `${WEB_ENV.apiBaseUrl}/system/readiness`,
           { cache: "no-store" },
         );
 

@@ -100,7 +100,7 @@ export async function fetchAdminCommandCenter(
   token: string,
   bookingId: string,
 ): Promise<AdminBookingCommandCenterPayload> {
-  const response = await fetch(`${apiBase}/api/v1/admin/bookings/${bookingId}/command-center`, {
+  const response = await fetch(`${apiBase}/admin/bookings/${bookingId}/command-center`, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
@@ -117,7 +117,7 @@ export async function patchAdminOperatorNote(
   bookingId: string,
   note: string,
 ): Promise<AdminBookingCommandCenterPayload> {
-  const response = await fetch(`${apiBase}/api/v1/admin/bookings/${bookingId}/operator-note`, {
+  const response = await fetch(`${apiBase}/admin/bookings/${bookingId}/operator-note`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -139,7 +139,7 @@ export async function postAdminBookingHold(
   bookingId: string,
 ): Promise<AdminBookingCommandCenterPayload> {
   const response = await fetch(
-    `${apiBase}/api/v1/bookings/${encodeURIComponent(bookingId)}/hold`,
+    `${apiBase}/bookings/${encodeURIComponent(bookingId)}/hold`,
     {
       method: "POST",
       headers: {
@@ -162,7 +162,7 @@ export async function postAdminBookingReview(
   token: string,
   bookingId: string,
 ): Promise<AdminBookingCommandCenterPayload> {
-  const response = await fetch(`${apiBase}/api/v1/admin/bookings/${bookingId}/review`, {
+  const response = await fetch(`${apiBase}/admin/bookings/${bookingId}/review`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
@@ -179,7 +179,7 @@ export async function postAdminBookingApprove(
   token: string,
   bookingId: string,
 ): Promise<AdminBookingCommandCenterPayload> {
-  const response = await fetch(`${apiBase}/api/v1/admin/bookings/${bookingId}/approve`, {
+  const response = await fetch(`${apiBase}/admin/bookings/${bookingId}/approve`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
@@ -197,7 +197,7 @@ export async function postAdminBookingReassign(
   bookingId: string,
   body: Record<string, unknown> = {},
 ): Promise<AdminBookingCommandCenterPayload> {
-  const response = await fetch(`${apiBase}/api/v1/admin/bookings/${bookingId}/reassign`, {
+  const response = await fetch(`${apiBase}/admin/bookings/${bookingId}/reassign`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

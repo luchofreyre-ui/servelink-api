@@ -60,31 +60,31 @@ export type OpsItemsResponse = {
 };
 
 export async function getOpsSummary() {
-  return readOpsEndpointJson<OpsSummaryResponse>("/api/v1/system/ops/summary");
+  return readOpsEndpointJson<OpsSummaryResponse>("/system/ops/summary");
 }
 
 export async function getInvalidAssignmentState(limit = 50) {
-  const path = `/api/v1/system/ops/bookings/invalid-assignment-state?limit=${limit}`;
+  const path = `/system/ops/bookings/invalid-assignment-state?limit=${limit}`;
   return readOpsEndpointJson<OpsItemsResponse>(path);
 }
 
 export async function getDispatchLocked(limit = 50) {
-  const path = `/api/v1/system/ops/bookings/dispatch-locked?limit=${limit}`;
+  const path = `/system/ops/bookings/dispatch-locked?limit=${limit}`;
   return readOpsEndpointJson<OpsItemsResponse>(path);
 }
 
 export async function getReviewRequired(limit = 50) {
-  const path = `/api/v1/system/ops/bookings/review-required?limit=${limit}`;
+  const path = `/system/ops/bookings/review-required?limit=${limit}`;
   return readOpsEndpointJson<OpsItemsResponse>(path);
 }
 
 export async function getDeferredDispatch(limit = 50) {
-  const path = `/api/v1/system/ops/dispatch/deferred?limit=${limit}`;
+  const path = `/system/ops/dispatch/deferred?limit=${limit}`;
   return readOpsEndpointJson<OpsItemsResponse>(path);
 }
 
 export async function getManualDispatch(limit = 50) {
-  const path = `/api/v1/system/ops/dispatch/manual-actions?limit=${limit}`;
+  const path = `/system/ops/dispatch/manual-actions?limit=${limit}`;
   return readOpsEndpointJson<OpsItemsResponse>(path);
 }
 

@@ -32,7 +32,7 @@ export async function postAdminAuthorityRecompute(
   bookingId: string,
 ): Promise<BookingAuthorityRecomputeResponse> {
   const response = await fetch(
-    `${apiBase}/api/v1/admin/authority/bookings/${encodeURIComponent(bookingId)}/recompute`,
+    `${apiBase}/admin/authority/bookings/${encodeURIComponent(bookingId)}/recompute`,
     {
       method: "POST",
       headers: {

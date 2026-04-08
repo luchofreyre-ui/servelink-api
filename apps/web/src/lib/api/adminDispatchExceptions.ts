@@ -52,7 +52,7 @@ export async function fetchAdminDispatchExceptionsPage(
   if (opts?.cursor) qs.set("cursor", opts.cursor);
 
   const response = await fetch(
-    `${WEB_ENV.apiBaseUrl}/api/v1/admin/dispatch/exceptions?${qs.toString()}`,
+    `${WEB_ENV.apiBaseUrl}/admin/dispatch/exceptions?${qs.toString()}`,
     {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",

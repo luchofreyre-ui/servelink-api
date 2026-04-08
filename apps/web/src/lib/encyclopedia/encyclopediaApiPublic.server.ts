@@ -31,7 +31,7 @@ export async function fetchEncyclopediaPublicListForSearch(): Promise<
 > {
   try {
     // Explicit `no-store` only — do not rely on Next fetch defaults.
-    const res = await fetch(`${API_BASE_URL}/api/v1/encyclopedia/list`, {
+    const res = await fetch(`${API_BASE_URL}/encyclopedia/list`, {
       cache: "no-store",
     });
     if (!res.ok) {
@@ -49,7 +49,7 @@ export async function getEncyclopediaApiLiveDetail(
   slug: string,
 ): Promise<ApiDetailJson | null> {
   try {
-    const url = `${API_BASE_URL}/api/v1/encyclopedia/${encodeURIComponent(slug)}`;
+    const url = `${API_BASE_URL}/encyclopedia/${encodeURIComponent(slug)}`;
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) {
       return null;

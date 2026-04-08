@@ -61,7 +61,7 @@ export async function fetchAdminAnomaliesPage(params: {
 
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}/api/v1/admin/ops/anomalies?${qs.toString()}`, {
+    response = await fetch(`${API_BASE_URL}/admin/ops/anomalies?${qs.toString()}`, {
       headers: { Authorization: `Bearer ${params.token}` },
       cache: "no-store",
       signal: controller.signal,

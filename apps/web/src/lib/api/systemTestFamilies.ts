@@ -113,7 +113,7 @@ export async function fetchAdminSystemTestFamilies(
   const q = qs.toString();
   return adminJson<SystemTestFamilyListItemApi[]>(
     accessToken,
-    `/api/v1/admin/system-tests/families${q ? `?${q}` : ""}`,
+    `/admin/system-tests/families${q ? `?${q}` : ""}`,
   );
 }
 
@@ -123,6 +123,6 @@ export async function fetchAdminSystemTestFamilyDetail(
 ): Promise<SystemTestFamilyDetailApi> {
   return adminJson<SystemTestFamilyDetailApi>(
     accessToken,
-    `/api/v1/admin/system-tests/families/${encodeURIComponent(familyId)}`,
+    `/admin/system-tests/families/${encodeURIComponent(familyId)}`,
   );
 }

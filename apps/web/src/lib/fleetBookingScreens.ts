@@ -8,7 +8,7 @@ import { readApiJson } from "./api-response";
 export async function loadAdminFleetScreens(_limit: number): Promise<unknown[]> {
   try {
     const landingRes = await apiFetch(
-      "/api/v1/admin/bookings/ops-landing?compact=true",
+      "/admin/bookings/ops-landing?compact=true",
     );
     const { landing } = await readApiJson<{
       landing?: { workboard?: { sections?: Record<string, unknown[]> } };
@@ -27,7 +27,7 @@ export async function loadAdminFleetScreens(_limit: number): Promise<unknown[]> 
     const screens = await Promise.all(
       unique.map(async (id) => {
         try {
-          const screenRes = await apiFetch(`/api/v1/bookings/${id}/screen`);
+          const screenRes = await apiFetch(`/bookings/${id}/screen`);
           const { screen } = await readApiJson<{ screen: unknown }>(screenRes);
           return screen;
         } catch {

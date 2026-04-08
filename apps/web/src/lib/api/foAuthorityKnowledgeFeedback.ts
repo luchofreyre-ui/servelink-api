@@ -26,7 +26,7 @@ export async function submitFoAuthorityKnowledgeFeedback(
     notes?: string;
   },
 ): Promise<FoAuthorityKnowledgeFeedbackResponse> {
-  const url = `${apiBase}/api/v1/fo/authority/bookings/${encodeURIComponent(bookingId)}/knowledge-feedback`;
+  const url = `${apiBase}/fo/authority/bookings/${encodeURIComponent(bookingId)}/knowledge-feedback`;
   const response = await fetch(url, {
     method: "POST",
     headers: {

@@ -17,7 +17,7 @@ async function postSystemOpsBookingAction(
     | "clear-review-required"
     | "trigger-redispatch",
 ): Promise<OpsMutationResult> {
-  const path = `/api/v1/system/ops/bookings/${encodeURIComponent(bookingId)}/${suffix}`;
+  const path = `/system/ops/bookings/${encodeURIComponent(bookingId)}/${suffix}`;
   const res = await apiFetch(path, {
     method: "POST",
     json: {},
@@ -45,7 +45,7 @@ async function postSystemOpsExceptionAction(
   dispatchExceptionKey: string,
   suffix: "assign-to-me" | "resolve",
 ): Promise<OpsMutationResult> {
-  const path = `/api/v1/system/ops/exception-actions/${encodeURIComponent(dispatchExceptionKey)}/${suffix}`;
+  const path = `/system/ops/exception-actions/${encodeURIComponent(dispatchExceptionKey)}/${suffix}`;
   const res = await apiFetch(path, {
     method: "POST",
     json: {},

@@ -292,7 +292,7 @@ export default function AdminBookingDetailPage() {
     if (!authToken || !bookingId) return;
     try {
       const data = await fetchJson<BookingRecord>(
-        `${API_BASE_URL}/api/v1/bookings/${bookingId}?includeEvents=true`,
+        `${API_BASE_URL}/bookings/${bookingId}?includeEvents=true`,
         authToken,
       );
       setBooking({ loading: false, error: null, data });
@@ -352,7 +352,7 @@ export default function AdminBookingDetailPage() {
       setAssignmentRecs({ loading: true, error: null, data: null });
 
       const commandCenterPromise = fetchJson<AdminBookingCommandCenterPayload>(
-        `${API_BASE_URL}/api/v1/admin/bookings/${bookingId}/command-center`,
+        `${API_BASE_URL}/admin/bookings/${bookingId}/command-center`,
         authToken,
       )
         .then((data) => {
@@ -372,7 +372,7 @@ export default function AdminBookingDetailPage() {
         });
 
       const screenPromise = fetchJson<BookingScreenEnvelope>(
-        `${API_BASE_URL}/api/v1/bookings/${bookingId}/screen`,
+        `${API_BASE_URL}/bookings/${bookingId}/screen`,
         authToken,
       )
         .then((payload) => {
@@ -398,7 +398,7 @@ export default function AdminBookingDetailPage() {
         });
 
       const anomaliesPromise = fetch(
-        `${API_BASE_URL}/api/v1/admin/payments/anomalies?bookingId=${encodeURIComponent(bookingId)}`,
+        `${API_BASE_URL}/admin/payments/anomalies?bookingId=${encodeURIComponent(bookingId)}`,
         {
           headers: { Authorization: `Bearer ${authToken}` },
           cache: "no-store",
@@ -420,7 +420,7 @@ export default function AdminBookingDetailPage() {
         });
 
       const bookingPromise = fetchJson<BookingRecord>(
-        `${API_BASE_URL}/api/v1/bookings/${bookingId}?includeEvents=true`,
+        `${API_BASE_URL}/bookings/${bookingId}?includeEvents=true`,
         authToken,
       )
         .then((data) => {
@@ -440,7 +440,7 @@ export default function AdminBookingDetailPage() {
         });
 
       const exceptionPromise = fetchJson<DispatchExceptionDetailResponse>(
-        `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-exception-detail`,
+        `${API_BASE_URL}/bookings/${bookingId}/dispatch-exception-detail`,
         authToken,
       )
         .then((data) => {
@@ -462,7 +462,7 @@ export default function AdminBookingDetailPage() {
         });
 
       const timelinePromise = fetchJson<DispatchTimelineResponse>(
-        `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-timeline`,
+        `${API_BASE_URL}/bookings/${bookingId}/dispatch-timeline`,
         authToken,
       )
         .then((data) => {
@@ -484,7 +484,7 @@ export default function AdminBookingDetailPage() {
         });
 
       const explainerPromise = fetchJson<DispatchExplainerResponse>(
-        `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-explainer`,
+        `${API_BASE_URL}/bookings/${bookingId}/dispatch-explainer`,
         authToken,
       )
         .then((data) => {
@@ -560,27 +560,27 @@ export default function AdminBookingDetailPage() {
         anomaliesReload,
       ] = await Promise.allSettled([
         fetchJson<BookingRecord>(
-          `${API_BASE_URL}/api/v1/bookings/${bookingId}?includeEvents=true`,
+          `${API_BASE_URL}/bookings/${bookingId}?includeEvents=true`,
           token,
         ),
         fetchJson<DispatchExceptionDetailResponse>(
-          `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-exception-detail`,
+          `${API_BASE_URL}/bookings/${bookingId}/dispatch-exception-detail`,
           token,
         ),
         fetchJson<DispatchTimelineResponse>(
-          `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-timeline`,
+          `${API_BASE_URL}/bookings/${bookingId}/dispatch-timeline`,
           token,
         ),
         fetchJson<DispatchExplainerResponse>(
-          `${API_BASE_URL}/api/v1/bookings/${bookingId}/dispatch-explainer`,
+          `${API_BASE_URL}/bookings/${bookingId}/dispatch-explainer`,
           token,
         ),
         fetchJson<AdminBookingCommandCenterPayload>(
-          `${API_BASE_URL}/api/v1/admin/bookings/${bookingId}/command-center`,
+          `${API_BASE_URL}/admin/bookings/${bookingId}/command-center`,
           token,
         ),
         fetchJson<BookingScreenEnvelope>(
-          `${API_BASE_URL}/api/v1/bookings/${bookingId}/screen`,
+          `${API_BASE_URL}/bookings/${bookingId}/screen`,
           token,
         ),
         fetchAssignmentRecommendations(bookingId),
@@ -682,7 +682,7 @@ export default function AdminBookingDetailPage() {
     });
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/admin/dispatch-decisions`, {
+      const response = await fetch(`${API_BASE_URL}/admin/dispatch-decisions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

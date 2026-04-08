@@ -71,7 +71,7 @@ export async function fetchAdminAuthorityReport(
     sp.set("updatedSince", params.updatedSince.trim());
   }
   const qs = sp.toString();
-  const url = `${apiBase}/api/v1/admin/authority/report${qs ? `?${qs}` : ""}`;
+  const url = `${apiBase}/admin/authority/report${qs ? `?${qs}` : ""}`;
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
@@ -110,7 +110,7 @@ export async function fetchAdminAuthorityResultsList(
     sp.set("offset", String(params.offset));
   }
   const qs = sp.toString();
-  const url = `${apiBase}/api/v1/admin/authority/results${qs ? `?${qs}` : ""}`;
+  const url = `${apiBase}/admin/authority/results${qs ? `?${qs}` : ""}`;
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
