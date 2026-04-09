@@ -10,7 +10,7 @@ type LoginResult = {
 };
 
 /**
- * Login must use the same base as the web app (`WEB_ENV.apiBaseUrl` includes `/api/v1`).
+ * Login uses `WEB_ENV.apiBaseUrl` (`{origin}/api/v1` from `NEXT_PUBLIC_API_BASE_URL`).
  */
 export async function loginViaApi(email: string, password: string): Promise<string> {
   const loginUrl = `${WEB_ENV.apiBaseUrl}/auth/login`;

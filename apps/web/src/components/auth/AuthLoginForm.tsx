@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAuthUser, hasRole, isAuthenticated, type UserRole } from "@/lib/auth/authClient";
 import { getDefaultRouteForRole, getRoleLabel } from "@/lib/auth/authRoutes";
@@ -22,6 +22,11 @@ export function AuthLoginForm({
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const resolvedTitle = useMemo(
     () => title ?? `${getRoleLabel(role)} Login`,
@@ -63,15 +68,9 @@ export function AuthLoginForm({
     router.refresh();
   }
 
-  const alreadyAuthed = typeof window !== "undefined" && isAuthenticated();
-  const alreadyCorrectRole =
-    typeof window !== "undefined" && hasRole(role);
-  const existingUser =
-    typeof window !== "undefined" ? getAuthUser() : null;
-
-  // 🔴 CRITICAL: IDs must match labels for Playwright
-  const emailId = `${role}-email-input`;
-  const passwordId = `${role}-password-input`;
+  const alreadyAuthed = mounted && isAuthenticated();
+  const alreadyCorrectRole = mounted && hasRole(role);
+  const existingUser = mounted ? getAuthUser() : null;
 
   return (
     <div className="mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
@@ -102,13 +101,14 @@ export function AuthLoginForm({
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
           <label
-            htmlFor={emailId}
+            htmlFor="email"
             className="mb-1 block text-sm font-medium text-slate-700"
           >
             {role === "admin" ? "Admin email" : "Email"}
           </label>
           <input
-            id={emailId}
+            id="email"
+            name="email"
             type="email"
             autoComplete="email"
             value={email}
@@ -121,13 +121,14 @@ export function AuthLoginForm({
 
         <div>
           <label
-            htmlFor={passwordId}
+            htmlFor="password"
             className="mb-1 block text-sm font-medium text-slate-700"
           >
             Password
           </label>
           <input
-            id={passwordId}
+            id="password"
+            name="password"
             type="password"
             autoComplete="current-password"
             value={password}

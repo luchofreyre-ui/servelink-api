@@ -1,19 +1,10 @@
-import { WEB_ENV } from "@/lib/env";
+import { WEB_ENV, normalizeApiOrigin } from "@/lib/env";
 import {
   getStoredAccessToken,
   SERVELINK_ACCESS_TOKEN_COOKIE,
 } from "@/lib/auth";
 
-function normalizeBaseUrl(input: string) {
-  const trimmed = input.trim();
-  if (!trimmed) {
-    return WEB_ENV.apiBaseUrl;
-  }
-
-  return trimmed.endsWith("/") ? trimmed.slice(0, -1) : trimmed;
-}
-
-export const API_BASE_URL = normalizeBaseUrl(WEB_ENV.apiBaseUrl);
+export const API_BASE_URL = WEB_ENV.apiBaseUrl;
 
 /**
  * `NEXT_PUBLIC_*` is inlined at build time; Playwright (and other runtimes) need a
@@ -22,7 +13,7 @@ export const API_BASE_URL = normalizeBaseUrl(WEB_ENV.apiBaseUrl);
 function serverApiBaseUrl(): string {
   const s = process.env.SERVELINK_INTERNAL_API_BASE_URL?.trim();
   if (s) {
-    return normalizeBaseUrl(s);
+    return `${normalizeApiOrigin(s)}/api/v1`;
   }
   return API_BASE_URL;
 }

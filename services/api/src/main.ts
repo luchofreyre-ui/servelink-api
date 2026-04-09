@@ -1,14 +1,28 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 
+/** Default browser origins for local Next.js dev when `CORS_ORIGINS` is unset or empty. */
+const DEFAULT_LOCAL_DEV_ORIGINS: readonly string[] = [
+  "http://localhost:3000",
+  "http://localhost:3002",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3002",
+];
+
 function parseAllowedOrigins(): string[] {
   const raw = process.env.CORS_ORIGINS;
-  if (!raw) return [];
+  const fromEnv = raw
+    ? raw
+        .split(",")
+        .map((o) => o.trim())
+        .filter(Boolean)
+    : [];
 
-  return raw
-    .split(",")
-    .map((o) => o.trim())
-    .filter(Boolean);
+  if (fromEnv.length === 0) {
+    return [...DEFAULT_LOCAL_DEV_ORIGINS];
+  }
+
+  return [...new Set([...DEFAULT_LOCAL_DEV_ORIGINS, ...fromEnv])];
 }
 
 async function bootstrap() {

@@ -10,7 +10,7 @@
  *
  * Env:
  *   SYSTEM_TESTS_ADMIN_TOKEN — Bearer JWT (admin) [required]
- *   NEXT_PUBLIC_API_BASE_URL — API base (default http://localhost:3001)
+ *   NEXT_PUBLIC_API_BASE_URL — API origin only (default http://localhost:3001)
  *   PLAYWRIGHT_UPLOAD_SOURCE — source string (default playwright-json)
  *   PLAYWRIGHT_LANE — optional lane slug (e.g. fast, deep, full-suite, custom-abc12345); appended to `source` as `|lane=…` for triage
  *   PLAYWRIGHT_LANE_LABEL — optional human label (logged only)
@@ -21,6 +21,7 @@
 import { createHash } from "crypto";
 import * as fs from "fs";
 import * as path from "path";
+import { normalizeApiOrigin } from "../src/lib/env";
 
 type Json = Record<string, unknown>;
 
@@ -385,8 +386,7 @@ async function main() {
     rawReportJson: report as Record<string, unknown>,
   };
 
-  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001").replace(/\/$/, "");
-  const url = `${base}/api/v1/admin/system-tests/report`;
+  const url = `${normalizeApiOrigin(process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001")}/api/v1/admin/system-tests/report`;
 
   const res = await fetch(url, {
     method: "POST",

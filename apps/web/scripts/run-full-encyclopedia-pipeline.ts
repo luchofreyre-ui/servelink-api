@@ -7,7 +7,7 @@
  *
  * Run from apps/web: npm run run:full-encyclopedia
  * Write batch JSON only: npm run run:full-encyclopedia -- --seed-only
- * Optional: --api-base=http://host:port/api/v1
+ * Optional: --api-base=http://host:port (API origin; `/api/v1` is appended)
  */
 
 import { execSync } from "child_process";
@@ -20,6 +20,7 @@ import {
   TAXONOMY_PROBLEMS as PROBLEMS,
   TAXONOMY_SURFACES as SURFACES,
 } from "../src/lib/encyclopedia/evidence/cleaningMatrixTaxonomy";
+import { normalizeApiOrigin } from "../src/lib/env";
 import {
   canonicalPairKey,
   resolveEvidence,
@@ -394,10 +395,12 @@ function runPipelineOnDiskBatches(apiBase: string): void {
 async function main() {
   const args = process.argv.slice(2);
   const seedOnly = args.includes("--seed-only");
-  const apiBase =
+  const apiBase = `${normalizeApiOrigin(
     getArg("api-base") ||
-    process.env.API_BASE_URL ||
-    "http://localhost:3001/api/v1";
+      process.env.API_BASE_URL ||
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      "http://localhost:3001",
+  )}/api/v1`;
 
   if (!seedOnly && !fileExists(API_ROOT)) {
     throw new Error(`API package not found at ${API_ROOT}`);

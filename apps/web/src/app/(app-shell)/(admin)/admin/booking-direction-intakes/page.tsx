@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getStoredAccessToken } from "@/lib/auth";
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:3001";
+import { WEB_ENV } from "@/lib/env";
 
 type IntakeRow = {
   intakeId: string;
@@ -54,7 +52,7 @@ export default function AdminBookingDirectionIntakesPage() {
       setError(null);
       try {
         const res = await fetch(
-          `${API_BASE_URL}/api/v1/admin/booking-direction-intakes?limit=50`,
+          `${WEB_ENV.apiBaseUrl}/admin/booking-direction-intakes?limit=50`,
           {
             headers: { Authorization: `Bearer ${token}` },
             cache: "no-store",

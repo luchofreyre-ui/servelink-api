@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+cd "$(dirname "$0")/.." || exit 1
+
+# Staged-file TypeScript gate (lint-staged alone can miss errors with stash/checkout; run tsc on real tree).
+if git diff --cached --name-only | grep -qE '^apps/web/.*\.(ts|tsx)$'; then
+  (cd apps/web && npm run typecheck) || exit 1
+fi
+if git diff --cached --name-only | grep -qE '^services/api/.*\.(ts|tsx)$'; then
+  (cd services/api && npx prisma generate && npm run typecheck) || exit 1
+fi
+if git diff --cached --name-only | grep -qE '^packages/system-test-intelligence/.*\.ts$'; then
+  (cd packages/system-test-intelligence && npm ci && npm run build && cd ../../services/api && npx prisma generate && npm run typecheck) || exit 1
+fi

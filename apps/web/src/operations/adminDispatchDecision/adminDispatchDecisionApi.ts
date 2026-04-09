@@ -2,6 +2,7 @@ import type {
   AdminDispatchDecisionInput,
   AdminDispatchDecisionResult,
 } from "@/contracts/adminDispatchDecision";
+import { API_BASE_URL } from "@/lib/api";
 import { validateAdminDispatchDecisionInput } from "./adminDispatchDecisionValidation";
 
 export class AdminDispatchDecisionApiError extends Error {
@@ -23,7 +24,7 @@ export async function submitAdminDispatchDecision(
     throw new AdminDispatchDecisionApiError(validation.errors.join(" "));
   }
 
-  const response = await fetch("http://localhost:3001/api/v1/admin/dispatch-decisions", {
+  const response = await fetch(`${API_BASE_URL}/admin/dispatch-decisions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

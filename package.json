@@ -1,0 +1,12 @@
+{
+  "name": "servelink",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "typecheck:api": "npm run typecheck --prefix services/api",
+    "typecheck:web": "npm run typecheck --prefix apps/web"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

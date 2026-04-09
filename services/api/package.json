@@ -14,7 +14,8 @@
     "backfill:system-test-intelligence": "ts-node src/scripts/backfill-system-test-intelligence.ts",
     "promote:encyclopedia": "ts-node src/scripts/encyclopedia/promote-approved.ts",
     "approve:all": "ts-node src/scripts/encyclopedia/approve-all-pending.ts",
-    "import:encyclopedia-review-records": "ts-node src/scripts/encyclopedia/import-review-records.ts"
+    "import:encyclopedia-review-records": "ts-node src/scripts/encyclopedia/import-review-records.ts",
+    "seed:playwright-admin-scenario": "ts-node -P scripts/tsconfig.json scripts/seedPlaywrightAdminScenario.ts"
   },
   "keywords": [],
   "author": "",

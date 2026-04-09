@@ -1,7 +1,6 @@
 "use client";
 
 import { AuthLoginForm } from "@/components/auth/AuthLoginForm";
-import { WEB_ENV } from "@/lib/env";
 
 export default function AdminAuthPage() {
   return (
@@ -14,7 +13,7 @@ export default function AdminAuthPage() {
         </h1>
 
         <p className="text-sm text-slate-600 mb-6">
-          POST {`${WEB_ENV.apiBaseUrl}/auth/login`}
+          POST /api/v1/auth/login
         </p>
 
         {/* WRAP FORM TO ADD REQUIRED LABEL STRUCTURE */}
