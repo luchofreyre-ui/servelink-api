@@ -690,8 +690,8 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
         surface: "glass",
         products: [
           { slug: "windex-original-glass-cleaner", name: "Windex Original" },
+          { slug: "invisible-glass-premium-glass-cleaner", name: "Invisible Glass Premium" },
           { slug: "rubbermaid-microfiber-cleaning-cloths", name: "Microfiber Cleaning Cloths" },
-          { slug: "method-all-purpose-cleaner", name: "Method All-Purpose Cleaner" },
         ],
       },
       {
