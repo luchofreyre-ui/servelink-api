@@ -56,7 +56,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const priorityComparisonSlug = deriveComparisonSlug(product.slug);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-10 px-6 py-10">
+    <main className="mx-auto max-w-5xl space-y-10 px-6 py-10">
       <div className="grid gap-8 lg:grid-cols-[minmax(280px,420px)_1fr]">
         <div>
           <ProductImageGallery
@@ -457,6 +457,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </section>
       )}
 
-    </div>
+    </main>
   );
 }

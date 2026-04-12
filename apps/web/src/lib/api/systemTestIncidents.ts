@@ -109,7 +109,7 @@ export async function fetchAdminSystemTestIncidents(
   const qs = q.toString();
   return adminJson<SystemTestIncidentListItemApi[]>(
     accessToken,
-    `/api/v1/admin/system-tests/incidents${qs ? `?${qs}` : ""}`,
+    `/admin/system-tests/incidents${qs ? `?${qs}` : ""}`,
   );
 }
 
@@ -123,6 +123,6 @@ export async function fetchAdminSystemTestIncidentDetail(
   const qs = q.toString();
   return adminJson<SystemTestIncidentDetailApi>(
     accessToken,
-    `/api/v1/admin/system-tests/incidents/${encodeURIComponent(incidentKey)}${qs ? `?${qs}` : ""}`,
+    `/admin/system-tests/incidents/${encodeURIComponent(incidentKey)}${qs ? `?${qs}` : ""}`,
   );
 }

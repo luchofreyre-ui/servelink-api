@@ -27,7 +27,7 @@ export async function fetchAdminAuthorityUnmappedTags(
   if (params?.updatedSince?.trim()) sp.set("updatedSince", params.updatedSince.trim());
   if (params?.maxRowsScan != null) sp.set("maxRowsScan", String(params.maxRowsScan));
   const qs = sp.toString();
-  const url = `${apiBase}/api/v1/admin/authority/knowledge-unmapped-tags${qs ? `?${qs}` : ""}`;
+  const url = `${apiBase}/admin/authority/knowledge-unmapped-tags${qs ? `?${qs}` : ""}`;
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",

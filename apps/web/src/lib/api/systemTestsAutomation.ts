@@ -59,7 +59,7 @@ export async function fetchSystemTestsAutomationStatus(
 ): Promise<SystemTestsAutomationStatus> {
   return adminJson<SystemTestsAutomationStatus>(
     accessToken,
-    "/api/v1/admin/system-tests/automation/status",
+    "/admin/system-tests/automation/status",
   );
 }
 
@@ -69,7 +69,7 @@ export async function fetchSystemTestsAutomationJob(
 ): Promise<SystemTestsAutomationJobDetailResponse> {
   return adminJson<SystemTestsAutomationJobDetailResponse>(
     accessToken,
-    `/api/v1/admin/system-tests/automation/jobs/${encodeURIComponent(jobId)}`,
+    `/admin/system-tests/automation/jobs/${encodeURIComponent(jobId)}`,
   );
 }
 
@@ -81,7 +81,7 @@ export async function fetchSystemTestsAutomationJobs(
   qs.set("limit", String(limit));
   return adminJson<SystemTestsAutomationJobsResponse>(
     accessToken,
-    `/api/v1/admin/system-tests/automation/jobs?${qs.toString()}`,
+    `/admin/system-tests/automation/jobs?${qs.toString()}`,
   );
 }
 
@@ -90,7 +90,7 @@ export async function postSystemTestsRunDigest(
 ): Promise<SystemTestsAutomationTriggerResponse> {
   return adminJson<SystemTestsAutomationTriggerResponse>(
     accessToken,
-    "/api/v1/admin/system-tests/automation/run-digest",
+    "/admin/system-tests/automation/run-digest",
     { method: "POST" },
   );
 }
@@ -100,7 +100,7 @@ export async function postSystemTestsEvaluateAlert(
 ): Promise<SystemTestsAutomationTriggerResponse> {
   return adminJson<SystemTestsAutomationTriggerResponse>(
     accessToken,
-    "/api/v1/admin/system-tests/automation/evaluate-alert",
+    "/admin/system-tests/automation/evaluate-alert",
     { method: "POST" },
   );
 }
@@ -110,7 +110,7 @@ export async function postSystemTestsGenerateTriage(
 ): Promise<SystemTestsAutomationTriggerResponse> {
   return adminJson<SystemTestsAutomationTriggerResponse>(
     accessToken,
-    "/api/v1/admin/system-tests/automation/generate-triage",
+    "/admin/system-tests/automation/generate-triage",
     { method: "POST" },
   );
 }
@@ -121,7 +121,7 @@ export async function postSystemTestsSendJob(
 ): Promise<{ ok: boolean; status: string; error?: string }> {
   return adminJson<{ ok: boolean; status: string; error?: string }>(
     accessToken,
-    `/api/v1/admin/system-tests/automation/send-job/${encodeURIComponent(jobId)}`,
+    `/admin/system-tests/automation/send-job/${encodeURIComponent(jobId)}`,
     { method: "POST" },
   );
 }

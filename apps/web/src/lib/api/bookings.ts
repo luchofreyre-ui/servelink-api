@@ -85,7 +85,7 @@ export async function fetchPublicBookingConfirmation(
   bookingId: string,
 ): Promise<PublicBookingConfirmationResponse> {
   const res = await fetch(
-    `${API_BASE_URL}/api/v1/public/bookings/${encodeURIComponent(bookingId)}/confirmation`,
+    `${API_BASE_URL}/public/bookings/${encodeURIComponent(bookingId)}/confirmation`,
     { cache: "no-store" },
   );
   if (!res.ok) {
@@ -100,7 +100,7 @@ export async function startDeepCleanVisit(
   visitNumber: number,
 ): Promise<{ kind: string; execution: unknown }> {
   const res = await apiFetch(
-    `/api/v1/bookings/${encodeURIComponent(bookingId)}/deep-clean/visits/${visitNumber}/start`,
+    `/bookings/${encodeURIComponent(bookingId)}/deep-clean/visits/${visitNumber}/start`,
     { method: "POST" },
   );
   if (!res.ok) {
@@ -119,7 +119,7 @@ export async function completeDeepCleanVisit(
   },
 ): Promise<{ kind: string; execution: unknown }> {
   const res = await apiFetch(
-    `/api/v1/bookings/${encodeURIComponent(bookingId)}/deep-clean/visits/${visitNumber}/complete`,
+    `/bookings/${encodeURIComponent(bookingId)}/deep-clean/visits/${visitNumber}/complete`,
     {
       method: "POST",
       json: {
@@ -141,7 +141,7 @@ export async function fetchAdminDeepCleanAnalytics(
   const qs = new URLSearchParams();
   if (params) appendDeepCleanAnalyticsQuery(qs, params);
   const suffix = qs.toString() ? `?${qs.toString()}` : "";
-  const res = await apiFetch(`/api/v1/admin/deep-clean/analytics${suffix}`);
+  const res = await apiFetch(`/admin/deep-clean/analytics${suffix}`);
   const text = await res.text().catch(() => "");
   let body: unknown = null;
   try {
@@ -168,7 +168,7 @@ export async function updateAdminDeepCleanCalibrationReview(
   payload: UpdateDeepCleanCalibrationReviewRequestApi,
 ): Promise<DeepCleanCalibrationReviewUpdatedResponseApi> {
   const res = await apiFetch(
-    `/api/v1/admin/deep-clean/analytics/${encodeURIComponent(bookingId)}/review`,
+    `/admin/deep-clean/analytics/${encodeURIComponent(bookingId)}/review`,
     {
       method: "POST",
       json: {
@@ -205,7 +205,7 @@ export async function fetchAdminDeepCleanInsights(
   const qs = new URLSearchParams();
   if (params) appendDeepCleanInsightsQuery(qs, params);
   const suffix = qs.toString() ? `?${qs.toString()}` : "";
-  const res = await apiFetch(`/api/v1/admin/deep-clean/insights${suffix}`);
+  const res = await apiFetch(`/admin/deep-clean/insights${suffix}`);
   const text = await res.text().catch(() => "");
   let body: unknown = null;
   try {
@@ -240,7 +240,7 @@ export async function fetchAdminDeepCleanEstimatorImpact(
   const qs = new URLSearchParams();
   if (params) appendDeepCleanEstimatorImpactQuery(qs, params);
   const suffix = qs.toString() ? `?${qs.toString()}` : "";
-  const res = await apiFetch(`/api/v1/admin/deep-clean/estimator-impact${suffix}`);
+  const res = await apiFetch(`/admin/deep-clean/estimator-impact${suffix}`);
   const text = await res.text().catch(() => "");
   let body: unknown = null;
   try {
@@ -277,7 +277,7 @@ async function parseJsonBody(res: Response): Promise<unknown> {
 }
 
 export async function fetchAdminDeepCleanEstimatorActiveConfig(): Promise<DeepCleanEstimatorActiveResponseApi> {
-  const res = await apiFetch("/api/v1/admin/deep-clean/estimator-config/active");
+  const res = await apiFetch("/admin/deep-clean/estimator-config/active");
   const body = await parseJsonBody(res);
   if (!res.ok) {
     const msg =
@@ -294,7 +294,7 @@ export async function fetchAdminDeepCleanEstimatorActiveConfig(): Promise<DeepCl
 }
 
 export async function fetchAdminDeepCleanEstimatorDraftConfig(): Promise<DeepCleanEstimatorDraftResponseApi> {
-  const res = await apiFetch("/api/v1/admin/deep-clean/estimator-config/draft");
+  const res = await apiFetch("/admin/deep-clean/estimator-config/draft");
   const body = await parseJsonBody(res);
   if (!res.ok) {
     const msg =
@@ -314,7 +314,7 @@ export async function updateAdminDeepCleanEstimatorDraftConfig(payload: {
   label?: string;
   config: DeepCleanEstimatorConfigPayloadApi;
 }): Promise<DeepCleanEstimatorDraftUpdatedResponseApi> {
-  const res = await apiFetch("/api/v1/admin/deep-clean/estimator-config/draft", {
+  const res = await apiFetch("/admin/deep-clean/estimator-config/draft", {
     method: "POST",
     json: payload,
   });
@@ -334,7 +334,7 @@ export async function updateAdminDeepCleanEstimatorDraftConfig(payload: {
 }
 
 export async function publishAdminDeepCleanEstimatorDraft(): Promise<DeepCleanEstimatorPublishedResponseApi> {
-  const res = await apiFetch("/api/v1/admin/deep-clean/estimator-config/publish", {
+  const res = await apiFetch("/admin/deep-clean/estimator-config/publish", {
     method: "POST",
     json: {},
   });
@@ -359,7 +359,7 @@ export async function publishAdminDeepCleanEstimatorDraft(): Promise<DeepCleanEs
 }
 
 export async function fetchAdminDeepCleanEstimatorConfigHistory(): Promise<DeepCleanEstimatorGovernanceHistoryResponseApi> {
-  const res = await apiFetch("/api/v1/admin/deep-clean/estimator-config/history");
+  const res = await apiFetch("/admin/deep-clean/estimator-config/history");
   const body = await parseJsonBody(res);
   if (!res.ok) {
     const msg =
@@ -379,7 +379,7 @@ export async function fetchAdminDeepCleanEstimatorConfigDetail(
   id: string,
 ): Promise<DeepCleanEstimatorGovernanceDetailResponseApi> {
   const res = await apiFetch(
-    `/api/v1/admin/deep-clean/estimator-config/${encodeURIComponent(id)}`,
+    `/admin/deep-clean/estimator-config/${encodeURIComponent(id)}`,
   );
   const body = await parseJsonBody(res);
   if (!res.ok) {
@@ -400,7 +400,7 @@ export async function restoreAdminDeepCleanEstimatorConfigToDraft(
   id: string,
 ): Promise<DeepCleanEstimatorRestoreDraftResponseApi> {
   const res = await apiFetch(
-    `/api/v1/admin/deep-clean/estimator-config/${encodeURIComponent(id)}/restore-to-draft`,
+    `/admin/deep-clean/estimator-config/${encodeURIComponent(id)}/restore-to-draft`,
     { method: "POST", json: {} },
   );
   const body = await parseJsonBody(res);
@@ -424,7 +424,7 @@ export async function restoreAdminDeepCleanEstimatorConfigToDraft(
 }
 
 export async function previewAdminDeepCleanEstimatorConfig(estimateInput: Record<string, unknown>): Promise<DeepCleanEstimatorPreviewResponseApi> {
-  const res = await apiFetch("/api/v1/admin/deep-clean/estimator-config/preview", {
+  const res = await apiFetch("/admin/deep-clean/estimator-config/preview", {
     method: "POST",
     json: { estimateInput },
   });

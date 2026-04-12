@@ -85,7 +85,7 @@ export async function fetchAdminSystemTestsSummary(
   const qs = q.toString();
   return adminJson<SystemTestsSummaryResponse>(
     accessToken,
-    `/api/v1/admin/system-tests/summary${qs ? `?${qs}` : ""}`,
+    `/admin/system-tests/summary${qs ? `?${qs}` : ""}`,
   );
 }
 
@@ -98,7 +98,7 @@ export async function fetchAdminSystemTestRuns(
   qs.set("limit", String(params?.limit ?? 20));
   return adminJson<SystemTestsRunsResponse>(
     accessToken,
-    `/api/v1/admin/system-tests/runs?${qs.toString()}`,
+    `/admin/system-tests/runs?${qs.toString()}`,
   );
 }
 
@@ -108,7 +108,7 @@ export async function fetchAdminSystemTestRunDetail(
 ): Promise<SystemTestRunDetailResponse> {
   return adminJson<SystemTestRunDetailResponse>(
     accessToken,
-    `/api/v1/admin/system-tests/runs/${encodeURIComponent(runId)}`,
+    `/admin/system-tests/runs/${encodeURIComponent(runId)}`,
   );
 }
 

@@ -4,8 +4,7 @@ import {
   KnowledgeSeverity,
   KnowledgeSurface,
 } from "@/types/knowledge";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
+import { API_BASE_URL } from "@/lib/api";
 
 function buildHeaders(token: string): HeadersInit {
   return {
@@ -23,7 +22,7 @@ async function readJson<T>(response: Response): Promise<T> {
 }
 
 export async function fetchFoKnowledgeSurfaces(token: string): Promise<KnowledgeSurface[]> {
-  const response = await fetch(`${API_BASE_URL}/api/v1/fo/knowledge/surfaces`, {
+  const response = await fetch(`${API_BASE_URL}/fo/knowledge/surfaces`, {
     method: "GET",
     headers: buildHeaders(token),
     cache: "no-store",
@@ -33,7 +32,7 @@ export async function fetchFoKnowledgeSurfaces(token: string): Promise<Knowledge
 }
 
 export async function fetchFoKnowledgeProblems(token: string): Promise<KnowledgeProblem[]> {
-  const response = await fetch(`${API_BASE_URL}/api/v1/fo/knowledge/problems`, {
+  const response = await fetch(`${API_BASE_URL}/fo/knowledge/problems`, {
     method: "GET",
     headers: buildHeaders(token),
     cache: "no-store",
@@ -59,7 +58,7 @@ export async function fetchFoKnowledgeQuickSolve(
   });
 
   const response = await fetch(
-    `${API_BASE_URL}/api/v1/fo/knowledge/quick-solve?${search.toString()}`,
+    `${API_BASE_URL}/fo/knowledge/quick-solve?${search.toString()}`,
     {
       method: "GET",
       headers: buildHeaders(token),

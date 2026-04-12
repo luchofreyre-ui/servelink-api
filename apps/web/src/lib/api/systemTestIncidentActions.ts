@@ -7,7 +7,7 @@ import type {
   SystemTestIncidentStepExecutionStatus,
 } from "@/types/systemTestIncidentActions";
 
-const BASE = "/api/v1/admin/system-tests/incident-actions";
+const BASE = "/admin/system-tests/incident-actions";
 const FETCH_TIMEOUT_MS = 25_000;
 
 function parseJsonStrict(raw: string, status: number): unknown {

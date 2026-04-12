@@ -37,9 +37,9 @@ export async function fetchDispatchConfigReadBundle(
   token: string,
 ): Promise<DispatchConfigReadBundle> {
   const [active, draft, compare] = await Promise.all([
-    adminGetJson<unknown>(token, "/api/v1/admin/dispatch-config/active"),
-    adminGetJson<unknown>(token, "/api/v1/admin/dispatch-config/draft"),
-    adminGetJson<unknown>(token, "/api/v1/admin/dispatch-config/compare"),
+    adminGetJson<unknown>(token, "/admin/dispatch-config/active"),
+    adminGetJson<unknown>(token, "/admin/dispatch-config/draft"),
+    adminGetJson<unknown>(token, "/admin/dispatch-config/compare"),
   ]);
   return { active, draft, compare };
 }

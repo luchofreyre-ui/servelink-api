@@ -47,6 +47,21 @@ export default function AppShellLayout({
               <Link href="/admin" className="hover:underline">
                 Admin
               </Link>
+              <Link href="/admin/ops" className="hover:underline">
+                Ops
+              </Link>
+              <Link href="/admin/anomalies" className="hover:underline">
+                Anomalies
+              </Link>
+              <Link href="/admin/activity" className="hover:underline">
+                Activity
+              </Link>
+              <Link href="/admin/exceptions" className="hover:underline">
+                Exceptions
+              </Link>
+              <Link href="/admin/system-tests" className="hover:underline">
+                System tests
+              </Link>
               <Link href="/notifications" className="hover:underline">
                 Notifications
               </Link>

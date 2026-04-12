@@ -17,6 +17,7 @@ import {
   TAXONOMY_PROBLEMS,
   TAXONOMY_SURFACES,
 } from "../../src/lib/encyclopedia/evidence/cleaningMatrixTaxonomy";
+import { normalizeApiOrigin } from "../../src/lib/env";
 
 type ListItem = { surface?: string; problem?: string; intent?: string };
 
@@ -34,8 +35,11 @@ async function fetchLiveList(apiBase: string): Promise<ListItem[]> {
 }
 
 async function main() {
-  const apiBase =
-    process.env.API_BASE_URL?.trim() || "http://localhost:3001/api/v1";
+  const apiBase = `${normalizeApiOrigin(
+    process.env.API_BASE_URL?.trim() ||
+      process.env.NEXT_PUBLIC_API_BASE_URL?.trim() ||
+      "http://localhost:3001",
+  )}/api/v1`;
 
   let items: ListItem[] = [];
   let liveListOk = false;

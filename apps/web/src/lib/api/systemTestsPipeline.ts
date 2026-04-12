@@ -61,7 +61,7 @@ export async function fetchSystemTestsPipelineJobs(
   qs.set("limit", String(limit));
   return adminJson<SystemTestsPipelineJobsResponse>(
     accessToken,
-    `/api/v1/admin/system-tests/pipeline/jobs?${qs.toString()}`,
+    `/admin/system-tests/pipeline/jobs?${qs.toString()}`,
   );
 }
 
@@ -74,7 +74,7 @@ export async function fetchSystemTestsPipelineJobsForRun(
   qs.set("limit", String(limit));
   return adminJson<SystemTestsPipelineJobsByRunResponse>(
     accessToken,
-    `/api/v1/admin/system-tests/pipeline/jobs/run/${encodeURIComponent(runId)}?${qs.toString()}`,
+    `/admin/system-tests/pipeline/jobs/run/${encodeURIComponent(runId)}?${qs.toString()}`,
   );
 }
 
@@ -84,7 +84,7 @@ export async function postSystemTestsPipelineRetryJob(
 ): Promise<SystemTestsPipelineEnqueueResponse> {
   return adminJson<SystemTestsPipelineEnqueueResponse>(
     accessToken,
-    `/api/v1/admin/system-tests/pipeline/retry/${encodeURIComponent(pipelineJobId)}`,
+    `/admin/system-tests/pipeline/retry/${encodeURIComponent(pipelineJobId)}`,
     { method: "POST" },
   );
 }
@@ -96,7 +96,7 @@ export async function postSystemTestsPipelineRequeueAnalysis(
 ): Promise<SystemTestsPipelineEnqueueResponse> {
   return adminJson<SystemTestsPipelineEnqueueResponse>(
     accessToken,
-    `/api/v1/admin/system-tests/pipeline/requeue-analysis/${encodeURIComponent(runId)}`,
+    `/admin/system-tests/pipeline/requeue-analysis/${encodeURIComponent(runId)}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

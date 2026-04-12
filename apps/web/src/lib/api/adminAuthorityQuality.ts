@@ -91,7 +91,7 @@ export async function fetchAdminAuthorityQuality(
   params?: { windowHours?: number; updatedSince?: string; topLimit?: number },
 ): Promise<BookingAuthorityQualityPayload> {
   const qs = buildScopedQuery(params);
-  const url = `${apiBase}/api/v1/admin/authority/quality${qs ? `?${qs}` : ""}`;
+  const url = `${apiBase}/admin/authority/quality${qs ? `?${qs}` : ""}`;
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
@@ -116,7 +116,7 @@ export async function fetchAdminAuthorityDrift(
   params?: { windowHours?: number; updatedSince?: string; topLimit?: number },
 ): Promise<BookingAuthorityDriftPayload> {
   const qs = buildScopedQuery(params);
-  const url = `${apiBase}/api/v1/admin/authority/drift${qs ? `?${qs}` : ""}`;
+  const url = `${apiBase}/admin/authority/drift${qs ? `?${qs}` : ""}`;
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",

@@ -1,14 +1,14 @@
+import { normalizeApiOrigin } from "@/lib/env";
+
 export const PLAYWRIGHT_BASE_URL =
   process.env.PLAYWRIGHT_BASE_URL?.replace(/\/$/, "") ||
   "http://127.0.0.1:3000";
 
-/** Ensures URLs used for Node-side API calls include `/api/v1`. */
-function ensureApiV1Suffix(url: string): string {
-  const t = url.replace(/\/$/, "");
-  return /\/api\/v1$/.test(t) ? t : `${t}/api/v1`;
-}
-
 const DEFAULT_NEST_ORIGIN = "http://127.0.0.1:3001";
+
+function toApiV1Base(url: string): string {
+  return `${normalizeApiOrigin(url)}/api/v1`;
+}
 
 /**
  * Canonical Nest HTTP origin (no `/api/v1`). Use for `NEXT_PUBLIC_API_BASE_URL` when
@@ -46,17 +46,17 @@ function nextPublicLooksLikeWebOriginOnly(url: string): boolean {
  * Prefer `PLAYWRIGHT_API_BASE_URL`; do not follow `NEXT_PUBLIC_*` when it points at the web app.
  */
 export const PLAYWRIGHT_API_BASE_URL = (() => {
-  const explicit = process.env.PLAYWRIGHT_API_BASE_URL?.replace(/\/$/, "");
+  const explicit = process.env.PLAYWRIGHT_API_BASE_URL?.trim();
   if (explicit) {
-    return ensureApiV1Suffix(explicit);
+    return toApiV1Base(explicit);
   }
 
   const fromNextPublic = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
   if (fromNextPublic && !nextPublicLooksLikeWebOriginOnly(fromNextPublic)) {
-    return ensureApiV1Suffix(fromNextPublic);
+    return toApiV1Base(fromNextPublic);
   }
 
-  return ensureApiV1Suffix(PLAYWRIGHT_NEST_API_ORIGIN);
+  return toApiV1Base(PLAYWRIGHT_NEST_API_ORIGIN);
 })();
 
 export const PLAYWRIGHT_SCENARIO_URL = `${PLAYWRIGHT_API_BASE_URL}/dev/playwright/admin-scenario`;

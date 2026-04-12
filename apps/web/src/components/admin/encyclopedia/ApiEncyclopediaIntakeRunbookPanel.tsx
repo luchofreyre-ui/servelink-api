@@ -13,7 +13,7 @@ export default function ApiEncyclopediaIntakeRunbookPanel() {
 
       <pre className="overflow-auto rounded-lg border bg-neutral-50 p-3 text-xs">
         {`cd ~/Desktop/servelink/apps/web
-SERVELINK_ACCESS_TOKEN=YOUR_TOKEN npm run intake:encyclopedia-generated-review-records -- --source=content-batches/encyclopedia/YOUR_FILE.json --api-base=http://localhost:3001/api/v1`}
+SERVELINK_ACCESS_TOKEN=YOUR_TOKEN npm run intake:encyclopedia-generated-review-records -- --source=content-batches/encyclopedia/YOUR_FILE.json --api-base=http://localhost:3001`}
       </pre>
 
       <div className="text-xs text-neutral-500">

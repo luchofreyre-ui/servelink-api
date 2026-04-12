@@ -2,7 +2,7 @@ import { apiFetch } from "@/lib/api";
 import { apiGet } from "@/lib/api/client";
 import type { CanonicalPageSnapshot } from "@/lib/encyclopedia/canonicalTypes";
 
-const BASE = "/api/v1/admin/encyclopedia/review";
+const BASE = "/admin/encyclopedia/review";
 
 export type ReviewedCandidateApiInput = {
   slug: string;

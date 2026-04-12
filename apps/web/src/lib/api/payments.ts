@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/lib/api";
+import { API_BASE_URL, apiFetch } from "@/lib/api";
 import { getStoredAccessToken } from "@/lib/auth";
 import type {
   AdminBookingOperationalDetail,
@@ -33,7 +33,7 @@ export function buildAuthHeaders(): HeadersInit {
 }
 
 export async function getStripePublicConfig(): Promise<StripePublicConfigResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/v1/payments/config`, {
+  const response = await fetch(`${API_BASE_URL}/payments/config`, {
     headers: buildAuthHeaders(),
     cache: "no-store",
   });
@@ -156,7 +156,7 @@ export async function getBookingStatus(
   bookingId: string,
   token: string,
 ): Promise<BookingStatusResponse> {
-  const response = await authFetch(token, `/api/v1/bookings/${bookingId}/status`, {
+  const response = await authFetch(token, `/bookings/${bookingId}/status`, {
     method: "GET",
   });
   const payload = await parseJson<Record<string, unknown>>(response);
@@ -169,7 +169,7 @@ export async function createBookingPaymentIntent(
 ): Promise<CreatePaymentIntentResponse> {
   const response = await authFetch(
     token,
-    `/api/v1/payments/bookings/${bookingId}/intent`,
+    `/payments/bookings/${bookingId}/intent`,
     { method: "POST", json: {} },
   );
   return parseJson<CreatePaymentIntentResponse>(response);
@@ -181,7 +181,7 @@ export async function confirmBookingPayment(
 ): Promise<ConfirmPaymentResponse> {
   const response = await authFetch(
     token,
-    `/api/v1/payments/bookings/${input.bookingId}/confirm`,
+    `/payments/bookings/${input.bookingId}/confirm`,
     {
       method: "POST",
       json: { paymentIntentId: input.paymentIntentId },
@@ -196,7 +196,7 @@ export async function failBookingPayment(
 ) {
   const response = await authFetch(
     token,
-    `/api/v1/payments/bookings/${input.bookingId}/fail`,
+    `/payments/bookings/${input.bookingId}/fail`,
     {
       method: "POST",
       json: { detail: input.detail },
@@ -211,7 +211,7 @@ export async function getAdminBookingOperationalDetail(
 ): Promise<AdminBookingOperationalDetail> {
   const response = await authFetch(
     token,
-    `/api/v1/admin/bookings/${bookingId}/operational-detail`,
+    `/admin/bookings/${bookingId}/operational-detail`,
     { method: "GET" },
   );
   const payload = await parseJson<Record<string, unknown>>(response);
@@ -220,13 +220,13 @@ export async function getAdminBookingOperationalDetail(
 
 /**
  * Open Prisma `OpsAnomaly` rows (payment failures, mismatches, etc.).
- * API route: GET /api/v1/admin/anomalies
- * (Distinct from fingerprinted queue at /api/v1/admin/ops/anomalies.)
+ * API route: GET /admin/anomalies
+ * (Distinct from fingerprinted queue at /admin/ops/anomalies.)
  */
-export async function getAdminOpenPrismaOpsAnomalies(
-  token: string,
-): Promise<AdminPrismaOpsAnomalyItem[]> {
-  const response = await authFetch(token, `/api/v1/admin/anomalies`, {
+export async function getAdminOpenPrismaOpsAnomalies(): Promise<
+  AdminPrismaOpsAnomalyItem[]
+> {
+  const response = await apiFetch(`/admin/anomalies`, {
     method: "GET",
   });
   const payload = await parseJson<unknown>(response);
@@ -240,14 +240,14 @@ export async function getAdminOpenPrismaOpsAnomalies(
 export const getAdminOpenOpsAnomalies = getAdminOpenPrismaOpsAnomalies;
 
 export async function acknowledgeAdminPrismaOpsAnomaly(id: string, token: string) {
-  const response = await authFetch(token, `/api/v1/admin/anomalies/${id}/ack`, {
+  const response = await authFetch(token, `/admin/anomalies/${id}/ack`, {
     method: "PATCH",
   });
   return parseJson<{ id: string; status: string }>(response);
 }
 
 export async function resolveAdminPrismaOpsAnomaly(id: string, token: string) {
-  const response = await authFetch(token, `/api/v1/admin/anomalies/${id}/resolve`, {
+  const response = await authFetch(token, `/admin/anomalies/${id}/resolve`, {
     method: "PATCH",
   });
   return parseJson<{ id: string; status: string }>(response);

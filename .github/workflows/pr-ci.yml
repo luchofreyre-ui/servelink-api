@@ -1,0 +1,165 @@
+# PR gate: API + web static checks, runner-local stack, three verify-local-* scripts.
+# Requires: branch protection → this workflow must pass before merge (configured in GitHub UI).
+
+name: PR CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: pr-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  CI: "true"
+
+  NODE_ENV: development
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/servelink
+  JWT_SECRET: ci-pr-ci-jwt-secret-not-for-production-use
+  JWT_ACCESS_SECRET: ci-pr-ci-jwt-access-secret-not-for-production-use
+  APP_BASE_URL: http://127.0.0.1:3001
+  WEB_BASE_URL: http://127.0.0.1:3000
+  DISABLE_DEV_SCENARIO_API: "0"
+
+  BASE_URL: http://127.0.0.1:3000
+  PLAYWRIGHT_NEST_API_ORIGIN: http://127.0.0.1:3001
+  NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:3001
+
+jobs:
+  stack-and-verify:
+    name: API + web (typecheck, test, build) + stack + verify:local-*
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: servelink
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d servelink"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Clean install (node_modules only)
+        run: |
+          rm -rf services/api/node_modules
+          rm -rf apps/web/node_modules
+          rm -rf packages/system-test-intelligence/node_modules
+
+      - name: Install API dependencies
+        working-directory: services/api
+        run: npm ci
+
+      - name: Build system-test-intelligence
+        working-directory: packages/system-test-intelligence
+        run: |
+          npm install
+          npm run build
+
+      - name: Prisma generate + migrate
+        working-directory: services/api
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+
+      - name: API typecheck
+        working-directory: services/api
+        run: npm run typecheck
+
+      - name: Build API
+        working-directory: services/api
+        run: npm run build
+
+      - name: Start API (background)
+        working-directory: services/api
+        run: |
+          nohup npm run start > "${RUNNER_TEMP}/api.log" 2>&1 &
+          echo $! > "${RUNNER_TEMP}/api.pid"
+          for i in $(seq 1 90); do
+            if curl -fsS "http://127.0.0.1:3001/api/v1/health" >/dev/null 2>&1; then
+              echo "API is up."
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "API failed to become healthy."
+          tail -n 200 "${RUNNER_TEMP}/api.log" || true
+          exit 1
+
+      - name: Install web dependencies
+        working-directory: apps/web
+        run: npm ci
+
+      - name: Web unit tests (Vitest)
+        working-directory: apps/web
+        run: npm test
+
+      - name: Build web
+        working-directory: apps/web
+        env:
+          NODE_ENV: production
+        run: npm run build
+
+      - name: Start web (background)
+        working-directory: apps/web
+        run: |
+          nohup npm run start > "${RUNNER_TEMP}/web.log" 2>&1 &
+          echo $! > "${RUNNER_TEMP}/web.pid"
+          for i in $(seq 1 120); do
+            if curl -fsS -o /dev/null "http://127.0.0.1:3000/" 2>/dev/null; then
+              echo "Web is up."
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Web failed to become ready."
+          tail -n 200 "${RUNNER_TEMP}/web.log" || true
+          exit 1
+
+      - name: Install Playwright (Chromium only)
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+
+      - name: verify:local-all-routes
+        working-directory: apps/web
+        run: npm run verify:local-all-routes
+
+      - name: verify:local-critical-flows
+        working-directory: apps/web
+        run: npm run verify:local-critical-flows
+
+      - name: verify:local-system-integrity
+        working-directory: apps/web
+        run: npm run verify:local-system-integrity
+
+      - name: Stop background servers
+        if: always()
+        run: |
+          for f in api.pid web.pid; do
+            p="${RUNNER_TEMP}/${f}"
+            if [ -f "$p" ]; then
+              kill "$(cat "$p")" 2>/dev/null || true
+            fi
+          done

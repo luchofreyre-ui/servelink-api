@@ -38,7 +38,7 @@ export async function fetchAdminFoAuthorityFeedbackSummary(
   if (params?.updatedSince?.trim()) sp.set("updatedSince", params.updatedSince.trim());
   if (params?.topLimit != null) sp.set("topLimit", String(params.topLimit));
   const qs = sp.toString();
-  const url = `${apiBase}/api/v1/admin/authority/fo-feedback-summary${qs ? `?${qs}` : ""}`;
+  const url = `${apiBase}/admin/authority/fo-feedback-summary${qs ? `?${qs}` : ""}`;
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",

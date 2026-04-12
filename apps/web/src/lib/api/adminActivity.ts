@@ -40,7 +40,7 @@ export async function fetchAdminActivityPage(params: {
 
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}/api/v1/admin/activity?${qs.toString()}`, {
+    response = await fetch(`${API_BASE_URL}/admin/activity?${qs.toString()}`, {
       headers: { Authorization: `Bearer ${params.token}` },
       cache: "no-store",
       signal: controller.signal,

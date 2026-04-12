@@ -1,6 +1,7 @@
 import { Page, request } from "@playwright/test";
 import { SERVELINK_ACCESS_TOKEN_COOKIE } from "@/lib/auth";
-import { PLAYWRIGHT_API_BASE_URL, PLAYWRIGHT_BASE_URL } from "./env";
+import { WEB_ENV } from "@/lib/env";
+import { PLAYWRIGHT_BASE_URL } from "./env";
 
 const SESSION_COOKIE_MAX_AGE_SEC = 60 * 60 * 24 * 7;
 
@@ -9,12 +10,10 @@ type LoginResult = {
 };
 
 /**
- * Login must hit the API origin with path `/api/v1/auth/login`.
- * Do not rely on request baseURL + relative `auth/login` without a trailing slash on base —
- * URL resolution would drop `/v1` and post to `/api/auth/login` instead.
+ * Login uses `WEB_ENV.apiBaseUrl` (`{origin}/api/v1` from `NEXT_PUBLIC_API_BASE_URL`).
  */
 export async function loginViaApi(email: string, password: string): Promise<string> {
-  const loginUrl = `${PLAYWRIGHT_API_BASE_URL}/auth/login`;
+  const loginUrl = `${WEB_ENV.apiBaseUrl}/auth/login`;
   const apiContext = await request.newContext();
 
   const response = await apiContext.post(loginUrl, {
@@ -75,7 +74,7 @@ function playwrightOrigin(): string {
 }
 
 /**
- * Seeds the same keys/cookie shape as production login (`token`, `servelink_token`, `servelink_user`,
+ * Seeds the same keys/cookie shape as production login (`token`, `servelink_user`,
  * `servelink_access_token` cookie). Called in-page so storage exists before React hydrates on the next navigation.
  */
 async function seedSessionInPage(
@@ -97,7 +96,6 @@ async function seedSessionInPage(
       cookieName: string;
     }) => {
       window.localStorage.setItem("token", value);
-      window.localStorage.setItem("servelink_token", value);
       window.localStorage.setItem("servelink_user", uj);
       const encoded = encodeURIComponent(value);
       document.cookie = `${cookieName}=${encoded}; Path=/; Max-Age=${maxAge}; SameSite=Lax`;

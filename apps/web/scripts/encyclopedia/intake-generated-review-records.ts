@@ -1,4 +1,5 @@
 import { loadCanonicalSnapshotsForApiIntake } from "../../src/lib/encyclopedia/reviewIntakeBridge";
+import { normalizeApiOrigin } from "../../src/lib/env";
 
 function getArg(name: string) {
   const prefix = `--${name}=`;
@@ -14,10 +15,12 @@ function getPositionalSource(): string | null {
 
 async function run() {
   const source = getArg("source") || getPositionalSource();
-  const apiBase =
+  const apiBase = `${normalizeApiOrigin(
     getArg("api-base") ||
-    process.env.API_BASE_URL ||
-    "http://localhost:3001/api/v1";
+      process.env.API_BASE_URL ||
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      "http://localhost:3001",
+  )}/api/v1`;
 
   if (!source) {
     throw new Error("Missing required --source=...");

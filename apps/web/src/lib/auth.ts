@@ -1,5 +1,13 @@
 export const AUTH_TOKEN_STORAGE_KEY = "token";
 
+const AUTH_USER_STORAGE_KEY = "servelink_user";
+
+export type StoredAuthUser = {
+  id: string;
+  email: string;
+  role: string;
+};
+
 /** Must match `apiFetch` server-side cookie read in `lib/api.ts`. */
 export const SERVELINK_ACCESS_TOKEN_COOKIE = "servelink_access_token";
 
@@ -37,6 +45,19 @@ export function getStoredAccessToken(): string | null {
 
   const value = window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
   return value && value.trim().length > 0 ? value : null;
+}
+
+export function getStoredAuthUser(): StoredAuthUser | null {
+  if (typeof window === "undefined") return null;
+  const raw = window.localStorage.getItem(AUTH_USER_STORAGE_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as StoredAuthUser;
+    if (!parsed?.id || !parsed?.email || !parsed?.role) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
 }
 
 /** Persists token for client API calls (localStorage) and RSC (cookie). */

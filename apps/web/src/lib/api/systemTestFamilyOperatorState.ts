@@ -15,7 +15,7 @@ export async function updateAdminSystemTestFamilyOperatorState(
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
     const response = await fetch(
-      `${API_BASE_URL}/api/v1/admin/system-tests/families/${encodeURIComponent(familyId)}/operator-state`,
+      `${API_BASE_URL}/admin/system-tests/families/${encodeURIComponent(familyId)}/operator-state`,
       {
         method: "PATCH",
         headers: {

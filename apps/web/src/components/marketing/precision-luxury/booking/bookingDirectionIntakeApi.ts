@@ -91,7 +91,7 @@ export async function submitBookingDirectionIntake(
   payload: SubmitBookingDirectionIntakePayload,
 ): Promise<BookingDirectionIntakeSubmitResponse> {
   const response = await fetch(
-    `${API_BASE_URL}/api/v1/booking-direction-intake/submit`,
+    `${API_BASE_URL}/booking-direction-intake/submit`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -115,7 +115,7 @@ export async function createBookingDirectionIntakeOnly(
   payload: SubmitBookingDirectionIntakePayload,
 ): Promise<BookingDirectionIntakeSuccess> {
   const response = await fetch(
-    `${API_BASE_URL}/api/v1/booking-direction/intakes`,
+    `${API_BASE_URL}/booking-direction/intakes`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

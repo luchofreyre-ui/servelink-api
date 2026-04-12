@@ -123,10 +123,6 @@ describe("DeepCleanEstimatorImpactClient", () => {
       "href",
       "/admin/deep-clean/estimator-governance",
     );
-    expect(screen.getByTestId("deep-clean-estimator-impact-link-monitoring")).toHaveAttribute(
-      "href",
-      "/admin/deep-clean/estimator-monitoring",
-    );
 
     expect(screen.getByTestId("deep-clean-estimator-impact-comparison-1-2")).toBeInTheDocument();
     expect(screen.getByTestId("deep-clean-estimator-impact-direction-improved")).toHaveTextContent("improved");

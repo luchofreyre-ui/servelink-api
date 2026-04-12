@@ -260,13 +260,6 @@ export function DeepCleanEstimatorClient() {
           >
             Estimator governance
           </Link>
-          <Link
-            href="/admin/deep-clean/estimator-monitoring"
-            className="text-blue-700 hover:underline"
-            data-testid="deep-clean-estimator-link-monitoring"
-          >
-            Estimator monitoring
-          </Link>
         </p>
       </div>
 

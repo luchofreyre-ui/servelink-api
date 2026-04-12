@@ -76,7 +76,7 @@ function transitionPath(
 export async function createBooking(
   payload: CreateBookingInput,
 ): Promise<BookingRecord> {
-  const res = await apiFetch("/api/v1/bookings", {
+  const res = await apiFetch("/bookings", {
     method: "POST",
     json: {
       estimateInput: payload.estimateInput,
@@ -106,7 +106,7 @@ export async function getBooking(
   }
   const qs = search.toString();
   const res = await apiFetch(
-    `/api/v1/bookings/${encodeURIComponent(id)}${qs ? `?${qs}` : ""}`,
+    `/bookings/${encodeURIComponent(id)}${qs ? `?${qs}` : ""}`,
   );
   const body = await parseJson(res);
   if (!res.ok) {
@@ -145,7 +145,7 @@ export async function listBookings(params?: {
   }
 
   const res = await apiFetch(
-    `/api/v1/bookings${search.toString() ? `?${search.toString()}` : ""}`,
+    `/bookings${search.toString() ? `?${search.toString()}` : ""}`,
   );
   const body = await parseJson(res);
   if (!res.ok) {
@@ -170,7 +170,7 @@ export async function updateBooking(
   id: string,
   payload: UpdateBookingInput,
 ): Promise<BookingRecord> {
-  const res = await apiFetch(`/api/v1/bookings/${encodeURIComponent(id)}`, {
+  const res = await apiFetch(`/bookings/${encodeURIComponent(id)}`, {
     method: "PATCH",
     json: payload,
   });
@@ -187,7 +187,7 @@ export async function fetchAssignmentRecommendations(
   bookingId: string,
 ): Promise<AssignmentRecommendation[]> {
   const res = await apiFetch(
-    `/api/v1/bookings/${encodeURIComponent(bookingId)}/assignment-recommendations`,
+    `/bookings/${encodeURIComponent(bookingId)}/assignment-recommendations`,
   );
   const body = await parseJson(res);
   if (!res.ok) {
@@ -210,7 +210,7 @@ export async function fetchAssignmentRecommendations(
 
 export async function assignRecommendedBooking(bookingId: string): Promise<BookingRecord> {
   const res = await apiFetch(
-    `/api/v1/bookings/${encodeURIComponent(bookingId)}/assign-recommended`,
+    `/bookings/${encodeURIComponent(bookingId)}/assign-recommended`,
     { method: "POST" },
   );
   const body = await parseJson(res);
@@ -229,7 +229,7 @@ export async function assignBooking(
   id: string,
   payload: AssignBookingInput,
 ): Promise<BookingRecord> {
-  const res = await apiFetch(`/api/v1/bookings/${encodeURIComponent(id)}/assign`, {
+  const res = await apiFetch(`/bookings/${encodeURIComponent(id)}/assign`, {
     method: "POST",
     json: {
       foId: payload.foId,
@@ -260,7 +260,7 @@ export async function transitionBooking(
 ): Promise<BookingRecord> {
   if ("nextStatus" in payload) {
     const res = await apiFetch(
-      `/api/v1/bookings/${encodeURIComponent(id)}/transition`,
+      `/bookings/${encodeURIComponent(id)}/transition`,
       {
         method: "POST",
         json: {
@@ -284,7 +284,7 @@ export async function transitionBooking(
 
   const segment = transitionPath(payload.transition);
   const res = await apiFetch(
-    `/api/v1/bookings/${encodeURIComponent(id)}/${segment}`,
+    `/bookings/${encodeURIComponent(id)}/${segment}`,
     {
       method: "POST",
       json: {
@@ -333,7 +333,7 @@ export async function createBookingCheckout(
 ): Promise<BookingCheckoutSession> {
   const defaults = defaultBookingCheckoutUrls(id);
   const res = await apiFetch(
-    `/api/v1/bookings/${encodeURIComponent(id)}/create-checkout`,
+    `/bookings/${encodeURIComponent(id)}/create-checkout`,
     {
       method: "POST",
       json: {
@@ -373,7 +373,7 @@ export async function updateBookingPaymentStatus(
   },
 ): Promise<BookingRecord> {
   const res = await apiFetch(
-    `/api/v1/bookings/${encodeURIComponent(id)}/payment-status`,
+    `/bookings/${encodeURIComponent(id)}/payment-status`,
     {
       method: "POST",
       json: payload,
@@ -406,7 +406,7 @@ export async function holdBooking(
     payload?: Record<string, unknown> | null;
   },
 ): Promise<BookingRecord> {
-  const res = await apiFetch(`/api/v1/bookings/${encodeURIComponent(id)}/hold`, {
+  const res = await apiFetch(`/bookings/${encodeURIComponent(id)}/hold`, {
     method: "POST",
     json: payload ?? {},
   });
@@ -420,7 +420,7 @@ export async function holdBooking(
 }
 
 export async function getAdminPaymentOpsSummary(): Promise<AdminPaymentOpsSummary> {
-  const res = await apiFetch("/api/v1/admin/payments/ops-summary");
+  const res = await apiFetch("/admin/payments/ops-summary");
   const body = await parseJson(res);
   if (!res.ok) {
     throw new Error(
@@ -448,7 +448,7 @@ export async function listAdminPaymentAnomalies(options?: {
   }
   const qs = search.toString();
   const res = await apiFetch(
-    `/api/v1/admin/payments/anomalies${qs ? `?${qs}` : ""}`,
+    `/admin/payments/anomalies${qs ? `?${qs}` : ""}`,
   );
   const body = await parseJson(res);
   if (!res.ok) {

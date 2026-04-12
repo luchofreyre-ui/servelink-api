@@ -4,7 +4,7 @@ import type {
   ListDispatchExceptionActionsResponse,
 } from "@/types/dispatchExceptionActions";
 
-const BASE = "/api/v1/admin/dispatch/exception-actions";
+const BASE = "/admin/dispatch/exception-actions";
 const FETCH_TIMEOUT_MS = 25_000;
 
 function buildListQuery(params?: {

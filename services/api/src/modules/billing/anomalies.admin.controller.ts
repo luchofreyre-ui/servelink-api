@@ -630,7 +630,8 @@ export class AnomaliesAdminController {
               } as any,
             });
           } catch (err: any) {
-            if (err?.code !== "P2002") throw err;
+            // P2002: fingerprint unique race. P2003: FK (e.g. invalid bookingId/foId on rollup row).
+            if (err?.code !== "P2002" && err?.code !== "P2003") throw err;
           }
 
           // Rollup materialization (idempotent): compute occurrences from evidence rows
@@ -699,16 +700,20 @@ export class AnomaliesAdminController {
             });
           }
         } catch (err: any) {
-          // sourceEventId is unique; if we lose a race, ignore
-          if (err?.code !== "P2002") throw err;
+          // P2002: sourceEventId unique race. P2003: FK (legacy NOTE still references deleted booking/FO).
+          if (err?.code !== "P2002" && err?.code !== "P2003") throw err;
         }
       }
 
-      await this.db.systemSetting.upsert({
-        where: { key: legacyWatermarkKey },
-        create: { key: legacyWatermarkKey, value: legacyScanNow.toISOString() },
-        update: { value: legacyScanNow.toISOString() },
-      });
+      try {
+        await this.db.systemSetting.upsert({
+          where: { key: legacyWatermarkKey },
+          create: { key: legacyWatermarkKey, value: legacyScanNow.toISOString() },
+          update: { value: legacyScanNow.toISOString() },
+        });
+      } catch {
+        // Best-effort watermark; inbox query below must still succeed if settings row is unavailable.
+      }
     }
 
     if (groupBy === "fingerprint") {

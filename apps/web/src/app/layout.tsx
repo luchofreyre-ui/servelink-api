@@ -1,4 +1,4 @@
-import "../index.css";
+import "./globals.css";
 import type { ReactNode } from "react";
 import { ToastHost } from "@/components/shared/ToastHost";
 

@@ -2,12 +2,6 @@ import type { NextConfig } from "next";
 import fs from "fs";
 import path from "path";
 
-/**
- * next.config cannot import the manifest pipeline (path aliases / app graph).
- * Redirects are synced from buildExecutableEncyclopediaRedirects() into JSON:
- *   npm run sync:encyclopedia-redirects
- * (prebuild runs this automatically.)
- */
 type ExecutableRedirect = {
   source: string;
   destination: string;
@@ -19,38 +13,47 @@ function loadExecutableEncyclopediaRedirectsFromGeneratedFile(): ExecutableRedir
     process.cwd(),
     "src/lib/encyclopedia/generated/executableEncyclopediaRedirects.json",
   );
-  if (!fs.existsSync(generatedPath)) {
-    console.warn(
-      `[next.config] Missing ${generatedPath}. Run: npm run sync:encyclopedia-redirects`,
-    );
-    return [];
-  }
-  try {
-    return JSON.parse(fs.readFileSync(generatedPath, "utf8")) as ExecutableRedirect[];
-  } catch (e) {
-    console.warn("[next.config] Failed to parse executable encyclopedia redirects JSON", e);
-    return [];
-  }
+
+  if (!fs.existsSync(generatedPath)) return [];
+
+  return JSON.parse(fs.readFileSync(generatedPath, "utf8")) as ExecutableRedirect[];
 }
 
+const CONTENT_SECURITY_POLICY =
+  "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://m.media-amazon.com https://images-na.ssl-images-amazon.com; font-src 'self' data:; connect-src 'self' http://localhost:3001 http://127.0.0.1:3001; frame-ancestors 'none';";
+
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: CONTENT_SECURITY_POLICY,
+          },
+        ],
+      },
+    ];
+  },
+
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "m.media-amazon.com",
-        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "images-na.ssl-images-amazon.com",
-        pathname: "/**",
       },
     ],
   },
+
   async redirects() {
-    const encyclopediaRedirects = loadExecutableEncyclopediaRedirectsFromGeneratedFile();
-    return encyclopediaRedirects.map((r) => ({
+    const redirects = loadExecutableEncyclopediaRedirectsFromGeneratedFile();
+
+    return redirects.map((r) => ({
       source: r.source,
       destination: r.destination,
       permanent: r.permanent,

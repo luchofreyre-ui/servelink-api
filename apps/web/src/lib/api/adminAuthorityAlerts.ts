@@ -68,7 +68,7 @@ export async function fetchAdminAuthorityAlerts(
   }
   if (params?.topLimit != null) sp.set("topLimit", String(params.topLimit));
   const qs = sp.toString();
-  const url = `${apiBase}/api/v1/admin/authority/alerts${qs ? `?${qs}` : ""}`;
+  const url = `${apiBase}/admin/authority/alerts${qs ? `?${qs}` : ""}`;
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
