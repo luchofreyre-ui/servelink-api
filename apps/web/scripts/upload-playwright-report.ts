@@ -113,6 +113,34 @@ function artifactJsonFromAttachments(
   return { trace, video, screenshot };
 }
 
+/** Persisted on `SystemTestRun.rawReportJson` — not the full Playwright tree (avoids multi‑MB duplicate + 413). */
+const RAW_REPORT_ENVELOPE_VERSION = 1 as const;
+
+const MAX_ERROR_MESSAGE_CHARS = 6_000;
+const MAX_ERROR_STACK_CHARS = 24_000;
+
+function capText(value: string | null, max: number): string | null {
+  if (value == null) {
+    return null;
+  }
+  if (value.length <= max) {
+    return value;
+  }
+  return `${value.slice(0, max)}\n…[truncated ${value.length - max} chars]`;
+}
+
+function buildPersistedRawReportEnvelope(report: Json): Record<string, unknown> {
+  const cfg = report.config as Json | undefined;
+  return {
+    envelopeVersion: RAW_REPORT_ENVELOPE_VERSION,
+    kind: "playwright-json-compact",
+    stats: report.stats ?? null,
+    startTime: report.startTime ?? null,
+    duration: report.duration ?? null,
+    ...(cfg && typeof cfg.version === "string" ? { configVersion: cfg.version } : {}),
+  };
+}
+
 type CaseOut = {
   filePath: string;
   title: string;
@@ -167,8 +195,8 @@ function walkSuite(suite: Json, titleParts: string[], out: CaseOut[]) {
       const apiStatus = mapResultStatusToApi(lastStatus);
 
       const err = last?.error as { message?: string; stack?: string } | undefined;
-      const errorMessage = err?.message ?? null;
-      const errorStack = err?.stack ?? null;
+      const errorMessage = capText(err?.message ?? null, MAX_ERROR_MESSAGE_CHARS);
+      const errorStack = capText(err?.stack ?? null, MAX_ERROR_STACK_CHARS);
 
       const fullNameParts = [projectName, ...nextTitles, specTitle].filter(Boolean);
       const fullName = fullNameParts.join(" > ");
@@ -383,10 +411,11 @@ async function main() {
       artifactJson: c.artifactJson,
       rawCaseJson: c.rawCaseJson,
     })),
-    rawReportJson: report as Record<string, unknown>,
+    rawReportJson: buildPersistedRawReportEnvelope(report),
   };
 
   const url = `${normalizeApiOrigin(process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001")}/api/v1/admin/system-tests/report`;
+  console.log("[SERVELINK_PLAYWRIGHT_UPLOAD] POST_URL=", url);
 
   const res = await fetch(url, {
     method: "POST",

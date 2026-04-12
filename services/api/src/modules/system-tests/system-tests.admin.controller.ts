@@ -4,13 +4,16 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Logger,
   Param,
   Post,
   Query,
+  Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
+import type { Request } from "express";
 
 import {
   parseIncludeDormantParam,
@@ -27,6 +30,8 @@ import { SystemTestsService } from "./system-tests.service";
 @Controller("/api/v1/admin/system-tests")
 @UseGuards(JwtAuthGuard, AdminGuard)
 export class SystemTestsAdminController {
+  private readonly log = new Logger(SystemTestsAdminController.name);
+
   constructor(private readonly systemTests: SystemTestsService) {}
 
   @Post("report")
@@ -38,7 +43,11 @@ export class SystemTestsAdminController {
       transform: true,
     }),
   )
-  async ingestReport(@Body() body: SystemTestReportIngestDto) {
+  async ingestReport(@Req() req: Request, @Body() body: SystemTestReportIngestDto) {
+    const cl = req.headers["content-length"];
+    this.log.log(
+      `[SERVELINK_SYSTEM_TEST_REPORT_INGEST] originalUrl=${req.originalUrl ?? req.url} contentLength=${cl ?? "unknown"}`,
+    );
     return this.systemTests.ingestReport(body);
   }
 
