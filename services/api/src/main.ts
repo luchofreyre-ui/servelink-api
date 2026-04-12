@@ -1,4 +1,3 @@
-import "./bootstrap-env";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
@@ -7,7 +6,9 @@ import { applyBodyParserMiddleware } from "./http/configure-body-parsers";
 /** Default browser origins for local Next.js dev when `CORS_ORIGINS` is unset or empty. */
 const DEFAULT_LOCAL_DEV_ORIGINS: readonly string[] = [
   "http://localhost:3000",
+  "http://localhost:3002",
   "http://127.0.0.1:3000",
+  "http://127.0.0.1:3002",
 ];
 
 function parseAllowedOrigins(): string[] {
@@ -18,13 +19,6 @@ function parseAllowedOrigins(): string[] {
         .map((o) => o.trim())
         .filter(Boolean)
     : [];
-
-  const isProduction = process.env.NODE_ENV === "production";
-
-  // Production: only explicitly configured origins (validated in `bootstrap-env`).
-  if (isProduction) {
-    return [...new Set(fromEnv)];
-  }
 
   if (fromEnv.length === 0) {
     return [...DEFAULT_LOCAL_DEV_ORIGINS];
