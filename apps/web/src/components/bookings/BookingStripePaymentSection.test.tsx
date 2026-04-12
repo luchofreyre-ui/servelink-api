@@ -45,7 +45,7 @@ const baseBooking = {
   quotedMargin: 19.5,
   quotedTotal: 99.5,
   paymentIntentId: null as string | null,
-  paymentStatus: "quote_ready" as const,
+  paymentStatus: "unpaid" as const,
 };
 
 describe("BookingStripePaymentSection", () => {
@@ -66,7 +66,7 @@ describe("BookingStripePaymentSection", () => {
 
     render(
       <BookingStripePaymentSection
-        booking={{ ...baseBooking, paymentStatus: "quote_ready" }}
+        booking={{ ...baseBooking, paymentStatus: "unpaid" }}
         onReload={async () => {}}
       />,
     );
@@ -86,7 +86,7 @@ describe("BookingStripePaymentSection", () => {
 
     render(
       <BookingStripePaymentSection
-        booking={{ ...baseBooking, paymentStatus: "quote_ready" }}
+        booking={{ ...baseBooking, paymentStatus: "unpaid" }}
         onReload={async () => {}}
       />,
     );
@@ -106,7 +106,7 @@ describe("BookingStripePaymentSection", () => {
 
     render(
       <BookingStripePaymentSection
-        booking={{ ...baseBooking, paymentStatus: "quote_ready" }}
+        booking={{ ...baseBooking, paymentStatus: "unpaid" }}
         onReload={async () => {}}
       />,
     );
@@ -136,7 +136,7 @@ describe("BookingStripePaymentSection", () => {
 
     render(
       <BookingStripePaymentSection
-        booking={{ ...baseBooking, paymentStatus: "quote_ready" }}
+        booking={{ ...baseBooking, paymentStatus: "unpaid" }}
         onReload={async () => {}}
       />,
     );

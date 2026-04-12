@@ -64,7 +64,7 @@ describe("BookingPaymentPanel", () => {
       <BookingPaymentPanel
         booking={{
           ...baseBooking,
-          paymentStatus: "quote_ready",
+          paymentStatus: "unpaid",
         }}
         onReload={async () => {}}
       />,
@@ -74,12 +74,12 @@ describe("BookingPaymentPanel", () => {
     expect(screen.getByText(/\$99\.5/)).toBeInTheDocument();
   });
 
-  it("disables create intent when not quote_ready or failed", () => {
+  it("disables create intent when status is not eligible (e.g. authorized with intent)", () => {
     render(
       <BookingPaymentPanel
         booking={{
           ...baseBooking,
-          paymentStatus: "requires_payment",
+          paymentStatus: "authorized",
           paymentIntentId: "pi_x",
         }}
         onReload={async () => {}}
@@ -89,12 +89,12 @@ describe("BookingPaymentPanel", () => {
     expect(screen.getByRole("button", { name: /create payment intent/i })).toBeDisabled();
   });
 
-  it("enables create intent for quote_ready", () => {
+  it("enables create intent for unpaid", () => {
     render(
       <BookingPaymentPanel
         booking={{
           ...baseBooking,
-          paymentStatus: "quote_ready",
+          paymentStatus: "unpaid",
         }}
         onReload={async () => {}}
       />,
@@ -103,12 +103,12 @@ describe("BookingPaymentPanel", () => {
     expect(screen.getByRole("button", { name: /create payment intent/i })).not.toBeDisabled();
   });
 
-  it("disables confirm until requires_payment and intent exists", () => {
+  it("disables confirm until payment_pending and intent exists", () => {
     const { rerender } = render(
       <BookingPaymentPanel
         booking={{
           ...baseBooking,
-          paymentStatus: "quote_ready",
+          paymentStatus: "unpaid",
         }}
         onReload={async () => {}}
       />,
@@ -120,7 +120,7 @@ describe("BookingPaymentPanel", () => {
       <BookingPaymentPanel
         booking={{
           ...baseBooking,
-          paymentStatus: "requires_payment",
+          paymentStatus: "payment_pending",
           paymentIntentId: null,
         }}
         onReload={async () => {}}
@@ -133,7 +133,7 @@ describe("BookingPaymentPanel", () => {
       <BookingPaymentPanel
         booking={{
           ...baseBooking,
-          paymentStatus: "requires_payment",
+          paymentStatus: "payment_pending",
           paymentIntentId: "pi_123",
         }}
         onReload={async () => {}}
@@ -162,7 +162,7 @@ describe("BookingPaymentPanel", () => {
       <BookingPaymentPanel
         booking={{
           ...baseBooking,
-          paymentStatus: "quote_ready",
+          paymentStatus: "unpaid",
         }}
         onReload={async () => {}}
       />,
@@ -196,7 +196,7 @@ describe("BookingPaymentPanel", () => {
       <BookingPaymentPanel
         booking={{
           ...baseBooking,
-          paymentStatus: "quote_ready",
+          paymentStatus: "unpaid",
         }}
         onReload={async () => {}}
       />,
@@ -220,7 +220,7 @@ describe("BookingPaymentPanel", () => {
       <BookingPaymentPanel
         booking={{
           ...baseBooking,
-          paymentStatus: "quote_ready",
+          paymentStatus: "unpaid",
         }}
         onReload={reload}
       />,
