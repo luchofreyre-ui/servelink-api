@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { PrismaModule } from "../../prisma.module";
 import { FoModule } from "../fo/fo.module";
 import { DispatchModule } from "../dispatch/dispatch.module";
@@ -43,7 +43,7 @@ import { StripeBookingPaymentModule } from "./stripe/stripe-booking-payment.modu
     AuthorityModule,
     AdminBookingsModule,
     FoModule,
-    DispatchModule,
+    forwardRef(() => DispatchModule),
     BillingModule,
     StripeBookingPaymentModule,
     DeepCleanEstimatorConfigModule,

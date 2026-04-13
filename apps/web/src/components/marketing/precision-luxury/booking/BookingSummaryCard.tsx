@@ -1,9 +1,19 @@
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
-import type { BookingFlowState } from "./bookingFlowTypes";
+import type { BookingFlowState, BookingStepId } from "./bookingFlowTypes";
+import {
+  formatEstimateConfidence,
+  formatEstimateDurationMinutes,
+  formatEstimateUsdFromCents,
+} from "./bookingIntakePreviewDisplay";
+import type { FunnelReviewEstimate } from "./bookingFunnelLocalEstimate";
 
 type BookingSummaryCardProps = {
   state: BookingFlowState;
+  step?: BookingStepId;
+  previewEstimate?: FunnelReviewEstimate | null;
+  previewLoading?: boolean;
+  previewError?: string | null;
 };
 
 function buildHomeProfile(state: BookingFlowState) {
@@ -14,13 +24,96 @@ function buildHomeProfile(state: BookingFlowState) {
   return `${state.bedrooms} · ${state.bathrooms} · ${state.homeSize}`;
 }
 
-export function BookingSummaryCard({ state }: BookingSummaryCardProps) {
+export function BookingSummaryCard({
+  state,
+  step,
+  previewEstimate,
+  previewLoading,
+  previewError,
+}: BookingSummaryCardProps) {
   const selectedService = getBookingServiceCatalogItem(state.serviceId);
   const deep = isDeepCleaningBookingServiceId(state.serviceId);
   const deepProgramLabel =
     state.deepCleanProgram === "phased_3_visit"
       ? "3-visit program"
       : "One visit";
+
+  const showLiveEstimate = step === "review";
+
+  const baseRows = [
+    ...(deep
+      ? [
+          {
+            label: "Deep clean structure",
+            value: deepProgramLabel,
+          },
+        ]
+      : []),
+    {
+      label: "Frequency",
+      value: state.frequency || "Not selected yet",
+    },
+    {
+      label: "Home Profile",
+      value: buildHomeProfile(state),
+    },
+    {
+      label: "Preferred Timing",
+      value: state.preferredTime || "Not selected yet",
+    },
+    {
+      label: "Pets",
+      value: state.pets || "Not specified",
+    },
+  ];
+
+  const contactRows =
+    step === "review"
+      ? [
+          {
+            label: "Your name",
+            value: state.customerName.trim() || "—",
+          },
+          {
+            label: "Email",
+            value: state.customerEmail.trim() || "—",
+          },
+        ]
+      : [];
+
+  const estimateRows =
+    showLiveEstimate && (previewLoading || previewError || previewEstimate)
+      ? [
+          {
+            label: "Indicative price",
+            value: previewLoading
+              ? "Calculating…"
+              : previewError
+                ? "See note in review"
+                : previewEstimate
+                  ? `${formatEstimateUsdFromCents(previewEstimate.priceCents)}${
+                      previewEstimate.source === "local"
+                        ? " (on-page)"
+                        : ""
+                    }`
+                  : "—",
+          },
+          ...(previewEstimate && !previewLoading && !previewError
+            ? [
+                {
+                  label: "Est. duration",
+                  value: formatEstimateDurationMinutes(
+                    previewEstimate.durationMinutes,
+                  ),
+                },
+                {
+                  label: "Confidence",
+                  value: formatEstimateConfidence(previewEstimate.confidence),
+                },
+              ]
+            : []),
+        ]
+      : [];
 
   return (
     <section className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
@@ -38,32 +131,7 @@ export function BookingSummaryCard({ state }: BookingSummaryCardProps) {
       </div>
 
       <div className="mt-6 space-y-4">
-        {[
-          ...(deep
-            ? [
-                {
-                  label: "Deep clean structure",
-                  value: deepProgramLabel,
-                },
-              ]
-            : []),
-          {
-            label: "Frequency",
-            value: state.frequency || "Not selected yet",
-          },
-          {
-            label: "Home Profile",
-            value: buildHomeProfile(state),
-          },
-          {
-            label: "Preferred Timing",
-            value: state.preferredTime || "Not selected yet",
-          },
-          {
-            label: "Pets",
-            value: state.pets || "Not specified",
-          },
-        ].map((item) => (
+        {[...estimateRows, ...contactRows, ...baseRows].map((item) => (
           <div
             key={item.label}
             className="rounded-2xl bg-[#FFF9F3] px-4 py-4 ring-1 ring-[#C9B27C]/14"

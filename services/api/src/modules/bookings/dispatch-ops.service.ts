@@ -11,6 +11,7 @@ import {
   isAssignedState,
   isInvalidAssignmentState,
 } from "./utils/assignment-state.util";
+import { BookingsService } from "./bookings.service";
 
 const NON_ASSIGNABLE_STATUSES: BookingStatus[] = [
   "in_progress",
@@ -47,6 +48,7 @@ export class DispatchOpsService {
     private readonly prisma: PrismaService,
     private readonly bookingDispatchControlService: BookingDispatchControlService,
     private readonly bookingReviewControlService: BookingReviewControlService,
+    private readonly bookingsService: BookingsService,
   ) {}
 
   private async assertDispatchAllowed(bookingId: string): Promise<void> {
@@ -185,11 +187,14 @@ export class DispatchOpsService {
 
       const bookingSnapshot = bookingSnapshotFromBooking(current);
 
-      await tx.booking.update({
-        where: { id: bookingId },
-        data: {
-          foId: franchiseOwnerId,
-          status: BookingStatus.assigned,
+      await this.bookingsService.applyAssignmentTransitionInTx(tx, {
+        bookingId,
+        toStatus: BookingStatus.assigned,
+        foId: franchiseOwnerId,
+        idempotencyKey: `admin-assign:${bookingId}:${Date.now()}`,
+        metadata: {
+          adminId,
+          source: "dispatch_ops_manual_assign_transaction",
         },
       });
 

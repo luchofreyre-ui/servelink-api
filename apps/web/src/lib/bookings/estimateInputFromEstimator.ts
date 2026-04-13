@@ -1,8 +1,9 @@
 import type { ProblemType, SurfaceType } from "@/lib/estimator/estimateEngine";
 
 /**
- * Maps the marketing estimator demo form into the API `estimateInput` shape
- * expected by POST /api/v1/bookings.
+ * Maps the legacy estimator demo (`EstimatorForm`) into the API `estimateInput`
+ * shape expected by authenticated `POST /api/v1/bookings`. The public funnel
+ * uses server-side intake preview instead.
  */
 export function buildEstimateInputForApi(params: {
   sqft: number;

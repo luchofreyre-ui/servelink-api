@@ -1,3 +1,7 @@
+/**
+ * Pure client-side estimate math for demos and on-page fallbacks.
+ * Public `/book` pricing uses the intake preview/submit API, not this engine alone.
+ */
 export type SurfaceType =
   | "kitchen"
   | "bathroom"

@@ -32,6 +32,8 @@ export const defaultBookingFlowState: BookingFlowState = {
   frequency: "",
   preferredTime: "",
   deepCleanProgram: "single_visit",
+  customerName: "",
+  customerEmail: "",
 };
 
 export function getSelectedService(serviceId: string) {

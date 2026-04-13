@@ -1,10 +1,13 @@
 import {
   BadRequestException,
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
 import {
+  Booking,
   BookingEventType,
   BookingPaymentStatus,
   BookingStatus,
@@ -48,6 +51,7 @@ export class BookingsService {
     private readonly fo: FoService,
     private readonly estimator: EstimatorService,
     private readonly ledger: LedgerService,
+    @Inject(forwardRef(() => DispatchService))
     private readonly dispatch: DispatchService,
     private readonly reputationService: ReputationService,
     private readonly bookingPaymentService: BookingPaymentService,
@@ -181,6 +185,206 @@ export class BookingsService {
     const booking = await this.db.booking.findUnique({ where: { id } });
     if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
     return booking;
+  }
+
+  /**
+   * Single transactional write for assignment-related booking rows + one audit event.
+   * Idempotent via @@unique([bookingId, idempotencyKey]) on BookingEvent.
+   */
+  async applyAssignmentTransition(args: {
+    bookingId: string;
+    toStatus: BookingStatus;
+    foId: string | null;
+    idempotencyKey: string;
+    metadata?: Record<string, unknown>;
+    note?: string | null;
+    updateWhere?: Prisma.BookingWhereInput;
+    optimisticFailure?: "default" | "booking_not_offered";
+    onOptimisticWriteMiss?: () => void;
+  }): Promise<Booking> {
+    const r = await this.db.$transaction(async (tx) =>
+      this.applyAssignmentTransitionInTx(tx, args),
+    );
+    return r.booking;
+  }
+
+  async applyAssignmentTransitionInTx(
+    tx: Prisma.TransactionClient,
+    args: {
+      bookingId: string;
+      toStatus: BookingStatus;
+      foId: string | null;
+      idempotencyKey: string;
+      metadata?: Record<string, unknown>;
+      note?: string | null;
+      updateWhere?: Prisma.BookingWhereInput;
+      optimisticFailure?: "default" | "booking_not_offered";
+      onOptimisticWriteMiss?: () => void;
+    },
+  ): Promise<{ booking: Booking; bookingRowUpdated: boolean }> {
+    const idem = String(args.idempotencyKey ?? "").trim();
+    if (!idem) {
+      throw new BadRequestException("idempotencyKey is required");
+    }
+
+    const existing = await tx.bookingEvent.findUnique({
+      where: {
+        bookingId_idempotencyKey: {
+          bookingId: args.bookingId,
+          idempotencyKey: idem,
+        },
+      },
+    });
+    if (existing) {
+      const row = await tx.booking.findUnique({ where: { id: args.bookingId } });
+      if (!row) throw new NotFoundException("BOOKING_NOT_FOUND");
+      return { booking: row, bookingRowUpdated: false };
+    }
+
+    const before = await tx.booking.findUnique({
+      where: { id: args.bookingId },
+    });
+    if (!before) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+
+    let bookingRowUpdated = false;
+    if (args.updateWhere) {
+      const where: Prisma.BookingWhereInput = {
+        AND: [{ id: args.bookingId }, args.updateWhere],
+      };
+      const { count } = await tx.booking.updateMany({
+        where,
+        data: {
+          status: args.toStatus,
+          foId: args.foId,
+          ...(args.toStatus === BookingStatus.accepted
+            ? { acceptedAt: new Date() }
+            : {}),
+        },
+      });
+      if (count === 1) {
+        bookingRowUpdated = true;
+      } else {
+        const refetched = await tx.booking.findUnique({
+          where: { id: args.bookingId },
+        });
+        if (!refetched) throw new NotFoundException("BOOKING_NOT_FOUND");
+        if (
+          refetched.status === args.toStatus &&
+          this.sameFo(refetched.foId, args.foId)
+        ) {
+          try {
+            await this.insertAssignmentBookingEvent(tx, {
+              bookingId: args.bookingId,
+              fromStatus: before.status,
+              toStatus: args.toStatus,
+              foId: args.foId,
+              idempotencyKey: idem,
+              metadata: args.metadata,
+              note: args.note ?? null,
+            });
+          } catch (e: any) {
+            if (e?.code === "P2002") {
+              const row = await tx.booking.findUnique({
+                where: { id: args.bookingId },
+              });
+              if (!row) throw new NotFoundException("BOOKING_NOT_FOUND");
+              return { booking: row, bookingRowUpdated: false };
+            }
+            throw e;
+          }
+          return { booking: refetched, bookingRowUpdated: false };
+        }
+        args.onOptimisticWriteMiss?.();
+        if (args.optimisticFailure === "booking_not_offered") {
+          throw new ConflictException("BOOKING_NOT_OFFERED");
+        }
+        throw new ConflictException({
+          code: "CONFLICT",
+          message: "Booking was modified by another request",
+        });
+      }
+    } else {
+      await tx.booking.update({
+        where: { id: args.bookingId },
+        data: {
+          status: args.toStatus,
+          foId: args.foId,
+          ...(args.toStatus === BookingStatus.accepted
+            ? { acceptedAt: new Date() }
+            : {}),
+        },
+      });
+      bookingRowUpdated = true;
+    }
+
+    if (bookingRowUpdated) {
+      try {
+        await this.insertAssignmentBookingEvent(tx, {
+          bookingId: args.bookingId,
+          fromStatus: before.status,
+          toStatus: args.toStatus,
+          foId: args.foId,
+          idempotencyKey: idem,
+          metadata: args.metadata,
+          note: args.note ?? null,
+        });
+      } catch (e: any) {
+        if (e?.code === "P2002") {
+          const row = await tx.booking.findUnique({
+            where: { id: args.bookingId },
+          });
+          if (!row) throw new NotFoundException("BOOKING_NOT_FOUND");
+          return { booking: row, bookingRowUpdated: false };
+        }
+        throw e;
+      }
+    }
+
+    const out = await tx.booking.findUnique({ where: { id: args.bookingId } });
+    if (!out) throw new NotFoundException("BOOKING_NOT_FOUND");
+    return { booking: out, bookingRowUpdated };
+  }
+
+  private sameFo(a: string | null, b: string | null): boolean {
+    return String(a ?? "") === String(b ?? "");
+  }
+
+  private async insertAssignmentBookingEvent(
+    tx: Prisma.TransactionClient,
+    args: {
+      bookingId: string;
+      fromStatus: BookingStatus;
+      toStatus: BookingStatus;
+      foId: string | null;
+      idempotencyKey: string;
+      metadata?: Record<string, unknown>;
+      note: string | null;
+    },
+  ): Promise<void> {
+    const eventType =
+      args.toStatus === BookingStatus.assigned && args.foId
+        ? BookingEventType.BOOKING_ASSIGNED
+        : BookingEventType.STATUS_CHANGED;
+
+    const payload: Prisma.InputJsonValue = {
+      foId: args.foId,
+      ...(args.metadata ?? {}),
+      ...(args.note ? { note: args.note } : {}),
+    };
+
+    await tx.bookingEvent.create({
+      data: {
+        bookingId: args.bookingId,
+        type: eventType,
+        fromStatus: args.fromStatus,
+        toStatus: args.toStatus,
+        idempotencyKey: args.idempotencyKey,
+        note: args.note,
+        payload,
+      },
+    });
   }
 
   async createCheckout(id: string, dto: CreateBookingCheckoutDto) {
@@ -833,157 +1037,96 @@ export class BookingsService {
       });
     }
 
-    try {
-      return await this.db.$transaction(async (tx: any) => {
-        const txBooking = await tx.booking.findUnique({
-          where: { id: booking.id },
-          select: {
-            id: true,
-            status: true,
-            foId: true,
-            dispatchLockedAt: true,
-          },
-        });
+    const idempotencyKey =
+      params.idempotencyKey != null && String(params.idempotencyKey).trim()
+        ? String(params.idempotencyKey).trim()
+        : `assign:${params.bookingId}:${foId}`;
 
-        if (!txBooking) {
-          throw new NotFoundException("BOOKING_NOT_FOUND");
-        }
+    return await this.db.$transaction(async (tx: any) => {
+      const txBooking = await tx.booking.findUnique({
+        where: { id: booking.id },
+        select: {
+          id: true,
+          status: true,
+          foId: true,
+          dispatchLockedAt: true,
+        },
+      });
 
-        if (txBooking.dispatchLockedAt) {
-          throw new BadRequestException("BOOKING_DISPATCH_LOCKED");
-        }
+      if (!txBooking) {
+        throw new NotFoundException("BOOKING_NOT_FOUND");
+      }
 
-        if (isInvalidAssignmentState(txBooking)) {
-          throw new BadRequestException("BOOKING_INVALID_STATE");
-        }
+      if (txBooking.dispatchLockedAt) {
+        throw new BadRequestException("BOOKING_DISPATCH_LOCKED");
+      }
 
-        if (isAssignedState(txBooking) && txBooking.foId === foId) {
-          return { ok: true, alreadyAssigned: true };
-        }
+      if (isInvalidAssignmentState(txBooking)) {
+        throw new BadRequestException("BOOKING_INVALID_STATE");
+      }
 
-        const where: any = {
-          id: booking.id,
-          status: expectedCurrentStatus,
-        };
+      if (isAssignedState(txBooking) && txBooking.foId === foId) {
+        return { ok: true, alreadyAssigned: true };
+      }
 
-        if (expectedCurrentStatus === BookingStatus.assigned) {
-          where.foId = currentFoId;
-        }
+      const updateWhere: Prisma.BookingWhereInput = {
+        status: expectedCurrentStatus,
+      };
+      if (expectedCurrentStatus === BookingStatus.assigned && currentFoId != null) {
+        (updateWhere as any).foId = currentFoId;
+      }
 
-        const { count } = await tx.booking.updateMany({
-          where,
-          data: { status: to, foId },
-        });
-
-        if (count === 1) {
-          try {
-            await tx.bookingEvent.create({
-              data: {
-                bookingId: booking.id,
-                type: BookingEventType.STATUS_CHANGED,
-                fromStatus: expectedCurrentStatus,
-                toStatus: to,
-                note: params.note ?? null,
-                idempotencyKey: params.idempotencyKey ?? null,
-              },
-            });
-          } catch (e: any) {
-            if (e?.code === "P2002") {
-              throw new IdempotencyReplayError(booking.id);
-            }
-            throw e;
-          }
-
-          const assignmentPayload = {
+      const { booking: updated, bookingRowUpdated } =
+        await this.applyAssignmentTransitionInTx(tx, {
+          bookingId: booking.id,
+          toStatus: to,
+          foId,
+          idempotencyKey,
+          note: params.note ?? null,
+          metadata: {
             kind: "booking_assigned" as const,
             assignmentSource: params.assignmentSource ?? "manual",
             actorUserId: String(params.actorUserId ?? "").trim(),
             actorRole: String(params.actorRole ?? "").trim(),
             selectedFoId: foId,
             recommendationSummary: params.recommendationSummary ?? null,
-          };
-          try {
-            await tx.bookingEvent.create({
-              data: {
-                bookingId: booking.id,
-                type: BookingEventType.BOOKING_ASSIGNED,
-                fromStatus: null,
-                toStatus: null,
-                note: JSON.stringify(assignmentPayload),
-                idempotencyKey: params.idempotencyKey
-                  ? `${params.idempotencyKey}:booking_assigned`
-                  : null,
-              },
-            });
-          } catch (e: any) {
-            if (e?.code === "P2002") {
-              throw new IdempotencyReplayError(booking.id);
-            }
-            throw e;
-          }
-
-          if (
-            expectedCurrentStatus === BookingStatus.assigned &&
-            currentFoId != null &&
-            currentFoId !== foId
-          ) {
-            await tx.franchiseOwnerReliabilityStats.upsert({
-              where: { foId: currentFoId },
-              create: {
-                foId: currentFoId,
-                activeAssignedCount: 0,
-              },
-              update: {
-                activeAssignedCount: { decrement: 1 },
-              },
-            });
-            await tx.franchiseOwnerReliabilityStats.upsert({
-              where: { foId },
-              create: {
-                foId,
-                assignmentsCount: 1,
-                activeAssignedCount: 1,
-              },
-              update: {
-                assignmentsCount: { increment: 1 },
-                activeAssignedCount: { increment: 1 },
-              },
-            });
-          }
-
-          const updated = await tx.booking.findUnique({
-            where: { id: booking.id },
-          });
-          return updated;
-        }
-
-        const refetched = await tx.booking.findUnique({
-          where: { id: booking.id },
+          },
+          updateWhere,
+          optimisticFailure: "default",
         });
-        if (!refetched) {
-          throw new NotFoundException("BOOKING_NOT_FOUND");
-        }
 
-        if (refetched.status === to && refetched.foId === foId) {
-          return { ...refetched, alreadyApplied: true };
-        }
-
-        throw new ConflictException({
-          code: "CONFLICT",
-          message: "Booking was modified by another request",
+      if (
+        bookingRowUpdated &&
+        expectedCurrentStatus === BookingStatus.assigned &&
+        currentFoId != null &&
+        currentFoId !== foId
+      ) {
+        await tx.franchiseOwnerReliabilityStats.upsert({
+          where: { foId: currentFoId },
+          create: {
+            foId: currentFoId,
+            activeAssignedCount: 0,
+          },
+          update: {
+            activeAssignedCount: { decrement: 1 },
+          },
         });
-      });
-    } catch (e: any) {
-      if (e instanceof IdempotencyReplayError) {
-        const refetched = await this.db.booking.findUnique({
-          where: { id: e.bookingId },
+        await tx.franchiseOwnerReliabilityStats.upsert({
+          where: { foId },
+          create: {
+            foId,
+            assignmentsCount: 1,
+            activeAssignedCount: 1,
+          },
+          update: {
+            assignmentsCount: { increment: 1 },
+            activeAssignedCount: { increment: 1 },
+          },
         });
-        if (refetched) {
-          return { ...refetched, alreadyApplied: true };
-        }
       }
-      throw e;
-    }
+
+      return updated;
+    });
   }
 
   async listBookingsForApi(

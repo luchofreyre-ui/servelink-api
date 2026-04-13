@@ -15,6 +15,8 @@ type IntakeRow = {
   frequency: string;
   preferredTime: string;
   deepCleanProgram: string | null;
+  customerName: string | null;
+  customerEmail: string | null;
   source: string | null;
   utm: {
     source: string | null;
@@ -142,6 +144,7 @@ export default function AdminBookingDirectionIntakesPage() {
                     <th className="px-4 py-3 font-medium">Deep clean</th>
                     <th className="px-4 py-3 font-medium">Home</th>
                     <th className="px-4 py-3 font-medium">Schedule</th>
+                    <th className="px-4 py-3 font-medium">Contact</th>
                     <th className="px-4 py-3 font-medium">Attribution</th>
                   </tr>
                 </thead>
@@ -149,7 +152,7 @@ export default function AdminBookingDirectionIntakesPage() {
                   {items.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={6}
+                        colSpan={7}
                         className="px-4 py-8 text-center text-slate-500"
                       >
                         No booking direction intakes yet.
@@ -183,6 +186,24 @@ export default function AdminBookingDirectionIntakesPage() {
                           <span className="mt-1 block text-slate-500">
                             {row.preferredTime}
                           </span>
+                        </td>
+                        <td className="max-w-[200px] px-4 py-3 text-xs leading-relaxed text-slate-300">
+                          {row.customerName || row.customerEmail ? (
+                            <>
+                              {row.customerName ? (
+                                <span className="block text-slate-200">
+                                  {row.customerName}
+                                </span>
+                              ) : null}
+                              {row.customerEmail ? (
+                                <span className="mt-1 block font-mono text-[11px] text-slate-400">
+                                  {row.customerEmail}
+                                </span>
+                              ) : null}
+                            </>
+                          ) : (
+                            <span className="text-slate-600">—</span>
+                          )}
                         </td>
                         <td className="max-w-[240px] px-4 py-3 text-xs leading-relaxed text-slate-400">
                           {row.source ? (

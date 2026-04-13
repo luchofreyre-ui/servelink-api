@@ -274,6 +274,8 @@ components:
         pets: { type: string }
         frequency: { type: string }
         preferredTime: { type: string }
+        customerName: { type: string, description: Optional lead name (public funnel) }
+        customerEmail: { type: string, format: email, description: Optional lead email (public funnel) }
         source: { type: string, description: Optional traffic/source label (e.g. query param) }
         utm: { $ref: "#/components/schemas/BookingDirectionUtm" }
 
@@ -298,6 +300,9 @@ components:
         pets: { type: string }
         frequency: { type: string }
         preferredTime: { type: string }
+        deepCleanProgram: { type: string, nullable: true }
+        customerName: { type: string, nullable: true }
+        customerEmail: { type: string, nullable: true }
         source: { type: string, nullable: true }
         utm: { $ref: "#/components/schemas/BookingDirectionUtm" }
         createdAt: { $ref: "#/components/schemas/ISODateTime" }

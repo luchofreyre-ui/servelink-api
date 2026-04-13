@@ -26,9 +26,17 @@ import { BookingSummaryCard } from "./BookingSummaryCard";
 import { BookingServiceHandoffCard } from "./BookingServiceHandoffCard";
 import {
   buildBookingAttributionFromSearchParams,
+  previewBookingDirectionEstimate,
   submitBookingDirectionIntake,
 } from "./bookingDirectionIntakeApi";
+import { mapIntakeDeepCleanSnapshotToCardProgram } from "./bookingIntakePreviewDisplay";
+import {
+  computeBookingFunnelLocalEstimate,
+  type FunnelReviewEstimate,
+} from "./bookingFunnelLocalEstimate";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
+import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
+import { isBookingContactValid } from "./bookingContactValidation";
 
 function getStepOrder(step: BookingStepId) {
   return bookingSteps.find((item) => item.id === step)?.order ?? 1;
@@ -78,7 +86,17 @@ export function BookingFlowClient() {
   const [attemptedConfirm, setAttemptedConfirm] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewEstimate, setPreviewEstimate] = useState<FunnelReviewEstimate | null>(
+    null,
+  );
+  const [previewDeepCleanCard, setPreviewDeepCleanCard] =
+    useState<DeepCleanProgramDisplay | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+  const [previewFetchCompleted, setPreviewFetchCompleted] = useState(false);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
+
+  const attributionQueryKey = searchParams?.toString() ?? "";
 
   const currentStepOrder = useMemo(() => getStepOrder(state.step), [state.step]);
 
@@ -90,16 +108,137 @@ export function BookingFlowClient() {
   const isScheduleComplete = !!state.frequency && !!state.preferredTime;
   const isBookingReady =
     !!state.serviceId && isHomeComplete && isScheduleComplete;
+  const isContactReady = isBookingContactValid(
+    state.customerName,
+    state.customerEmail,
+  );
+  const canConfirmDirection = isBookingReady && isContactReady;
+
+  const contactPayloadKey = useMemo(() => {
+    if (!isContactReady) return "";
+    return `${state.customerName.trim()}|${state.customerEmail.trim()}`;
+  }, [isContactReady, state.customerName, state.customerEmail]);
 
   useEffect(() => {
     if (
       (attemptedNext && stepError) ||
-      (attemptedConfirm && !isBookingReady) ||
-      Boolean(submitError)
+      (attemptedConfirm && !canConfirmDirection) ||
+      Boolean(submitError) ||
+      Boolean(previewError)
     ) {
       errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [attemptedNext, stepError, attemptedConfirm, isBookingReady, submitError]);
+  }, [
+    attemptedNext,
+    stepError,
+    attemptedConfirm,
+    canConfirmDirection,
+    submitError,
+    previewError,
+  ]);
+
+  useEffect(() => {
+    if (state.step !== "review") {
+      setPreviewEstimate(null);
+      setPreviewDeepCleanCard(null);
+      setPreviewLoading(false);
+      setPreviewError(null);
+      setPreviewFetchCompleted(false);
+      return;
+    }
+
+    if (!isBookingReady) {
+      setPreviewEstimate(null);
+      setPreviewDeepCleanCard(null);
+      setPreviewLoading(false);
+      setPreviewError(null);
+      setPreviewFetchCompleted(false);
+      return;
+    }
+
+    const ac = new AbortController();
+    setPreviewLoading(true);
+    setPreviewError(null);
+    setPreviewFetchCompleted(false);
+
+    const attribution = buildBookingAttributionFromSearchParams(
+      new URLSearchParams(attributionQueryKey),
+    );
+
+    const payload = {
+      serviceId: state.serviceId,
+      homeSize: state.homeSize,
+      bedrooms: state.bedrooms,
+      bathrooms: state.bathrooms,
+      pets: state.pets ?? "",
+      frequency: state.frequency,
+      preferredTime: state.preferredTime,
+      ...(isDeepCleaningBookingServiceId(state.serviceId) &&
+      state.deepCleanProgram
+        ? { deepCleanProgram: state.deepCleanProgram }
+        : {}),
+      ...(isContactReady
+        ? {
+            customerName: state.customerName.trim(),
+            customerEmail: state.customerEmail.trim(),
+          }
+        : {}),
+      ...attribution,
+    };
+
+    void previewBookingDirectionEstimate(payload, { signal: ac.signal })
+      .then((r) => {
+        if (ac.signal.aborted) return;
+        setPreviewEstimate({
+          priceCents: r.estimate.priceCents,
+          durationMinutes: r.estimate.durationMinutes,
+          confidence: r.estimate.confidence,
+          source: "server",
+        });
+        setPreviewDeepCleanCard(
+          r.deepCleanProgram
+            ? mapIntakeDeepCleanSnapshotToCardProgram(r.deepCleanProgram)
+            : null,
+        );
+      })
+      .catch((e: unknown) => {
+        if (ac.signal.aborted) return;
+        const local = computeBookingFunnelLocalEstimate(state);
+        if (local) {
+          setPreviewEstimate(local);
+          setPreviewDeepCleanCard(null);
+          setPreviewError(null);
+          return;
+        }
+        setPreviewEstimate(null);
+        setPreviewDeepCleanCard(null);
+        setPreviewError(
+          e instanceof Error
+            ? e.message
+            : "We couldn’t load an estimate. You can still confirm your direction.",
+        );
+      })
+      .finally(() => {
+        if (ac.signal.aborted) return;
+        setPreviewLoading(false);
+        setPreviewFetchCompleted(true);
+      });
+
+    return () => ac.abort();
+  }, [
+    state.step,
+    state.serviceId,
+    state.homeSize,
+    state.bedrooms,
+    state.bathrooms,
+    state.pets,
+    state.frequency,
+    state.preferredTime,
+    state.deepCleanProgram,
+    isBookingReady,
+    contactPayloadKey,
+    attributionQueryKey,
+  ]);
 
   useEffect(() => {
     if (state.step === "home" && isHomeComplete) {
@@ -117,15 +256,18 @@ export function BookingFlowClient() {
       new URLSearchParams(searchParams?.toString() ?? ""),
     );
 
-    const parsedSerialized = serializeState(parsed);
-    const currentSerialized = serializeState(state);
-
-    // Only update state if URL is truly different
-    if (parsedSerialized !== currentSerialized) {
-      setState(parsed);
-    }
-    // ❗️REMOVE state from deps to prevent loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setState((prev) => {
+      const parsedSerialized = serializeState(parsed);
+      const currentSerialized = serializeState(prev);
+      if (parsedSerialized === currentSerialized) {
+        return prev;
+      }
+      return {
+        ...parsed,
+        customerName: prev.customerName,
+        customerEmail: prev.customerEmail,
+      };
+    });
   }, [searchParams]);
 
   // STATE → URL (ONLY runs when state changes)
@@ -159,7 +301,7 @@ export function BookingFlowClient() {
   async function confirmBookingDirection() {
     setSubmitError(null);
     setAttemptedConfirm(true);
-    if (!isBookingReady) return;
+    if (!isBookingReady || !isContactReady) return;
 
     setIsSubmitting(true);
     try {
@@ -179,6 +321,8 @@ export function BookingFlowClient() {
         state.deepCleanProgram
           ? { deepCleanProgram: state.deepCleanProgram }
           : {}),
+        customerName: state.customerName.trim(),
+        customerEmail: state.customerEmail.trim(),
         ...attribution,
       });
 
@@ -232,6 +376,13 @@ export function BookingFlowClient() {
   function patchState(patch: Partial<BookingFlowState>) {
     setAttemptedNext(false);
     setAttemptedConfirm(false);
+    setSubmitError(null);
+    setState((prev) => ({ ...prev, ...patch }));
+  }
+
+  function patchContactState(
+    patch: Partial<Pick<BookingFlowState, "customerName" | "customerEmail">>,
+  ) {
     setSubmitError(null);
     setState((prev) => ({ ...prev, ...patch }));
   }
@@ -322,7 +473,21 @@ export function BookingFlowClient() {
                 />
               ) : null}
 
-              {state.step === "review" ? <BookingStepReview state={state} /> : null}
+              {state.step === "review" ? (
+                <BookingStepReview
+                  state={state}
+                  previewEstimate={previewEstimate}
+                  previewDeepCleanCard={previewDeepCleanCard}
+                  previewLoading={previewLoading}
+                  previewError={previewError}
+                  previewFetchCompleted={previewFetchCompleted}
+                  previewErrorRef={errorRef}
+                  showContactFieldErrors={
+                    attemptedConfirm && isBookingReady && !isContactReady
+                  }
+                  onContactChange={patchContactState}
+                />
+              ) : null}
 
               <div className="flex flex-col gap-3 sm:flex-row">
                 {state.step !== "service" ? (
@@ -381,6 +546,13 @@ export function BookingFlowClient() {
                     Please complete home details and schedule selections before
                     confirming.
                   </p>
+                ) : attemptedConfirm && isBookingReady && !isContactReady ? (
+                  <p
+                    ref={errorRef}
+                    className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
+                  >
+                    Please add your name and a valid email before confirming.
+                  </p>
                 ) : null
               ) : attemptedNext && stepError ? (
                 <p
@@ -393,7 +565,13 @@ export function BookingFlowClient() {
             </div>
 
             <aside className="space-y-6">
-              <BookingSummaryCard state={state} />
+              <BookingSummaryCard
+                state={state}
+                step={state.step}
+                previewEstimate={previewEstimate}
+                previewLoading={previewLoading}
+                previewError={previewError}
+              />
 
               <section className="rounded-[32px] border border-[#C9B27C]/16 bg-[#0F172A] p-8 text-white shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
                 <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">

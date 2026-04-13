@@ -101,5 +101,7 @@ export function parseBookingSearchParams(
     frequency: isValidFrequency(frequency) ? frequency : "",
     preferredTime: isValidTime(preferredTime) ? preferredTime : "",
     deepCleanProgram,
+    customerName: "",
+    customerEmail: "",
   };
 }

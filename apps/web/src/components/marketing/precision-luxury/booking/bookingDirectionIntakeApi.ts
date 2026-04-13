@@ -34,6 +34,12 @@ export type SubmitBookingDirectionIntakePayload = {
   preferredTime: string;
   /** Only persisted when service is deep clean. */
   deepCleanProgram?: "single_visit" | "phased_3_visit";
+  /**
+   * Optional for legacy callers; the public `/book` funnel sends both once
+   * Phase 3 contact validation passes.
+   */
+  customerName?: string;
+  customerEmail?: string;
   source?: string;
   utm?: BookingDirectionUtmPayload;
 };
@@ -56,6 +62,17 @@ export type BookingDirectionIntakeSubmitResponse = {
   } | null;
   deepCleanProgram: DeepCleanProgramDisplay | null;
   bookingError: { code: string; message: string } | null;
+};
+
+/** Stateless pre-submit estimate (same shape as submit, without booking fields). */
+export type BookingDirectionEstimatePreviewResponse = {
+  kind: "booking_direction_estimate_preview";
+  estimate: {
+    priceCents: number;
+    durationMinutes: number;
+    confidence: number;
+  };
+  deepCleanProgram: DeepCleanProgramDisplay | null;
 };
 
 /** Reads `source` + standard UTM query params from the booking URL. */
@@ -108,6 +125,31 @@ export async function submitBookingDirectionIntake(
   }
 
   return response.json() as Promise<BookingDirectionIntakeSubmitResponse>;
+}
+
+export async function previewBookingDirectionEstimate(
+  payload: SubmitBookingDirectionIntakePayload,
+  init?: RequestInit,
+): Promise<BookingDirectionEstimatePreviewResponse> {
+  const response = await fetch(
+    `${API_BASE_URL}/booking-direction-intake/preview-estimate`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+      ...init,
+    },
+  );
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => "");
+    throw new Error(
+      text || `Booking direction estimate preview failed (${response.status})`,
+    );
+  }
+
+  return response.json() as Promise<BookingDirectionEstimatePreviewResponse>;
 }
 
 /** Intake-only save (no booking / estimator). Use when you need the legacy path. */

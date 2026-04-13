@@ -23,6 +23,8 @@ export class BookingDirectionIntakeService {
         frequency: dto.frequency.trim(),
         preferredTime: dto.preferredTime.trim(),
         deepCleanProgram,
+        customerName: dto.customerName?.trim() || null,
+        customerEmail: dto.customerEmail?.trim() || null,
         source: dto.source?.trim() || null,
         utmSource: utm?.source?.trim() || null,
         utmMedium: utm?.medium?.trim() || null,
@@ -55,7 +57,7 @@ export class BookingDirectionIntakeService {
 
     return {
       kind: "booking_direction_intake_list" as const,
-      items: items.map((row) => ({
+        items: items.map((row) => ({
         intakeId: row.id,
         serviceId: row.serviceId,
         homeSize: row.homeSize,
@@ -65,6 +67,8 @@ export class BookingDirectionIntakeService {
         frequency: row.frequency,
         preferredTime: row.preferredTime,
         deepCleanProgram: row.deepCleanProgram,
+        customerName: row.customerName,
+        customerEmail: row.customerEmail,
         source: row.source,
         utm: {
           source: row.utmSource,

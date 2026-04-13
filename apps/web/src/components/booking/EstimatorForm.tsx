@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Legacy / internal demo: local estimator + authenticated `POST /bookings`.
+ * Not mounted on the public `/book` route — the marketing intake funnel
+ * (`BookingFlowClient` → booking-direction-intake) is the authoritative path.
+ */
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { generateEstimate } from "@/lib/estimator/estimateEngine";
