@@ -132,7 +132,7 @@ baseTest.describe("admin ops inline actions", () => {
 
       await openAdminPage(page, adminToken, "/admin/ops");
       await expect(
-        page.getByRole("heading", { name: "System Ops" }),
+        page.getByRole("heading", { level: 1, name: /operations control center/i }),
       ).toBeVisible({ timeout: 30_000 });
 
       const reviewSection = page.locator("#review-required");
@@ -221,7 +221,7 @@ baseTest.describe("admin ops inline actions", () => {
 
       await openAdminPage(page, adminToken, "/admin/ops");
       await expect(
-        page.getByRole("heading", { name: "System Ops" }),
+        page.getByRole("heading", { level: 1, name: /operations control center/i }),
       ).toBeVisible({ timeout: 30_000 });
 
       const section = page.locator(`#${sectionId}`);
