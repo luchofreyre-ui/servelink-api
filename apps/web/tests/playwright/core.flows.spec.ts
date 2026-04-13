@@ -51,7 +51,7 @@ test.describe("core flows", () => {
       page.getByRole("heading", { level: 1, name: /bar keepers friend cleanser/i }),
     ).toBeVisible();
 
-    const productShell = page.locator("div.mx-auto.max-w-5xl").first();
+    const productShell = page.getByRole("main");
     await expect(productShell).toBeVisible();
     const text = await productShell.innerText();
     expect(text.trim().length).toBeGreaterThan(80);
