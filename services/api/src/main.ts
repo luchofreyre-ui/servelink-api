@@ -1,5 +1,7 @@
 import { NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
+import { applyBodyParserMiddleware } from "./http/configure-body-parsers";
 
 /** Default browser origins for local Next.js dev when `CORS_ORIGINS` is unset or empty. */
 const DEFAULT_LOCAL_DEV_ORIGINS: readonly string[] = [
@@ -26,7 +28,10 @@ function parseAllowedOrigins(): string[] {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: false,
+  });
+  applyBodyParserMiddleware(app.getHttpAdapter().getInstance());
 
   const allowedOrigins = parseAllowedOrigins();
 
