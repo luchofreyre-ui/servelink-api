@@ -311,8 +311,14 @@ test.describe("admin booking command center", () => {
       .getByRole("button", { name: "Reassign", exact: true })
       .click();
 
-    await expect(
-      page.getByText("reassign completed successfully."),
-    ).toBeVisible();
+    // Legacy POST /admin/dispatch-decisions `reassign` applies manual redispatch + assign;
+    // prove success via refreshed booking data (target FO on the overview), not the
+    // ephemeral `actionState.success` toast string (drifts easily with copy tweaks).
+    const bookingOverview = page.locator("section").filter({
+      has: page.getByRole("heading", { name: "Booking overview" }),
+    });
+    await expect(bookingOverview.getByText(String(targetFo))).toBeVisible({
+      timeout: 15_000,
+    });
   });
 });

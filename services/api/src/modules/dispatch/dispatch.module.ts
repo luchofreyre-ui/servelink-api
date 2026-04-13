@@ -1,4 +1,5 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
+import { BookingsModule } from "../bookings/bookings.module";
 import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
 import { FoModule } from "../fo/fo.module";
 import { DispatchAdminController } from "./dispatch.admin.controller";
@@ -27,7 +28,7 @@ import { DispatchOpsService } from "./dispatch-ops.service";
 import { TrustModule } from "../trust/trust.module";
 
 @Module({
-  imports: [FoModule, TrustModule],
+  imports: [FoModule, TrustModule, forwardRef(() => BookingsModule)],
   controllers: [
     DispatchAdminController,
     DispatchExceptionActionsAdminController,

@@ -1,3 +1,7 @@
+/**
+ * Authenticated bookings API client (JWT). Used by admin/tools and the legacy
+ * `EstimatorForm` demo — not the public `/book` intake funnel.
+ */
 export {
   assignBooking,
   assignRecommendedBooking,

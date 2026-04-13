@@ -1,5 +1,7 @@
 import {
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
@@ -50,6 +52,7 @@ import {
   isAssignedState,
   isInvalidAssignmentState,
 } from "../bookings/utils/assignment-state.util";
+import { BookingsService } from "../bookings/bookings.service";
 
 @Injectable()
 export class DispatchService {
@@ -76,6 +79,8 @@ export class DispatchService {
     private readonly dispatchScoringService: DispatchScoringService,
     private readonly dispatchLock: DispatchLockService,
     private readonly dispatchIdempotency: DispatchIdempotencyService,
+    @Inject(forwardRef(() => BookingsService))
+    private readonly bookingsService: BookingsService,
   ) {}
 
   private toInputJson(value: unknown): Prisma.InputJsonValue | null {
@@ -1053,21 +1058,37 @@ export class DispatchService {
         throw new ConflictException("OFFER_NOT_ACTIVE");
       }
 
-      const claimedBooking = await tx.booking.updateMany({
-        where: {
-          id: currentOffer.bookingId,
-          status: BookingStatus.offered,
-          foId: null,
-        },
-        data: {
-          status: BookingStatus.assigned,
+      const assignResult = await this.bookingsService.applyAssignmentTransitionInTx(
+        tx,
+        {
+          bookingId: args.bookingId,
+          toStatus: BookingStatus.assigned,
           foId: currentOffer.foId,
+          idempotencyKey: `accept-offer:${args.offerId}`,
+          metadata: {
+            source: "acceptOfferForBooking",
+            offerId: args.offerId,
+          },
+          updateWhere: {
+            status: BookingStatus.offered,
+            foId: null,
+          },
+          optimisticFailure: "booking_not_offered",
+          onOptimisticWriteMiss: () => dispatchAcceptRaceLostTotal.inc(),
         },
-      });
+      );
 
-      if (claimedBooking.count !== 1) {
-        dispatchAcceptRaceLostTotal.inc();
-        throw new ConflictException("BOOKING_NOT_OFFERED");
+      if (!assignResult.bookingRowUpdated) {
+        const o = await tx.bookingOffer.findUnique({
+          where: { id: args.offerId },
+        });
+        if (
+          o?.status === BookingOfferStatus.accepted &&
+          assignResult.booking.status === BookingStatus.assigned &&
+          assignResult.booking.foId === currentOffer.foId
+        ) {
+          return { ok: true as const, skippedSideEffects: true as const };
+        }
       }
 
       const accepted = await tx.bookingOffer.updateMany({
@@ -1138,7 +1159,7 @@ export class DispatchService {
         },
       });
 
-      return { ok: true as const };
+      return { ok: true as const, skippedSideEffects: false as const };
     });
 
     if (
@@ -1148,6 +1169,15 @@ export class DispatchService {
       txResult.ok === false
     ) {
       return txResult;
+    }
+
+    if (
+      txResult &&
+      typeof txResult === "object" &&
+      "skippedSideEffects" in txResult &&
+      (txResult as { skippedSideEffects?: boolean }).skippedSideEffects
+    ) {
+      return { ok: true };
     }
 
     void this.reputationService.recomputeForFoSafe(offer.foId);

@@ -112,12 +112,23 @@ function mapPetsToShedding(raw: string): EstimateInput["pet_shedding"] {
   return undefined;
 }
 
+/** Same fields the estimator reads from a persisted intake row (DTO-compatible). */
+export type IntakeFieldsForEstimate = {
+  homeSize: string;
+  bedrooms: string;
+  bathrooms: string;
+  serviceId: string;
+  frequency: string;
+  pets: string;
+  deepCleanProgram?: string | null;
+};
+
 /**
- * Maps a persisted intake row to EstimatorService input.
+ * Maps intake-shaped fields to EstimatorService input.
  * Defensive: never throws; uses safe defaults when parsing fails.
  */
-export function mapIntakeToEstimateInput(
-  intake: BookingDirectionIntake,
+export function mapIntakeFieldsToEstimateInput(
+  intake: IntakeFieldsForEstimate,
 ): EstimateInput {
   const sqft = extractSqftFromHomeSize(intake.homeSize);
   const sqft_band = sqftToBand(sqft);
@@ -133,6 +144,7 @@ export function mapIntakeToEstimateInput(
       ? "phased_3_visit"
       : "single_visit";
 
+  const pets = intake.pets ?? "";
   const addons: Addon[] = [];
 
   const estimateInput: EstimateInput = {
@@ -150,8 +162,8 @@ export function mapIntakeToEstimateInput(
     clutter_level: "not_sure",
     kitchen_condition: "not_sure",
     bathroom_condition: "not_sure",
-    pet_presence: mapPetsToPresence(intake.pets),
-    pet_shedding: mapPetsToShedding(intake.pets),
+    pet_presence: mapPetsToPresence(pets),
+    pet_shedding: mapPetsToShedding(pets),
     pet_accidents_or_litter_areas: "not_sure",
     occupancy_state: "not_sure",
     floor_visibility: "not_sure",
@@ -162,4 +174,22 @@ export function mapIntakeToEstimateInput(
   };
 
   return estimateInput;
+}
+
+/**
+ * Maps a persisted intake row to EstimatorService input.
+ * Defensive: never throws; uses safe defaults when parsing fails.
+ */
+export function mapIntakeToEstimateInput(
+  intake: BookingDirectionIntake,
+): EstimateInput {
+  return mapIntakeFieldsToEstimateInput({
+    homeSize: intake.homeSize,
+    bedrooms: intake.bedrooms,
+    bathrooms: intake.bathrooms,
+    serviceId: intake.serviceId,
+    frequency: intake.frequency,
+    pets: intake.pets ?? "",
+    deepCleanProgram: intake.deepCleanProgram,
+  });
 }

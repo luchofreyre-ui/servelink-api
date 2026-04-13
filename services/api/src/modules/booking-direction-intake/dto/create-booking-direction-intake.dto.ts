@@ -1,11 +1,15 @@
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
   IsIn,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   ValidateNested,
 } from "class-validator";
+
+/** Matches `apps/web/.../bookingContactValidation.ts` (funnel email gate). */
+const BOOKING_INTAKE_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export class BookingDirectionUtmDto {
   @IsOptional()
@@ -78,4 +82,29 @@ export class CreateBookingDirectionIntakeDto {
   @ValidateNested()
   @Type(() => BookingDirectionUtmDto)
   utm?: BookingDirectionUtmDto;
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) return undefined;
+    if (typeof value !== "string") return value;
+    const t = value.trim();
+    return t.length ? t : undefined;
+  })
+  @IsString()
+  @MaxLength(200)
+  customerName?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) return undefined;
+    if (typeof value !== "string") return value;
+    const t = value.trim();
+    return t.length ? t : undefined;
+  })
+  @IsString()
+  @MaxLength(320)
+  @Matches(BOOKING_INTAKE_EMAIL_PATTERN, {
+    message: "customerEmail must be a valid email address",
+  })
+  customerEmail?: string;
 }

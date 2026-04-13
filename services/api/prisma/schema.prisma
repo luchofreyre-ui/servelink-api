@@ -2398,6 +2398,10 @@ model BookingDirectionIntake {
   /// Public deep-clean product choice: single_visit | phased_3_visit. Null when not deep clean or legacy rows.
   deepCleanProgram String?
 
+  /// Lead identity from the public booking funnel (optional for legacy rows / callers).
+  customerName  String?
+  customerEmail String?
+
   source      String?
   utmSource   String?
   utmMedium   String?

@@ -31,6 +31,12 @@ export type BookingFlowState = {
   preferredTime: BookingTimeOption | "";
   /** Set when `serviceId` is deep clean; otherwise "". */
   deepCleanProgram: BookingDeepCleanProgramChoice | "";
+  /**
+   * Contact capture for the funnel (Phase 3). Intentionally not mirrored in URL
+   * query params to avoid leaking PII through referrers and server logs.
+   */
+  customerName: string;
+  customerEmail: string;
 };
 
 export type BookingStepDefinition = {
