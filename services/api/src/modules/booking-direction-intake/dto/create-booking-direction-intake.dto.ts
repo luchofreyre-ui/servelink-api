@@ -7,9 +7,17 @@ import {
   MaxLength,
   ValidateNested,
 } from "class-validator";
+import { ESTIMATE_BATHROOMS, ESTIMATE_BEDROOMS } from "./estimate-factor-enums";
+import { EstimateFactorsDto } from "./estimate-factors.dto";
 
 /** Matches `apps/web/.../bookingContactValidation.ts` (funnel email gate). */
 const BOOKING_INTAKE_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * After comma stripping, require explicit sqft 300–99999 (matches mapper strictness).
+ * Allows 3-digit (300–999) or 4–5 digit values.
+ */
+const HOME_SIZE_SQFT_PATTERN = /(?:^|[^\d])([3-9]\d{2}|\d{4,5})(?:[^\d]|$)/;
 
 export class BookingDirectionUtmDto {
   @IsOptional()
@@ -43,22 +51,34 @@ export class CreateBookingDirectionIntakeDto {
   @MaxLength(120)
   serviceId!: string;
 
+  @Transform(({ value }) => {
+    if (typeof value !== "string") return value;
+    return value.replace(/,/g, "");
+  })
   @IsString()
   @MaxLength(500)
+  @Matches(HOME_SIZE_SQFT_PATTERN, {
+    message:
+      "homeSize must include explicit square footage (300–99999), e.g. 2200 or 2,200 sq ft",
+  })
   homeSize!: string;
 
   @IsString()
-  @MaxLength(80)
-  bedrooms!: string;
+  @IsIn([...ESTIMATE_BEDROOMS])
+  bedrooms!: (typeof ESTIMATE_BEDROOMS)[number];
 
   @IsString()
-  @MaxLength(80)
-  bathrooms!: string;
+  @IsIn([...ESTIMATE_BATHROOMS])
+  bathrooms!: (typeof ESTIMATE_BATHROOMS)[number];
 
   @IsOptional()
   @IsString()
   @MaxLength(200)
   pets?: string;
+
+  @ValidateNested()
+  @Type(() => EstimateFactorsDto)
+  estimateFactors!: EstimateFactorsDto;
 
   @IsString()
   @MaxLength(80)

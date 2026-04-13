@@ -22,6 +22,7 @@ model User {
   refreshTokens                   RefreshToken[]
   bookingAuthorityResultsReviewed BookingAuthorityResult[] @relation("BookingAuthorityResultReviewedBy")
   bookingAuthorityMismatchesAsActor BookingAuthorityMismatch[] @relation("BookingAuthorityMismatchActor")
+  recurringPlans                   RecurringPlan[]
   systemTestIncidentActionsOwned   SystemTestIncidentAction[] @relation("SystemTestIncidentActionOwner")
   systemTestIncidentEventsAuthored SystemTestIncidentEvent[]  @relation("SystemTestIncidentEventActor")
   systemTestIncidentNotesAuthored  SystemTestIncidentNote[]   @relation("SystemTestIncidentNoteUser")
@@ -2398,6 +2399,9 @@ model BookingDirectionIntake {
   /// Public deep-clean product choice: single_visit | phased_3_visit. Null when not deep clean or legacy rows.
   deepCleanProgram String?
 
+  /// Validated questionnaire snapshot aligned with `EstimateFactorsDto` / `EstimateInput` (no silent defaults).
+  estimateFactors Json?
+
   /// Lead identity from the public booking funnel (optional for legacy rows / callers).
   customerName  String?
   customerEmail String?
@@ -2481,6 +2485,90 @@ model KnowledgeReviewSignal {
   @@index([entityType, entityKey])
   @@index([status])
   @@index([signalType])
+}
+
+enum RecurringPlanStatus {
+  active
+  paused
+  canceled
+}
+
+enum RecurringCadence {
+  weekly
+  biweekly
+  monthly
+}
+
+enum RecurringOccurrenceStatus {
+  pending_generation
+  booking_created
+  scheduled
+  completed
+  skipped
+  canceled
+  needs_review
+}
+
+/// Customer recurring maintenance plan (snapshot-based; orchestrates occurrences).
+model RecurringPlan {
+  id                   String                 @id @default(cuid())
+  customerId           String
+  status               RecurringPlanStatus    @default(active)
+  cadence              RecurringCadence
+  serviceType          String
+  preferredTimeWindow  String?
+  preferredFoId        String?
+  bookingNotes         String?
+  estimateSnapshot     Json
+  pricingSnapshot      Json
+  intakeSnapshot       Json
+  defaultAddonIds      Json
+  addressSnapshot      Json
+  createdFromBookingId String?
+  nextAnchorAt         DateTime
+  lastGeneratedAt      DateTime?
+  canceledAt           DateTime?
+  pausedAt             DateTime?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+
+  customer    User                    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  occurrences RecurringOccurrence[]
+
+  @@index([customerId, status])
+  @@index([nextAnchorAt, status])
+}
+
+model RecurringOccurrence {
+  id                    String                    @id @default(cuid())
+  recurringPlanId       String
+  sequenceNumber        Int
+  targetDate            DateTime
+  status                RecurringOccurrenceStatus @default(pending_generation)
+  bookingId             String?
+  overrideAddonIds      Json?
+  overrideInstructions  String?
+  overridePreferredFoId String?
+  bookingSnapshot       Json?
+  generationError       String?
+  processingState       String                    @default("ready")
+  processingAttempts    Int                       @default(0)
+  lastProcessingAt      DateTime?
+  processingToken       String?
+  bookingFingerprint    String?
+  bookingCreatedAt      DateTime?
+  reconciliationState   String?                   @default("clean")
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+
+  recurringPlan RecurringPlan @relation(fields: [recurringPlanId], references: [id], onDelete: Cascade)
+
+  @@unique([recurringPlanId, sequenceNumber])
+  @@index([recurringPlanId, status])
+  @@index([targetDate, status])
+  @@index([processingState, processingAttempts, status])
+  @@index([bookingFingerprint])
+  @@index([reconciliationState])
 }
 
 /// Generated encyclopedia review queue (pipeline intake → human review).

@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 
-import { Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Role, type BookingDirectionIntake } from "@prisma/client";
 import { PrismaService } from "../../prisma";
@@ -11,6 +11,7 @@ import { EstimatorService } from "../estimate/estimator.service";
 import { BookingDirectionIntakeService } from "./booking-direction-intake.service";
 import type { CreateBookingDirectionIntakeDto } from "./dto/create-booking-direction-intake.dto";
 import {
+  IntakeEstimateMappingError,
   mapIntakeFieldsToEstimateInput,
   mapIntakeToEstimateInput,
 } from "./intake-to-estimate.mapper";
@@ -114,15 +115,26 @@ export class IntakeBookingBridgeService {
   async previewEstimateFromDto(
     dto: CreateBookingDirectionIntakeDto,
   ): Promise<IntakeEstimatePreviewResponse> {
-    const estimateInput = mapIntakeFieldsToEstimateInput({
-      homeSize: dto.homeSize,
-      bedrooms: dto.bedrooms,
-      bathrooms: dto.bathrooms,
-      serviceId: dto.serviceId,
-      frequency: dto.frequency,
-      pets: dto.pets ?? "",
-      deepCleanProgram: dto.deepCleanProgram ?? null,
-    });
+    let estimateInput;
+    try {
+      estimateInput = mapIntakeFieldsToEstimateInput({
+        homeSize: dto.homeSize,
+        bedrooms: dto.bedrooms,
+        bathrooms: dto.bathrooms,
+        serviceId: dto.serviceId,
+        frequency: dto.frequency,
+        deepCleanProgram: dto.deepCleanProgram ?? null,
+        estimateFactors: dto.estimateFactors,
+      });
+    } catch (err: unknown) {
+      if (err instanceof IntakeEstimateMappingError) {
+        throw new BadRequestException({
+          code: err.code,
+          message: err.message,
+        });
+      }
+      throw err;
+    }
 
     const result = await this.estimator.estimate(estimateInput);
     const deepCleanProgram = result.deepCleanProgram
@@ -187,7 +199,27 @@ export class IntakeBookingBridgeService {
 
     const customerId = customerResolution.customerId;
 
-    const estimateInput = mapIntakeToEstimateInput(intake);
+    let estimateInput;
+    try {
+      estimateInput = mapIntakeToEstimateInput(intake);
+    } catch (err: unknown) {
+      if (err instanceof IntakeEstimateMappingError) {
+        return {
+          kind: "booking_direction_intake_submit",
+          intakeId: intake.id,
+          bookingCreated: false,
+          bookingId: null,
+          estimate: null,
+          deepCleanProgram: null,
+          bookingError: {
+            code: err.code,
+            message: err.message,
+          },
+        };
+      }
+      throw err;
+    }
+
     const noteParts = [
       `Booking direction intake ${intake.id}`,
       `serviceId=${intake.serviceId}`,

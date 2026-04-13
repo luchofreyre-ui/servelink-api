@@ -9,26 +9,39 @@ import type {
   ServiceType,
   SqftBand,
 } from "../estimate/estimator.service";
+import type { EstimateFactorsDto } from "./dto/estimate-factors.dto";
 
-const DEFAULT_SQFT = 1400;
+export class IntakeEstimateMappingError extends Error {
+  readonly code: string;
 
-/** First integer found in a string (e.g. "2,200 sq ft" → 2200). */
-export function extractSqftFromHomeSize(raw: string): number {
+  constructor(code: string, message: string) {
+    super(message);
+    this.name = "IntakeEstimateMappingError";
+    this.code = code;
+  }
+}
+
+/**
+ * Extracts explicit sqft from marketing home size text.
+ * @throws IntakeEstimateMappingError if no valid 3–5 digit sqft in [300, 20000]
+ */
+export function extractSqftFromHomeSizeStrict(raw: string): number {
   const s = String(raw ?? "").replace(/,/g, "");
   const m = s.match(/(\d{3,5})\b/);
-  if (m) {
-    const n = parseInt(m[1], 10);
-    if (Number.isFinite(n) && n > 0) return Math.min(20000, n);
+  if (!m) {
+    throw new IntakeEstimateMappingError(
+      "HOME_SIZE_SQFT_REQUIRED",
+      "homeSize must contain a square footage number (3–5 digits, e.g. 2200).",
+    );
   }
-  const any = s.match(/(\d+)/);
-  if (any) {
-    const n = parseInt(any[1], 10);
-    if (Number.isFinite(n) && n > 0) {
-      if (n < 300) return DEFAULT_SQFT;
-      return Math.min(20000, n);
-    }
+  const n = Number.parseInt(m[1], 10);
+  if (!Number.isFinite(n) || n < 300) {
+    throw new IntakeEstimateMappingError(
+      "HOME_SIZE_SQFT_INVALID",
+      "homeSize square footage must be at least 300.",
+    );
   }
-  return DEFAULT_SQFT;
+  return Math.min(20000, n);
 }
 
 export function sqftToBand(sqft: number): SqftBand {
@@ -41,36 +54,6 @@ export function sqftToBand(sqft: number): SqftBand {
   if (x <= 2999) return "2500_2999";
   if (x <= 3499) return "3000_3499";
   return "3500_plus";
-}
-
-function parseBedrooms(raw: string): Bedrooms {
-  const s = String(raw ?? "").toLowerCase();
-  if (s.includes("5+") || s.includes("5 +")) return "5_plus";
-  const m = s.match(/(\d+)/);
-  if (!m) return "2";
-  const n = parseInt(m[1], 10);
-  if (!Number.isFinite(n) || n < 0) return "2";
-  if (n === 0) return "0";
-  if (n >= 5) return "5_plus";
-  return String(Math.min(4, n)) as Bedrooms;
-}
-
-function parseBathrooms(raw: string): Bathrooms {
-  const s = String(raw ?? "").toLowerCase();
-  if (s.includes("4+") || s.includes("4 +")) return "4_plus";
-  const half = s.includes("2.5") || s.includes("2_5");
-  const m = s.match(/(\d+)(?:\s*\.\s*5)?/);
-  if (!m) return "2";
-  const n = parseInt(m[1], 10);
-  if (!Number.isFinite(n) || n < 1) return "1";
-  if (half && n === 2) return "2_5";
-  if (half && n === 3) return "3_5";
-  if (half && n === 1) return "1_5";
-  if (n >= 4) return "4_plus";
-  if (n === 1) return "1";
-  if (n === 2) return "2";
-  if (n === 3) return "3";
-  return "2";
 }
 
 function mapServiceIdToServiceType(serviceId: string): ServiceType {
@@ -97,19 +80,26 @@ function mapFrequencyToServiceHint(
   return "maintenance";
 }
 
-function mapPetsToPresence(raw: string): EstimateInput["pet_presence"] {
-  const s = String(raw ?? "").toLowerCase().trim();
-  if (!s || s.includes("no pet") || s === "none") return "none";
-  if (s.includes("multiple")) return "multiple";
-  if (s.includes("one ") || s.startsWith("one")) return "one";
-  return "not_sure";
+function assertBedrooms(value: string): Bedrooms {
+  const v = value as Bedrooms;
+  return v;
 }
 
-function mapPetsToShedding(raw: string): EstimateInput["pet_shedding"] {
-  const s = String(raw ?? "").toLowerCase();
-  if (s.includes("multiple")) return "high";
-  if (s.includes("dog") || s.includes("cat")) return "medium";
-  return undefined;
+function assertBathrooms(value: string): Bathrooms {
+  const v = value as Bathrooms;
+  return v;
+}
+
+function assertFloors(value: string): Floors {
+  return value as Floors;
+}
+
+function assertPropertyType(value: string): PropertyType {
+  return value as PropertyType;
+}
+
+function assertAddons(ids: string[]): Addon[] {
+  return ids as Addon[];
 }
 
 /** Same fields the estimator reads from a persisted intake row (DTO-compatible). */
@@ -119,21 +109,21 @@ export type IntakeFieldsForEstimate = {
   bathrooms: string;
   serviceId: string;
   frequency: string;
-  pets: string;
   deepCleanProgram?: string | null;
+  estimateFactors: EstimateFactorsDto;
 };
 
 /**
- * Maps intake-shaped fields to EstimatorService input.
- * Defensive: never throws; uses safe defaults when parsing fails.
+ * Maps validated intake + questionnaire into `EstimateInput`.
+ * Throws `IntakeEstimateMappingError` only for sqft extraction failures (DTO should prevent others).
  */
 export function mapIntakeFieldsToEstimateInput(
   intake: IntakeFieldsForEstimate,
 ): EstimateInput {
-  const sqft = extractSqftFromHomeSize(intake.homeSize);
+  const sqft = extractSqftFromHomeSizeStrict(intake.homeSize);
   const sqft_band = sqftToBand(sqft);
-  const bedrooms = parseBedrooms(intake.bedrooms);
-  const bathrooms = parseBathrooms(intake.bathrooms);
+  const bedrooms = assertBedrooms(intake.bedrooms);
+  const bathrooms = assertBathrooms(intake.bathrooms);
   const service_type = mapFrequencyToServiceHint(
     intake.serviceId,
     intake.frequency,
@@ -144,52 +134,71 @@ export function mapIntakeFieldsToEstimateInput(
       ? "phased_3_visit"
       : "single_visit";
 
-  const pets = intake.pets ?? "";
-  const addons: Addon[] = [];
+  const f = intake.estimateFactors;
 
   const estimateInput: EstimateInput = {
-    property_type: "house" as PropertyType,
+    property_type: assertPropertyType(f.propertyType),
     sqft_band,
     bedrooms,
     bathrooms,
-    floors: "1" as Floors,
+    floors: assertFloors(f.floors),
     service_type,
     ...(service_type === "deep_clean"
       ? { deep_clean_program: deepCleanProgramMode }
       : {}),
-    first_time_with_servelink: "not_sure",
-    last_professional_clean: "not_sure",
-    clutter_level: "not_sure",
-    kitchen_condition: "not_sure",
-    bathroom_condition: "not_sure",
-    pet_presence: mapPetsToPresence(pets),
-    pet_shedding: mapPetsToShedding(pets),
-    pet_accidents_or_litter_areas: "not_sure",
-    occupancy_state: "not_sure",
-    floor_visibility: "not_sure",
-    flooring_mix: "not_sure",
-    carpet_percent: "not_sure",
-    stairs_flights: "not_sure",
-    addons,
+    first_time_with_servelink: f.firstTimeWithServelink,
+    last_professional_clean: f.lastProfessionalClean,
+    clutter_level: f.clutterLevel,
+    kitchen_condition: f.kitchenCondition,
+    stovetop_type: f.stovetopType,
+    bathroom_condition: f.bathroomCondition,
+    glass_showers: f.glassShowers,
+    pet_presence: f.petPresence,
+    ...(f.petPresence !== "none" && f.petShedding
+      ? { pet_shedding: f.petShedding }
+      : {}),
+    pet_accidents_or_litter_areas: f.petAccidentsOrLitterAreas,
+    occupancy_state: f.occupancyState,
+    floor_visibility: f.floorVisibility,
+    carpet_percent: f.carpetPercent,
+    stairs_flights: f.stairsFlights,
+    addons: assertAddons(f.addonIds ?? []),
   };
 
   return estimateInput;
 }
 
+function parseEstimateFactorsFromJson(
+  raw: unknown,
+): EstimateFactorsDto | null {
+  if (raw == null || typeof raw !== "object" || Array.isArray(raw)) {
+    return null;
+  }
+  return raw as EstimateFactorsDto;
+}
+
 /**
  * Maps a persisted intake row to EstimatorService input.
- * Defensive: never throws; uses safe defaults when parsing fails.
+ * @throws IntakeEstimateMappingError when `estimateFactors` JSON is missing or invalid.
  */
 export function mapIntakeToEstimateInput(
   intake: BookingDirectionIntake,
 ): EstimateInput {
+  const factors = parseEstimateFactorsFromJson(intake.estimateFactors);
+  if (!factors) {
+    throw new IntakeEstimateMappingError(
+      "ESTIMATE_FACTORS_MISSING",
+      "Intake is missing estimateFactors; cannot build an estimate.",
+    );
+  }
+
   return mapIntakeFieldsToEstimateInput({
     homeSize: intake.homeSize,
     bedrooms: intake.bedrooms,
     bathrooms: intake.bathrooms,
     serviceId: intake.serviceId,
     frequency: intake.frequency,
-    pets: intake.pets ?? "",
     deepCleanProgram: intake.deepCleanProgram,
+    estimateFactors: factors,
   });
 }
