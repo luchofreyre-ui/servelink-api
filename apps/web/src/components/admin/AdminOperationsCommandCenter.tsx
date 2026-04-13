@@ -67,27 +67,27 @@ function DashboardShell(props: { children: ReactNode }) {
 }
 
 function DashboardCard(props: {
-  title: string;
   eyebrow?: string;
+  title: string;
   children: ReactNode;
-  actions?: ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-white/10 bg-slate-950/70 p-5 shadow-[0_12px_40px_rgba(0,0,0,0.28)]">
-      <div className="mb-4 flex items-start justify-between gap-4">
-        <div>
-          {props.eyebrow ? (
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
-              {props.eyebrow}
-            </p>
-          ) : null}
-          <h2 className="mt-1 text-xl font-semibold text-slate-50">
-            {props.title}
-          </h2>
+    <section
+      role="region"
+      aria-label={props.title}
+      className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5"
+    >
+      {props.eyebrow ? (
+        <div className="text-xs uppercase tracking-wide text-slate-400">
+          {props.eyebrow}
         </div>
-        {props.actions ? <div>{props.actions}</div> : null}
-      </div>
-      {props.children}
+      ) : null}
+
+      <h2 className="mt-1 text-xl font-semibold text-slate-50">
+        {props.title}
+      </h2>
+
+      <div className="mt-4">{props.children}</div>
     </section>
   );
 }
@@ -599,18 +599,15 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
         )}
       </DashboardCard>
 
-      <DashboardCard
-        eyebrow="Quality"
-        title="System tests"
-        actions={
+      <DashboardCard eyebrow="Quality" title="System tests">
+        <div className="mb-3 flex justify-end">
           <Link
             href="/admin/system-tests"
             className="text-sm font-medium text-slate-300 hover:text-white"
           >
             Open dashboard
           </Link>
-        }
-      >
+        </div>
         <p className="text-sm text-slate-400">
           Hosted Playwright ingestion, run history, and failure diagnostics. Ingest runs via CI or{" "}
           <code className="rounded bg-black/30 px-1 py-0.5 text-xs text-slate-300">
@@ -620,18 +617,15 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
         </p>
       </DashboardCard>
 
-      <DashboardCard
-        eyebrow="Dispatch"
-        title="Exception actions (queue)"
-        actions={
+      <DashboardCard eyebrow="Dispatch" title="Exception actions (queue)">
+        <div className="mb-3 flex justify-end">
           <Link
             href="/admin/exceptions"
             className="text-sm font-medium text-slate-300 hover:text-white"
           >
             Open queue
           </Link>
-        }
-      >
+        </div>
         {dexActionMetrics ?
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <Link
@@ -729,18 +723,15 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <DashboardCard
-          eyebrow="Dispatch"
-          title="Recent dispatch exceptions"
-          actions={
+        <DashboardCard eyebrow="Dispatch" title="Recent dispatch exceptions">
+          <div className="mb-3 flex justify-end">
             <Link
               href="/admin/exceptions"
               className="text-sm font-medium text-slate-300 hover:text-white"
             >
               View all
             </Link>
-          }
-        >
+          </div>
           {loading ? (
             <div className="text-sm text-slate-400">
               Loading dispatch exceptions...
@@ -783,18 +774,15 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
           )}
         </DashboardCard>
 
-        <DashboardCard
-          eyebrow="Operations"
-          title="Recent admin activity"
-          actions={
+        <DashboardCard eyebrow="Operations" title="Recent admin activity">
+          <div className="mb-3 flex justify-end">
             <Link
               href="/admin/activity"
               className="text-sm font-medium text-slate-300 hover:text-white"
             >
               View all
             </Link>
-          }
-        >
+          </div>
           {loading ? (
             <div className="text-sm text-slate-400">Loading admin activity...</div>
           ) : error ? (
@@ -840,18 +828,15 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
         </DashboardCard>
       </div>
 
-      <DashboardCard
-        eyebrow="Dispatch"
-        title="Recent dispatch bookings"
-        actions={
+      <DashboardCard eyebrow="Dispatch" title="Recent dispatch bookings">
+        <div className="mb-3 flex justify-end">
           <Link
             href="/admin/exceptions"
             className="text-sm font-medium text-slate-300 hover:text-white"
           >
             Exceptions queue
           </Link>
-        }
-      >
+        </div>
         {paymentBookingsLoading ? (
           <div className="text-sm text-slate-400">Loading bookings…</div>
         ) : bookingsError ? (
