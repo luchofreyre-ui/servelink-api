@@ -11,17 +11,28 @@ type JsonLike =
 export type BookingFlowDebugState = {
   flowVersion: string;
   pathname?: string | null;
+
   currentStep?: string | null;
-  visibleSteps?: string[];
+  orderedSteps?: string[];
+  reachableSteps?: string[];
+  nextStepCandidate?: string | null;
+  previousStepCandidate?: string | null;
+
   canContinue?: boolean | null;
   stepError?: string | null;
+
   isLoadingEstimate?: boolean | null;
   estimateError?: string | null;
   estimateReady?: boolean | null;
   estimateStale?: boolean | null;
-  decisionStepVisible?: boolean | null;
-  recurringStepVisible?: boolean | null;
-  reviewStepVisible?: boolean | null;
+  previewFetchCompleted?: boolean | null;
+  previewRequestKey?: string | null;
+  snapshotRequestKey?: string | null;
+
+  decisionEligible?: boolean | null;
+  recurringEligible?: boolean | null;
+  reviewReady?: boolean | null;
+
   selectedFrequency?: string | null;
   selectedDecision?: string | null;
   selectedProgram?: string | null;
@@ -29,6 +40,7 @@ export type BookingFlowDebugState = {
   homeSize?: string | null;
   bedrooms?: string | number | null;
   bathrooms?: string | number | null;
+
   pricePreview?: JsonLike;
   estimatePipeline?: JsonLike;
   formSnapshot?: JsonLike;
@@ -71,16 +83,22 @@ export function BookingFlowDebugPanel({
           <div className="mb-2 text-sm font-semibold text-white">Core State</div>
           <Row label="pathname" value={state.pathname} />
           <Row label="currentStep" value={state.currentStep} />
-          <Row label="visibleSteps" value={(state.visibleSteps ?? []).join(", ")} />
+          <Row label="orderedSteps" value={(state.orderedSteps ?? []).join(", ")} />
+          <Row label="reachableSteps" value={(state.reachableSteps ?? []).join(", ")} />
+          <Row label="nextStepCandidate" value={state.nextStepCandidate} />
+          <Row label="previousStepCandidate" value={state.previousStepCandidate} />
           <Row label="canContinue" value={state.canContinue} />
           <Row label="stepError" value={state.stepError} />
           <Row label="isLoadingEstimate" value={state.isLoadingEstimate} />
           <Row label="estimateError" value={state.estimateError} />
           <Row label="estimateReady" value={state.estimateReady} />
           <Row label="estimateStale" value={state.estimateStale} />
-          <Row label="decisionStepVisible" value={state.decisionStepVisible} />
-          <Row label="recurringStepVisible" value={state.recurringStepVisible} />
-          <Row label="reviewStepVisible" value={state.reviewStepVisible} />
+          <Row label="previewFetchCompleted" value={state.previewFetchCompleted} />
+          <Row label="previewRequestKey" value={state.previewRequestKey} />
+          <Row label="snapshotRequestKey" value={state.snapshotRequestKey} />
+          <Row label="decisionEligible" value={state.decisionEligible} />
+          <Row label="recurringEligible" value={state.recurringEligible} />
+          <Row label="reviewReady" value={state.reviewReady} />
           <Row label="selectedFrequency" value={state.selectedFrequency} />
           <Row label="selectedDecision" value={state.selectedDecision} />
           <Row label="selectedProgram" value={state.selectedProgram} />

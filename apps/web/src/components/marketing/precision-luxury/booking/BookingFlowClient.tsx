@@ -71,8 +71,10 @@ function getDebugStepLabel(step: unknown): string {
   return "unknown";
 }
 
-function getDebugString(value: unknown): string | null {
-  return typeof value === "string" && value.trim() ? value : null;
+function safeJsonLike(
+  value: unknown,
+): NonNullable<BookingFlowDebugState["pricePreview"]> {
+  return value as NonNullable<BookingFlowDebugState["pricePreview"]>;
 }
 
 function hasAuthenticatedCustomerSession() {
@@ -277,32 +279,60 @@ export function BookingFlowClient() {
   );
   const canConfirmDirection = isBookingReady && isContactReady;
 
-  const intakePayloadSnapshot = useMemo(() => {
-    try {
-      const attribution = buildBookingAttributionFromSearchParams(
-        new URLSearchParams(attributionQueryKey),
-      );
-      const extras = {
-        ...attribution,
-        ...(isContactReady
-          ? {
-              customerName: state.customerName.trim(),
-              customerEmail: state.customerEmail.trim(),
-            }
-          : {}),
-      };
-      return buildSubmitBookingDirectionPayload(
-        state,
-        extras,
-      ) as unknown as BookingFlowDebugState["payloadSnapshot"];
-    } catch {
-      return null;
-    }
-  }, [state, attributionQueryKey, isContactReady]);
+  const orderedStepIds = useMemo(() => bookingSteps.map((s) => s.id), []);
+
+  const currentStepIndex = orderedStepIds.indexOf(state.step);
+
+  const previousStepCandidate =
+    currentStepIndex > 0 ? orderedStepIds[currentStepIndex - 1]! : null;
+
+  const nextStepCandidate =
+    currentStepIndex >= 0 && currentStepIndex < orderedStepIds.length - 1
+      ? orderedStepIds[currentStepIndex + 1]!
+      : null;
+
+  const reviewReady =
+    state.step === "review"
+      ? Boolean(estimateForDisplay) && !previewLoading && !previewError
+      : null;
+
+  const decisionEligible =
+    orderedStepIds.includes("decision") &&
+    Boolean(estimateForDisplay) &&
+    !previewLoading &&
+    !previewError;
+
+  const recurringEligible =
+    orderedStepIds.includes("recurring_setup") &&
+    state.recurringIntent?.type === "recurring";
+
+  const estimateReady =
+    state.step === "review"
+      ? Boolean(estimateForDisplay) && !previewLoading && !previewError
+      : Boolean(estimateForDisplay);
+
+  const estimateStale =
+    state.step === "review"
+      ? Boolean(
+          previewFetchCompleted &&
+            previewRequestKey &&
+            state.estimateSnapshot &&
+            state.estimateSnapshot.previewRequestKey !== previewRequestKey,
+        )
+      : false;
+
+  const reachableSteps = useMemo(
+    () =>
+      orderedStepIds.filter((stepId) => {
+        if (stepId === "decision") return decisionEligible;
+        if (stepId === "recurring_setup") return recurringEligible;
+        if (stepId === "review") return true;
+        return true;
+      }),
+    [orderedStepIds, decisionEligible, recurringEligible],
+  );
 
   const bookingDebugState = useMemo<BookingFlowDebugState>(() => {
-    const visibleStepsList = bookingSteps.map((s) => s.id);
-    const currentStepLabel = getDebugStepLabel(state.step);
     const recurringIntent = state.recurringIntent;
     let selectedDecisionLabel: string | null = null;
     if (recurringIntent?.type === "recurring") {
@@ -311,72 +341,166 @@ export function BookingFlowClient() {
       selectedDecisionLabel = "one_time";
     }
 
-    const estimateStale =
-      state.step === "review" &&
-      state.estimateSnapshot != null &&
-      state.estimateSnapshot.previewRequestKey !== previewRequestKey;
+    const intakePayloadSnapshot = (() => {
+      try {
+        const attribution = buildBookingAttributionFromSearchParams(
+          new URLSearchParams(attributionQueryKey),
+        );
+        const extras = {
+          ...attribution,
+          ...(isContactReady
+            ? {
+                customerName: state.customerName.trim(),
+                customerEmail: state.customerEmail.trim(),
+              }
+            : {}),
+        };
 
-    const estimateReady =
-      state.step === "review"
-        ? Boolean(estimateForDisplay && !previewLoading && previewFetchCompleted)
+        return buildSubmitBookingDirectionPayload(state, extras);
+      } catch (error) {
+        return {
+          payloadBuildError:
+            error instanceof Error ? error.message : "Unknown payload build error",
+        };
+      }
+    })();
+
+    const snapshotKey =
+      state.estimateSnapshot &&
+      typeof state.estimateSnapshot.previewRequestKey === "string"
+        ? state.estimateSnapshot.previewRequestKey
         : null;
 
     return {
       flowVersion: "NEW_FLOW_V1",
       pathname,
-      currentStep: currentStepLabel,
-      visibleSteps: visibleStepsList,
-      canContinue,
-      stepError: stepError ?? null,
-      isLoadingEstimate: previewLoading,
-      estimateError: previewError,
+      currentStep: getDebugStepLabel(state.step),
+
+      orderedSteps: orderedStepIds,
+      reachableSteps,
+      nextStepCandidate,
+      previousStepCandidate,
+
+      canContinue: Boolean(canContinue),
+      stepError: stepError == null ? null : String(stepError),
+
+      isLoadingEstimate: Boolean(previewLoading),
+      estimateError: previewError == null ? null : String(previewError),
       estimateReady,
       estimateStale,
-      decisionStepVisible: state.step === "decision",
-      recurringStepVisible: state.step === "recurring_setup",
-      reviewStepVisible: state.step === "review",
+      previewFetchCompleted: Boolean(previewFetchCompleted),
+      previewRequestKey:
+        typeof previewRequestKey === "string" ? previewRequestKey : null,
+      snapshotRequestKey: snapshotKey,
+
+      decisionEligible,
+      recurringEligible,
+      reviewReady,
+
       selectedFrequency:
-        typeof state.frequency === "string" && state.frequency.trim()
-          ? state.frequency
-          : null,
+        typeof state.frequency === "string" ? state.frequency : null,
       selectedDecision: selectedDecisionLabel,
       selectedProgram:
-        typeof state.deepCleanProgram === "string" && state.deepCleanProgram.trim()
-          ? state.deepCleanProgram
-          : null,
+        typeof state.deepCleanProgram === "string" ? state.deepCleanProgram : null,
       zip: null,
-      homeSize: getDebugString(state.homeSize),
-      bedrooms: state.bedrooms || null,
-      bathrooms: state.bathrooms || null,
-      pricePreview:
-        estimateForDisplay as unknown as BookingFlowDebugState["pricePreview"],
-      estimatePipeline: {
+      homeSize:
+        typeof state.homeSize === "string" ? state.homeSize : null,
+      bedrooms: state.bedrooms ?? null,
+      bathrooms: state.bathrooms ?? null,
+
+      pricePreview: safeJsonLike(estimateForDisplay ?? null),
+      estimatePipeline: safeJsonLike({
         previewLoading,
         previewError,
         previewFetchCompleted,
         previewRequestKey,
-        snapshotRequestKey: state.estimateSnapshot?.previewRequestKey ?? null,
+        snapshotRequestKey: snapshotKey,
         step: state.step,
-      } as BookingFlowDebugState["estimatePipeline"],
-      formSnapshot: state as unknown as BookingFlowDebugState["formSnapshot"],
-      payloadSnapshot: intakePayloadSnapshot,
+        estimateSnapshot: state.estimateSnapshot ?? null,
+      }),
+      formSnapshot: safeJsonLike(state),
+      payloadSnapshot: safeJsonLike(intakePayloadSnapshot),
     };
   }, [
     pathname,
     state,
-    stepError,
     canContinue,
+    stepError,
     previewLoading,
     previewError,
     previewFetchCompleted,
     previewRequestKey,
     estimateForDisplay,
-    intakePayloadSnapshot,
+    orderedStepIds,
+    reachableSteps,
+    nextStepCandidate,
+    previousStepCandidate,
+    reviewReady,
+    decisionEligible,
+    recurringEligible,
+    estimateReady,
+    estimateStale,
+    attributionQueryKey,
+    isContactReady,
   ]);
 
   useEffect(() => {
     console.log("BOOKING_DEBUG_STATE", bookingDebugState);
   }, [bookingDebugState]);
+
+  useEffect(() => {
+    console.log("BOOKING_DEBUG_STEP_TRANSITION", {
+      currentStep: bookingDebugState.currentStep,
+      previousStepCandidate: bookingDebugState.previousStepCandidate,
+      nextStepCandidate: bookingDebugState.nextStepCandidate,
+      reachableSteps: bookingDebugState.reachableSteps,
+    });
+  }, [
+    bookingDebugState.currentStep,
+    bookingDebugState.previousStepCandidate,
+    bookingDebugState.nextStepCandidate,
+    bookingDebugState.reachableSteps,
+  ]);
+
+  useEffect(() => {
+    console.log("BOOKING_DEBUG_ESTIMATE_STATUS", {
+      currentStep: bookingDebugState.currentStep,
+      isLoadingEstimate: bookingDebugState.isLoadingEstimate,
+      estimateError: bookingDebugState.estimateError,
+      estimateReady: bookingDebugState.estimateReady,
+      estimateStale: bookingDebugState.estimateStale,
+      previewFetchCompleted: bookingDebugState.previewFetchCompleted,
+      previewRequestKey: bookingDebugState.previewRequestKey,
+      snapshotRequestKey: bookingDebugState.snapshotRequestKey,
+    });
+  }, [
+    bookingDebugState.currentStep,
+    bookingDebugState.isLoadingEstimate,
+    bookingDebugState.estimateError,
+    bookingDebugState.estimateReady,
+    bookingDebugState.estimateStale,
+    bookingDebugState.previewFetchCompleted,
+    bookingDebugState.previewRequestKey,
+    bookingDebugState.snapshotRequestKey,
+  ]);
+
+  useEffect(() => {
+    console.log("BOOKING_DEBUG_ELIGIBILITY", {
+      currentStep: bookingDebugState.currentStep,
+      canContinue: bookingDebugState.canContinue,
+      stepError: bookingDebugState.stepError,
+      decisionEligible: bookingDebugState.decisionEligible,
+      recurringEligible: bookingDebugState.recurringEligible,
+      reviewReady: bookingDebugState.reviewReady,
+    });
+  }, [
+    bookingDebugState.currentStep,
+    bookingDebugState.canContinue,
+    bookingDebugState.stepError,
+    bookingDebugState.decisionEligible,
+    bookingDebugState.recurringEligible,
+    bookingDebugState.reviewReady,
+  ]);
 
   const contactPayloadKey = useMemo(() => {
     if (!isContactReady) return "";
@@ -621,8 +745,8 @@ export function BookingFlowClient() {
       stepError: bookingDebugState.stepError,
       estimateReady: bookingDebugState.estimateReady,
       estimateStale: bookingDebugState.estimateStale,
-      decisionStepVisible: bookingDebugState.decisionStepVisible,
-      recurringStepVisible: bookingDebugState.recurringStepVisible,
+      decisionEligible: bookingDebugState.decisionEligible,
+      recurringEligible: bookingDebugState.recurringEligible,
       formSnapshot: bookingDebugState.formSnapshot,
       payloadSnapshot: bookingDebugState.payloadSnapshot,
     });
@@ -777,7 +901,8 @@ export function BookingFlowClient() {
   function goBack() {
     console.log("BOOKING_DEBUG_BACK", {
       currentStep: bookingDebugState.currentStep,
-      visibleSteps: bookingDebugState.visibleSteps,
+      orderedSteps: bookingDebugState.orderedSteps,
+      reachableSteps: bookingDebugState.reachableSteps,
     });
 
     setAttemptedNext(false);
@@ -930,6 +1055,18 @@ export function BookingFlowClient() {
         <section className="mx-auto max-w-7xl px-6 py-16 md:px-8 lg:py-20">
           <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
             <div className="space-y-8">
+              <div className="mb-4 rounded-xl border border-red-300 bg-red-50 p-3 text-xs text-red-900">
+                <div>
+                  <strong>Booking Debug:</strong> {bookingDebugState.currentStep}
+                </div>
+                <div>canContinue: {String(bookingDebugState.canContinue)}</div>
+                <div>stepError: {bookingDebugState.stepError ?? "null"}</div>
+                <div>estimateReady: {String(bookingDebugState.estimateReady)}</div>
+                <div>estimateStale: {String(bookingDebugState.estimateStale)}</div>
+                <div>decisionEligible: {String(bookingDebugState.decisionEligible)}</div>
+                <div>recurringEligible: {String(bookingDebugState.recurringEligible)}</div>
+              </div>
+
               <BookingServiceHandoffCard serviceId={state.serviceId} />
 
               {state.step === "service" ? (
