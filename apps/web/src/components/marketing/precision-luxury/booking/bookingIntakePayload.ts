@@ -1,4 +1,8 @@
-import type { BookingDirectionOutboundPayload } from "./bookingDirectionIntakeApi";
+import { buildBookingHandoffPayloadForIntakeSubmit } from "@/lib/booking/bookingDispatchHandoff";
+import type {
+  BookingDirectionOutboundPayload,
+  SubmitBookingDirectionIntakePayload,
+} from "./bookingDirectionIntakeApi";
 import type { BookingFlowState } from "./bookingFlowTypes";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 
@@ -40,6 +44,9 @@ export function buildPreviewBookingDirectionPayload(
 export function buildSubmitBookingDirectionPayload(
   state: BookingFlowState,
   extras: BookingDirectionExtras,
-): BookingDirectionOutboundPayload {
-  return buildBaseBookingDirectionPayload(state, extras);
+): SubmitBookingDirectionIntakePayload {
+  return {
+    ...buildBaseBookingDirectionPayload(state, extras),
+    bookingHandoff: buildBookingHandoffPayloadForIntakeSubmit(state),
+  };
 }

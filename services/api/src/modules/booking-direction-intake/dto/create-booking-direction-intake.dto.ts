@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from "class-validator";
 import { ESTIMATE_BATHROOMS, ESTIMATE_BEDROOMS } from "./estimate-factor-enums";
+import { BookingHandoffDto } from "./booking-handoff.dto";
 import { EstimateFactorsDto } from "./estimate-factors.dto";
 
 /** Matches `apps/web/.../bookingContactValidation.ts` (funnel email gate). */
@@ -129,4 +130,10 @@ export class CreateBookingDirectionIntakeDto {
     message: "customerEmail must be a valid email address",
   })
   customerEmail?: string;
+
+  /** Optional funnel handoff: schedule preference, cleaner intent, recurring path metadata. */
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => BookingHandoffDto)
+  bookingHandoff?: BookingHandoffDto;
 }

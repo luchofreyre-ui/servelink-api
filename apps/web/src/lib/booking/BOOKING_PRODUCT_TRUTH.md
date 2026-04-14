@@ -1,6 +1,6 @@
 # Booking Product Truth
 
-This document is the human-readable contract for the public `/book` funnel and its API boundaries. Code constants live in `bookingProductContract.ts`. Payload wire shape is `BookingDirectionOutboundPayload` in `bookingDirectionIntakeApi.ts` and `CreateBookingDirectionIntakeDto` in the API.
+This document is the human-readable contract for the public `/book` funnel and its API boundaries. Code constants live in `bookingProductContract.ts`. Wire types: `BookingDirectionOutboundPayload` / `SubmitBookingDirectionIntakePayload` in `bookingDirectionIntakeApi.ts`, `CreateBookingDirectionIntakeDto` in the API.
 
 ## Purpose
 
@@ -9,7 +9,7 @@ Deliver a guided booking experience that:
 - Produces a server-backed estimate snapshot before plan decision.
 - Keeps **preview** and **submit** bodies free of top-level `estimateFactors` (questionnaire stays funnel state; server maps defaults when omitted).
 - Separates **one-time** booking direction intake from **recurring** plan creation (`POST /api/v1/recurring/plans`).
-- Captures honest **schedule** and **cleaner preference** intent for confirm/ops even when not yet first-class on the intake DTO.
+- Persists **schedule**, **cleaner preference**, and **recurring path metadata** as structured **`bookingHandoff`** on `BookingDirectionIntake` and forwards the same JSON into downstream **`Booking.notes`** for dispatch/ops (see intake bridge).
 
 ## Canonical step order
 
@@ -22,13 +22,14 @@ Deliver a guided booking experience that:
 - **Guest-capable** through confirm for intake submit.
 - **Review** requires a successful estimate snapshot (`preview-estimate` + locked snapshot) before continue.
 - **Decision** offers one-time; choosing it sets `recurringIntent: { type: "one_time" }` and jumps to **confirm**.
-- **Confirm** requires valid estimate snapshot and contact fields; submit calls `booking-direction-intake` submit path with **only** DTO-allowed fields.
+- **Confirm** requires valid estimate snapshot and contact fields; submit calls `POST /api/v1/booking-direction-intake/submit` with DTO-allowed fields including optional **`bookingHandoff`**.
 
 ## Recurring path
 
 - **Decision** allows recurring cadence selection **without** forcing login at that moment.
 - **recurring_setup** collects first-visit scheduling for plan creation (date, arrival preference, add-ons, notes).
 - **Confirm** shows recurring summary; **customer JWT** is required only when executing **`POST /recurring/plans`** (final action). Guests who reach confirm see sign-in handoff; state is restored from `sessionStorage` after auth via existing `BOOKING_FLOW_SESSION_KEY` restore on `/book` mount.
+- **bookingHandoff on intake** applies to **one-time intake submit** only. Recurring plan creation uses `CreateRecurringPlanRequest` / `intakeSnapshot` (separate contract); the funnel still mirrors recurring intent in UI summaries.
 
 ## Auth requirements by step
 
@@ -45,24 +46,57 @@ Encoded rule: `BOOKING_PRODUCT_CONTRACT.recurringAuthPoint === "before_confirm"`
 
 ## Estimate pipeline contract
 
-- **Preview** (`/booking-direction-intake/preview-estimate`): body matches `buildPreviewBookingDirectionPayload` — **no** top-level `estimateFactors`.
+- **Preview** (`/booking-direction-intake/preview-estimate`): body matches `buildPreviewBookingDirectionPayload` — **no** top-level `estimateFactors`, **no** `bookingHandoff` from the public funnel (preview stays minimal).
 - **Review** may not advance while preview is loading, in error, or without `estimateSnapshot` once the preview round completed.
-- **Submit** (one-time): same wire fields as preview; server applies estimate defaults when `estimateFactors` omitted.
+- **Submit** (one-time): base fields as preview **plus** structured **`bookingHandoff`** from `buildBookingHandoffPayloadForIntakeSubmit` (public funnel always sends it; DTO keeps it optional for legacy callers); server applies estimate defaults when `estimateFactors` omitted on the row.
+
+## API `bookingHandoff` shape (CreateBookingDirectionIntakeDto)
+
+Optional nested object (all sub-fields optional at validation level; the web funnel sends a full object for observability):
+
+```json
+{
+  "bookingHandoff": {
+    "scheduling": {
+      "mode": "preference_only" | "slot_selection",
+      "preferredTime": "string | null",
+      "preferredDayWindow": "string | null",
+      "flexibilityNotes": "string | null",
+      "selectedSlotId": "string | null",
+      "selectedSlotLabel": "string | null"
+    },
+    "cleanerPreference": {
+      "mode": "none" | "preferred_cleaner",
+      "cleanerId": "string | null",
+      "cleanerLabel": "string | null",
+      "hardRequirement": "boolean",
+      "notes": "string | null"
+    },
+    "recurring": {
+      "pathKind": "one_time" | "recurring",
+      "cadence": "string | null",
+      "authRequiredAtConfirm": "boolean"
+    }
+  }
+}
+```
+
+- **Persistence:** `BookingDirectionIntake.bookingHandoff` (`JSONB` / Prisma `Json`).
+- **Bridge:** `IntakeBookingBridgeService` appends the same JSON under `--- SERVELINK_BOOKING_HANDOFF_JSON ---` on **`Booking.notes`** when a booking is created from intake.
 
 ## Scheduling contract
 
-- **Wire today:** `frequency` + `preferredTime` strings on `BookingDirectionOutboundPayload` (API `CreateBookingDirectionIntakeDto`).
-- **Funnel state:** `scheduleSelection` (`ScheduleSelection` in `bookingFlowTypes.ts`) holds richer intent:
-  - **Current implementation:** `mode: "preference_only"` only. No public funnel route yet lists concrete slots; do not render fake slot cards.
-  - **Product direction (`BOOKING_PRODUCT_CONTRACT.schedulingMode`):** `slot_selection` — upgrade path is to call real availability when a customer-safe API is wired into this funnel.
-- **Confirm** must show the human-readable schedule line from `buildBookingDispatchHandoffSummary`.
+- **Legacy wire columns:** `frequency` + `preferredTime` on the intake DTO (unchanged).
+- **Funnel state:** `scheduleSelection` (`ScheduleSelection` in `bookingFlowTypes.ts`).
+- **Runtime mode:** **`preference_only`** — day-window and flexibility notes when offered; **no** fake exact slot UI without a backed public slot API.
+- **Roadmap:** `BOOKING_PRODUCT_CONTRACT.schedulingModeRoadmap` is **`slot_selection`** for when availability is wired customer-safe end-to-end.
+- **Confirm** shows the human-readable schedule line from `buildBookingDispatchHandoffSummary` (same underlying state as `bookingHandoff.scheduling`).
 
 ## Cleaner selection / preferred cleaner contract
 
-- **Wire today:** booking-direction intake DTO has **no** generic “preferred cleaner” field for the public submit path.
-- **Funnel state:** `cleanerPreference` (`CleanerPreference`) with `mode: "none" | "preferred_cleaner"`, optional notes, optional `hardRequirement` (soft default).
+- **Wire:** `bookingHandoff.cleanerPreference` on intake submit (DTO `BookingHandoffCleanerPreferenceDto`). UI funnel field `preferenceNotes` maps to API **`notes`**.
+- **Funnel state:** `cleanerPreference` with `mode: "none" | "preferred_cleaner"`, optional `hardRequirement`.
 - **No fake provider cards** without a backed list API.
-- **Confirm** shows captured preference text from the handoff helper only.
 
 ## Confirm-step requirements
 
@@ -78,13 +112,14 @@ Exact copy:
 
 ## Dispatch handoff contract
 
-- **Intake submit** sends only fields allowed by `CreateBookingDirectionIntakeDto`.
-- **UI / ops narrative** uses `buildBookingDispatchHandoffSummary` in `bookingDispatchHandoff.ts` (does not mutate API payloads).
+- **Intake submit** sends `CreateBookingDirectionIntakeDto` including optional **`bookingHandoff`** (structured).
+- **UI summaries** use `buildBookingDispatchHandoffSummary`; **API submit** uses `buildBookingHandoffPayloadForIntakeSubmit` — same booking state, parallel shapes (scheduling / cleaner / recurring).
 
 ## Admin / operator visibility surfaces
 
-- **`/admin/ops/recurring`:** recurring ops summary, exhausted queue, route manifest, live probes (`AdminRecurringOperationsPanel`, `RecurringOpsDashboard`).
-- **Booking direction intakes (admin):** lists captured intake rows (`/admin/booking-direction-intakes`) — schedule/cleaner funnel fields are not yet guaranteed columns; operators rely on intake detail views as implemented server-side.
+- **`/admin/ops/recurring`:** recurring ops summary, route manifest, funnel vs intake note.
+- **`/admin/booking-direction-intakes`:** intake list includes a **Handoff** column when `bookingHandoff` is present; full JSON is returned by `GET /api/v1/admin/booking-direction-intakes` per row.
+- **Booking record:** operators can read appended **`SERVELINK_BOOKING_HANDOFF_JSON`** block on `Booking.notes` for intakes that created a booking.
 
 ## Customer lifecycle surfaces
 
@@ -96,7 +131,7 @@ Exact copy:
 | Flow | Coverage |
 |------|-----------|
 | Review preview loading guard | `booking-review-loading-race.spec.ts` |
-| One-time → confirm | `booking-one-time-happy-path.spec.ts` |
+| One-time → confirm + submit `bookingHandoff`, no `estimateFactors` on wire | `booking-one-time-happy-path.spec.ts` |
 | Recurring guest through setup → confirm auth handoff | `booking-recurring-auth-gate.spec.ts` |
 | Recurring + one-time smoke | `booking-recurring-path.spec.ts` |
 | Confirm without snapshot blocked | `booking-confirm-without-snapshot.spec.ts` |
@@ -104,19 +139,18 @@ Exact copy:
 
 ## Recovered existing system surfaces
 
-From repo history and code search (not exhaustive):
-
 | Path | Role |
 |------|------|
-| `apps/web/.../bookingDirectionIntakeApi.ts` + `bookingIntakePayload.ts` | Preview/submit payload builders; no top-level `estimateFactors`. |
+| `apps/web/.../bookingDirectionIntakeApi.ts` + `bookingIntakePayload.ts` | Preview (minimal) / submit payloads; submit includes **`bookingHandoff`**. |
+| `apps/web/.../bookingDispatchHandoff.ts` | Confirm summaries + **`buildBookingHandoffPayloadForIntakeSubmit`**. |
 | `apps/web/.../BookingFlowClient.tsx` | Step machine, preview guard, recurring vs one-time submit. |
 | `apps/web/.../BookingStepSchedule.tsx` | Frequency, preferred time, day-window / notes, `BookingStepCleanerPreference`. |
 | `apps/web/.../bookingRecurringApi.ts` | Customer recurring HTTP client + documented routes. |
-| `services/api/.../booking-direction-intake/*` | Intake DTO, estimate mapping, submit controller. |
+| `services/api/.../booking-direction-intake/*` | Intake DTO (incl. `bookingHandoff`), persistence, bridge to `Booking`. |
 | `services/api/.../slot-holds/*` | Slot availability engine for bookings module (not yet wired to public funnel). |
 | `services/api/.../recurring/*` | Recurring plan CRUD, ops summary, `preferredFoId` on plan DTOs. |
 | `apps/web/.../admin/ops/recurring/page.tsx` | Operator recurring dashboard shell. |
 
 ---
 
-_Last updated: booking product recovery drop._
+_Last updated: booking scheduling + dispatch handoff integration drop._

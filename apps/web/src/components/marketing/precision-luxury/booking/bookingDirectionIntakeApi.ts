@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/lib/api";
+import type { BookingDirectionBookingHandoffPayload } from "@/lib/booking/bookingDispatchHandoff";
 
 export type BookingDirectionUtmPayload = {
   source?: string;
@@ -70,10 +71,12 @@ export type BookingDirectionOutboundPayload = {
 };
 
 /**
- * Submit body: same API-safe fields as preview. Questionnaire is applied on the server
- * when `estimateFactors` is omitted (defaults), matching the preview-estimate contract.
+ * Submit body: same API-safe fields as preview, plus structured `bookingHandoff`.
+ * Preview must not send `bookingHandoff` unless needed; public funnel keeps preview minimal.
  */
-export type SubmitBookingDirectionIntakePayload = BookingDirectionOutboundPayload;
+export type SubmitBookingDirectionIntakePayload = BookingDirectionOutboundPayload & {
+  bookingHandoff?: BookingDirectionBookingHandoffPayload;
+};
 
 export type BookingDirectionIntakeSuccess = {
   kind: "booking_direction_intake";
@@ -206,3 +209,5 @@ export async function createBookingDirectionIntakeOnly(
 
   return response.json() as Promise<BookingDirectionIntakeSuccess>;
 }
+
+export type { BookingDirectionBookingHandoffPayload } from "@/lib/booking/bookingDispatchHandoff";

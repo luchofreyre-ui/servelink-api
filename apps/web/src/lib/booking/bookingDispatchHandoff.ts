@@ -1,9 +1,75 @@
 /**
- * UI-facing dispatch / confirm handoff summary derived from booking state.
- * Does not add fields to `BookingDirectionOutboundPayload` unless the API DTO grows.
+ * UI-facing dispatch / confirm handoff summary + structured API `bookingHandoff` for intake submit.
  */
 import type { BookingFlowState } from "@/components/marketing/precision-luxury/booking/bookingFlowTypes";
 import { getBookingServiceCatalogItem } from "@/components/marketing/precision-luxury/booking/bookingServiceCatalog";
+
+/** Mirrors `CreateBookingDirectionIntakeDto.bookingHandoff` (API). */
+export type BookingDirectionBookingHandoffPayload = {
+  scheduling: {
+    mode: "preference_only" | "slot_selection";
+    preferredTime?: string | null;
+    preferredDayWindow?: string | null;
+    flexibilityNotes?: string | null;
+    selectedSlotId?: string | null;
+    selectedSlotLabel?: string | null;
+  };
+  cleanerPreference: {
+    mode: "none" | "preferred_cleaner";
+    cleanerId?: string | null;
+    cleanerLabel?: string | null;
+    hardRequirement?: boolean;
+    notes?: string | null;
+  };
+  recurring: {
+    pathKind: "one_time" | "recurring";
+    cadence?: string | null;
+    authRequiredAtConfirm?: boolean;
+  };
+};
+
+export function buildBookingHandoffPayloadForIntakeSubmit(
+  state: BookingFlowState,
+): BookingDirectionBookingHandoffPayload {
+  const ss = state.scheduleSelection;
+  const mode: "preference_only" | "slot_selection" =
+    ss?.mode === "slot_selection" ? "slot_selection" : "preference_only";
+
+  const scheduling: BookingDirectionBookingHandoffPayload["scheduling"] = {
+    mode,
+    preferredTime: (ss?.preferredTime ?? state.preferredTime) || null,
+    preferredDayWindow: ss?.preferredDayWindow ?? null,
+    flexibilityNotes: ss?.flexibilityNotes ?? null,
+    selectedSlotId: ss?.selectedSlotId ?? null,
+    selectedSlotLabel: ss?.selectedSlotLabel ?? null,
+  };
+
+  const cp = state.cleanerPreference;
+  const cleanerPreference: BookingDirectionBookingHandoffPayload["cleanerPreference"] =
+    {
+      mode: cp?.mode === "preferred_cleaner" ? "preferred_cleaner" : "none",
+      cleanerId: cp?.cleanerId ?? null,
+      cleanerLabel: cp?.cleanerLabel ?? null,
+      hardRequirement: Boolean(cp?.hardRequirement),
+      notes: cp?.preferenceNotes?.trim() ? cp.preferenceNotes.trim() : null,
+    };
+
+  const ri = state.recurringIntent;
+  const recurring: BookingDirectionBookingHandoffPayload["recurring"] =
+    ri?.type === "recurring"
+      ? {
+          pathKind: "recurring",
+          cadence: ri.cadence,
+          authRequiredAtConfirm: true,
+        }
+      : {
+          pathKind: "one_time",
+          cadence: null,
+          authRequiredAtConfirm: false,
+        };
+
+  return { scheduling, cleanerPreference, recurring };
+}
 
 export type BookingDispatchHandoffSummary = {
   serviceLabel: string;

@@ -96,6 +96,31 @@ export type IntakeEstimatePreviewResponse = {
   deepCleanProgram: DeepCleanProgramSubmitDisplay | null;
 };
 
+/**
+ * Mirrors persisted `BookingDirectionIntake.bookingHandoff` onto the downstream `Booking.notes`
+ * so dispatch / ops tooling that reads booking records sees scheduling + cleaner intent without
+ * a separate intake join. Full structured JSON remains on the intake row for admin APIs.
+ */
+function appendPersistedBookingHandoffToDispatchNote(
+  baseNote: string,
+  bookingHandoff: unknown,
+): string {
+  if (
+    bookingHandoff == null ||
+    (typeof bookingHandoff === "object" &&
+      bookingHandoff !== null &&
+      Object.keys(bookingHandoff as object).length === 0)
+  ) {
+    return baseNote;
+  }
+  try {
+    const block = JSON.stringify(bookingHandoff, null, 2);
+    return `${baseNote}\n\n--- SERVELINK_BOOKING_HANDOFF_JSON ---\n${block}`;
+  } catch {
+    return baseNote;
+  }
+}
+
 @Injectable()
 export class IntakeBookingBridgeService {
   private readonly logger = new Logger(IntakeBookingBridgeService.name);
@@ -232,7 +257,11 @@ export class IntakeBookingBridgeService {
     if (displayName) {
       noteParts.push(`customerName=${displayName}`);
     }
-    const note = noteParts.join(" | ");
+    const baseNote = noteParts.join(" | ");
+    const note = appendPersistedBookingHandoffToDispatchNote(
+      baseNote,
+      intake.bookingHandoff,
+    );
 
     try {
       const { booking, estimate } = await this.bookings.createBooking({

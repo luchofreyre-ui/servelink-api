@@ -15,6 +15,8 @@ type IntakeRow = {
   frequency: string;
   preferredTime: string;
   deepCleanProgram: string | null;
+  hasEstimateFactors?: boolean;
+  bookingHandoff?: unknown;
   customerName: string | null;
   customerEmail: string | null;
   source: string | null;
@@ -27,6 +29,17 @@ type IntakeRow = {
   };
   createdAt: string;
 };
+
+function handoffSummary(h: unknown): string {
+  if (h == null || typeof h !== "object") return "—";
+  const o = h as Record<string, unknown>;
+  const sched = o.scheduling as Record<string, unknown> | undefined;
+  const mode = typeof sched?.mode === "string" ? sched.mode : "";
+  const cleaner = o.cleanerPreference as Record<string, unknown> | undefined;
+  const cMode = typeof cleaner?.mode === "string" ? cleaner.mode : "";
+  const parts = [mode && `sched:${mode}`, cMode && `cleaner:${cMode}`].filter(Boolean);
+  return parts.length ? parts.join(" · ") : "present";
+}
 
 export default function AdminBookingDirectionIntakesPage() {
   const [tokenChecked, setTokenChecked] = useState(false);
@@ -142,8 +155,10 @@ export default function AdminBookingDirectionIntakesPage() {
                     <th className="px-4 py-3 font-medium">Received</th>
                     <th className="px-4 py-3 font-medium">Service</th>
                     <th className="px-4 py-3 font-medium">Deep clean</th>
+                    <th className="px-4 py-3 font-medium">Estimate Q</th>
                     <th className="px-4 py-3 font-medium">Home</th>
                     <th className="px-4 py-3 font-medium">Schedule</th>
+                    <th className="px-4 py-3 font-medium">Handoff</th>
                     <th className="px-4 py-3 font-medium">Contact</th>
                     <th className="px-4 py-3 font-medium">Attribution</th>
                   </tr>
@@ -152,7 +167,7 @@ export default function AdminBookingDirectionIntakesPage() {
                   {items.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={7}
+                        colSpan={9}
                         className="px-4 py-8 text-center text-slate-500"
                       >
                         No booking direction intakes yet.
@@ -173,6 +188,9 @@ export default function AdminBookingDirectionIntakesPage() {
                         <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-300">
                           {row.deepCleanProgram ?? "—"}
                         </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-300">
+                          {row.hasEstimateFactors ? "Yes" : "—"}
+                        </td>
                         <td className="max-w-[220px] px-4 py-3 text-xs leading-relaxed text-slate-300">
                           {row.bedrooms} · {row.bathrooms} · {row.homeSize}
                           {row.pets ? (
@@ -186,6 +204,9 @@ export default function AdminBookingDirectionIntakesPage() {
                           <span className="mt-1 block text-slate-500">
                             {row.preferredTime}
                           </span>
+                        </td>
+                        <td className="max-w-[180px] px-4 py-3 text-xs leading-relaxed text-slate-400">
+                          {handoffSummary(row.bookingHandoff)}
                         </td>
                         <td className="max-w-[200px] px-4 py-3 text-xs leading-relaxed text-slate-300">
                           {row.customerName || row.customerEmail ? (

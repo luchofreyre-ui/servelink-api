@@ -56,8 +56,14 @@ export const BOOKING_PRODUCT_CONTRACT = {
   /** Recurring plan creation uses customer JWT; enforced at final submit, not at cadence pick. */
   recurringAuthPoint: "before_confirm" as BookingAuthPoint,
 
-  /** Target: slot-level booking once a public funnel API exists; today the funnel uses honest preference capture only. */
-  schedulingMode: "slot_selection" as SchedulingMode,
+  /**
+   * Implemented funnel + API `bookingHandoff.scheduling.mode`: preference capture only
+   * (no customer-safe slot list in this funnel yet).
+   */
+  schedulingMode: "preference_only" as SchedulingMode,
+
+  /** Product target once slot availability is wired end-to-end. */
+  schedulingModeRoadmap: "slot_selection" as SchedulingMode,
 
   /** Preferred cleaner / team request when data exists; never fake provider cards. */
   cleanerSelectionMode: "preferred_cleaner" as CleanerSelectionMode,

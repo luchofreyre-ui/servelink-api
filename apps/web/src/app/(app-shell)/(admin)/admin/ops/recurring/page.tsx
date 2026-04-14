@@ -136,11 +136,16 @@ export default async function AdminRecurringOpsPage() {
             Public booking funnel vs intake API
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            The marketing booking flow captures richer schedule preferences, cleaner preference
-            intent, and recurring setup in client state and confirm summaries. The booking-direction
-            intake DTO used for one-time submit does not yet expose first-class fields for those
-            objects, so operators should treat them as funnel truth until intake and admin booking
-            detail views are extended. Recurring plan creation uses authenticated{" "}
+            One-time <code className="rounded bg-gray-100 px-1 font-mono text-xs">POST /booking-direction-intake/submit</code>{" "}
+            persists structured <code className="rounded bg-gray-100 px-1 font-mono text-xs">bookingHandoff</code>{" "}
+            (scheduling, cleaner preference, recurring path metadata) on{" "}
+            <code className="rounded bg-gray-100 px-1 font-mono text-xs">BookingDirectionIntake</code>
+            and mirrors the JSON into <code className="rounded bg-gray-100 px-1 font-mono text-xs">Booking.notes</code>{" "}
+            when the intake bridge creates a booking. See{" "}
+            <Link href="/admin/booking-direction-intakes" className="text-blue-700 hover:underline">
+              booking direction captures
+            </Link>{" "}
+            for per-row handoff visibility. Recurring plan creation still uses authenticated{" "}
             <code className="rounded bg-gray-100 px-1 font-mono text-xs">POST /recurring/plans</code>{" "}
             with cadence and anchor timing from recurring setup.
           </p>

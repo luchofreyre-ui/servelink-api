@@ -26,6 +26,9 @@ export class BookingDirectionIntakeService {
         deepCleanProgram,
         estimateFactors: (dto.estimateFactors ??
           defaultIntakeQuestionnaireFactors()) as object,
+        bookingHandoff: dto.bookingHandoff
+          ? (JSON.parse(JSON.stringify(dto.bookingHandoff)) as object)
+          : undefined,
         customerName: dto.customerName?.trim() || null,
         customerEmail: dto.customerEmail?.trim() || null,
         source: dto.source?.trim() || null,
@@ -71,6 +74,7 @@ export class BookingDirectionIntakeService {
         preferredTime: row.preferredTime,
         deepCleanProgram: row.deepCleanProgram,
         hasEstimateFactors: row.estimateFactors != null,
+        bookingHandoff: row.bookingHandoff ?? null,
         customerName: row.customerName,
         customerEmail: row.customerEmail,
         source: row.source,

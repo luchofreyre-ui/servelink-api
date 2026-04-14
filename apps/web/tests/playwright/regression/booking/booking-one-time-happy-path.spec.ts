@@ -65,15 +65,46 @@ test.describe.configure({ timeout: 120_000 });
 test("booking: one-time path reaches confirm with schedule and cleaner summary", async ({
   page,
 }) => {
+  let previewRequestBody: Record<string, unknown> | null = null;
+  let submitRequestBody: Record<string, unknown> | null = null;
+
   await page.route("**/booking-direction-intake/preview-estimate", async (route) => {
     if (route.request().method() !== "POST") {
       await route.continue();
       return;
     }
+    const raw = route.request().postData();
+    previewRequestBody = raw ? (JSON.parse(raw) as Record<string, unknown>) : null;
     await route.fulfill({
       status: 200,
       contentType: "application/json",
       body: PREVIEW_BODY,
+    });
+  });
+
+  await page.route("**/booking-direction-intake/submit", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.continue();
+      return;
+    }
+    const raw = route.request().postData();
+    submitRequestBody = raw ? (JSON.parse(raw) as Record<string, unknown>) : null;
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({
+        kind: "booking_direction_intake_submit",
+        intakeId: "pw-intake-handoff",
+        bookingCreated: true,
+        bookingId: "pw-booking-handoff",
+        estimate: {
+          priceCents: 66084,
+          durationMinutes: 197,
+          confidence: 0.65,
+        },
+        deepCleanProgram: null,
+        bookingError: null,
+      }),
     });
   });
 
@@ -100,4 +131,23 @@ test("booking: one-time path reaches confirm with schedule and cleaner summary",
   await expect(page.getByText("Cleaner preference", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Estimate", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/Locked review estimate:/)).toBeVisible();
+
+  expect(previewRequestBody).toBeTruthy();
+  expect(previewRequestBody).not.toHaveProperty("estimateFactors");
+
+  await page.getByRole("button", { name: "Confirm Booking Direction" }).click();
+  await expect(page).toHaveURL(/\/book\/confirmation/, { timeout: 20_000 });
+
+  expect(submitRequestBody).toBeTruthy();
+  expect(submitRequestBody).not.toHaveProperty("estimateFactors");
+  const handoff = submitRequestBody?.bookingHandoff as Record<string, unknown> | undefined;
+  expect(handoff).toBeTruthy();
+  const scheduling = handoff?.scheduling as Record<string, unknown>;
+  expect(scheduling?.mode).toBe("preference_only");
+  expect(scheduling?.preferredTime).toBeTruthy();
+  const cleaner = handoff?.cleanerPreference as Record<string, unknown>;
+  expect(cleaner?.mode).toBe("none");
+  const recurring = handoff?.recurring as Record<string, unknown>;
+  expect(recurring?.pathKind).toBe("one_time");
+  expect(recurring?.authRequiredAtConfirm).toBe(false);
 });

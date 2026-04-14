@@ -63,11 +63,14 @@ function reviewUrl() {
 test.describe.configure({ timeout: 120_000 });
 
 test("booking: one-time confirm shows locked estimate line", async ({ page }) => {
+  let previewRequestBody: Record<string, unknown> | null = null;
   await page.route("**/booking-direction-intake/preview-estimate", async (route) => {
     if (route.request().method() !== "POST") {
       await route.continue();
       return;
     }
+    const raw = route.request().postData();
+    previewRequestBody = raw ? (JSON.parse(raw) as Record<string, unknown>) : null;
     await route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -93,6 +96,9 @@ test("booking: one-time confirm shows locked estimate line", async ({ page }) =>
 
   await expect(page.getByText("One-time cleaning").first()).toBeVisible();
   await expect(page.getByText(/Locked review estimate:/)).toBeVisible();
+
+  expect(previewRequestBody).toBeTruthy();
+  expect(previewRequestBody).not.toHaveProperty("estimateFactors");
 });
 
 test("booking: recurring cadence does not redirect before recurring_setup", async ({ page }) => {

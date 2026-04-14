@@ -110,6 +110,8 @@ test("booking: recurring guest completes setup then auth gate only at final conf
   await expect(page.getByRole("heading", { name: "Confirm and send" })).toBeVisible({
     timeout: 30_000,
   });
+  await expect(page.getByText("Recurring · Weekly")).toBeVisible();
+  await expect(page.getByText(/Frequency:/).first()).toBeVisible();
   await expect(
     page.getByText("Please sign in to continue with your recurring plan."),
   ).toBeVisible();
