@@ -33,9 +33,9 @@ import BookingStepRecurringSetup from "./BookingStepRecurringSetup";
 import { BookingStepConfirm } from "./BookingStepConfirm";
 import { BookingSummaryCard } from "./BookingSummaryCard";
 import { BookingServiceHandoffCard } from "./BookingServiceHandoffCard";
+import type { BookingDirectionEstimatePreviewResponse } from "./bookingDirectionIntakeApi";
 import {
   buildBookingAttributionFromSearchParams,
-  previewBookingDirectionEstimate,
   submitBookingDirectionIntake,
 } from "./bookingDirectionIntakeApi";
 import { mapIntakeDeepCleanSnapshotToCardProgram } from "./bookingIntakePreviewDisplay";
@@ -54,6 +54,7 @@ import {
   createRecurringPlan,
 } from "./bookingRecurringApi";
 import { hasRole } from "@/lib/auth/authClient";
+import { API_BASE_URL } from "@/lib/api";
 import {
   BookingFlowDebugPanel,
   type BookingFlowDebugState,
@@ -84,6 +85,47 @@ function safeJsonLike(
   value: unknown,
 ): NonNullable<BookingFlowDebugState["pricePreview"]> {
   return value as NonNullable<BookingFlowDebugState["pricePreview"]>;
+}
+
+function hasOwnObjectKey(value: unknown, key: string): boolean {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      Object.prototype.hasOwnProperty.call(value, key),
+  );
+}
+
+function deepCloneForDebug<T>(value: T): T {
+  try {
+    return JSON.parse(JSON.stringify(value)) as T;
+  } catch {
+    return value;
+  }
+}
+
+function safeStatusFromUnknownResponse(value: unknown): number | null {
+  if (
+    value &&
+    typeof value === "object" &&
+    "status" in (value as Record<string, unknown>) &&
+    typeof (value as { status?: unknown }).status === "number"
+  ) {
+    return (value as { status: number }).status;
+  }
+  return null;
+}
+
+function safeOkFromUnknownResponse(value: unknown): boolean | null {
+  if (
+    value &&
+    typeof value === "object" &&
+    "ok" in (value as Record<string, unknown>) &&
+    typeof (value as { ok?: unknown }).ok === "boolean"
+  ) {
+    return (value as { ok: boolean }).ok;
+  }
+  return null;
 }
 
 function hasMeaningfulValue(value: unknown): boolean {
@@ -261,6 +303,16 @@ export function BookingFlowClient() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewFetchCompleted, setPreviewFetchCompleted] = useState(false);
+  const [debugPreviewPayloadSnapshot, setDebugPreviewPayloadSnapshot] =
+    useState<unknown>(null);
+  const [debugPreviewResponseSnapshot, setDebugPreviewResponseSnapshot] =
+    useState<unknown>(null);
+  const [debugPreviewRequestAttempted, setDebugPreviewRequestAttempted] =
+    useState(false);
+  const [debugPreviewResponseStatus, setDebugPreviewResponseStatus] =
+    useState<number | null>(null);
+  const [debugPreviewResponseOk, setDebugPreviewResponseOk] =
+    useState<boolean | null>(null);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
   const skipUrlSearchParamsHydration = useRef(0);
 
@@ -451,6 +503,57 @@ export function BookingFlowClient() {
     homeRenderedFieldIds,
   ]);
 
+  const submitPayloadSnapshot = useMemo(() => {
+    try {
+      const attribution = buildBookingAttributionFromSearchParams(
+        new URLSearchParams(attributionQueryKey),
+      );
+      const extras = {
+        ...attribution,
+        ...(isContactReady
+          ? {
+              customerName: state.customerName.trim(),
+              customerEmail: state.customerEmail.trim(),
+            }
+          : {}),
+      };
+      return buildSubmitBookingDirectionPayload(state, extras);
+    } catch (error) {
+      return {
+        payloadBuildError:
+          error instanceof Error ? error.message : "Unknown submit payload error",
+      };
+    }
+  }, [state, attributionQueryKey, isContactReady]);
+
+  const estimateFactorsPresentInSubmitPayload = useMemo(
+    () => hasOwnObjectKey(submitPayloadSnapshot, "estimateFactors"),
+    [submitPayloadSnapshot],
+  );
+
+  const estimateFactorsPresentInPreviewPayload = useMemo(
+    () => hasOwnObjectKey(debugPreviewPayloadSnapshot, "estimateFactors"),
+    [debugPreviewPayloadSnapshot],
+  );
+
+  const estimateSnapshotPresent = Boolean(state.estimateSnapshot);
+
+  const estimateSnapshotStepGuard =
+    state.step !== "confirm" ? null : Boolean(state.estimateSnapshot);
+
+  const confirmBlockedReason = useMemo(() => {
+    if (state.step === "confirm" && !state.estimateSnapshot) {
+      return "confirm_reached_without_estimate_snapshot";
+    }
+    if (state.step === "review" && previewError) {
+      return "review_preview_error_present";
+    }
+    if (state.step === "review" && previewLoading) {
+      return "review_preview_still_loading";
+    }
+    return null;
+  }, [state.step, state.estimateSnapshot, previewError, previewLoading]);
+
   const bookingDebugState = useMemo<BookingFlowDebugState>(() => {
     const recurringIntent = state.recurringIntent;
     let selectedDecisionLabel: string | null = null;
@@ -459,30 +562,6 @@ export function BookingFlowClient() {
     } else if (recurringIntent?.type === "one_time") {
       selectedDecisionLabel = "one_time";
     }
-
-    const intakePayloadSnapshot = (() => {
-      try {
-        const attribution = buildBookingAttributionFromSearchParams(
-          new URLSearchParams(attributionQueryKey),
-        );
-        const extras = {
-          ...attribution,
-          ...(isContactReady
-            ? {
-                customerName: state.customerName.trim(),
-                customerEmail: state.customerEmail.trim(),
-              }
-            : {}),
-        };
-
-        return buildSubmitBookingDirectionPayload(state, extras);
-      } catch (error) {
-        return {
-          payloadBuildError:
-            error instanceof Error ? error.message : "Unknown payload build error",
-        };
-      }
-    })();
 
     const snapshotKey =
       state.estimateSnapshot &&
@@ -538,11 +617,23 @@ export function BookingFlowClient() {
         estimateSnapshot: state.estimateSnapshot ?? null,
       }),
       formSnapshot: safeJsonLike(state),
-      payloadSnapshot: safeJsonLike(intakePayloadSnapshot),
+      payloadSnapshot: safeJsonLike(submitPayloadSnapshot),
 
       homeRequirements,
       homeRenderedFieldIds,
       homeValidationFailure,
+
+      previewPayloadSnapshot: safeJsonLike(debugPreviewPayloadSnapshot),
+      previewResponseSnapshot: safeJsonLike(debugPreviewResponseSnapshot),
+      submitPayloadSnapshot: safeJsonLike(submitPayloadSnapshot),
+      estimateSnapshotPresent,
+      estimateSnapshotStepGuard,
+      confirmBlockedReason,
+      estimateFactorsPresentInPreviewPayload,
+      estimateFactorsPresentInSubmitPayload,
+      previewRequestAttempted: debugPreviewRequestAttempted,
+      previewResponseOk: debugPreviewResponseOk,
+      previewResponseStatus: debugPreviewResponseStatus,
     };
   }, [
     pathname,
@@ -568,6 +659,17 @@ export function BookingFlowClient() {
     homeRequirements,
     homeRenderedFieldIds,
     homeValidationFailure,
+    debugPreviewPayloadSnapshot,
+    debugPreviewResponseSnapshot,
+    submitPayloadSnapshot,
+    estimateSnapshotPresent,
+    estimateSnapshotStepGuard,
+    confirmBlockedReason,
+    estimateFactorsPresentInPreviewPayload,
+    estimateFactorsPresentInSubmitPayload,
+    debugPreviewRequestAttempted,
+    debugPreviewResponseOk,
+    debugPreviewResponseStatus,
   ]);
 
   useEffect(() => {
@@ -646,6 +748,52 @@ export function BookingFlowClient() {
     bookingDebugState.formSnapshot,
   ]);
 
+  useEffect(() => {
+    console.log("BOOKING_DEBUG_PREVIEW_PAYLOAD", {
+      currentStep: bookingDebugState.currentStep,
+      previewRequestAttempted: bookingDebugState.previewRequestAttempted,
+      estimateFactorsPresentInPreviewPayload:
+        bookingDebugState.estimateFactorsPresentInPreviewPayload,
+      previewPayloadSnapshot: bookingDebugState.previewPayloadSnapshot,
+    });
+  }, [
+    bookingDebugState.currentStep,
+    bookingDebugState.previewRequestAttempted,
+    bookingDebugState.estimateFactorsPresentInPreviewPayload,
+    bookingDebugState.previewPayloadSnapshot,
+  ]);
+
+  useEffect(() => {
+    console.log("BOOKING_DEBUG_PREVIEW_RESPONSE", {
+      currentStep: bookingDebugState.currentStep,
+      previewResponseOk: bookingDebugState.previewResponseOk,
+      previewResponseStatus: bookingDebugState.previewResponseStatus,
+      previewResponseSnapshot: bookingDebugState.previewResponseSnapshot,
+      estimateSnapshotPresent: bookingDebugState.estimateSnapshotPresent,
+    });
+  }, [
+    bookingDebugState.currentStep,
+    bookingDebugState.previewResponseOk,
+    bookingDebugState.previewResponseStatus,
+    bookingDebugState.previewResponseSnapshot,
+    bookingDebugState.estimateSnapshotPresent,
+  ]);
+
+  useEffect(() => {
+    console.log("BOOKING_DEBUG_SUBMIT_PAYLOAD", {
+      currentStep: bookingDebugState.currentStep,
+      estimateFactorsPresentInSubmitPayload:
+        bookingDebugState.estimateFactorsPresentInSubmitPayload,
+      submitPayloadSnapshot: bookingDebugState.submitPayloadSnapshot,
+      confirmBlockedReason: bookingDebugState.confirmBlockedReason,
+    });
+  }, [
+    bookingDebugState.currentStep,
+    bookingDebugState.estimateFactorsPresentInSubmitPayload,
+    bookingDebugState.submitPayloadSnapshot,
+    bookingDebugState.confirmBlockedReason,
+  ]);
+
   const contactPayloadKey = useMemo(() => {
     if (!isContactReady) return "";
     return `${state.customerName.trim()}|${state.customerEmail.trim()}`;
@@ -700,6 +848,11 @@ export function BookingFlowClient() {
 
   useEffect(() => {
     if (state.step !== "review") {
+      setDebugPreviewPayloadSnapshot(null);
+      setDebugPreviewResponseSnapshot(null);
+      setDebugPreviewRequestAttempted(false);
+      setDebugPreviewResponseStatus(null);
+      setDebugPreviewResponseOk(null);
       return;
     }
 
@@ -709,13 +862,44 @@ export function BookingFlowClient() {
       setPreviewLoading(false);
       setPreviewError(null);
       setPreviewFetchCompleted(false);
+      setDebugPreviewPayloadSnapshot(null);
+      setDebugPreviewResponseSnapshot(null);
+      setDebugPreviewRequestAttempted(false);
+      setDebugPreviewResponseStatus(null);
+      setDebugPreviewResponseOk(null);
       setState((prev) =>
         prev.estimateSnapshot ? { ...prev, estimateSnapshot: null } : prev,
       );
       return;
     }
 
+    const attribution = buildBookingAttributionFromSearchParams(
+      new URLSearchParams(attributionQueryKey),
+    );
+
+    const payload = buildSubmitBookingDirectionPayload(state, {
+      ...attribution,
+      ...(isContactReady
+        ? {
+            customerName: state.customerName.trim(),
+            customerEmail: state.customerEmail.trim(),
+          }
+        : {}),
+    });
+
     if (state.estimateSnapshot?.previewRequestKey === previewRequestKey) {
+      setDebugPreviewPayloadSnapshot(deepCloneForDebug(payload));
+      setDebugPreviewRequestAttempted(true);
+      setDebugPreviewResponseSnapshot(
+        deepCloneForDebug({
+          skippedFetch: true,
+          reason: "estimateSnapshot.previewRequestKey matches previewRequestKey",
+          previewRequestKey,
+        }),
+      );
+      setDebugPreviewResponseStatus(null);
+      setDebugPreviewResponseOk(null);
+
       setPreviewEstimate({
         priceCents: state.estimateSnapshot.priceCents,
         durationMinutes: state.estimateSnapshot.durationMinutes,
@@ -734,23 +918,75 @@ export function BookingFlowClient() {
     setPreviewError(null);
     setPreviewFetchCompleted(false);
 
-    const attribution = buildBookingAttributionFromSearchParams(
-      new URLSearchParams(attributionQueryKey),
-    );
+    setDebugPreviewPayloadSnapshot(deepCloneForDebug(payload));
+    setDebugPreviewRequestAttempted(true);
 
-    const payload = buildSubmitBookingDirectionPayload(state, {
-      ...attribution,
-      ...(isContactReady
-        ? {
-            customerName: state.customerName.trim(),
-            customerEmail: state.customerEmail.trim(),
-          }
-        : {}),
-    });
+    void (async () => {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/booking-direction-intake/preview-estimate`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            cache: "no-store",
+            signal: ac.signal,
+          },
+        );
+        const text = await response.text();
+        if (ac.signal.aborted) {
+          return;
+        }
 
-    void previewBookingDirectionEstimate(payload, { signal: ac.signal })
-      .then((r) => {
-        if (ac.signal.aborted) return;
+        let parsedBody: unknown = null;
+        try {
+          parsedBody = text ? JSON.parse(text) : null;
+        } catch {
+          parsedBody = { jsonParseFailed: true, rawPreviewText: text };
+        }
+
+        setDebugPreviewResponseSnapshot(
+          deepCloneForDebug({
+            response: {
+              ok: response.ok,
+              status: response.status,
+              statusText: response.statusText,
+            },
+            body: parsedBody,
+            bodyTopLevelOk: safeOkFromUnknownResponse(parsedBody),
+            bodyTopLevelStatus: safeStatusFromUnknownResponse(parsedBody),
+          }),
+        );
+        setDebugPreviewResponseStatus(response.status);
+        setDebugPreviewResponseOk(response.ok);
+
+        if (!response.ok) {
+          setPreviewEstimate(null);
+          setPreviewDeepCleanCard(null);
+          setState((prev) =>
+            prev.estimateSnapshot ? { ...prev, estimateSnapshot: null } : prev,
+          );
+          const msg =
+            typeof parsedBody === "object" &&
+            parsedBody &&
+            "message" in parsedBody
+              ? String((parsedBody as { message: unknown }).message)
+              : text || `Booking direction estimate preview failed (${response.status})`;
+          setPreviewError(msg);
+          return;
+        }
+
+        const r = parsedBody as BookingDirectionEstimatePreviewResponse;
+        if (!r?.estimate) {
+          setPreviewEstimate(null);
+          setPreviewDeepCleanCard(null);
+          setState((prev) =>
+            prev.estimateSnapshot ? { ...prev, estimateSnapshot: null } : prev,
+          );
+          setPreviewError("Invalid preview response shape.");
+          return;
+        }
+
         const card = r.deepCleanProgram
           ? mapIntakeDeepCleanSnapshotToCardProgram(r.deepCleanProgram)
           : null;
@@ -772,9 +1008,17 @@ export function BookingFlowClient() {
             deepCleanProgramCard: card,
           },
         }));
-      })
-      .catch((e: unknown) => {
-        if (ac.signal.aborted) return;
+      } catch (e: unknown) {
+        if (ac.signal.aborted) {
+          return;
+        }
+        setDebugPreviewResponseSnapshot(
+          deepCloneForDebug({
+            error: e instanceof Error ? e.message : "Unknown preview request error",
+          }),
+        );
+        setDebugPreviewResponseStatus(null);
+        setDebugPreviewResponseOk(false);
         setPreviewEstimate(null);
         setPreviewDeepCleanCard(null);
         setState((prev) =>
@@ -785,12 +1029,13 @@ export function BookingFlowClient() {
             ? e.message
             : "We couldn’t load an estimate from the server. Fix any issues above or try again.",
         );
-      })
-      .finally(() => {
-        if (ac.signal.aborted) return;
-        setPreviewLoading(false);
-        setPreviewFetchCompleted(true);
-      });
+      } finally {
+        if (!ac.signal.aborted) {
+          setPreviewLoading(false);
+          setPreviewFetchCompleted(true);
+        }
+      }
+    })();
 
     return () => ac.abort();
   }, [
@@ -1209,6 +1454,37 @@ export function BookingFlowClient() {
                 <div>estimateStale: {String(bookingDebugState.estimateStale)}</div>
                 <div>decisionEligible: {String(bookingDebugState.decisionEligible)}</div>
                 <div>recurringEligible: {String(bookingDebugState.recurringEligible)}</div>
+              </div>
+
+              <div className="mb-4 rounded-xl border border-blue-300 bg-blue-50 p-3 text-xs text-blue-950">
+                <div className="mb-1 font-semibold">Estimate + Payload Truth</div>
+                <div>
+                  previewRequestAttempted:{" "}
+                  {String(bookingDebugState.previewRequestAttempted)}
+                </div>
+                <div>previewResponseOk: {String(bookingDebugState.previewResponseOk)}</div>
+                <div>
+                  previewResponseStatus: {String(bookingDebugState.previewResponseStatus)}
+                </div>
+                <div>
+                  estimateSnapshotPresent:{" "}
+                  {String(bookingDebugState.estimateSnapshotPresent)}
+                </div>
+                <div>
+                  estimateSnapshotStepGuard:{" "}
+                  {String(bookingDebugState.estimateSnapshotStepGuard)}
+                </div>
+                <div>
+                  confirmBlockedReason: {bookingDebugState.confirmBlockedReason ?? "null"}
+                </div>
+                <div>
+                  estimateFactorsInPreviewPayload:{" "}
+                  {String(bookingDebugState.estimateFactorsPresentInPreviewPayload)}
+                </div>
+                <div>
+                  estimateFactorsInSubmitPayload:{" "}
+                  {String(bookingDebugState.estimateFactorsPresentInSubmitPayload)}
+                </div>
               </div>
 
               {bookingDebugState.currentStep === "home" ? (

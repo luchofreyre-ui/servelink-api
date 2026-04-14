@@ -59,6 +59,18 @@ export type BookingFlowDebugState = {
   homeRequirements?: BookingHomeRequirementDebugRow[];
   homeRenderedFieldIds?: string[];
   homeValidationFailure?: string | null;
+
+  previewPayloadSnapshot?: JsonLike;
+  previewResponseSnapshot?: JsonLike;
+  submitPayloadSnapshot?: JsonLike;
+  estimateSnapshotPresent?: boolean | null;
+  estimateSnapshotStepGuard?: boolean | null;
+  confirmBlockedReason?: string | null;
+  estimateFactorsPresentInPreviewPayload?: boolean | null;
+  estimateFactorsPresentInSubmitPayload?: boolean | null;
+  previewRequestAttempted?: boolean | null;
+  previewResponseOk?: boolean | null;
+  previewResponseStatus?: number | null;
 };
 
 function pretty(value: unknown) {
@@ -110,6 +122,20 @@ export function BookingFlowDebugPanel({
           <Row label="previewFetchCompleted" value={state.previewFetchCompleted} />
           <Row label="previewRequestKey" value={state.previewRequestKey} />
           <Row label="snapshotRequestKey" value={state.snapshotRequestKey} />
+          <Row label="estimateSnapshotPresent" value={state.estimateSnapshotPresent} />
+          <Row label="estimateSnapshotStepGuard" value={state.estimateSnapshotStepGuard} />
+          <Row label="confirmBlockedReason" value={state.confirmBlockedReason} />
+          <Row label="previewRequestAttempted" value={state.previewRequestAttempted} />
+          <Row label="previewResponseOk" value={state.previewResponseOk} />
+          <Row label="previewResponseStatus" value={state.previewResponseStatus} />
+          <Row
+            label="estimateFactorsInPreviewPayload"
+            value={state.estimateFactorsPresentInPreviewPayload}
+          />
+          <Row
+            label="estimateFactorsInSubmitPayload"
+            value={state.estimateFactorsPresentInSubmitPayload}
+          />
           <Row label="decisionEligible" value={state.decisionEligible} />
           <Row label="recurringEligible" value={state.recurringEligible} />
           <Row label="reviewReady" value={state.reviewReady} />
@@ -157,10 +183,31 @@ export function BookingFlowDebugPanel({
           </pre>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+        <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3">
           <div className="mb-2 text-sm font-semibold text-white">Payload Snapshot</div>
           <pre className="overflow-x-auto whitespace-pre-wrap text-white/90">
             {pretty(state.payloadSnapshot)}
+          </pre>
+        </div>
+
+        <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="mb-2 text-sm font-semibold text-white">Preview Payload Snapshot</div>
+          <pre className="overflow-x-auto whitespace-pre-wrap text-white/90">
+            {pretty(state.previewPayloadSnapshot)}
+          </pre>
+        </div>
+
+        <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="mb-2 text-sm font-semibold text-white">Preview Response Snapshot</div>
+          <pre className="overflow-x-auto whitespace-pre-wrap text-white/90">
+            {pretty(state.previewResponseSnapshot)}
+          </pre>
+        </div>
+
+        <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="mb-2 text-sm font-semibold text-white">Submit Payload Snapshot</div>
+          <pre className="overflow-x-auto whitespace-pre-wrap text-white/90">
+            {pretty(state.submitPayloadSnapshot)}
           </pre>
         </div>
       </div>
