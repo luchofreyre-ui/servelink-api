@@ -60,8 +60,16 @@ import {
   buildCreateRecurringPlanRequest,
   createRecurringPlan,
 } from "./bookingRecurringApi";
+import { getStoredAccessToken } from "@/lib/auth";
 import { hasRole } from "@/lib/auth/authClient";
 import { API_BASE_URL } from "@/lib/api";
+import {
+  BOOKING_SLOT_HOLD_EXPIRED_MESSAGE,
+  BOOKING_SLOT_HOLD_RESERVE_FAILED_MESSAGE,
+  confirmBookingAvailabilityHold,
+  createBookingAvailabilityHold,
+  isHoldExpiredErrorMessage,
+} from "./bookingAvailabilityApi";
 import {
   BookingFlowDebugPanel,
   type BookingFlowDebugState,
@@ -1540,6 +1548,100 @@ export function BookingFlowClient() {
         q.set("dcProgram", state.deepCleanProgram);
       }
 
+      const ss = state.scheduleSelection;
+      const token = getStoredAccessToken()?.trim();
+      const wantsSlotHold =
+        ss?.mode === "slot_selection" &&
+        Boolean(ss.selectedSlotFoId?.trim()) &&
+        Boolean(ss.selectedSlotWindowStart?.trim()) &&
+        Boolean(ss.selectedSlotWindowEnd?.trim()) &&
+        result.bookingCreated &&
+        Boolean(result.bookingId) &&
+        Boolean(token);
+
+      if (wantsSlotHold && result.bookingId && state.estimateSnapshot) {
+        const winMs =
+          new Date(ss.selectedSlotWindowEnd!.trim()).getTime() -
+          new Date(ss.selectedSlotWindowStart!.trim()).getTime();
+        const winMin = Math.round(winMs / 60000);
+        if (
+          Number.isFinite(winMin) &&
+          winMin > 0 &&
+          winMin !== state.estimateSnapshot.durationMinutes
+        ) {
+          setSubmitError(BOOKING_SLOT_HOLD_RESERVE_FAILED_MESSAGE);
+          goToStep("schedule");
+          setState((prev) => ({
+            ...prev,
+            scheduleSelection: {
+              mode: "preference_only",
+              preferredTime:
+                prev.scheduleSelection?.preferredTime ?? prev.preferredTime,
+              preferredDayWindow:
+                prev.scheduleSelection?.preferredDayWindow ?? null,
+              flexibilityNotes:
+                prev.scheduleSelection?.flexibilityNotes ?? null,
+              selectedSlotId: null,
+              selectedSlotLabel: null,
+              selectedSlotDate: null,
+              selectedSlotWindowStart: null,
+              selectedSlotWindowEnd: null,
+              selectedSlotFoId: null,
+              holdId: null,
+              holdExpiresAt: null,
+              slotHoldConfirmed: false,
+            },
+          }));
+          return;
+        }
+      }
+
+      if (wantsSlotHold && result.bookingId) {
+        try {
+          const hold = await createBookingAvailabilityHold({
+            bookingId: result.bookingId,
+            foId: ss!.selectedSlotFoId!.trim(),
+            startAt: ss!.selectedSlotWindowStart!.trim(),
+            endAt: ss!.selectedSlotWindowEnd!.trim(),
+          });
+          await confirmBookingAvailabilityHold({
+            bookingId: result.bookingId,
+            holdId: hold.id,
+            idempotencyKey: `confirm-hold-${Date.now()}`,
+          });
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : "";
+          setSubmitError(
+            isHoldExpiredErrorMessage(msg)
+              ? BOOKING_SLOT_HOLD_EXPIRED_MESSAGE
+              : BOOKING_SLOT_HOLD_RESERVE_FAILED_MESSAGE,
+          );
+          goToStep("schedule");
+          setState((prev) => ({
+            ...prev,
+            scheduleSelection: {
+              mode: "preference_only",
+              preferredTime:
+                prev.scheduleSelection?.preferredTime ?? prev.preferredTime,
+              preferredDayWindow:
+                prev.scheduleSelection?.preferredDayWindow ?? null,
+              flexibilityNotes:
+                prev.scheduleSelection?.flexibilityNotes ?? null,
+              selectedSlotId: null,
+              selectedSlotLabel: null,
+              selectedSlotDate: null,
+              selectedSlotWindowStart: null,
+              selectedSlotWindowEnd: null,
+              selectedSlotFoId: null,
+              holdId: null,
+              holdExpiresAt: null,
+              slotHoldConfirmed: false,
+            },
+          }));
+          return;
+        }
+      }
+
       router.push(`/book/confirmation?${q.toString()}`);
     } catch (err) {
       console.error("booking direction intake failed", err);
@@ -1668,6 +1770,21 @@ export function BookingFlowClient() {
       recurringSetup: createDefaultRecurringSetup(
         prev.estimateFactors.addonIds ?? [],
       ),
+      scheduleSelection: {
+        mode: "preference_only",
+        preferredTime: prev.preferredTime,
+        preferredDayWindow: prev.scheduleSelection?.preferredDayWindow ?? null,
+        flexibilityNotes: prev.scheduleSelection?.flexibilityNotes ?? null,
+        selectedSlotId: null,
+        selectedSlotLabel: null,
+        selectedSlotDate: null,
+        selectedSlotWindowStart: null,
+        selectedSlotWindowEnd: null,
+        selectedSlotFoId: null,
+        holdId: null,
+        holdExpiresAt: null,
+        slotHoldConfirmed: false,
+      },
     }));
   };
 
@@ -1700,6 +1817,9 @@ export function BookingFlowClient() {
     if (state.step !== "schedule") return;
     if (!state.frequency || !state.preferredTime) return;
     setState((prev) => {
+      if (prev.scheduleSelection?.mode === "slot_selection") {
+        return prev;
+      }
       const nextSel: ScheduleSelection = {
         mode: "preference_only",
         preferredTime: prev.preferredTime,
@@ -1707,6 +1827,13 @@ export function BookingFlowClient() {
         flexibilityNotes: prev.scheduleSelection?.flexibilityNotes ?? null,
         selectedSlotId: null,
         selectedSlotLabel: null,
+        selectedSlotDate: null,
+        selectedSlotWindowStart: null,
+        selectedSlotWindowEnd: null,
+        selectedSlotFoId: null,
+        holdId: null,
+        holdExpiresAt: null,
+        slotHoldConfirmed: false,
       };
       const cur = prev.scheduleSelection;
       if (
@@ -1721,6 +1848,39 @@ export function BookingFlowClient() {
       return { ...prev, scheduleSelection: nextSel };
     });
   }, [state.step, state.frequency, state.preferredTime]);
+
+  useEffect(() => {
+    const slotFo = state.scheduleSelection?.selectedSlotFoId?.trim();
+    const cleanerId = state.cleanerPreference?.cleanerId?.trim();
+    if (state.scheduleSelection?.mode !== "slot_selection" || !slotFo) return;
+    if (cleanerId && cleanerId === slotFo) return;
+    setState((prev) => {
+      if (prev.scheduleSelection?.mode !== "slot_selection") return prev;
+      return {
+        ...prev,
+        scheduleSelection: {
+          mode: "preference_only",
+          preferredTime:
+            prev.scheduleSelection?.preferredTime ?? prev.preferredTime,
+          preferredDayWindow: prev.scheduleSelection?.preferredDayWindow ?? null,
+          flexibilityNotes: prev.scheduleSelection?.flexibilityNotes ?? null,
+          selectedSlotId: null,
+          selectedSlotLabel: null,
+          selectedSlotDate: null,
+          selectedSlotWindowStart: null,
+          selectedSlotWindowEnd: null,
+          selectedSlotFoId: null,
+          holdId: null,
+          holdExpiresAt: null,
+          slotHoldConfirmed: false,
+        },
+      };
+    });
+  }, [
+    state.scheduleSelection?.mode,
+    state.scheduleSelection?.selectedSlotFoId,
+    state.cleanerPreference?.cleanerId,
+  ]);
 
   useEffect(() => {
     if (state.step !== "schedule") return;
@@ -1751,6 +1911,13 @@ export function BookingFlowClient() {
           flexibilityNotes: null,
           selectedSlotId: null,
           selectedSlotLabel: null,
+          selectedSlotDate: null,
+          selectedSlotWindowStart: null,
+          selectedSlotWindowEnd: null,
+          selectedSlotFoId: null,
+          holdId: null,
+          holdExpiresAt: null,
+          slotHoldConfirmed: false,
         };
       }
       if (!prev.cleanerPreference) {
@@ -1937,6 +2104,10 @@ export function BookingFlowClient() {
               {state.step === "schedule" ? (
                 <BookingStepSchedule
                   state={state}
+                  slotApisEnabled={hasRole("customer")}
+                  slotDurationMinutes={
+                    state.estimateSnapshot?.durationMinutes ?? 180
+                  }
                   onFrequencySelect={(value: BookingFrequencyOption) =>
                     patchState({ frequency: value })
                   }
@@ -1944,29 +2115,29 @@ export function BookingFlowClient() {
                     patchState({ preferredTime: value })
                   }
                   onScheduleSelectionPatch={(patch: Partial<ScheduleSelection>) =>
-                    setState((prev) => ({
-                      ...prev,
-                      scheduleSelection: {
-                        mode: "preference_only",
-                        preferredTime: prev.preferredTime,
-                        preferredDayWindow:
-                          patch.preferredDayWindow !== undefined
-                            ? patch.preferredDayWindow
-                            : prev.scheduleSelection?.preferredDayWindow ?? null,
-                        flexibilityNotes:
-                          patch.flexibilityNotes !== undefined
-                            ? patch.flexibilityNotes
-                            : prev.scheduleSelection?.flexibilityNotes ?? null,
-                        selectedSlotId:
-                          patch.selectedSlotId !== undefined
-                            ? patch.selectedSlotId
-                            : prev.scheduleSelection?.selectedSlotId ?? null,
-                        selectedSlotLabel:
-                          patch.selectedSlotLabel !== undefined
-                            ? patch.selectedSlotLabel
-                            : prev.scheduleSelection?.selectedSlotLabel ?? null,
-                      },
-                    }))
+                    setState((prev) => {
+                      const base: ScheduleSelection =
+                        prev.scheduleSelection ?? {
+                          mode: "preference_only",
+                          preferredTime: prev.preferredTime,
+                          preferredDayWindow: null,
+                          flexibilityNotes: null,
+                          selectedSlotId: null,
+                          selectedSlotLabel: null,
+                          selectedSlotDate: null,
+                          selectedSlotWindowStart: null,
+                          selectedSlotWindowEnd: null,
+                          selectedSlotFoId: null,
+                          holdId: null,
+                          holdExpiresAt: null,
+                          slotHoldConfirmed: false,
+                        };
+                      const next: ScheduleSelection = { ...base, ...patch };
+                      if (!next.preferredTime) {
+                        next.preferredTime = prev.preferredTime;
+                      }
+                      return { ...prev, scheduleSelection: next };
+                    })
                   }
                   onCleanerPreferenceChange={(next: CleanerPreference) =>
                     setState((prev) => ({ ...prev, cleanerPreference: next }))

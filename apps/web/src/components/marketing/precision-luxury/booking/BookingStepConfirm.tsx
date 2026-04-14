@@ -41,6 +41,11 @@ function firstVisitSummary(state: BookingFlowState) {
 export function BookingStepConfirm({ state }: Props) {
   const visitLine = firstVisitSummary(state);
   const snap = state.estimateSnapshot;
+  const slotBacked =
+    state.scheduleSelection?.mode === "slot_selection" &&
+    state.scheduleSelection.selectedSlotFoId?.trim() &&
+    state.scheduleSelection.selectedSlotWindowStart?.trim() &&
+    state.scheduleSelection.selectedSlotWindowEnd?.trim();
   const priceLine =
     snap != null
       ? new Intl.NumberFormat("en-US", {
@@ -55,7 +60,11 @@ export function BookingStepConfirm({ state }: Props) {
     <BookingSectionCard
       eyebrow="Step 8"
       title="Confirm and send"
-      body="Your estimate is locked from the review step. Confirm your plan choice, then submit your booking direction. We’ll use your timing preferences to finalize scheduling (preference-based today — not a guaranteed exact slot until availability is wired end-to-end). If you requested a preferred cleaner, we’ll prioritize that team when available; assignment still follows capacity and ops review when needed."
+      body={
+        slotBacked
+          ? "Your estimate is locked from the review step. You selected a concrete arrival window for your preferred team. After submit, we attempt a short-lived server hold and confirmation so the booking reflects that window when the operation succeeds; if reservation fails, you’ll be returned to scheduling to pick another option. Assignment still follows capacity and ops review when signals are weak."
+          : "Your estimate is locked from the review step. Confirm your plan choice, then submit your booking direction. We’ll use your timing preferences to finalize scheduling (preference-based when no enforceable window was selected). If you requested a preferred cleaner, we’ll prioritize that team when available; assignment still follows capacity and ops review when needed."
+      }
     >
       <div className="space-y-4">
         <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">

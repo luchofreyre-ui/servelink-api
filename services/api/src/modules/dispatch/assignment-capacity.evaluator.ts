@@ -65,12 +65,19 @@ export function evaluateAssignmentCapacity(input: {
   };
 
   const sched = constraints.scheduling;
+  const hasEnforceableSlotSelection =
+    sched.mode === "slot_selection" &&
+    Boolean(sched.selectedSlotFoId?.trim()) &&
+    Boolean(sched.selectedSlotWindowStart?.trim()) &&
+    Boolean(sched.selectedSlotWindowEnd?.trim());
+
   const hasSchedulingIntent =
     Boolean(sched.preferredTime?.trim()) ||
     Boolean(sched.preferredDayWindow?.trim()) ||
     Boolean(sched.flexibilityNotes?.trim()) ||
     Boolean(sched.selectedSlotId?.trim()) ||
-    Boolean(sched.selectedSlotLabel?.trim());
+    Boolean(sched.selectedSlotLabel?.trim()) ||
+    hasEnforceableSlotSelection;
 
   if (!hasSchedulingIntent) {
     pushCode(ASSIGNMENT_REASON_CODES.MISSING_SCHEDULING_INTENT);
@@ -78,11 +85,16 @@ export function evaluateAssignmentCapacity(input: {
     status = worse(status, "needs_review");
   }
 
-  if (sched.mode === "slot_selection" && sched.selectedSlotId?.trim()) {
+  const legacyOpaqueSlotSelection =
+    sched.mode === "slot_selection" &&
+    Boolean(sched.selectedSlotId?.trim()) &&
+    !hasEnforceableSlotSelection;
+
+  if (legacyOpaqueSlotSelection) {
     pushCode(ASSIGNMENT_REASON_CODES.SLOT_NOT_ENFORCEABLE_YET);
     pushCode(ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED);
     notesForOps.push(
-      "slot_selection with selectedSlotId: platform cannot yet verify which franchise owner holds that slot — manual review.",
+      "slot_selection with selectedSlotId only (no FO + ISO window on handoff) — slot cannot be verified at intake time.",
     );
     status = worse(status, "needs_review");
   }
@@ -113,6 +125,46 @@ export function evaluateAssignmentCapacity(input: {
   };
 
   const cp = constraints.cleanerPreference;
+
+  if (hasEnforceableSlotSelection) {
+    const foId = sched.selectedSlotFoId!.trim();
+    notesForOps.push(
+      `Slot selection recorded for franchise owner ${foId} (${sched.selectedSlotWindowStart} → ${sched.selectedSlotWindowEnd}). Customer must complete JWT hold + confirm-hold after booking creation for operational scheduledStart truth.`,
+    );
+    if (!rosterDefined) {
+      pushCode(ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED);
+      status = worse(status, "needs_review");
+      notesForOps.push(
+        "Roster not available in this evaluation pass — could not verify selected-slot franchise owner against active roster.",
+      );
+    } else {
+      const onRoster = cleaners!.some((c) => c.cleanerId === foId);
+      if (!onRoster) {
+        pushCode(ASSIGNMENT_REASON_CODES.SELECTED_SLOT_PROVIDER_NOT_ON_ROSTER);
+        pushCode(ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED);
+        status = worse(status, "needs_review");
+        notesForOps.push(
+          "Selected slot franchise owner id is not present on the active roster snapshot.",
+        );
+      }
+    }
+
+    if (
+      cp.mode === "preferred_cleaner" &&
+      cp.hardRequirement === true &&
+      cp.cleanerId?.trim() &&
+      cp.cleanerId.trim() !== foId
+    ) {
+      pushCode(
+        ASSIGNMENT_REASON_CODES.SELECTED_SLOT_VS_HARD_PREFERRED_CLEANER_CONFLICT,
+      );
+      status = worse(status, "deferred");
+      notesForOps.push(
+        "Hard preferred cleaner conflicts with selected arrival window franchise owner.",
+      );
+    }
+  }
+
   if (cp.mode === "preferred_cleaner") {
     if (!cleaners) {
       pushCode(ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED);
@@ -174,6 +226,26 @@ export function evaluateAssignmentCapacity(input: {
 
   if (
     status === "assignable" &&
+    sched.mode === "slot_selection" &&
+    hasEnforceableSlotSelection &&
+    cp.mode === "none" &&
+    !recommendedCleanerId &&
+    cleaners &&
+    cleaners.length > 0
+  ) {
+    const foId = sched.selectedSlotFoId!.trim();
+    const row = cleaners.find((c) => c.cleanerId === foId);
+    if (row) {
+      recommendedCleanerId = row.cleanerId;
+      recommendedCleanerLabel = row.cleanerLabel;
+      notesForOps.push(
+        "Slot-backed handoff without explicit cleaner preference: recommendation aligns to the selected franchise owner.",
+      );
+    }
+  }
+
+  if (
+    status === "assignable" &&
     sched.mode === "preference_only" &&
     hasSchedulingIntent &&
     cleaners &&
@@ -198,6 +270,17 @@ export function evaluateAssignmentCapacity(input: {
   ) {
     notesForOps.push(
       "Preference-only scheduling: exact slot enforcement is not active for this evaluation pass.",
+    );
+  }
+
+  if (
+    status === "assignable" &&
+    sched.mode === "slot_selection" &&
+    hasEnforceableSlotSelection &&
+    hasSchedulingIntent
+  ) {
+    notesForOps.push(
+      "Slot-backed scheduling intent captured on intake; operational lock requires successful customer JWT hold + confirm-hold on the booking.",
     );
   }
 

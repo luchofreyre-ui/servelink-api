@@ -49,6 +49,16 @@ export function mapBookingHandoffToAssignmentConstraints(args: {
     flexibilityNotes: asTrimmedString(schedRaw.flexibilityNotes),
     selectedSlotId: asTrimmedString(schedRaw.selectedSlotId),
     selectedSlotLabel: asTrimmedString(schedRaw.selectedSlotLabel),
+    selectedSlotFoId: asTrimmedString(schedRaw.selectedSlotFoId),
+    selectedSlotWindowStart: asTrimmedString(schedRaw.selectedSlotWindowStart),
+    selectedSlotWindowEnd: asTrimmedString(schedRaw.selectedSlotWindowEnd),
+    selectedSlotDate: asTrimmedString(schedRaw.selectedSlotDate),
+    holdId: asTrimmedString(schedRaw.holdId),
+    holdExpiresAt: asTrimmedString(schedRaw.holdExpiresAt),
+    slotHoldConfirmed:
+      typeof schedRaw.slotHoldConfirmed === "boolean"
+        ? schedRaw.slotHoldConfirmed
+        : undefined,
   };
 
   const cleanerMode: AssignmentConstraintSet["cleanerPreference"]["mode"] =

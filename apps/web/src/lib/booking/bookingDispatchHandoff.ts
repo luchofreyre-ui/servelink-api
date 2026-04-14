@@ -3,6 +3,7 @@
  */
 import type { BookingFlowState } from "@/components/marketing/precision-luxury/booking/bookingFlowTypes";
 import { getBookingServiceCatalogItem } from "@/components/marketing/precision-luxury/booking/bookingServiceCatalog";
+import { getStoredAccessToken } from "@/lib/auth";
 
 /** Mirrors `CreateBookingDirectionIntakeDto.bookingHandoff` (API). */
 export type BookingDirectionBookingHandoffPayload = {
@@ -13,6 +14,13 @@ export type BookingDirectionBookingHandoffPayload = {
     flexibilityNotes?: string | null;
     selectedSlotId?: string | null;
     selectedSlotLabel?: string | null;
+    selectedSlotDate?: string | null;
+    selectedSlotWindowStart?: string | null;
+    selectedSlotWindowEnd?: string | null;
+    selectedSlotFoId?: string | null;
+    holdId?: string | null;
+    holdExpiresAt?: string | null;
+    slotHoldConfirmed?: boolean;
   };
   cleanerPreference: {
     mode: "none" | "preferred_cleaner";
@@ -28,20 +36,49 @@ export type BookingDirectionBookingHandoffPayload = {
   };
 };
 
+function clientHasJwtForSlotHold(): boolean {
+  if (typeof window === "undefined") return false;
+  return Boolean(getStoredAccessToken()?.trim());
+}
+
 export function buildBookingHandoffPayloadForIntakeSubmit(
   state: BookingFlowState,
 ): BookingDirectionBookingHandoffPayload {
   const ss = state.scheduleSelection;
-  const mode: "preference_only" | "slot_selection" =
+  let mode: "preference_only" | "slot_selection" =
     ss?.mode === "slot_selection" ? "slot_selection" : "preference_only";
+
+  const hasSlotPayload =
+    Boolean(ss?.selectedSlotFoId?.trim()) &&
+    Boolean(ss?.selectedSlotWindowStart?.trim()) &&
+    Boolean(ss?.selectedSlotWindowEnd?.trim());
+
+  if (mode === "slot_selection" && (!hasSlotPayload || !clientHasJwtForSlotHold())) {
+    mode = "preference_only";
+  }
 
   const scheduling: BookingDirectionBookingHandoffPayload["scheduling"] = {
     mode,
     preferredTime: (ss?.preferredTime ?? state.preferredTime) || null,
     preferredDayWindow: ss?.preferredDayWindow ?? null,
     flexibilityNotes: ss?.flexibilityNotes ?? null,
-    selectedSlotId: ss?.selectedSlotId ?? null,
-    selectedSlotLabel: ss?.selectedSlotLabel ?? null,
+    selectedSlotId:
+      mode === "slot_selection" ? (ss?.selectedSlotId ?? null) : null,
+    selectedSlotLabel:
+      mode === "slot_selection" ? (ss?.selectedSlotLabel ?? null) : null,
+    selectedSlotDate:
+      mode === "slot_selection" ? (ss?.selectedSlotDate ?? null) : null,
+    selectedSlotWindowStart:
+      mode === "slot_selection" ? (ss?.selectedSlotWindowStart ?? null) : null,
+    selectedSlotWindowEnd:
+      mode === "slot_selection" ? (ss?.selectedSlotWindowEnd ?? null) : null,
+    selectedSlotFoId:
+      mode === "slot_selection" ? (ss?.selectedSlotFoId ?? null) : null,
+    holdId: mode === "slot_selection" ? (ss?.holdId ?? null) : null,
+    holdExpiresAt:
+      mode === "slot_selection" ? (ss?.holdExpiresAt ?? null) : null,
+    slotHoldConfirmed:
+      mode === "slot_selection" ? Boolean(ss?.slotHoldConfirmed) : undefined,
   };
 
   const cp = state.cleanerPreference;
@@ -113,14 +150,26 @@ export function buildBookingDispatchHandoffSummary(
   const flexPart = ss?.flexibilityNotes?.trim()
     ? ` · Notes: ${ss.flexibilityNotes.trim()}`
     : "";
-  const slotPart =
-    ss?.mode === "slot_selection" && ss.selectedSlotLabel
-      ? ` · Requested slot: ${ss.selectedSlotLabel}`
-      : ss?.mode === "slot_selection"
-        ? " · Slot selection mode (no slot API wired in funnel yet — preferences only)."
-        : "";
+  const slotBacked =
+    ss?.mode === "slot_selection" &&
+    ss.selectedSlotFoId?.trim() &&
+    ss.selectedSlotWindowStart?.trim() &&
+    ss.selectedSlotWindowEnd?.trim();
 
-  const scheduleSummary = `Frequency: ${freq} · Preferred time: ${prefTime}${windowPart}${flexPart}${slotPart}`;
+  const arrivalLine = slotBacked
+    ? ss?.selectedSlotLabel?.trim()
+      ? `Your selected arrival window: ${ss.selectedSlotLabel.trim()}`
+      : `Your selected arrival window: ${ss.selectedSlotWindowStart} → ${ss.selectedSlotWindowEnd}`
+    : null;
+
+  const slotIntegrityNote =
+    ss?.mode === "slot_selection" && !slotBacked
+      ? " · Note: slot-style selection is incomplete — dispatch will treat this as timing preference only."
+      : "";
+
+  const scheduleSummary = arrivalLine
+    ? `${arrivalLine} · Cadence: ${freq} · ${prefTime}${windowPart}${flexPart}`
+    : `Your timing preference: ${freq} · ${prefTime}${windowPart}${flexPart}${slotIntegrityNote}`;
 
   const intent = state.recurringIntent;
   let planSummary = "Not selected";

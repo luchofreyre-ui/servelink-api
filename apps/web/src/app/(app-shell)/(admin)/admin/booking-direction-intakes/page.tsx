@@ -42,6 +42,39 @@ function handoffSummary(h: unknown): string {
   return parts.length ? parts.join(" · ") : "present";
 }
 
+function schedulingSlotDetail(h: unknown): string | null {
+  if (h == null || typeof h !== "object") return null;
+  const sched = (h as Record<string, unknown>).scheduling as
+    | Record<string, unknown>
+    | undefined;
+  if (!sched) return null;
+  const mode = typeof sched.mode === "string" ? sched.mode : "";
+  const label =
+    typeof sched.selectedSlotLabel === "string" && sched.selectedSlotLabel.trim()
+      ? sched.selectedSlotLabel.trim()
+      : null;
+  const start =
+    typeof sched.selectedSlotWindowStart === "string"
+      ? sched.selectedSlotWindowStart.trim()
+      : "";
+  const end =
+    typeof sched.selectedSlotWindowEnd === "string"
+      ? sched.selectedSlotWindowEnd.trim()
+      : "";
+  const fo =
+    typeof sched.selectedSlotFoId === "string" && sched.selectedSlotFoId.trim()
+      ? `fo:${sched.selectedSlotFoId.trim().slice(0, 8)}…`
+      : "";
+  const hold =
+    typeof sched.holdId === "string" && sched.holdId.trim()
+      ? `hold:${sched.holdId.trim().slice(0, 10)}…`
+      : "";
+  const bits = [mode, label, start && end ? `${start}→${end}` : "", fo, hold].filter(
+    Boolean,
+  );
+  return bits.length > 1 ? bits.join(" · ") : null;
+}
+
 function assignmentEngineColumns(ex: unknown): {
   status: string;
   reasons: string;
@@ -305,6 +338,7 @@ export default function AdminBookingDirectionIntakesPage() {
                   ) : (
                     items.map((row) => {
                       const ax = assignmentEngineColumns(row.assignmentExecution);
+                      const slotLine = schedulingSlotDetail(row.bookingHandoff);
                       return (
                       <tr
                         key={row.intakeId}
@@ -335,6 +369,11 @@ export default function AdminBookingDirectionIntakesPage() {
                           <span className="mt-1 block text-slate-500">
                             {row.preferredTime}
                           </span>
+                          {slotLine ? (
+                            <span className="mt-2 block rounded-md border border-teal-500/20 bg-teal-500/5 px-2 py-1 font-mono text-[10px] leading-snug text-teal-100/90">
+                              {slotLine}
+                            </span>
+                          ) : null}
                         </td>
                         <td className="max-w-[180px] px-4 py-3 text-xs leading-relaxed text-slate-400">
                           {handoffSummary(row.bookingHandoff)}

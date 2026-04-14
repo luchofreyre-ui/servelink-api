@@ -177,6 +177,35 @@ export function rankProviderCandidates(
       ),
     );
 
+    const slotFoId = sched.selectedSlotFoId?.trim() ?? "";
+    const hasExactSlotHandoff =
+      sched.mode === "slot_selection" &&
+      Boolean(slotFoId) &&
+      Boolean(sched.selectedSlotWindowStart?.trim()) &&
+      Boolean(sched.selectedSlotWindowEnd?.trim());
+    const exactSlotMatch =
+      hasExactSlotHandoff && matchesCleanerId(c, slotFoId);
+    factors.push(
+      factor(
+        "exact_slot_match",
+        PROVIDER_RANKING_WEIGHTS.exactSlotMatch,
+        exactSlotMatch ? 1 : 0,
+        exactSlotMatch
+          ? "Roster franchise owner matches handoff arrival window selection."
+          : null,
+      ),
+    );
+    factors.push(
+      factor(
+        "exact_slot_conflict",
+        PROVIDER_RANKING_WEIGHTS.exactSlotMiss,
+        hasExactSlotHandoff && !exactSlotMatch ? 1 : 0,
+        hasExactSlotHandoff && !exactSlotMatch
+          ? "Not the franchise owner tied to the selected arrival window."
+          : null,
+      ),
+    );
+
     const recurringSupport =
       constraints.recurring.pathKind === "recurring" &&
       c.supportsRecurring === true;
@@ -216,7 +245,8 @@ export function rankProviderCandidates(
       schedScore > 0 ||
       serviceAreaMatch ||
       recurringSupport ||
-      hasWindows;
+      hasWindows ||
+      exactSlotMatch;
     factors.push(
       factor(
         "manual_fallback",
@@ -284,6 +314,7 @@ export function deriveRecommendationConfidence(args: {
   const strongSecondary = top.factors.some(
     (f) =>
       (f.code === "schedule_preference_match" && f.contribution >= 10) ||
+      (f.code === "exact_slot_match" && f.contribution >= 40) ||
       (f.code === "capacity_signal_present" && f.contribution > 0) ||
       (f.code === "service_area_match" && f.contribution > 0) ||
       (f.code === "recurring_support_match" && f.contribution > 0),

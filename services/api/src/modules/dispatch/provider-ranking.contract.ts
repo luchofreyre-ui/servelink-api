@@ -9,6 +9,8 @@ export type ProviderRankingFactorCode =
   | "active_roster_match"
   | "service_area_match"
   | "schedule_preference_match"
+  | "exact_slot_match"
+  | "exact_slot_conflict"
   | "recurring_support_match"
   | "capacity_signal_present"
   | "capacity_signal_missing"
@@ -56,6 +58,10 @@ export const PROVIDER_RANKING_WEIGHTS = {
   activeRosterMatch: 30,
   serviceAreaMatch: 25,
   schedulePreferenceMatch: 20,
+  /** When handoff includes FO + ISO window, roster row matches that franchise owner. */
+  exactSlotMatch: 85,
+  /** Penalize roster rows that are not the selected arrival-window franchise owner. */
+  exactSlotMiss: -55,
   recurringSupportMatch: 15,
   capacitySignalPresent: 10,
   capacitySignalMissing: -10,

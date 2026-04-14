@@ -24,7 +24,9 @@ export type BookingAuthPoint =
 export type SchedulingMode =
   | "preference_only"
   | "slot_selection"
-  | "provider_aware_slot_selection";
+  | "provider_aware_slot_selection"
+  /** Product label: slot-backed path when API + JWT allow; explicit preference fallback otherwise. */
+  | "hybrid_slot_or_preference";
 
 export type CleanerSelectionMode =
   | "none"
@@ -91,13 +93,12 @@ export const BOOKING_PRODUCT_CONTRACT = {
   recurringAuthPoint: "before_confirm" as BookingAuthPoint,
 
   /**
-   * Implemented funnel + API `bookingHandoff.scheduling.mode`: preference capture only
-   * (no customer-safe slot list in this funnel yet).
+   * Hybrid scheduling: the funnel may capture `slot_selection` (FO + ISO window from
+   * `GET /bookings/availability/windows`) when the customer is signed in and selects a
+   * preferred team; holds use `POST /bookings/availability/holds` after the booking shell
+   * exists, then `POST /bookings/:id/confirm-hold`. Otherwise `preference_only` is used.
    */
-  schedulingMode: "preference_only" as SchedulingMode,
-
-  /** Product target once slot availability is wired end-to-end. */
-  schedulingModeRoadmap: "slot_selection" as SchedulingMode,
+  schedulingMode: "hybrid_slot_or_preference" as SchedulingMode,
 
   /** Preferred cleaner / team request when data exists; never fake provider cards. */
   cleanerSelectionMode: "preferred_cleaner" as CleanerSelectionMode,

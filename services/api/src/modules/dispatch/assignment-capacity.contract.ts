@@ -24,6 +24,13 @@ export type AssignmentConstraintSet = {
     flexibilityNotes?: string | null;
     selectedSlotId?: string | null;
     selectedSlotLabel?: string | null;
+    selectedSlotFoId?: string | null;
+    selectedSlotWindowStart?: string | null;
+    selectedSlotWindowEnd?: string | null;
+    selectedSlotDate?: string | null;
+    holdId?: string | null;
+    holdExpiresAt?: string | null;
+    slotHoldConfirmed?: boolean;
   };
 
   cleanerPreference: {
@@ -69,6 +76,9 @@ export const ASSIGNMENT_REASON_CODES = {
   RECURRING_CONTINUITY_UNAVAILABLE: "recurring_continuity_unavailable",
   CAPACITY_UNKNOWN: "capacity_unknown",
   SLOT_NOT_ENFORCEABLE_YET: "slot_not_enforceable_yet",
+  SELECTED_SLOT_PROVIDER_NOT_ON_ROSTER: "selected_slot_provider_not_on_roster",
+  SELECTED_SLOT_VS_HARD_PREFERRED_CLEANER_CONFLICT:
+    "selected_slot_vs_hard_preferred_cleaner_conflict",
   MANUAL_REVIEW_REQUIRED: "manual_review_required",
   LOW_RANKING_CONFIDENCE: "low_ranking_confidence",
 } as const;

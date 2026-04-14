@@ -48,6 +48,9 @@ export class RosterAvailabilityService {
       preferredTime?: string | null;
       preferredDayWindow?: string | null;
       selectedSlotId?: string | null;
+      selectedSlotFoId?: string | null;
+      selectedSlotWindowStart?: string | null;
+      selectedSlotWindowEnd?: string | null;
     };
     recurring?: {
       pathKind: "one_time" | "recurring";

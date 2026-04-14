@@ -92,7 +92,14 @@ Optional nested object (all sub-fields optional at validation level; the web fun
       "preferredDayWindow": "string | null",
       "flexibilityNotes": "string | null",
       "selectedSlotId": "string | null",
-      "selectedSlotLabel": "string | null"
+      "selectedSlotLabel": "string | null",
+      "selectedSlotDate": "string | null",
+      "selectedSlotWindowStart": "ISO-8601 string | null",
+      "selectedSlotWindowEnd": "ISO-8601 string | null",
+      "selectedSlotFoId": "UUID | null",
+      "holdId": "string | null",
+      "holdExpiresAt": "ISO-8601 string | null",
+      "slotHoldConfirmed": "boolean (optional)"
     },
     "cleanerPreference": {
       "mode": "none" | "preferred_cleaner",
@@ -119,18 +126,33 @@ Optional nested object (all sub-fields optional at validation level; the web fun
 - **Mapper:** `assignment-constraint.mapper.ts` — `mapBookingHandoffToAssignmentConstraints` (never throws; merges intake `preferredTime` when handoff omits it).
 - **Roster reader:** `services/api/src/modules/dispatch/roster-availability.service.ts` — `RosterAvailabilityService` loads **active** `FranchiseOwner` rows with linked `ServiceProvider` (plus optional `FoSchedule` windows as informational context only). No fabricated availability or hardcoded cleaner lists.
 - **Ranking contract:** `services/api/src/modules/dispatch/provider-ranking.contract.ts` — explicit factor codes, weights, `RankedProviderCandidate`, and `RecommendationConfidence` (`high` | `medium` | `low`).
-- **Ranking service:** `provider-ranking.service.ts` — `rankProviderCandidates` scores each active roster row deterministically (preferred cleaner and recurring continuity dominate; schedule hints vs informational `FoSchedule` window labels add a weak positive; missing schedule windows apply a small negative). Tie-break: higher score then `cleanerId` ascending.
-- **Evaluator:** `assignment-capacity.evaluator.ts` — `evaluateAssignmentCapacity`. The intake bridge passes a **real roster array** (possibly empty). Legacy rows may still omit `liveInputs` / have been evaluated before this drop; when `availableCleaners` is **omitted** in callers, roster ID checks are skipped. **Empty roster** → `needs_review` + `capacity_unknown` + `manual_review_required`. **`slot_selection` + `selectedSlotId`** → `needs_review` + `slot_not_enforceable_yet` (slot IDs are not mapped to provider capacity in this pass — intentional, not a bug). **`preference_only`** with roster and no preferred cleaner → **top scored** roster candidate is recommended when confidence is **medium** or **high**; **low** confidence (thin signals only) forces `needs_review` + `low_ranking_confidence` and **clears** the public recommendation while still persisting a **top-3** `rankedCandidates` snapshot for ops. Preferred cleaner IDs may match either franchise-owner id or `providerId` on a roster row. Recurring continuity uses `RecurringPlan.preferredFoId` when resolvable.
+- **Ranking service:** `provider-ranking.service.ts` — `rankProviderCandidates` scores each active roster row deterministically (preferred cleaner and recurring continuity dominate; when handoff includes **FO + ISO slot window**, `exact_slot_match` / `exact_slot_conflict` adjust scores; schedule hints vs informational `FoSchedule` window labels add a weak positive; missing schedule windows apply a small negative). Tie-break: higher score then `cleanerId` ascending.
+- **Evaluator:** `assignment-capacity.evaluator.ts` — `evaluateAssignmentCapacity`. The intake bridge passes a **real roster array** (possibly empty). Legacy rows may still omit `liveInputs` / have been evaluated before this drop; when `availableCleaners` is **omitted** in callers, roster ID checks are skipped. **Empty roster** → `needs_review` + `capacity_unknown` + `manual_review_required`. **`slot_selection` + `selectedSlotId` without `selectedSlotFoId` + ISO window pair** → `needs_review` + `slot_not_enforceable_yet` (opaque slot token only). **`slot_selection` with FO + `selectedSlotWindowStart` / `selectedSlotWindowEnd`** → intake evaluation records slot intent and verifies the FO is on the active roster; **operational** `scheduledStart` still depends on the customer JWT **`POST /bookings/availability/holds`** then **`POST /bookings/:id/confirm-hold`** after the booking shell exists (see “Availability / slot-hold API contract”). Hard preferred cleaner that **conflicts** with the selected-slot FO → `deferred` + `selected_slot_vs_hard_preferred_cleaner_conflict`. Selected FO missing from roster → `needs_review` + `selected_slot_provider_not_on_roster`. **`preference_only`** with roster and no preferred cleaner → **top scored** roster candidate is recommended when confidence is **medium** or **high**; **low** confidence (thin signals only) forces `needs_review` + `low_ranking_confidence` and **clears** the public recommendation while still persisting a **top-3** `rankedCandidates` snapshot for ops. Preferred cleaner IDs may match either franchise-owner id or `providerId` on a roster row. Recurring continuity uses `RecurringPlan.preferredFoId` when resolvable.
 - **Persistence:** `BookingDirectionIntake.assignmentExecution` JSON (`{ constraints, evaluation, liveInputs }`). `liveInputs` holds a minimal roster snapshot and, for **recurring** path intakes, `recurringContinuityContext` when lookup succeeds. `evaluation` may include `recommendationConfidence`, `recommendationReasonSummary`, and `rankedCandidates` (bounded). **`Booking.notes`** also receives `--- SERVELINK_ASSIGNMENT_EXECUTION_JSON ---` after the handoff block when a booking is created.
 - **Dispatch control:** Non-`assignable` outcomes set `BookingDispatchControl.reviewRequired` with `reviewSource=intake_assignment_capacity_v1` and reason codes embedded in `reviewReason` for command-center visibility.
-- **Honesty:** Public funnel scheduling mode remains **preference_only** unless handoff explicitly carries `slot_selection`; even then, exact slot enforcement is **not** automated here. Cleaner preference is evaluated against the **live roster** when the bridge runs; recurring continuity is **attempted** when customer + plan context exists — not promised on every path.
+- **Honesty:** `BOOKING_PRODUCT_CONTRACT.schedulingMode` is **`hybrid_slot_or_preference`**. Exact slot language is shown only when the handoff includes FO + ISO window (`slot_selection` with enforceable payload). Intake-time evaluation cannot replace post-submit hold/confirm; guests without a customer JWT cannot complete hold/confirm — the web submit path **downgrades** scheduling to `preference_only` on the wire when no token is present. Cleaner preference is evaluated against the **live roster** when the bridge runs; recurring continuity is **attempted** when customer + plan context exists — not promised on every path.
+
+## Scheduling truth
+
+- Exact slot selection is supported only when **availability windows** are returned for a chosen franchise owner (`GET /api/v1/bookings/availability/windows`), the customer selects a window, and after intake creates a booking shell the same session can run **hold + confirm-hold** with a **customer JWT** (`POST /api/v1/bookings/availability/holds`, `POST /api/v1/bookings/:id/confirm-hold`). Holds are short-lived (see API service `HOLD_SECONDS`).
+- **Preference-only** scheduling remains the explicit fallback when windows are empty/unavailable, the customer is not signed in, preferred team is not chosen (no `foId` for windows), or hold/confirm fails (user is returned to the schedule step with fixed copy).
+- **Confirm** distinguishes “Your selected arrival window” vs “Your timing preference” via `buildBookingDispatchHandoffSummary`.
+
+## Availability / slot-hold API contract
+
+| Method | Route | Auth | Purpose |
+|--------|-------|------|---------|
+| `GET` | `/api/v1/bookings/availability/windows` | Customer JWT (`JwtAuthGuard` on `BookingsController`) | Query params (validated DTO): `foId` (UUID), `rangeStart`, `rangeEnd` (ISO-8601), `durationMinutes` (int ≥ 1). Response: **JSON array** of `{ startAt, endAt }` (ISO instants). |
+| `POST` | `/api/v1/bookings/availability/holds` | Customer JWT | Body (`CreateSlotHoldDto`): `bookingId` (UUID), `foId` (UUID), `startAt`, `endAt` (ISO-8601). **Hold is created only after a booking row exists** (model B). Returns `BookingSlotHold` row including `id`, `expiresAt`. |
+| `POST` | `/api/v1/bookings/:id/confirm-hold` | Customer JWT | Body: `{ holdId, note? }`. Optional header `idempotency-key`. Confirms booking from validated non-expired hold; may return `BOOKING_SLOT_HOLD_EXPIRED` etc. on failure. |
+
+**Fallback policy:** If any prerequisite fails (guest session, window list empty, duration mismatch vs locked estimate snapshot, overlap, eligibility), the funnel keeps **preference-only** intent and surfaces the exact user-facing strings for expired hold vs other reservation failures on the confirm action.
 
 ## Scheduling contract
 
 - **Legacy wire columns:** `frequency` + `preferredTime` on the intake DTO (unchanged).
 - **Funnel state:** `scheduleSelection` (`ScheduleSelection` in `bookingFlowTypes.ts`).
-- **Runtime mode:** **`preference_only`** — day-window and flexibility notes when offered; **no** fake exact slot UI without a backed public slot API.
-- **Roadmap:** `BOOKING_PRODUCT_CONTRACT.schedulingModeRoadmap` is **`slot_selection`** for when availability is wired customer-safe end-to-end.
+- **Runtime product label:** `BOOKING_PRODUCT_CONTRACT.schedulingMode` → **`hybrid_slot_or_preference`** (`bookingProductContract.ts`). Persisted `bookingHandoff.scheduling.mode` remains **`preference_only` | `slot_selection`** per API DTO.
 - **Confirm** shows the human-readable schedule line from `buildBookingDispatchHandoffSummary` (same underlying state as `bookingHandoff.scheduling`).
 
 ## Cleaner selection / preferred cleaner contract
@@ -159,7 +181,7 @@ Exact copy:
 ## Admin / operator visibility surfaces
 
 - **`/admin/ops/recurring`:** recurring ops summary, route manifest, funnel vs intake note, and a static **Continuity, cleaners, and execution** section (truthful scope statement).
-- **`/admin/booking-direction-intakes`:** **Handoff** summary plus **Assignment**, **Reason codes**, **Continuity / pref**, and **Live execution** (recommended cleaner, preferred-match / continuity flags, roster count from `liveInputs`) when the bridge has run; API returns full JSON per row.
+- **`/admin/booking-direction-intakes`:** **Handoff** summary plus **Assignment**, **Reason codes**, **Continuity / pref**, and **Live execution** (recommended cleaner, preferred-match / continuity flags, roster count from `liveInputs`) when the bridge has run; API returns full JSON per row. The **Schedule** column also surfaces **slot-backed vs preference-only** detail from `bookingHandoff.scheduling` (mode, window label/ISO, optional `holdId` prefix when present on the handoff JSON).
 - **Booking record:** operators can read **`SERVELINK_BOOKING_HANDOFF_JSON`** and **`SERVELINK_ASSIGNMENT_EXECUTION_JSON`** blocks on `Booking.notes` when a booking is created from intake.
 
 ## Customer lifecycle surfaces
@@ -186,7 +208,7 @@ Exact copy:
 | `services/api/src/modules/dispatch/dispatch-candidate.service.ts` | Active `FranchiseOwner` + `ServiceProvider` roster with geo/capacity **filters** for dispatch candidate ranking (booking-shaped input). |
 | `services/api/src/modules/dispatch/roster-availability.service.ts` | Canonical **unfiltered** active FO + provider list for assignment evaluation; optional `FoSchedule` windows per FO (informational weekly windows, same table as `FoScheduleService`). |
 | `services/api/prisma/schema.prisma` — `FranchiseOwner`, `ServiceProvider`, `FoSchedule`, `FoBlockout` | Active roster eligibility (`status`, `safetyHold`, `providerId`); linked provider display names; per-FO weekly schedule rows; blockouts (not yet driving intake evaluator rules). |
-| `services/api/prisma/schema.prisma` — `BookingSlotHold` | Slot holds tied to `bookingId` + `foId` — real slot/capacity signals for **existing** bookings; **not** wired into intake assignment v1 (no invented mapping from funnel slot ids). |
+| `services/api/prisma/schema.prisma` — `BookingSlotHold` | Slot holds tied to `bookingId` + `foId` — used by public funnel **after** intake booking creation when JWT hold + confirm succeeds. |
 | `services/api/prisma/schema.prisma` — `RecurringPlan.preferredFoId` | Continuity anchor for recurring customers when email resolves to a user with an active plan. |
 | `services/api/src/modules/dispatch/provider-dispatch-resolver.service.ts` | `providerId` ↔ `foId` resolution for active franchise owners. |
 
@@ -197,13 +219,14 @@ Exact copy:
 | `apps/web/.../bookingDirectionIntakeApi.ts` + `bookingIntakePayload.ts` | Preview (minimal) / submit payloads; submit includes **`bookingHandoff`**. |
 | `apps/web/.../bookingDispatchHandoff.ts` | Confirm summaries + **`buildBookingHandoffPayloadForIntakeSubmit`**. |
 | `apps/web/.../BookingFlowClient.tsx` | Step machine, preview guard, recurring vs one-time submit. |
-| `apps/web/.../BookingStepSchedule.tsx` | Frequency, preferred time, day-window / notes, `BookingStepCleanerPreference`. |
+| `apps/web/.../BookingStepSchedule.tsx` | Hybrid schedule: optional live windows (`bookingAvailabilityApi`) + preference fallback + `BookingStepCleanerPreference`. |
+| `apps/web/.../bookingAvailabilityApi.ts` | Typed client for availability windows + hold + confirm-hold (customer JWT via `apiFetch`). |
 | `apps/web/.../bookingRecurringApi.ts` | Customer recurring HTTP client + documented routes. |
 | `services/api/.../booking-direction-intake/*` | Intake DTO (incl. `bookingHandoff`), persistence, bridge to `Booking`. |
-| `services/api/.../slot-holds/*` | Slot availability engine for bookings module (not yet wired to public funnel). |
+| `services/api/.../slot-holds/*` | Slot availability + holds; wired from web funnel after booking shell exists (JWT). |
 | `services/api/.../recurring/*` | Recurring plan CRUD, ops summary, `preferredFoId` on plan DTOs. |
 | `apps/web/.../admin/ops/recurring/page.tsx` | Operator recurring dashboard shell. |
 
 ---
 
-_Last updated: booking URL serialization aligned with recurring vs one-time path truth._
+_Last updated: hybrid scheduling (availability windows + hold/confirm-hold) with honest preference fallback._

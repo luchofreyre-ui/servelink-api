@@ -62,14 +62,26 @@ export type BookingEstimateSnapshot = {
   deepCleanProgramCard: DeepCleanProgramDisplay | null;
 };
 
-/** Funnel-only schedule capture; wire fields are still `frequency` + `preferredTime` until slot APIs are integrated. */
+/**
+ * Hybrid scheduling: exact arrival window when availability + JWT hold path is used;
+ * otherwise honest preference-only capture.
+ */
 export type ScheduleSelection = {
   mode: "preference_only" | "slot_selection";
-  selectedSlotId?: string | null;
-  selectedSlotLabel?: string | null;
   preferredTime?: string | null;
   preferredDayWindow?: string | null;
   flexibilityNotes?: string | null;
+  selectedSlotId?: string | null;
+  selectedSlotLabel?: string | null;
+  selectedSlotDate?: string | null;
+  selectedSlotWindowStart?: string | null;
+  selectedSlotWindowEnd?: string | null;
+  /** Franchise owner id for the selected window (matches preferred cleaner `cleanerId` in funnel). */
+  selectedSlotFoId?: string | null;
+  holdId?: string | null;
+  holdExpiresAt?: string | null;
+  /** Set client-side after `confirm-hold` succeeds (optional echo on handoff). */
+  slotHoldConfirmed?: boolean;
 };
 
 export type CleanerPreference = {

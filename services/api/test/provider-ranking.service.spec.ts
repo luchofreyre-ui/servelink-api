@@ -142,6 +142,33 @@ describe("rankProviderCandidates", () => {
     expect(ranked[1].rank).toBe(2);
   });
 
+  it("exact slot handoff ranks matching franchise owner first", () => {
+    const slotFo = "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa";
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: {
+          mode: "slot_selection",
+          preferredTime: "Morning",
+          selectedSlotFoId: slotFo,
+          selectedSlotWindowStart: "2026-05-01T14:00:00.000Z",
+          selectedSlotWindowEnd: "2026-05-01T17:00:00.000Z",
+        },
+        cleanerPreference: { mode: "none" },
+        recurring: { pathKind: "one_time" },
+      },
+    });
+    const ranked = rankProviderCandidates({
+      constraints,
+      availableCleaners: [
+        { cleanerId: "zzzzzzzz-zzzz-4zzz-zzzz-zzzzzzzzzzzz", cleanerLabel: "Zed" },
+        { cleanerId: slotFo, cleanerLabel: "Slot team" },
+      ],
+    });
+    expect(ranked[0].cleanerId).toBe(slotFo);
+    const topFactors = ranked[0].factors.map((f) => f.code);
+    expect(topFactors).toContain("exact_slot_match");
+  });
+
   it("service area ZIP5 match ranks higher when intent zip is provided", () => {
     const constraints = mapBookingHandoffToAssignmentConstraints({
       bookingHandoff: {

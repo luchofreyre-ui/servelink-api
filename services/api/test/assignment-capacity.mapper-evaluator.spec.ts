@@ -22,6 +22,25 @@ describe("mapBookingHandoffToAssignmentConstraints", () => {
     });
     expect(c.scheduling.preferredTime).toBe("Morning");
   });
+
+  it("maps slot window fields from scheduling handoff", () => {
+    const c = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: {
+          mode: "slot_selection",
+          selectedSlotFoId: "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+          selectedSlotWindowStart: "2026-05-01T14:00:00.000Z",
+          selectedSlotWindowEnd: "2026-05-01T17:00:00.000Z",
+        },
+      },
+    });
+    expect(c.scheduling.mode).toBe("slot_selection");
+    expect(c.scheduling.selectedSlotFoId).toBe(
+      "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+    );
+    expect(c.scheduling.selectedSlotWindowStart).toBe("2026-05-01T14:00:00.000Z");
+    expect(c.scheduling.selectedSlotWindowEnd).toBe("2026-05-01T17:00:00.000Z");
+  });
 });
 
 describe("evaluateAssignmentCapacity", () => {
@@ -241,6 +260,99 @@ describe("evaluateAssignmentCapacity", () => {
     expect(ev.recommendationConfidence).toBe("low");
     expect(ev.recommendedCleanerId).toBeUndefined();
     expect(ev.rankedCandidates?.length).toBeGreaterThan(0);
+  });
+
+  it("8b: slot_selection with enforceable window + roster FO -> assignable (no slot_not_enforceable_yet)", () => {
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: {
+          mode: "slot_selection",
+          preferredTime: "Morning",
+          selectedSlotFoId: "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+          selectedSlotWindowStart: "2026-05-01T14:00:00.000Z",
+          selectedSlotWindowEnd: "2026-05-01T17:00:00.000Z",
+        },
+        cleanerPreference: { mode: "none" },
+        recurring: { pathKind: "one_time" },
+      },
+    });
+    const ev = evaluateAssignmentCapacity({
+      constraints,
+      availableCleaners: [
+        {
+          cleanerId: "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+          cleanerLabel: "Slot FO",
+        },
+      ],
+    });
+    expect(ev.status).toBe("assignable");
+    expect(ev.reasonCodes).not.toContain(
+      ASSIGNMENT_REASON_CODES.SLOT_NOT_ENFORCEABLE_YET,
+    );
+    expect(ev.recommendedCleanerId).toBe(
+      "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+    );
+  });
+
+  it("8c: enforceable slot FO missing from roster -> needs_review", () => {
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: {
+          mode: "slot_selection",
+          preferredTime: "Morning",
+          selectedSlotFoId: "bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb",
+          selectedSlotWindowStart: "2026-05-01T14:00:00.000Z",
+          selectedSlotWindowEnd: "2026-05-01T17:00:00.000Z",
+        },
+        cleanerPreference: { mode: "none" },
+        recurring: { pathKind: "one_time" },
+      },
+    });
+    const ev = evaluateAssignmentCapacity({
+      constraints,
+      availableCleaners: [{ cleanerId: "other", cleanerLabel: "Other" }],
+    });
+    expect(ev.status).toBe("needs_review");
+    expect(ev.reasonCodes).toContain(
+      ASSIGNMENT_REASON_CODES.SELECTED_SLOT_PROVIDER_NOT_ON_ROSTER,
+    );
+  });
+
+  it("8d: enforceable slot vs hard preferred cleaner conflict -> deferred", () => {
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: {
+          mode: "slot_selection",
+          preferredTime: "Morning",
+          selectedSlotFoId: "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+          selectedSlotWindowStart: "2026-05-01T14:00:00.000Z",
+          selectedSlotWindowEnd: "2026-05-01T17:00:00.000Z",
+        },
+        cleanerPreference: {
+          mode: "preferred_cleaner",
+          cleanerId: "cccccccc-cccc-4ccc-cccc-cccccccccccc",
+          hardRequirement: true,
+        },
+        recurring: { pathKind: "one_time" },
+      },
+    });
+    const ev = evaluateAssignmentCapacity({
+      constraints,
+      availableCleaners: [
+        {
+          cleanerId: "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+          cleanerLabel: "Slot FO",
+        },
+        {
+          cleanerId: "cccccccc-cccc-4ccc-cccc-cccccccccccc",
+          cleanerLabel: "Preferred",
+        },
+      ],
+    });
+    expect(ev.status).toBe("deferred");
+    expect(ev.reasonCodes).toContain(
+      ASSIGNMENT_REASON_CODES.SELECTED_SLOT_VS_HARD_PREFERRED_CLEANER_CONFLICT,
+    );
   });
 
   it("9b: roster with windows + scheduling token overlap -> assignable + ranked winner", () => {

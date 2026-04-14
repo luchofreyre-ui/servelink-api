@@ -2,8 +2,10 @@ import { Transform, Type } from "class-transformer";
 import {
   IsBoolean,
   IsIn,
+  IsISO8601,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
   ValidateNested,
 } from "class-validator";
@@ -42,6 +44,45 @@ export class BookingHandoffSchedulingDto {
   @IsString()
   @MaxLength(500)
   selectedSlotLabel?: string | null;
+
+  /** Franchise owner id for the selected availability window (matches roster `cleanerId`). */
+  @IsOptional()
+  @Transform(({ value }) => (value === null || value === undefined ? undefined : String(value)))
+  @IsUUID()
+  selectedSlotFoId?: string | null;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === null || value === undefined ? undefined : String(value)))
+  @IsISO8601()
+  selectedSlotWindowStart?: string | null;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === null || value === undefined ? undefined : String(value)))
+  @IsISO8601()
+  selectedSlotWindowEnd?: string | null;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === null || value === undefined ? undefined : String(value)))
+  @IsString()
+  @MaxLength(32)
+  selectedSlotDate?: string | null;
+
+  /** Last slot hold id created post-submit (funnel-only; optional on persisted handoff). */
+  @IsOptional()
+  @Transform(({ value }) => (value === null || value === undefined ? undefined : String(value)))
+  @IsString()
+  @MaxLength(80)
+  holdId?: string | null;
+
+  @IsOptional()
+  @Transform(({ value }) => (value === null || value === undefined ? undefined : String(value)))
+  @IsISO8601()
+  holdExpiresAt?: string | null;
+
+  /** True only after `POST /bookings/:id/confirm-hold` succeeds for this booking (optional client echo). */
+  @IsOptional()
+  @IsBoolean()
+  slotHoldConfirmed?: boolean;
 }
 
 export class BookingHandoffCleanerPreferenceDto {
