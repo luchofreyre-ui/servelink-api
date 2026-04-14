@@ -64,6 +64,8 @@ describe("evaluateAssignmentCapacity", () => {
     expect(ev.status).toBe("assignable");
     expect(ev.matchedPreferredCleaner).toBe(true);
     expect(ev.recommendedCleanerId).toBe("c1");
+    expect(ev.recommendationConfidence).toBe("high");
+    expect(ev.rankedCandidates?.[0]?.cleanerId).toBe("c1");
   });
 
   it("2b: preferred cleaner id matches providerId on roster row", () => {
@@ -153,6 +155,7 @@ describe("evaluateAssignmentCapacity", () => {
     expect(ev.status).toBe("assignable");
     expect(ev.recurringContinuityCandidate).toBe(true);
     expect(ev.recommendedCleanerId).toBe("prior");
+    expect(ev.recommendationConfidence).toBe("high");
   });
 
   it("6: recurring with prior cleaner unavailable -> needs_review + continuity code", () => {
@@ -218,7 +221,7 @@ describe("evaluateAssignmentCapacity", () => {
     );
   });
 
-  it("9: active roster + no preference -> assignable + deterministic recommended cleaner", () => {
+  it("9: bare roster + no preference -> needs_review (low ranking confidence)", () => {
     const constraints = mapBookingHandoffToAssignmentConstraints({
       bookingHandoff: {
         scheduling: { preferredTime: "Afternoon" },
@@ -233,8 +236,39 @@ describe("evaluateAssignmentCapacity", () => {
         { cleanerId: "afo", cleanerLabel: "Amy" },
       ],
     });
+    expect(ev.status).toBe("needs_review");
+    expect(ev.reasonCodes).toContain(ASSIGNMENT_REASON_CODES.LOW_RANKING_CONFIDENCE);
+    expect(ev.recommendationConfidence).toBe("low");
+    expect(ev.recommendedCleanerId).toBeUndefined();
+    expect(ev.rankedCandidates?.length).toBeGreaterThan(0);
+  });
+
+  it("9b: roster with windows + scheduling token overlap -> assignable + ranked winner", () => {
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: { preferredTime: "Mon" },
+        cleanerPreference: { mode: "none" },
+        recurring: { pathKind: "one_time" },
+      },
+    });
+    const ev = evaluateAssignmentCapacity({
+      constraints,
+      availableCleaners: [
+        {
+          cleanerId: "zfo",
+          cleanerLabel: "Zed",
+          availableWindows: [{ label: "Tue 09:00–17:00" }],
+        },
+        {
+          cleanerId: "afo",
+          cleanerLabel: "Amy",
+          availableWindows: [{ label: "Mon 09:00–17:00" }],
+        },
+      ],
+    });
     expect(ev.status).toBe("assignable");
     expect(ev.recommendedCleanerId).toBe("afo");
-    expect(ev.recommendedCleanerLabel).toBe("Amy");
+    expect(ev.recommendationConfidence).toBe("medium");
+    expect(ev.rankedCandidates?.[0]?.cleanerId).toBe("afo");
   });
 });

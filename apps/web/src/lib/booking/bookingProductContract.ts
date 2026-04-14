@@ -59,6 +59,11 @@ export const BOOKING_URL_SERIALIZATION = {
  */
 export const ASSIGNMENT_CAPACITY_ENGINE = {
   version: "v1_first_pass" as const,
+  /**
+   * Provider recommendation is scored ranking (`provider-ranking.service.ts`), not arbitrary id order.
+   * `recommendationConfidence` may force `needs_review` when only thin roster signals exist.
+   */
+  providerRankingVersion: "v1_scored" as const,
   decisionStatuses: [
     "assignable",
     "needs_review",

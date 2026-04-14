@@ -152,6 +152,21 @@ export default async function AdminRecurringOpsPage() {
               The intake list shows recommended cleaner, preferred-match flag, continuity outcome, and
               roster count — all derived from persisted <code className="rounded bg-white px-1 font-mono text-xs">assignmentExecution</code>.
             </p>
+            <p className="mt-3 text-gray-600">
+              <span className="font-medium text-gray-900">Ranking quality.</span> Intake assignment now uses{" "}
+              <strong className="font-medium text-gray-900">scored provider ranking</strong> (not arbitrary id
+              order): preferred cleaner and recurring continuity matches dominate; informational{" "}
+              <code className="rounded bg-white px-1 font-mono text-xs">FoSchedule</code> windows and scheduling hints
+              add weaker signals. When confidence is{" "}
+              <code className="rounded bg-white px-1 font-mono text-xs">low</code>, the evaluator may force{" "}
+              <code className="rounded bg-white px-1 font-mono text-xs">needs_review</code> even though candidates
+              exist — see the <strong className="font-medium text-gray-900">Ranking</strong> column on{" "}
+              <Link href="/admin/booking-direction-intakes" className="text-blue-700 hover:underline">
+                booking direction captures
+              </Link>{" "}
+              for <code className="rounded bg-white px-1 font-mono text-xs">recommendationConfidence</code>, short
+              reason lines, and a compact top-candidate summary.
+            </p>
           </div>
         </section>
 

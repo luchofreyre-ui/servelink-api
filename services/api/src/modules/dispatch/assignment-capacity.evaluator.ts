@@ -4,15 +4,15 @@ import {
   type AssignmentDecisionStatus,
   type CapacityEvaluationResult,
 } from "./assignment-capacity.contract";
+import {
+  buildRecommendationReasonSummary,
+  deriveRecommendationConfidence,
+  rankProviderCandidates,
+  toRankedCandidatesPersistence,
+  type RankProviderAvailableCleaner,
+} from "./provider-ranking.service";
 
-export type AvailableCleanerRow = {
-  cleanerId: string;
-  /** Optional; matches `bookingHandoff.cleanerPreference.cleanerId` when it references `ServiceProvider.id`. */
-  providerId?: string | null;
-  cleanerLabel: string;
-  isActive?: boolean;
-  supportsRecurring?: boolean;
-};
+export type AvailableCleanerRow = RankProviderAvailableCleaner;
 
 function statusRank(s: AssignmentDecisionStatus): number {
   switch (s) {
@@ -38,8 +38,7 @@ function worse(
 
 /**
  * First-pass deterministic capacity / assignment outcome from constraints.
- * When `availableCleaners` is omitted, roster-based ID checks are skipped (legacy rows);
- * slot-id and scheduling rules still apply.
+ * Provider recommendation uses scored ranking (`rankProviderCandidates`) instead of raw id order.
  */
 export function evaluateAssignmentCapacity(input: {
   constraints: AssignmentConstraintSet;
@@ -48,8 +47,11 @@ export function evaluateAssignmentCapacity(input: {
     priorCleanerId?: string | null;
     priorCleanerLabel?: string | null;
   };
+  /** Optional ZIP5 when booking/intake exposes it; otherwise ranking skips service-area match. */
+  intentServiceZip5?: string | null;
 }): CapacityEvaluationResult {
-  const { constraints, availableCleaners, recurringContext } = input;
+  const { constraints, availableCleaners, recurringContext, intentServiceZip5 } =
+    input;
   const reasonCodes: string[] = [];
   const notesForOps: string[] = [];
   let status: AssignmentDecisionStatus = "assignable";
@@ -76,10 +78,6 @@ export function evaluateAssignmentCapacity(input: {
     status = worse(status, "needs_review");
   }
 
-  /**
-   * Exact slot IDs from the funnel are not mapped to provider capacity in this pass
-   * (no customer-safe slot-to-FO binding). Require manual review instead of silent assignable.
-   */
   if (sched.mode === "slot_selection" && sched.selectedSlotId?.trim()) {
     pushCode(ASSIGNMENT_REASON_CODES.SLOT_NOT_ENFORCEABLE_YET);
     pushCode(ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED);
@@ -162,6 +160,18 @@ export function evaluateAssignmentCapacity(input: {
     }
   }
 
+  const ranked =
+    cleaners && cleaners.length > 0
+      ? rankProviderCandidates({
+          constraints,
+          availableCleaners: cleaners,
+          recurringContext,
+          intentServiceZip5: intentServiceZip5 ?? null,
+        })
+      : [];
+
+  const rankedPersist = ranked.length ? toRankedCandidatesPersistence(ranked) : undefined;
+
   if (
     status === "assignable" &&
     sched.mode === "preference_only" &&
@@ -171,14 +181,12 @@ export function evaluateAssignmentCapacity(input: {
     cp.mode === "none" &&
     !recommendedCleanerId
   ) {
-    const first = [...cleaners].sort((a, b) =>
-      a.cleanerId.localeCompare(b.cleanerId),
-    )[0];
-    if (first && (first.isActive === undefined || first.isActive !== false)) {
-      recommendedCleanerId = first.cleanerId;
-      recommendedCleanerLabel = first.cleanerLabel;
+    const top = ranked[0];
+    if (top) {
+      recommendedCleanerId = top.cleanerId;
+      recommendedCleanerLabel = top.cleanerLabel;
       notesForOps.push(
-        "No explicit cleaner preference; recommended first active roster member (deterministic id order) — not a ranked best-match.",
+        "No explicit cleaner preference; recommendation is top scored roster candidate (deterministic ranking — not a guaranteed dispatch assignment).",
       );
     }
   }
@@ -193,11 +201,49 @@ export function evaluateAssignmentCapacity(input: {
     );
   }
 
+  const topRanked = ranked[0];
+  const recommendationConfidence = deriveRecommendationConfidence({
+    matchedPreferredCleaner,
+    recurringContinuityCandidate,
+    topRanked,
+  });
+
+  const recommendationReasonSummary = buildRecommendationReasonSummary({
+    confidence: recommendationConfidence,
+    matchedPreferredCleaner,
+    recurringContinuityCandidate,
+    topRanked,
+  });
+
+  if (
+    status === "assignable" &&
+    recommendedCleanerId &&
+    !matchedPreferredCleaner &&
+    !recurringContinuityCandidate &&
+    recommendationConfidence === "low"
+  ) {
+    pushCode(ASSIGNMENT_REASON_CODES.LOW_RANKING_CONFIDENCE);
+    pushCode(ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED);
+    status = worse(status, "needs_review");
+    recommendedCleanerId = undefined;
+    recommendedCleanerLabel = undefined;
+    notesForOps.push(
+      "Ranking confidence is low (thin roster signals only); forcing needs_review instead of a hard assignable recommendation.",
+    );
+  }
+
   const result: CapacityEvaluationResult = {
     status,
     reasonCodes,
     notesForOps: notesForOps.length ? notesForOps : undefined,
+    recommendationConfidence,
+    recommendationReasonSummary,
   };
+
+  if (rankedPersist?.length) {
+    result.rankedCandidates = rankedPersist;
+  }
+
   if (matchedPreferredCleaner) {
     result.matchedPreferredCleaner = true;
   }

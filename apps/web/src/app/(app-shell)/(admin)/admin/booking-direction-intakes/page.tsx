@@ -47,6 +47,7 @@ function assignmentEngineColumns(ex: unknown): {
   reasons: string;
   continuity: string;
   liveSummary: string;
+  rankingSummary: string;
 } {
   if (ex == null || typeof ex !== "object") {
     return {
@@ -54,6 +55,7 @@ function assignmentEngineColumns(ex: unknown): {
       reasons: "No evaluation stored (legacy intake or pre-engine row).",
       continuity: "—",
       liveSummary: "—",
+      rankingSummary: "—",
     };
   }
   const o = ex as Record<string, unknown>;
@@ -70,7 +72,51 @@ function assignmentEngineColumns(ex: unknown): {
     reasons,
     continuity: parts.length ? parts.join(" · ") : "—",
     liveSummary: liveExecutionSummary(o, ev),
+    rankingSummary: rankingExecutionSummary(ev),
   };
+}
+
+function rankingExecutionSummary(
+  ev: Record<string, unknown> | undefined,
+): string {
+  if (!ev) return "—";
+  const conf =
+    typeof ev.recommendationConfidence === "string"
+      ? ev.recommendationConfidence
+      : "";
+  const sum = ev.recommendationReasonSummary;
+  const sumLine =
+    Array.isArray(sum) && sum.length
+      ? sum
+          .slice(0, 3)
+          .map((x) => String(x))
+          .join(" · ")
+      : "";
+  const ranked = ev.rankedCandidates;
+  let top = "";
+  if (Array.isArray(ranked) && ranked.length) {
+    top = ranked
+      .slice(0, 3)
+      .map((row) => {
+        const r = row as Record<string, unknown>;
+        const label =
+          typeof r.cleanerLabel === "string" && r.cleanerLabel.trim()
+            ? r.cleanerLabel.trim()
+            : String(r.cleanerId ?? "");
+        const score = typeof r.score === "number" ? r.score : "?";
+        const pref = r.matchedPreferredCleaner === true ? "★pref" : "";
+        const cont = r.recurringContinuityCandidate === true ? "★cont" : "";
+        const tags = [pref, cont].filter(Boolean).join("");
+        return `${label}:${score}${tags ? ` ${tags}` : ""}`;
+      })
+      .join(" | ");
+  }
+  const bits = [
+    conf && `confidence ${conf}`,
+    sumLine || null,
+    top && `top: ${top}`,
+  ].filter(Boolean);
+  return bits.length ? bits.join(" · ") : "—";
 }
 
 function liveExecutionSummary(
@@ -241,6 +287,7 @@ export default function AdminBookingDirectionIntakesPage() {
                     <th className="px-4 py-3 font-medium">Reason codes</th>
                     <th className="px-4 py-3 font-medium">Continuity / pref</th>
                     <th className="px-4 py-3 font-medium">Live execution</th>
+                    <th className="px-4 py-3 font-medium">Ranking</th>
                     <th className="px-4 py-3 font-medium">Contact</th>
                     <th className="px-4 py-3 font-medium">Attribution</th>
                   </tr>
@@ -249,7 +296,7 @@ export default function AdminBookingDirectionIntakesPage() {
                   {items.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={13}
+                        colSpan={14}
                         className="px-4 py-8 text-center text-slate-500"
                       >
                         No booking direction intakes yet.
@@ -303,6 +350,9 @@ export default function AdminBookingDirectionIntakesPage() {
                         </td>
                         <td className="max-w-[220px] px-4 py-3 text-[11px] leading-relaxed text-slate-400">
                           {ax.liveSummary}
+                        </td>
+                        <td className="max-w-[240px] px-4 py-3 text-[11px] leading-relaxed text-slate-400">
+                          {ax.rankingSummary}
                         </td>
                         <td className="max-w-[200px] px-4 py-3 text-xs leading-relaxed text-slate-300">
                           {row.customerName || row.customerEmail ? (

@@ -290,6 +290,8 @@ export class IntakeBookingBridgeService {
       cleanerLabel: c.cleanerLabel,
       isActive: c.isActive,
       supportsRecurring: c.supportsRecurring,
+      serviceAreaZip5: c.serviceAreaZip5 ?? null,
+      availableWindows: c.availableWindows,
     }));
 
     const recurringContextForEval =
@@ -310,6 +312,8 @@ export class IntakeBookingBridgeService {
         cleanerLabel: c.cleanerLabel,
         isActive: c.isActive,
         supportsRecurring: c.supportsRecurring,
+        serviceAreaZip5: c.serviceAreaZip5 ?? null,
+        windowCount: c.availableWindows?.length ?? 0,
       })),
       recurringContinuityContext:
         constraints.recurring.pathKind === "recurring"

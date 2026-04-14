@@ -41,6 +41,11 @@ export type AssignmentConstraintSet = {
   };
 };
 
+import type {
+  RankedCandidatePersistence,
+  RecommendationConfidence,
+} from "./provider-ranking.contract";
+
 export type CapacityEvaluationResult = {
   status: AssignmentDecisionStatus;
   reasonCodes: string[];
@@ -49,6 +54,12 @@ export type CapacityEvaluationResult = {
   matchedPreferredCleaner?: boolean;
   recurringContinuityCandidate?: boolean;
   notesForOps?: string[];
+  /** How strong the recommendation is; may force `needs_review` when low. */
+  recommendationConfidence?: RecommendationConfidence;
+  /** Short operator-readable lines (also mirrored in admin UI). */
+  recommendationReasonSummary?: string[];
+  /** Top ranked candidates (bounded); see `PROVIDER_RANKING_PERSIST_TOP_N`. */
+  rankedCandidates?: RankedCandidatePersistence[];
 };
 
 export const ASSIGNMENT_REASON_CODES = {
@@ -59,6 +70,7 @@ export const ASSIGNMENT_REASON_CODES = {
   CAPACITY_UNKNOWN: "capacity_unknown",
   SLOT_NOT_ENFORCEABLE_YET: "slot_not_enforceable_yet",
   MANUAL_REVIEW_REQUIRED: "manual_review_required",
+  LOW_RANKING_CONFIDENCE: "low_ranking_confidence",
 } as const;
 
 export type AssignmentReasonCode =

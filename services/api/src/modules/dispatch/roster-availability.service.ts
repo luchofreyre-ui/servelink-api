@@ -10,7 +10,14 @@ export type AvailableCleanerRecord = {
   providerId?: string | null;
   cleanerLabel: string;
   isActive: boolean;
+  /**
+   * When true, roster marks the provider as suitable for recurring plan flows.
+   * Omitted when unknown (no dedicated column yet — do not guess).
+   */
   supportsRecurring?: boolean;
+  /** Five-digit ZIP service area when modeled; otherwise null (not inferred from lat/lng here). */
+  serviceAreaZip5?: string | null;
+  /** Informational `FoSchedule` rows; not a guarantee of slot-level capacity. */
   availableWindows?: Array<{
     label: string;
     start?: string | null;
@@ -78,6 +85,7 @@ export class RosterAvailabilityService {
         providerId: fo.providerId,
         cleanerLabel: label,
         isActive: true,
+        serviceAreaZip5: null,
         availableWindows: windows.length ? windows : undefined,
       };
     });
