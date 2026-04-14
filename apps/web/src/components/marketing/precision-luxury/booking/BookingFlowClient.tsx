@@ -33,10 +33,7 @@ import BookingStepRecurringSetup from "./BookingStepRecurringSetup";
 import { BookingStepConfirm } from "./BookingStepConfirm";
 import { BookingSummaryCard } from "./BookingSummaryCard";
 import { BookingServiceHandoffCard } from "./BookingServiceHandoffCard";
-import type {
-  BookingDirectionEstimatePreviewResponse,
-  IntakeEstimateFactorsPayload,
-} from "./bookingDirectionIntakeApi";
+import type { BookingDirectionEstimatePreviewResponse } from "./bookingDirectionIntakeApi";
 import {
   buildBookingAttributionFromSearchParams,
   submitBookingDirectionIntake,
@@ -48,7 +45,6 @@ import { isBookingContactValid } from "./bookingContactValidation";
 import type { FunnelReviewEstimate } from "./bookingFlowTypes";
 import {
   ESTIMATE_ADDON_OPTIONS,
-  buildEstimateFactorsPayload,
   homeSizeHasValidSqftForEstimate,
   isBookingEstimateFactorsComplete,
 } from "./bookingEstimateFactors";
@@ -1295,12 +1291,9 @@ export function BookingFlowClient() {
 
     setIsSubmitting(true);
     try {
-      const result = await submitBookingDirectionIntake({
-        ...buildSubmitBookingDirectionPayload(state, contactExtras),
-        estimateFactors: buildEstimateFactorsPayload(
-          state.estimateFactors,
-        ) as IntakeEstimateFactorsPayload,
-      });
+      const result = await submitBookingDirectionIntake(
+        buildSubmitBookingDirectionPayload(state, contactExtras),
+      );
 
       const q = new URLSearchParams();
       q.set("intakeId", result.intakeId);

@@ -70,11 +70,10 @@ export type BookingDirectionOutboundPayload = {
 };
 
 /**
- * Submit body: base wire fields plus questionnaire for persistence and booking mapping.
+ * Submit body: same API-safe fields as preview. Questionnaire is applied on the server
+ * when `estimateFactors` is omitted (defaults), matching the preview-estimate contract.
  */
-export type SubmitBookingDirectionIntakePayload = BookingDirectionOutboundPayload & {
-  estimateFactors: IntakeEstimateFactorsPayload;
-};
+export type SubmitBookingDirectionIntakePayload = BookingDirectionOutboundPayload;
 
 export type BookingDirectionIntakeSuccess = {
   kind: "booking_direction_intake";
