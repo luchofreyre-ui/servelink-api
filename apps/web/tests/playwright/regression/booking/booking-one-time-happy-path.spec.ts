@@ -126,6 +126,14 @@ test("booking: one-time path reaches confirm with schedule and cleaner summary",
   await expect(page.getByRole("heading", { name: "Confirm and send" })).toBeVisible({
     timeout: 30_000,
   });
+  await expect
+    .poll(() => new URL(page.url()).searchParams.get("bookingPath"), { timeout: 15_000 })
+    .toBe("one_time");
+  const confirmUrl = new URL(page.url());
+  expect(confirmUrl.searchParams.get("frequency")).toBe("One-Time");
+  expect(confirmUrl.searchParams.get("cadence")).toBeNull();
+  await expect(page.getByTestId("booking-debug-url-state-consistent")).toHaveText(/true/);
+
   await expect(page.getByText("Schedule", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/Frequency:/)).toBeVisible();
   await expect(page.getByText("Cleaner preference", { exact: true }).first()).toBeVisible();

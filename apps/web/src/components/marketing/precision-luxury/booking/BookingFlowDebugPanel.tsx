@@ -73,6 +73,15 @@ export type BookingFlowDebugState = {
   previewResponseStatus?: number | null;
   previewSource?: string | null;
   reviewNextAttempts?: JsonLike;
+
+  /** Live query params vs canonical serializer (`buildBookingSearchParams`). */
+  serializedFrequency?: string | null;
+  /** `bookingPath` query param (recurring | one_time). */
+  serializedDecision?: string | null;
+  serializedCadence?: string | null;
+  serializedRecAnchor?: string | null;
+  serializedRecTime?: string | null;
+  urlStateConsistent?: boolean | null;
 };
 
 function pretty(value: unknown) {
@@ -86,9 +95,13 @@ function pretty(value: unknown) {
 function Row(props: {
   label: string;
   value: unknown;
+  testId?: string;
 }) {
   return (
-    <div className="grid grid-cols-[160px_1fr] gap-2 border-b border-white/10 py-1">
+    <div
+      data-testid={props.testId}
+      className="grid grid-cols-[160px_1fr] gap-2 border-b border-white/10 py-1"
+    >
       <div className="font-medium text-white/70">{props.label}</div>
       <div className="break-words text-white">{String(props.value ?? "null")}</div>
     </div>
@@ -149,6 +162,23 @@ export function BookingFlowDebugPanel({
           <Row label="homeSize" value={state.homeSize} />
           <Row label="bedrooms" value={state.bedrooms} />
           <Row label="bathrooms" value={state.bathrooms} />
+        </div>
+
+        <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="mb-2 text-sm font-semibold text-white">URL serialization</div>
+          <Row label="serializedFrequency (query)" value={state.serializedFrequency} />
+          <Row
+            label="serializedDecision (bookingPath)"
+            value={state.serializedDecision}
+          />
+          <Row label="serializedCadence (query)" value={state.serializedCadence} />
+          <Row label="serializedRecAnchor" value={state.serializedRecAnchor} />
+          <Row label="serializedRecTime" value={state.serializedRecTime} />
+          <Row
+            label="urlStateConsistent"
+            value={state.urlStateConsistent}
+            testId="booking-debug-url-state-consistent"
+          />
         </div>
 
         <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3">

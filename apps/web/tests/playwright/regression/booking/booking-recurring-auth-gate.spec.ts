@@ -116,8 +116,21 @@ test("booking: recurring guest completes setup then auth gate only at final conf
     page.getByText("Please sign in to continue with your recurring plan."),
   ).toBeVisible();
 
+  const beforeAuthUrl = new URL(page.url());
+  expect(beforeAuthUrl.searchParams.get("cadence")).toBe("weekly");
+  expect(beforeAuthUrl.searchParams.get("bookingPath")).toBe("recurring");
+  expect(beforeAuthUrl.searchParams.get("frequency")).not.toBe("One-Time");
+  await expect(page.getByTestId("booking-debug-url-state-consistent")).toHaveText(/true/);
+
   const authNav = page.waitForURL(/\/customer\/auth/, { timeout: 20_000 });
   await page.getByRole("button", { name: "Confirm Booking Direction" }).click();
   await authNav;
   expect(page.url()).toContain("redirect=");
+
+  const persisted = await page.evaluate(() =>
+    window.sessionStorage.getItem("booking_flow_state"),
+  );
+  expect(persisted).toBeTruthy();
+  const saved = JSON.parse(persisted!) as { recurringIntent?: { type?: string } };
+  expect(saved.recurringIntent?.type).toBe("recurring");
 });

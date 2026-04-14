@@ -39,6 +39,20 @@ export type ConfirmRequirement =
   | "cleaner_rule_satisfied";
 
 /**
+ * `/book` query serialization for path truth (deep links, refresh, auth resume).
+ * Write/parse/precedence rules live in
+ * `apps/web/src/components/marketing/precision-luxury/booking/bookingUrlState.ts`.
+ */
+export const BOOKING_URL_SERIALIZATION = {
+  cadenceParam: "cadence",
+  bookingPathParam: "bookingPath",
+  recurringBookingPath: "recurring",
+  oneTimeBookingPath: "one_time",
+  recAnchorParam: "recAnchor",
+  recTimeParam: "recTime",
+} as const;
+
+/**
  * First-pass server assignment / capacity outcomes (dispatch module + intake bridge).
  * Intake persistence includes `liveInputs` (minimal active roster snapshot + recurring continuity
  * context when applicable) next to `constraints` and `evaluation`.

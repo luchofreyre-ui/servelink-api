@@ -12,7 +12,9 @@ import {
   buildBookingPreviewRequestKey,
   buildBookingEstimateDrivingSignature,
   buildBookingSearchParams,
+  isBookingUrlSerializationConsistent,
   parseBookingSearchParams,
+  readBookingUrlSerializationDebug,
 } from "./bookingUrlState";
 import type {
   BookingFlowState,
@@ -382,6 +384,8 @@ export function BookingFlowClient() {
     useRef<LastSuccessfulPreviewNetworkDebug | null>(null);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
   const skipUrlSearchParamsHydration = useRef(0);
+  /** Schedule-step frequency captured at review snapshot (restore after recurring / decision back). */
+  const scheduleFrequencyRef = useRef<BookingFrequencyOption | "">("");
 
   const attributionQueryKey = searchParams?.toString() ?? "";
 
@@ -673,6 +677,10 @@ export function BookingFlowClient() {
         ? state.estimateSnapshot.previewRequestKey
         : null;
 
+    const sp = new URLSearchParams(searchParams?.toString() ?? "");
+    const urlSer = readBookingUrlSerializationDebug(sp);
+    const urlStateConsistent = isBookingUrlSerializationConsistent(state, sp);
+
     return {
       flowVersion: "NEW_FLOW_V1",
       pathname,
@@ -740,9 +748,17 @@ export function BookingFlowClient() {
       previewResponseStatus: debugPreviewResponseStatus,
       previewSource: debugPreviewSource,
       reviewNextAttempts: safeJsonLike(debugReviewNextAttempts),
+
+      serializedFrequency: urlSer.serializedFrequency || null,
+      serializedDecision: urlSer.serializedBookingPath || null,
+      serializedCadence: urlSer.serializedCadence || null,
+      serializedRecAnchor: urlSer.serializedRecAnchor || null,
+      serializedRecTime: urlSer.serializedRecTime || null,
+      urlStateConsistent,
     };
   }, [
     pathname,
+    searchParams,
     state,
     canContinue,
     stepError,
@@ -1224,6 +1240,20 @@ export function BookingFlowClient() {
   ]);
 
   useEffect(() => {
+    if (
+      state.step === "review" &&
+      state.estimateSnapshot &&
+      state.frequency &&
+      (state.frequency === "Weekly" ||
+        state.frequency === "Bi-Weekly" ||
+        state.frequency === "Monthly" ||
+        state.frequency === "One-Time")
+    ) {
+      scheduleFrequencyRef.current = state.frequency;
+    }
+  }, [state.step, state.estimateSnapshot, state.frequency]);
+
+  useEffect(() => {
     if (state.step === "home" && isHomeComplete) {
       setAttemptedNext(false);
     }
@@ -1249,11 +1279,27 @@ export function BookingFlowClient() {
         new URLSearchParams(searchParams?.toString() ?? ""),
       );
 
-      const mergedBase: BookingFlowState = {
+      let mergedBase: BookingFlowState = {
         ...parsed,
         customerName: prev.customerName,
         customerEmail: prev.customerEmail,
       };
+
+      if (
+        prev.estimateSnapshot &&
+        mergedBase.recurringIntent?.type === "recurring"
+      ) {
+        const withPrevScheduleFrequency: BookingFlowState = {
+          ...mergedBase,
+          frequency: prev.frequency,
+        };
+        if (
+          buildBookingEstimateDrivingSignature(withPrevScheduleFrequency) ===
+          buildBookingEstimateDrivingSignature(prev)
+        ) {
+          mergedBase = withPrevScheduleFrequency;
+        }
+      }
 
       const sameDriving =
         buildBookingEstimateDrivingSignature(mergedBase) ===
@@ -1261,12 +1307,19 @@ export function BookingFlowClient() {
 
       const merged: BookingFlowState = {
         ...mergedBase,
-        recurringIntent: sameDriving ? prev.recurringIntent : undefined,
-        recurringSetup: sameDriving ? prev.recurringSetup : undefined,
+        recurringIntent:
+          mergedBase.recurringIntent ??
+          (sameDriving ? prev.recurringIntent : undefined),
+        recurringSetup:
+          mergedBase.recurringSetup ??
+          (sameDriving ? prev.recurringSetup : undefined),
         estimateSnapshot: sameDriving ? prev.estimateSnapshot : null,
       };
 
-      if (serializeState(merged) === serializeState(prev)) {
+      if (
+        buildBookingSearchParams(merged).toString() ===
+        buildBookingSearchParams(prev).toString()
+      ) {
         return prev;
       }
 
@@ -1276,11 +1329,9 @@ export function BookingFlowClient() {
 
   // STATE → URL (ONLY runs when state changes)
   useEffect(() => {
-    const desired = serializeState(state);
-    const current = new URLSearchParams(searchParams?.toString() ?? "").toString();
-
-    if (desired !== current) {
-      router.replace(`${pathname}?${desired}`, { scroll: false });
+    const current = new URLSearchParams(searchParams?.toString() ?? "");
+    if (!isBookingUrlSerializationConsistent(state, current)) {
+      router.replace(`${pathname}?${serializeState(state)}`, { scroll: false });
     }
     // ❗️REMOVE searchParams from deps to prevent loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1524,7 +1575,27 @@ export function BookingFlowClient() {
       return goToStep("decision");
     }
     if (state.step === "decision") {
-      return goToStep("review");
+      setAttemptedNext(false);
+      setReviewNavigationBlock(null);
+      setAttemptedConfirm(false);
+      setSubmitError(null);
+      setState((prev) => {
+        const restore =
+          scheduleFrequencyRef.current === "Weekly" ||
+          scheduleFrequencyRef.current === "Bi-Weekly" ||
+          scheduleFrequencyRef.current === "Monthly" ||
+          scheduleFrequencyRef.current === "One-Time"
+            ? scheduleFrequencyRef.current
+            : prev.frequency;
+        return {
+          ...prev,
+          step: "review",
+          frequency: restore,
+          recurringIntent: undefined,
+          recurringSetup: undefined,
+        };
+      });
+      return;
     }
     if (state.step === "review") {
       setAttemptedConfirm(false);
@@ -1571,12 +1642,22 @@ export function BookingFlowClient() {
       );
       return;
     }
-    setState((current) => ({
-      ...current,
-      recurringIntent: { type: "one_time" },
-      recurringSetup: undefined,
-      step: "confirm",
-    }));
+    setState((current) => {
+      const restore =
+        scheduleFrequencyRef.current === "Weekly" ||
+        scheduleFrequencyRef.current === "Bi-Weekly" ||
+        scheduleFrequencyRef.current === "Monthly" ||
+        scheduleFrequencyRef.current === "One-Time"
+          ? scheduleFrequencyRef.current
+          : current.frequency;
+      return {
+        ...current,
+        recurringIntent: { type: "one_time" },
+        recurringSetup: undefined,
+        frequency: restore,
+        step: "confirm",
+      };
+    });
   };
 
   const handleRecurringDecision = (cadence: RecurringCadence) => {

@@ -17,16 +17,45 @@ Deliver a guided booking experience that:
 
 (See `bookingSteps` in `bookingFlowData.ts`.)
 
+## URL serialization truth
+
+Implementation: `apps/web/src/components/marketing/precision-luxury/booking/bookingUrlState.ts` (`buildBookingSearchParams`, `parseBookingSearchParams`). Constants: `BOOKING_URL_SERIALIZATION` in `bookingProductContract.ts`.
+
+### One-time path (after decision)
+
+- `bookingPath=one_time` is always written on the one-time confirm path.
+- Legacy `frequency` continues to carry the **schedule row** from the questionnaire (typically `One-Time` for the deep-clean happy path).
+- `cadence` is omitted (no recurring cadence in URL).
+
+### Recurring path (decision → recurring_setup → confirm)
+
+- `bookingPath=recurring` and `cadence={weekly|biweekly|monthly}` are written as soon as the customer chooses a recurring cadence.
+- The `frequency` query param mirrors the **cadence label** (`Weekly`, `Bi-Weekly`, `Monthly`) so the URL never claims `frequency=One-Time` while the funnel is on a recurring path.
+- When recurring setup has a first anchor, `recAnchor=YYYY-MM-DD` and `recTime={morning|midday|afternoon|anytime}` are added so refresh / cold URL can rehydrate setup.
+- Funnel **in-memory** `state.frequency` remains the schedule row used for the locked **preview/submit** estimate key when a snapshot exists; URL hydration preserves that row when it still matches `buildBookingEstimateDrivingSignature` (so estimate snapshots are not cleared by canonical URL churn).
+
+### Precedence (legacy / contradictory query pairs)
+
+1. If `cadence` is present and valid, it defines recurring intent and **wins** over a stale `frequency=One-Time` and over `bookingPath=one_time` if both were ever present in a bad link.
+2. Else if `bookingPath=recurring`, recurring intent is implied; cadence is inferred from `frequency` when it maps to `Weekly` / `Bi-Weekly` / `Monthly`, otherwise it defaults to `weekly`.
+3. Else if `bookingPath=one_time`, one-time intent is explicit.
+4. Else recurring intent is not inferred from `frequency` alone (so `frequency=Weekly` on **schedule** / **review** stays a schedule row, not a recurring plan path).
+
+### Auth redirect resume
+
+- Before redirecting to `/customer/auth?redirect=/book`, the funnel persists JSON state under `sessionStorage` key `booking_flow_state`.
+- That payload must include `recurringIntent: { type: "recurring", cadence }` and recurring setup fields; the serializer must emit matching `bookingPath` / `cadence` / `frequency` / optional `recAnchor` / `recTime` when the client rebuilds the URL after restore.
+
 ## One-time path
 
 - **Guest-capable** through confirm for intake submit.
 - **Review** requires a successful estimate snapshot (`preview-estimate` + locked snapshot) before continue.
-- **Decision** offers one-time; choosing it sets `recurringIntent: { type: "one_time" }` and jumps to **confirm**.
+- **Decision** offers one-time; choosing it sets `recurringIntent: { type: "one_time" }` and jumps to **confirm** (URL writes `bookingPath=one_time` plus schedule `frequency`).
 - **Confirm** requires valid estimate snapshot and contact fields; submit calls `POST /api/v1/booking-direction-intake/submit` with DTO-allowed fields including optional **`bookingHandoff`**.
 
 ## Recurring path
 
-- **Decision** allows recurring cadence selection **without** forcing login at that moment.
+- **Decision** allows recurring cadence selection **without** forcing login at that moment (URL immediately writes `bookingPath=recurring` and `cadence`).
 - **recurring_setup** collects first-visit scheduling for plan creation (date, arrival preference, add-ons, notes).
 - **Confirm** shows recurring summary; **customer JWT** is required only when executing **`POST /recurring/plans`** (final action). Guests who reach confirm see sign-in handoff; state is restored from `sessionStorage` after auth via existing `BOOKING_FLOW_SESSION_KEY` restore on `/book` mount.
 - **bookingHandoff on intake** applies to **one-time intake submit** only. Recurring plan creation uses `CreateRecurringPlanRequest` / `intakeSnapshot` (separate contract); the funnel still mirrors recurring intent in UI summaries.
@@ -175,4 +204,4 @@ Exact copy:
 
 ---
 
-_Last updated: dispatch live roster + continuity inputs for assignment engine (v1)._
+_Last updated: booking URL serialization aligned with recurring vs one-time path truth._

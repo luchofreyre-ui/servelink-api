@@ -44,6 +44,12 @@ const EF = {
   addonIds: [] as string[],
 };
 
+function anchorDatePlusDays(days: number) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 function reviewUrl() {
   const qs = new URLSearchParams({
     step: "review",
@@ -97,6 +103,15 @@ test("booking: one-time confirm shows locked estimate line", async ({ page }) =>
   await expect(page.getByText("One-time cleaning").first()).toBeVisible();
   await expect(page.getByText(/Locked review estimate:/)).toBeVisible();
 
+  await expect
+    .poll(() => new URL(page.url()).searchParams.get("bookingPath"), { timeout: 15_000 })
+    .toBe("one_time");
+  const oneTimeUrl = new URL(page.url());
+  expect(oneTimeUrl.searchParams.get("frequency")).toBe("One-Time");
+  await expect(page.getByTestId("booking-debug-url-state-consistent")).toHaveText(
+    /true/,
+  );
+
   expect(previewRequestBody).toBeTruthy();
   expect(previewRequestBody).not.toHaveProperty("estimateFactors");
 });
@@ -134,4 +149,23 @@ test("booking: recurring cadence does not redirect before recurring_setup", asyn
   });
   expect(page.url()).toMatch(/\/book/);
   expect(page.url()).not.toMatch(/customer\/auth|auth\/login/);
+
+  const recurringSetupUrl = new URL(page.url());
+  expect(recurringSetupUrl.searchParams.get("frequency")).not.toBe("One-Time");
+  expect(recurringSetupUrl.searchParams.get("cadence")).toBe("weekly");
+  expect(recurringSetupUrl.searchParams.get("bookingPath")).toBe("recurring");
+  await expect(page.getByTestId("booking-debug-url-state-consistent")).toHaveText(/true/);
+
+  await page.locator("#recurring-next-anchor-date").fill(anchorDatePlusDays(14));
+  await page.getByRole("button", { name: "Continue" }).click();
+
+  await expect(page.getByRole("heading", { name: "Confirm and send" })).toBeVisible({
+    timeout: 30_000,
+  });
+  const recurringConfirmUrl = new URL(page.url());
+  expect(recurringConfirmUrl.searchParams.get("frequency")).not.toBe("One-Time");
+  expect(recurringConfirmUrl.searchParams.get("cadence")).toBe("weekly");
+  expect(recurringConfirmUrl.searchParams.get("bookingPath")).toBe("recurring");
+  expect(recurringConfirmUrl.searchParams.get("recAnchor")).toBeTruthy();
+  await expect(page.getByTestId("booking-debug-url-state-consistent")).toHaveText(/true/);
 });
