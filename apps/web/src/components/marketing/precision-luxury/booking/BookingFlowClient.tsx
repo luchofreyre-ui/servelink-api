@@ -57,9 +57,18 @@ import { hasRole } from "@/lib/auth/authClient";
 import {
   BookingFlowDebugPanel,
   type BookingFlowDebugState,
+  type BookingHomeRequirementDebugRow,
 } from "./BookingFlowDebugPanel";
 
 const BOOKING_FLOW_SESSION_KEY = "booking_flow_state";
+
+/** Field ids rendered by `BookingStepHomeDetails` (must match that component). */
+const HOME_STEP_RENDERED_FIELD_IDS = [
+  "homeSize",
+  "bedrooms",
+  "bathrooms",
+  "pets",
+] as const;
 
 function getDebugStepLabel(step: unknown): string {
   if (typeof step === "string" && step.trim()) return step;
@@ -75,6 +84,42 @@ function safeJsonLike(
   value: unknown,
 ): NonNullable<BookingFlowDebugState["pricePreview"]> {
   return value as NonNullable<BookingFlowDebugState["pricePreview"]>;
+}
+
+function hasMeaningfulValue(value: unknown): boolean {
+  if (value == null) return false;
+  if (typeof value === "string") return value.trim().length > 0;
+  if (typeof value === "number") return !Number.isNaN(value);
+  if (typeof value === "boolean") return true;
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === "object") return Object.keys(value).length > 0;
+  return false;
+}
+
+function normalizeHomeRequirement(
+  field: string,
+  required: boolean,
+  rendered: boolean,
+  value: unknown,
+  note?: string | null,
+): BookingHomeRequirementDebugRow {
+  const hasValue = hasMeaningfulValue(value);
+
+  const status: BookingHomeRequirementDebugRow["status"] = required
+    ? rendered && hasValue
+      ? "pass"
+      : "fail"
+    : "unknown";
+
+  return {
+    field,
+    required,
+    rendered,
+    hasValue,
+    value: safeJsonLike(value ?? null),
+    status,
+    note: note ?? null,
+  };
 }
 
 function hasAuthenticatedCustomerSession() {
@@ -332,6 +377,80 @@ export function BookingFlowClient() {
     [orderedStepIds, decisionEligible, recurringEligible],
   );
 
+  const homeRenderedFieldIds = useMemo(
+    () => [...HOME_STEP_RENDERED_FIELD_IDS],
+    [],
+  );
+
+  const homeValidationFailure =
+    state.step === "home" && stepError ? String(stepError) : null;
+
+  const homeRequirements = useMemo((): BookingHomeRequirementDebugRow[] => {
+    if (state.step !== "home") return [];
+
+    const ids = homeRenderedFieldIds;
+    const basicsComplete = Boolean(
+      state.homeSize && state.bedrooms && state.bathrooms,
+    );
+    const sqftOk = homeSizeHasValidSqftForEstimate(state.homeSize);
+    const homeSizeRendered = ids.includes("homeSize");
+
+    const homeSizeExplicitSqft: BookingHomeRequirementDebugRow = {
+      field: "homeSizeExplicitSqft",
+      required: true,
+      rendered: homeSizeRendered,
+      hasValue: sqftOk,
+      value: safeJsonLike(state.homeSize ?? null),
+      status: basicsComplete
+        ? homeSizeRendered && sqftOk
+          ? "pass"
+          : "fail"
+        : "unknown",
+      note: basicsComplete
+        ? "getStepError: homeSizeHasValidSqftForEstimate (300–20,000 sq ft from digits in home size text)."
+        : "Only evaluated after homeSize, bedrooms, and bathrooms are all non-empty per getStepError.",
+    };
+
+    return [
+      normalizeHomeRequirement(
+        "bedrooms",
+        true,
+        ids.includes("bedrooms"),
+        state.bedrooms,
+        "getStepError(home): bedrooms must be selected (non-empty).",
+      ),
+      normalizeHomeRequirement(
+        "bathrooms",
+        true,
+        ids.includes("bathrooms"),
+        state.bathrooms,
+        "getStepError(home): bathrooms must be selected (non-empty).",
+      ),
+      normalizeHomeRequirement(
+        "homeSize",
+        true,
+        ids.includes("homeSize"),
+        state.homeSize,
+        "getStepError(home): home size text must be non-empty before sqft parse.",
+      ),
+      homeSizeExplicitSqft,
+      normalizeHomeRequirement(
+        "pets",
+        false,
+        ids.includes("pets"),
+        state.pets,
+        "Optional in UI; not required by getStepError on home.",
+      ),
+    ];
+  }, [
+    state.step,
+    state.homeSize,
+    state.bedrooms,
+    state.bathrooms,
+    state.pets,
+    homeRenderedFieldIds,
+  ]);
+
   const bookingDebugState = useMemo<BookingFlowDebugState>(() => {
     const recurringIntent = state.recurringIntent;
     let selectedDecisionLabel: string | null = null;
@@ -420,6 +539,10 @@ export function BookingFlowClient() {
       }),
       formSnapshot: safeJsonLike(state),
       payloadSnapshot: safeJsonLike(intakePayloadSnapshot),
+
+      homeRequirements,
+      homeRenderedFieldIds,
+      homeValidationFailure,
     };
   }, [
     pathname,
@@ -442,6 +565,9 @@ export function BookingFlowClient() {
     estimateStale,
     attributionQueryKey,
     isContactReady,
+    homeRequirements,
+    homeRenderedFieldIds,
+    homeValidationFailure,
   ]);
 
   useEffect(() => {
@@ -500,6 +626,24 @@ export function BookingFlowClient() {
     bookingDebugState.decisionEligible,
     bookingDebugState.recurringEligible,
     bookingDebugState.reviewReady,
+  ]);
+
+  useEffect(() => {
+    if (bookingDebugState.currentStep !== "home") return;
+
+    console.log("BOOKING_DEBUG_HOME_TRUTH", {
+      currentStep: bookingDebugState.currentStep,
+      homeValidationFailure: bookingDebugState.homeValidationFailure,
+      homeRenderedFieldIds: bookingDebugState.homeRenderedFieldIds,
+      homeRequirements: bookingDebugState.homeRequirements,
+      formSnapshot: bookingDebugState.formSnapshot,
+    });
+  }, [
+    bookingDebugState.currentStep,
+    bookingDebugState.homeValidationFailure,
+    bookingDebugState.homeRenderedFieldIds,
+    bookingDebugState.homeRequirements,
+    bookingDebugState.formSnapshot,
   ]);
 
   const contactPayloadKey = useMemo(() => {
@@ -1066,6 +1210,23 @@ export function BookingFlowClient() {
                 <div>decisionEligible: {String(bookingDebugState.decisionEligible)}</div>
                 <div>recurringEligible: {String(bookingDebugState.recurringEligible)}</div>
               </div>
+
+              {bookingDebugState.currentStep === "home" ? (
+                <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-950">
+                  <div className="mb-1 font-semibold">Home Step Truth</div>
+                  <div>
+                    homeValidationFailure:{" "}
+                    {bookingDebugState.homeValidationFailure ?? "null"}
+                  </div>
+                  <div>
+                    homeRenderedFieldIds:{" "}
+                    {(bookingDebugState.homeRenderedFieldIds ?? []).join(", ")}
+                  </div>
+                  <pre className="mt-2 overflow-x-auto whitespace-pre-wrap">
+                    {JSON.stringify(bookingDebugState.homeRequirements, null, 2)}
+                  </pre>
+                </div>
+              ) : null}
 
               <BookingServiceHandoffCard serviceId={state.serviceId} />
 

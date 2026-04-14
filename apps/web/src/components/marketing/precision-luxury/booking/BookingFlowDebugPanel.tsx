@@ -8,6 +8,16 @@ type JsonLike =
   | JsonLike[]
   | { [key: string]: JsonLike };
 
+export type BookingHomeRequirementDebugRow = {
+  field: string;
+  required: boolean;
+  rendered: boolean;
+  hasValue: boolean;
+  value: JsonLike;
+  status: "pass" | "fail" | "unknown";
+  note?: string | null;
+};
+
 export type BookingFlowDebugState = {
   flowVersion: string;
   pathname?: string | null;
@@ -45,6 +55,10 @@ export type BookingFlowDebugState = {
   estimatePipeline?: JsonLike;
   formSnapshot?: JsonLike;
   payloadSnapshot?: JsonLike;
+
+  homeRequirements?: BookingHomeRequirementDebugRow[];
+  homeRenderedFieldIds?: string[];
+  homeValidationFailure?: string | null;
 };
 
 function pretty(value: unknown) {
@@ -106,6 +120,20 @@ export function BookingFlowDebugPanel({
           <Row label="homeSize" value={state.homeSize} />
           <Row label="bedrooms" value={state.bedrooms} />
           <Row label="bathrooms" value={state.bathrooms} />
+        </div>
+
+        <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="mb-2 text-sm font-semibold text-white">Home Step Truth</div>
+
+          <Row label="homeValidationFailure" value={state.homeValidationFailure} />
+          <Row
+            label="homeRenderedFieldIds"
+            value={(state.homeRenderedFieldIds ?? []).join(", ")}
+          />
+
+          <pre className="mt-3 overflow-x-auto whitespace-pre-wrap text-white/90">
+            {pretty(state.homeRequirements)}
+          </pre>
         </div>
 
         <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3">
