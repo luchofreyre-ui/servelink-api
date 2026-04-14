@@ -2416,6 +2416,9 @@ model BookingDirectionIntake {
   /// Structured schedule / cleaner / recurring intent from the public funnel (`bookingHandoff` DTO).
   bookingHandoff Json?
 
+  /// Assignment constraints + first-pass capacity evaluation (intake bridge).
+  assignmentExecution Json?
+
   createdAt DateTime @default(now())
 
   @@index([createdAt])

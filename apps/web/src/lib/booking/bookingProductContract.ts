@@ -38,6 +38,17 @@ export type ConfirmRequirement =
   | "schedule_complete"
   | "cleaner_rule_satisfied";
 
+/** First-pass server assignment / capacity outcomes (see API dispatch module + intake bridge). */
+export const ASSIGNMENT_CAPACITY_ENGINE = {
+  version: "v1_first_pass" as const,
+  decisionStatuses: [
+    "assignable",
+    "needs_review",
+    "deferred",
+    "unassignable",
+  ] as const,
+} as const;
+
 export const BOOKING_PRODUCT_CONTRACT = {
   canonicalStepOrder: [
     "service",

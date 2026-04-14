@@ -75,6 +75,7 @@ export class BookingDirectionIntakeService {
         deepCleanProgram: row.deepCleanProgram,
         hasEstimateFactors: row.estimateFactors != null,
         bookingHandoff: row.bookingHandoff ?? null,
+        assignmentExecution: row.assignmentExecution ?? null,
         customerName: row.customerName,
         customerEmail: row.customerEmail,
         source: row.source,

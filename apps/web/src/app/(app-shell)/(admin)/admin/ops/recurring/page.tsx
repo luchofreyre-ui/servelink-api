@@ -112,6 +112,35 @@ export default async function AdminRecurringOpsPage() {
         </section>
 
         <section
+          aria-labelledby="recurring-assignment-continuity"
+          className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+        >
+          <h2
+            id="recurring-assignment-continuity"
+            className="text-lg font-semibold text-gray-900"
+          >
+            Continuity, cleaners, and execution
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Recurring plans may carry <code className="rounded bg-gray-100 px-1 font-mono text-xs">preferredFoId</code>{" "}
+            and cadence from customer setup. Continuity with a prior provider is{" "}
+            <strong className="font-medium text-gray-900">attempted, not guaranteed</strong>. The
+            v1 assignment engine runs on one-time booking-direction intake when the bridge creates a
+            booking; recurring occurrence assignment still follows recurring + dispatch workflows.
+            See{" "}
+            <Link
+              href="/admin/booking-direction-intakes"
+              className="font-mono text-blue-700 hover:underline"
+            >
+              /admin/booking-direction-intakes
+            </Link>{" "}
+            for <code className="rounded bg-gray-100 px-1 font-mono text-xs">bookingHandoff</code> and{" "}
+            <code className="rounded bg-gray-100 px-1 font-mono text-xs">assignmentExecution</code>{" "}
+            when stored.
+          </p>
+        </section>
+
+        <section
           aria-labelledby="recurring-customer-surface"
           className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
         >

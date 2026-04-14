@@ -84,6 +84,15 @@ Optional nested object (all sub-fields optional at validation level; the web fun
 - **Persistence:** `BookingDirectionIntake.bookingHandoff` (`JSONB` / Prisma `Json`).
 - **Bridge:** `IntakeBookingBridgeService` appends the same JSON under `--- SERVELINK_BOOKING_HANDOFF_JSON ---` on **`Booking.notes`** when a booking is created from intake.
 
+## Assignment & capacity execution (v1 first pass)
+
+- **Contract (API):** `services/api/src/modules/dispatch/assignment-capacity.contract.ts` — `AssignmentConstraintSet`, `CapacityEvaluationResult`, `ASSIGNMENT_REASON_CODES`, statuses `assignable` | `needs_review` | `deferred` | `unassignable`.
+- **Mapper:** `assignment-constraint.mapper.ts` — `mapBookingHandoffToAssignmentConstraints` (never throws; merges intake `preferredTime` when handoff omits it).
+- **Evaluator:** `assignment-capacity.evaluator.ts` — `evaluateAssignmentCapacity`. Roster-aware checks run only when `availableCleaners` is **provided**; the intake bridge currently calls the evaluator **without** a roster so preferred-cleaner ID verification defers to **needs_review** + `manual_review_required` instead of guessing availability.
+- **Persistence:** `BookingDirectionIntake.assignmentExecution` JSON (`{ constraints, evaluation }`). **`Booking.notes`** also receives `--- SERVELINK_ASSIGNMENT_EXECUTION_JSON ---` after the handoff block when a booking is created.
+- **Dispatch control:** Non-`assignable` outcomes set `BookingDispatchControl.reviewRequired` with `reviewSource=intake_assignment_capacity_v1` for command-center visibility.
+- **Honesty:** Runtime scheduling remains **preference_only**; cleaner preference is a **constraint**, not a guaranteed assignment; recurring continuity is **attempted** when roster + context exist — not promised on every path.
+
 ## Scheduling contract
 
 - **Legacy wire columns:** `frequency` + `preferredTime` on the intake DTO (unchanged).
@@ -117,9 +126,9 @@ Exact copy:
 
 ## Admin / operator visibility surfaces
 
-- **`/admin/ops/recurring`:** recurring ops summary, route manifest, funnel vs intake note.
-- **`/admin/booking-direction-intakes`:** intake list includes a **Handoff** column when `bookingHandoff` is present; full JSON is returned by `GET /api/v1/admin/booking-direction-intakes` per row.
-- **Booking record:** operators can read appended **`SERVELINK_BOOKING_HANDOFF_JSON`** block on `Booking.notes` for intakes that created a booking.
+- **`/admin/ops/recurring`:** recurring ops summary, route manifest, funnel vs intake note, and a static **Continuity, cleaners, and execution** section (truthful scope statement).
+- **`/admin/booking-direction-intakes`:** **Handoff** summary plus **Assignment**, **Reason codes**, and **Continuity / pref** columns driven by `assignmentExecution` when the bridge has run; API returns full JSON per row.
+- **Booking record:** operators can read **`SERVELINK_BOOKING_HANDOFF_JSON`** and **`SERVELINK_ASSIGNMENT_EXECUTION_JSON`** blocks on `Booking.notes` when a booking is created from intake.
 
 ## Customer lifecycle surfaces
 
@@ -132,6 +141,7 @@ Exact copy:
 |------|-----------|
 | Review preview loading guard | `booking-review-loading-race.spec.ts` |
 | One-time → confirm + submit `bookingHandoff`, no `estimateFactors` on wire | `booking-one-time-happy-path.spec.ts` |
+| Assignment mapper + evaluator (API unit) | `assignment-capacity.mapper-evaluator.spec.ts` |
 | Recurring guest through setup → confirm auth handoff | `booking-recurring-auth-gate.spec.ts` |
 | Recurring + one-time smoke | `booking-recurring-path.spec.ts` |
 | Confirm without snapshot blocked | `booking-confirm-without-snapshot.spec.ts` |
@@ -153,4 +163,4 @@ Exact copy:
 
 ---
 
-_Last updated: booking scheduling + dispatch handoff integration drop._
+_Last updated: assignment + capacity execution engine (v1) drop._

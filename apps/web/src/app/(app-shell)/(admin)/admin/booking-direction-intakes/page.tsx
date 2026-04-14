@@ -17,6 +17,7 @@ type IntakeRow = {
   deepCleanProgram: string | null;
   hasEstimateFactors?: boolean;
   bookingHandoff?: unknown;
+  assignmentExecution?: unknown;
   customerName: string | null;
   customerEmail: string | null;
   source: string | null;
@@ -39,6 +40,34 @@ function handoffSummary(h: unknown): string {
   const cMode = typeof cleaner?.mode === "string" ? cleaner.mode : "";
   const parts = [mode && `sched:${mode}`, cMode && `cleaner:${cMode}`].filter(Boolean);
   return parts.length ? parts.join(" · ") : "present";
+}
+
+function assignmentEngineColumns(ex: unknown): {
+  status: string;
+  reasons: string;
+  continuity: string;
+} {
+  if (ex == null || typeof ex !== "object") {
+    return {
+      status: "—",
+      reasons: "No evaluation stored (legacy intake or pre-engine row).",
+      continuity: "—",
+    };
+  }
+  const o = ex as Record<string, unknown>;
+  const ev = o.evaluation as Record<string, unknown> | undefined;
+  const status = typeof ev?.status === "string" ? ev.status : "—";
+  const rc = ev?.reasonCodes;
+  const reasons =
+    Array.isArray(rc) && rc.length ? rc.slice(0, 8).join(", ") : "(none)";
+  const parts: string[] = [];
+  if (ev?.matchedPreferredCleaner === true) parts.push("preferred match");
+  if (ev?.recurringContinuityCandidate === true) parts.push("continuity candidate");
+  return {
+    status,
+    reasons,
+    continuity: parts.length ? parts.join(" · ") : "—",
+  };
 }
 
 export default function AdminBookingDirectionIntakesPage() {
@@ -116,7 +145,9 @@ export default function AdminBookingDirectionIntakesPage() {
               <strong className="font-semibold text-white/90">
                 not committed bookings
               </strong>
-              — intent only, for ops follow-up.
+              — intent only, for ops follow-up. Rows created after the assignment engine
+              drop include <strong className="font-semibold text-white/90">assignmentExecution</strong>{" "}
+              (constraints + first-pass capacity outcome) when the intake bridge ran.
             </p>
           </div>
           <Link
@@ -159,6 +190,9 @@ export default function AdminBookingDirectionIntakesPage() {
                     <th className="px-4 py-3 font-medium">Home</th>
                     <th className="px-4 py-3 font-medium">Schedule</th>
                     <th className="px-4 py-3 font-medium">Handoff</th>
+                    <th className="px-4 py-3 font-medium">Assignment</th>
+                    <th className="px-4 py-3 font-medium">Reason codes</th>
+                    <th className="px-4 py-3 font-medium">Continuity / pref</th>
                     <th className="px-4 py-3 font-medium">Contact</th>
                     <th className="px-4 py-3 font-medium">Attribution</th>
                   </tr>
@@ -167,14 +201,16 @@ export default function AdminBookingDirectionIntakesPage() {
                   {items.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={9}
+                        colSpan={12}
                         className="px-4 py-8 text-center text-slate-500"
                       >
                         No booking direction intakes yet.
                       </td>
                     </tr>
                   ) : (
-                    items.map((row) => (
+                    items.map((row) => {
+                      const ax = assignmentEngineColumns(row.assignmentExecution);
+                      return (
                       <tr
                         key={row.intakeId}
                         className="align-top text-slate-200 hover:bg-white/[0.02]"
@@ -207,6 +243,15 @@ export default function AdminBookingDirectionIntakesPage() {
                         </td>
                         <td className="max-w-[180px] px-4 py-3 text-xs leading-relaxed text-slate-400">
                           {handoffSummary(row.bookingHandoff)}
+                        </td>
+                        <td className="max-w-[120px] whitespace-nowrap px-4 py-3 font-mono text-[11px] text-amber-100/90">
+                          {ax.status}
+                        </td>
+                        <td className="max-w-[200px] px-4 py-3 text-[11px] leading-relaxed text-slate-400">
+                          {ax.reasons}
+                        </td>
+                        <td className="max-w-[160px] px-4 py-3 text-[11px] leading-relaxed text-slate-400">
+                          {ax.continuity}
                         </td>
                         <td className="max-w-[200px] px-4 py-3 text-xs leading-relaxed text-slate-300">
                           {row.customerName || row.customerEmail ? (
@@ -244,7 +289,8 @@ export default function AdminBookingDirectionIntakesPage() {
                           ) : null}
                         </td>
                       </tr>
-                    ))
+                    );
+                    })
                   )}
                 </tbody>
               </table>

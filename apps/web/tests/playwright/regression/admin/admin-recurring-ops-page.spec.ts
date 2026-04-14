@@ -17,5 +17,9 @@ test.describe("admin recurring ops page", () => {
     await expect(
       page.getByRole("heading", { name: "Public booking funnel vs intake API" }),
     ).toBeVisible();
+
+    await expect(
+      page.getByRole("heading", { name: "Continuity, cleaners, and execution" }),
+    ).toBeVisible();
   });
 });

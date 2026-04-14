@@ -55,7 +55,7 @@ export function BookingStepConfirm({ state }: Props) {
     <BookingSectionCard
       eyebrow="Step 8"
       title="Confirm and send"
-      body="Your estimate is locked from the review step. Confirm your plan choice, then submit your booking direction."
+      body="Your estimate is locked from the review step. Confirm your plan choice, then submit your booking direction. We’ll use your timing preferences to finalize scheduling (preference-based today — not a guaranteed exact slot until availability is wired end-to-end). If you requested a preferred cleaner, we’ll prioritize that team when available; assignment still follows capacity and ops review when needed."
     >
       <div className="space-y-4">
         <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">

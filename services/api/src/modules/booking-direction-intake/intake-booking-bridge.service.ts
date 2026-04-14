@@ -16,6 +16,8 @@ import {
   mapIntakeToEstimateInput,
 } from "./intake-to-estimate.mapper";
 import { defaultIntakeQuestionnaireFactors } from "./intake-default-questionnaire";
+import { evaluateAssignmentCapacity } from "../dispatch/assignment-capacity.evaluator";
+import { mapBookingHandoffToAssignmentConstraints } from "../dispatch/assignment-constraint.mapper";
 
 export type DeepCleanProgramVisitSubmitDisplay = {
   visitIndex: number;
@@ -116,6 +118,29 @@ function appendPersistedBookingHandoffToDispatchNote(
   try {
     const block = JSON.stringify(bookingHandoff, null, 2);
     return `${baseNote}\n\n--- SERVELINK_BOOKING_HANDOFF_JSON ---\n${block}`;
+  } catch {
+    return baseNote;
+  }
+}
+
+/**
+ * Persists first-pass assignment/capacity evaluation alongside booking notes for ops/dispatch tools.
+ */
+function appendAssignmentExecutionToDispatchNote(
+  baseNote: string,
+  assignmentExecution: unknown,
+): string {
+  if (
+    assignmentExecution == null ||
+    (typeof assignmentExecution === "object" &&
+      assignmentExecution !== null &&
+      Object.keys(assignmentExecution as object).length === 0)
+  ) {
+    return baseNote;
+  }
+  try {
+    const block = JSON.stringify(assignmentExecution, null, 2);
+    return `${baseNote}\n\n--- SERVELINK_ASSIGNMENT_EXECUTION_JSON ---\n${block}`;
   } catch {
     return baseNote;
   }
@@ -226,6 +251,27 @@ export class IntakeBookingBridgeService {
 
     const customerId = customerResolution.customerId;
 
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingId: null,
+      intakeId: intake.id,
+      bookingHandoff: intake.bookingHandoff,
+      intakePreferredTime: intake.preferredTime,
+      intakeFrequency: intake.frequency,
+    });
+    const evaluation = evaluateAssignmentCapacity({
+      constraints,
+      availableCleaners: undefined,
+      recurringContext: undefined,
+    });
+    const assignmentExecution = { constraints, evaluation };
+
+    await this.prisma.bookingDirectionIntake.update({
+      where: { id: intake.id },
+      data: {
+        assignmentExecution: assignmentExecution as object,
+      },
+    });
+
     let estimateInput;
     try {
       estimateInput = mapIntakeToEstimateInput(intake);
@@ -258,9 +304,12 @@ export class IntakeBookingBridgeService {
       noteParts.push(`customerName=${displayName}`);
     }
     const baseNote = noteParts.join(" | ");
-    const note = appendPersistedBookingHandoffToDispatchNote(
-      baseNote,
-      intake.bookingHandoff,
+    const note = appendAssignmentExecutionToDispatchNote(
+      appendPersistedBookingHandoffToDispatchNote(
+        baseNote,
+        intake.bookingHandoff,
+      ),
+      assignmentExecution,
     );
 
     try {
@@ -303,6 +352,36 @@ export class IntakeBookingBridgeService {
       const deepCleanProgram = estimate.deepCleanProgram
         ? mapDeepCleanProgramForSubmitResponse(estimate.deepCleanProgram)
         : null;
+
+      if (
+        evaluation.status === "needs_review" ||
+        evaluation.status === "deferred" ||
+        evaluation.status === "unassignable"
+      ) {
+        const reasonSnippet = evaluation.reasonCodes.slice(0, 8).join(",");
+        await this.prisma.bookingDispatchControl.upsert({
+          where: { bookingId: booking.id },
+          update: {
+            reviewRequired: true,
+            reviewReason: `assignment_engine:${evaluation.status}:${reasonSnippet}`.slice(
+              0,
+              480,
+            ),
+            reviewSource: "intake_assignment_capacity_v1",
+            reviewRequestedAt: new Date(),
+          },
+          create: {
+            bookingId: booking.id,
+            reviewRequired: true,
+            reviewReason: `assignment_engine:${evaluation.status}:${reasonSnippet}`.slice(
+              0,
+              480,
+            ),
+            reviewSource: "intake_assignment_capacity_v1",
+            reviewRequestedAt: new Date(),
+          },
+        });
+      }
 
       return {
         kind: "booking_direction_intake_submit",
