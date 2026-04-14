@@ -4,6 +4,161 @@ import { buildSubmitBookingDirectionPayload } from "./bookingIntakePayload";
 import type { BookingDirectionOutboundPayload } from "./bookingDirectionIntakeApi";
 import { buildEstimateFactorsPayload } from "./bookingEstimateFactors";
 
+/**
+ * Canonical list of recurring HTTP routes implemented in the API layer
+ * (`RecurringController`, `RecurringOpsController`). Paths are relative to
+ * the versioned API base (`WEB_ENV.apiBaseUrl` → `/api/v1`).
+ *
+ * This is the operator-facing manifest when no separate manifest endpoint exists.
+ */
+export const RECURRING_API_DOCUMENTED_ROUTES = [
+  {
+    method: "GET" as const,
+    path: "/recurring",
+    controller: "RecurringController",
+    notes: "Root probe; JWT with admin or customer role.",
+  },
+  {
+    method: "GET" as const,
+    path: "/recurring/debug/routes",
+    controller: "RecurringController",
+    notes: "Debug reachability; JWT with admin or customer role.",
+  },
+  {
+    method: "POST" as const,
+    path: "/recurring/plans",
+    controller: "RecurringController",
+    notes: "Create recurring plan (customer JWT).",
+  },
+  {
+    method: "GET" as const,
+    path: "/recurring/plans/me",
+    controller: "RecurringController",
+    notes: "List plans for authenticated customer.",
+  },
+  {
+    method: "POST" as const,
+    path: "/recurring/plans/:planId/next-occurrence/skip",
+    controller: "RecurringController",
+    notes: "Skip next occurrence for plan owner.",
+  },
+  {
+    method: "GET" as const,
+    path: "/recurring/plans/:planId/next-occurrence",
+    controller: "RecurringController",
+  },
+  {
+    method: "PATCH" as const,
+    path: "/recurring/plans/:planId/next-occurrence",
+    controller: "RecurringController",
+  },
+  {
+    method: "GET" as const,
+    path: "/recurring/plans/:planId",
+    controller: "RecurringController",
+  },
+  {
+    method: "PATCH" as const,
+    path: "/recurring/plans/:planId",
+    controller: "RecurringController",
+  },
+  {
+    method: "GET" as const,
+    path: "/recurring/ops/summary",
+    controller: "RecurringOpsController",
+    notes: "Admin reliability guard; admin JWT.",
+  },
+  {
+    method: "GET" as const,
+    path: "/recurring/ops/exhausted",
+    controller: "RecurringOpsController",
+    notes: "Admin reliability guard; optional `limit` query.",
+  },
+] as const;
+
+export type RecurringHttpProbeResult = {
+  ok: boolean;
+  status: number;
+  data: unknown;
+};
+
+async function readJsonBody(response: Response): Promise<unknown> {
+  const text = await response.text();
+  if (!text) return null;
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return text;
+  }
+}
+
+/** `GET /api/v1/recurring` — root probe (admin or customer JWT). */
+export async function getRecurringRoot(): Promise<RecurringHttpProbeResult> {
+  const response = await apiFetch("/recurring", {
+    method: "GET",
+    credentials: "include",
+  });
+  return {
+    ok: response.ok,
+    status: response.status,
+    data: await readJsonBody(response),
+  };
+}
+
+/** `GET /api/v1/recurring/debug/routes` — debug route listing (admin or customer JWT). */
+export async function getRecurringDebugRoutes(): Promise<RecurringHttpProbeResult> {
+  const response = await apiFetch("/recurring/debug/routes", {
+    method: "GET",
+    credentials: "include",
+  });
+  return {
+    ok: response.ok,
+    status: response.status,
+    data: await readJsonBody(response),
+  };
+}
+
+export type RecurringManifest = {
+  documentedRoutes: typeof RECURRING_API_DOCUMENTED_ROUTES;
+  /** Present when `includeLiveProbes` is true; reflects the current session JWT. */
+  liveProbes?: {
+    root: RecurringHttpProbeResult;
+    debugRoutes: RecurringHttpProbeResult;
+  };
+};
+
+/**
+ * Single recurring contract object for the web layer: static route truth plus
+ * optional live probes for root and debug endpoints only.
+ */
+export async function getRecurringManifest(options?: {
+  includeLiveProbes?: boolean;
+}): Promise<RecurringManifest> {
+  if (!options?.includeLiveProbes) {
+    return { documentedRoutes: RECURRING_API_DOCUMENTED_ROUTES };
+  }
+  const [root, debugRoutes] = await Promise.all([
+    getRecurringRoot(),
+    getRecurringDebugRoutes(),
+  ]);
+  return {
+    documentedRoutes: RECURRING_API_DOCUMENTED_ROUTES,
+    liveProbes: { root, debugRoutes },
+  };
+}
+
+export type {
+  RecurringExhaustedRow,
+  RecurringOpsExhaustedResponse,
+  RecurringOpsSummaryItem,
+  RecurringOpsSummaryResponse,
+} from "@/lib/api/recurringOps";
+
+export {
+  getRecurringOpsExhausted,
+  getRecurringOpsSummary,
+} from "@/lib/api/recurringOps";
+
 export type CreateRecurringPlanRequest = {
   cadence: RecurringCadence;
   serviceType: string;

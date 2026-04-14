@@ -517,7 +517,32 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
         </div>
       </section>
 
-      <RecurringSystemProbe />
+      <DashboardCard eyebrow="Recurring" title="Recurring Operations">
+        <p className="text-sm text-slate-400">
+          Live recurring health, documented HTTP routes, ops metrics, and exhausted occurrences.
+          Use this before the lightweight probe below.
+        </p>
+        <div className="mt-4">
+          <Link
+            href="/admin/ops/recurring"
+            className="inline-flex rounded-xl border border-teal-400/30 bg-teal-500/10 px-4 py-2 text-sm font-semibold text-teal-100 hover:bg-teal-500/20"
+          >
+            Open recurring operations
+          </Link>
+        </div>
+      </DashboardCard>
+
+      <section
+        className="rounded-2xl border border-slate-700/80 bg-slate-950/40 p-5"
+        aria-label="Recurring diagnostics probe"
+      >
+        <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+          Diagnostics (quick probe)
+        </p>
+        <div className="mt-3">
+          <RecurringSystemProbe />
+        </div>
+      </section>
 
       {children}
 

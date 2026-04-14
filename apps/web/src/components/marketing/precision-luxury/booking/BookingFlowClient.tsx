@@ -320,7 +320,7 @@ function getStepError(
     state.recurringIntent?.type === "recurring" &&
     !isRecurringSetupComplete(state.recurringSetup)
   ) {
-    return "Choose your first visit date and preferred arrival window before continuing.";
+    return "Please complete your recurring setup before continuing.";
   }
 
   if (state.step === "confirm" && !state.estimateSnapshot) {
@@ -439,6 +439,12 @@ export function BookingFlowClient() {
     state.customerName,
     state.customerEmail,
   );
+  const isRecurringConfirmReady = useMemo(() => {
+    if (state.recurringIntent?.type !== "recurring") return true;
+    return Boolean(
+      state.recurringSetup && isRecurringSetupComplete(state.recurringSetup),
+    );
+  }, [state.recurringIntent, state.recurringSetup]);
   const canConfirmDirection = isBookingReady && isContactReady;
 
   const stepError = useMemo(
@@ -1387,9 +1393,7 @@ export function BookingFlowClient() {
       }
       const setupResolved = state.recurringSetup;
       if (!setupResolved || !isRecurringSetupComplete(setupResolved)) {
-        setSubmitError(
-          "Complete recurring setup: first visit date and arrival window.",
-        );
+        setSubmitError("Please complete your recurring setup before continuing.");
         return;
       }
       const nextAnchorAt = toNextAnchorIso(
@@ -1833,6 +1837,8 @@ export function BookingFlowClient() {
               state.recurringSetup &&
               state.recurringIntent?.type === "recurring" ? (
                 <BookingStepRecurringSetup
+                  cadence={state.recurringIntent.cadence}
+                  estimateSnapshot={state.estimateSnapshot ?? null}
                   value={state.recurringSetup}
                   foOptions={[]}
                   addonOptions={recurringAddonOptions}
@@ -1878,7 +1884,8 @@ export function BookingFlowClient() {
                     type="button"
                     disabled={
                       isSubmitting ||
-                      !state.estimateSnapshot
+                      !state.estimateSnapshot ||
+                      !isRecurringConfirmReady
                     }
                     onClick={() => void confirmBookingDirection()}
                     className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-70"
@@ -1922,6 +1929,15 @@ export function BookingFlowClient() {
                     className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
                   >
                     Please add your name and a valid email before confirming.
+                  </p>
+                ) : attemptedConfirm &&
+                  state.recurringIntent?.type === "recurring" &&
+                  !isRecurringConfirmReady ? (
+                  <p
+                    ref={errorRef}
+                    className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
+                  >
+                    Please complete your recurring setup before continuing.
                   </p>
                 ) : null
               ) : state.step === "review" ? (

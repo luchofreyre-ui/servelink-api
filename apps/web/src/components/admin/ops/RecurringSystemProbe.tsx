@@ -1,6 +1,9 @@
 "use client";
 
-import { WEB_ENV } from "@/lib/env";
+import {
+  getRecurringDebugRoutes,
+  getRecurringRoot,
+} from "@/components/marketing/precision-luxury/booking/bookingRecurringApi";
 
 export function RecurringSystemProbe() {
   return (
@@ -15,12 +18,9 @@ export function RecurringSystemProbe() {
         <button
           type="button"
           onClick={async () => {
-            const res = await fetch(`${WEB_ENV.apiBaseUrl}/recurring`, {
-              credentials: "include",
-            });
-            const data = await res.json();
-            console.log("RECURRING ROOT:", { status: res.status, data });
-            alert(JSON.stringify({ status: res.status, data }, null, 2));
+            const result = await getRecurringRoot();
+            console.log("RECURRING ROOT:", result);
+            alert(JSON.stringify(result, null, 2));
           }}
           className="rounded bg-black px-3 py-2 text-white"
         >
@@ -30,12 +30,9 @@ export function RecurringSystemProbe() {
         <button
           type="button"
           onClick={async () => {
-            const res = await fetch(`${WEB_ENV.apiBaseUrl}/recurring/debug/routes`, {
-              credentials: "include",
-            });
-            const data = await res.json();
-            console.log("RECURRING DEBUG:", { status: res.status, data });
-            alert(JSON.stringify({ status: res.status, data }, null, 2));
+            const result = await getRecurringDebugRoutes();
+            console.log("RECURRING DEBUG:", result);
+            alert(JSON.stringify(result, null, 2));
           }}
           className="rounded bg-black px-3 py-2 text-white"
         >
