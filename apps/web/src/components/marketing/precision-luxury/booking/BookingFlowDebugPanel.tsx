@@ -71,6 +71,7 @@ export type BookingFlowDebugState = {
   previewRequestAttempted?: boolean | null;
   previewResponseOk?: boolean | null;
   previewResponseStatus?: number | null;
+  previewSource?: string | null;
 };
 
 function pretty(value: unknown) {
@@ -128,6 +129,7 @@ export function BookingFlowDebugPanel({
           <Row label="previewRequestAttempted" value={state.previewRequestAttempted} />
           <Row label="previewResponseOk" value={state.previewResponseOk} />
           <Row label="previewResponseStatus" value={state.previewResponseStatus} />
+          <Row label="previewSource" value={state.previewSource} />
           <Row
             label="estimateFactorsInPreviewPayload"
             value={state.estimateFactorsPresentInPreviewPayload}

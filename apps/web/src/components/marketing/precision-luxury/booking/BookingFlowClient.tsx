@@ -66,6 +66,14 @@ import {
 
 const BOOKING_FLOW_SESSION_KEY = "booking_flow_state";
 
+type BookingPreviewDebugSource = "idle" | "network" | "cache_reuse" | "error";
+
+type LastSuccessfulPreviewNetworkDebug = {
+  ok: boolean;
+  status: number;
+  snapshot: unknown;
+};
+
 /** Field ids rendered by `BookingStepHomeDetails` (must match that component). */
 const HOME_STEP_RENDERED_FIELD_IDS = [
   "homeSize",
@@ -274,13 +282,16 @@ function getStepError(
 
   if (state.step === "review") {
     if (reviewPreview?.isBookingReady) {
-      if (reviewPreview.previewLoading || !reviewPreview.previewFetchCompleted) {
+      if (reviewPreview.previewLoading) {
         return "Your estimate is still loading. Please wait before continuing.";
       }
       if (reviewPreview.previewError) {
         return "We could not load your estimate. Please review your details and try again.";
       }
       if (!state.estimateSnapshot) {
+        if (!reviewPreview.previewFetchCompleted) {
+          return "Your estimate is still loading. Please wait before continuing.";
+        }
         return "Your estimate snapshot is missing. Go back to review and wait for the estimate to load.";
       }
     }
@@ -340,6 +351,13 @@ export function BookingFlowClient() {
     useState<number | null>(null);
   const [debugPreviewResponseOk, setDebugPreviewResponseOk] =
     useState<boolean | null>(null);
+  const [debugPreviewSource, setDebugPreviewSource] =
+    useState<BookingPreviewDebugSource>("idle");
+  const [reviewNavigationBlock, setReviewNavigationBlock] = useState<
+    string | null
+  >(null);
+  const lastSuccessfulPreviewNetworkRef =
+    useRef<LastSuccessfulPreviewNetworkDebug | null>(null);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
   const skipUrlSearchParamsHydration = useRef(0);
 
@@ -676,6 +694,7 @@ export function BookingFlowClient() {
       previewRequestAttempted: debugPreviewRequestAttempted,
       previewResponseOk: debugPreviewResponseOk,
       previewResponseStatus: debugPreviewResponseStatus,
+      previewSource: debugPreviewSource,
     };
   }, [
     pathname,
@@ -712,6 +731,7 @@ export function BookingFlowClient() {
     debugPreviewRequestAttempted,
     debugPreviewResponseOk,
     debugPreviewResponseStatus,
+    debugPreviewSource,
   ]);
 
   useEffect(() => {
@@ -810,6 +830,7 @@ export function BookingFlowClient() {
       currentStep: bookingDebugState.currentStep,
       previewResponseOk: bookingDebugState.previewResponseOk,
       previewResponseStatus: bookingDebugState.previewResponseStatus,
+      previewSource: bookingDebugState.previewSource,
       previewResponseSnapshot: bookingDebugState.previewResponseSnapshot,
       estimateSnapshotPresent: bookingDebugState.estimateSnapshotPresent,
     });
@@ -817,6 +838,7 @@ export function BookingFlowClient() {
     bookingDebugState.currentStep,
     bookingDebugState.previewResponseOk,
     bookingDebugState.previewResponseStatus,
+    bookingDebugState.previewSource,
     bookingDebugState.previewResponseSnapshot,
     bookingDebugState.estimateSnapshotPresent,
   ]);
@@ -873,6 +895,7 @@ export function BookingFlowClient() {
   useEffect(() => {
     if (
       (attemptedNext && stepError) ||
+      (attemptedNext && reviewNavigationBlock) ||
       (attemptedConfirm && !canConfirmDirection) ||
       Boolean(submitError) ||
       Boolean(previewError)
@@ -882,6 +905,7 @@ export function BookingFlowClient() {
   }, [
     attemptedNext,
     stepError,
+    reviewNavigationBlock,
     attemptedConfirm,
     canConfirmDirection,
     submitError,
@@ -895,6 +919,7 @@ export function BookingFlowClient() {
       setDebugPreviewRequestAttempted(false);
       setDebugPreviewResponseStatus(null);
       setDebugPreviewResponseOk(null);
+      setDebugPreviewSource("idle");
       return;
     }
 
@@ -909,6 +934,8 @@ export function BookingFlowClient() {
       setDebugPreviewRequestAttempted(false);
       setDebugPreviewResponseStatus(null);
       setDebugPreviewResponseOk(null);
+      setDebugPreviewSource("idle");
+      lastSuccessfulPreviewNetworkRef.current = null;
       setState((prev) =>
         prev.estimateSnapshot ? { ...prev, estimateSnapshot: null } : prev,
       );
@@ -932,15 +959,32 @@ export function BookingFlowClient() {
     if (state.estimateSnapshot?.previewRequestKey === previewRequestKey) {
       setDebugPreviewPayloadSnapshot(deepCloneForDebug(payload));
       setDebugPreviewRequestAttempted(true);
-      setDebugPreviewResponseSnapshot(
-        deepCloneForDebug({
-          skippedFetch: true,
-          reason: "estimateSnapshot.previewRequestKey matches previewRequestKey",
-          previewRequestKey,
-        }),
-      );
-      setDebugPreviewResponseStatus(null);
-      setDebugPreviewResponseOk(null);
+      setDebugPreviewSource("cache_reuse");
+
+      const prior = lastSuccessfulPreviewNetworkRef.current;
+      if (prior) {
+        setDebugPreviewResponseOk(prior.ok);
+        setDebugPreviewResponseStatus(prior.status);
+        setDebugPreviewResponseSnapshot(
+          deepCloneForDebug({
+            reusedSnapshot: true,
+            previewRequestKey,
+            lastSuccessfulPreview: prior.snapshot,
+          }),
+        );
+      } else {
+        setDebugPreviewResponseOk(true);
+        setDebugPreviewResponseStatus(200);
+        setDebugPreviewResponseSnapshot(
+          deepCloneForDebug({
+            reusedSnapshot: true,
+            previewRequestKey,
+            lastSuccessfulPreview: null,
+            note:
+              "No prior in-session network preview capture; inferred 200/OK from cached estimate snapshot.",
+          }),
+        );
+      }
 
       setPreviewEstimate({
         priceCents: state.estimateSnapshot.priceCents,
@@ -987,22 +1031,23 @@ export function BookingFlowClient() {
           parsedBody = { jsonParseFailed: true, rawPreviewText: text };
         }
 
-        setDebugPreviewResponseSnapshot(
-          deepCloneForDebug({
-            response: {
-              ok: response.ok,
-              status: response.status,
-              statusText: response.statusText,
-            },
-            body: parsedBody,
-            bodyTopLevelOk: safeOkFromUnknownResponse(parsedBody),
-            bodyTopLevelStatus: safeStatusFromUnknownResponse(parsedBody),
-          }),
-        );
+        const wireSnapshot = {
+          response: {
+            ok: response.ok,
+            status: response.status,
+            statusText: response.statusText,
+          },
+          body: parsedBody,
+          bodyTopLevelOk: safeOkFromUnknownResponse(parsedBody),
+          bodyTopLevelStatus: safeStatusFromUnknownResponse(parsedBody),
+        };
+        setDebugPreviewResponseSnapshot(deepCloneForDebug(wireSnapshot));
         setDebugPreviewResponseStatus(response.status);
         setDebugPreviewResponseOk(response.ok);
 
         if (!response.ok) {
+          setDebugPreviewSource("error");
+          lastSuccessfulPreviewNetworkRef.current = null;
           setPreviewEstimate(null);
           setPreviewDeepCleanCard(null);
           setState((prev) =>
@@ -1020,6 +1065,8 @@ export function BookingFlowClient() {
 
         const r = parsedBody as BookingDirectionEstimatePreviewResponse;
         if (!r?.estimate) {
+          setDebugPreviewSource("error");
+          lastSuccessfulPreviewNetworkRef.current = null;
           setPreviewEstimate(null);
           setPreviewDeepCleanCard(null);
           setState((prev) =>
@@ -1032,6 +1079,12 @@ export function BookingFlowClient() {
         const card = r.deepCleanProgram
           ? mapIntakeDeepCleanSnapshotToCardProgram(r.deepCleanProgram)
           : null;
+        setDebugPreviewSource("network");
+        lastSuccessfulPreviewNetworkRef.current = {
+          ok: response.ok,
+          status: response.status,
+          snapshot: wireSnapshot,
+        };
         setPreviewEstimate({
           priceCents: r.estimate.priceCents,
           durationMinutes: r.estimate.durationMinutes,
@@ -1054,6 +1107,8 @@ export function BookingFlowClient() {
         if (ac.signal.aborted) {
           return;
         }
+        setDebugPreviewSource("error");
+        lastSuccessfulPreviewNetworkRef.current = null;
         setDebugPreviewResponseSnapshot(
           deepCloneForDebug({
             error: e instanceof Error ? e.message : "Unknown preview request error",
@@ -1170,6 +1225,28 @@ export function BookingFlowClient() {
   function goNext() {
     setAttemptedNext(true);
 
+    if (state.step === "review") {
+      if (previewLoading) {
+        setReviewNavigationBlock(
+          "Your estimate is still loading. Please wait before continuing.",
+        );
+        return;
+      }
+      if (previewError) {
+        setReviewNavigationBlock(
+          "We could not load your estimate. Please review your details and try again.",
+        );
+        return;
+      }
+      if (!state.estimateSnapshot) {
+        setReviewNavigationBlock(
+          "Your estimate snapshot is missing. Go back to review and wait for the estimate to load.",
+        );
+        return;
+      }
+    }
+    setReviewNavigationBlock(null);
+
     console.log("BOOKING_DEBUG_NEXT", {
       currentStep: bookingDebugState.currentStep,
       canContinue: bookingDebugState.canContinue,
@@ -1197,13 +1274,13 @@ export function BookingFlowClient() {
   async function confirmBookingDirection() {
     setSubmitError(null);
     setAttemptedConfirm(true);
-    if (!isBookingReady || !isContactReady) return;
     if (!state.estimateSnapshot) {
       setSubmitError(
         "Your estimate snapshot is missing. Go back to review and wait for the estimate to load.",
       );
       return;
     }
+    if (!isBookingReady || !isContactReady) return;
 
     const attribution = buildBookingAttributionFromSearchParams(
       new URLSearchParams(searchParams?.toString() ?? ""),
@@ -1337,6 +1414,7 @@ export function BookingFlowClient() {
     });
 
     setAttemptedNext(false);
+    setReviewNavigationBlock(null);
 
     if (state.step === "confirm") {
       setAttemptedConfirm(false);
@@ -1365,6 +1443,7 @@ export function BookingFlowClient() {
 
   function patchState(patch: Partial<BookingFlowState>) {
     setAttemptedNext(false);
+    setReviewNavigationBlock(null);
     setAttemptedConfirm(false);
     setSubmitError(null);
     setState((prev) => {
@@ -1381,6 +1460,7 @@ export function BookingFlowClient() {
     patch: Partial<Pick<BookingFlowState, "customerName" | "customerEmail">>,
   ) {
     setSubmitError(null);
+    setReviewNavigationBlock(null);
     setState((prev) => ({
       ...prev,
       ...patch,
@@ -1515,6 +1595,9 @@ export function BookingFlowClient() {
                   previewResponseStatus: {String(bookingDebugState.previewResponseStatus)}
                 </div>
                 <div>
+                  previewSource: {bookingDebugState.previewSource ?? "null"}
+                </div>
+                <div>
                   estimateSnapshotPresent:{" "}
                   {String(bookingDebugState.estimateSnapshotPresent)}
                 </div>
@@ -1559,6 +1642,7 @@ export function BookingFlowClient() {
                   serviceId={state.serviceId}
                   onSelect={(serviceId) => {
                     setAttemptedNext(false);
+                    setReviewNavigationBlock(null);
                     setAttemptedConfirm(false);
                     setSubmitError(null);
                     setState((prev) => ({
@@ -1652,7 +1736,17 @@ export function BookingFlowClient() {
               ) : null}
 
               {state.step === "confirm" ? (
-                <BookingStepConfirm state={state} />
+                <>
+                  {!state.estimateSnapshot ? (
+                    <p
+                      className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4 font-[var(--font-manrope)] text-sm font-medium text-[#92400E]"
+                    >
+                      Your estimate snapshot is missing. Go back to review and wait
+                      for the estimate to load.
+                    </p>
+                  ) : null}
+                  <BookingStepConfirm state={state} />
+                </>
               ) : null}
 
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -1675,7 +1769,10 @@ export function BookingFlowClient() {
                 {state.step === "decision" ? null : state.step === "confirm" ? (
                   <button
                     type="button"
-                    disabled={isSubmitting}
+                    disabled={
+                      isSubmitting ||
+                      !state.estimateSnapshot
+                    }
                     onClick={() => void confirmBookingDirection()}
                     className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-70"
                   >
@@ -1728,6 +1825,13 @@ export function BookingFlowClient() {
                   >
                     {submitError}
                   </p>
+                ) : attemptedNext && reviewNavigationBlock ? (
+                  <p
+                    ref={errorRef}
+                    className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
+                  >
+                    {reviewNavigationBlock}
+                  </p>
                 ) : attemptedNext && stepError ? (
                   <p
                     ref={errorRef}
@@ -1736,6 +1840,13 @@ export function BookingFlowClient() {
                     {stepError}
                   </p>
                 ) : null
+              ) : state.step === "decision" && submitError ? (
+                <p
+                  ref={errorRef}
+                  className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
+                >
+                  {submitError}
+                </p>
               ) : attemptedNext && stepError ? (
                 <p
                   ref={errorRef}
