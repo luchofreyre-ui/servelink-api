@@ -19,9 +19,11 @@ import type {
   BookingFrequencyOption,
   BookingStepId,
   BookingTimeOption,
+  CleanerPreference,
   RecurringCadence,
   RecurringSetupState,
   RecurringTimePreference,
+  ScheduleSelection,
 } from "./bookingFlowTypes";
 import { BookingStepService } from "./BookingStepService";
 import { BookingStepHomeDetails } from "./BookingStepHomeDetails";
@@ -190,11 +192,6 @@ function normalizeHomeRequirement(
   };
 }
 
-function hasAuthenticatedCustomerSession() {
-  if (typeof window === "undefined") return false;
-  return hasRole("customer");
-}
-
 function createDefaultRecurringSetup(
   existingAddonIds: string[] = [],
 ): RecurringSetupState {
@@ -288,11 +285,13 @@ function getStepError(
     return "Please answer every job-detail question (including pet shedding when you have pets) before continuing.";
   }
 
-  if (
-    state.step === "schedule" &&
-    (!state.frequency || !state.preferredTime)
-  ) {
-    return "Please choose your preferred frequency and timing before continuing.";
+  if (state.step === "schedule") {
+    if (!state.frequency || !state.preferredTime) {
+      return "Please choose your preferred frequency and timing before continuing.";
+    }
+    if (!state.scheduleSelection?.mode) {
+      return "Please complete your scheduling details before continuing.";
+    }
   }
 
   if (state.step === "review") {
@@ -1386,8 +1385,14 @@ export function BookingFlowClient() {
 
     if (state.recurringIntent?.type === "recurring") {
       if (!hasRole("customer")) {
-        setSubmitError(
-          "Please sign in with your customer account to create a recurring plan.",
+        if (typeof window !== "undefined") {
+          window.sessionStorage.setItem(
+            BOOKING_FLOW_SESSION_KEY,
+            JSON.stringify(state),
+          );
+        }
+        router.push(
+          `/customer/auth?redirect=${encodeURIComponent("/book")}`,
         );
         return;
       }
@@ -1575,33 +1580,14 @@ export function BookingFlowClient() {
   };
 
   const handleRecurringDecision = (cadence: RecurringCadence) => {
-    setState((prev) => {
-      const next: BookingFlowState = {
-        ...prev,
-        recurringIntent: { type: "recurring", cadence },
-      };
-
-      if (!hasAuthenticatedCustomerSession()) {
-        if (typeof window !== "undefined") {
-          window.sessionStorage.setItem(
-            BOOKING_FLOW_SESSION_KEY,
-            JSON.stringify(next),
-          );
-        }
-        void Promise.resolve().then(() =>
-          router.push("/auth/login?redirect=/book"),
-        );
-        return next;
-      }
-
-      return {
-        ...next,
-        step: "recurring_setup",
-        recurringSetup: createDefaultRecurringSetup(
-          next.estimateFactors.addonIds ?? [],
-        ),
-      };
-    });
+    setState((prev) => ({
+      ...prev,
+      recurringIntent: { type: "recurring", cadence },
+      step: "recurring_setup",
+      recurringSetup: createDefaultRecurringSetup(
+        prev.estimateFactors.addonIds ?? [],
+      ),
+    }));
   };
 
   const recurringAddonOptions = useMemo(
@@ -1628,6 +1614,77 @@ export function BookingFlowClient() {
       ),
     }));
   }, [state.step, state.recurringIntent, state.recurringSetup]);
+
+  useEffect(() => {
+    if (state.step !== "schedule") return;
+    if (!state.frequency || !state.preferredTime) return;
+    setState((prev) => {
+      const nextSel: ScheduleSelection = {
+        mode: "preference_only",
+        preferredTime: prev.preferredTime,
+        preferredDayWindow: prev.scheduleSelection?.preferredDayWindow ?? null,
+        flexibilityNotes: prev.scheduleSelection?.flexibilityNotes ?? null,
+        selectedSlotId: null,
+        selectedSlotLabel: null,
+      };
+      const cur = prev.scheduleSelection;
+      if (
+        cur &&
+        cur.mode === nextSel.mode &&
+        cur.preferredTime === nextSel.preferredTime &&
+        cur.preferredDayWindow === nextSel.preferredDayWindow &&
+        cur.flexibilityNotes === nextSel.flexibilityNotes
+      ) {
+        return prev;
+      }
+      return { ...prev, scheduleSelection: nextSel };
+    });
+  }, [state.step, state.frequency, state.preferredTime]);
+
+  useEffect(() => {
+    if (state.step !== "schedule") return;
+    if (state.cleanerPreference) return;
+    setState((prev) => ({
+      ...prev,
+      cleanerPreference: { mode: "none" },
+    }));
+  }, [state.step, state.cleanerPreference]);
+
+  /** URL or review-first flows can skip the schedule step UI; still satisfy schedule contract. */
+  useEffect(() => {
+    if (!state.frequency || !state.preferredTime) return;
+    const stepsNeedingScheduleContract: BookingStepId[] = [
+      "review",
+      "decision",
+      "recurring_setup",
+      "confirm",
+    ];
+    if (!stepsNeedingScheduleContract.includes(state.step)) return;
+    setState((prev) => {
+      const patch: Partial<BookingFlowState> = {};
+      if (!prev.scheduleSelection?.mode) {
+        patch.scheduleSelection = {
+          mode: "preference_only",
+          preferredTime: prev.preferredTime,
+          preferredDayWindow: null,
+          flexibilityNotes: null,
+          selectedSlotId: null,
+          selectedSlotLabel: null,
+        };
+      }
+      if (!prev.cleanerPreference) {
+        patch.cleanerPreference = { mode: "none" };
+      }
+      if (Object.keys(patch).length === 0) return prev;
+      return { ...prev, ...patch };
+    });
+  }, [
+    state.step,
+    state.frequency,
+    state.preferredTime,
+    state.scheduleSelection?.mode,
+    state.cleanerPreference,
+  ]);
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
@@ -1805,6 +1862,34 @@ export function BookingFlowClient() {
                   onTimeSelect={(value: BookingTimeOption) =>
                     patchState({ preferredTime: value })
                   }
+                  onScheduleSelectionPatch={(patch: Partial<ScheduleSelection>) =>
+                    setState((prev) => ({
+                      ...prev,
+                      scheduleSelection: {
+                        mode: "preference_only",
+                        preferredTime: prev.preferredTime,
+                        preferredDayWindow:
+                          patch.preferredDayWindow !== undefined
+                            ? patch.preferredDayWindow
+                            : prev.scheduleSelection?.preferredDayWindow ?? null,
+                        flexibilityNotes:
+                          patch.flexibilityNotes !== undefined
+                            ? patch.flexibilityNotes
+                            : prev.scheduleSelection?.flexibilityNotes ?? null,
+                        selectedSlotId:
+                          patch.selectedSlotId !== undefined
+                            ? patch.selectedSlotId
+                            : prev.scheduleSelection?.selectedSlotId ?? null,
+                        selectedSlotLabel:
+                          patch.selectedSlotLabel !== undefined
+                            ? patch.selectedSlotLabel
+                            : prev.scheduleSelection?.selectedSlotLabel ?? null,
+                      },
+                    }))
+                  }
+                  onCleanerPreferenceChange={(next: CleanerPreference) =>
+                    setState((prev) => ({ ...prev, cleanerPreference: next }))
+                  }
                 />
               ) : null}
 
@@ -1856,6 +1941,14 @@ export function BookingFlowClient() {
                     >
                       Your estimate snapshot is missing. Go back to review and wait
                       for the estimate to load.
+                    </p>
+                  ) : null}
+                  {state.recurringIntent?.type === "recurring" &&
+                  !hasRole("customer") ? (
+                    <p
+                      className="mb-4 rounded-xl border border-teal-200 bg-teal-50 p-4 font-[var(--font-manrope)] text-sm font-medium text-[#0F766E]"
+                    >
+                      Please sign in to continue with your recurring plan.
                     </p>
                   ) : null}
                   <BookingStepConfirm state={state} />

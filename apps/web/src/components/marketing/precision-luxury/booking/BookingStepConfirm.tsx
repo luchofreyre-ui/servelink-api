@@ -1,5 +1,6 @@
 "use client";
 
+import { buildBookingDispatchHandoffSummary } from "@/lib/booking/bookingDispatchHandoff";
 import { BookingSectionCard } from "../BookingSectionCard";
 import type { BookingFlowState } from "./bookingFlowTypes";
 
@@ -48,35 +49,84 @@ export function BookingStepConfirm({ state }: Props) {
         }).format(snap.priceCents / 100)
       : null;
 
+  const handoff = buildBookingDispatchHandoffSummary(state);
+
   return (
     <BookingSectionCard
       eyebrow="Step 8"
       title="Confirm and send"
       body="Your estimate is locked from the review step. Confirm your plan choice, then submit your booking direction."
     >
-      <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
-        <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-          Plan
-        </p>
-        <p className="mt-2 font-[var(--font-manrope)] text-base font-medium text-[#0F172A]">
-          {recurringLabel(state)}
-        </p>
-        {visitLine ? (
-          <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
-            First visit: {visitLine}
+      <div className="space-y-4">
+        <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
+          <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+            Service
           </p>
-        ) : state.recurringIntent?.type === "recurring" ? (
-          <p className="mt-2 font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
-            Please complete your recurring setup before continuing.
+          <p className="mt-1 font-[var(--font-manrope)] text-base font-medium text-[#0F172A]">
+            {handoff.serviceLabel}
           </p>
-        ) : null}
-        {priceLine && snap ? (
-          <p className="mt-3 font-[var(--font-manrope)] text-sm text-[#64748B]">
-            Locked review estimate:{" "}
-            <span className="font-medium text-[#0F172A] tabular-nums">{priceLine}</span>{" "}
-            ({snap.durationMinutes} min, confidence {Math.round(snap.confidence * 100)}%)
+        </div>
+
+        <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
+          <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+            Home
           </p>
-        ) : null}
+          <p className="mt-1 font-[var(--font-manrope)] text-sm text-[#0F172A]">
+            {handoff.homeSummary}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
+          <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+            Estimate
+          </p>
+          <p className="mt-1 font-[var(--font-manrope)] text-sm text-[#0F172A]">
+            {handoff.estimateSummary ?? "—"}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
+          <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+            Schedule
+          </p>
+          <p className="mt-1 font-[var(--font-manrope)] text-sm text-[#0F172A]">
+            {handoff.scheduleSummary}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
+          <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+            Cleaner preference
+          </p>
+          <p className="mt-1 font-[var(--font-manrope)] text-sm text-[#0F172A]">
+            {handoff.cleanerSummary}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
+          <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+            Plan
+          </p>
+          <p className="mt-2 font-[var(--font-manrope)] text-base font-medium text-[#0F172A]">
+            {recurringLabel(state)}
+          </p>
+          {visitLine ? (
+            <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
+              First visit: {visitLine}
+            </p>
+          ) : state.recurringIntent?.type === "recurring" ? (
+            <p className="mt-2 font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
+              Please complete your recurring setup before continuing.
+            </p>
+          ) : null}
+          {priceLine && snap ? (
+            <p className="mt-3 font-[var(--font-manrope)] text-sm text-[#64748B]">
+              Locked review estimate:{" "}
+              <span className="font-medium text-[#0F172A] tabular-nums">{priceLine}</span>{" "}
+              ({snap.durationMinutes} min, confidence {Math.round(snap.confidence * 100)}%)
+            </p>
+          ) : null}
+        </div>
       </div>
     </BookingSectionCard>
   );

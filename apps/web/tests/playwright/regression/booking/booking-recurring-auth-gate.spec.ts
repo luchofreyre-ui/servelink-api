@@ -60,42 +60,17 @@ function reviewUrl() {
   return `/book?${qs.toString()}`;
 }
 
+function anchorDatePlusDays(days: number) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 test.describe.configure({ timeout: 120_000 });
 
-test("booking: one-time confirm shows locked estimate line", async ({ page }) => {
-  await page.route("**/booking-direction-intake/preview-estimate", async (route) => {
-    if (route.request().method() !== "POST") {
-      await route.continue();
-      return;
-    }
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: PREVIEW_BODY,
-    });
-  });
-
-  await page.goto(reviewUrl(), { waitUntil: "domcontentloaded" });
-
-  await page.getByText("Loading…").first().waitFor({ state: "detached", timeout: 60_000 }).catch(() => {});
-  const nameInput = page.locator("#booking-customer-name");
-  await nameInput.waitFor({ state: "visible", timeout: 60_000 });
-  await nameInput.fill("Recurring Path User");
-  await page.locator("#booking-customer-email").fill("recurring-path-booking@example.com");
-
-  await page.getByRole("button", { name: "Continue" }).click();
-
-  await expect(
-    page.getByRole("heading", { name: "Choose how you want to proceed" }),
-  ).toBeVisible({ timeout: 30_000 });
-
-  await page.getByRole("button", { name: "One-time cleaning" }).click();
-
-  await expect(page.getByText("One-time cleaning").first()).toBeVisible();
-  await expect(page.getByText(/Locked review estimate:/)).toBeVisible();
-});
-
-test("booking: recurring cadence does not redirect before recurring_setup", async ({ page }) => {
+test("booking: recurring guest completes setup then auth gate only at final confirm submit", async ({
+  page,
+}) => {
   await page.route("**/booking-direction-intake/preview-estimate", async (route) => {
     if (route.request().method() !== "POST") {
       await route.continue();
@@ -112,8 +87,8 @@ test("booking: recurring cadence does not redirect before recurring_setup", asyn
 
   await page.getByText("Loading…").first().waitFor({ state: "detached", timeout: 60_000 }).catch(() => {});
   await page.locator("#booking-customer-name").waitFor({ state: "visible", timeout: 60_000 });
-  await page.locator("#booking-customer-name").fill("Recurring Path User 2");
-  await page.locator("#booking-customer-email").fill("recurring-path-2-booking@example.com");
+  await page.locator("#booking-customer-name").fill("Recurring Auth Gate User");
+  await page.locator("#booking-customer-email").fill("recurring-auth-gate-booking@example.com");
 
   await page.getByRole("button", { name: "Continue" }).click();
 
@@ -128,4 +103,19 @@ test("booking: recurring cadence does not redirect before recurring_setup", asyn
   });
   expect(page.url()).toMatch(/\/book/);
   expect(page.url()).not.toMatch(/customer\/auth|auth\/login/);
+
+  await page.locator("#recurring-next-anchor-date").fill(anchorDatePlusDays(14));
+  await page.getByRole("button", { name: "Continue" }).click();
+
+  await expect(page.getByRole("heading", { name: "Confirm and send" })).toBeVisible({
+    timeout: 30_000,
+  });
+  await expect(
+    page.getByText("Please sign in to continue with your recurring plan."),
+  ).toBeVisible();
+
+  const authNav = page.waitForURL(/\/customer\/auth/, { timeout: 20_000 });
+  await page.getByRole("button", { name: "Confirm Booking Direction" }).click();
+  await authNav;
+  expect(page.url()).toContain("redirect=");
 });

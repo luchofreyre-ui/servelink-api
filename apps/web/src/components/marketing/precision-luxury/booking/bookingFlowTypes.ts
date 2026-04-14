@@ -1,4 +1,34 @@
-export type BookingStepId = "service" | "home" | "schedule" | "review";
+import type { BookingStepId } from "@/lib/booking/bookingProductContract";
+import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
+import type { BookingEstimateFactorsState } from "./bookingEstimateFactors";
+
+export type { BookingStepId };
+
+export type RecurringCadence = "weekly" | "biweekly" | "monthly";
+
+export type RecurringIntent =
+  | {
+      type: "one_time";
+    }
+  | {
+      type: "recurring";
+      cadence: RecurringCadence;
+    };
+
+export type RecurringTimePreference =
+  | "morning"
+  | "midday"
+  | "afternoon"
+  | "anytime";
+
+export type RecurringSetupState = {
+  /** YYYY-MM-DD */
+  nextAnchorDate: string;
+  timePreference: RecurringTimePreference;
+  preferredFoId?: string;
+  bookingNotes?: string;
+  addonIds: string[];
+};
 
 export type BookingServiceOption = {
   id: string;
@@ -7,7 +37,11 @@ export type BookingServiceOption = {
   meta: string;
 };
 
-export type BookingFrequencyOption = "Weekly" | "Bi-Weekly" | "Monthly" | "One-Time";
+export type BookingFrequencyOption =
+  | "Weekly"
+  | "Bi-Weekly"
+  | "Monthly"
+  | "One-Time";
 
 export type BookingTimeOption =
   | "Weekday Morning"
@@ -18,17 +52,52 @@ export type BookingTimeOption =
 /** Public deep clean product; empty when service is not deep clean. */
 export type BookingDeepCleanProgramChoice = "single_visit" | "phased_3_visit";
 
+/** Immutable server estimate + UI card, keyed to the preview request inputs. */
+export type BookingEstimateSnapshot = {
+  previewRequestKey: string;
+  priceCents: number;
+  durationMinutes: number;
+  confidence: number;
+  source: "server";
+  deepCleanProgramCard: DeepCleanProgramDisplay | null;
+};
+
+/** Funnel-only schedule capture; wire fields are still `frequency` + `preferredTime` until slot APIs are integrated. */
+export type ScheduleSelection = {
+  mode: "preference_only" | "slot_selection";
+  selectedSlotId?: string | null;
+  selectedSlotLabel?: string | null;
+  preferredTime?: string | null;
+  preferredDayWindow?: string | null;
+  flexibilityNotes?: string | null;
+};
+
+export type CleanerPreference = {
+  mode: "none" | "preferred_cleaner";
+  cleanerId?: string | null;
+  cleanerLabel?: string | null;
+  hardRequirement?: boolean;
+  preferenceNotes?: string | null;
+};
+
 export type BookingFlowState = {
   step: BookingStepId;
   serviceId: string;
   homeSize: string;
   bedrooms: string;
   bathrooms: string;
+  /** Optional ops note; not used in estimator (pet detail lives in `estimateFactors`). */
   pets: string;
+  /** Explicit questionnaire → `EstimateInput` (no silent defaults). */
+  estimateFactors: BookingEstimateFactorsState;
   /** Empty until user selects a valid option (URL/parser may omit). */
   frequency: BookingFrequencyOption | "";
   /** Empty until user selects a valid option (URL/parser may omit). */
   preferredTime: BookingTimeOption | "";
+  /** Richer schedule intent for confirm / ops handoff (not yet on booking-direction DTO). */
+  scheduleSelection?: ScheduleSelection;
+  /** Cleaner / team preference (funnel-only until API exposes a first-class field). */
+  cleanerPreference?: CleanerPreference;
   /** Set when `serviceId` is deep clean; otherwise "". */
   deepCleanProgram: BookingDeepCleanProgramChoice | "";
   /**
@@ -37,10 +106,21 @@ export type BookingFlowState = {
    */
   customerName: string;
   customerEmail: string;
+  recurringIntent?: RecurringIntent;
+  recurringSetup?: RecurringSetupState;
+  estimateSnapshot?: BookingEstimateSnapshot | null;
 };
 
 export type BookingStepDefinition = {
   id: BookingStepId;
   order: number;
   label: string;
+};
+
+/** Server-backed estimate shown on the review step (no client fallback). */
+export type FunnelReviewEstimate = {
+  priceCents: number;
+  durationMinutes: number;
+  confidence: number;
+  source: "server";
 };

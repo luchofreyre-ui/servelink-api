@@ -127,6 +127,24 @@ export default async function AdminRecurringOpsPage() {
             related plan routes (customer JWT).
           </p>
         </section>
+
+        <section
+          aria-labelledby="booking-funnel-intake-gap"
+          className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+        >
+          <h2 id="booking-funnel-intake-gap" className="text-lg font-semibold text-gray-900">
+            Public booking funnel vs intake API
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            The marketing booking flow captures richer schedule preferences, cleaner preference
+            intent, and recurring setup in client state and confirm summaries. The booking-direction
+            intake DTO used for one-time submit does not yet expose first-class fields for those
+            objects, so operators should treat them as funnel truth until intake and admin booking
+            detail views are extended. Recurring plan creation uses authenticated{" "}
+            <code className="rounded bg-gray-100 px-1 font-mono text-xs">POST /recurring/plans</code>{" "}
+            with cadence and anchor timing from recurring setup.
+          </p>
+        </section>
       </div>
     </div>
   );
