@@ -26,6 +26,7 @@ import { DispatchOpsController } from "./dispatch-ops.controller";
 import { DispatchOpsExceptionController } from "./dispatch-ops-exception.controller";
 import { DispatchOpsService } from "./dispatch-ops.service";
 import { TrustModule } from "../trust/trust.module";
+import { RosterAvailabilityService } from "./roster-availability.service";
 
 @Module({
   imports: [FoModule, TrustModule, forwardRef(() => BookingsModule)],
@@ -56,7 +57,13 @@ import { TrustModule } from "../trust/trust.module";
     DispatchLockService,
     DispatchIdempotencyService,
     DispatchOpsService,
+    RosterAvailabilityService,
   ],
-  exports: [DispatchService, ReputationService, DispatchConfigService],
+  exports: [
+    DispatchService,
+    ReputationService,
+    DispatchConfigService,
+    RosterAvailabilityService,
+  ],
 })
 export class DispatchModule {}

@@ -38,7 +38,11 @@ export type ConfirmRequirement =
   | "schedule_complete"
   | "cleaner_rule_satisfied";
 
-/** First-pass server assignment / capacity outcomes (see API dispatch module + intake bridge). */
+/**
+ * First-pass server assignment / capacity outcomes (dispatch module + intake bridge).
+ * Intake persistence includes `liveInputs` (minimal active roster snapshot + recurring continuity
+ * context when applicable) next to `constraints` and `evaluation`.
+ */
 export const ASSIGNMENT_CAPACITY_ENGINE = {
   version: "v1_first_pass" as const,
   decisionStatuses: [

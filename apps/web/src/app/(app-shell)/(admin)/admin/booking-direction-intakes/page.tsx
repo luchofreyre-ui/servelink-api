@@ -46,12 +46,14 @@ function assignmentEngineColumns(ex: unknown): {
   status: string;
   reasons: string;
   continuity: string;
+  liveSummary: string;
 } {
   if (ex == null || typeof ex !== "object") {
     return {
       status: "—",
       reasons: "No evaluation stored (legacy intake or pre-engine row).",
       continuity: "—",
+      liveSummary: "—",
     };
   }
   const o = ex as Record<string, unknown>;
@@ -67,7 +69,50 @@ function assignmentEngineColumns(ex: unknown): {
     status,
     reasons,
     continuity: parts.length ? parts.join(" · ") : "—",
+    liveSummary: liveExecutionSummary(o, ev),
   };
+}
+
+function liveExecutionSummary(
+  root: Record<string, unknown>,
+  ev: Record<string, unknown> | undefined,
+): string {
+  const li = root.liveInputs as Record<string, unknown> | undefined;
+  const cleaners = li?.availableCleaners;
+  const n = Array.isArray(cleaners) ? cleaners.length : null;
+  const rc = li?.recurringContinuityContext as
+    | Record<string, unknown>
+    | undefined;
+  const hasPrior =
+    typeof rc?.priorCleanerId === "string" && rc.priorCleanerId.trim().length > 0;
+  const priorLabel =
+    typeof rc?.priorCleanerLabel === "string" && rc.priorCleanerLabel.trim()
+      ? rc.priorCleanerLabel.trim()
+      : null;
+  const parts: string[] = [];
+  const recLabel =
+    typeof ev?.recommendedCleanerLabel === "string"
+      ? ev.recommendedCleanerLabel.trim()
+      : "";
+  if (recLabel) parts.push(`recommended: ${recLabel}`);
+  else if (
+    typeof ev?.recommendedCleanerId === "string" &&
+    ev.recommendedCleanerId.trim()
+  ) {
+    parts.push(`recommended id: ${ev.recommendedCleanerId}`);
+  }
+  if (ev?.matchedPreferredCleaner === true) parts.push("preferred match: yes");
+  if (ev?.recurringContinuityCandidate === true) {
+    parts.push("continuity: yes");
+  } else if (hasPrior) {
+    parts.push(
+      priorLabel
+        ? `continuity: no (prior ${priorLabel})`
+        : "continuity: no (prior not on roster)",
+    );
+  }
+  if (n != null) parts.push(`available cleaners: ${n}`);
+  return parts.length ? parts.join(" · ") : "—";
 }
 
 export default function AdminBookingDirectionIntakesPage() {
@@ -145,9 +190,11 @@ export default function AdminBookingDirectionIntakesPage() {
               <strong className="font-semibold text-white/90">
                 not committed bookings
               </strong>
-              — intent only, for ops follow-up. Rows created after the assignment engine
-              drop include <strong className="font-semibold text-white/90">assignmentExecution</strong>{" "}
-              (constraints + first-pass capacity outcome) when the intake bridge ran.
+              — intent only, for ops follow-up.               Rows created after the live-input drop include{" "}
+              <strong className="font-semibold text-white/90">assignmentExecution</strong>{" "}
+              (constraints, evaluation, and a minimal{" "}
+              <strong className="font-semibold text-white/90">liveInputs</strong> roster snapshot) when
+              the intake bridge ran.
             </p>
           </div>
           <Link
@@ -193,6 +240,7 @@ export default function AdminBookingDirectionIntakesPage() {
                     <th className="px-4 py-3 font-medium">Assignment</th>
                     <th className="px-4 py-3 font-medium">Reason codes</th>
                     <th className="px-4 py-3 font-medium">Continuity / pref</th>
+                    <th className="px-4 py-3 font-medium">Live execution</th>
                     <th className="px-4 py-3 font-medium">Contact</th>
                     <th className="px-4 py-3 font-medium">Attribution</th>
                   </tr>
@@ -201,7 +249,7 @@ export default function AdminBookingDirectionIntakesPage() {
                   {items.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={12}
+                        colSpan={13}
                         className="px-4 py-8 text-center text-slate-500"
                       >
                         No booking direction intakes yet.
@@ -252,6 +300,9 @@ export default function AdminBookingDirectionIntakesPage() {
                         </td>
                         <td className="max-w-[160px] px-4 py-3 text-[11px] leading-relaxed text-slate-400">
                           {ax.continuity}
+                        </td>
+                        <td className="max-w-[220px] px-4 py-3 text-[11px] leading-relaxed text-slate-400">
+                          {ax.liveSummary}
                         </td>
                         <td className="max-w-[200px] px-4 py-3 text-xs leading-relaxed text-slate-300">
                           {row.customerName || row.customerEmail ? (

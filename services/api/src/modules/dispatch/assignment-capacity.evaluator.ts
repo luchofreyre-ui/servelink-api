@@ -7,6 +7,8 @@ import {
 
 export type AvailableCleanerRow = {
   cleanerId: string;
+  /** Optional; matches `bookingHandoff.cleanerPreference.cleanerId` when it references `ServiceProvider.id`. */
+  providerId?: string | null;
   cleanerLabel: string;
   isActive?: boolean;
   supportsRecurring?: boolean;
@@ -36,8 +38,8 @@ function worse(
 
 /**
  * First-pass deterministic capacity / assignment outcome from constraints.
- * When `availableCleaners` is omitted, roster-based checks are skipped (intake bridge default)
- * except where explicit cleaner id matching requires a roster.
+ * When `availableCleaners` is omitted, roster-based ID checks are skipped (legacy rows);
+ * slot-id and scheduling rules still apply.
  */
 export function evaluateAssignmentCapacity(input: {
   constraints: AssignmentConstraintSet;
@@ -74,10 +76,27 @@ export function evaluateAssignmentCapacity(input: {
     status = worse(status, "needs_review");
   }
 
+  /**
+   * Exact slot IDs from the funnel are not mapped to provider capacity in this pass
+   * (no customer-safe slot-to-FO binding). Require manual review instead of silent assignable.
+   */
+  if (sched.mode === "slot_selection" && sched.selectedSlotId?.trim()) {
+    pushCode(ASSIGNMENT_REASON_CODES.SLOT_NOT_ENFORCEABLE_YET);
+    pushCode(ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED);
+    notesForOps.push(
+      "slot_selection with selectedSlotId: platform cannot yet verify which franchise owner holds that slot — manual review.",
+    );
+    status = worse(status, "needs_review");
+  }
+
   const rosterDefined = availableCleaners !== undefined;
   const rosterEmpty = rosterDefined && availableCleaners.length === 0;
   if (rosterEmpty) {
     pushCode(ASSIGNMENT_REASON_CODES.CAPACITY_UNKNOWN);
+    pushCode(ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED);
+    notesForOps.push(
+      "No active franchise owners with linked providers matched the roster query — capacity unknown.",
+    );
     status = worse(status, "needs_review");
   }
 
@@ -85,11 +104,14 @@ export function evaluateAssignmentCapacity(input: {
 
   const findCleaner = (id: string | null | undefined) => {
     if (!id?.trim() || !cleaners) return undefined;
-    return cleaners.find(
-      (c) =>
-        c.cleanerId === id.trim() &&
-        (c.isActive === undefined || c.isActive !== false),
-    );
+    const t = id.trim();
+    return cleaners.find((c) => {
+      const active = c.isActive === undefined || c.isActive !== false;
+      if (!active) return false;
+      if (c.cleanerId === t) return true;
+      if (c.providerId != null && c.providerId.trim() === t) return true;
+      return false;
+    });
   };
 
   const cp = constraints.cleanerPreference;
@@ -137,6 +159,27 @@ export function evaluateAssignmentCapacity(input: {
         pushCode(ASSIGNMENT_REASON_CODES.RECURRING_CONTINUITY_UNAVAILABLE);
         status = worse(status, "needs_review");
       }
+    }
+  }
+
+  if (
+    status === "assignable" &&
+    sched.mode === "preference_only" &&
+    hasSchedulingIntent &&
+    cleaners &&
+    cleaners.length > 0 &&
+    cp.mode === "none" &&
+    !recommendedCleanerId
+  ) {
+    const first = [...cleaners].sort((a, b) =>
+      a.cleanerId.localeCompare(b.cleanerId),
+    )[0];
+    if (first && (first.isActive === undefined || first.isActive !== false)) {
+      recommendedCleanerId = first.cleanerId;
+      recommendedCleanerLabel = first.cleanerLabel;
+      notesForOps.push(
+        "No explicit cleaner preference; recommended first active roster member (deterministic id order) — not a ranked best-match.",
+      );
     }
   }
 

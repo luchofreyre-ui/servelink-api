@@ -138,6 +138,21 @@ export default async function AdminRecurringOpsPage() {
             <code className="rounded bg-gray-100 px-1 font-mono text-xs">assignmentExecution</code>{" "}
             when stored.
           </p>
+          <div
+            className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700"
+            role="note"
+            aria-label="Live execution inputs on intake"
+          >
+            <p className="font-medium text-gray-900">Live execution inputs (intake bridge)</p>
+            <p className="mt-2">
+              When the customer email on an intake resolves to a user with an active recurring plan,
+              the engine loads <code className="rounded bg-white px-1 font-mono text-xs">preferredFoId</code>{" "}
+              into <code className="rounded bg-white px-1 font-mono text-xs">liveInputs.recurringContinuityContext</code>{" "}
+              for recurring-path intakes only, and compares it to the active franchise-owner roster.
+              The intake list shows recommended cleaner, preferred-match flag, continuity outcome, and
+              roster count — all derived from persisted <code className="rounded bg-white px-1 font-mono text-xs">assignmentExecution</code>.
+            </p>
+          </div>
         </section>
 
         <section

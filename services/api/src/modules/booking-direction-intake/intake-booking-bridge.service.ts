@@ -18,6 +18,7 @@ import {
 import { defaultIntakeQuestionnaireFactors } from "./intake-default-questionnaire";
 import { evaluateAssignmentCapacity } from "../dispatch/assignment-capacity.evaluator";
 import { mapBookingHandoffToAssignmentConstraints } from "../dispatch/assignment-constraint.mapper";
+import { RosterAvailabilityService } from "../dispatch/roster-availability.service";
 
 export type DeepCleanProgramVisitSubmitDisplay = {
   visitIndex: number;
@@ -157,6 +158,7 @@ export class IntakeBookingBridgeService {
     private readonly config: ConfigService,
     private readonly estimator: EstimatorService,
     private readonly auth: AuthService,
+    private readonly rosterAvailability: RosterAvailabilityService,
   ) {}
 
   /**
@@ -258,12 +260,71 @@ export class IntakeBookingBridgeService {
       intakePreferredTime: intake.preferredTime,
       intakeFrequency: intake.frequency,
     });
+
+    const [availableCleanerRecords, recurringContinuityRaw] = await Promise.all([
+      this.rosterAvailability.getAvailableCleanersForBookingIntent({
+        bookingId: null,
+        intakeId: intake.id,
+        scheduling: {
+          mode: constraints.scheduling.mode,
+          preferredTime: constraints.scheduling.preferredTime,
+          preferredDayWindow: constraints.scheduling.preferredDayWindow,
+          selectedSlotId: constraints.scheduling.selectedSlotId,
+        },
+        recurring: {
+          pathKind: constraints.recurring.pathKind,
+          cadence: constraints.recurring.cadence,
+        },
+      }),
+      this.rosterAvailability.getRecurringContinuityContext({
+        bookingId: null,
+        intakeId: intake.id,
+        customerEmail: intake.customerEmail,
+        recurringCadence: constraints.recurring.cadence,
+      }),
+    ]);
+
+    const cleanerRows = availableCleanerRecords.map((c) => ({
+      cleanerId: c.cleanerId,
+      providerId: c.providerId ?? null,
+      cleanerLabel: c.cleanerLabel,
+      isActive: c.isActive,
+      supportsRecurring: c.supportsRecurring,
+    }));
+
+    const recurringContextForEval =
+      constraints.recurring.pathKind === "recurring" &&
+      recurringContinuityRaw.priorCleanerId?.trim()
+        ? recurringContinuityRaw
+        : undefined;
+
     const evaluation = evaluateAssignmentCapacity({
       constraints,
-      availableCleaners: undefined,
-      recurringContext: undefined,
+      availableCleaners: cleanerRows,
+      recurringContext: recurringContextForEval,
     });
-    const assignmentExecution = { constraints, evaluation };
+
+    const liveInputs = {
+      availableCleaners: availableCleanerRecords.map((c) => ({
+        cleanerId: c.cleanerId,
+        cleanerLabel: c.cleanerLabel,
+        isActive: c.isActive,
+        supportsRecurring: c.supportsRecurring,
+      })),
+      recurringContinuityContext:
+        constraints.recurring.pathKind === "recurring"
+          ? {
+              priorCleanerId: recurringContinuityRaw.priorCleanerId ?? null,
+              priorCleanerLabel:
+                recurringContinuityRaw.priorCleanerLabel ?? null,
+            }
+          : {
+              priorCleanerId: null,
+              priorCleanerLabel: null,
+            },
+    };
+
+    const assignmentExecution = { constraints, evaluation, liveInputs };
 
     await this.prisma.bookingDirectionIntake.update({
       where: { id: intake.id },

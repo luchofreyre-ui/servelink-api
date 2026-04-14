@@ -21,5 +21,9 @@ test.describe("admin recurring ops page", () => {
     await expect(
       page.getByRole("heading", { name: "Continuity, cleaners, and execution" }),
     ).toBeVisible();
+
+    await expect(
+      page.getByRole("note", { name: "Live execution inputs on intake" }),
+    ).toBeVisible();
   });
 });

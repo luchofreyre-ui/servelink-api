@@ -66,6 +66,33 @@ describe("evaluateAssignmentCapacity", () => {
     expect(ev.recommendedCleanerId).toBe("c1");
   });
 
+  it("2b: preferred cleaner id matches providerId on roster row", () => {
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: { preferredTime: "Morning" },
+        cleanerPreference: {
+          mode: "preferred_cleaner",
+          cleanerId: "prov_99",
+          hardRequirement: false,
+        },
+        recurring: { pathKind: "one_time" },
+      },
+    });
+    const ev = evaluateAssignmentCapacity({
+      constraints,
+      availableCleaners: [
+        {
+          cleanerId: "fo_1",
+          providerId: "prov_99",
+          cleanerLabel: "Alex",
+        },
+      ],
+    });
+    expect(ev.status).toBe("assignable");
+    expect(ev.matchedPreferredCleaner).toBe(true);
+    expect(ev.recommendedCleanerId).toBe("fo_1");
+  });
+
   it("3: preferred cleaner unavailable (soft) -> needs_review", () => {
     const constraints = mapBookingHandoffToAssignmentConstraints({
       bookingHandoff: {
@@ -147,7 +174,7 @@ describe("evaluateAssignmentCapacity", () => {
     );
   });
 
-  it("empty roster array -> needs_review + capacity_unknown", () => {
+  it("7: empty roster array -> needs_review + capacity_unknown + manual_review", () => {
     const constraints = mapBookingHandoffToAssignmentConstraints({
       bookingHandoff: {
         scheduling: { preferredTime: "Morning" },
@@ -161,5 +188,53 @@ describe("evaluateAssignmentCapacity", () => {
     });
     expect(ev.status).toBe("needs_review");
     expect(ev.reasonCodes).toContain(ASSIGNMENT_REASON_CODES.CAPACITY_UNKNOWN);
+    expect(ev.reasonCodes).toContain(
+      ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED,
+    );
+  });
+
+  it("8: slot_selection + selectedSlotId -> needs_review + slot_not_enforceable_yet", () => {
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: {
+          mode: "slot_selection",
+          preferredTime: "Morning",
+          selectedSlotId: "slot_xyz",
+        },
+        cleanerPreference: { mode: "none" },
+        recurring: { pathKind: "one_time" },
+      },
+    });
+    const ev = evaluateAssignmentCapacity({
+      constraints,
+      availableCleaners: [{ cleanerId: "c1", cleanerLabel: "A" }],
+    });
+    expect(ev.status).toBe("needs_review");
+    expect(ev.reasonCodes).toContain(
+      ASSIGNMENT_REASON_CODES.SLOT_NOT_ENFORCEABLE_YET,
+    );
+    expect(ev.reasonCodes).toContain(
+      ASSIGNMENT_REASON_CODES.MANUAL_REVIEW_REQUIRED,
+    );
+  });
+
+  it("9: active roster + no preference -> assignable + deterministic recommended cleaner", () => {
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: { preferredTime: "Afternoon" },
+        cleanerPreference: { mode: "none" },
+        recurring: { pathKind: "one_time" },
+      },
+    });
+    const ev = evaluateAssignmentCapacity({
+      constraints,
+      availableCleaners: [
+        { cleanerId: "zfo", cleanerLabel: "Zed" },
+        { cleanerId: "afo", cleanerLabel: "Amy" },
+      ],
+    });
+    expect(ev.status).toBe("assignable");
+    expect(ev.recommendedCleanerId).toBe("afo");
+    expect(ev.recommendedCleanerLabel).toBe("Amy");
   });
 });

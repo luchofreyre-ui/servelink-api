@@ -88,10 +88,11 @@ Optional nested object (all sub-fields optional at validation level; the web fun
 
 - **Contract (API):** `services/api/src/modules/dispatch/assignment-capacity.contract.ts` — `AssignmentConstraintSet`, `CapacityEvaluationResult`, `ASSIGNMENT_REASON_CODES`, statuses `assignable` | `needs_review` | `deferred` | `unassignable`.
 - **Mapper:** `assignment-constraint.mapper.ts` — `mapBookingHandoffToAssignmentConstraints` (never throws; merges intake `preferredTime` when handoff omits it).
-- **Evaluator:** `assignment-capacity.evaluator.ts` — `evaluateAssignmentCapacity`. Roster-aware checks run only when `availableCleaners` is **provided**; the intake bridge currently calls the evaluator **without** a roster so preferred-cleaner ID verification defers to **needs_review** + `manual_review_required` instead of guessing availability.
-- **Persistence:** `BookingDirectionIntake.assignmentExecution` JSON (`{ constraints, evaluation }`). **`Booking.notes`** also receives `--- SERVELINK_ASSIGNMENT_EXECUTION_JSON ---` after the handoff block when a booking is created.
-- **Dispatch control:** Non-`assignable` outcomes set `BookingDispatchControl.reviewRequired` with `reviewSource=intake_assignment_capacity_v1` for command-center visibility.
-- **Honesty:** Runtime scheduling remains **preference_only**; cleaner preference is a **constraint**, not a guaranteed assignment; recurring continuity is **attempted** when roster + context exist — not promised on every path.
+- **Roster reader:** `services/api/src/modules/dispatch/roster-availability.service.ts` — `RosterAvailabilityService` loads **active** `FranchiseOwner` rows with linked `ServiceProvider` (plus optional `FoSchedule` windows as informational context only). No fabricated availability or hardcoded cleaner lists.
+- **Evaluator:** `assignment-capacity.evaluator.ts` — `evaluateAssignmentCapacity`. The intake bridge passes a **real roster array** (possibly empty). Legacy rows may still omit `liveInputs` / have been evaluated before this drop; when `availableCleaners` is **omitted** in callers, roster ID checks are skipped. **Empty roster** → `needs_review` + `capacity_unknown` + `manual_review_required`. **`slot_selection` + `selectedSlotId`** → `needs_review` + `slot_not_enforceable_yet` (slot IDs are not mapped to provider capacity in this pass — intentional, not a bug). **`preference_only`** with roster and no preferred cleaner → deterministic “first by `cleanerId` sort” recommendation with an ops note (not ranked best-match). Preferred cleaner IDs may match either franchise-owner id or `providerId` on a roster row. Recurring continuity uses `RecurringPlan.preferredFoId` when resolvable.
+- **Persistence:** `BookingDirectionIntake.assignmentExecution` JSON (`{ constraints, evaluation, liveInputs }`). `liveInputs` holds a minimal roster snapshot and, for **recurring** path intakes, `recurringContinuityContext` when lookup succeeds. **`Booking.notes`** also receives `--- SERVELINK_ASSIGNMENT_EXECUTION_JSON ---` after the handoff block when a booking is created.
+- **Dispatch control:** Non-`assignable` outcomes set `BookingDispatchControl.reviewRequired` with `reviewSource=intake_assignment_capacity_v1` and reason codes embedded in `reviewReason` for command-center visibility.
+- **Honesty:** Public funnel scheduling mode remains **preference_only** unless handoff explicitly carries `slot_selection`; even then, exact slot enforcement is **not** automated here. Cleaner preference is evaluated against the **live roster** when the bridge runs; recurring continuity is **attempted** when customer + plan context exists — not promised on every path.
 
 ## Scheduling contract
 
@@ -127,7 +128,7 @@ Exact copy:
 ## Admin / operator visibility surfaces
 
 - **`/admin/ops/recurring`:** recurring ops summary, route manifest, funnel vs intake note, and a static **Continuity, cleaners, and execution** section (truthful scope statement).
-- **`/admin/booking-direction-intakes`:** **Handoff** summary plus **Assignment**, **Reason codes**, and **Continuity / pref** columns driven by `assignmentExecution` when the bridge has run; API returns full JSON per row.
+- **`/admin/booking-direction-intakes`:** **Handoff** summary plus **Assignment**, **Reason codes**, **Continuity / pref**, and **Live execution** (recommended cleaner, preferred-match / continuity flags, roster count from `liveInputs`) when the bridge has run; API returns full JSON per row.
 - **Booking record:** operators can read **`SERVELINK_BOOKING_HANDOFF_JSON`** and **`SERVELINK_ASSIGNMENT_EXECUTION_JSON`** blocks on `Booking.notes` when a booking is created from intake.
 
 ## Customer lifecycle surfaces
@@ -147,6 +148,17 @@ Exact copy:
 | Confirm without snapshot blocked | `booking-confirm-without-snapshot.spec.ts` |
 | Admin recurring page | `admin-recurring-ops-page.spec.ts` |
 
+## Recovered roster / availability sources
+
+| Backend path | What it provides |
+|--------------|------------------|
+| `services/api/src/modules/dispatch/dispatch-candidate.service.ts` | Active `FranchiseOwner` + `ServiceProvider` roster with geo/capacity **filters** for dispatch candidate ranking (booking-shaped input). |
+| `services/api/src/modules/dispatch/roster-availability.service.ts` | Canonical **unfiltered** active FO + provider list for assignment evaluation; optional `FoSchedule` windows per FO (informational weekly windows, same table as `FoScheduleService`). |
+| `services/api/prisma/schema.prisma` — `FranchiseOwner`, `ServiceProvider`, `FoSchedule`, `FoBlockout` | Active roster eligibility (`status`, `safetyHold`, `providerId`); linked provider display names; per-FO weekly schedule rows; blockouts (not yet driving intake evaluator rules). |
+| `services/api/prisma/schema.prisma` — `BookingSlotHold` | Slot holds tied to `bookingId` + `foId` — real slot/capacity signals for **existing** bookings; **not** wired into intake assignment v1 (no invented mapping from funnel slot ids). |
+| `services/api/prisma/schema.prisma` — `RecurringPlan.preferredFoId` | Continuity anchor for recurring customers when email resolves to a user with an active plan. |
+| `services/api/src/modules/dispatch/provider-dispatch-resolver.service.ts` | `providerId` ↔ `foId` resolution for active franchise owners. |
+
 ## Recovered existing system surfaces
 
 | Path | Role |
@@ -163,4 +175,4 @@ Exact copy:
 
 ---
 
-_Last updated: assignment + capacity execution engine (v1) drop._
+_Last updated: dispatch live roster + continuity inputs for assignment engine (v1)._
