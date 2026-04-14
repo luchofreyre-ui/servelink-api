@@ -8,6 +8,7 @@ import { AdminAnomaliesQueue } from "@/components/admin/anomalies/AdminAnomalies
 import { AdminLaunchReadinessCard } from "@/components/admin/AdminLaunchReadinessCard";
 import { AdminBookingRevenueReadinessCard } from "@/components/admin/AdminBookingRevenueReadinessCard";
 import { AdminOpsAnomaliesPanel } from "@/components/admin/AdminOpsAnomaliesPanel";
+import { RecurringSystemProbe } from "@/components/admin/ops/RecurringSystemProbe";
 import { WEB_ENV } from "@/lib/env";
 import {
   clearStoredAccessToken,
@@ -515,6 +516,8 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
           </div>
         </div>
       </section>
+
+      <RecurringSystemProbe />
 
       {children}
 

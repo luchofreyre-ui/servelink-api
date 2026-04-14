@@ -43,6 +43,31 @@ const patchRecurringPlanPipe = new ValidationPipe({
 export class RecurringController {
   constructor(private readonly recurring: RecurringService) {}
 
+  /** Validation: root reachability (admin + customer JWT). */
+  @Roles(Role.admin, Role.customer)
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  root() {
+    return {
+      ok: true,
+      message: "Recurring root reachable",
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  /** Validation: debug reachability (admin + customer JWT). */
+  @Roles(Role.admin, Role.customer)
+  @UseGuards(JwtAuthGuard)
+  @Get("debug/routes")
+  getRecurringRoutes(@Req() req: any) {
+    return {
+      ok: true,
+      message: "Recurring routes reachable",
+      user: req.user ?? null,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
   @Post("plans")
   @UsePipes(recurringBodyPipe)
   async createPlan(
