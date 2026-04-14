@@ -9,6 +9,8 @@ import { BookingFlowProgress } from "../BookingFlowProgress";
 import { bookingSteps } from "./bookingFlowData";
 import { BOOKING_PAGE_DESCRIPTION } from "./bookingSeo";
 import {
+  buildBookingPreviewRequestKey,
+  buildBookingEstimateDrivingSignature,
   buildBookingSearchParams,
   parseBookingSearchParams,
 } from "./bookingUrlState";
@@ -17,11 +19,18 @@ import type {
   BookingFrequencyOption,
   BookingStepId,
   BookingTimeOption,
+  RecurringCadence,
+  RecurringSetupState,
+  RecurringTimePreference,
 } from "./bookingFlowTypes";
 import { BookingStepService } from "./BookingStepService";
 import { BookingStepHomeDetails } from "./BookingStepHomeDetails";
+import { BookingStepEstimateFactors } from "./BookingStepEstimateFactors";
 import { BookingStepSchedule } from "./BookingStepSchedule";
 import { BookingStepReview } from "./BookingStepReview";
+import BookingStepDecision from "./BookingStepDecision";
+import BookingStepRecurringSetup from "./BookingStepRecurringSetup";
+import { BookingStepConfirm } from "./BookingStepConfirm";
 import { BookingSummaryCard } from "./BookingSummaryCard";
 import { BookingServiceHandoffCard } from "./BookingServiceHandoffCard";
 import {
@@ -30,13 +39,100 @@ import {
   submitBookingDirectionIntake,
 } from "./bookingDirectionIntakeApi";
 import { mapIntakeDeepCleanSnapshotToCardProgram } from "./bookingIntakePreviewDisplay";
-import {
-  computeBookingFunnelLocalEstimate,
-  type FunnelReviewEstimate,
-} from "./bookingFunnelLocalEstimate";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
 import { isBookingContactValid } from "./bookingContactValidation";
+import type { FunnelReviewEstimate } from "./bookingFlowTypes";
+import {
+  ESTIMATE_ADDON_OPTIONS,
+  homeSizeHasValidSqftForEstimate,
+  isBookingEstimateFactorsComplete,
+} from "./bookingEstimateFactors";
+import { buildSubmitBookingDirectionPayload } from "./bookingIntakePayload";
+import {
+  buildCreateRecurringPlanRequest,
+  createRecurringPlan,
+} from "./bookingRecurringApi";
+import { hasRole } from "@/lib/auth/authClient";
+import {
+  BookingFlowDebugPanel,
+  type BookingFlowDebugState,
+} from "./BookingFlowDebugPanel";
+
+const BOOKING_FLOW_SESSION_KEY = "booking_flow_state";
+
+function getDebugStepLabel(step: unknown): string {
+  if (typeof step === "string" && step.trim()) return step;
+  if (typeof step === "number") return String(step);
+  if (step && typeof step === "object" && "id" in (step as Record<string, unknown>)) {
+    const id = (step as { id?: unknown }).id;
+    if (typeof id === "string" && id.trim()) return id;
+  }
+  return "unknown";
+}
+
+function getDebugString(value: unknown): string | null {
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function hasAuthenticatedCustomerSession() {
+  if (typeof window === "undefined") return false;
+  return hasRole("customer");
+}
+
+function createDefaultRecurringSetup(
+  existingAddonIds: string[] = [],
+): RecurringSetupState {
+  return {
+    nextAnchorDate: "",
+    timePreference: "anytime",
+    preferredFoId: undefined,
+    bookingNotes: undefined,
+    addonIds: [...existingAddonIds],
+  };
+}
+
+function isRecurringSetupComplete(
+  value: RecurringSetupState | undefined,
+): boolean {
+  if (!value) return false;
+  if (!value.nextAnchorDate) return false;
+  if (!value.timePreference) return false;
+  return true;
+}
+
+function toNextAnchorIso(
+  dateOnly: string,
+  timePreference: RecurringTimePreference,
+): string {
+  const hour =
+    timePreference === "morning"
+      ? 9
+      : timePreference === "midday"
+        ? 12
+        : timePreference === "afternoon"
+          ? 15
+          : 12;
+  const local = new Date(`${dateOnly}T00:00:00`);
+  local.setHours(hour, 0, 0, 0);
+  return local.toISOString();
+}
+
+const BOOKING_SNAPSHOT_TOUCH_KEYS: (keyof BookingFlowState)[] = [
+  "serviceId",
+  "homeSize",
+  "bedrooms",
+  "bathrooms",
+  "pets",
+  "estimateFactors",
+  "frequency",
+  "preferredTime",
+  "deepCleanProgram",
+];
+
+function patchTouchesEstimateSnapshot(patch: Partial<BookingFlowState>) {
+  return BOOKING_SNAPSHOT_TOUCH_KEYS.some((k) => k in patch);
+}
 
 function getStepOrder(step: BookingStepId) {
   return bookingSteps.find((item) => item.id === step)?.order ?? 1;
@@ -51,11 +147,20 @@ function getStepError(state: BookingFlowState): string | null {
     return "Please choose a service before continuing.";
   }
 
+  if (state.step === "home") {
+    if (!state.homeSize || !state.bedrooms || !state.bathrooms) {
+      return "Please complete your home details before continuing.";
+    }
+    if (!homeSizeHasValidSqftForEstimate(state.homeSize)) {
+      return "Enter explicit square footage (300–20,000) as a number in your home size, e.g. 2200 or 2,200 sq ft.";
+    }
+  }
+
   if (
-    state.step === "home" &&
-    (!state.homeSize || !state.bedrooms || !state.bathrooms)
+    state.step === "factors" &&
+    !isBookingEstimateFactorsComplete(state.estimateFactors)
   ) {
-    return "Please complete your home details before continuing.";
+    return "Please answer every job-detail question (including pet shedding when you have pets) before continuing.";
   }
 
   if (
@@ -63,6 +168,21 @@ function getStepError(state: BookingFlowState): string | null {
     (!state.frequency || !state.preferredTime)
   ) {
     return "Please choose your preferred frequency and timing before continuing.";
+  }
+
+  if (
+    state.step === "review" &&
+    !isBookingContactValid(state.customerName, state.customerEmail)
+  ) {
+    return "Please add your name and a valid email before continuing.";
+  }
+
+  if (
+    state.step === "recurring_setup" &&
+    state.recurringIntent?.type === "recurring" &&
+    !isRecurringSetupComplete(state.recurringSetup)
+  ) {
+    return "Choose your first visit date and preferred arrival window before continuing.";
   }
 
   return null;
@@ -95,8 +215,42 @@ export function BookingFlowClient() {
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewFetchCompleted, setPreviewFetchCompleted] = useState(false);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
+  const skipUrlSearchParamsHydration = useRef(0);
 
   const attributionQueryKey = searchParams?.toString() ?? "";
+
+  const previewRequestKey = useMemo(
+    () => buildBookingPreviewRequestKey(state, attributionQueryKey),
+    [
+      state.serviceId,
+      state.homeSize,
+      state.bedrooms,
+      state.bathrooms,
+      state.pets,
+      state.estimateFactors,
+      state.frequency,
+      state.preferredTime,
+      state.deepCleanProgram,
+      state.customerName,
+      state.customerEmail,
+      attributionQueryKey,
+    ],
+  );
+
+  const estimateForDisplay = useMemo((): FunnelReviewEstimate | null => {
+    if (state.estimateSnapshot) {
+      return {
+        priceCents: state.estimateSnapshot.priceCents,
+        durationMinutes: state.estimateSnapshot.durationMinutes,
+        confidence: state.estimateSnapshot.confidence,
+        source: "server",
+      };
+    }
+    return previewEstimate;
+  }, [state.estimateSnapshot, previewEstimate]);
+
+  const deepCleanCardForDisplay =
+    state.estimateSnapshot?.deepCleanProgramCard ?? previewDeepCleanCard;
 
   const currentStepOrder = useMemo(() => getStepOrder(state.step), [state.step]);
 
@@ -104,20 +258,159 @@ export function BookingFlowClient() {
   const canContinue = !stepError;
 
   const isHomeComplete =
-    !!state.homeSize && !!state.bedrooms && !!state.bathrooms;
+    !!state.homeSize &&
+    !!state.bedrooms &&
+    !!state.bathrooms &&
+    homeSizeHasValidSqftForEstimate(state.homeSize);
+  const isFactorsComplete = isBookingEstimateFactorsComplete(
+    state.estimateFactors,
+  );
   const isScheduleComplete = !!state.frequency && !!state.preferredTime;
   const isBookingReady =
-    !!state.serviceId && isHomeComplete && isScheduleComplete;
+    !!state.serviceId &&
+    isHomeComplete &&
+    isFactorsComplete &&
+    isScheduleComplete;
   const isContactReady = isBookingContactValid(
     state.customerName,
     state.customerEmail,
   );
   const canConfirmDirection = isBookingReady && isContactReady;
 
+  const intakePayloadSnapshot = useMemo(() => {
+    try {
+      const attribution = buildBookingAttributionFromSearchParams(
+        new URLSearchParams(attributionQueryKey),
+      );
+      const extras = {
+        ...attribution,
+        ...(isContactReady
+          ? {
+              customerName: state.customerName.trim(),
+              customerEmail: state.customerEmail.trim(),
+            }
+          : {}),
+      };
+      return buildSubmitBookingDirectionPayload(
+        state,
+        extras,
+      ) as unknown as BookingFlowDebugState["payloadSnapshot"];
+    } catch {
+      return null;
+    }
+  }, [state, attributionQueryKey, isContactReady]);
+
+  const bookingDebugState = useMemo<BookingFlowDebugState>(() => {
+    const visibleStepsList = bookingSteps.map((s) => s.id);
+    const currentStepLabel = getDebugStepLabel(state.step);
+    const recurringIntent = state.recurringIntent;
+    let selectedDecisionLabel: string | null = null;
+    if (recurringIntent?.type === "recurring") {
+      selectedDecisionLabel = `recurring:${recurringIntent.cadence}`;
+    } else if (recurringIntent?.type === "one_time") {
+      selectedDecisionLabel = "one_time";
+    }
+
+    const estimateStale =
+      state.step === "review" &&
+      state.estimateSnapshot != null &&
+      state.estimateSnapshot.previewRequestKey !== previewRequestKey;
+
+    const estimateReady =
+      state.step === "review"
+        ? Boolean(estimateForDisplay && !previewLoading && previewFetchCompleted)
+        : null;
+
+    return {
+      flowVersion: "NEW_FLOW_V1",
+      pathname,
+      currentStep: currentStepLabel,
+      visibleSteps: visibleStepsList,
+      canContinue,
+      stepError: stepError ?? null,
+      isLoadingEstimate: previewLoading,
+      estimateError: previewError,
+      estimateReady,
+      estimateStale,
+      decisionStepVisible: state.step === "decision",
+      recurringStepVisible: state.step === "recurring_setup",
+      reviewStepVisible: state.step === "review",
+      selectedFrequency:
+        typeof state.frequency === "string" && state.frequency.trim()
+          ? state.frequency
+          : null,
+      selectedDecision: selectedDecisionLabel,
+      selectedProgram:
+        typeof state.deepCleanProgram === "string" && state.deepCleanProgram.trim()
+          ? state.deepCleanProgram
+          : null,
+      zip: null,
+      homeSize: getDebugString(state.homeSize),
+      bedrooms: state.bedrooms || null,
+      bathrooms: state.bathrooms || null,
+      pricePreview:
+        estimateForDisplay as unknown as BookingFlowDebugState["pricePreview"],
+      estimatePipeline: {
+        previewLoading,
+        previewError,
+        previewFetchCompleted,
+        previewRequestKey,
+        snapshotRequestKey: state.estimateSnapshot?.previewRequestKey ?? null,
+        step: state.step,
+      } as BookingFlowDebugState["estimatePipeline"],
+      formSnapshot: state as unknown as BookingFlowDebugState["formSnapshot"],
+      payloadSnapshot: intakePayloadSnapshot,
+    };
+  }, [
+    pathname,
+    state,
+    stepError,
+    canContinue,
+    previewLoading,
+    previewError,
+    previewFetchCompleted,
+    previewRequestKey,
+    estimateForDisplay,
+    intakePayloadSnapshot,
+  ]);
+
+  useEffect(() => {
+    console.log("BOOKING_DEBUG_STATE", bookingDebugState);
+  }, [bookingDebugState]);
+
   const contactPayloadKey = useMemo(() => {
     if (!isContactReady) return "";
     return `${state.customerName.trim()}|${state.customerEmail.trim()}`;
   }, [isContactReady, state.customerName, state.customerEmail]);
+
+  const restoreBookingFlowState = (): BookingFlowState | null => {
+    if (typeof window === "undefined") return null;
+    const saved = window.sessionStorage.getItem(BOOKING_FLOW_SESSION_KEY);
+    if (!saved) return null;
+
+    try {
+      return JSON.parse(saved) as BookingFlowState;
+    } catch {
+      return null;
+    }
+  };
+
+  const clearPersistedBookingFlowState = () => {
+    if (typeof window === "undefined") return;
+    window.sessionStorage.removeItem(BOOKING_FLOW_SESSION_KEY);
+  };
+
+  useEffect(() => {
+    const restored = restoreBookingFlowState();
+    if (!restored) return;
+
+    setState(restored);
+    clearPersistedBookingFlowState();
+    skipUrlSearchParamsHydration.current = 1;
+    const qs = buildBookingSearchParams(restored).toString();
+    router.replace(`${pathname}?${qs}`, { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- session restore runs once on mount
+  }, []);
 
   useEffect(() => {
     if (
@@ -139,11 +432,6 @@ export function BookingFlowClient() {
 
   useEffect(() => {
     if (state.step !== "review") {
-      setPreviewEstimate(null);
-      setPreviewDeepCleanCard(null);
-      setPreviewLoading(false);
-      setPreviewError(null);
-      setPreviewFetchCompleted(false);
       return;
     }
 
@@ -153,6 +441,23 @@ export function BookingFlowClient() {
       setPreviewLoading(false);
       setPreviewError(null);
       setPreviewFetchCompleted(false);
+      setState((prev) =>
+        prev.estimateSnapshot ? { ...prev, estimateSnapshot: null } : prev,
+      );
+      return;
+    }
+
+    if (state.estimateSnapshot?.previewRequestKey === previewRequestKey) {
+      setPreviewEstimate({
+        priceCents: state.estimateSnapshot.priceCents,
+        durationMinutes: state.estimateSnapshot.durationMinutes,
+        confidence: state.estimateSnapshot.confidence,
+        source: "server",
+      });
+      setPreviewDeepCleanCard(state.estimateSnapshot.deepCleanProgramCard);
+      setPreviewLoading(false);
+      setPreviewError(null);
+      setPreviewFetchCompleted(true);
       return;
     }
 
@@ -165,57 +470,52 @@ export function BookingFlowClient() {
       new URLSearchParams(attributionQueryKey),
     );
 
-    const payload = {
-      serviceId: state.serviceId,
-      homeSize: state.homeSize,
-      bedrooms: state.bedrooms,
-      bathrooms: state.bathrooms,
-      pets: state.pets ?? "",
-      frequency: state.frequency,
-      preferredTime: state.preferredTime,
-      ...(isDeepCleaningBookingServiceId(state.serviceId) &&
-      state.deepCleanProgram
-        ? { deepCleanProgram: state.deepCleanProgram }
-        : {}),
+    const payload = buildSubmitBookingDirectionPayload(state, {
+      ...attribution,
       ...(isContactReady
         ? {
             customerName: state.customerName.trim(),
             customerEmail: state.customerEmail.trim(),
           }
         : {}),
-      ...attribution,
-    };
+    });
 
     void previewBookingDirectionEstimate(payload, { signal: ac.signal })
       .then((r) => {
         if (ac.signal.aborted) return;
+        const card = r.deepCleanProgram
+          ? mapIntakeDeepCleanSnapshotToCardProgram(r.deepCleanProgram)
+          : null;
         setPreviewEstimate({
           priceCents: r.estimate.priceCents,
           durationMinutes: r.estimate.durationMinutes,
           confidence: r.estimate.confidence,
           source: "server",
         });
-        setPreviewDeepCleanCard(
-          r.deepCleanProgram
-            ? mapIntakeDeepCleanSnapshotToCardProgram(r.deepCleanProgram)
-            : null,
-        );
+        setPreviewDeepCleanCard(card);
+        setState((prev) => ({
+          ...prev,
+          estimateSnapshot: {
+            previewRequestKey,
+            priceCents: r.estimate.priceCents,
+            durationMinutes: r.estimate.durationMinutes,
+            confidence: r.estimate.confidence,
+            source: "server",
+            deepCleanProgramCard: card,
+          },
+        }));
       })
       .catch((e: unknown) => {
         if (ac.signal.aborted) return;
-        const local = computeBookingFunnelLocalEstimate(state);
-        if (local) {
-          setPreviewEstimate(local);
-          setPreviewDeepCleanCard(null);
-          setPreviewError(null);
-          return;
-        }
         setPreviewEstimate(null);
         setPreviewDeepCleanCard(null);
+        setState((prev) =>
+          prev.estimateSnapshot ? { ...prev, estimateSnapshot: null } : prev,
+        );
         setPreviewError(
           e instanceof Error
             ? e.message
-            : "We couldn’t load an estimate. You can still confirm your direction.",
+            : "We couldn’t load an estimate from the server. Fix any issues above or try again.",
         );
       })
       .finally(() => {
@@ -227,6 +527,9 @@ export function BookingFlowClient() {
     return () => ac.abort();
   }, [
     state.step,
+    isBookingReady,
+    previewRequestKey,
+    state.estimateSnapshot?.previewRequestKey,
     state.serviceId,
     state.homeSize,
     state.bedrooms,
@@ -235,8 +538,10 @@ export function BookingFlowClient() {
     state.frequency,
     state.preferredTime,
     state.deepCleanProgram,
-    isBookingReady,
-    contactPayloadKey,
+    state.estimateFactors,
+    isContactReady,
+    state.customerName,
+    state.customerEmail,
     attributionQueryKey,
   ]);
 
@@ -245,28 +550,49 @@ export function BookingFlowClient() {
       setAttemptedNext(false);
     }
 
+    if (state.step === "factors" && isFactorsComplete) {
+      setAttemptedNext(false);
+    }
+
     if (state.step === "schedule" && isScheduleComplete) {
       setAttemptedNext(false);
     }
-  }, [state.step, isHomeComplete, isScheduleComplete]);
+  }, [state.step, isHomeComplete, isFactorsComplete, isScheduleComplete]);
 
   // URL → STATE (ONLY runs when searchParams change)
   useEffect(() => {
-    const parsed = parseBookingSearchParams(
-      new URLSearchParams(searchParams?.toString() ?? ""),
-    );
-
     setState((prev) => {
-      const parsedSerialized = serializeState(parsed);
-      const currentSerialized = serializeState(prev);
-      if (parsedSerialized === currentSerialized) {
+      if (skipUrlSearchParamsHydration.current > 0) {
+        skipUrlSearchParamsHydration.current -= 1;
         return prev;
       }
-      return {
+
+      const parsed = parseBookingSearchParams(
+        new URLSearchParams(searchParams?.toString() ?? ""),
+      );
+
+      const mergedBase: BookingFlowState = {
         ...parsed,
         customerName: prev.customerName,
         customerEmail: prev.customerEmail,
       };
+
+      const sameDriving =
+        buildBookingEstimateDrivingSignature(mergedBase) ===
+        buildBookingEstimateDrivingSignature(prev);
+
+      const merged: BookingFlowState = {
+        ...mergedBase,
+        recurringIntent: sameDriving ? prev.recurringIntent : undefined,
+        recurringSetup: sameDriving ? prev.recurringSetup : undefined,
+        estimateSnapshot: sameDriving ? prev.estimateSnapshot : null,
+      };
+
+      if (serializeState(merged) === serializeState(prev)) {
+        return prev;
+      }
+
+      return merged;
     });
   }, [searchParams]);
 
@@ -289,42 +615,130 @@ export function BookingFlowClient() {
   function goNext() {
     setAttemptedNext(true);
 
+    console.log("BOOKING_DEBUG_NEXT", {
+      currentStep: bookingDebugState.currentStep,
+      canContinue: bookingDebugState.canContinue,
+      stepError: bookingDebugState.stepError,
+      estimateReady: bookingDebugState.estimateReady,
+      estimateStale: bookingDebugState.estimateStale,
+      decisionStepVisible: bookingDebugState.decisionStepVisible,
+      recurringStepVisible: bookingDebugState.recurringStepVisible,
+      formSnapshot: bookingDebugState.formSnapshot,
+      payloadSnapshot: bookingDebugState.payloadSnapshot,
+    });
+
     if (stepError) return;
 
     setAttemptedNext(false);
 
     if (state.step === "service") return goToStep("home");
-    if (state.step === "home") return goToStep("schedule");
+    if (state.step === "home") return goToStep("factors");
+    if (state.step === "factors") return goToStep("schedule");
     if (state.step === "schedule") return goToStep("review");
+    if (state.step === "review") return goToStep("decision");
+    if (state.step === "recurring_setup") return goToStep("confirm");
   }
 
   async function confirmBookingDirection() {
     setSubmitError(null);
     setAttemptedConfirm(true);
     if (!isBookingReady || !isContactReady) return;
+    if (!state.estimateSnapshot) {
+      setSubmitError(
+        "Your estimate snapshot is missing. Go back to review and wait for the estimate to load.",
+      );
+      return;
+    }
+
+    const attribution = buildBookingAttributionFromSearchParams(
+      new URLSearchParams(searchParams?.toString() ?? ""),
+    );
+    const contactExtras = {
+      customerName: state.customerName.trim(),
+      customerEmail: state.customerEmail.trim(),
+      ...attribution,
+    };
+
+    if (state.recurringIntent?.type === "recurring") {
+      if (!hasRole("customer")) {
+        setSubmitError(
+          "Please sign in with your customer account to create a recurring plan.",
+        );
+        return;
+      }
+      const setupResolved = state.recurringSetup;
+      if (!setupResolved || !isRecurringSetupComplete(setupResolved)) {
+        setSubmitError(
+          "Complete recurring setup: first visit date and arrival window.",
+        );
+        return;
+      }
+      const nextAnchorAt = toNextAnchorIso(
+        setupResolved.nextAnchorDate,
+        setupResolved.timePreference,
+      );
+
+      setIsSubmitting(true);
+      try {
+        const recurringResult = await createRecurringPlan(
+          buildCreateRecurringPlanRequest(
+            state,
+            contactExtras,
+            state.recurringIntent.cadence,
+            {
+              nextAnchorAt,
+              preferredTimeWindow: setupResolved.timePreference,
+              defaultAddonIds: setupResolved.addonIds,
+              preferredFoId: setupResolved.preferredFoId,
+              bookingNotes: setupResolved.bookingNotes,
+            },
+          ),
+        );
+
+        const q = new URLSearchParams();
+        q.set("recurringPlanId", String(recurringResult.recurringPlan.id));
+        q.set(
+          "occurrenceStatus",
+          String(recurringResult.firstOccurrenceGenerationResult.status),
+        );
+        const bid = recurringResult.firstOccurrenceGenerationResult.bookingId;
+        if (bid) {
+          q.set("bookingId", bid);
+          q.set("priceCents", String(state.estimateSnapshot.priceCents));
+          q.set("durationMinutes", String(state.estimateSnapshot.durationMinutes));
+          q.set("confidence", String(state.estimateSnapshot.confidence));
+        }
+        const genErr =
+          recurringResult.firstOccurrenceGenerationResult.generationError;
+        if (genErr) {
+          q.set("recurringGenError", genErr);
+        }
+        if (
+          isDeepCleaningBookingServiceId(state.serviceId) &&
+          state.deepCleanProgram
+        ) {
+          q.set("dcProgram", state.deepCleanProgram);
+        }
+
+        router.push(`/book/confirmation?${q.toString()}`);
+      } catch (err) {
+        console.error("recurring plan create failed", err);
+        setSubmitError(
+          err instanceof Error
+            ? err.message
+            : "We couldn’t create your recurring plan. Please try again.",
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
 
     setIsSubmitting(true);
     try {
-      const attribution = buildBookingAttributionFromSearchParams(
-        new URLSearchParams(searchParams?.toString() ?? ""),
+      const result = await submitBookingDirectionIntake(
+        buildSubmitBookingDirectionPayload(state, contactExtras),
       );
-
-      const result = await submitBookingDirectionIntake({
-        serviceId: state.serviceId,
-        homeSize: state.homeSize,
-        bedrooms: state.bedrooms,
-        bathrooms: state.bathrooms,
-        pets: state.pets ?? "",
-        frequency: state.frequency,
-        preferredTime: state.preferredTime,
-        ...(isDeepCleaningBookingServiceId(state.serviceId) &&
-        state.deepCleanProgram
-          ? { deepCleanProgram: state.deepCleanProgram }
-          : {}),
-        customerName: state.customerName.trim(),
-        customerEmail: state.customerEmail.trim(),
-        ...attribution,
-      });
 
       const q = new URLSearchParams();
       q.set("intakeId", result.intakeId);
@@ -361,14 +775,34 @@ export function BookingFlowClient() {
   }
 
   function goBack() {
+    console.log("BOOKING_DEBUG_BACK", {
+      currentStep: bookingDebugState.currentStep,
+      visibleSteps: bookingDebugState.visibleSteps,
+    });
+
     setAttemptedNext(false);
 
+    if (state.step === "confirm") {
+      setAttemptedConfirm(false);
+      setSubmitError(null);
+      if (state.recurringIntent?.type === "recurring") {
+        return goToStep("recurring_setup");
+      }
+      return goToStep("decision");
+    }
+    if (state.step === "recurring_setup") {
+      return goToStep("decision");
+    }
+    if (state.step === "decision") {
+      return goToStep("review");
+    }
     if (state.step === "review") {
       setAttemptedConfirm(false);
       setSubmitError(null);
       return goToStep("schedule");
     }
-    if (state.step === "schedule") return goToStep("home");
+    if (state.step === "schedule") return goToStep("factors");
+    if (state.step === "factors") return goToStep("home");
     if (state.step === "home") return goToStep("service");
     return;
   }
@@ -377,15 +811,90 @@ export function BookingFlowClient() {
     setAttemptedNext(false);
     setAttemptedConfirm(false);
     setSubmitError(null);
-    setState((prev) => ({ ...prev, ...patch }));
+    setState((prev) => {
+      const next = { ...prev, ...patch };
+      if (patchTouchesEstimateSnapshot(patch)) {
+        next.estimateSnapshot = null;
+        next.recurringSetup = undefined;
+      }
+      return next;
+    });
   }
 
   function patchContactState(
     patch: Partial<Pick<BookingFlowState, "customerName" | "customerEmail">>,
   ) {
     setSubmitError(null);
-    setState((prev) => ({ ...prev, ...patch }));
+    setState((prev) => ({
+      ...prev,
+      ...patch,
+      estimateSnapshot: null,
+    }));
   }
+
+  const handleOneTimeDecision = () => {
+    setState((current) => ({
+      ...current,
+      recurringIntent: { type: "one_time" },
+      recurringSetup: undefined,
+      step: "confirm",
+    }));
+  };
+
+  const handleRecurringDecision = (cadence: RecurringCadence) => {
+    setState((prev) => {
+      const next: BookingFlowState = {
+        ...prev,
+        recurringIntent: { type: "recurring", cadence },
+      };
+
+      if (!hasAuthenticatedCustomerSession()) {
+        if (typeof window !== "undefined") {
+          window.sessionStorage.setItem(
+            BOOKING_FLOW_SESSION_KEY,
+            JSON.stringify(next),
+          );
+        }
+        void Promise.resolve().then(() =>
+          router.push("/auth/login?redirect=/book"),
+        );
+        return next;
+      }
+
+      return {
+        ...next,
+        step: "recurring_setup",
+        recurringSetup: createDefaultRecurringSetup(
+          next.estimateFactors.addonIds ?? [],
+        ),
+      };
+    });
+  };
+
+  const recurringAddonOptions = useMemo(
+    () =>
+      ESTIMATE_ADDON_OPTIONS.map((row) => ({
+        id: row.id,
+        label: row.label,
+      })),
+    [],
+  );
+
+  useEffect(() => {
+    if (
+      state.step !== "recurring_setup" ||
+      state.recurringIntent?.type !== "recurring" ||
+      state.recurringSetup
+    ) {
+      return;
+    }
+    setState((prev) => ({
+      ...prev,
+      recurringSetup: createDefaultRecurringSetup(
+        prev.estimateFactors.addonIds ?? [],
+      ),
+    }));
+  }, [state.step, state.recurringIntent, state.recurringSetup]);
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
@@ -433,6 +942,8 @@ export function BookingFlowClient() {
                     setState((prev) => ({
                       ...prev,
                       serviceId,
+                      estimateSnapshot: null,
+                      recurringSetup: undefined,
                       deepCleanProgram: isDeepCleaningBookingServiceId(
                         serviceId,
                       )
@@ -461,6 +972,13 @@ export function BookingFlowClient() {
                 />
               ) : null}
 
+              {state.step === "factors" ? (
+                <BookingStepEstimateFactors
+                  state={state}
+                  onChange={(patch) => patchState(patch)}
+                />
+              ) : null}
+
               {state.step === "schedule" ? (
                 <BookingStepSchedule
                   state={state}
@@ -476,17 +994,43 @@ export function BookingFlowClient() {
               {state.step === "review" ? (
                 <BookingStepReview
                   state={state}
-                  previewEstimate={previewEstimate}
-                  previewDeepCleanCard={previewDeepCleanCard}
+                  previewEstimate={estimateForDisplay}
+                  previewDeepCleanCard={deepCleanCardForDisplay}
                   previewLoading={previewLoading}
                   previewError={previewError}
                   previewFetchCompleted={previewFetchCompleted}
                   previewErrorRef={errorRef}
                   showContactFieldErrors={
-                    attemptedConfirm && isBookingReady && !isContactReady
+                    (attemptedNext || attemptedConfirm) &&
+                    isBookingReady &&
+                    !isContactReady
                   }
                   onContactChange={patchContactState}
                 />
+              ) : null}
+
+              {state.step === "decision" ? (
+                <BookingStepDecision
+                  onOneTime={handleOneTimeDecision}
+                  onRecurring={handleRecurringDecision}
+                />
+              ) : null}
+
+              {state.step === "recurring_setup" &&
+              state.recurringSetup &&
+              state.recurringIntent?.type === "recurring" ? (
+                <BookingStepRecurringSetup
+                  value={state.recurringSetup}
+                  foOptions={[]}
+                  addonOptions={recurringAddonOptions}
+                  onChange={(next) =>
+                    setState((prev) => ({ ...prev, recurringSetup: next }))
+                  }
+                />
+              ) : null}
+
+              {state.step === "confirm" ? (
+                <BookingStepConfirm state={state} />
               ) : null}
 
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -506,7 +1050,16 @@ export function BookingFlowClient() {
                   </Link>
                 )}
 
-                {state.step !== "review" ? (
+                {state.step === "decision" ? null : state.step === "confirm" ? (
+                  <button
+                    type="button"
+                    disabled={isSubmitting}
+                    onClick={() => void confirmBookingDirection()}
+                    className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {isSubmitting ? "Sending…" : "Confirm Booking Direction"}
+                  </button>
+                ) : (
                   <button
                     onClick={goNext}
                     aria-disabled={!canContinue}
@@ -518,19 +1071,10 @@ export function BookingFlowClient() {
                   >
                     Continue
                   </button>
-                ) : (
-                  <button
-                    type="button"
-                    disabled={isSubmitting}
-                    onClick={() => void confirmBookingDirection()}
-                    className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {isSubmitting ? "Sending…" : "Confirm Booking Direction"}
-                  </button>
                 )}
               </div>
 
-              {state.step === "review" ? (
+              {state.step === "confirm" ? (
                 submitError ? (
                   <p
                     ref={errorRef}
@@ -543,8 +1087,8 @@ export function BookingFlowClient() {
                     ref={errorRef}
                     className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
                   >
-                    Please complete home details and schedule selections before
-                    confirming.
+                    Please complete home details, job questionnaire, and
+                    schedule selections before confirming.
                   </p>
                 ) : attemptedConfirm && isBookingReady && !isContactReady ? (
                   <p
@@ -552,6 +1096,22 @@ export function BookingFlowClient() {
                     className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
                   >
                     Please add your name and a valid email before confirming.
+                  </p>
+                ) : null
+              ) : state.step === "review" ? (
+                submitError ? (
+                  <p
+                    ref={errorRef}
+                    className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
+                  >
+                    {submitError}
+                  </p>
+                ) : attemptedNext && stepError ? (
+                  <p
+                    ref={errorRef}
+                    className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
+                  >
+                    {stepError}
                   </p>
                 ) : null
               ) : attemptedNext && stepError ? (
@@ -568,7 +1128,7 @@ export function BookingFlowClient() {
               <BookingSummaryCard
                 state={state}
                 step={state.step}
-                previewEstimate={previewEstimate}
+                previewEstimate={estimateForDisplay}
                 previewLoading={previewLoading}
                 previewError={previewError}
               />
@@ -591,6 +1151,8 @@ export function BookingFlowClient() {
       </main>
 
       <PublicSiteFooter />
+
+      <BookingFlowDebugPanel state={bookingDebugState} />
     </div>
   );
 }
