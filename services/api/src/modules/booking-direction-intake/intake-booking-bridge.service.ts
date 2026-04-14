@@ -15,6 +15,7 @@ import {
   mapIntakeFieldsToEstimateInput,
   mapIntakeToEstimateInput,
 } from "./intake-to-estimate.mapper";
+import { defaultIntakeQuestionnaireFactors } from "./intake-default-questionnaire";
 
 export type DeepCleanProgramVisitSubmitDisplay = {
   visitIndex: number;
@@ -124,7 +125,8 @@ export class IntakeBookingBridgeService {
         serviceId: dto.serviceId,
         frequency: dto.frequency,
         deepCleanProgram: dto.deepCleanProgram ?? null,
-        estimateFactors: dto.estimateFactors,
+        estimateFactors:
+          dto.estimateFactors ?? defaultIntakeQuestionnaireFactors(),
       });
     } catch (err: unknown) {
       if (err instanceof IntakeEstimateMappingError) {

@@ -76,9 +76,11 @@ export class CreateBookingDirectionIntakeDto {
   @MaxLength(200)
   pets?: string;
 
+  /** Optional on the wire: client may omit; server applies defaults for mapping when absent. */
+  @IsOptional()
   @ValidateNested()
   @Type(() => EstimateFactorsDto)
-  estimateFactors!: EstimateFactorsDto;
+  estimateFactors?: EstimateFactorsDto;
 
   @IsString()
   @MaxLength(80)

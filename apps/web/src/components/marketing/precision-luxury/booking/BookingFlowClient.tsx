@@ -33,7 +33,10 @@ import BookingStepRecurringSetup from "./BookingStepRecurringSetup";
 import { BookingStepConfirm } from "./BookingStepConfirm";
 import { BookingSummaryCard } from "./BookingSummaryCard";
 import { BookingServiceHandoffCard } from "./BookingServiceHandoffCard";
-import type { BookingDirectionEstimatePreviewResponse } from "./bookingDirectionIntakeApi";
+import type {
+  BookingDirectionEstimatePreviewResponse,
+  IntakeEstimateFactorsPayload,
+} from "./bookingDirectionIntakeApi";
 import {
   buildBookingAttributionFromSearchParams,
   submitBookingDirectionIntake,
@@ -45,10 +48,14 @@ import { isBookingContactValid } from "./bookingContactValidation";
 import type { FunnelReviewEstimate } from "./bookingFlowTypes";
 import {
   ESTIMATE_ADDON_OPTIONS,
+  buildEstimateFactorsPayload,
   homeSizeHasValidSqftForEstimate,
   isBookingEstimateFactorsComplete,
 } from "./bookingEstimateFactors";
-import { buildSubmitBookingDirectionPayload } from "./bookingIntakePayload";
+import {
+  buildPreviewBookingDirectionPayload,
+  buildSubmitBookingDirectionPayload,
+} from "./bookingIntakePayload";
 import {
   buildCreateRecurringPlanRequest,
   createRecurringPlan,
@@ -231,7 +238,17 @@ function serializeState(state: BookingFlowState) {
   return buildBookingSearchParams(state).toString();
 }
 
-function getStepError(state: BookingFlowState): string | null {
+type ReviewPreviewGateContext = {
+  previewLoading: boolean;
+  previewError: string | null;
+  previewFetchCompleted: boolean;
+  isBookingReady: boolean;
+};
+
+function getStepError(
+  state: BookingFlowState,
+  reviewPreview?: ReviewPreviewGateContext | null,
+): string | null {
   if (state.step === "service" && !state.serviceId) {
     return "Please choose a service before continuing.";
   }
@@ -259,11 +276,21 @@ function getStepError(state: BookingFlowState): string | null {
     return "Please choose your preferred frequency and timing before continuing.";
   }
 
-  if (
-    state.step === "review" &&
-    !isBookingContactValid(state.customerName, state.customerEmail)
-  ) {
-    return "Please add your name and a valid email before continuing.";
+  if (state.step === "review") {
+    if (reviewPreview?.isBookingReady) {
+      if (reviewPreview.previewLoading || !reviewPreview.previewFetchCompleted) {
+        return "Your estimate is still loading. Please wait before continuing.";
+      }
+      if (reviewPreview.previewError) {
+        return "We could not load your estimate. Please review your details and try again.";
+      }
+      if (!state.estimateSnapshot) {
+        return "Your estimate snapshot is missing. Go back to review and wait for the estimate to load.";
+      }
+    }
+    if (!isBookingContactValid(state.customerName, state.customerEmail)) {
+      return "Please add your name and a valid email before continuing.";
+    }
   }
 
   if (
@@ -272,6 +299,10 @@ function getStepError(state: BookingFlowState): string | null {
     !isRecurringSetupComplete(state.recurringSetup)
   ) {
     return "Choose your first visit date and preferred arrival window before continuing.";
+  }
+
+  if (state.step === "confirm" && !state.estimateSnapshot) {
+    return "Your estimate snapshot is missing. Go back to review and wait for the estimate to load.";
   }
 
   return null;
@@ -353,9 +384,6 @@ export function BookingFlowClient() {
 
   const currentStepOrder = useMemo(() => getStepOrder(state.step), [state.step]);
 
-  const stepError = useMemo(() => getStepError(state), [state]);
-  const canContinue = !stepError;
-
   const isHomeComplete =
     !!state.homeSize &&
     !!state.bedrooms &&
@@ -375,6 +403,24 @@ export function BookingFlowClient() {
     state.customerEmail,
   );
   const canConfirmDirection = isBookingReady && isContactReady;
+
+  const stepError = useMemo(
+    () =>
+      getStepError(state, {
+        previewLoading,
+        previewError,
+        previewFetchCompleted,
+        isBookingReady,
+      }),
+    [
+      state,
+      previewLoading,
+      previewError,
+      previewFetchCompleted,
+      isBookingReady,
+    ],
+  );
+  const canContinue = !stepError;
 
   const orderedStepIds = useMemo(() => bookingSteps.map((s) => s.id), []);
 
@@ -877,7 +923,7 @@ export function BookingFlowClient() {
       new URLSearchParams(attributionQueryKey),
     );
 
-    const payload = buildSubmitBookingDirectionPayload(state, {
+    const payload = buildPreviewBookingDirectionPayload(state, {
       ...attribution,
       ...(isContactReady
         ? {
@@ -1249,9 +1295,12 @@ export function BookingFlowClient() {
 
     setIsSubmitting(true);
     try {
-      const result = await submitBookingDirectionIntake(
-        buildSubmitBookingDirectionPayload(state, contactExtras),
-      );
+      const result = await submitBookingDirectionIntake({
+        ...buildSubmitBookingDirectionPayload(state, contactExtras),
+        estimateFactors: buildEstimateFactorsPayload(
+          state.estimateFactors,
+        ) as IntakeEstimateFactorsPayload,
+      });
 
       const q = new URLSearchParams();
       q.set("intakeId", result.intakeId);
@@ -1347,6 +1396,12 @@ export function BookingFlowClient() {
   }
 
   const handleOneTimeDecision = () => {
+    if (!state.estimateSnapshot) {
+      setSubmitError(
+        "Your estimate snapshot is missing. Go back to review and wait for the estimate to load.",
+      );
+      return;
+    }
     setState((current) => ({
       ...current,
       recurringIntent: { type: "one_time" },

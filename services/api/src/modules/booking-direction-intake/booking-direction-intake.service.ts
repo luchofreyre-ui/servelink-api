@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma";
 import type { CreateBookingDirectionIntakeDto } from "./dto/create-booking-direction-intake.dto";
 import { intakeServiceIdImpliesDeepClean } from "./intake-service-type.util";
+import { defaultIntakeQuestionnaireFactors } from "./intake-default-questionnaire";
 
 @Injectable()
 export class BookingDirectionIntakeService {
@@ -23,7 +24,8 @@ export class BookingDirectionIntakeService {
         frequency: dto.frequency.trim(),
         preferredTime: dto.preferredTime.trim(),
         deepCleanProgram,
-        estimateFactors: dto.estimateFactors as object,
+        estimateFactors: (dto.estimateFactors ??
+          defaultIntakeQuestionnaireFactors()) as object,
         customerName: dto.customerName?.trim() || null,
         customerEmail: dto.customerEmail?.trim() || null,
         source: dto.source?.trim() || null,
