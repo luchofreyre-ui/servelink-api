@@ -74,6 +74,21 @@ type LastSuccessfulPreviewNetworkDebug = {
   snapshot: unknown;
 };
 
+type ReviewNextAttemptDebugEvent = {
+  timestamp: string;
+  currentStep: string | null;
+  previewLoading: boolean;
+  previewError: string | null;
+  estimateSnapshotPresent: boolean;
+  canContinue: boolean | null;
+  stepError: string | null;
+  outcome:
+    | "blocked_loading"
+    | "blocked_error"
+    | "blocked_missing_snapshot"
+    | "allowed";
+};
+
 /** Field ids rendered by `BookingStepHomeDetails` (must match that component). */
 const HOME_STEP_RENDERED_FIELD_IDS = [
   "homeSize",
@@ -356,6 +371,14 @@ export function BookingFlowClient() {
   const [reviewNavigationBlock, setReviewNavigationBlock] = useState<
     string | null
   >(null);
+  const [debugReviewNextAttempts, setDebugReviewNextAttempts] = useState<
+    ReviewNextAttemptDebugEvent[]
+  >([]);
+
+  const pushDebugReviewNextAttempt = (event: ReviewNextAttemptDebugEvent) => {
+    setDebugReviewNextAttempts((prev) => [...prev.slice(-9), event]);
+  };
+
   const lastSuccessfulPreviewNetworkRef =
     useRef<LastSuccessfulPreviewNetworkDebug | null>(null);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
@@ -435,6 +458,22 @@ export function BookingFlowClient() {
     ],
   );
   const canContinue = !stepError;
+
+  /** Latest UI guard inputs for `goNext` (avoids stale handler reads during rapid preview churn). */
+  const reviewGuardUiRef = useRef({
+    previewLoading,
+    previewError,
+    estimateSnapshot: state.estimateSnapshot,
+    canContinue,
+    stepError,
+  });
+  reviewGuardUiRef.current = {
+    previewLoading,
+    previewError,
+    estimateSnapshot: state.estimateSnapshot,
+    canContinue,
+    stepError,
+  };
 
   const orderedStepIds = useMemo(() => bookingSteps.map((s) => s.id), []);
 
@@ -695,6 +734,7 @@ export function BookingFlowClient() {
       previewResponseOk: debugPreviewResponseOk,
       previewResponseStatus: debugPreviewResponseStatus,
       previewSource: debugPreviewSource,
+      reviewNextAttempts: safeJsonLike(debugReviewNextAttempts),
     };
   }, [
     pathname,
@@ -732,6 +772,7 @@ export function BookingFlowClient() {
     debugPreviewResponseOk,
     debugPreviewResponseStatus,
     debugPreviewSource,
+    debugReviewNextAttempts,
   ]);
 
   useEffect(() => {
@@ -856,6 +897,28 @@ export function BookingFlowClient() {
     bookingDebugState.estimateFactorsPresentInSubmitPayload,
     bookingDebugState.submitPayloadSnapshot,
     bookingDebugState.confirmBlockedReason,
+  ]);
+
+  useEffect(() => {
+    if (state.step !== "review") return;
+
+    console.log("BOOKING_DEBUG_REVIEW_GUARD_STATE", {
+      currentStep: state.step,
+      previewLoading: Boolean(previewLoading),
+      previewError: previewError == null ? null : String(previewError),
+      estimateSnapshotPresent: Boolean(state.estimateSnapshot),
+      canContinue: typeof canContinue === "boolean" ? canContinue : null,
+      stepError: stepError == null ? null : String(stepError),
+      reviewNextAttempts: debugReviewNextAttempts,
+    });
+  }, [
+    state.step,
+    previewLoading,
+    previewError,
+    state.estimateSnapshot,
+    canContinue,
+    stepError,
+    debugReviewNextAttempts,
   ]);
 
   const contactPayloadKey = useMemo(() => {
@@ -1226,24 +1289,48 @@ export function BookingFlowClient() {
     setAttemptedNext(true);
 
     if (state.step === "review") {
-      if (previewLoading) {
+      const g = reviewGuardUiRef.current;
+      const baseEvent = {
+        timestamp: new Date().toISOString(),
+        currentStep: "review" as const,
+        previewLoading: Boolean(g.previewLoading),
+        previewError: g.previewError == null ? null : String(g.previewError),
+        estimateSnapshotPresent: Boolean(g.estimateSnapshot),
+        canContinue: typeof g.canContinue === "boolean" ? g.canContinue : null,
+        stepError: g.stepError == null ? null : String(g.stepError),
+      };
+
+      if (g.previewLoading) {
+        const evt = { ...baseEvent, outcome: "blocked_loading" as const };
+        pushDebugReviewNextAttempt(evt);
+        console.log(`BOOKING_DEBUG_REVIEW_NEXT_ATTEMPT:${JSON.stringify(evt)}`);
         setReviewNavigationBlock(
           "Your estimate is still loading. Please wait before continuing.",
         );
         return;
       }
-      if (previewError) {
+      if (g.previewError) {
+        const evt = { ...baseEvent, outcome: "blocked_error" as const };
+        pushDebugReviewNextAttempt(evt);
+        console.log(`BOOKING_DEBUG_REVIEW_NEXT_ATTEMPT:${JSON.stringify(evt)}`);
         setReviewNavigationBlock(
           "We could not load your estimate. Please review your details and try again.",
         );
         return;
       }
-      if (!state.estimateSnapshot) {
+      if (!g.estimateSnapshot) {
+        const evt = { ...baseEvent, outcome: "blocked_missing_snapshot" as const };
+        pushDebugReviewNextAttempt(evt);
+        console.log(`BOOKING_DEBUG_REVIEW_NEXT_ATTEMPT:${JSON.stringify(evt)}`);
         setReviewNavigationBlock(
           "Your estimate snapshot is missing. Go back to review and wait for the estimate to load.",
         );
         return;
       }
+
+      const allowedEvt = { ...baseEvent, outcome: "allowed" as const };
+      pushDebugReviewNextAttempt(allowedEvt);
+      console.log(`BOOKING_DEBUG_REVIEW_NEXT_ATTEMPT:${JSON.stringify(allowedEvt)}`);
     }
     setReviewNavigationBlock(null);
 
@@ -1617,6 +1704,26 @@ export function BookingFlowClient() {
                   {String(bookingDebugState.estimateFactorsPresentInSubmitPayload)}
                 </div>
               </div>
+
+              {bookingDebugState.currentStep === "review" ? (
+                <div className="mb-4 rounded-xl border border-purple-300 bg-purple-50 p-3 text-xs text-purple-950">
+                  <div className="mb-1 font-semibold">Review Guard Truth</div>
+                  <div>
+                    previewLoading: {String(bookingDebugState.isLoadingEstimate)}
+                  </div>
+                  <div>previewError: {bookingDebugState.estimateError ?? "null"}</div>
+                  <div>
+                    estimateSnapshotPresent:{" "}
+                    {String(bookingDebugState.estimateSnapshotPresent)}
+                  </div>
+                  <div>canContinue: {String(bookingDebugState.canContinue)}</div>
+                  <div>stepError: {bookingDebugState.stepError ?? "null"}</div>
+                  <div>
+                    confirmBlockedReason:{" "}
+                    {bookingDebugState.confirmBlockedReason ?? "null"}
+                  </div>
+                </div>
+              ) : null}
 
               {bookingDebugState.currentStep === "home" ? (
                 <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-950">

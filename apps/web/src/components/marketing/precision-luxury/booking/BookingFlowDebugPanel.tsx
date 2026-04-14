@@ -72,6 +72,7 @@ export type BookingFlowDebugState = {
   previewResponseOk?: boolean | null;
   previewResponseStatus?: number | null;
   previewSource?: string | null;
+  reviewNextAttempts?: JsonLike;
 };
 
 function pretty(value: unknown) {
@@ -210,6 +211,16 @@ export function BookingFlowDebugPanel({
           <div className="mb-2 text-sm font-semibold text-white">Submit Payload Snapshot</div>
           <pre className="overflow-x-auto whitespace-pre-wrap text-white/90">
             {pretty(state.submitPayloadSnapshot)}
+          </pre>
+        </div>
+
+        <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="mb-2 text-sm font-semibold text-white">Review Next Attempts</div>
+          <pre
+            data-testid="booking-debug-review-next-attempts"
+            className="overflow-x-auto whitespace-pre-wrap text-white/90"
+          >
+            {pretty(state.reviewNextAttempts)}
           </pre>
         </div>
       </div>
