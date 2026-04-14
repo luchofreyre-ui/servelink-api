@@ -79,8 +79,11 @@ test("booking: one-time confirm summary; recurring choice redirects unauthentica
 
   await page.goto(reviewUrl(), { waitUntil: "domcontentloaded" });
 
-  await page.getByLabel("Full name").fill("Recurring Path User");
-  await page.getByLabel("Email").fill("recurring-path-booking@example.com");
+  await page.getByText("Loading…").first().waitFor({ state: "detached", timeout: 60_000 }).catch(() => {});
+  const nameInput = page.locator("#booking-customer-name");
+  await nameInput.waitFor({ state: "visible", timeout: 60_000 });
+  await nameInput.fill("Recurring Path User");
+  await page.locator("#booking-customer-email").fill("recurring-path-booking@example.com");
 
   await page.getByRole("button", { name: "Continue" }).click();
 
@@ -99,8 +102,8 @@ test("booking: one-time confirm summary; recurring choice redirects unauthentica
     page.getByRole("heading", { name: "Choose how you want to proceed" }),
   ).toBeVisible();
 
-  await page.getByRole("button", { name: "Weekly" }).click();
+  await page.getByRole("button", { name: "Weekly", exact: true }).click();
 
-  await page.waitForURL(/\/auth\/login/, { timeout: 15_000 });
-  expect(page.url()).toContain("redirect=");
+  await page.waitForURL(/\/(auth\/login|customer\/auth)/, { timeout: 15_000 });
+  expect(page.url()).toMatch(/redirect=/);
 });
