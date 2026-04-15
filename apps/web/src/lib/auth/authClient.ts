@@ -2,7 +2,7 @@ import {
   clearStoredAccessToken,
   getStoredAccessToken,
   setStoredAccessToken,
-} from "@/lib/auth";
+} from "../auth";
 
 export type UserRole = "admin" | "fo" | "customer";
 

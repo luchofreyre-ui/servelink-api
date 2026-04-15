@@ -135,7 +135,9 @@ test("booking: one-time path reaches confirm with schedule and cleaner summary",
   await expect(page.getByTestId("booking-debug-url-state-consistent")).toHaveText(/true/);
 
   await expect(page.getByText("Schedule", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText(/Frequency:/)).toBeVisible();
+  await expect(
+    page.getByText("Frequency", { exact: true }).first(),
+  ).toBeVisible();
   await expect(page.getByText("Cleaner preference", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Estimate", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/Locked review estimate:/)).toBeVisible();

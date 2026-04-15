@@ -11,6 +11,9 @@ interface SearchPageProps {
   }>;
 }
 
+/** Results depend on `searchParams`; avoid static prerender / partial static errors. */
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Search | Cleaning Encyclopedia",
   description:
