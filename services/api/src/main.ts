@@ -1,3 +1,4 @@
+import { execSync } from "child_process";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
@@ -27,17 +28,28 @@ function parseAllowedOrigins(): string[] {
   return [...new Set([...DEFAULT_LOCAL_DEV_ORIGINS, ...fromEnv])];
 }
 
+function runPrismaMigrationsOrExit(): void {
+  try {
+    execSync("npx prisma migrate deploy", { stdio: "inherit" });
+  } catch (error) {
+    console.error("Prisma migrate deploy failed:", error);
+    process.exit(1);
+  }
+}
+
 async function bootstrap() {
+  runPrismaMigrationsOrExit();
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bodyParser: false,
   });
+
   applyBodyParserMiddleware(app.getHttpAdapter().getInstance());
 
   const allowedOrigins = parseAllowedOrigins();
 
   app.enableCors({
     origin: (origin, callback) => {
-      // allow server-to-server / curl / no-origin requests
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
