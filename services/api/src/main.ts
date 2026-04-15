@@ -28,17 +28,19 @@ function parseAllowedOrigins(): string[] {
   return [...new Set([...DEFAULT_LOCAL_DEV_ORIGINS, ...fromEnv])];
 }
 
-function runPrismaMigrationsOrExit(): void {
+async function bootstrap() {
+  console.log("=== MIGRATION START ===");
+
   try {
+    console.log("Running prisma migrate deploy...");
     execSync("npx prisma migrate deploy", { stdio: "inherit" });
+    console.log("=== MIGRATION COMPLETE ===");
   } catch (error) {
-    console.error("Prisma migrate deploy failed:", error);
+    console.error("=== MIGRATION FAILED ===", error);
     process.exit(1);
   }
-}
 
-async function bootstrap() {
-  runPrismaMigrationsOrExit();
+  console.log("=== CONTINUING TO NEST BOOT ===");
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bodyParser: false,
