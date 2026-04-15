@@ -1,3 +1,4 @@
+import { execSync } from "child_process";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
@@ -28,6 +29,19 @@ function parseAllowedOrigins(): string[] {
 }
 
 async function bootstrap() {
+  console.log("=== MIGRATION START ===");
+
+  try {
+    console.log("Running prisma migrate deploy...");
+    execSync("npx prisma migrate deploy", { stdio: "inherit" });
+    console.log("=== MIGRATION COMPLETE ===");
+  } catch (error) {
+    console.error("=== MIGRATION FAILED ===", error);
+    process.exit(1);
+  }
+
+  console.log("=== CONTINUING TO NEST BOOT ===");
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bodyParser: false,
   });
