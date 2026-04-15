@@ -1,10 +1,14 @@
-import { IsISO8601, IsUUID } from "class-validator";
+import { IsISO8601, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateSlotHoldDto {
-  @IsUUID()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(128)
   bookingId!: string;
 
-  @IsUUID()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(128)
   foId!: string;
 
   @IsISO8601()

@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
@@ -18,6 +19,9 @@ type CreateHoldArgs = {
   foId: string;
   startAt: string | Date;
   endAt: string | Date;
+  /** When present and role is `customer`, booking must belong to this user id. */
+  actorUserId?: string;
+  actorRole?: string;
 };
 
 type ValidateHoldArgs = {
@@ -141,6 +145,31 @@ export class SlotHoldsService {
   }
 
   async createHold(args: CreateHoldArgs) {
+    const booking = await this.db.booking.findUnique({
+      where: { id: args.bookingId },
+      select: {
+        id: true,
+        customerId: true,
+        status: true,
+        estimatedHours: true,
+      },
+    });
+    if (!booking) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+    if (booking.status !== BookingStatus.pending_payment) {
+      throw new ConflictException("BOOKING_SLOT_HOLD_BOOKING_STATE_INVALID");
+    }
+    const hours = Number(booking.estimatedHours ?? 0);
+    if (!(hours > 0)) {
+      throw new ConflictException("BOOKING_ESTIMATED_HOURS_REQUIRED_FOR_HOLD");
+    }
+    const actorRole = String(args.actorRole ?? "").trim().toLowerCase();
+    const actorUserId = String(args.actorUserId ?? "").trim();
+    if (actorRole === "customer" && actorUserId && booking.customerId !== actorUserId) {
+      throw new ForbiddenException("BOOKING_CUSTOMER_MISMATCH");
+    }
+
     const startAt = this.toDate(args.startAt, "BOOKING_SLOT_START_INVALID");
     const endAt = this.toDate(args.endAt, "BOOKING_SLOT_END_INVALID");
 

@@ -39,13 +39,6 @@ const dayWindowOptions = [
 
 const DEFAULT_SLOT_DURATION_MINUTES = 180;
 
-function isUuidLike(value: string | null | undefined): boolean {
-  if (!value?.trim()) return false;
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    value.trim(),
-  );
-}
-
 function slotRangeIso(): { rangeStart: string; rangeEnd: string } {
   const start = new Date();
   start.setHours(0, 0, 0, 0);
@@ -155,7 +148,7 @@ export function BookingStepSchedule({
           rangeStart,
           rangeEnd,
           durationMinutes: duration,
-          preferredFoId: isUuidLike(preferredFoId) ? preferredFoId : null,
+          preferredFoId: preferredFoId ? preferredFoId : null,
           squareFootage: sqft,
           estimatedLaborMinutes: duration,
           recommendedTeamSize: 1,

@@ -43,6 +43,7 @@ import { HoldBookingDto } from "./dto/hold-booking.dto";
 import { ListBookingsDto } from "./dto/list-bookings.dto";
 import { TransitionBookingDto } from "./dto/transition-booking.dto";
 import { UpdateBookingPatchDto } from "./dto/update-booking-patch.dto";
+import { SkipIdempotency } from "../../common/reliability/reliability.decorators";
 import { CreateBookingCheckoutDto } from "./dto/create-booking-checkout.dto";
 import { UpdateBookingPaymentStatusDto } from "./dto/update-booking-payment-status.dto";
 
@@ -193,22 +194,45 @@ export class BookingsController {
   }
 
   @Get("availability/windows")
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
   async listAvailabilityWindows(@Query() query: AvailabilityWindowsQueryDto) {
     return this.slotAvailability.listAvailableWindows(query);
   }
 
   @Post("availability/holds")
-  async createSlotHold(@Body() dto: CreateSlotHoldDto) {
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
+  async createSlotHold(
+    @Req() req: { user?: { userId?: string; role?: string } },
+    @Body() dto: CreateSlotHoldDto,
+  ) {
     return this.slotHolds.createHold({
       bookingId: dto.bookingId,
       foId: dto.foId,
       startAt: dto.startAt,
       endAt: dto.endAt,
+      actorUserId:
+        req.user?.userId != null ? String(req.user.userId).trim() : undefined,
+      actorRole:
+        req.user?.role != null ? String(req.user.role).trim() : undefined,
     });
   }
 
+  @SkipIdempotency()
   @Post(":id/confirm-hold")
   async confirmHold(
+    @Req() req: { user?: { userId?: string; role?: string } },
     @Param() params: ConfirmHoldParamsDto,
     @Body()
     body: {
@@ -222,6 +246,10 @@ export class BookingsController {
       holdId: String(body?.holdId ?? "").trim(),
       note: body?.note,
       idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
+      actorUserId:
+        req.user?.userId != null ? String(req.user.userId).trim() : undefined,
+      actorRole:
+        req.user?.role != null ? String(req.user.role).trim() : undefined,
     });
   }
 

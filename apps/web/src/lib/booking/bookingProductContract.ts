@@ -111,6 +111,14 @@ export const BOOKING_PRODUCT_CONTRACT = {
    */
   availabilityScope: "multi_provider_candidates" as AvailabilityScope,
 
+  /**
+   * `preferredFoId` on `GET .../availability/windows/aggregate` is the persisted
+   * `FranchiseOwner.id` string (Prisma `@default(cuid())`), not UUID-shaped by default.
+   * The API validates a bounded non-empty string and resolves existence server-side;
+   * unknown ids are ignored so aggregation still returns candidate windows.
+   */
+  aggregatePreferredFoIdKind: "franchise_owner_id" as const,
+
   /** Preferred cleaner / team request when data exists; never fake provider cards. */
   cleanerSelectionMode: "preferred_cleaner" as CleanerSelectionMode,
 

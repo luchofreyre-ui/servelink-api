@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -500,6 +501,8 @@ export class BookingsService {
     holdId: string;
     note?: string;
     idempotencyKey?: string | null;
+    actorUserId?: string;
+    actorRole?: string;
   }) {
     try {
       return await this.db.$transaction(async (tx: any) => {
@@ -509,6 +512,12 @@ export class BookingsService {
 
         if (!current) {
           throw new NotFoundException("BOOKING_NOT_FOUND");
+        }
+
+        const actorRole = String(args.actorRole ?? "").trim().toLowerCase();
+        const actorUserId = String(args.actorUserId ?? "").trim();
+        if (actorRole === "customer" && actorUserId && current.customerId !== actorUserId) {
+          throw new ForbiddenException("BOOKING_CUSTOMER_MISMATCH");
         }
 
         const idem = args.idempotencyKey ?? null;

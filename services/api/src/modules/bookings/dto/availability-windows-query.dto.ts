@@ -1,8 +1,11 @@
 import { Type } from "class-transformer";
-import { IsISO8601, IsInt, IsUUID, Min } from "class-validator";
+import { IsInt, IsISO8601, IsString, MaxLength, Min, MinLength } from "class-validator";
 
 export class AvailabilityWindowsQueryDto {
-  @IsUUID()
+  /** Franchise owner primary key (`FranchiseOwner.id`, typically `cuid()`). */
+  @IsString()
+  @MinLength(1)
+  @MaxLength(128)
   foId!: string;
 
   @IsISO8601()

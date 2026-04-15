@@ -4,12 +4,15 @@ import {
   IsISO8601,
   IsNumber,
   IsOptional,
-  IsUUID,
+  IsString,
   Max,
+  MaxLength,
   Min,
+  MinLength,
 } from "class-validator";
 
-function toOptionalTrimmedUuid({ value }: { value: unknown }): string | undefined {
+/** Franchise owner ids are Prisma `cuid()` strings, not UUIDs. */
+function toOptionalTrimmedFoId({ value }: { value: unknown }): string | undefined {
   if (value === null || value === undefined || value === "") return undefined;
   const s = String(value).trim();
   return s.length ? s : undefined;
@@ -22,8 +25,10 @@ function toOptionalTrimmedUuid({ value }: { value: unknown }): string | undefine
  */
 export class AvailabilityWindowsAggregateQueryDto {
   @IsOptional()
-  @Transform(toOptionalTrimmedUuid)
-  @IsUUID()
+  @Transform(toOptionalTrimmedFoId)
+  @IsString()
+  @MinLength(1)
+  @MaxLength(128)
   preferredFoId?: string;
 
   @IsISO8601()

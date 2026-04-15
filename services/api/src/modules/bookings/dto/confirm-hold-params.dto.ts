@@ -1,6 +1,8 @@
-import { IsUUID } from "class-validator";
+import { IsString, MaxLength, MinLength } from "class-validator";
 
 export class ConfirmHoldParamsDto {
-  @IsUUID()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(128)
   id!: string;
 }

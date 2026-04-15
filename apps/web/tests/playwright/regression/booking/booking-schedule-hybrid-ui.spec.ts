@@ -79,8 +79,8 @@ test("booking: signed-in customer sees aggregate slot cards + candidate trust co
         mode: "multi_provider_candidates",
         windows: [
           {
-            foId: "bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb",
-            cleanerId: "bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb",
+            foId: "cmjplaywrightaggregatefo0001ab",
+            cleanerId: "cmjplaywrightaggregatefo0001ab",
             cleanerLabel: "Aggregate test team",
             startAt: "2030-05-10T14:00:00.000Z",
             endAt: "2030-05-10T17:00:00.000Z",

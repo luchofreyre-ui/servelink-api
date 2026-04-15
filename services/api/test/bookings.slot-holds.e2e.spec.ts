@@ -372,6 +372,69 @@ describe("Booking slot holds + confirm from hold (E2E)", () => {
     ).toContain("FO_NOT_AVAILABLE_AT_SCHEDULED_TIME");
   });
 
+  it("aggregate windows accepts real cuid preferredFoId without 400", async () => {
+    const rangeStart = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    const rangeEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+
+    const res = await request(app.getHttpServer())
+      .get("/api/v1/bookings/availability/windows/aggregate")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .query({
+        rangeStart,
+        rangeEnd,
+        durationMinutes: 180,
+        preferredFoId: fo1Id,
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty("mode");
+    expect(Array.isArray(res.body?.windows)).toBe(true);
+  });
+
+  it("aggregate windows accepts bogus preferredFoId without 400 (falls back to candidates)", async () => {
+    const rangeStart = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    const rangeEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+
+    const res = await request(app.getHttpServer())
+      .get("/api/v1/bookings/availability/windows/aggregate")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .query({
+        rangeStart,
+        rangeEnd,
+        durationMinutes: 180,
+        preferredFoId: "cmkdoesnotexistpreferredfo0001ab",
+      });
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body?.windows)).toBe(true);
+  });
+
+  it("rejects hold when booking is not pending_payment", async () => {
+    const booking = await prisma.booking.create({
+      data: {
+        customerId,
+        hourlyRateCents: 5000,
+        estimatedHours: 4,
+        currency: "usd",
+        status: BookingStatus.pending_dispatch,
+      },
+    });
+    const { startAt, endAt } = makeWindow(72, 4);
+
+    const res = await request(app.getHttpServer())
+      .post("/api/v1/bookings/availability/holds")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({
+        bookingId: booking.id,
+        foId: fo1Id,
+        startAt,
+        endAt,
+      });
+
+    expect(res.status).toBe(409);
+    expect(JSON.stringify(res.body)).toContain("BOOKING_SLOT_HOLD_BOOKING_STATE_INVALID");
+  });
+
   it("availability windows exclude active holds and existing bookings", async () => {
     const booking = await createBookingShell();
     const { startAt, endAt } = makeWindow(54, 4);

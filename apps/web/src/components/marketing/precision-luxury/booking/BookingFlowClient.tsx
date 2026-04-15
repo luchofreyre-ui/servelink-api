@@ -74,7 +74,20 @@ import {
   BookingFlowDebugPanel,
   type BookingFlowDebugState,
   type BookingHomeRequirementDebugRow,
+  type SlotHoldLifecycleDebugFields,
 } from "./BookingFlowDebugPanel";
+
+const INITIAL_SLOT_HOLD_LIFECYCLE_DEBUG: SlotHoldLifecycleDebugFields = {
+  selectedSlotFoId: null,
+  selectedSlotSource: null,
+  submitBookingId: null,
+  holdCreateAttempted: false,
+  holdCreateStatus: null,
+  holdId: null,
+  confirmHoldAttempted: false,
+  confirmHoldStatus: null,
+  slotLifecycleConsistent: null,
+};
 
 const BOOKING_FLOW_SESSION_KEY = "booking_flow_state";
 
@@ -383,6 +396,8 @@ export function BookingFlowClient() {
   const [debugReviewNextAttempts, setDebugReviewNextAttempts] = useState<
     ReviewNextAttemptDebugEvent[]
   >([]);
+  const [slotHoldLifecycleDebug, setSlotHoldLifecycleDebug] =
+    useState<SlotHoldLifecycleDebugFields>(INITIAL_SLOT_HOLD_LIFECYCLE_DEBUG);
 
   const pushDebugReviewNextAttempt = (event: ReviewNextAttemptDebugEvent) => {
     setDebugReviewNextAttempts((prev) => [...prev.slice(-9), event]);
@@ -757,6 +772,8 @@ export function BookingFlowClient() {
       previewSource: debugPreviewSource,
       reviewNextAttempts: safeJsonLike(debugReviewNextAttempts),
 
+      ...slotHoldLifecycleDebug,
+
       serializedFrequency: urlSer.serializedFrequency || null,
       serializedDecision: urlSer.serializedBookingPath || null,
       serializedCadence: urlSer.serializedCadence || null,
@@ -802,6 +819,7 @@ export function BookingFlowClient() {
     debugPreviewResponseStatus,
     debugPreviewSource,
     debugReviewNextAttempts,
+    slotHoldLifecycleDebug,
   ]);
 
   useEffect(() => {
@@ -1599,20 +1617,68 @@ export function BookingFlowClient() {
       }
 
       if (wantsSlotHold && result.bookingId) {
+        const bookingIdForHold = result.bookingId;
+        const foForHold = ss!.selectedSlotFoId!.trim();
+        const slotSource = ss!.selectedSlotSource ?? null;
+        const windowStart = ss!.selectedSlotWindowStart!.trim();
+        const windowEnd = ss!.selectedSlotWindowEnd!.trim();
+
+        setSlotHoldLifecycleDebug({
+          selectedSlotFoId: foForHold,
+          selectedSlotSource: slotSource,
+          submitBookingId: bookingIdForHold,
+          holdCreateAttempted: true,
+          holdCreateStatus: "pending",
+          holdId: null,
+          confirmHoldAttempted: false,
+          confirmHoldStatus: null,
+          slotLifecycleConsistent: false,
+        });
+
         try {
           const hold = await createBookingAvailabilityHold({
-            bookingId: result.bookingId,
-            foId: ss!.selectedSlotFoId!.trim(),
-            startAt: ss!.selectedSlotWindowStart!.trim(),
-            endAt: ss!.selectedSlotWindowEnd!.trim(),
+            bookingId: bookingIdForHold,
+            foId: foForHold,
+            startAt: windowStart,
+            endAt: windowEnd,
           });
+          const holdAligns =
+            hold.bookingId === bookingIdForHold &&
+            hold.foId === foForHold &&
+            new Date(hold.startAt).getTime() === new Date(windowStart).getTime() &&
+            new Date(hold.endAt).getTime() === new Date(windowEnd).getTime();
+
+          setSlotHoldLifecycleDebug((prev) => ({
+            ...prev,
+            holdCreateStatus: "created",
+            holdId: hold.id,
+            confirmHoldAttempted: true,
+            confirmHoldStatus: "pending",
+          }));
+
           await confirmBookingAvailabilityHold({
-            bookingId: result.bookingId,
+            bookingId: bookingIdForHold,
             holdId: hold.id,
             idempotencyKey: `confirm-hold-${Date.now()}`,
           });
+
+          setSlotHoldLifecycleDebug((prev) => ({
+            ...prev,
+            confirmHoldStatus: "confirmed",
+            slotLifecycleConsistent: holdAligns,
+          }));
         } catch (e) {
-          const msg = e instanceof Error ? e.message : "";
+          const msg = e instanceof Error ? e.message : String(e ?? "");
+          setSlotHoldLifecycleDebug((prev) => {
+            const next = { ...prev };
+            if (!prev.holdId) {
+              next.holdCreateStatus = `failed: ${msg}`;
+            } else {
+              next.confirmHoldStatus = `failed: ${msg}`;
+            }
+            next.slotLifecycleConsistent = false;
+            return next;
+          });
           setSubmitError(
             isHoldExpiredErrorMessage(msg)
               ? BOOKING_SLOT_HOLD_EXPIRED_MESSAGE

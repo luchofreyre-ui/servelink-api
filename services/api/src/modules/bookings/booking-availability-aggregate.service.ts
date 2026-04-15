@@ -1,4 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { FoStatus } from "@prisma/client";
+import { PrismaService } from "../../prisma";
 import { DispatchCandidateService } from "../dispatch/dispatch-candidate.service";
 import { RosterAvailabilityService } from "../dispatch/roster-availability.service";
 import type { AvailabilityWindowsAggregateQueryDto } from "./dto/availability-windows-aggregate-query.dto";
@@ -38,7 +40,29 @@ export class BookingAvailabilityAggregateService {
     private readonly slotAvailability: SlotAvailabilityService,
     private readonly roster: RosterAvailabilityService,
     private readonly dispatchCandidates: DispatchCandidateService,
+    private readonly prisma: PrismaService,
   ) {}
+
+  /**
+   * Resolves a query `preferredFoId` to a real active franchise owner id, or `null` if unknown/ineligible.
+   * Invalid ids are ignored (no 400) so aggregation still returns truthful candidate windows.
+   */
+  async resolveEligiblePreferredFoId(
+    preferredFoId: string | null | undefined,
+  ): Promise<string | null> {
+    const raw = preferredFoId?.trim() || null;
+    if (!raw) return null;
+    const row = await this.prisma.franchiseOwner.findFirst({
+      where: {
+        id: raw,
+        status: FoStatus.active,
+        safetyHold: false,
+        providerId: { not: null },
+      },
+      select: { id: true },
+    });
+    return row?.id ?? null;
+  }
 
   private formatWindowLabel(startAt: Date, endAt: Date): string {
     if (!Number.isFinite(startAt.getTime()) || !Number.isFinite(endAt.getTime())) {
@@ -202,7 +226,9 @@ export class BookingAvailabilityAggregateService {
     query: AvailabilityWindowsAggregateQueryDto,
   ): Promise<AggregatedAvailabilityResponse> {
     const maxProviders = query.maxProviders ?? 12;
-    const preferred = query.preferredFoId?.trim() || null;
+    const preferred = await this.resolveEligiblePreferredFoId(
+      query.preferredFoId?.trim() || null,
+    );
 
     const candidates = await this.resolveAvailabilityProviderCandidates({
       preferredFoId: preferred,

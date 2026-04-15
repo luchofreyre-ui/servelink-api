@@ -18,6 +18,19 @@ export type BookingHomeRequirementDebugRow = {
   note?: string | null;
 };
 
+export type SlotHoldLifecycleDebugFields = {
+  selectedSlotFoId: string | null;
+  selectedSlotSource: string | null;
+  submitBookingId: string | null;
+  holdCreateAttempted: boolean;
+  holdCreateStatus: string | null;
+  holdId: string | null;
+  confirmHoldAttempted: boolean;
+  confirmHoldStatus: string | null;
+  /** `true` only after hold + confirm succeed with matching booking, FO, and window alignment. */
+  slotLifecycleConsistent: boolean | null;
+};
+
 export type BookingFlowDebugState = {
   flowVersion: string;
   pathname?: string | null;
@@ -73,6 +86,17 @@ export type BookingFlowDebugState = {
   previewResponseStatus?: number | null;
   previewSource?: string | null;
   reviewNextAttempts?: JsonLike;
+
+  /** Last one-time submit slot hold / confirm-hold attempt (authenticated slot path). */
+  selectedSlotFoId?: string | null;
+  selectedSlotSource?: string | null;
+  submitBookingId?: string | null;
+  holdCreateAttempted?: boolean | null;
+  holdCreateStatus?: string | null;
+  holdId?: string | null;
+  confirmHoldAttempted?: boolean | null;
+  confirmHoldStatus?: string | null;
+  slotLifecycleConsistent?: boolean | null;
 
   /** Live query params vs canonical serializer (`buildBookingSearchParams`). */
   serializedFrequency?: string | null;
@@ -252,6 +276,23 @@ export function BookingFlowDebugPanel({
           >
             {pretty(state.reviewNextAttempts)}
           </pre>
+        </div>
+
+        <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="mb-2 text-sm font-semibold text-white">Slot hold lifecycle</div>
+          <Row label="selectedSlotFoId" value={state.selectedSlotFoId} />
+          <Row label="selectedSlotSource" value={state.selectedSlotSource} />
+          <Row label="submitBookingId" value={state.submitBookingId} />
+          <Row label="holdCreateAttempted" value={state.holdCreateAttempted} />
+          <Row label="holdCreateStatus" value={state.holdCreateStatus} />
+          <Row label="holdId" value={state.holdId} />
+          <Row label="confirmHoldAttempted" value={state.confirmHoldAttempted} />
+          <Row label="confirmHoldStatus" value={state.confirmHoldStatus} />
+          <Row
+            label="slotLifecycleConsistent"
+            value={state.slotLifecycleConsistent}
+            testId="booking-debug-slot-lifecycle-consistent"
+          />
         </div>
       </div>
     </div>

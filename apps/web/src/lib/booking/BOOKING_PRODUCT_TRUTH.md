@@ -96,7 +96,7 @@ Optional nested object (all sub-fields optional at validation level; the web fun
       "selectedSlotDate": "string | null",
       "selectedSlotWindowStart": "ISO-8601 string | null",
       "selectedSlotWindowEnd": "ISO-8601 string | null",
-      "selectedSlotFoId": "UUID | null",
+      "selectedSlotFoId": "string (FranchiseOwner.id / cuid) | null",
       "selectedSlotSource": "preferred_provider | candidate_provider | null",
       "selectedSlotProviderLabel": "string | null",
       "holdId": "string | null",
@@ -151,7 +151,7 @@ Optional nested object (all sub-fields optional at validation level; the web fun
 ## Multi-provider windows contract
 
 - **`GET /api/v1/bookings/availability/windows`** (unchanged): requires **`foId`**; returns **only** `{ startAt, endAt }[]` for that franchise owner — **no embedded provider identity** in each window object (caller already knows `foId`). Capacity for that FO is implied by existing bookings + active holds inside `SlotAvailabilityService`. **No ZIP filter** in that service; dispatch geo filtering happens only when using the aggregate path with dispatch inputs.
-- **`GET /api/v1/bookings/availability/windows/aggregate`**: `rangeStart`, `rangeEnd`, `durationMinutes` required; optional `preferredFoId`, optional `siteLat`/`siteLng`/`squareFootage`/`estimatedLaborMinutes`/`recommendedTeamSize`/`maxProviders`. Response: `{ mode: "preferred_provider_only" | "multi_provider_candidates", windows: ProviderBackedAvailabilityWindow[] }` where each window includes **`foId`**, **`source`** (`preferred_provider` \| `candidate_provider`), **`windowLabel`**, **`cleanerLabel`**, and ISO **`startAt`/`endAt`**. **Dedup policy:** identical start/end across two FOs remain **separate rows** so holds target the correct FO. **Sort:** preferred-provider windows first, then ascending `startAt`, then `foId`.
+- **`GET /api/v1/bookings/availability/windows/aggregate`**: `rangeStart`, `rangeEnd`, `durationMinutes` required; optional `preferredFoId` (**non-empty string**, matches real `FranchiseOwner.id` when set), optional `siteLat`/`siteLng`/`squareFootage`/`estimatedLaborMinutes`/`recommendedTeamSize`/`maxProviders`. Response: `{ mode: "preferred_provider_only" | "multi_provider_candidates", windows: ProviderBackedAvailabilityWindow[] }` where each window includes **`foId`**, **`source`** (`preferred_provider` \| `candidate_provider`), **`windowLabel`**, **`cleanerLabel`**, and ISO **`startAt`/`endAt`**. **Dedup policy:** identical start/end across two FOs remain **separate rows** so holds target the correct FO. **Sort:** preferred-provider windows first, then ascending `startAt`, then `foId`.
 - **Holds / confirm-hold** unchanged: body still includes the selected window’s **`foId`**.
 
 ## Availability / slot-hold API contract
@@ -159,9 +159,9 @@ Optional nested object (all sub-fields optional at validation level; the web fun
 | Method | Route | Auth | Purpose |
 |--------|-------|------|---------|
 | `GET` | `/api/v1/bookings/availability/windows/aggregate` | Customer JWT | Multi-provider fan-out + provider-backed windows (see “Multi-provider windows contract”). |
-| `GET` | `/api/v1/bookings/availability/windows` | Customer JWT (`JwtAuthGuard` on `BookingsController`) | Query params (validated DTO): `foId` (UUID), `rangeStart`, `rangeEnd` (ISO-8601), `durationMinutes` (int ≥ 1). Response: **JSON array** of `{ startAt, endAt }` (ISO instants). |
-| `POST` | `/api/v1/bookings/availability/holds` | Customer JWT | Body (`CreateSlotHoldDto`): `bookingId` (UUID), `foId` (UUID), `startAt`, `endAt` (ISO-8601). **Hold is created only after a booking row exists** (model B). Returns `BookingSlotHold` row including `id`, `expiresAt`. |
-| `POST` | `/api/v1/bookings/:id/confirm-hold` | Customer JWT | Body: `{ holdId, note? }`. Optional header `idempotency-key`. Confirms booking from validated non-expired hold; may return `BOOKING_SLOT_HOLD_EXPIRED` etc. on failure. |
+| `GET` | `/api/v1/bookings/availability/windows` | Customer JWT (`JwtAuthGuard` on `BookingsController`) | Query params (validated DTO): `foId` (**FranchiseOwner.id** string), `rangeStart`, `rangeEnd` (ISO-8601), `durationMinutes` (int ≥ 1). Response: **JSON array** of `{ startAt, endAt }` (ISO instants). |
+| `POST` | `/api/v1/bookings/availability/holds` | Customer JWT | Body (`CreateSlotHoldDto`): `bookingId`, `foId` (both **cuid/string ids** matching persisted rows), `startAt`, `endAt` (ISO-8601). Booking must be **`pending_payment`** with **`estimatedHours` > 0** (intake-created shell). **Hold is created only after a booking row exists** (model B). Returns `BookingSlotHold` row including `id`, `expiresAt`. Wrong lifecycle → **`409 BOOKING_SLOT_HOLD_BOOKING_STATE_INVALID`**. |
+| `POST` | `/api/v1/bookings/:id/confirm-hold` | Customer JWT | Body: `{ holdId, note? }`. Optional header `idempotency-key`. Confirms booking from validated non-expired hold while booking is **`pending_payment`** (then transitions to **`assigned`** with `scheduledStart` from the hold). **Application-level** idempotent replay (same header + booking) returns `{ ..., alreadyApplied: true }` via `BookingEvent` — the route opts out of the generic HTTP idempotency response cache so this contract is not masked. May return `BOOKING_SLOT_HOLD_EXPIRED`, `BOOKING_CONFIRMATION_STATE_INVALID` (e.g. booking never in `pending_payment`), etc. |
 
 **Fallback policy:** If any prerequisite fails (guest session, window list empty, duration mismatch vs locked estimate snapshot, overlap, eligibility), the funnel keeps **preference-only** intent and surfaces the exact user-facing strings for expired hold vs other reservation failures on the confirm action.
 
