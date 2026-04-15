@@ -6,6 +6,25 @@ export type BookingAvailabilityWindow = {
   endAt: string;
 };
 
+export type AggregatedAvailabilityMode =
+  | "preferred_provider_only"
+  | "multi_provider_candidates";
+
+export type ProviderBackedAvailabilityWindow = {
+  foId: string;
+  cleanerId: string | null;
+  cleanerLabel: string | null;
+  startAt: string;
+  endAt: string;
+  windowLabel: string;
+  source: "preferred_provider" | "candidate_provider";
+};
+
+export type AggregatedAvailabilityResponse = {
+  mode: AggregatedAvailabilityMode;
+  windows: ProviderBackedAvailabilityWindow[];
+};
+
 export type BookingSlotHoldRecord = {
   id: string;
   bookingId: string;
@@ -25,6 +44,65 @@ export function parseAvailabilityWindowRow(
   const endAt = typeof o.endAt === "string" ? o.endAt.trim() : "";
   if (!startAt || !endAt) return null;
   return { startAt, endAt };
+}
+
+export function parseProviderBackedWindowRow(
+  value: unknown,
+): ProviderBackedAvailabilityWindow | null {
+  if (!value || typeof value !== "object") return null;
+  const o = value as Record<string, unknown>;
+  const foId = typeof o.foId === "string" ? o.foId.trim() : "";
+  const startAt = typeof o.startAt === "string" ? o.startAt.trim() : "";
+  const endAt = typeof o.endAt === "string" ? o.endAt.trim() : "";
+  const windowLabel = typeof o.windowLabel === "string" ? o.windowLabel.trim() : "";
+  const source = o.source;
+  if (
+    !foId ||
+    !startAt ||
+    !endAt ||
+    !windowLabel ||
+    (source !== "preferred_provider" && source !== "candidate_provider")
+  ) {
+    return null;
+  }
+  const cleanerId =
+    typeof o.cleanerId === "string" && o.cleanerId.trim() ? o.cleanerId.trim() : null;
+  const cleanerLabel =
+    typeof o.cleanerLabel === "string" && o.cleanerLabel.trim()
+      ? o.cleanerLabel.trim()
+      : null;
+  return {
+    foId,
+    cleanerId,
+    cleanerLabel,
+    startAt,
+    endAt,
+    windowLabel,
+    source,
+  };
+}
+
+export function parseAggregatedAvailabilityResponse(
+  body: unknown,
+): AggregatedAvailabilityResponse {
+  if (!body || typeof body !== "object") {
+    throw new Error("INVALID_AGGREGATED_AVAILABILITY_SHAPE");
+  }
+  const o = body as Record<string, unknown>;
+  const mode = o.mode;
+  if (mode !== "preferred_provider_only" && mode !== "multi_provider_candidates") {
+    throw new Error("INVALID_AGGREGATED_AVAILABILITY_MODE");
+  }
+  const raw = o.windows;
+  if (!Array.isArray(raw)) {
+    throw new Error("INVALID_AGGREGATED_AVAILABILITY_WINDOWS");
+  }
+  const windows: ProviderBackedAvailabilityWindow[] = [];
+  for (const row of raw) {
+    const w = parseProviderBackedWindowRow(row);
+    if (w) windows.push(w);
+  }
+  return { mode, windows };
 }
 
 export function parseAvailabilityWindowsResponse(body: unknown): BookingAvailabilityWindow[] {
@@ -108,6 +186,61 @@ export async function getBookingAvailabilityWindows(args: {
     );
   }
   return parseAvailabilityWindowsResponse(body);
+}
+
+/**
+ * GET `/api/v1/bookings/availability/windows/aggregate`
+ * Provider-backed windows (each row includes `foId` for hold creation).
+ */
+export async function getAggregatedBookingAvailabilityWindows(args: {
+  rangeStart: string;
+  rangeEnd: string;
+  durationMinutes: number;
+  preferredFoId?: string | null;
+  siteLat?: number;
+  siteLng?: number;
+  squareFootage?: number;
+  estimatedLaborMinutes?: number;
+  recommendedTeamSize?: number;
+  maxProviders?: number;
+}): Promise<AggregatedAvailabilityResponse> {
+  const params = new URLSearchParams({
+    rangeStart: args.rangeStart,
+    rangeEnd: args.rangeEnd,
+    durationMinutes: String(Math.floor(args.durationMinutes)),
+  });
+  const pf = args.preferredFoId?.trim();
+  if (pf) params.set("preferredFoId", pf);
+  if (args.siteLat != null && Number.isFinite(args.siteLat)) {
+    params.set("siteLat", String(args.siteLat));
+  }
+  if (args.siteLng != null && Number.isFinite(args.siteLng)) {
+    params.set("siteLng", String(args.siteLng));
+  }
+  if (args.squareFootage != null && args.squareFootage > 0) {
+    params.set("squareFootage", String(Math.floor(args.squareFootage)));
+  }
+  if (args.estimatedLaborMinutes != null && args.estimatedLaborMinutes > 0) {
+    params.set("estimatedLaborMinutes", String(Math.floor(args.estimatedLaborMinutes)));
+  }
+  if (args.recommendedTeamSize != null && args.recommendedTeamSize > 0) {
+    params.set("recommendedTeamSize", String(Math.floor(args.recommendedTeamSize)));
+  }
+  if (args.maxProviders != null && args.maxProviders > 0) {
+    params.set("maxProviders", String(Math.floor(args.maxProviders)));
+  }
+
+  const res = await apiFetch(
+    `/bookings/availability/windows/aggregate?${params.toString()}`,
+    { method: "GET" },
+  );
+  const body = await readJson(res);
+  if (!res.ok) {
+    throw new Error(
+      errorMessageFromBody(body, `availability_aggregate_failed_${res.status}`),
+    );
+  }
+  return parseAggregatedAvailabilityResponse(body);
 }
 
 /**

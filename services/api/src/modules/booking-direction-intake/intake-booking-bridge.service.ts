@@ -273,6 +273,8 @@ export class IntakeBookingBridgeService {
           selectedSlotFoId: constraints.scheduling.selectedSlotFoId,
           selectedSlotWindowStart: constraints.scheduling.selectedSlotWindowStart,
           selectedSlotWindowEnd: constraints.scheduling.selectedSlotWindowEnd,
+          selectedSlotSource: constraints.scheduling.selectedSlotSource,
+          selectedSlotProviderLabel: constraints.scheduling.selectedSlotProviderLabel,
         },
         recurring: {
           pathKind: constraints.recurring.pathKind,

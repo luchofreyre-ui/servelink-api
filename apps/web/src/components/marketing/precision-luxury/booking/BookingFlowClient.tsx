@@ -1587,6 +1587,8 @@ export function BookingFlowClient() {
               selectedSlotWindowStart: null,
               selectedSlotWindowEnd: null,
               selectedSlotFoId: null,
+              selectedSlotSource: null,
+              selectedSlotProviderLabel: null,
               holdId: null,
               holdExpiresAt: null,
               slotHoldConfirmed: false,
@@ -1633,6 +1635,8 @@ export function BookingFlowClient() {
               selectedSlotWindowStart: null,
               selectedSlotWindowEnd: null,
               selectedSlotFoId: null,
+              selectedSlotSource: null,
+              selectedSlotProviderLabel: null,
               holdId: null,
               holdExpiresAt: null,
               slotHoldConfirmed: false,
@@ -1781,6 +1785,8 @@ export function BookingFlowClient() {
         selectedSlotWindowStart: null,
         selectedSlotWindowEnd: null,
         selectedSlotFoId: null,
+        selectedSlotSource: null,
+        selectedSlotProviderLabel: null,
         holdId: null,
         holdExpiresAt: null,
         slotHoldConfirmed: false,
@@ -1831,6 +1837,8 @@ export function BookingFlowClient() {
         selectedSlotWindowStart: null,
         selectedSlotWindowEnd: null,
         selectedSlotFoId: null,
+        selectedSlotSource: null,
+        selectedSlotProviderLabel: null,
         holdId: null,
         holdExpiresAt: null,
         slotHoldConfirmed: false,
@@ -1852,8 +1860,13 @@ export function BookingFlowClient() {
   useEffect(() => {
     const slotFo = state.scheduleSelection?.selectedSlotFoId?.trim();
     const cleanerId = state.cleanerPreference?.cleanerId?.trim();
+    const src = state.scheduleSelection?.selectedSlotSource;
     if (state.scheduleSelection?.mode !== "slot_selection" || !slotFo) return;
-    if (cleanerId && cleanerId === slotFo) return;
+    if (src === "candidate_provider") return;
+    if (!cleanerId || cleanerId === slotFo) return;
+    const mismatchPreferredPath =
+      src === "preferred_provider" || src === null || src === undefined;
+    if (!mismatchPreferredPath) return;
     setState((prev) => {
       if (prev.scheduleSelection?.mode !== "slot_selection") return prev;
       return {
@@ -1870,6 +1883,8 @@ export function BookingFlowClient() {
           selectedSlotWindowStart: null,
           selectedSlotWindowEnd: null,
           selectedSlotFoId: null,
+          selectedSlotSource: null,
+          selectedSlotProviderLabel: null,
           holdId: null,
           holdExpiresAt: null,
           slotHoldConfirmed: false,
@@ -1879,6 +1894,7 @@ export function BookingFlowClient() {
   }, [
     state.scheduleSelection?.mode,
     state.scheduleSelection?.selectedSlotFoId,
+    state.scheduleSelection?.selectedSlotSource,
     state.cleanerPreference?.cleanerId,
   ]);
 
@@ -1915,6 +1931,8 @@ export function BookingFlowClient() {
           selectedSlotWindowStart: null,
           selectedSlotWindowEnd: null,
           selectedSlotFoId: null,
+          selectedSlotSource: null,
+          selectedSlotProviderLabel: null,
           holdId: null,
           holdExpiresAt: null,
           slotHoldConfirmed: false,
@@ -2104,6 +2122,7 @@ export function BookingFlowClient() {
               {state.step === "schedule" ? (
                 <BookingStepSchedule
                   state={state}
+                  homeSize={state.homeSize}
                   slotApisEnabled={hasRole("customer")}
                   slotDurationMinutes={
                     state.estimateSnapshot?.durationMinutes ?? 180
@@ -2128,6 +2147,8 @@ export function BookingFlowClient() {
                           selectedSlotWindowStart: null,
                           selectedSlotWindowEnd: null,
                           selectedSlotFoId: null,
+                          selectedSlotSource: null,
+                          selectedSlotProviderLabel: null,
                           holdId: null,
                           holdExpiresAt: null,
                           slotHoldConfirmed: false,

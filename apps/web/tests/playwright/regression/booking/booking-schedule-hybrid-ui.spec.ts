@@ -51,3 +51,53 @@ test("booking: schedule step shows hybrid arrival-window section + preference fa
   ).toBeVisible();
   await expect(page.getByText("Visit timing preferences")).toBeVisible();
 });
+
+test("booking: signed-in customer sees aggregate slot cards + candidate trust copy", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("token", "playwright-customer-token");
+    window.localStorage.setItem(
+      "servelink_user",
+      JSON.stringify({
+        id: "playwright-customer",
+        email: "playwright+customer@servelink.test",
+        role: "customer",
+      }),
+    );
+  });
+
+  await page.route("**/bookings/availability/windows/aggregate**", async (route) => {
+    if (route.request().method() !== "GET") {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        mode: "multi_provider_candidates",
+        windows: [
+          {
+            foId: "bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb",
+            cleanerId: "bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb",
+            cleanerLabel: "Aggregate test team",
+            startAt: "2030-05-10T14:00:00.000Z",
+            endAt: "2030-05-10T17:00:00.000Z",
+            windowLabel: "2030-05-10T14:00:00.000Z → 2030-05-10T17:00:00.000Z",
+            source: "candidate_provider",
+          },
+        ],
+      }),
+    });
+  });
+
+  await page.goto(scheduleUrl(), { waitUntil: "domcontentloaded" });
+  await expect(
+    page.getByRole("heading", { name: "Choose your schedule" }),
+  ).toBeVisible({ timeout: 30_000 });
+  const slotBtn = page.locator("button", { hasText: "Backed by an available team" }).first();
+  await expect(slotBtn).toBeVisible({ timeout: 30_000 });
+  await slotBtn.click();
+  await expect(slotBtn).toHaveClass(/ecfdf5/);
+});

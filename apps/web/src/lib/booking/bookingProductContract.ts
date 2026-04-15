@@ -28,6 +28,11 @@ export type SchedulingMode =
   /** Product label: slot-backed path when API + JWT allow; explicit preference fallback otherwise. */
   | "hybrid_slot_or_preference";
 
+/** How widely the availability API fans out before the user picks a provider-backed window. */
+export type AvailabilityScope =
+  | "preferred_provider_only"
+  | "multi_provider_candidates";
+
 export type CleanerSelectionMode =
   | "none"
   | "preferred_cleaner"
@@ -93,12 +98,18 @@ export const BOOKING_PRODUCT_CONTRACT = {
   recurringAuthPoint: "before_confirm" as BookingAuthPoint,
 
   /**
-   * Hybrid scheduling: the funnel may capture `slot_selection` (FO + ISO window from
-   * `GET /bookings/availability/windows`) when the customer is signed in and selects a
-   * preferred team; holds use `POST /bookings/availability/holds` after the booking shell
-   * exists, then `POST /bookings/:id/confirm-hold`. Otherwise `preference_only` is used.
+   * Hybrid scheduling: `slot_selection` captures a concrete FO + ISO window from aggregated
+   * `GET /bookings/availability/windows/aggregate` (or legacy single-FO `.../windows`) when
+   * JWT + data allow; holds use `POST /bookings/availability/holds` then `POST /bookings/:id/confirm-hold`.
+   * Otherwise `preference_only` is used.
    */
   schedulingMode: "hybrid_slot_or_preference" as SchedulingMode,
+
+  /**
+   * Availability fan-out: multi-provider candidate roster (deterministic) with preferred FO
+   * prioritized; still hybrid — empty aggregate → preference fallback.
+   */
+  availabilityScope: "multi_provider_candidates" as AvailabilityScope,
 
   /** Preferred cleaner / team request when data exists; never fake provider cards. */
   cleanerSelectionMode: "preferred_cleaner" as CleanerSelectionMode,

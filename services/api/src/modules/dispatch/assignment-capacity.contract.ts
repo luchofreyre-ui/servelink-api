@@ -31,6 +31,8 @@ export type AssignmentConstraintSet = {
     holdId?: string | null;
     holdExpiresAt?: string | null;
     slotHoldConfirmed?: boolean;
+    selectedSlotSource?: "preferred_provider" | "candidate_provider";
+    selectedSlotProviderLabel?: string | null;
   };
 
   cleanerPreference: {

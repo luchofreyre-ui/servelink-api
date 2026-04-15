@@ -149,6 +149,14 @@ export function evaluateAssignmentCapacity(input: {
       }
     }
 
+    if (sched.selectedSlotSource === "candidate_provider") {
+      const note =
+        "Slot selection source: candidate_provider (multi-provider availability aggregation — not the soft preferred-cleaner row alone).";
+      if (!notesForOps.includes(note)) {
+        notesForOps.push(note);
+      }
+    }
+
     if (
       cp.mode === "preferred_cleaner" &&
       cp.hardRequirement === true &&

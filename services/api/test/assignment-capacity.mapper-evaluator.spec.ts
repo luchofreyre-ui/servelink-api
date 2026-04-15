@@ -41,6 +41,23 @@ describe("mapBookingHandoffToAssignmentConstraints", () => {
     expect(c.scheduling.selectedSlotWindowStart).toBe("2026-05-01T14:00:00.000Z");
     expect(c.scheduling.selectedSlotWindowEnd).toBe("2026-05-01T17:00:00.000Z");
   });
+
+  it("maps selectedSlotSource and selectedSlotProviderLabel from scheduling handoff", () => {
+    const c = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: {
+          mode: "slot_selection",
+          selectedSlotFoId: "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+          selectedSlotWindowStart: "2026-05-01T14:00:00.000Z",
+          selectedSlotWindowEnd: "2026-05-01T17:00:00.000Z",
+          selectedSlotSource: "candidate_provider",
+          selectedSlotProviderLabel: "Team B",
+        },
+      },
+    });
+    expect(c.scheduling.selectedSlotSource).toBe("candidate_provider");
+    expect(c.scheduling.selectedSlotProviderLabel).toBe("Team B");
+  });
 });
 
 describe("evaluateAssignmentCapacity", () => {
@@ -292,6 +309,33 @@ describe("evaluateAssignmentCapacity", () => {
     expect(ev.recommendedCleanerId).toBe(
       "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
     );
+  });
+
+  it("8b2: candidate_provider slot source surfaces multi-provider ops note", () => {
+    const constraints = mapBookingHandoffToAssignmentConstraints({
+      bookingHandoff: {
+        scheduling: {
+          mode: "slot_selection",
+          preferredTime: "Morning",
+          selectedSlotFoId: "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+          selectedSlotWindowStart: "2026-05-01T14:00:00.000Z",
+          selectedSlotWindowEnd: "2026-05-01T17:00:00.000Z",
+          selectedSlotSource: "candidate_provider",
+        },
+        cleanerPreference: { mode: "none" },
+        recurring: { pathKind: "one_time" },
+      },
+    });
+    const ev = evaluateAssignmentCapacity({
+      constraints,
+      availableCleaners: [
+        {
+          cleanerId: "aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa",
+          cleanerLabel: "Slot FO",
+        },
+      ],
+    });
+    expect(ev.notesForOps?.join(" ")).toContain("candidate_provider");
   });
 
   it("8c: enforceable slot FO missing from roster -> needs_review", () => {

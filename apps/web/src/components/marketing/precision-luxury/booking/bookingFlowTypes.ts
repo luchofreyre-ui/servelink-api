@@ -78,6 +78,10 @@ export type ScheduleSelection = {
   selectedSlotWindowEnd?: string | null;
   /** Franchise owner id for the selected window (matches preferred cleaner `cleanerId` in funnel). */
   selectedSlotFoId?: string | null;
+  /** Which availability path produced the slot (multi-provider aggregate vs preferred team). */
+  selectedSlotSource?: "preferred_provider" | "candidate_provider" | null;
+  /** Roster / display label for the FO that backs the slot (may differ from preferred cleaner label). */
+  selectedSlotProviderLabel?: string | null;
   holdId?: string | null;
   holdExpiresAt?: string | null;
   /** Set client-side after `confirm-hold` succeeds (optional echo on handoff). */

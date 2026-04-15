@@ -32,7 +32,9 @@ import { BookingScreenService } from "./booking-screen.service";
 import { AdminBookingsService } from "../admin/bookings/admin-bookings.service";
 import { AssignmentService } from "./assignment/assignment.service";
 import { AssignBookingDto } from "./dto/assign-booking.dto";
+import { AvailabilityWindowsAggregateQueryDto } from "./dto/availability-windows-aggregate-query.dto";
 import { AvailabilityWindowsQueryDto } from "./dto/availability-windows-query.dto";
+import { BookingAvailabilityAggregateService } from "./booking-availability-aggregate.service";
 import { BookingMainTransitionDto } from "./dto/booking-main-transition.dto";
 import { ConfirmHoldParamsDto } from "./dto/confirm-hold-params.dto";
 import { CreateBookingDto } from "./dto/create-booking.dto";
@@ -59,6 +61,7 @@ export class BookingsController {
     private readonly deepCleanVisitExecution: DeepCleanVisitExecutionService,
     private readonly adminBookings: AdminBookingsService,
     private readonly assignmentService: AssignmentService,
+    private readonly availabilityAggregate: BookingAvailabilityAggregateService,
   ) {}
 
   @Post()
@@ -173,6 +176,20 @@ export class BookingsController {
       ok: true,
       item: this.bookings.mapBookingWithEvents(row as Record<string, unknown>),
     };
+  }
+
+  @Get("availability/windows/aggregate")
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
+  async listAvailabilityWindowsAggregate(
+    @Query() query: AvailabilityWindowsAggregateQueryDto,
+  ) {
+    return this.availabilityAggregate.aggregateWindows(query);
   }
 
   @Get("availability/windows")

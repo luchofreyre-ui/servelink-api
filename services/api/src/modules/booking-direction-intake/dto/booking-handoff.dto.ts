@@ -67,6 +67,16 @@ export class BookingHandoffSchedulingDto {
   @MaxLength(32)
   selectedSlotDate?: string | null;
 
+  @IsOptional()
+  @IsIn(["preferred_provider", "candidate_provider"])
+  selectedSlotSource?: "preferred_provider" | "candidate_provider";
+
+  @IsOptional()
+  @Transform(({ value }) => (value === null || value === undefined ? undefined : String(value)))
+  @IsString()
+  @MaxLength(200)
+  selectedSlotProviderLabel?: string | null;
+
   /** Last slot hold id created post-submit (funnel-only; optional on persisted handoff). */
   @IsOptional()
   @Transform(({ value }) => (value === null || value === undefined ? undefined : String(value)))

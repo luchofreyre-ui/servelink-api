@@ -42,6 +42,12 @@ export function mapBookingHandoffToAssignmentConstraints(args: {
     asTrimmedString(schedRaw.preferredTime) ??
     asTrimmedString(args.intakePreferredTime);
 
+  const slotSrc = schedRaw.selectedSlotSource;
+  const selectedSlotSource =
+    slotSrc === "preferred_provider" || slotSrc === "candidate_provider"
+      ? slotSrc
+      : undefined;
+
   const scheduling: AssignmentConstraintSet["scheduling"] = {
     mode: schedulingMode,
     preferredTime,
@@ -59,6 +65,8 @@ export function mapBookingHandoffToAssignmentConstraints(args: {
       typeof schedRaw.slotHoldConfirmed === "boolean"
         ? schedRaw.slotHoldConfirmed
         : undefined,
+    selectedSlotSource,
+    selectedSlotProviderLabel: asTrimmedString(schedRaw.selectedSlotProviderLabel),
   };
 
   const cleanerMode: AssignmentConstraintSet["cleanerPreference"]["mode"] =

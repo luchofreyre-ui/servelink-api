@@ -51,6 +51,8 @@ export class RosterAvailabilityService {
       selectedSlotFoId?: string | null;
       selectedSlotWindowStart?: string | null;
       selectedSlotWindowEnd?: string | null;
+      selectedSlotSource?: "preferred_provider" | "candidate_provider";
+      selectedSlotProviderLabel?: string | null;
     };
     recurring?: {
       pathKind: "one_time" | "recurring";

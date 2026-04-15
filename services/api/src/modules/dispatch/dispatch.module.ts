@@ -64,6 +64,7 @@ import { RosterAvailabilityService } from "./roster-availability.service";
     ReputationService,
     DispatchConfigService,
     RosterAvailabilityService,
+    DispatchCandidateService,
   ],
 })
 export class DispatchModule {}

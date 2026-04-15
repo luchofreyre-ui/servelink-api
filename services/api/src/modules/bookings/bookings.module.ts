@@ -36,6 +36,7 @@ import { AdminBookingsModule } from "../admin/bookings/admin-bookings.module";
 import { AssignmentService } from "./assignment/assignment.service";
 import { BookingPaymentService } from "./payment/payment.service";
 import { StripeBookingPaymentModule } from "./stripe/stripe-booking-payment.module";
+import { BookingAvailabilityAggregateService } from "./booking-availability-aggregate.service";
 
 @Module({
   imports: [
@@ -80,6 +81,7 @@ import { StripeBookingPaymentModule } from "./stripe/stripe-booking-payment.modu
     ExecutionService,
     AssignmentService,
     BookingPaymentService,
+    BookingAvailabilityAggregateService,
   ],
   exports: [
     BookingsService,
@@ -92,6 +94,7 @@ import { StripeBookingPaymentModule } from "./stripe/stripe-booking-payment.modu
     ExecutionService,
     AssignmentService,
     BookingPaymentService,
+    BookingAvailabilityAggregateService,
   ],
 })
 export class BookingsModule {}

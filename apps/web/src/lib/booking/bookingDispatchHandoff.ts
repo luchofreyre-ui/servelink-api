@@ -18,6 +18,8 @@ export type BookingDirectionBookingHandoffPayload = {
     selectedSlotWindowStart?: string | null;
     selectedSlotWindowEnd?: string | null;
     selectedSlotFoId?: string | null;
+    selectedSlotSource?: "preferred_provider" | "candidate_provider";
+    selectedSlotProviderLabel?: string | null;
     holdId?: string | null;
     holdExpiresAt?: string | null;
     slotHoldConfirmed?: boolean;
@@ -74,6 +76,14 @@ export function buildBookingHandoffPayloadForIntakeSubmit(
       mode === "slot_selection" ? (ss?.selectedSlotWindowEnd ?? null) : null,
     selectedSlotFoId:
       mode === "slot_selection" ? (ss?.selectedSlotFoId ?? null) : null,
+    selectedSlotSource:
+      mode === "slot_selection" && ss?.selectedSlotSource
+        ? ss.selectedSlotSource
+        : undefined,
+    selectedSlotProviderLabel:
+      mode === "slot_selection"
+        ? (ss?.selectedSlotProviderLabel ?? null)
+        : null,
     holdId: mode === "slot_selection" ? (ss?.holdId ?? null) : null,
     holdExpiresAt:
       mode === "slot_selection" ? (ss?.holdExpiresAt ?? null) : null,
@@ -156,10 +166,17 @@ export function buildBookingDispatchHandoffSummary(
     ss.selectedSlotWindowStart?.trim() &&
     ss.selectedSlotWindowEnd?.trim();
 
+  const slotSourceNote =
+    slotBacked && ss?.selectedSlotSource === "candidate_provider"
+      ? " · Backed by an available team"
+      : slotBacked && ss?.selectedSlotSource === "preferred_provider"
+        ? " · Preferred team slot"
+        : "";
+
   const arrivalLine = slotBacked
     ? ss?.selectedSlotLabel?.trim()
-      ? `Your selected arrival window: ${ss.selectedSlotLabel.trim()}`
-      : `Your selected arrival window: ${ss.selectedSlotWindowStart} → ${ss.selectedSlotWindowEnd}`
+      ? `Your selected arrival window: ${ss.selectedSlotLabel.trim()}${slotSourceNote}`
+      : `Your selected arrival window: ${ss.selectedSlotWindowStart} → ${ss.selectedSlotWindowEnd}${slotSourceNote}`
     : null;
 
   const slotIntegrityNote =

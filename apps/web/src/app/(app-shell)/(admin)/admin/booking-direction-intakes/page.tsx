@@ -69,9 +69,25 @@ function schedulingSlotDetail(h: unknown): string | null {
     typeof sched.holdId === "string" && sched.holdId.trim()
       ? `hold:${sched.holdId.trim().slice(0, 10)}…`
       : "";
-  const bits = [mode, label, start && end ? `${start}→${end}` : "", fo, hold].filter(
-    Boolean,
-  );
+  const src =
+    sched.selectedSlotSource === "preferred_provider" ||
+    sched.selectedSlotSource === "candidate_provider"
+      ? `src:${sched.selectedSlotSource}`
+      : "";
+  const provLabel =
+    typeof sched.selectedSlotProviderLabel === "string" &&
+    sched.selectedSlotProviderLabel.trim()
+      ? sched.selectedSlotProviderLabel.trim()
+      : "";
+  const bits = [
+    mode,
+    label,
+    start && end ? `${start}→${end}` : "",
+    fo,
+    src,
+    provLabel,
+    hold,
+  ].filter(Boolean);
   return bits.length > 1 ? bits.join(" · ") : null;
 }
 

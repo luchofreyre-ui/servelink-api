@@ -5,8 +5,8 @@ import { BookingOptionCard } from "../BookingOptionCard";
 import { BookingSectionCard } from "../BookingSectionCard";
 import { BookingStepCleanerPreference } from "./BookingStepCleanerPreference";
 import {
-  getBookingAvailabilityWindows,
-  type BookingAvailabilityWindow,
+  getAggregatedBookingAvailabilityWindows,
+  type ProviderBackedAvailabilityWindow,
 } from "./bookingAvailabilityApi";
 import type {
   BookingFlowState,
@@ -55,12 +55,21 @@ function slotRangeIso(): { rangeStart: string; rangeEnd: string } {
   return { rangeStart: start.toISOString(), rangeEnd: end.toISOString() };
 }
 
-function formatWindowLabel(w: BookingAvailabilityWindow): string {
+function extractSqftFromHomeSize(homeSize: string): number | undefined {
+  const t = String(homeSize ?? "").replace(/,/g, "");
+  const m = t.match(/(\d{3,5})\b/);
+  if (!m) return undefined;
+  const n = Number.parseInt(m[1], 10);
+  if (!Number.isFinite(n) || n < 300 || n > 20000) return undefined;
+  return n;
+}
+
+function formatWindowLabelTimes(startAt: string, endAt: string): string {
   try {
-    const a = new Date(w.startAt);
-    const b = new Date(w.endAt);
+    const a = new Date(startAt);
+    const b = new Date(endAt);
     if (!Number.isFinite(a.getTime()) || !Number.isFinite(b.getTime())) {
-      return `${w.startAt} → ${w.endAt}`;
+      return `${startAt} → ${endAt}`;
     }
     return `${a.toLocaleString(undefined, {
       weekday: "short",
@@ -73,7 +82,7 @@ function formatWindowLabel(w: BookingAvailabilityWindow): string {
       minute: "2-digit",
     })}`;
   } catch {
-    return `${w.startAt} → ${w.endAt}`;
+    return `${startAt} → ${endAt}`;
   }
 }
 
@@ -89,6 +98,7 @@ function dateOnlyFromIso(iso: string): string | null {
 
 type BookingStepScheduleProps = {
   state: BookingFlowState;
+  homeSize: string;
   slotApisEnabled: boolean;
   slotDurationMinutes: number;
   onFrequencySelect: (value: BookingFrequencyOption) => void;
@@ -99,6 +109,7 @@ type BookingStepScheduleProps = {
 
 export function BookingStepSchedule({
   state,
+  homeSize,
   slotApisEnabled,
   slotDurationMinutes,
   onFrequencySelect,
@@ -110,19 +121,20 @@ export function BookingStepSchedule({
   const dayWindow = sel?.preferredDayWindow ?? "";
   const flexNotes = sel?.flexibilityNotes ?? "";
 
-  const foId = state.cleanerPreference?.cleanerId?.trim() ?? "";
+  const preferredFoId = state.cleanerPreference?.cleanerId?.trim() ?? "";
   const duration = Math.max(
     1,
     Math.floor(slotDurationMinutes || DEFAULT_SLOT_DURATION_MINUTES),
   );
+  const sqft = extractSqftFromHomeSize(homeSize);
 
-  const [windows, setWindows] = useState<BookingAvailabilityWindow[] | null>(
+  const [windows, setWindows] = useState<ProviderBackedAvailabilityWindow[] | null>(
     null,
   );
   const [windowsError, setWindowsError] = useState<string | null>(null);
   const [windowsLoading, setWindowsLoading] = useState(false);
 
-  const canQueryWindows = slotApisEnabled && isUuidLike(foId);
+  const canQueryWindows = slotApisEnabled;
 
   useEffect(() => {
     if (!canQueryWindows) {
@@ -139,14 +151,18 @@ export function BookingStepSchedule({
       setWindowsLoading(true);
       setWindowsError(null);
       try {
-        const list = await getBookingAvailabilityWindows({
-          foId,
+        const res = await getAggregatedBookingAvailabilityWindows({
           rangeStart,
           rangeEnd,
           durationMinutes: duration,
+          preferredFoId: isUuidLike(preferredFoId) ? preferredFoId : null,
+          squareFootage: sqft,
+          estimatedLaborMinutes: duration,
+          recommendedTeamSize: 1,
+          maxProviders: 14,
         });
         if (!cancelled) {
-          setWindows(list);
+          setWindows(res.windows);
         }
       } catch (e) {
         if (!cancelled) {
@@ -166,23 +182,30 @@ export function BookingStepSchedule({
     return () => {
       cancelled = true;
     };
-  }, [canQueryWindows, foId, duration]);
+  }, [canQueryWindows, preferredFoId, duration, sqft]);
 
   const selectedKey = useMemo(() => {
     if (
       sel?.mode !== "slot_selection" ||
+      !sel.selectedSlotFoId ||
       !sel.selectedSlotWindowStart ||
       !sel.selectedSlotWindowEnd
     ) {
       return "";
     }
-    return `${sel.selectedSlotWindowStart}|${sel.selectedSlotWindowEnd}`;
-  }, [sel?.mode, sel?.selectedSlotWindowStart, sel?.selectedSlotWindowEnd]);
+    return `${sel.selectedSlotFoId}|${sel.selectedSlotWindowStart}|${sel.selectedSlotWindowEnd}`;
+  }, [
+    sel?.mode,
+    sel?.selectedSlotFoId,
+    sel?.selectedSlotWindowStart,
+    sel?.selectedSlotWindowEnd,
+  ]);
 
-  function selectWindow(w: BookingAvailabilityWindow) {
-    if (!isUuidLike(foId)) return;
-    const label = formatWindowLabel(w);
-    const slotId = `${foId}:${w.startAt}:${w.endAt}`;
+  function selectWindow(w: ProviderBackedAvailabilityWindow) {
+    const label =
+      w.windowLabel?.trim() ||
+      formatWindowLabelTimes(w.startAt, w.endAt);
+    const slotId = `${w.foId}:${w.startAt}:${w.endAt}`;
     onScheduleSelectionPatch({
       mode: "slot_selection",
       selectedSlotId: slotId,
@@ -190,7 +213,9 @@ export function BookingStepSchedule({
       selectedSlotDate: dateOnlyFromIso(w.startAt),
       selectedSlotWindowStart: w.startAt,
       selectedSlotWindowEnd: w.endAt,
-      selectedSlotFoId: foId,
+      selectedSlotFoId: w.foId,
+      selectedSlotSource: w.source,
+      selectedSlotProviderLabel: w.cleanerLabel ?? null,
       holdId: null,
       holdExpiresAt: null,
       slotHoldConfirmed: false,
@@ -206,6 +231,8 @@ export function BookingStepSchedule({
       selectedSlotWindowStart: null,
       selectedSlotWindowEnd: null,
       selectedSlotFoId: null,
+      selectedSlotSource: null,
+      selectedSlotProviderLabel: null,
       holdId: null,
       holdExpiresAt: null,
       slotHoldConfirmed: false,
@@ -223,7 +250,7 @@ export function BookingStepSchedule({
     <BookingSectionCard
       eyebrow="Step 4"
       title="Choose your schedule"
-      body="Pick cadence and timing. When you are signed in and have selected a preferred team, we can load real arrival windows for that team. Otherwise we capture honest timing preferences — dispatch still confirms the final visit time."
+      body="Pick cadence and timing. Signed-in customers can load real arrival windows from eligible teams (your preferred team is prioritized when set). Otherwise use timing preferences — dispatch still confirms the final visit time."
     >
       <div className="grid gap-8 lg:grid-cols-2">
         <div>
@@ -285,12 +312,6 @@ export function BookingStepSchedule({
             continue with timing preferences below — that path is fully supported
             and intentional.
           </p>
-        ) : !isUuidLike(foId) ? (
-          <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
-            Choose a <span className="font-medium text-[#0F172A]">preferred team</span>{" "}
-            below so we know which provider&apos;s calendar to query. If you prefer not
-            to pick a team, use timing preferences — dispatch will propose availability.
-          </p>
         ) : windowsLoading ? (
           <p className="text-sm text-[#64748B]">Loading availability…</p>
         ) : windowsError ? (
@@ -304,8 +325,8 @@ export function BookingStepSchedule({
           </div>
         ) : showEmptyWindowsFallback ? (
           <div className="rounded-xl border border-[#C9B27C]/20 bg-white/60 px-4 py-3 text-sm text-[#475569]">
-            No discrete windows matched this duration in the next two weeks for
-            this team. Use timing preferences below, or try another preferred team.
+            No discrete windows matched this duration in the next two weeks across
+            the teams we checked. Use timing preferences below, or adjust home details and try again.
           </div>
         ) : windows && windows.length > 0 ? (
           <div className="space-y-3">
@@ -315,8 +336,15 @@ export function BookingStepSchedule({
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
               {windows.map((w) => {
-                const key = `${w.startAt}|${w.endAt}`;
+                const key = `${w.foId}|${w.startAt}|${w.endAt}`;
                 const selected = key === selectedKey;
+                const title =
+                  w.windowLabel?.trim() ||
+                  formatWindowLabelTimes(w.startAt, w.endAt);
+                const trust =
+                  w.source === "candidate_provider"
+                    ? "Backed by an available team"
+                    : "Preferred team slot";
                 return (
                   <button
                     key={key}
@@ -328,7 +356,10 @@ export function BookingStepSchedule({
                         : "border-[#C9B27C]/25 bg-white text-[#0F172A] hover:border-[#0D9488]/30"
                     }`}
                   >
-                    <span className="font-medium">{formatWindowLabel(w)}</span>
+                    <span className="font-medium">{title}</span>
+                    <span className="mt-1 block text-xs font-normal text-[#64748B]">
+                      {trust}
+                    </span>
                   </button>
                 );
               })}

@@ -97,6 +97,8 @@ Optional nested object (all sub-fields optional at validation level; the web fun
       "selectedSlotWindowStart": "ISO-8601 string | null",
       "selectedSlotWindowEnd": "ISO-8601 string | null",
       "selectedSlotFoId": "UUID | null",
+      "selectedSlotSource": "preferred_provider | candidate_provider | null",
+      "selectedSlotProviderLabel": "string | null",
       "holdId": "string | null",
       "holdExpiresAt": "ISO-8601 string | null",
       "slotHoldConfirmed": "boolean (optional)"
@@ -134,14 +136,29 @@ Optional nested object (all sub-fields optional at validation level; the web fun
 
 ## Scheduling truth
 
-- Exact slot selection is supported only when **availability windows** are returned for a chosen franchise owner (`GET /api/v1/bookings/availability/windows`), the customer selects a window, and after intake creates a booking shell the same session can run **hold + confirm-hold** with a **customer JWT** (`POST /api/v1/bookings/availability/holds`, `POST /api/v1/bookings/:id/confirm-hold`). Holds are short-lived (see API service `HOLD_SECONDS`).
-- **Preference-only** scheduling remains the explicit fallback when windows are empty/unavailable, the customer is not signed in, preferred team is not chosen (no `foId` for windows), or hold/confirm fails (user is returned to the schedule step with fixed copy).
+- Exact slot selection is supported when **provider-backed windows** are returned (`GET /api/v1/bookings/availability/windows/aggregate` in the funnel; legacy single-FO `GET /api/v1/bookings/availability/windows` remains for direct per-FO callers), the customer selects a row that includes a concrete **`foId`**, and after intake creates a booking shell the same session can run **hold + confirm-hold** with a **customer JWT** (`POST /api/v1/bookings/availability/holds`, `POST /api/v1/bookings/:id/confirm-hold`). Holds are short-lived (see API service `HOLD_SECONDS`).
+- **Preference-only** scheduling remains the explicit fallback when the aggregate returns no windows, the customer is not signed in, or hold/confirm fails (user is returned to the schedule step with fixed copy).
 - **Confirm** distinguishes “Your selected arrival window” vs “Your timing preference” via `buildBookingDispatchHandoffSummary`.
+
+## Multi-provider availability truth
+
+- Slots may be sourced from **more than one eligible franchise owner** when `BookingAvailabilityAggregateService` fans out `SlotAvailabilityService.listAvailableWindows` per candidate FO.
+- A **preferred FO** (optional `preferredFoId` query param, mirrored from funnel preferred cleaner id) is **prioritized** in candidate ordering and window sorting; if geo-filtered dispatch candidates exclude that FO, the service can still attach the preferred FO from the **roster** when it remains an active provider (honest “still try preferred” behavior — not a guarantee of dispatch eligibility).
+- When no preferred FO is set, candidates still come from **real** active `FranchiseOwner` rows (roster path) or **dispatch-filtered** rows when `siteLat`, `siteLng`, `squareFootage`, and `estimatedLaborMinutes` are supplied on the aggregate query.
+- Every selectable UI row maps to **one concrete `foId`** for hold creation — no generic slot pool.
+- `BOOKING_PRODUCT_CONTRACT.availabilityScope` is **`multi_provider_candidates`**; the product remains **hybrid** with **preference-only** fallback.
+
+## Multi-provider windows contract
+
+- **`GET /api/v1/bookings/availability/windows`** (unchanged): requires **`foId`**; returns **only** `{ startAt, endAt }[]` for that franchise owner — **no embedded provider identity** in each window object (caller already knows `foId`). Capacity for that FO is implied by existing bookings + active holds inside `SlotAvailabilityService`. **No ZIP filter** in that service; dispatch geo filtering happens only when using the aggregate path with dispatch inputs.
+- **`GET /api/v1/bookings/availability/windows/aggregate`**: `rangeStart`, `rangeEnd`, `durationMinutes` required; optional `preferredFoId`, optional `siteLat`/`siteLng`/`squareFootage`/`estimatedLaborMinutes`/`recommendedTeamSize`/`maxProviders`. Response: `{ mode: "preferred_provider_only" | "multi_provider_candidates", windows: ProviderBackedAvailabilityWindow[] }` where each window includes **`foId`**, **`source`** (`preferred_provider` \| `candidate_provider`), **`windowLabel`**, **`cleanerLabel`**, and ISO **`startAt`/`endAt`**. **Dedup policy:** identical start/end across two FOs remain **separate rows** so holds target the correct FO. **Sort:** preferred-provider windows first, then ascending `startAt`, then `foId`.
+- **Holds / confirm-hold** unchanged: body still includes the selected window’s **`foId`**.
 
 ## Availability / slot-hold API contract
 
 | Method | Route | Auth | Purpose |
 |--------|-------|------|---------|
+| `GET` | `/api/v1/bookings/availability/windows/aggregate` | Customer JWT | Multi-provider fan-out + provider-backed windows (see “Multi-provider windows contract”). |
 | `GET` | `/api/v1/bookings/availability/windows` | Customer JWT (`JwtAuthGuard` on `BookingsController`) | Query params (validated DTO): `foId` (UUID), `rangeStart`, `rangeEnd` (ISO-8601), `durationMinutes` (int ≥ 1). Response: **JSON array** of `{ startAt, endAt }` (ISO instants). |
 | `POST` | `/api/v1/bookings/availability/holds` | Customer JWT | Body (`CreateSlotHoldDto`): `bookingId` (UUID), `foId` (UUID), `startAt`, `endAt` (ISO-8601). **Hold is created only after a booking row exists** (model B). Returns `BookingSlotHold` row including `id`, `expiresAt`. |
 | `POST` | `/api/v1/bookings/:id/confirm-hold` | Customer JWT | Body: `{ holdId, note? }`. Optional header `idempotency-key`. Confirms booking from validated non-expired hold; may return `BOOKING_SLOT_HOLD_EXPIRED` etc. on failure. |
@@ -152,7 +169,7 @@ Optional nested object (all sub-fields optional at validation level; the web fun
 
 - **Legacy wire columns:** `frequency` + `preferredTime` on the intake DTO (unchanged).
 - **Funnel state:** `scheduleSelection` (`ScheduleSelection` in `bookingFlowTypes.ts`).
-- **Runtime product label:** `BOOKING_PRODUCT_CONTRACT.schedulingMode` → **`hybrid_slot_or_preference`** (`bookingProductContract.ts`). Persisted `bookingHandoff.scheduling.mode` remains **`preference_only` | `slot_selection`** per API DTO.
+- **Runtime product labels:** `BOOKING_PRODUCT_CONTRACT.schedulingMode` → **`hybrid_slot_or_preference`**; `availabilityScope` → **`multi_provider_candidates`** (`bookingProductContract.ts`). Persisted `bookingHandoff.scheduling.mode` remains **`preference_only` | `slot_selection`** per API DTO, with optional `selectedSlotSource` / `selectedSlotProviderLabel` on slot-backed submits.
 - **Confirm** shows the human-readable schedule line from `buildBookingDispatchHandoffSummary` (same underlying state as `bookingHandoff.scheduling`).
 
 ## Cleaner selection / preferred cleaner contract
@@ -181,7 +198,7 @@ Exact copy:
 ## Admin / operator visibility surfaces
 
 - **`/admin/ops/recurring`:** recurring ops summary, route manifest, funnel vs intake note, and a static **Continuity, cleaners, and execution** section (truthful scope statement).
-- **`/admin/booking-direction-intakes`:** **Handoff** summary plus **Assignment**, **Reason codes**, **Continuity / pref**, and **Live execution** (recommended cleaner, preferred-match / continuity flags, roster count from `liveInputs`) when the bridge has run; API returns full JSON per row. The **Schedule** column also surfaces **slot-backed vs preference-only** detail from `bookingHandoff.scheduling` (mode, window label/ISO, optional `holdId` prefix when present on the handoff JSON).
+- **`/admin/booking-direction-intakes`:** **Handoff** summary plus **Assignment**, **Reason codes**, **Continuity / pref**, and **Live execution** (recommended cleaner, preferred-match / continuity flags, roster count from `liveInputs`) when the bridge has run; API returns full JSON per row. The **Schedule** column also surfaces **slot-backed vs preference-only** detail from `bookingHandoff.scheduling` (mode, window label/ISO, **`selectedSlotSource`**, provider label, optional `holdId` prefix when present on the handoff JSON).
 - **Booking record:** operators can read **`SERVELINK_BOOKING_HANDOFF_JSON`** and **`SERVELINK_ASSIGNMENT_EXECUTION_JSON`** blocks on `Booking.notes` when a booking is created from intake.
 
 ## Customer lifecycle surfaces
@@ -200,6 +217,7 @@ Exact copy:
 | Recurring + one-time smoke | `booking-recurring-path.spec.ts` |
 | Confirm without snapshot blocked | `booking-confirm-without-snapshot.spec.ts` |
 | Admin recurring page | `admin-recurring-ops-page.spec.ts` |
+| Schedule hybrid (guest + mocked customer aggregate) | `booking-schedule-hybrid-ui.spec.ts` |
 
 ## Recovered roster / availability sources
 
@@ -224,9 +242,10 @@ Exact copy:
 | `apps/web/.../bookingRecurringApi.ts` | Customer recurring HTTP client + documented routes. |
 | `services/api/.../booking-direction-intake/*` | Intake DTO (incl. `bookingHandoff`), persistence, bridge to `Booking`. |
 | `services/api/.../slot-holds/*` | Slot availability + holds; wired from web funnel after booking shell exists (JWT). |
+| `services/api/.../bookings/booking-availability-aggregate.service.ts` | Multi-provider windows aggregation for `GET .../availability/windows/aggregate`. |
 | `services/api/.../recurring/*` | Recurring plan CRUD, ops summary, `preferredFoId` on plan DTOs. |
 | `apps/web/.../admin/ops/recurring/page.tsx` | Operator recurring dashboard shell. |
 
 ---
 
-_Last updated: hybrid scheduling (availability windows + hold/confirm-hold) with honest preference fallback._
+_Last updated: multi-provider aggregate windows (`GET .../availability/windows/aggregate`) with hybrid preference fallback and provider-backed holds._
