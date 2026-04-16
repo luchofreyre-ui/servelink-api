@@ -103,5 +103,8 @@ export function parseBookingSearchParams(
     deepCleanProgram,
     customerName: "",
     customerEmail: "",
+    estimateFactors: {
+      ...defaultBookingFlowState.estimateFactors,
+    },
   };
 }

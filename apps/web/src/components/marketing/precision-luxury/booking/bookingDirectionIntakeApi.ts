@@ -24,7 +24,32 @@ export type DeepCleanProgramDisplay = {
   visits: DeepCleanProgramVisitDisplay[];
 };
 
-export type SubmitBookingDirectionIntakePayload = {
+/** Mirrors API `EstimateFactorsDto` — sent as JSON for validation + mapping. */
+export type IntakeEstimateFactorsPayload = {
+  propertyType: string;
+  floors: string;
+  firstTimeWithServelink: string;
+  lastProfessionalClean: string;
+  clutterLevel: string;
+  kitchenCondition: string;
+  stovetopType: string;
+  bathroomCondition: string;
+  glassShowers: string;
+  petPresence: string;
+  petShedding?: string;
+  petAccidentsOrLitterAreas: string;
+  occupancyState: string;
+  floorVisibility: string;
+  carpetPercent: string;
+  stairsFlights: string;
+  addonIds: string[];
+};
+
+/**
+ * Wire JSON for preview-estimate (API rejects / should not receive top-level
+ * `estimateFactors` on this path).
+ */
+export type BookingDirectionOutboundPayload = {
   serviceId: string;
   homeSize: string;
   bedrooms: string;
@@ -43,6 +68,12 @@ export type SubmitBookingDirectionIntakePayload = {
   source?: string;
   utm?: BookingDirectionUtmPayload;
 };
+
+/**
+ * Submit body: same API-safe fields as preview. Questionnaire is applied on the server
+ * when `estimateFactors` is omitted (defaults), matching the preview-estimate contract.
+ */
+export type SubmitBookingDirectionIntakePayload = BookingDirectionOutboundPayload;
 
 export type BookingDirectionIntakeSuccess = {
   kind: "booking_direction_intake";
@@ -78,7 +109,7 @@ export type BookingDirectionEstimatePreviewResponse = {
 /** Reads `source` + standard UTM query params from the booking URL. */
 export function buildBookingAttributionFromSearchParams(
   params: URLSearchParams,
-): Pick<SubmitBookingDirectionIntakePayload, "source" | "utm"> {
+): Pick<BookingDirectionOutboundPayload, "source" | "utm"> {
   const source = params.get("source")?.trim() || undefined;
 
   const utmSource = params.get("utm_source")?.trim();
@@ -128,7 +159,7 @@ export async function submitBookingDirectionIntake(
 }
 
 export async function previewBookingDirectionEstimate(
-  payload: SubmitBookingDirectionIntakePayload,
+  payload: BookingDirectionOutboundPayload,
   init?: RequestInit,
 ): Promise<BookingDirectionEstimatePreviewResponse> {
   const response = await fetch(

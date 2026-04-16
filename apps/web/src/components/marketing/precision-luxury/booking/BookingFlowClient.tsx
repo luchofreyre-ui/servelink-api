@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ServiceHeader } from "../layout/ServiceHeader";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
 import { BookingFlowProgress } from "../BookingFlowProgress";
-import { bookingSteps } from "./bookingFlowData";
+import { bookingSteps, getSelectedService } from "./bookingFlowData";
 import { BOOKING_PAGE_DESCRIPTION } from "./bookingSeo";
 import {
   buildBookingSearchParams,
@@ -17,7 +17,17 @@ import type {
   BookingFrequencyOption,
   BookingStepId,
   BookingTimeOption,
+  RecurringCadence,
 } from "./bookingFlowTypes";
+import { BookingStepDecision } from "./BookingStepDecision";
+import {
+  BookingStepRecurringSetup,
+  type BookingRecurringFrequencyOption,
+} from "./BookingStepRecurringSetup";
+import {
+  BookingStepConfirm,
+  type BookingConfirmChecklistItem,
+} from "./BookingStepConfirm";
 import { BookingStepService } from "./BookingStepService";
 import { BookingStepHomeDetails } from "./BookingStepHomeDetails";
 import { BookingStepSchedule } from "./BookingStepSchedule";
@@ -37,6 +47,22 @@ import {
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
 import { isBookingContactValid } from "./bookingContactValidation";
+import {
+  buildBookingDecisionOptions,
+  resolveBookingDecisionSelection,
+} from "./bookingDecisionEngine";
+import {
+  buildBookingCadenceSummary,
+  buildBookingRecurringFrequencyOptions,
+  buildRecurringIntentForCadenceSelect,
+  buildRecurringIntentForEnabledChange,
+  getBookingRecurringEnabled,
+} from "./bookingRecurringEngine";
+import {
+  buildBookingConfirmChecklist,
+  buildBookingConfirmScheduleLine,
+  buildBookingConfirmWarningKind,
+} from "./bookingConfirmEngine";
 
 function getStepOrder(step: BookingStepId) {
   return bookingSteps.find((item) => item.id === step)?.order ?? 1;
@@ -95,6 +121,7 @@ export function BookingFlowClient() {
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewFetchCompleted, setPreviewFetchCompleted] = useState(false);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
+  const confirmGateErrorRef = useRef<HTMLDivElement | null>(null);
 
   const attributionQueryKey = searchParams?.toString() ?? "";
 
@@ -120,12 +147,18 @@ export function BookingFlowClient() {
   }, [isContactReady, state.customerName, state.customerEmail]);
 
   useEffect(() => {
-    if (
-      (attemptedNext && stepError) ||
-      (attemptedConfirm && !canConfirmDirection) ||
-      Boolean(submitError) ||
-      Boolean(previewError)
-    ) {
+    const reviewGateError =
+      state.step === "review" &&
+      (Boolean(submitError) ||
+        (attemptedConfirm && !canConfirmDirection));
+    if (reviewGateError) {
+      confirmGateErrorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      return;
+    }
+    if ((attemptedNext && stepError) || Boolean(previewError)) {
       errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [
@@ -135,6 +168,7 @@ export function BookingFlowClient() {
     canConfirmDirection,
     submitError,
     previewError,
+    state.step,
   ]);
 
   useEffect(() => {
@@ -387,6 +421,168 @@ export function BookingFlowClient() {
     setState((prev) => ({ ...prev, ...patch }));
   }
 
+  const decisionOptions = useMemo(
+    () =>
+      buildBookingDecisionOptions({
+        recurringIntent: state.recurringIntent?.type === "recurring",
+        selectedServiceId: state.serviceId,
+        recurringServiceId: null,
+        oneTimeServiceId: null,
+        moveServiceId: null,
+        includeMoveOption: false,
+      }),
+    [state.recurringIntent?.type, state.serviceId],
+  );
+
+  function handleDecisionSelect(id: string) {
+    const { nextServiceId } = resolveBookingDecisionSelection({
+      decisionId: id,
+      recurringServiceId: null,
+      oneTimeServiceId: null,
+      moveServiceId: null,
+    });
+    const servicePatch =
+      nextServiceId != null ? { serviceId: nextServiceId } : {};
+
+    if (id === "one_time") {
+      patchState({
+        ...servicePatch,
+        recurringIntent: { type: "one_time" },
+      });
+      return;
+    }
+    if (id === "recurring") {
+      patchState({
+        ...servicePatch,
+        recurringIntent: {
+          type: "recurring",
+          cadence:
+            state.recurringIntent?.type === "recurring"
+              ? state.recurringIntent.cadence
+              : "weekly",
+        },
+      });
+    }
+  }
+
+  const recurringEnabled = getBookingRecurringEnabled(state.recurringIntent);
+
+  const recurringFrequencyOptions: BookingRecurringFrequencyOption[] =
+    useMemo(
+      () =>
+        buildBookingRecurringFrequencyOptions(
+          recurringEnabled,
+          state.recurringIntent,
+        ),
+      [recurringEnabled, state.recurringIntent],
+    );
+
+  function handleRecurringEnabledChange(enabled: boolean) {
+    patchState({
+      recurringIntent: buildRecurringIntentForEnabledChange(
+        enabled,
+        state.recurringIntent,
+      ),
+    });
+  }
+
+  function handleRecurringFrequencySelect(id: string) {
+    const cadence = id as RecurringCadence;
+    patchState({
+      recurringIntent: buildRecurringIntentForCadenceSelect(cadence),
+    });
+  }
+
+  const cadenceSummary = useMemo(
+    () => buildBookingCadenceSummary(recurringEnabled, state.recurringIntent),
+    [recurringEnabled, state.recurringIntent],
+  );
+
+  const confirmChecklist: BookingConfirmChecklistItem[] = useMemo(
+    () =>
+      buildBookingConfirmChecklist({
+        serviceId: state.serviceId,
+        isHomeComplete,
+        isScheduleComplete,
+        recurringEnabled,
+        recurringIntent: state.recurringIntent,
+        isContactReady,
+        attemptedConfirm,
+        isBookingReady,
+        previewLoading,
+        previewFetchCompleted,
+        previewError,
+        hasPreviewEstimate: previewEstimate != null,
+      }),
+    [
+      state.serviceId,
+      state.recurringIntent,
+      isHomeComplete,
+      isScheduleComplete,
+      recurringEnabled,
+      isContactReady,
+      attemptedConfirm,
+      isBookingReady,
+      previewFetchCompleted,
+      previewEstimate,
+      previewError,
+      previewLoading,
+    ],
+  );
+
+  const confirmSummary: ReactNode = useMemo(() => {
+    const svc = getSelectedService(state.serviceId);
+    return (
+      <div className="space-y-2 font-[var(--font-manrope)] text-sm text-neutral-800">
+        <p>
+          <span className="font-semibold">{svc.title}</span>
+        </p>
+        <p>
+          {buildBookingConfirmScheduleLine(
+            state.frequency,
+            state.preferredTime,
+          )}
+        </p>
+      </div>
+    );
+  }, [state.serviceId, state.frequency, state.preferredTime]);
+
+  const confirmWarning: ReactNode | undefined = useMemo(() => {
+    const kind = buildBookingConfirmWarningKind({
+      step: state.step,
+      submitError,
+      attemptedConfirm,
+      isBookingReady,
+      isContactReady,
+    });
+    if (kind.kind === "none") return undefined;
+    if (kind.kind === "submit_error") {
+      return (
+        <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]">
+          {kind.message}
+        </p>
+      );
+    }
+    if (kind.kind === "incomplete_booking") {
+      return (
+        <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]">
+          Please complete home details and schedule selections before confirming.
+        </p>
+      );
+    }
+    return (
+      <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]">
+        Please add your name and a valid email before confirming.
+      </p>
+    );
+  }, [
+    state.step,
+    submitError,
+    attemptedConfirm,
+    isBookingReady,
+    isContactReady,
+  ]);
+
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <ServiceHeader />
@@ -424,34 +620,47 @@ export function BookingFlowClient() {
               <BookingServiceHandoffCard serviceId={state.serviceId} />
 
               {state.step === "service" ? (
-                <BookingStepService
-                  serviceId={state.serviceId}
-                  onSelect={(serviceId) => {
-                    setAttemptedNext(false);
-                    setAttemptedConfirm(false);
-                    setSubmitError(null);
-                    setState((prev) => ({
-                      ...prev,
-                      serviceId,
-                      deepCleanProgram: isDeepCleaningBookingServiceId(
+                <>
+                  <BookingStepDecision
+                    options={decisionOptions}
+                    onSelect={handleDecisionSelect}
+                  />
+                  <BookingStepRecurringSetup
+                    enabled={recurringEnabled}
+                    onEnabledChange={handleRecurringEnabledChange}
+                    frequencyOptions={recurringFrequencyOptions}
+                    onSelectFrequency={handleRecurringFrequencySelect}
+                    cadenceSummary={cadenceSummary}
+                  />
+                  <BookingStepService
+                    serviceId={state.serviceId}
+                    onSelect={(serviceId) => {
+                      setAttemptedNext(false);
+                      setAttemptedConfirm(false);
+                      setSubmitError(null);
+                      setState((prev) => ({
+                        ...prev,
                         serviceId,
-                      )
-                        ? prev.deepCleanProgram === "phased_3_visit" ||
-                          prev.deepCleanProgram === "single_visit"
-                          ? prev.deepCleanProgram
-                          : "single_visit"
-                        : "",
-                    }));
-                  }}
-                  deepCleanProgram={
-                    state.deepCleanProgram === "phased_3_visit"
-                      ? "phased_3_visit"
-                      : "single_visit"
-                  }
-                  onDeepCleanProgramChange={(value) =>
-                    patchState({ deepCleanProgram: value })
-                  }
-                />
+                        deepCleanProgram: isDeepCleaningBookingServiceId(
+                          serviceId,
+                        )
+                          ? prev.deepCleanProgram === "phased_3_visit" ||
+                            prev.deepCleanProgram === "single_visit"
+                            ? prev.deepCleanProgram
+                            : "single_visit"
+                          : "",
+                      }));
+                    }}
+                    deepCleanProgram={
+                      state.deepCleanProgram === "phased_3_visit"
+                        ? "phased_3_visit"
+                        : "single_visit"
+                    }
+                    onDeepCleanProgramChange={(value) =>
+                      patchState({ deepCleanProgram: value })
+                    }
+                  />
+                </>
               ) : null}
 
               {state.step === "home" ? (
@@ -474,40 +683,72 @@ export function BookingFlowClient() {
               ) : null}
 
               {state.step === "review" ? (
-                <BookingStepReview
-                  state={state}
-                  previewEstimate={previewEstimate}
-                  previewDeepCleanCard={previewDeepCleanCard}
-                  previewLoading={previewLoading}
-                  previewError={previewError}
-                  previewFetchCompleted={previewFetchCompleted}
-                  previewErrorRef={errorRef}
-                  showContactFieldErrors={
-                    attemptedConfirm && isBookingReady && !isContactReady
-                  }
-                  onContactChange={patchContactState}
-                />
+                <>
+                  <BookingStepReview
+                    state={state}
+                    previewEstimate={previewEstimate}
+                    previewDeepCleanCard={previewDeepCleanCard}
+                    previewLoading={previewLoading}
+                    previewError={previewError}
+                    previewFetchCompleted={previewFetchCompleted}
+                    previewErrorRef={errorRef}
+                    showContactFieldErrors={
+                      attemptedConfirm && isBookingReady && !isContactReady
+                    }
+                    onContactChange={patchContactState}
+                  />
+                  <div ref={confirmGateErrorRef}>
+                    <BookingStepConfirm
+                      checklist={confirmChecklist}
+                      summary={confirmSummary}
+                      warning={confirmWarning}
+                      footer={
+                        <div className="flex flex-col gap-3 sm:flex-row">
+                          <button
+                            type="button"
+                            onClick={goBack}
+                            className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white"
+                          >
+                            Back
+                          </button>
+                          <button
+                            type="button"
+                            disabled={isSubmitting}
+                            onClick={() => void confirmBookingDirection()}
+                            className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-70"
+                          >
+                            {isSubmitting
+                              ? "Sending…"
+                              : "Confirm Booking Direction"}
+                          </button>
+                        </div>
+                      }
+                    />
+                  </div>
+                </>
               ) : null}
 
-              <div className="flex flex-col gap-3 sm:flex-row">
-                {state.step !== "service" ? (
-                  <button
-                    onClick={goBack}
-                    className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white"
-                  >
-                    Back
-                  </button>
-                ) : (
-                  <Link
-                    href={`/services/${state.serviceId}`}
-                    className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white"
-                  >
-                    Back to Service
-                  </Link>
-                )}
+              {state.step !== "review" ? (
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  {state.step !== "service" ? (
+                    <button
+                      type="button"
+                      onClick={goBack}
+                      className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white"
+                    >
+                      Back
+                    </button>
+                  ) : (
+                    <Link
+                      href={`/services/${state.serviceId}`}
+                      className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white"
+                    >
+                      Back to Service
+                    </Link>
+                  )}
 
-                {state.step !== "review" ? (
                   <button
+                    type="button"
                     onClick={goNext}
                     aria-disabled={!canContinue}
                     className={`inline-flex items-center justify-center rounded-full px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white transition ${
@@ -518,43 +759,10 @@ export function BookingFlowClient() {
                   >
                     Continue
                   </button>
-                ) : (
-                  <button
-                    type="button"
-                    disabled={isSubmitting}
-                    onClick={() => void confirmBookingDirection()}
-                    className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {isSubmitting ? "Sending…" : "Confirm Booking Direction"}
-                  </button>
-                )}
-              </div>
+                </div>
+              ) : null}
 
-              {state.step === "review" ? (
-                submitError ? (
-                  <p
-                    ref={errorRef}
-                    className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
-                  >
-                    {submitError}
-                  </p>
-                ) : attemptedConfirm && !isBookingReady ? (
-                  <p
-                    ref={errorRef}
-                    className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
-                  >
-                    Please complete home details and schedule selections before
-                    confirming.
-                  </p>
-                ) : attemptedConfirm && isBookingReady && !isContactReady ? (
-                  <p
-                    ref={errorRef}
-                    className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
-                  >
-                    Please add your name and a valid email before confirming.
-                  </p>
-                ) : null
-              ) : attemptedNext && stepError ? (
+              {state.step !== "review" && attemptedNext && stepError ? (
                 <p
                   ref={errorRef}
                   className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
