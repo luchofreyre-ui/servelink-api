@@ -5,6 +5,7 @@
 # deps / builds
 node_modules/
 dist/
+apps/web/tsconfig.tsbuildinfo
 
 # env
 .env
