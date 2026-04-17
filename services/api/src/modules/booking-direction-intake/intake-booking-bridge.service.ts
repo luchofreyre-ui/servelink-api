@@ -2,11 +2,19 @@ import { randomBytes } from "node:crypto";
 
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Role, type BookingDirectionIntake } from "@prisma/client";
+import {
+  BookingStatus,
+  Role,
+  type BookingDirectionIntake,
+} from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { AuthService } from "../../auth/auth.service";
 import { BookingsService } from "../bookings/bookings.service";
 import type { DeepCleanProgramEstimate } from "../estimate/deep-clean-program";
+import {
+  EstimatorExecutionError,
+  EstimatorInputValidationError,
+} from "../estimate/errors/estimator.errors";
 import { EstimatorService } from "../estimate/estimator.service";
 import { BookingDirectionIntakeService } from "./booking-direction-intake.service";
 import type { CreateBookingDirectionIntakeDto } from "./dto/create-booking-direction-intake.dto";
@@ -15,6 +23,12 @@ import {
   mapIntakeFieldsToEstimateInput,
   mapIntakeToEstimateInput,
 } from "./intake-to-estimate.mapper";
+import {
+  INTAKE_ESTIMATE_EXECUTION_FAILED_CODE,
+  INTAKE_ESTIMATE_EXECUTION_FAILED_MESSAGE,
+  INTAKE_ESTIMATE_INPUT_INVALID_MESSAGE,
+  INTAKE_PREVIEW_ESTIMATE_FAILED_MESSAGE,
+} from "./intake-estimator-reliability";
 
 export type DeepCleanProgramVisitSubmitDisplay = {
   visitIndex: number;
@@ -63,6 +77,8 @@ export type IntakeSubmitSuccess = {
   intakeId: string;
   bookingCreated: true;
   bookingId: string;
+  /** True when the booking row can enter the public scheduling orchestrator (estimate + pending slot). */
+  schedulable: boolean;
   estimate: {
     priceCents: number;
     durationMinutes: number;
@@ -136,7 +152,35 @@ export class IntakeBookingBridgeService {
       throw err;
     }
 
-    const result = await this.estimator.estimate(estimateInput);
+    let result;
+    try {
+      result = await this.estimator.estimate(estimateInput);
+    } catch (err: unknown) {
+      if (err instanceof EstimatorExecutionError) {
+        this.logger.warn(
+          `previewEstimateFromDto code=${err.code} serviceId=${dto.serviceId} context=${JSON.stringify(err.estimatorContext ?? {})}`,
+        );
+        const c = (err as Error & { cause?: unknown }).cause;
+        if (c instanceof Error && c.stack) {
+          this.logger.warn(c.stack);
+        }
+        throw new BadRequestException({
+          code: INTAKE_ESTIMATE_EXECUTION_FAILED_CODE,
+          message: INTAKE_PREVIEW_ESTIMATE_FAILED_MESSAGE,
+        });
+      }
+      if (err instanceof EstimatorInputValidationError) {
+        this.logger.warn(
+          `previewEstimateFromDto code=${err.code} serviceId=${dto.serviceId} validationContext=${JSON.stringify(err.validationContext ?? {})}`,
+        );
+        throw new BadRequestException({
+          code: err.code,
+          message: INTAKE_ESTIMATE_INPUT_INVALID_MESSAGE,
+        });
+      }
+      throw err;
+    }
+
     const deepCleanProgram = result.deepCleanProgram
       ? mapDeepCleanProgramForSubmitResponse(result.deepCleanProgram)
       : null;
@@ -237,6 +281,7 @@ export class IntakeBookingBridgeService {
         customerId,
         estimateInput,
         note,
+        preferredFoId: intake.preferredFoId,
       });
 
       if (!booking?.id) {
@@ -273,11 +318,28 @@ export class IntakeBookingBridgeService {
         ? mapDeepCleanProgramForSubmitResponse(estimate.deepCleanProgram)
         : null;
 
+      const schedulableRow = await this.prisma.booking.findUnique({
+        where: { id: booking.id },
+        select: {
+          estimatedHours: true,
+          status: true,
+          scheduledStart: true,
+          estimateSnapshot: { select: { id: true } },
+        },
+      });
+      const schedulable =
+        schedulableRow != null &&
+        schedulableRow.status === BookingStatus.pending_payment &&
+        schedulableRow.scheduledStart == null &&
+        Number(schedulableRow.estimatedHours) > 0 &&
+        schedulableRow.estimateSnapshot != null;
+
       return {
         kind: "booking_direction_intake_submit",
         intakeId: intake.id,
         bookingCreated: true,
         bookingId: booking.id,
+        schedulable,
         estimate: {
           priceCents: Math.max(0, Math.floor(estimate.estimatedPriceCents)),
           durationMinutes: Math.max(
@@ -292,6 +354,45 @@ export class IntakeBookingBridgeService {
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : String(err ?? "unknown error");
+      if (err instanceof EstimatorExecutionError) {
+        this.logger.error(
+          `createBooking code=${err.code} intakeId=${intake.id} context=${JSON.stringify(err.estimatorContext ?? {})}`,
+        );
+        const c = (err as Error & { cause?: unknown }).cause;
+        if (c instanceof Error && c.stack) {
+          this.logger.error(c.stack);
+        }
+        return {
+          kind: "booking_direction_intake_submit",
+          intakeId: intake.id,
+          bookingCreated: false,
+          bookingId: null,
+          estimate: null,
+          deepCleanProgram: null,
+          bookingError: {
+            code: INTAKE_ESTIMATE_EXECUTION_FAILED_CODE,
+            message: INTAKE_ESTIMATE_EXECUTION_FAILED_MESSAGE,
+          },
+        };
+      }
+      if (err instanceof EstimatorInputValidationError) {
+        this.logger.warn(
+          `createBooking code=${err.code} intakeId=${intake.id} validationContext=${JSON.stringify(err.validationContext ?? {})}`,
+        );
+        return {
+          kind: "booking_direction_intake_submit",
+          intakeId: intake.id,
+          bookingCreated: false,
+          bookingId: null,
+          estimate: null,
+          deepCleanProgram: null,
+          bookingError: {
+            code: err.code,
+            message: INTAKE_ESTIMATE_INPUT_INVALID_MESSAGE,
+          },
+        };
+      }
+
       this.logger.error(
         `createBooking from intake failed intakeId=${intake.id}: ${message}`,
       );

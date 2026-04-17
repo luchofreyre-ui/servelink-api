@@ -1,91 +1,388 @@
 import { BookingOptionCard } from "../BookingOptionCard";
 import { BookingSectionCard } from "../BookingSectionCard";
-import type {
-  BookingFlowState,
-  BookingFrequencyOption,
-  BookingTimeOption,
-} from "./bookingFlowTypes";
+import {
+  BOOKING_SCHEDULE_CHOOSE_DIFFERENT_TIME_CTA,
+  BOOKING_SCHEDULE_CHOOSE_SLOT_HINT,
+  BOOKING_SCHEDULE_CHOOSE_TEAM_HINT,
+  BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE,
+  BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA,
+  BOOKING_SCHEDULE_CONFIRMING,
+  BOOKING_SCHEDULE_HOLD_FAILED_HINT,
+  BOOKING_SCHEDULE_NO_SLOTS_BACK_TO_REVIEW_CTA,
+  BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_BODY,
+  BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_TITLE,
+  BOOKING_SCHEDULE_NO_SLOTS_TRY_OTHER_TEAM_CTA,
+  BOOKING_SCHEDULE_PAGE_LEAD,
+  BOOKING_SCHEDULE_PAGE_TITLE,
+  BOOKING_SCHEDULE_RECOMMENDED_BADGE,
+  BOOKING_SCHEDULE_RETRY_CONFIRM_CTA,
+  BOOKING_SCHEDULE_SLOTS_LEAD,
+  BOOKING_SCHEDULE_SLOTS_TITLE,
+  BOOKING_SCHEDULE_SLOT_CARD_BODY,
+  BOOKING_SCHEDULE_SUMMARY_ARRIVAL_LABEL,
+  BOOKING_SCHEDULE_SUMMARY_TEAM_LABEL,
+  BOOKING_SCHEDULE_SUMMARY_TITLE,
+  BOOKING_SCHEDULE_TEAM_CARD_BODY,
+  BOOKING_SCHEDULE_TEAM_CARD_RECOMMENDED_BODY,
+  BOOKING_SCHEDULE_TEAM_SUPPORT_LINE,
+  BOOKING_SCHEDULE_TEAMS_LOADING,
+  BOOKING_SCHEDULE_TEAMS_LOADING_STILL,
+  BOOKING_SCHEDULE_TEAMS_LOAD_FAILED_BODY,
+  BOOKING_SCHEDULE_TEAMS_LOAD_FAILED_TITLE,
+  BOOKING_SCHEDULE_WINDOWS_LOADING,
+  BOOKING_SCHEDULE_WINDOWS_LOADING_STILL,
+  BOOKING_SCHEDULE_ZERO_TEAMS_ADJUST_CTA,
+  BOOKING_SCHEDULE_ZERO_TEAMS_BODY,
+  BOOKING_SCHEDULE_ZERO_TEAMS_CONTINUE_CTA,
+  BOOKING_SCHEDULE_ZERO_TEAMS_TITLE,
+  BOOKING_STEP_EDIT_CONTINUITY_HINT,
+} from "./bookingPublicSurfaceCopy";
+import type { BookingAvailableTeamOption, BookingFlowState } from "./bookingFlowTypes";
 
-const frequencyOptions: BookingFrequencyOption[] = [
-  "Weekly",
-  "Bi-Weekly",
-  "Monthly",
-  "One-Time",
-];
+export type BookingScheduleTeamsEmptyState = "none" | "zero" | "load_error";
 
-const timeOptions: BookingTimeOption[] = [
-  "Weekday Morning",
-  "Weekday Afternoon",
-  "Friday",
-  "Saturday",
-];
+function formatSlotLabel(isoStart: string): string {
+  const d = new Date(isoStart);
+  if (!Number.isFinite(d.getTime())) return isoStart;
+  return d.toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+function formatArrivalWindow(startAt: string, endAt: string): string {
+  const startLabel = formatSlotLabel(startAt);
+  const end = new Date(endAt);
+  if (!Number.isFinite(end.getTime())) return `${startLabel} – ${endAt}`;
+  const endPart = end.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  return `${startLabel} – ${endPart}`;
+}
 
 type BookingStepScheduleProps = {
   state: BookingFlowState;
-  onFrequencySelect: (value: BookingFrequencyOption) => void;
-  onTimeSelect: (value: BookingTimeOption) => void;
+  serviceId: string;
+  teamsLoading: boolean;
+  windowsLoading: boolean;
+  confirmLoading: boolean;
+  /** Team / slot list load failures (not hold/confirm). */
+  surfaceError: string | null;
+  teamsEmptyState: BookingScheduleTeamsEmptyState;
+  teamsLoadSlowHint: boolean;
+  windowsLoadSlowHint: boolean;
+  slotsEmptyForSelectedTeam: boolean;
+  scheduleCommitError: string | null;
+  scheduleCommitPhase: "none" | "hold_failed" | "confirm_failed";
+  hasAlternateTeamToSwitchTo: boolean;
+  onSelectTeam: (team: BookingAvailableTeamOption) => void;
+  onSelectSlot: (startAt: string, endAt: string) => void;
+  onConfirmArrival: () => void;
+  onAdjustScheduleDetails: () => void;
+  onContinueManualFollowUp: () => void;
+  onBackToReviewFromSchedule: () => void;
+  onSwitchToAlternateTeam: () => void;
+  onRetryConfirmBooking: () => void;
+  onChooseDifferentTimeAfterConfirmFail: () => void;
 };
 
 export function BookingStepSchedule({
   state,
-  onFrequencySelect,
-  onTimeSelect,
+  serviceId: _serviceId,
+  teamsLoading,
+  windowsLoading,
+  confirmLoading,
+  surfaceError,
+  teamsEmptyState,
+  teamsLoadSlowHint,
+  windowsLoadSlowHint,
+  slotsEmptyForSelectedTeam,
+  scheduleCommitError,
+  scheduleCommitPhase,
+  hasAlternateTeamToSwitchTo,
+  onSelectTeam,
+  onSelectSlot,
+  onConfirmArrival,
+  onAdjustScheduleDetails,
+  onContinueManualFollowUp,
+  onBackToReviewFromSchedule,
+  onSwitchToAlternateTeam,
+  onRetryConfirmBooking,
+  onChooseDifferentTimeAfterConfirmFail,
 }: BookingStepScheduleProps) {
+  void _serviceId;
+  const displayTeams = state.availableTeams.slice(0, 2);
+  const hasTeams = displayTeams.length > 0;
+  const teamChosen = Boolean(state.selectedTeamId.trim());
+  const slotChosen =
+    Boolean(state.selectedSlotStart.trim()) &&
+    Boolean(state.selectedSlotEnd.trim());
+  const canConfirm = teamChosen && slotChosen && scheduleCommitPhase !== "confirm_failed";
+  const showTeamsFallback =
+    !teamsLoading && teamsEmptyState !== "none" && !hasTeams;
+
   return (
     <BookingSectionCard
-      eyebrow="Step 3"
-      title="Choose your schedule"
-      body="Select how often and when you’d like service. You can adjust this later."
+      eyebrow="Step 4"
+      title={BOOKING_SCHEDULE_PAGE_TITLE}
+      body={BOOKING_SCHEDULE_PAGE_LEAD}
     >
-      <div className="grid gap-8 lg:grid-cols-2">
-        <div>
-          <p className="mb-2 font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-            Preferred frequency
+      <p className="mb-10 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+        {BOOKING_STEP_EDIT_CONTINUITY_HINT}
+      </p>
+
+      {surfaceError && teamsEmptyState === "none" ? (
+        <p className="mb-6 rounded-2xl border border-amber-200/90 bg-amber-50/90 px-4 py-3 font-[var(--font-manrope)] text-sm text-amber-950">
+          {surfaceError}
+        </p>
+      ) : null}
+
+      {showTeamsFallback ? (
+        <div
+          data-testid="booking-schedule-zero-teams-fallback"
+          className="mb-8 rounded-2xl border border-[#C9B27C]/20 bg-white px-6 py-8 shadow-sm ring-1 ring-[#C9B27C]/10"
+        >
+          <p className="font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.02em] text-[#0F172A]">
+            {teamsEmptyState === "load_error"
+              ? BOOKING_SCHEDULE_TEAMS_LOAD_FAILED_TITLE
+              : BOOKING_SCHEDULE_ZERO_TEAMS_TITLE}
           </p>
-
-          {!state.frequency && (
-            <p className="mb-4 text-sm text-[#64748B]">
-              Choose how often you want service.
-            </p>
-          )}
-
-          <div className="grid grid-cols-2 gap-4">
-            {frequencyOptions.map((option) => (
-              <div key={option} onClick={() => onFrequencySelect(option)}>
-                <BookingOptionCard
-                  title={option}
-                  body="Select the cadence that fits your lifestyle."
-                  selected={state.frequency === option}
-                />
-              </div>
-            ))}
+          <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+            {teamsEmptyState === "load_error"
+              ? BOOKING_SCHEDULE_TEAMS_LOAD_FAILED_BODY
+              : BOOKING_SCHEDULE_ZERO_TEAMS_BODY}
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <button
+              type="button"
+              data-testid="booking-schedule-adjust-details"
+              onClick={() => onAdjustScheduleDetails()}
+              className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-8 py-3.5 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76]"
+            >
+              {BOOKING_SCHEDULE_ZERO_TEAMS_ADJUST_CTA}
+            </button>
+            {teamsEmptyState === "zero" ? (
+              <button
+                type="button"
+                data-testid="booking-schedule-continue-manual"
+                onClick={() => onContinueManualFollowUp()}
+                className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/28 px-8 py-3.5 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white"
+              >
+                {BOOKING_SCHEDULE_ZERO_TEAMS_CONTINUE_CTA}
+              </button>
+            ) : null}
           </div>
         </div>
+      ) : null}
 
-        <div>
-          <p className="mb-2 font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-            Preferred timing
+      {/* Section A — team selection */}
+      {!showTeamsFallback ? (
+        <div data-testid="booking-schedule-team-section">
+          <p className="font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.02em] text-[#0F172A]">
+            {BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE}
+          </p>
+          <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+            {BOOKING_SCHEDULE_TEAM_SUPPORT_LINE}
           </p>
 
-          {!state.preferredTime && (
-            <p className="mb-4 text-sm text-[#64748B]">
-              Choose a time window that works best for your routine.
-            </p>
-          )}
-
-          <div className="grid gap-4">
-            {timeOptions.map((option) => (
-              <div key={option} onClick={() => onTimeSelect(option)}>
-                <BookingOptionCard
-                  title={option}
-                  body="We’ll match you with availability in this window."
-                  selected={state.preferredTime === option}
-                />
+          <div className="mt-6">
+            {teamsLoading && !hasTeams ? (
+              <div data-testid="booking-schedule-teams-loading">
+                <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
+                  {BOOKING_SCHEDULE_TEAMS_LOADING}
+                </p>
+                {teamsLoadSlowHint ? (
+                  <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
+                    {BOOKING_SCHEDULE_TEAMS_LOADING_STILL}
+                  </p>
+                ) : null}
               </div>
-            ))}
+            ) : !hasTeams ? null : (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {displayTeams.map((team) => (
+                    <BookingOptionCard
+                      key={team.id}
+                      title={team.displayName}
+                      body={
+                        team.isRecommended
+                          ? BOOKING_SCHEDULE_TEAM_CARD_RECOMMENDED_BODY
+                          : BOOKING_SCHEDULE_TEAM_CARD_BODY
+                      }
+                      meta={
+                        team.isRecommended ? BOOKING_SCHEDULE_RECOMMENDED_BADGE : undefined
+                      }
+                      selected={state.selectedTeamId.trim() === team.id}
+                      onClick={() => onSelectTeam(team)}
+                    />
+                  ))}
+                </div>
+                {!teamChosen ? (
+                  <p className="mt-4 font-[var(--font-manrope)] text-sm text-[#64748B]">
+                    {BOOKING_SCHEDULE_CHOOSE_TEAM_HINT}
+                  </p>
+                ) : null}
+              </>
+            )}
           </div>
         </div>
-      </div>
+      ) : null}
+
+      {/* Section B — slots (only after team) */}
+      {!showTeamsFallback && teamChosen ? (
+        <div
+          className="mt-12 border-t border-[#C9B27C]/14 pt-12"
+          data-testid="booking-schedule-slot-section"
+        >
+          <p className="font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.02em] text-[#0F172A]">
+            {BOOKING_SCHEDULE_SLOTS_TITLE}
+          </p>
+          <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+            {BOOKING_SCHEDULE_SLOTS_LEAD}
+          </p>
+
+          {windowsLoading ? (
+            <div data-testid="booking-schedule-windows-loading">
+              <p className="mt-6 font-[var(--font-manrope)] text-sm text-[#64748B]">
+                {BOOKING_SCHEDULE_WINDOWS_LOADING}
+              </p>
+              {windowsLoadSlowHint ? (
+                <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
+                  {BOOKING_SCHEDULE_WINDOWS_LOADING_STILL}
+                </p>
+              ) : null}
+            </div>
+          ) : slotsEmptyForSelectedTeam ? (
+            <div
+              data-testid="booking-schedule-no-slots-fallback"
+              className="mt-8 rounded-2xl border border-[#C9B27C]/20 bg-white px-6 py-8 shadow-sm ring-1 ring-[#C9B27C]/10"
+            >
+              <p className="font-[var(--font-poppins)] text-lg font-semibold tracking-[-0.02em] text-[#0F172A]">
+                {BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_TITLE}
+              </p>
+              <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                {BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_BODY}
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                {hasAlternateTeamToSwitchTo ? (
+                  <button
+                    type="button"
+                    data-testid="booking-schedule-switch-team"
+                    onClick={() => onSwitchToAlternateTeam()}
+                    className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-8 py-3.5 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76]"
+                  >
+                    {BOOKING_SCHEDULE_NO_SLOTS_TRY_OTHER_TEAM_CTA}
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  data-testid="booking-schedule-no-slots-back-review"
+                  onClick={() => onBackToReviewFromSchedule()}
+                  className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/28 px-8 py-3.5 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white"
+                >
+                  {BOOKING_SCHEDULE_NO_SLOTS_BACK_TO_REVIEW_CTA}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {state.availableWindows.map((w) => (
+                <BookingOptionCard
+                  key={`${w.startAt}-${w.endAt}`}
+                  title={formatSlotLabel(w.startAt)}
+                  body={BOOKING_SCHEDULE_SLOT_CARD_BODY}
+                  selected={
+                    state.selectedSlotStart === w.startAt &&
+                    state.selectedSlotEnd === w.endAt
+                  }
+                  onClick={() => onSelectSlot(w.startAt, w.endAt)}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Section C — summary + final confirm */}
+          {!slotsEmptyForSelectedTeam ? (
+            <div className="mt-10 border-t border-[#C9B27C]/14 pt-10">
+              {scheduleCommitError ? (
+                <div
+                  data-testid="booking-schedule-commit-error"
+                  className="mb-6 rounded-2xl border border-amber-200/90 bg-amber-50/90 px-5 py-4 font-[var(--font-manrope)] text-sm leading-6 text-amber-950"
+                >
+                  {scheduleCommitError}
+                  {scheduleCommitPhase === "hold_failed" ? (
+                    <p className="mt-3 text-sm text-amber-950/90">{BOOKING_SCHEDULE_HOLD_FAILED_HINT}</p>
+                  ) : null}
+                  {scheduleCommitPhase === "confirm_failed" ? (
+                    <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                      <button
+                        type="button"
+                        data-testid="booking-schedule-retry-confirm"
+                        disabled={confirmLoading}
+                        onClick={() => onRetryConfirmBooking()}
+                        className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-2.5 font-[var(--font-manrope)] text-sm font-semibold text-white transition hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {BOOKING_SCHEDULE_RETRY_CONFIRM_CTA}
+                      </button>
+                      <button
+                        type="button"
+                        data-testid="booking-schedule-choose-different-time"
+                        disabled={confirmLoading}
+                        onClick={() => onChooseDifferentTimeAfterConfirmFail()}
+                        className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/28 px-6 py-2.5 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {BOOKING_SCHEDULE_CHOOSE_DIFFERENT_TIME_CTA}
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {slotChosen ? (
+                <div
+                  data-testid="booking-schedule-summary"
+                  className="mb-6 rounded-2xl border border-[#C9B27C]/18 bg-[#FFF9F3] px-5 py-4 shadow-sm ring-1 ring-[#C9B27C]/10"
+                >
+                  <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                    {BOOKING_SCHEDULE_SUMMARY_TITLE}
+                  </p>
+                  <p className="mt-3 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
+                    <span className="text-[#64748B]">{BOOKING_SCHEDULE_SUMMARY_TEAM_LABEL}:</span>{" "}
+                    {state.selectedTeamDisplayName.trim()}
+                  </p>
+                  <p className="mt-2 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
+                    <span className="text-[#64748B]">{BOOKING_SCHEDULE_SUMMARY_ARRIVAL_LABEL}:</span>{" "}
+                    {formatArrivalWindow(
+                      state.selectedSlotStart.trim(),
+                      state.selectedSlotEnd.trim(),
+                    )}
+                  </p>
+                </div>
+              ) : null}
+
+              {!slotChosen ? (
+                <p className="mb-4 font-[var(--font-manrope)] text-sm text-[#64748B]">
+                  {BOOKING_SCHEDULE_CHOOSE_SLOT_HINT}
+                </p>
+              ) : null}
+
+              <button
+                type="button"
+                data-testid="booking-schedule-confirm-booking"
+                disabled={!canConfirm || confirmLoading}
+                onClick={() => onConfirmArrival()}
+                className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-8 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {confirmLoading ? BOOKING_SCHEDULE_CONFIRMING : BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA}
+              </button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </BookingSectionCard>
   );
 }

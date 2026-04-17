@@ -10,8 +10,13 @@ export const metadata: Metadata = {
 
 function ConfirmationFallback() {
   return (
-    <div className="min-h-screen bg-[#FFF9F3] px-6 py-24 text-center font-[var(--font-manrope)] text-[#475569]">
-      Loading confirmation…
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#FFF9F3] px-6 py-24 text-center">
+      <p className="font-[var(--font-manrope)] text-sm font-medium text-[#475569]">
+        Loading your confirmation…
+      </p>
+      <p className="mt-2 max-w-xs font-[var(--font-manrope)] text-xs text-[#64748B]">
+        Almost there.
+      </p>
     </div>
   );
 }

@@ -62,6 +62,8 @@ export class BookingsService {
     note?: string;
     idempotencyKey?: string | null;
     estimateInput?: EstimateInput;
+    /** Optional public funnel preference only; does not assign `foId`. */
+    preferredFoId?: string | null;
   }): Promise<{
     booking: any;
     estimate?: EstimateResult;
@@ -79,6 +81,11 @@ export class BookingsService {
           ? input.estimateInput.siteLng
           : null;
 
+      const preferredFoId =
+        typeof input.preferredFoId === "string" && input.preferredFoId.trim()
+          ? input.preferredFoId.trim()
+          : null;
+
       const booking = await tx.booking.create({
         data: {
           status: BookingStatus.pending_payment,
@@ -89,6 +96,7 @@ export class BookingsService {
           notes: input.note ?? null,
           siteLat,
           siteLng,
+          preferredFoId,
         },
       });
 

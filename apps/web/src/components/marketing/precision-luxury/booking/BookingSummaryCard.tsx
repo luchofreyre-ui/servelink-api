@@ -7,6 +7,10 @@ import {
   formatEstimateUsdFromCents,
 } from "./bookingIntakePreviewDisplay";
 import type { FunnelReviewEstimate } from "./bookingFunnelLocalEstimate";
+import {
+  formatBookingBathroomsForDisplay,
+  formatBookingBedroomsForDisplay,
+} from "./bookingEstimateFactorFields";
 
 type BookingSummaryCardProps = {
   state: BookingFlowState;
@@ -21,7 +25,7 @@ function buildHomeProfile(state: BookingFlowState) {
     return "Complete home details";
   }
 
-  return `${state.bedrooms} · ${state.bathrooms} · ${state.homeSize}`;
+  return `${formatBookingBedroomsForDisplay(state.bedrooms)} · ${formatBookingBathroomsForDisplay(state.bathrooms)} · ${state.homeSize}`;
 }
 
 export function BookingSummaryCard({
@@ -44,7 +48,7 @@ export function BookingSummaryCard({
     ...(deep
       ? [
           {
-            label: "Deep clean structure",
+            label: "Deep clean plan",
             value: deepProgramLabel,
           },
         ]
@@ -54,7 +58,7 @@ export function BookingSummaryCard({
       value: state.frequency || "Not selected yet",
     },
     {
-      label: "Home Profile",
+      label: "Home profile",
       value: buildHomeProfile(state),
     },
     {
@@ -85,15 +89,15 @@ export function BookingSummaryCard({
     showLiveEstimate && (previewLoading || previewError || previewEstimate)
       ? [
           {
-            label: "Indicative price",
+            label: "Estimate",
             value: previewLoading
-              ? "Calculating…"
+              ? "Getting estimate…"
               : previewError
                 ? "See note in review"
                 : previewEstimate
                   ? `${formatEstimateUsdFromCents(previewEstimate.priceCents)}${
                       previewEstimate.source === "local"
-                        ? " (on-page)"
+                        ? " (approx.)"
                         : ""
                     }`
                   : "—",
@@ -101,13 +105,13 @@ export function BookingSummaryCard({
           ...(previewEstimate && !previewLoading && !previewError
             ? [
                 {
-                  label: "Est. duration",
+                  label: "Est. time",
                   value: formatEstimateDurationMinutes(
                     previewEstimate.durationMinutes,
                   ),
                 },
                 {
-                  label: "Confidence",
+                  label: "How sure we are",
                   value: formatEstimateConfidence(previewEstimate.confidence),
                 },
               ]
@@ -148,10 +152,11 @@ export function BookingSummaryCard({
 
       <div className="mt-6 rounded-[24px] border border-[#0D9488]/18 bg-[#0D9488] p-5 text-white shadow-[0_14px_40px_rgba(13,148,136,0.16)]">
         <p className="font-[var(--font-manrope)] text-xs uppercase tracking-[0.16em] text-white/75">
-          Premium booking standard
+          At a glance
         </p>
         <p className="mt-3 font-[var(--font-manrope)] text-sm leading-7 text-white">
-          This summary keeps your selections visible and helps you complete booking with confidence.
+          Your selections stay visible here as you go—so nothing gets lost
+          between steps.
         </p>
       </div>
     </section>

@@ -10,6 +10,7 @@ import type {
   SqftBand,
 } from "../estimate/estimator.service";
 import type { EstimateFactorsDto } from "./dto/estimate-factors.dto";
+import { resolveEstimateFactorsForPublicIntake } from "./estimate-factors-sanitize";
 
 export class IntakeEstimateMappingError extends Error {
   readonly code: string;
@@ -110,7 +111,8 @@ export type IntakeFieldsForEstimate = {
   serviceId: string;
   frequency: string;
   deepCleanProgram?: string | null;
-  estimateFactors: EstimateFactorsDto;
+  /** Omitted by the public `/book` client; filled with defaults before estimating. */
+  estimateFactors?: EstimateFactorsDto | null;
 };
 
 /**
@@ -134,7 +136,7 @@ export function mapIntakeFieldsToEstimateInput(
       ? "phased_3_visit"
       : "single_visit";
 
-  const f = intake.estimateFactors;
+  const f = resolveEstimateFactorsForPublicIntake(intake.estimateFactors);
 
   const estimateInput: EstimateInput = {
     property_type: assertPropertyType(f.propertyType),
@@ -179,18 +181,14 @@ function parseEstimateFactorsFromJson(
 
 /**
  * Maps a persisted intake row to EstimatorService input.
- * @throws IntakeEstimateMappingError when `estimateFactors` JSON is missing or invalid.
+ * Missing or non-object `estimateFactors` JSON is filled with public-funnel defaults
+ * before mapping (see `resolveEstimateFactorsForPublicIntake`).
+ * @throws IntakeEstimateMappingError for sqft / structural mapping failures only.
  */
 export function mapIntakeToEstimateInput(
   intake: BookingDirectionIntake,
 ): EstimateInput {
   const factors = parseEstimateFactorsFromJson(intake.estimateFactors);
-  if (!factors) {
-    throw new IntakeEstimateMappingError(
-      "ESTIMATE_FACTORS_MISSING",
-      "Intake is missing estimateFactors; cannot build an estimate.",
-    );
-  }
 
   return mapIntakeFieldsToEstimateInput({
     homeSize: intake.homeSize,
@@ -199,6 +197,6 @@ export function mapIntakeToEstimateInput(
     serviceId: intake.serviceId,
     frequency: intake.frequency,
     deepCleanProgram: intake.deepCleanProgram,
-    estimateFactors: factors,
+    estimateFactors: resolveEstimateFactorsForPublicIntake(factors),
   });
 }

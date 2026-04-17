@@ -28,6 +28,7 @@ import { FinancialModule } from "./modules/financial/financial.module";
 import { PaymentsModule } from "./modules/payments/payments.module";
 import { SystemModule } from "./modules/system/system.module";
 import { BookingDirectionIntakeModule } from "./modules/booking-direction-intake/booking-direction-intake.module";
+import { PublicBookingOrchestratorModule } from "./modules/public-booking-orchestrator/public-booking-orchestrator.module";
 import { AuthorityModule } from "./modules/authority/authority.module";
 import { KnowledgeModule } from "./modules/knowledge/knowledge.module";
 import { SystemTestsAutomationModule } from "./modules/system-tests-automation/system-tests-automation.module";
@@ -76,6 +77,7 @@ const enableDevScenarioApi =
     PaymentsModule,
     SystemModule,
     BookingDirectionIntakeModule,
+    PublicBookingOrchestratorModule,
     AuthorityModule,
     EncyclopediaModule,
     RecurringModule,

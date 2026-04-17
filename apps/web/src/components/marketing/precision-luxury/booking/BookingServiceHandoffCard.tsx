@@ -12,7 +12,7 @@ export function BookingServiceHandoffCard({
   return (
     <section className="rounded-[28px] border border-[#C9B27C]/16 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
       <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.22em] text-[#C9B27C]">
-        Service handoff
+        Your service
       </p>
 
       <div className="mt-4 flex items-center justify-between gap-4">
@@ -32,7 +32,9 @@ export function BookingServiceHandoffCard({
 
       <div className="mt-5 rounded-2xl bg-[#FFF9F3] px-4 py-4 ring-1 ring-[#C9B27C]/14">
         <p className="font-[var(--font-manrope)] text-sm leading-7 text-[#0F172A]">
-          You arrived in booking with a service already selected. The flow should preserve that context so the client feels oriented instead of reset.
+          You started from a service page, so this is pre-selected below. Your
+          choice stays selected as you move through the steps—you can change it
+          anytime.
         </p>
       </div>
     </section>

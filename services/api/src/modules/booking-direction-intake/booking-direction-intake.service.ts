@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma";
 import type { CreateBookingDirectionIntakeDto } from "./dto/create-booking-direction-intake.dto";
+import { DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS } from "./estimate-factors-sanitize";
 import { intakeServiceIdImpliesDeepClean } from "./intake-service-type.util";
 
 @Injectable()
@@ -22,8 +23,12 @@ export class BookingDirectionIntakeService {
         pets: (dto.pets ?? "").trim(),
         frequency: dto.frequency.trim(),
         preferredTime: dto.preferredTime.trim(),
+        preferredFoId: dto.preferredFoId?.trim() || null,
         deepCleanProgram,
-        estimateFactors: dto.estimateFactors as object,
+        estimateFactors: (dto.estimateFactors ?? {
+          ...DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS,
+          addonIds: [...DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS.addonIds],
+        }) as object,
         customerName: dto.customerName?.trim() || null,
         customerEmail: dto.customerEmail?.trim() || null,
         source: dto.source?.trim() || null,
@@ -67,6 +72,7 @@ export class BookingDirectionIntakeService {
         pets: row.pets,
         frequency: row.frequency,
         preferredTime: row.preferredTime,
+        preferredFoId: row.preferredFoId,
         deepCleanProgram: row.deepCleanProgram,
         hasEstimateFactors: row.estimateFactors != null,
         customerName: row.customerName,

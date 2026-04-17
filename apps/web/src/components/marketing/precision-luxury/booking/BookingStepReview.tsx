@@ -1,47 +1,150 @@
-import type { ReactNode, Ref } from "react";
+import { useEffect, useRef, type LegacyRef, type ReactNode, type RefObject } from "react";
 import { DeepCleanProgramCard } from "@/components/booking/deep-clean/DeepCleanProgramCard";
 import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
 import { BookingSectionCard } from "../BookingSectionCard";
 import { BookingTextField } from "./BookingTextField";
 import { getSelectedService } from "./bookingFlowData";
-import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
-import type { BookingFlowState } from "./bookingFlowTypes";
+import {
+  isBookingMoveTransitionServiceId,
+  isDeepCleaningBookingServiceId,
+} from "./bookingDeepClean";
+import type {
+  BookingFlowState,
+  BookingHomeCondition,
+  BookingPreviewConfidenceBand,
+  BookingProblemAreaToken,
+  BookingSurfaceComplexity,
+} from "./bookingFlowTypes";
 import {
   formatEstimateConfidence,
   formatEstimateDurationMinutes,
   formatEstimateUsdFromCents,
 } from "./bookingIntakePreviewDisplay";
 import type { FunnelReviewEstimate } from "./bookingFunnelLocalEstimate";
+import { emitBookingFunnelEvent } from "./bookingFunnelAnalytics";
 import {
   getBookingCustomerEmailError,
   getBookingCustomerNameError,
   isBookingContactValid,
 } from "./bookingContactValidation";
+import {
+  formatBookingBathroomsForDisplay,
+  formatBookingBedroomsForDisplay,
+  normalizeBookingBathroomsParam,
+  normalizeBookingBedroomsParam,
+} from "./bookingEstimateFactorFields";
+import {
+  isCadenceComplete,
+  isHomeDetailsComplete,
+  normalizeBookingAddOnsForPayload,
+  normalizeBookingAppliancePresenceForPayload,
+  normalizeBookingHomeSizeParam,
+  normalizeBookingPetsParam,
+  normalizeBookingProblemAreasForPayload,
+} from "./bookingUrlState";
+import {
+  BOOKING_ADD_ON_LABELS,
+  BOOKING_APPLIANCE_PRESENCE_LABELS,
+  BOOKING_DEEP_CLEAN_FOCUS_LABELS,
+  BOOKING_HOME_CONDITION_LABELS,
+  BOOKING_PROBLEM_AREA_LABELS,
+  BOOKING_REVIEW_ADD_ONS_LABEL,
+  BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL,
+  BOOKING_REVIEW_ESTIMATOR_CONDITION_LABEL,
+  BOOKING_REVIEW_ESTIMATOR_FOCUS_AREAS_LABEL,
+  BOOKING_REVIEW_ESTIMATOR_SURFACE_LABEL,
+  BOOKING_REVIEW_SCOPE_OF_WORK_LABEL,
+  BOOKING_REVIEW_TRANSITION_APPLIANCES_LABEL,
+  BOOKING_REVIEW_TRANSITION_SETUP_LABEL,
+  BOOKING_REVIEW_BANNER_AFTER_SEND_DID_NOT_FINISH,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DEEP_CLEAN_FOCUS,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_CONDITION,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES,
+  BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE,
+  BOOKING_REVIEW_ESTIMATE_NONE_AFTER_FETCH,
+  BOOKING_REVIEW_ESTIMATE_REFRESHING_BODY,
+  BOOKING_REVIEW_ESTIMATE_REFRESHING_TITLE,
+  BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_HINT,
+  BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD,
+  BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE,
+  BOOKING_REVIEW_PRE_CONF_CUSTOM_BODY,
+  BOOKING_REVIEW_PRE_CONF_CUSTOM_HEADLINE,
+  BOOKING_REVIEW_PRE_CONF_CUSTOM_SUPPORTING,
+  BOOKING_REVIEW_PRE_CONF_HIGH_BODY,
+  BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE,
+  BOOKING_REVIEW_PRE_CONF_HIGH_SUPPORTING,
+  BOOKING_REVIEW_PRE_CONF_SPECIAL_BODY,
+  BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE,
+  BOOKING_REVIEW_PRE_CONF_SPECIAL_SUPPORTING,
+  BOOKING_REVIEW_BANNER_READY_NEXT_STEP,
+  BOOKING_REVIEW_NEXT_SCHEDULE_BODY,
+  BOOKING_REVIEW_NEXT_SCHEDULE_TITLE,
+  BOOKING_REVIEW_PREP_SECTION_TITLE,
+  BOOKING_REVIEW_RECOMMEND_SECTION_TITLE,
+  BOOKING_REVIEW_SCHEDULE_NOTE,
+  BOOKING_REVIEW_STEP_BODY,
+  BOOKING_REVIEW_STEP_TITLE,
+  BOOKING_REVIEW_SELECTED_ARRIVAL_LABEL,
+  BOOKING_REVIEW_SELECTED_TEAM_LABEL,
+  BOOKING_CADENCE_ARRIVAL_WINDOW_LABEL,
+  BOOKING_SCOPE_INTENSITY_LABELS,
+  BOOKING_SURFACE_COMPLEXITY_LABELS,
+  BOOKING_TRANSITION_STATE_LABELS,
+} from "./bookingPublicSurfaceCopy";
 
 type BookingStepReviewProps = {
   state: BookingFlowState;
+  condition: BookingHomeCondition;
+  problemAreas: readonly BookingProblemAreaToken[];
+  surfaceComplexity: BookingSurfaceComplexity;
+  estimateDriverHeavyCondition: boolean;
+  estimateDriverHasProblemAreas: boolean;
+  estimateDriverDenseLayout: boolean;
+  estimateDriverDetailHeavyScope: boolean;
+  estimateDriverHasAddOns: boolean;
+  estimateDriverDeepCleanFocus: boolean;
+  estimateDriverFurnishedTransition: boolean;
+  estimateDriverTransitionAppliances: boolean;
+  previewConfidenceBand: BookingPreviewConfidenceBand;
+  hasSubmitRecoverableFailure?: boolean;
+  estimatePreviewReady: boolean;
   previewEstimate: FunnelReviewEstimate | null;
   previewDeepCleanCard: DeepCleanProgramDisplay | null;
   previewLoading: boolean;
   previewError: string | null;
   previewFetchCompleted: boolean;
-  previewErrorRef?: Ref<HTMLParagraphElement>;
+  previewErrorRef?: RefObject<HTMLParagraphElement | null>;
   showContactFieldErrors: boolean;
   onContactChange: (
     patch: Partial<Pick<BookingFlowState, "customerName" | "customerEmail">>,
   ) => void;
+  prepGuidanceItems: string[];
+  recommendedAttentionItems: string[];
 };
 
-function isHomeComplete(state: BookingFlowState) {
-  return !!state.homeSize && !!state.bedrooms && !!state.bathrooms;
-}
-
-function isScheduleComplete(state: BookingFlowState) {
-  return !!state.frequency && !!state.preferredTime;
-}
-
 function isBookingReady(state: BookingFlowState) {
-  return !!state.serviceId && isHomeComplete(state) && isScheduleComplete(state);
+  return (
+    !!state.serviceId &&
+    isHomeDetailsComplete(state) &&
+    isCadenceComplete(state)
+  );
+}
+
+function formatSlotForReview(isoStart: string): string {
+  const d = new Date(isoStart);
+  if (!Number.isFinite(d.getTime())) return isoStart;
+  return d.toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 function ReviewSection({
@@ -69,8 +172,49 @@ function deepProgramFallbackLabel(state: BookingFlowState) {
     : "One-visit deep clean";
 }
 
+function planningConfidenceCopy(band: BookingPreviewConfidenceBand): {
+  headline: string;
+  body: string;
+  supporting: string;
+} {
+  switch (band) {
+    case "high_clarity":
+      return {
+        headline: BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE,
+        body: BOOKING_REVIEW_PRE_CONF_HIGH_BODY,
+        supporting: BOOKING_REVIEW_PRE_CONF_HIGH_SUPPORTING,
+      };
+    case "customized":
+      return {
+        headline: BOOKING_REVIEW_PRE_CONF_CUSTOM_HEADLINE,
+        body: BOOKING_REVIEW_PRE_CONF_CUSTOM_BODY,
+        supporting: BOOKING_REVIEW_PRE_CONF_CUSTOM_SUPPORTING,
+      };
+    case "special_attention":
+      return {
+        headline: BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE,
+        body: BOOKING_REVIEW_PRE_CONF_SPECIAL_BODY,
+        supporting: BOOKING_REVIEW_PRE_CONF_SPECIAL_SUPPORTING,
+      };
+  }
+}
+
 export function BookingStepReview({
   state,
+  condition,
+  problemAreas,
+  surfaceComplexity,
+  estimateDriverHeavyCondition,
+  estimateDriverHasProblemAreas,
+  estimateDriverDenseLayout,
+  estimateDriverDetailHeavyScope,
+  estimateDriverHasAddOns,
+  estimateDriverDeepCleanFocus,
+  estimateDriverFurnishedTransition,
+  estimateDriverTransitionAppliances,
+  previewConfidenceBand,
+  hasSubmitRecoverableFailure = false,
+  estimatePreviewReady,
   previewEstimate,
   previewDeepCleanCard,
   previewLoading,
@@ -79,19 +223,75 @@ export function BookingStepReview({
   previewErrorRef,
   showContactFieldErrors,
   onContactChange,
+  prepGuidanceItems,
+  recommendedAttentionItems,
 }: BookingStepReviewProps) {
+  const reviewFunnelOnceRef = useRef(false);
+  useEffect(() => {
+    if (reviewFunnelOnceRef.current) return;
+    reviewFunnelOnceRef.current = true;
+    emitBookingFunnelEvent("review_viewed", { serviceId: state.serviceId });
+  }, [state.serviceId]);
+
   const service = getSelectedService(state.serviceId);
-  const homeOk = isHomeComplete(state);
-  const scheduleOk = isScheduleComplete(state);
+  const homeOk = isHomeDetailsComplete(state);
+  const cadenceOk = isCadenceComplete(state);
   const ready = isBookingReady(state);
   const contactOk = isBookingContactValid(
     state.customerName,
     state.customerEmail,
   );
-  const bannerReady = ready && contactOk;
+  const bannerFullyReady =
+    ready &&
+    contactOk &&
+    estimatePreviewReady &&
+    !previewLoading &&
+    !previewError &&
+    !hasSubmitRecoverableFailure;
   const deep = isDeepCleaningBookingServiceId(state.serviceId);
 
-  const petsDisplay = state.pets?.trim() ? state.pets : "Not specified";
+  const bedToken = normalizeBookingBedroomsParam(state.bedrooms);
+  const bathToken = normalizeBookingBathroomsParam(state.bathrooms);
+  const bedroomsSummary =
+    formatBookingBedroomsForDisplay(bedToken) ||
+    (state.bedrooms.trim() || "—");
+  const bathroomsSummary =
+    formatBookingBathroomsForDisplay(bathToken) ||
+    (state.bathrooms.trim() || "—");
+
+  const petsNormalized = normalizeBookingPetsParam(state.pets);
+  const petsDisplay = petsNormalized ? petsNormalized : "Not specified";
+
+  const problemAreasNormalized = normalizeBookingProblemAreasForPayload(
+    state.problemAreas,
+  );
+  const problemAreasDisplay =
+    problemAreasNormalized.length > 0
+      ? problemAreasNormalized
+          .map((t) => BOOKING_PROBLEM_AREA_LABELS[t])
+          .join(", ")
+      : "Not specified";
+
+  const addOnsNormalized = normalizeBookingAddOnsForPayload(state.selectedAddOns);
+  const addOnsDisplay =
+    addOnsNormalized.length > 0
+      ? addOnsNormalized.map((t) => BOOKING_ADD_ON_LABELS[t]).join(", ")
+      : "Not specified";
+
+  const appliancesNormalized = normalizeBookingAppliancePresenceForPayload(
+    state.appliancePresence,
+  );
+  const appliancesDisplay =
+    appliancesNormalized.length > 0
+      ? appliancesNormalized
+          .map((t) => BOOKING_APPLIANCE_PRESENCE_LABELS[t])
+          .join(", ")
+      : "Not specified";
+
+  const moveTransition = isBookingMoveTransitionServiceId(state.serviceId);
+
+  const frequencySummary = String(state.frequency ?? "").trim();
+  const preferredTimeSummary = String(state.preferredTime ?? "").trim();
 
   const nameError =
     showContactFieldErrors && !contactOk
@@ -102,29 +302,110 @@ export function BookingStepReview({
       ? getBookingCustomerEmailError(state.customerEmail)
       : null;
 
+  const estimateDriverCandidates = [
+    {
+      on: estimateDriverDeepCleanFocus,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DEEP_CLEAN_FOCUS,
+      key: "dcf",
+    },
+    {
+      on: estimateDriverFurnishedTransition,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION,
+      key: "mvt",
+    },
+    {
+      on: estimateDriverTransitionAppliances,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES,
+      key: "mva",
+    },
+    {
+      on: estimateDriverDetailHeavyScope,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE,
+      key: "scope",
+    },
+    {
+      on: estimateDriverHasAddOns,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS,
+      key: "addons",
+    },
+    {
+      on: estimateDriverHeavyCondition,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_CONDITION,
+      key: "heavy",
+    },
+    {
+      on: estimateDriverHasProblemAreas,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS,
+      key: "problems",
+    },
+    {
+      on: estimateDriverDenseLayout,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT,
+      key: "dense",
+    },
+  ] as const;
+
+  const activeEstimateDrivers = estimateDriverCandidates.filter((d) => d.on);
+  const estimateDriverBullets = activeEstimateDrivers.slice(0, 4);
+  const showEstimateDriverBlock = activeEstimateDrivers.length > 0;
+
+  const estimateDriverBlockKey = `${state.serviceId}:${condition}:${normalizeBookingProblemAreasForPayload([...problemAreas]).join(",")}:${surfaceComplexity}:${state.scopeIntensity}:${addOnsNormalized.join(",")}:${state.deepCleanFocus}:${state.transitionState}:${appliancesNormalized.join(",")}`;
+
+  const showPlanningConfidenceBlock =
+    estimatePreviewReady &&
+    !previewLoading &&
+    !previewError &&
+    previewEstimate != null;
+
+  const planningConfidence = planningConfidenceCopy(previewConfidenceBand);
+
+  const bannerMessage = (() => {
+    if (!ready) {
+      return "Complete the missing details before you continue.";
+    }
+    if (!contactOk) {
+      return "Add your contact details so we can follow up.";
+    }
+    if (hasSubmitRecoverableFailure) {
+      return BOOKING_REVIEW_BANNER_AFTER_SEND_DID_NOT_FINISH;
+    }
+    if (previewLoading) {
+      return BOOKING_REVIEW_ESTIMATE_REFRESHING_BODY;
+    }
+    if (previewError) {
+      return `${BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD} ${BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_HINT}`;
+    }
+    if (!previewLoading && !previewError && !previewFetchCompleted) {
+      return "Almost ready…";
+    }
+    if (previewFetchCompleted && !estimatePreviewReady) {
+      return BOOKING_REVIEW_ESTIMATE_NONE_AFTER_FETCH;
+    }
+    if (estimatePreviewReady) {
+      return BOOKING_REVIEW_BANNER_READY_NEXT_STEP;
+    }
+    return "Almost ready…";
+  })();
+
   return (
     <BookingSectionCard
-      eyebrow="Step 4"
-      title="Review your booking direction"
-      body="Confirm everything looks right before we lock in your direction. You can go back to adjust any step."
+      eyebrow="Step 3"
+      title={BOOKING_REVIEW_STEP_TITLE}
+      body={BOOKING_REVIEW_STEP_BODY}
     >
       <div
         className={`mb-8 rounded-2xl border px-5 py-4 ${
-          bannerReady
+          bannerFullyReady
             ? "border-[#0D9488]/25 bg-[rgba(13,148,136,0.08)]"
             : "border-[#C9B27C]/20 bg-white"
         }`}
       >
         <p
           className={`font-[var(--font-manrope)] text-sm font-medium leading-6 ${
-            bannerReady ? "text-[#0F766E]" : "text-[#92400E]"
+            bannerFullyReady ? "text-[#0F766E]" : "text-[#92400E]"
           }`}
         >
-          {!ready
-            ? "Complete the missing details before confirming your booking direction."
-            : !contactOk
-              ? "Add your contact details so we can follow up on your booking direction."
-              : "Everything needed to book is in place."}
+          {bannerMessage}
         </p>
       </div>
 
@@ -132,15 +413,29 @@ export function BookingStepReview({
         <ReviewSection title="Service">
           <p className="font-medium">{service.title}</p>
           {deep ? (
+            <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#0F172A]">
+              <span className="font-medium text-[#475569]">Deep clean plan:</span>{" "}
+              {deepProgramFallbackLabel(state)}
+            </p>
+          ) : null}
+          {deep ? (
             <div className="mt-3 border-t border-[#C9B27C]/14 pt-3">
-              {previewDeepCleanCard ? (
+              {previewLoading && ready && contactOk ? (
+                <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                  <span className="font-semibold text-[#0F172A]">
+                    {BOOKING_REVIEW_ESTIMATE_REFRESHING_TITLE}
+                  </span>
+                  {" — "}
+                  {BOOKING_REVIEW_ESTIMATE_REFRESHING_BODY}
+                </p>
+              ) : previewDeepCleanCard ? (
                 <DeepCleanProgramCard
                   program={previewDeepCleanCard}
                   className="text-[#0F172A]"
                 />
               ) : previewLoading ? (
                 <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
-                  Loading program breakdown…
+                  Loading visit plan…
                 </p>
               ) : previewError ? null : (
                 <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
@@ -151,40 +446,76 @@ export function BookingStepReview({
           ) : null}
         </ReviewSection>
 
-        <ReviewSection title="Indicative estimate">
-          {previewLoading ? (
+        <ReviewSection title="Estimate preview">
+          {previewLoading && ready && contactOk ? (
+            <div className="mb-4 rounded-2xl border border-[#C9B27C]/18 bg-white px-4 py-3 shadow-sm">
+              <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
+                {BOOKING_REVIEW_ESTIMATE_REFRESHING_TITLE}
+              </p>
+              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                {BOOKING_REVIEW_ESTIMATE_REFRESHING_BODY}
+              </p>
+            </div>
+          ) : null}
+          {previewLoading && !(ready && contactOk) ? (
             <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
-              Calculating your estimate…
+              Getting your estimate…
             </p>
           ) : null}
           {!previewLoading && previewEstimate?.source === "server" ? (
             <p className="font-[var(--font-manrope)] text-xs text-[#64748B]">
-              Live preview from our pricing engine (same inputs as when you
-              confirm).
+              Live preview uses the same intake fields we store and run through
+              the estimator when you send your request.
             </p>
           ) : null}
           {!previewLoading && previewEstimate?.source === "local" ? (
             <p className="font-[var(--font-manrope)] text-xs text-[#64748B]">
-              Simplified on-page estimate from your home size and service type.
-              The live preview could not be reached — confirm your direction for
-              an official saved quote.
+              Approximate range from your home size and service type. We
+              couldn’t reach the live preview; send your request and we’ll return
+              a firm quote.
             </p>
           ) : null}
           {!previewLoading && !previewError && !previewEstimate && !previewFetchCompleted ? (
             <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
-              Preparing estimate…
+              Almost ready…
             </p>
           ) : null}
           {previewError ? (
-            <p
-              ref={previewErrorRef}
-              className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]"
+            <div className="space-y-2">
+              <p
+                ref={previewErrorRef as LegacyRef<HTMLParagraphElement>}
+                className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]"
+              >
+                {BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD}
+              </p>
+              <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#92400E]">
+                {BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_HINT}
+              </p>
+              {previewError.length > 0 && previewError.length < 220 ? (
+                <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                  {previewError}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+          {showPlanningConfidenceBlock ? (
+            <div
+              data-testid="booking-review-planning-confidence"
+              className="mb-4 rounded-2xl border border-[#C9B27C]/18 bg-white px-4 py-3 shadow-sm ring-1 ring-[#C9B27C]/8"
             >
-              {previewError}{" "}
-              <span className="font-normal text-[#92400E]">
-                You can still confirm your booking direction.
-              </span>
-            </p>
+              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                {BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE}
+              </p>
+              <p className="mt-2 font-[var(--font-manrope)] text-sm font-medium leading-6 text-[#0F172A]">
+                {planningConfidence.headline}
+              </p>
+              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
+                {planningConfidence.body}
+              </p>
+              <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                {planningConfidence.supporting}
+              </p>
+            </div>
           ) : null}
           {previewEstimate ? (
             <div className="space-y-2">
@@ -197,53 +528,187 @@ export function BookingStepReview({
                 {formatEstimateDurationMinutes(previewEstimate.durationMinutes)}
               </p>
               <p className="font-medium">
-                <span className="text-[#64748B]">Confidence:</span>{" "}
+                <span className="text-[#64748B]">How sure we are:</span>{" "}
                 {formatEstimateConfidence(previewEstimate.confidence)}
               </p>
               <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
                 {previewEstimate.source === "server"
-                  ? "Final numbers may adjust slightly when your booking is confirmed."
-                  : "Figures are indicative only; confirming saves your direction so we can return an authoritative quote."}
+                  ? "Final numbers may adjust slightly once we confirm details with you."
+                  : "Figures are approximate; continuing lets us return a firm quote after you save."}
               </p>
             </div>
           ) : previewFetchCompleted && !previewLoading && !previewError ? (
             <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
-              Estimate unavailable for this step.
+              No estimate to show for these selections yet.
             </p>
           ) : null}
         </ReviewSection>
 
+        {showEstimateDriverBlock ? (
+          <div key={estimateDriverBlockKey}>
+            <ReviewSection title={BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE}>
+              <ul className="list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A] marker:text-[#94A3B8]">
+                {estimateDriverBullets.map((b) => (
+                  <li key={b.key}>{b.text}</li>
+                ))}
+              </ul>
+            </ReviewSection>
+          </div>
+        ) : null}
+
+        {prepGuidanceItems.length > 0 ? (
+          <div data-testid="booking-review-prep-guidance">
+            <ReviewSection title={BOOKING_REVIEW_PREP_SECTION_TITLE}>
+              <ul className="list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A] marker:text-[#94A3B8]">
+                {prepGuidanceItems.map((text) => (
+                  <li key={text}>{text}</li>
+                ))}
+              </ul>
+            </ReviewSection>
+          </div>
+        ) : null}
+
+        {recommendedAttentionItems.length > 0 ? (
+          <div data-testid="booking-review-recommendations">
+            <ReviewSection title={BOOKING_REVIEW_RECOMMEND_SECTION_TITLE}>
+              <ul className="list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A] marker:text-[#94A3B8]">
+                {recommendedAttentionItems.map((text) => (
+                  <li key={text}>{text}</li>
+                ))}
+              </ul>
+            </ReviewSection>
+          </div>
+        ) : null}
+
         <ReviewSection title="Home details">
           {homeOk ? (
-            <p className="font-medium">
-              {state.bedrooms} · {state.bathrooms} · {state.homeSize}
-            </p>
+            <div className="space-y-2 font-[var(--font-manrope)] text-sm">
+              <p>
+                <span className="font-medium text-[#64748B]">Home size:</span>{" "}
+                <span className="text-[#0F172A]">
+                  {normalizeBookingHomeSizeParam(state.homeSize) || "—"}
+                </span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">Bedrooms:</span>{" "}
+                <span className="text-[#0F172A]">{bedroomsSummary}</span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">Bathrooms:</span>{" "}
+                <span className="text-[#0F172A]">{bathroomsSummary}</span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">Pets:</span>{" "}
+                <span className="text-[#0F172A]">{petsDisplay}</span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">
+                  {BOOKING_REVIEW_ESTIMATOR_CONDITION_LABEL}:
+                </span>{" "}
+                <span className="text-[#0F172A]">
+                  {BOOKING_HOME_CONDITION_LABELS[state.condition]}
+                </span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">
+                  {BOOKING_REVIEW_ESTIMATOR_FOCUS_AREAS_LABEL}:
+                </span>{" "}
+                <span className="text-[#0F172A]">{problemAreasDisplay}</span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">
+                  {BOOKING_REVIEW_ESTIMATOR_SURFACE_LABEL}:
+                </span>{" "}
+                <span className="text-[#0F172A]">
+                  {BOOKING_SURFACE_COMPLEXITY_LABELS[state.surfaceComplexity]}
+                </span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">
+                  {BOOKING_REVIEW_SCOPE_OF_WORK_LABEL}:
+                </span>{" "}
+                <span className="text-[#0F172A]">
+                  {BOOKING_SCOPE_INTENSITY_LABELS[state.scopeIntensity]}
+                </span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">
+                  {BOOKING_REVIEW_ADD_ONS_LABEL}:
+                </span>{" "}
+                <span className="text-[#0F172A]">{addOnsDisplay}</span>
+              </p>
+              {deep ? (
+                <p>
+                  <span className="font-medium text-[#64748B]">
+                    {BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL}:
+                  </span>{" "}
+                  <span className="text-[#0F172A]">
+                    {BOOKING_DEEP_CLEAN_FOCUS_LABELS[state.deepCleanFocus]}
+                  </span>
+                </p>
+              ) : null}
+              {moveTransition ? (
+                <p>
+                  <span className="font-medium text-[#64748B]">
+                    {BOOKING_REVIEW_TRANSITION_SETUP_LABEL}:
+                  </span>{" "}
+                  <span className="text-[#0F172A]">
+                    {BOOKING_TRANSITION_STATE_LABELS[state.transitionState]}
+                  </span>
+                </p>
+              ) : null}
+              {moveTransition ? (
+                <p>
+                  <span className="font-medium text-[#64748B]">
+                    {BOOKING_REVIEW_TRANSITION_APPLIANCES_LABEL}:
+                  </span>{" "}
+                  <span className="text-[#0F172A]">{appliancesDisplay}</span>
+                </p>
+              ) : null}
+            </div>
           ) : (
             <p className="font-semibold text-[#B91C1C]">Incomplete</p>
           )}
         </ReviewSection>
 
         <ReviewSection title="Schedule">
-          {scheduleOk ? (
+          {cadenceOk ? (
             <div className="space-y-1">
               <p className="font-medium">
                 <span className="text-[#64748B]">Frequency:</span>{" "}
-                {state.frequency}
+                {frequencySummary}
               </p>
               <p className="font-medium">
-                <span className="text-[#64748B]">Preferred timing:</span>{" "}
-                {state.preferredTime}
+                <span className="text-[#64748B]">
+                  {BOOKING_CADENCE_ARRIVAL_WINDOW_LABEL}:
+                </span>{" "}
+                {preferredTimeSummary}
               </p>
+              {state.selectedTeamId.trim() &&
+              state.selectedTeamDisplayName.trim() ? (
+                <p className="mt-3 font-medium">
+                  <span className="text-[#64748B]">
+                    {BOOKING_REVIEW_SELECTED_TEAM_LABEL}:
+                  </span>{" "}
+                  {state.selectedTeamDisplayName.trim()}
+                </p>
+              ) : (
+                <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                  {BOOKING_REVIEW_SCHEDULE_NOTE}
+                </p>
+              )}
+              {state.selectedSlotStart.trim() && state.selectedSlotEnd.trim() ? (
+                <p className="font-medium">
+                  <span className="text-[#64748B]">
+                    {BOOKING_REVIEW_SELECTED_ARRIVAL_LABEL}:
+                  </span>{" "}
+                  {formatSlotForReview(state.selectedSlotStart.trim())}
+                </p>
+              ) : null}
             </div>
           ) : (
             <p className="font-semibold text-[#B91C1C]">Incomplete</p>
           )}
-        </ReviewSection>
-
-        <ReviewSection title="Optional details">
-          <p className="font-medium">
-            <span className="text-[#64748B]">Pets:</span> {petsDisplay}
-          </p>
         </ReviewSection>
 
         <ReviewSection title="Your contact">
@@ -274,10 +739,13 @@ export function BookingStepReview({
               helper={emailError ?? undefined}
             />
           </div>
-          {contactOk ? (
+          {contactOk &&
+          estimatePreviewReady &&
+          !previewLoading &&
+          !previewError ? (
             <div className="mt-4 border-t border-[#C9B27C]/14 pt-4">
               <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                Confirm before sending
+                Contact on file
               </p>
               <p className="mt-2 font-medium">
                 <span className="text-[#64748B]">Name:</span>{" "}
@@ -290,6 +758,18 @@ export function BookingStepReview({
             </div>
           ) : null}
         </ReviewSection>
+
+        <div
+          className="mt-10 rounded-2xl border border-[#0D9488]/20 bg-[rgba(13,148,136,0.06)] px-6 py-6"
+          data-testid="booking-review-next-schedule"
+        >
+          <p className="font-[var(--font-poppins)] text-lg font-semibold tracking-[-0.02em] text-[#0F172A]">
+            {BOOKING_REVIEW_NEXT_SCHEDULE_TITLE}
+          </p>
+          <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">
+            {BOOKING_REVIEW_NEXT_SCHEDULE_BODY}
+          </p>
+        </div>
       </div>
     </BookingSectionCard>
   );

@@ -95,6 +95,8 @@ model Booking {
   createdAt             DateTime                    @default(now())
   updatedAt             DateTime                    @updatedAt
   foId                  String?
+  /// Customer preference only; actual assignment uses `foId` after scheduling / holds.
+  preferredFoId         String?
   geofenceRadiusMeters  Int?                        @default(100)
   siteLat               Float?
   siteLng               Float?
@@ -2396,6 +2398,8 @@ model BookingDirectionIntake {
   pets          String   @default("")
   frequency     String
   preferredTime String
+  /// Optional public-booking preference (franchise owner id); not a guarantee of assignment.
+  preferredFoId String?
   /// Public deep-clean product choice: single_visit | phased_3_visit. Null when not deep clean or legacy rows.
   deepCleanProgram String?
 
