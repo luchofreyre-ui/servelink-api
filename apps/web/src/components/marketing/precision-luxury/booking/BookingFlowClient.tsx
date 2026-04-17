@@ -304,6 +304,16 @@ export function BookingFlowClient() {
     teamId: initialState.selectedTeamId,
   });
 
+  /** Latest booking state for debounced URL sync (timer must read current snapshot). */
+  const stateForUrlSyncRef = useRef(state);
+  stateForUrlSyncRef.current = state;
+  /** Latest search string for debounced replace (avoid stale closure vs `useSearchParams`). */
+  const searchParamsStringRef = useRef(searchParams?.toString() ?? "");
+  searchParamsStringRef.current = searchParams?.toString() ?? "";
+  const prevStepForUrlSyncRef = useRef(state.step);
+  const urlReplaceDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastErrorScrollSignatureRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (state.step !== "schedule" || !state.schedulingBookingId.trim()) {
       setTeamsEmptyState("none");
@@ -855,14 +865,23 @@ export function BookingFlowClient() {
     estimate.status === "success" || estimate.status === "error";
 
   useEffect(() => {
-    if (
-      (attemptedNext && stepError) ||
-      (attemptedConfirm && !canConfirmDirection) ||
-      submitRecoverableFailure ||
-      Boolean(previewError)
-    ) {
-      errorRef.current?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+    const signature = [
+      attemptedNext && stepError ? `next:${stepError}` : "",
+      attemptedConfirm && !canConfirmDirection ? "contact" : "",
+      submitRecoverableFailure ? "recover" : "",
+      previewError ? `preview:${previewError}` : "",
+    ]
+      .filter(Boolean)
+      .join("|");
+
+    if (!signature) {
+      lastErrorScrollSignatureRef.current = null;
+      return;
     }
+    if (signature === lastErrorScrollSignatureRef.current) return;
+    lastErrorScrollSignatureRef.current = signature;
+
+    errorRef.current?.scrollIntoView?.({ behavior: "smooth", block: "center" });
   }, [
     attemptedNext,
     stepError,
@@ -919,16 +938,55 @@ export function BookingFlowClient() {
     }
   }, [state.step]);
 
-  // STATE → URL (ONLY runs when state changes)
+  // STATE → URL: debounce within a step so field edits do not hammer `router.replace`
+  // (which can reset scroll / focus on some App Router builds). Flush immediately on step change.
   useEffect(() => {
-    const desired = serializeState(state);
-    const current = new URLSearchParams(searchParams?.toString() ?? "").toString();
-
-    if (desired !== current) {
+    const flushUrl = () => {
+      if (urlReplaceDebounceRef.current) {
+        clearTimeout(urlReplaceDebounceRef.current);
+        urlReplaceDebounceRef.current = null;
+      }
+      const nextState = stateForUrlSyncRef.current;
+      const desired = serializeState(nextState);
+      const current = new URLSearchParams(searchParamsStringRef.current).toString();
+      if (desired === current) return;
+      const y = typeof window !== "undefined" ? window.scrollY : 0;
       router.replace(`${pathname}?${desired}`, { scroll: false });
+      // jsdom does not implement scrollTo; skip restoration in Vitest to avoid noisy errors.
+      if (typeof window !== "undefined" && !process.env.VITEST) {
+        requestAnimationFrame(() => {
+          try {
+            window.scrollTo({ top: y, left: 0, behavior: "auto" });
+          } catch {
+            try {
+              window.scrollTo(0, y);
+            } catch {
+              /* ignore */
+            }
+          }
+        });
+      }
+    };
+
+    const stepChanged = prevStepForUrlSyncRef.current !== state.step;
+    prevStepForUrlSyncRef.current = state.step;
+
+    if (stepChanged) {
+      flushUrl();
+      return;
     }
-    // Omit searchParams from deps to avoid replace/router feedback loops.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    if (urlReplaceDebounceRef.current) {
+      clearTimeout(urlReplaceDebounceRef.current);
+    }
+    urlReplaceDebounceRef.current = setTimeout(flushUrl, 220);
+
+    return () => {
+      if (urlReplaceDebounceRef.current) {
+        clearTimeout(urlReplaceDebounceRef.current);
+        urlReplaceDebounceRef.current = null;
+      }
+    };
   }, [state, pathname, router]);
 
   function goToStep(step: BookingStepId) {

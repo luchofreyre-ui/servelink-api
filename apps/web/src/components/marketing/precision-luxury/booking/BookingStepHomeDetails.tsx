@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { BookingSectionCard } from "../BookingSectionCard";
 import {
   BookingSelectField,
@@ -64,8 +65,10 @@ import {
   isDeepCleaningBookingServiceId,
 } from "./bookingDeepClean";
 import {
+  isCadenceComplete,
   normalizeBookingAddOnsForPayload,
   normalizeBookingAppliancePresenceForPayload,
+  normalizeBookingHomeSizeParam,
   normalizeBookingProblemAreasForPayload,
 } from "./bookingUrlState";
 
@@ -96,6 +99,45 @@ export function BookingStepHomeDetails({
   selectedServiceTitle,
   deepCleanPlanLabel,
 }: BookingStepHomeDetailsProps) {
+  const cadenceSectionRef = useRef<HTMLDivElement | null>(null);
+  const visitContextSectionRef = useRef<HTMLDivElement | null>(null);
+  const prevCoreHomeCompleteRef = useRef(false);
+  const prevCadenceCompleteRef = useRef(false);
+
+  const homeSizeOk = Boolean(normalizeBookingHomeSizeParam(state.homeSize));
+  const bedroomsOk = Boolean(String(state.bedrooms ?? "").trim());
+  const bathroomsOk = Boolean(String(state.bathrooms ?? "").trim());
+  const coreHomeComplete = homeSizeOk && bedroomsOk && bathroomsOk;
+  const cadenceComplete = isCadenceComplete(state);
+
+  useEffect(() => {
+    if (coreHomeComplete && !prevCoreHomeCompleteRef.current) {
+      try {
+        cadenceSectionRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      } catch {
+        /* jsdom may not implement scrollIntoView options */
+      }
+    }
+    prevCoreHomeCompleteRef.current = coreHomeComplete;
+  }, [coreHomeComplete]);
+
+  useEffect(() => {
+    if (cadenceComplete && !prevCadenceCompleteRef.current && coreHomeComplete) {
+      try {
+        visitContextSectionRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      } catch {
+        /* jsdom may not implement scrollIntoView options */
+      }
+    }
+    prevCadenceCompleteRef.current = cadenceComplete;
+  }, [cadenceComplete, coreHomeComplete]);
+
   const bedroomOptions: BookingSelectFieldOption[] = [
     "",
     ...BOOKING_HOME_BEDROOM_OPTIONS.map((o) => ({ value: o.value, label: o.label })),
@@ -291,6 +333,7 @@ export function BookingStepHomeDetails({
         </div>
 
         <div
+          ref={cadenceSectionRef}
           className="border-t border-[#C9B27C]/14 pt-10"
           data-testid="booking-home-cadence-section"
         >
@@ -384,7 +427,11 @@ export function BookingStepHomeDetails({
           </div>
         </div>
 
-        <div className="border-t border-[#C9B27C]/14 pt-10">
+        <div
+          ref={visitContextSectionRef}
+          className="border-t border-[#C9B27C]/14 pt-10"
+          data-testid="booking-home-visit-context-section"
+        >
           <div className="mb-5">
             <p className="font-[var(--font-poppins)] text-sm font-semibold tracking-[-0.02em] text-[#0F172A]">
               {BOOKING_STEP2_VISIT_CONTEXT_SECTION_TITLE}
