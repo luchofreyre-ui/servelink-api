@@ -9,6 +9,10 @@ import {
 import { applyDeepCleanEstimatorTuningToLabor } from "../bookings/deep-clean-estimator-tuning.apply";
 import { buildDeepCleanProgramEstimate } from "./deep-clean-program";
 import type { DeepCleanProgramEstimate } from "./deep-clean-program";
+import {
+  EstimatorExecutionError,
+  EstimatorInputValidationError,
+} from "./errors/estimator.errors";
 
 export type {
   DeepCleanProgramEstimate,
@@ -877,6 +881,45 @@ function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
 }
 
+function validateEstimateInputForExecution(input: EstimateInput): void {
+  if (!(input.sqft_band in BASE_MIN_BY_SQFT)) {
+    throw new EstimatorInputValidationError(
+      "Invalid estimate input: unknown sqft_band.",
+      { context: { field: "sqft_band" } },
+    );
+  }
+  if (!(input.bedrooms in BEDROOM_ADJ_MIN)) {
+    throw new EstimatorInputValidationError(
+      "Invalid estimate input: unknown bedrooms.",
+      { context: { field: "bedrooms" } },
+    );
+  }
+  if (!(input.bathrooms in BATHROOM_ADJ_MIN)) {
+    throw new EstimatorInputValidationError(
+      "Invalid estimate input: unknown bathrooms.",
+      { context: { field: "bathrooms" } },
+    );
+  }
+  if (!(input.property_type in PROPERTY_TYPE_ADJ_MIN)) {
+    throw new EstimatorInputValidationError(
+      "Invalid estimate input: unknown property_type.",
+      { context: { field: "property_type" } },
+    );
+  }
+  if (!(input.floors in FLOORS_ADJ_MIN)) {
+    throw new EstimatorInputValidationError(
+      "Invalid estimate input: unknown floors.",
+      { context: { field: "floors" } },
+    );
+  }
+  if (!(input.service_type in SERVICE_TYPE_LABOR_MULTIPLIER)) {
+    throw new EstimatorInputValidationError(
+      "Invalid estimate input: unknown service_type.",
+      { context: { field: "service_type" } },
+    );
+  }
+}
+
 @Injectable()
 export class EstimatorService {
   constructor(
@@ -885,6 +928,33 @@ export class EstimatorService {
   ) {}
 
   async estimate(input: EstimateInput, options?: EstimateOptions): Promise<EstimateResult> {
+    try {
+      validateEstimateInputForExecution(input);
+      return await this.executeEstimateCore(input, options);
+    } catch (err: unknown) {
+      if (
+        err instanceof EstimatorInputValidationError ||
+        err instanceof EstimatorExecutionError
+      ) {
+        throw err;
+      }
+      throw new EstimatorExecutionError(
+        err instanceof Error ? err.message : "Estimator execution failed",
+        {
+          cause: err,
+          context: {
+            service_type: input.service_type,
+            sqft_band: input.sqft_band,
+          },
+        },
+      );
+    }
+  }
+
+  private async executeEstimateCore(
+    input: EstimateInput,
+    options?: EstimateOptions,
+  ): Promise<EstimateResult> {
     // ---- Baseline
     const baseline: EstimateLineItem[] = [];
     baseline.push({ label: "Base size (sqft band)", minutes: BASE_MIN_BY_SQFT[input.sqft_band] });

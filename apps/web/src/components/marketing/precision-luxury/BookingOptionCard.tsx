@@ -5,6 +5,7 @@ type BookingOptionCardProps = {
   body: string;
   meta?: string;
   selected?: boolean;
+  onClick?: () => void;
   children?: ReactNode;
 };
 
@@ -13,11 +14,13 @@ export function BookingOptionCard({
   body,
   meta,
   selected = false,
+  onClick,
   children,
 }: BookingOptionCardProps) {
   return (
     <button
       type="button"
+      onClick={onClick}
       className={`w-full rounded-[24px] border p-6 text-left transition ${
         selected
           ? "border-[#0D9488] bg-white shadow-[0_18px_50px_rgba(13,148,136,0.12)]"

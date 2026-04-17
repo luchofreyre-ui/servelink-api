@@ -8,6 +8,40 @@ import { fetchPublicBookingConfirmation } from "@/lib/api/bookings";
 import { mapBookingScreenProgramToDisplay } from "@/mappers/deepCleanProgramMappers";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
 import { ServiceHeader } from "../layout/ServiceHeader";
+import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
+import {
+  formatBookingBathroomsForDisplay,
+  formatBookingBedroomsForDisplay,
+} from "./bookingEstimateFactorFields";
+import {
+  BOOKING_CONFIRMATION_HEADLINE_BOOKING_SAVED,
+  BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY,
+  BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED,
+  BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL,
+  BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD,
+  BOOKING_CONFIRMATION_INTRO_NEUTRAL_REENTRY,
+  BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL,
+  BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD,
+  BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED,
+  BOOKING_CONFIRMATION_NEXT_STEPS_NEUTRAL_REENTRY,
+  BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED,
+  BOOKING_CONFIRMATION_REQUEST_SECTION_TITLE,
+  BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE,
+  BOOKING_CONFIRMATION_RETURN_TO_BOOKING_CTA,
+  BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA,
+  bookingConfirmationDeepPlanEchoLabel,
+  bookingConfirmationNoticeForBookingErrorCode,
+} from "./bookingPublicSurfaceCopy";
+import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
+import {
+  clearBookingConfirmationSessionSnapshot,
+  hasPublicIntakeEchoInSearchParams,
+  markBookingFlowFreshStartRequested,
+  mergeConfirmationParamsFromSessionIfUrlEmpty,
+  normalizeBookingHomeSizeParam,
+  readBookingConfirmationSessionSnapshot,
+  readPublicIntakeEchoFromSearchParams,
+} from "./bookingUrlState";
 
 function formatUsdFromCents(cents: number): string {
   const n = Number.isFinite(cents) ? cents / 100 : 0;
@@ -25,19 +59,88 @@ function parseDcProgramFromQuery(raw: string | null | undefined) {
   return null;
 }
 
+type ConfirmationOutcomeMode =
+  | "booking_saved"
+  | "request_received"
+  | "neutral_reentry";
+
+function classifyConfirmationOutcome(
+  sp: URLSearchParams,
+): ConfirmationOutcomeMode {
+  const intakeId = sp.get("intakeId")?.trim() ?? "";
+  const bookingId = sp.get("bookingId")?.trim() ?? "";
+  const priceCentsRaw = sp.get("priceCents");
+  const durationMinutesRaw = sp.get("durationMinutes");
+  const confidenceRaw = sp.get("confidence");
+  const priceCents =
+    priceCentsRaw != null && priceCentsRaw !== ""
+      ? Number(priceCentsRaw)
+      : NaN;
+  const durationMinutes =
+    durationMinutesRaw != null && durationMinutesRaw !== ""
+      ? Number(durationMinutesRaw)
+      : NaN;
+  const confidence =
+    confidenceRaw != null && confidenceRaw !== ""
+      ? Number(confidenceRaw)
+      : NaN;
+
+  const estimateBundleCredible =
+    intakeId.length > 0 &&
+    bookingId.length > 0 &&
+    Number.isFinite(priceCents) &&
+    priceCents >= 0 &&
+    priceCents < 1e12 &&
+    Number.isFinite(durationMinutes) &&
+    durationMinutes > 0 &&
+    durationMinutes < 1e7 &&
+    Number.isFinite(confidence) &&
+    confidence >= 0 &&
+    confidence <= 1;
+
+  if (estimateBundleCredible) return "booking_saved";
+  if (intakeId.length > 0) return "request_received";
+  return "neutral_reentry";
+}
+
 export function BookingConfirmationClient() {
   const searchParams = useSearchParams();
+  const urlString = searchParams?.toString() ?? "";
 
-  const bookingId = searchParams?.get("bookingId")?.trim() || "";
-  const intakeId = searchParams?.get("intakeId")?.trim() || "";
-  const priceCentsRaw = searchParams?.get("priceCents");
-  const durationMinutesRaw = searchParams?.get("durationMinutes");
-  const confidenceRaw = searchParams?.get("confidence");
-  const bookingErrorCode = searchParams?.get("bookingError")?.trim() || "";
-  const dcProgramParam = parseDcProgramFromQuery(searchParams?.get("dcProgram"));
+  const [effectiveSearchParams, setEffectiveSearchParams] = useState(
+    () => new URLSearchParams(urlString),
+  );
+
+  useEffect(() => {
+    const url = new URLSearchParams(searchParams?.toString() ?? "");
+    setEffectiveSearchParams(
+      mergeConfirmationParamsFromSessionIfUrlEmpty(
+        url,
+        readBookingConfirmationSessionSnapshot(),
+      ),
+    );
+  }, [urlString]);
+
+  const bookingId = effectiveSearchParams.get("bookingId")?.trim() || "";
+  const intakeId = effectiveSearchParams.get("intakeId")?.trim() || "";
+  const priceCentsRaw = effectiveSearchParams.get("priceCents");
+  const durationMinutesRaw = effectiveSearchParams.get("durationMinutes");
+  const confidenceRaw = effectiveSearchParams.get("confidence");
+  const bookingErrorCode =
+    effectiveSearchParams.get("bookingError")?.trim() || "";
+  const dcProgramParam = parseDcProgramFromQuery(
+    effectiveSearchParams.get("dcProgram"),
+  );
+
+  const outcomeMode = useMemo(
+    () => classifyConfirmationOutcome(effectiveSearchParams),
+    [effectiveSearchParams],
+  );
 
   const urlPriceCents = priceCentsRaw ? Number(priceCentsRaw) : NaN;
-  const urlDurationMinutes = durationMinutesRaw ? Number(durationMinutesRaw) : NaN;
+  const urlDurationMinutes = durationMinutesRaw
+    ? Number(durationMinutesRaw)
+    : NaN;
   const urlConfidence = confidenceRaw ? Number(confidenceRaw) : NaN;
 
   const [remoteLoading, setRemoteLoading] = useState(false);
@@ -92,16 +195,87 @@ export function BookingConfirmationClient() {
     return urlConfidence;
   }, [remote, urlConfidence]);
 
-  const hasEstimate =
-    Boolean(bookingId) &&
-    Number.isFinite(priceCents) &&
-    Number.isFinite(durationMinutes) &&
-    Number.isFinite(confidence);
+  const hasEstimate = outcomeMode === "booking_saved";
+  const bookingSavedWithLiveQuote = hasEstimate;
+
+  const headline =
+    outcomeMode === "neutral_reentry"
+      ? BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY
+      : outcomeMode === "booking_saved"
+        ? BOOKING_CONFIRMATION_HEADLINE_BOOKING_SAVED
+        : BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED;
 
   const programDisplay = useMemo(
     () => mapBookingScreenProgramToDisplay(remote?.deepCleanProgram ?? null),
     [remote],
   );
+
+  const intakeEcho = useMemo(() => {
+    if (classifyConfirmationOutcome(effectiveSearchParams) === "neutral_reentry") {
+      return null;
+    }
+    const sp = new URLSearchParams(effectiveSearchParams.toString());
+    if (!hasPublicIntakeEchoInSearchParams(sp)) return null;
+    return readPublicIntakeEchoFromSearchParams(sp);
+  }, [effectiveSearchParams]);
+
+  const clearSessionAndNavigateProps = {
+    onClick: () => {
+      clearBookingConfirmationSessionSnapshot();
+      markBookingFlowFreshStartRequested();
+    },
+  };
+
+  if (outcomeMode === "neutral_reentry") {
+    return (
+      <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
+        <ServiceHeader />
+
+        <main>
+          <section className="mx-auto max-w-3xl px-6 py-20 md:px-8 md:py-28">
+            <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
+              Thank you
+            </p>
+            <h1 className="mt-4 font-[var(--font-poppins)] text-4xl font-semibold tracking-[-0.04em] text-[#0F172A] md:text-5xl">
+              {headline}
+            </h1>
+            <p className="mt-6 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
+              {BOOKING_CONFIRMATION_INTRO_NEUTRAL_REENTRY}
+            </p>
+
+            <div className="mt-10 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
+              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                Next steps
+              </p>
+              <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
+                {BOOKING_CONFIRMATION_NEXT_STEPS_NEUTRAL_REENTRY}
+              </p>
+            </div>
+
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Link
+                href="/book"
+                replace
+                title={BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE}
+                {...clearSessionAndNavigateProps}
+                className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-3.5 font-[var(--font-manrope)] text-sm font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76]"
+              >
+                {BOOKING_CONFIRMATION_RETURN_TO_BOOKING_CTA}
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 bg-white px-6 py-3.5 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] transition hover:bg-[#FFF9F3]"
+              >
+                Browse services
+              </Link>
+            </div>
+          </section>
+        </main>
+
+        <PublicSiteFooter />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
@@ -110,48 +284,114 @@ export function BookingConfirmationClient() {
       <main>
         <section className="mx-auto max-w-3xl px-6 py-20 md:px-8 md:py-28">
           <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
-            Booking
+            Thank you
           </p>
           <h1 className="mt-4 font-[var(--font-poppins)] text-4xl font-semibold tracking-[-0.04em] text-[#0F172A] md:text-5xl">
-            We received your booking
+            {headline}
           </h1>
           <p className="mt-6 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
             Thank you.{" "}
-            {hasEstimate ? (
+            {bookingSavedWithLiveQuote ? (
               <>
-                Below is an{" "}
-                <strong className="font-semibold text-[#0F172A]">
-                  initial estimate
-                </strong>{" "}
-                based on what you shared. Final pricing may adjust after we
-                confirm details.
+                {BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD}{" "}
+                {BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL}
               </>
             ) : (
               <>
-                We saved your request
+                {BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD}{" "}
+                {BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL}
                 {intakeId ? (
                   <>
                     {" "}
-                    <span className="text-[#64748B]">(reference {intakeId})</span>
+                    <span className="text-[#64748B]">
+                      Keep this handy: {intakeId}
+                    </span>
                   </>
                 ) : null}
-                . Our team will follow up with next steps.
               </>
             )}
           </p>
 
-          {bookingErrorCode ? (
+          {bookingErrorCode && outcomeMode === "request_received" ? (
             <p className="mt-4 rounded-2xl border border-amber-200/80 bg-amber-50 px-4 py-3 font-[var(--font-manrope)] text-sm text-amber-950">
-              We stored your preferences, but couldn&apos;t generate a live quote
-              yet ({bookingErrorCode}). Someone will still reach out.
+              {bookingConfirmationNoticeForBookingErrorCode(bookingErrorCode)}
             </p>
+          ) : null}
+
+          {intakeEcho ? (
+            <div className="mt-8 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
+              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                {BOOKING_CONFIRMATION_REQUEST_SECTION_TITLE}
+              </p>
+              <div className="mt-4 space-y-2 font-[var(--font-manrope)] text-sm leading-7 text-[#334155]">
+                <p>
+                  <span className="font-semibold text-[#0F172A]">Service: </span>
+                  {getBookingServiceCatalogItem(intakeEcho.serviceId).title}
+                </p>
+                {isDeepCleaningBookingServiceId(intakeEcho.serviceId) &&
+                intakeEcho.deepCleanProgram ? (
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      Deep clean plan:{" "}
+                    </span>
+                    {bookingConfirmationDeepPlanEchoLabel(
+                      intakeEcho.deepCleanProgram,
+                    )}
+                  </p>
+                ) : null}
+                {normalizeBookingHomeSizeParam(intakeEcho.homeSize) ? (
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      Home size:{" "}
+                    </span>
+                    {normalizeBookingHomeSizeParam(intakeEcho.homeSize)}
+                  </p>
+                ) : null}
+                {intakeEcho.bedrooms.trim() ? (
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      Bedrooms:{" "}
+                    </span>
+                    {formatBookingBedroomsForDisplay(intakeEcho.bedrooms)}
+                  </p>
+                ) : null}
+                {intakeEcho.bathrooms.trim() ? (
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      Bathrooms:{" "}
+                    </span>
+                    {formatBookingBathroomsForDisplay(intakeEcho.bathrooms)}
+                  </p>
+                ) : null}
+                <p>
+                  <span className="font-semibold text-[#0F172A]">Pets: </span>
+                  {intakeEcho.pets.trim() ? intakeEcho.pets.trim() : "Not specified"}
+                </p>
+                {intakeEcho.frequency ? (
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      Frequency:{" "}
+                    </span>
+                    {intakeEcho.frequency}
+                  </p>
+                ) : null}
+                {intakeEcho.preferredTime ? (
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      Preferred timing:{" "}
+                    </span>
+                    {intakeEcho.preferredTime}
+                  </p>
+                ) : null}
+              </div>
+            </div>
           ) : null}
 
           {bookingId && remoteError ? (
             <p className="mt-4 rounded-2xl border border-amber-200/80 bg-amber-50 px-4 py-3 font-[var(--font-manrope)] text-sm text-amber-950">
-              Couldn&apos;t refresh saved program details from the server (
-              {remoteError}). Estimates from your link still show below when
-              available.
+              We couldn&apos;t refresh your saved visit plan from our servers.
+              What you confirmed is still valid—we&apos;ll follow up with full
+              details.
             </p>
           ) : null}
 
@@ -188,7 +428,7 @@ export function BookingConfirmationClient() {
               </div>
               <div>
                 <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                  Estimate confidence
+                  How sure we are
                 </p>
                 <p className="mt-2 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
                   {Math.min(100, Math.max(0, Math.round(confidence * 100)))}%
@@ -202,7 +442,7 @@ export function BookingConfirmationClient() {
               ) : null}
               {remoteLoading ? (
                 <p className="font-[var(--font-manrope)] text-xs text-[#64748B]">
-                  Syncing saved program details…
+                  Loading your saved visit plan…
                 </p>
               ) : null}
             </div>
@@ -211,9 +451,9 @@ export function BookingConfirmationClient() {
           {programDisplay ? (
             <div className="mt-8 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
               <p className="mb-4 font-[var(--font-manrope)] text-sm text-[#64748B]">
-                Per-visit scope below is loaded from your saved booking. Visit
-                dates are confirmed separately — this is not automated
-                scheduling.
+                Visit plan below comes from your saved booking. Dates are set
+                when we confirm with you—this page doesn&apos;t schedule visits on
+                its own.
               </p>
               <DeepCleanProgramCard program={programDisplay} />
             </div>
@@ -221,8 +461,8 @@ export function BookingConfirmationClient() {
             remote.deepCleanProgram === null &&
             remote.estimateSnapshot?.serviceType === "deep_clean" ? (
               <p className="mt-6 rounded-2xl border border-amber-100 bg-amber-50/80 px-4 py-3 font-[var(--font-manrope)] text-sm text-amber-950">
-                Deep clean program details are not available for this booking
-                snapshot. Our team can still confirm scope with you.
+                Deep clean visit details aren&apos;t showing for this save yet.
+                Our team can still walk through scope with you.
               </p>
             ) : null
           ) : null}
@@ -232,9 +472,8 @@ export function BookingConfirmationClient() {
           !remoteLoading &&
           dcProgramParam === "phased_3_visit" ? (
             <p className="mt-6 font-[var(--font-manrope)] text-sm text-[#64748B]">
-              You selected the 3-visit program. If visit-level detail does not
-              appear, confirm your booking reference is correct or contact
-              support.
+              You chose the 3-visit program. If visit-level detail doesn&apos;t
+              show here, we&apos;ll confirm it when we reach out.
             </p>
           ) : null}
 
@@ -244,9 +483,9 @@ export function BookingConfirmationClient() {
                 Next steps
               </p>
               <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
-                We&apos;ll review your service type, home profile, and timing.
-                Servelink will reach out with confirmation options and any
-                follow-up questions—usually within one business day.
+                {bookingSavedWithLiveQuote
+                  ? BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED
+                  : BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED}
               </p>
             </div>
           </div>
@@ -254,9 +493,12 @@ export function BookingConfirmationClient() {
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/book"
+              replace
+              title={BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE}
+              {...clearSessionAndNavigateProps}
               className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 bg-white px-6 py-3.5 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] transition hover:bg-[#FFF9F3]"
             >
-              New booking
+              {BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA}
             </Link>
             <Link
               href="/services"

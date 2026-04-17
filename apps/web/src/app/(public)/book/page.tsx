@@ -7,7 +7,18 @@ export const metadata: Metadata = buildBookingPageMetadata();
 
 export default function BookingFlowRoute() {
   return (
-    <Suspense fallback={<div className="min-h-[40vh] bg-[#FFF9F3] p-8 text-sm text-slate-600">Loading…</div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] flex-col items-center justify-center bg-[#FFF9F3] px-6 py-16 text-center">
+          <p className="font-[var(--font-manrope)] text-sm font-medium text-[#475569]">
+            Loading your booking page…
+          </p>
+          <p className="mt-2 max-w-sm font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+            This only takes a moment.
+          </p>
+        </div>
+      }
+    >
       <BookingFlowClient />
     </Suspense>
   );

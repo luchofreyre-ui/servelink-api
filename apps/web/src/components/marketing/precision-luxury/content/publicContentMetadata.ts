@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BOOKING_PAGE_DESCRIPTION } from "../booking/bookingSeo";
 import {
   PUBLIC_SITE_NAME,
   PUBLIC_SITE_URL,
@@ -84,8 +85,7 @@ export function buildServicesHubMetadata(): Metadata {
 export function buildBookingPageMetadata(): Metadata {
   return buildPublicMetadata({
     title: "Book Premium Home Cleaning",
-    description:
-      "Book a premium residential cleaning experience with a calm, guided flow built around trust, clarity, and high-end service presentation.",
+    description: BOOKING_PAGE_DESCRIPTION,
     pathname: "/book",
     type: "website",
   });

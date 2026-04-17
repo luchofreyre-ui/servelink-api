@@ -76,9 +76,14 @@ export class CreateBookingDirectionIntakeDto {
   @MaxLength(200)
   pets?: string;
 
+  /**
+   * Public `/book` Step 2 questionnaire mapped into estimator tokens.
+   * When omitted, server applies `DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS` before estimate.
+   */
+  @IsOptional()
   @ValidateNested()
   @Type(() => EstimateFactorsDto)
-  estimateFactors!: EstimateFactorsDto;
+  estimateFactors?: EstimateFactorsDto;
 
   @IsString()
   @MaxLength(80)
@@ -87,6 +92,18 @@ export class CreateBookingDirectionIntakeDto {
   @IsString()
   @MaxLength(120)
   preferredTime!: string;
+
+  /** Optional franchise-owner preference for public scheduling (cuid-shaped id). */
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) return undefined;
+    if (typeof value !== "string") return value;
+    const t = value.trim();
+    return t.length ? t : undefined;
+  })
+  @IsString()
+  @MaxLength(128)
+  preferredFoId?: string;
 
   /** Only stored when service is deep clean; otherwise ignored. */
   @IsOptional()

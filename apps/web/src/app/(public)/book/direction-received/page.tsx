@@ -17,18 +17,18 @@ export default function BookingDirectionReceivedPage() {
       <main>
         <section className="mx-auto max-w-3xl px-6 py-20 md:px-8 md:py-28">
           <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
-            Booking direction
+            Request received
           </p>
           <h1 className="mt-4 font-[var(--font-poppins)] text-4xl font-semibold tracking-[-0.04em] text-[#0F172A] md:text-5xl">
-            We received your booking direction
+            We have your request
           </h1>
           <p className="mt-6 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
             Thank you. This is{" "}
             <strong className="font-semibold text-[#0F172A]">
-              not a confirmed appointment yet
+              not a confirmed visit yet
             </strong>
-            — we captured your preferences so our team can match you with the
-            right service plan and availability.
+            — we saved your preferences so our team can match the right plan and
+            availability.
           </p>
 
           <div className="mt-10 space-y-6 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
@@ -48,10 +48,9 @@ export default function BookingDirectionReceivedPage() {
                 Contact
               </p>
               <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
-                If you included contact details elsewhere on the site, we may
-                use those. You can always reply to our message or return to the
-                booking flow to adjust your direction before anything is
-                finalized.
+                If you shared contact details elsewhere, we may use those. Reply
+                to our message anytime, or return here to adjust your request
+                before anything is finalized.
               </p>
             </div>
           </div>

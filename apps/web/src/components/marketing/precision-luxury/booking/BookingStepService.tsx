@@ -2,7 +2,10 @@ import { BookingOptionCard } from "../BookingOptionCard";
 import { BookingSectionCard } from "../BookingSectionCard";
 import type { BookingDeepCleanProgramChoice } from "./bookingFlowTypes";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
-import { bookingServiceCatalog } from "./bookingServiceCatalog";
+import {
+  bookingServiceCatalog,
+  getBookingServiceCatalogItem,
+} from "./bookingServiceCatalog";
 
 type BookingStepServiceProps = {
   serviceId: string;
@@ -22,8 +25,8 @@ export function BookingStepService({
   return (
     <BookingSectionCard
       eyebrow="Step 1"
-      title="Choose the right service"
-      body="The page should help the client select confidently without feeling overloaded."
+      title="Choose your service"
+      body="Pick the visit type that fits your home. You can switch before you send your request."
     >
       <div className="grid gap-5">
         {bookingServiceCatalog.map((option) => (
@@ -44,11 +47,11 @@ export function BookingStepService({
             <p className="font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">
               How should we structure your deep clean?
             </p>
-            <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-              Same total scope either way: one intensive visit, or three focused
-              visits spread over time. The program does not reduce work—it
-              changes pacing and how visits are scheduled.
-            </p>
+              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                Same thorough scope either way: one full visit, or three focused
+                visits over time. It changes pacing and scheduling—not the level
+                of care.
+              </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -82,14 +85,37 @@ export function BookingStepService({
                 3-visit deep clean program
               </p>
               <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-                Same scope split across three visits: heavy foundation first,
-                then two detail-and-maintenance passes. Spreads labor and
-                disruption; not a shortcut.
+                Same scope split across three visits: a strong foundation first,
+                then two detail passes. Easier scheduling day-to-day with the
+                same thoroughness.
               </p>
             </button>
           </div>
         </div>
       ) : null}
+
+      <div className="mt-10 rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
+        <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+          Your selection
+        </p>
+        <p className="mt-2 font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">
+          {getBookingServiceCatalogItem(serviceId).title}
+        </p>
+        {showDeepProgram ? (
+          <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
+            Deep clean plan:{" "}
+            <span className="font-medium text-[#0F172A]">
+              {deepCleanProgram === "phased_3_visit"
+                ? "Three visits"
+                : "One visit"}
+            </span>
+          </p>
+        ) : (
+          <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
+            You can change the service above before you continue.
+          </p>
+        )}
+      </div>
     </BookingSectionCard>
   );
 }
