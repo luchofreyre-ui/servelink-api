@@ -434,7 +434,7 @@ describe("bookingUrlState", () => {
     expect(next.customerEmail).toBe("sam@example.com");
   });
 
-  it("clamp after schedule becomes incomplete demotes review to schedule", () => {
+  it("clamp after cadence becomes incomplete demotes review to home", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -454,7 +454,7 @@ describe("bookingUrlState", () => {
       preferredTime: "",
     });
     const clamped = clampBookingStepToStructuralMax(patched);
-    expect(clamped.step).toBe("schedule");
+    expect(clamped.step).toBe("home");
     expect(clamped.homeSize).toBe("2000");
     expect(clamped.frequency).toBe("Weekly");
   });
@@ -526,7 +526,7 @@ describe("bookingUrlState", () => {
     );
   });
 
-  it("clampBookingStepToStructuralMax demotes review when schedule is incomplete", () => {
+  it("clampBookingStepToStructuralMax demotes review when cadence is incomplete", () => {
     const s: BookingFlowState = {
       ...defaultBookingFlowState,
       step: "review",
@@ -536,7 +536,7 @@ describe("bookingUrlState", () => {
       frequency: "Weekly",
       preferredTime: "",
     };
-    expect(clampBookingStepToStructuralMax(s).step).toBe("schedule");
+    expect(clampBookingStepToStructuralMax(s).step).toBe("home");
   });
 
   it("clampBookingStepToStructuralMax demotes review when home is incomplete", () => {
