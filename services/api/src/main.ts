@@ -28,6 +28,19 @@ function parseAllowedOrigins(): string[] {
   return [...new Set([...DEFAULT_LOCAL_DEV_ORIGINS, ...fromEnv])];
 }
 
+/**
+ * Vercel preview/production web builds live on unique `*.vercel.app` hosts.
+ * Public booking estimate uses browser `fetch`; without this, preview PRs fail CORS against the API.
+ */
+function isHttpsVercelAppDeploymentOrigin(origin: string): boolean {
+  try {
+    const u = new URL(origin);
+    return u.protocol === "https:" && u.hostname.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+}
+
 async function bootstrap() {
   console.log("=== MIGRATION START ===");
 
@@ -55,6 +68,10 @@ async function bootstrap() {
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      if (isHttpsVercelAppDeploymentOrigin(origin)) {
         return callback(null, true);
       }
 
