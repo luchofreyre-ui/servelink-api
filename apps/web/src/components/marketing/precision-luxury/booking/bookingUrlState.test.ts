@@ -517,6 +517,20 @@ describe("bookingUrlState", () => {
     expect(s.step).toBe("review");
   });
 
+  it("parse/build round-trips bookingId and intakeId so review→schedule URL sync does not drop scheduling context", () => {
+    const { shallowId } = catalogDeepAndShallow();
+    const sp = new URLSearchParams(
+      `step=schedule&service=${encodeURIComponent(shallowId)}&homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&bookingId=bk_xyz&intakeId=in_abc`,
+    );
+    const parsed = parseBookingSearchParams(sp);
+    expect(parsed.step).toBe("schedule");
+    expect(parsed.schedulingBookingId).toBe("bk_xyz");
+    expect(parsed.schedulingIntakeId).toBe("in_abc");
+    const out = buildBookingSearchParams(parsed);
+    expect(out.get("bookingId")).toBe("bk_xyz");
+    expect(out.get("intakeId")).toBe("in_abc");
+  });
+
   it("detects echoed intake params for confirmation", () => {
     expect(
       hasPublicIntakeEchoInSearchParams(new URLSearchParams("homeSize=1")),

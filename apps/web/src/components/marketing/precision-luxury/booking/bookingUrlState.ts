@@ -612,6 +612,14 @@ export function buildBookingSearchParams(state: BookingFlowState) {
     params.set(BOOKING_URL_APPLIANCE_PRESENCE, appliancesForUrl.join(","));
   }
 
+  /** Persist post-review scheduling context so URL→state sync does not strip `schedulingBookingId` and clamp off `schedule`. */
+  if (state.schedulingBookingId.trim()) {
+    params.set("bookingId", state.schedulingBookingId.trim());
+  }
+  if (state.schedulingIntakeId.trim()) {
+    params.set("intakeId", state.schedulingIntakeId.trim());
+  }
+
   return params;
 }
 
@@ -725,8 +733,8 @@ export function parseBookingSearchParams(
     step: defaultBookingFlowState.step,
     customerName: "",
     customerEmail: "",
-    schedulingBookingId: "",
-    schedulingIntakeId: "",
+    schedulingBookingId: getParamValue(searchParams, "bookingId").trim(),
+    schedulingIntakeId: getParamValue(searchParams, "intakeId").trim(),
     selectedTeamId: "",
     selectedTeamDisplayName: "",
     availableTeams: [],
