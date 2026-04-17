@@ -304,14 +304,14 @@ export function BookingFlowClient() {
     teamId: initialState.selectedTeamId,
   });
 
-  /** Latest booking state for debounced URL sync (timer must read current snapshot). */
-  const stateForUrlSyncRef = useRef(state);
-  stateForUrlSyncRef.current = state;
-  /** Latest search string for debounced replace (avoid stale closure vs `useSearchParams`). */
-  const searchParamsStringRef = useRef(searchParams?.toString() ?? "");
-  searchParamsStringRef.current = searchParams?.toString() ?? "";
-  const prevStepForUrlSyncRef = useRef(state.step);
-  const urlReplaceDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Latest booking state when committing the URL at step boundaries. */
+  const stateRefForBookingUrl = useRef(state);
+  stateRefForBookingUrl.current = state;
+  /**
+   * Last `state.step` written to the location bar. Same-step edits stay in React only
+   * (no `router.replace`) to avoid App Router remount/scroll reset loops.
+   */
+  const bookingUrlCommittedStepRef = useRef<BookingStepId | null>(null);
   const lastErrorScrollSignatureRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -532,6 +532,7 @@ export function BookingFlowClient() {
     if (!consumeBookingFlowFreshStartRequested()) return;
 
     clearBookingConfirmationSessionSnapshot();
+    bookingUrlCommittedStepRef.current = null;
     skipContactMergeFromUrlOnceRef.current = true;
     setAttemptedNext(false);
     setAttemptedConfirm(false);
@@ -938,56 +939,34 @@ export function BookingFlowClient() {
     }
   }, [state.step]);
 
-  // STATE → URL: debounce within a step so field edits do not hammer `router.replace`
-  // (which can reset scroll / focus on some App Router builds). Flush immediately on step change.
+  // STATE → URL: commit only when `state.step` changes (Continue/Back/clamp/submit) plus one
+  // initial normalize on mount. Intake fields are not mirrored live — same-step edits avoid
+  // `router.replace` entirely so the questionnaire does not re-navigate on each interaction.
   useEffect(() => {
-    const flushUrl = () => {
-      if (urlReplaceDebounceRef.current) {
-        clearTimeout(urlReplaceDebounceRef.current);
-        urlReplaceDebounceRef.current = null;
-      }
-      const nextState = stateForUrlSyncRef.current;
-      const desired = serializeState(nextState);
-      const current = new URLSearchParams(searchParamsStringRef.current).toString();
-      if (desired === current) return;
-      const y = typeof window !== "undefined" ? window.scrollY : 0;
-      router.replace(`${pathname}?${desired}`, { scroll: false });
-      // jsdom does not implement scrollTo; skip restoration in Vitest to avoid noisy errors.
-      if (typeof window !== "undefined" && !process.env.VITEST) {
-        requestAnimationFrame(() => {
-          try {
-            window.scrollTo({ top: y, left: 0, behavior: "auto" });
-          } catch {
-            try {
-              window.scrollTo(0, y);
-            } catch {
-              /* ignore */
-            }
-          }
-        });
-      }
-    };
+    const step = state.step;
+    const desired = serializeState(stateRefForBookingUrl.current);
+    const current = new URLSearchParams(searchParams?.toString() ?? "").toString();
 
-    const stepChanged = prevStepForUrlSyncRef.current !== state.step;
-    prevStepForUrlSyncRef.current = state.step;
-
-    if (stepChanged) {
-      flushUrl();
+    if (bookingUrlCommittedStepRef.current === null) {
+      bookingUrlCommittedStepRef.current = step;
+      if (desired !== current) {
+        router.replace(`${pathname}?${desired}`, { scroll: false });
+      }
       return;
     }
 
-    if (urlReplaceDebounceRef.current) {
-      clearTimeout(urlReplaceDebounceRef.current);
+    if (bookingUrlCommittedStepRef.current === step) {
+      return;
     }
-    urlReplaceDebounceRef.current = setTimeout(flushUrl, 220);
 
-    return () => {
-      if (urlReplaceDebounceRef.current) {
-        clearTimeout(urlReplaceDebounceRef.current);
-        urlReplaceDebounceRef.current = null;
-      }
-    };
-  }, [state, pathname, router]);
+    bookingUrlCommittedStepRef.current = step;
+    if (desired !== current) {
+      router.replace(`${pathname}?${desired}`, { scroll: false });
+    }
+    // Intentionally omit `searchParams` from deps: commits are driven by `state.step` only
+    // (plus mount). `searchParams` is read when this effect runs after step transitions.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.step, pathname, router]);
 
   function goToStep(step: BookingStepId) {
     setState((prev) =>
