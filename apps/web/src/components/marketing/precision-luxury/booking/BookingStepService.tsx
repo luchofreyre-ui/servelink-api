@@ -1,95 +1,137 @@
+import Link from "next/link";
 import { BookingOptionCard } from "../BookingOptionCard";
 import { BookingSectionCard } from "../BookingSectionCard";
-import type { BookingDeepCleanProgramChoice } from "./bookingFlowTypes";
-import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
+import type { BookingPublicPath } from "./bookingFlowTypes";
 import {
-  bookingServiceCatalog,
-  getBookingServiceCatalogItem,
-} from "./bookingServiceCatalog";
+  BOOKING_PUBLIC_CARD_FIRST_TIME_BODY,
+  BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE,
+  BOOKING_PUBLIC_CARD_MOVE_BODY,
+  BOOKING_PUBLIC_CARD_MOVE_TITLE,
+  BOOKING_PUBLIC_CARD_RECURRING_BODY,
+  BOOKING_PUBLIC_CARD_RECURRING_TITLE,
+  BOOKING_PUBLIC_SERVICE_SECTION_BODY,
+  BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
+  BOOKING_RECURRING_GATE_BODY,
+  BOOKING_RECURRING_GATE_HEADLINE,
+  BOOKING_RECURRING_GATE_LOGIN_CTA,
+  BOOKING_RECURRING_GATE_REGISTER_CTA,
+} from "./bookingPublicSurfaceCopy";
+import {
+  PUBLIC_BOOK_INTERNAL_FIRST_TIME,
+  PUBLIC_BOOK_INTERNAL_MOVE,
+} from "./publicBookingTaxonomy";
+
+export type PublicBookingServiceCardSelection =
+  | { kind: "first_time" }
+  | { kind: "move_transition" }
+  | { kind: "recurring_auth_gate" };
 
 type BookingStepServiceProps = {
+  bookingPublicPath: BookingPublicPath;
   serviceId: string;
-  onSelect: (serviceId: string) => void;
-  deepCleanProgram: BookingDeepCleanProgramChoice;
-  onDeepCleanProgramChange: (value: BookingDeepCleanProgramChoice) => void;
+  onSelectPublicService: (selection: PublicBookingServiceCardSelection) => void;
 };
 
 export function BookingStepService({
+  bookingPublicPath,
   serviceId,
-  onSelect,
-  deepCleanProgram,
-  onDeepCleanProgramChange,
+  onSelectPublicService,
 }: BookingStepServiceProps) {
-  const showDeepProgram = isDeepCleaningBookingServiceId(serviceId);
+  const firstSelected =
+    bookingPublicPath === "first_time" && serviceId === PUBLIC_BOOK_INTERNAL_FIRST_TIME;
+  const moveSelected =
+    bookingPublicPath === "move_transition" && serviceId === PUBLIC_BOOK_INTERNAL_MOVE;
+  const recurringGate = bookingPublicPath === "recurring_auth_gate";
 
   return (
     <BookingSectionCard
       eyebrow="Step 1"
-      title="Choose your service"
-      body="Pick the visit type that fits your home. You can switch before you send your request."
+      title={BOOKING_PUBLIC_SERVICE_SECTION_TITLE}
+      body={BOOKING_PUBLIC_SERVICE_SECTION_BODY}
     >
-      <div className="grid gap-5">
-        {bookingServiceCatalog.map((option) => (
-          <div key={option.id} onClick={() => onSelect(option.id)}>
-            <BookingOptionCard
-              title={option.title}
-              body={option.shortDescription}
-              meta={option.meta}
-              selected={serviceId === option.id}
-            />
-          </div>
-        ))}
+      <div className="grid gap-5" data-testid="booking-public-service-options">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => onSelectPublicService({ kind: "first_time" })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onSelectPublicService({ kind: "first_time" });
+            }
+          }}
+        >
+          <BookingOptionCard
+            title={BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE}
+            body={BOOKING_PUBLIC_CARD_FIRST_TIME_BODY}
+            meta="Anonymous path"
+            selected={firstSelected}
+          />
+        </div>
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => onSelectPublicService({ kind: "move_transition" })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onSelectPublicService({ kind: "move_transition" });
+            }
+          }}
+        >
+          <BookingOptionCard
+            title={BOOKING_PUBLIC_CARD_MOVE_TITLE}
+            body={BOOKING_PUBLIC_CARD_MOVE_BODY}
+            meta="Anonymous path"
+            selected={moveSelected}
+          />
+        </div>
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => onSelectPublicService({ kind: "recurring_auth_gate" })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onSelectPublicService({ kind: "recurring_auth_gate" });
+            }
+          }}
+        >
+          <BookingOptionCard
+            title={BOOKING_PUBLIC_CARD_RECURRING_TITLE}
+            body={BOOKING_PUBLIC_CARD_RECURRING_BODY}
+            meta="Login required"
+            selected={recurringGate}
+          />
+        </div>
       </div>
 
-      {showDeepProgram ? (
-        <div className="mt-10 space-y-4 border-t border-[#C9B27C]/14 pt-8">
+      {recurringGate ? (
+        <div
+          className="mt-10 space-y-6 border-t border-[#C9B27C]/14 pt-8"
+          data-testid="booking-recurring-auth-gate"
+        >
           <div>
             <p className="font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">
-              How should we structure your deep clean?
+              {BOOKING_RECURRING_GATE_HEADLINE}
             </p>
-              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-                Same thorough scope either way: one full visit, or three focused
-                visits over time. It changes pacing and scheduling—not the level
-                of care.
-              </p>
+            <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+              {BOOKING_RECURRING_GATE_BODY}
+            </p>
           </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <button
-              type="button"
-              onClick={() => onDeepCleanProgramChange("single_visit")}
-              className={`rounded-2xl border px-5 py-4 text-left transition ${
-                deepCleanProgram === "single_visit"
-                  ? "border-[#0D9488] bg-[rgba(13,148,136,0.08)] ring-2 ring-[#0D9488]/25"
-                  : "border-[#C9B27C]/20 bg-white hover:border-[#C9B27C]/35"
-              }`}
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Link
+              href="/customer/auth"
+              className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-3.5 font-[var(--font-manrope)] text-sm font-semibold text-white shadow-[0_12px_32px_rgba(13,148,136,0.2)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76]"
             >
-              <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
-                One-visit deep clean
-              </p>
-              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-                Full deep clean completed in a single appointment—best when you
-                want the home reset in one go.
-              </p>
-            </button>
-            <button
-              type="button"
-              onClick={() => onDeepCleanProgramChange("phased_3_visit")}
-              className={`rounded-2xl border px-5 py-4 text-left transition ${
-                deepCleanProgram === "phased_3_visit"
-                  ? "border-[#0D9488] bg-[rgba(13,148,136,0.08)] ring-2 ring-[#0D9488]/25"
-                  : "border-[#C9B27C]/20 bg-white hover:border-[#C9B27C]/35"
-              }`}
+              {BOOKING_RECURRING_GATE_LOGIN_CTA}
+            </Link>
+            <Link
+              href="/customer/auth"
+              className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/30 bg-white px-6 py-3.5 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] transition hover:border-[#C9B27C]/50"
             >
-              <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
-                3-visit deep clean program
-              </p>
-              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-                Same scope split across three visits: a strong foundation first,
-                then two detail passes. Easier scheduling day-to-day with the
-                same thoroughness.
-              </p>
-            </button>
+              {BOOKING_RECURRING_GATE_REGISTER_CTA}
+            </Link>
           </div>
         </div>
       ) : null}
@@ -99,22 +141,19 @@ export function BookingStepService({
           Your selection
         </p>
         <p className="mt-2 font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">
-          {getBookingServiceCatalogItem(serviceId).title}
+          {firstSelected
+            ? BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE
+            : moveSelected
+              ? BOOKING_PUBLIC_CARD_MOVE_TITLE
+              : recurringGate
+                ? BOOKING_PUBLIC_CARD_RECURRING_TITLE
+                : "Choose a service to continue"}
         </p>
-        {showDeepProgram ? (
-          <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
-            Deep clean plan:{" "}
-            <span className="font-medium text-[#0F172A]">
-              {deepCleanProgram === "phased_3_visit"
-                ? "Three visits"
-                : "One visit"}
-            </span>
-          </p>
-        ) : (
-          <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
-            You can change the service above before you continue.
-          </p>
-        )}
+        <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
+          {recurringGate
+            ? "Use the actions above to sign in or create an account—this public form will not continue as a recurring booking."
+            : "You can change the service above before you continue."}
+        </p>
       </div>
     </BookingSectionCard>
   );

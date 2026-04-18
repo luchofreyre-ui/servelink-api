@@ -37,19 +37,23 @@ import {
   BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_REFRESHING,
   BOOKING_SCHEDULE_CONFIRM_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED,
+  BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED,
 } from "./bookingPublicSurfaceCopy";
 import {
   appendPublicIntakeContextToSearchParams,
   applyContactFieldChangeToBookingFlowState,
+  applyFirstTimePostEstimateVisitChoiceToBookingFlowState,
   applyHomeDetailsFieldChangeToBookingFlowState,
   applyScheduleFieldChangeToBookingFlowState,
   applyServiceChangeToBookingFlowState,
+  applyServiceLocationFieldChangeToBookingFlowState,
   buildBookingSearchParams,
   clampBookingStepToStructuralMax,
   clearBookingConfirmationSessionSnapshot,
   consumeBookingFlowFreshStartRequested,
-  isCadenceComplete,
   isHomeDetailsComplete,
+  isPublicAnonymousPreferredWindowComplete,
+  isServiceLocationComplete,
   normalizeBookingAddOnsForPayload,
   normalizeBookingAppliancePresenceForPayload,
   normalizeBookingHomeSizeParam,
@@ -61,13 +65,16 @@ import {
 import type {
   BookingAvailableTeamOption,
   BookingFlowState,
-  BookingFrequencyOption,
   BookingPreviewConfidenceBand,
   BookingStepId,
   BookingTimeOption,
 } from "./bookingFlowTypes";
-import { BookingStepService } from "./BookingStepService";
+import {
+  BookingStepService,
+  type PublicBookingServiceCardSelection,
+} from "./BookingStepService";
 import { BookingStepHomeDetails } from "./BookingStepHomeDetails";
+import { BookingStepServiceLocation } from "./BookingStepServiceLocation";
 import {
   BookingStepSchedule,
   type BookingScheduleTeamsEmptyState,
@@ -84,7 +91,6 @@ import {
   type SubmitBookingDirectionIntakePayload,
 } from "./bookingDirectionIntakeApi";
 import { buildIntakeEstimateFactorsFromBookingHomeState } from "./bookingStep2ToEstimateFactors";
-import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
 import { buildEstimateRequestKey } from "./bookingEstimateKey";
 import { useBookingEstimate } from "./useBookingEstimate";
 import { mapIntakeDeepCleanSnapshotToCardProgram } from "./bookingIntakePreviewDisplay";
@@ -93,6 +99,11 @@ import {
   isBookingMoveTransitionServiceId,
   isDeepCleaningBookingServiceId,
 } from "./bookingDeepClean";
+import {
+  PUBLIC_BOOK_INTERNAL_FIRST_TIME,
+  PUBLIC_BOOK_INTERNAL_MOVE,
+  PUBLIC_BOOK_INTERNAL_RECURRING,
+} from "./publicBookingTaxonomy";
 import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
 import { isBookingContactValid } from "./bookingContactValidation";
 import { emitBookingFunnelEvent } from "./bookingFunnelAnalytics";
@@ -105,13 +116,35 @@ function serializeState(state: BookingFlowState) {
   return buildBookingSearchParams(state).toString();
 }
 
+function getPublicBookingOriginServiceHref(s: BookingFlowState): string {
+  if (s.bookingPublicPath === "move_transition") {
+    return `/services/${PUBLIC_BOOK_INTERNAL_MOVE}`;
+  }
+  if (s.bookingPublicPath === "recurring_auth_gate") {
+    return `/services/${PUBLIC_BOOK_INTERNAL_RECURRING}`;
+  }
+  return `/services/${PUBLIC_BOOK_INTERNAL_FIRST_TIME}`;
+}
+
 function getStepError(state: BookingFlowState): string | null {
-  if (state.step === "service" && !state.serviceId) {
-    return "Please choose a service before continuing.";
+  if (state.step === "service") {
+    if (state.bookingPublicPath === "recurring_auth_gate") {
+      return BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED;
+    }
+    if (!state.serviceId) {
+      return "Please choose a service before continuing.";
+    }
   }
 
-  if (state.step === "home" && (!isHomeDetailsComplete(state) || !isCadenceComplete(state))) {
-    return "Please complete your home details and service cadence before continuing.";
+  if (
+    state.step === "home" &&
+    (!isHomeDetailsComplete(state) || !isPublicAnonymousPreferredWindowComplete(state))
+  ) {
+    return "Please complete your home details and preferred arrival window before continuing.";
+  }
+
+  if (state.step === "location" && !isServiceLocationComplete(state)) {
+    return "Add a valid service ZIP code (at least five characters) before continuing.";
   }
 
   if (state.step === "schedule") {
@@ -555,14 +588,20 @@ export function BookingFlowClient() {
   const canContinue = !stepError;
 
   const isHomeComplete = isHomeDetailsComplete(state);
-  const isCadenceCompleteState = isCadenceComplete(state);
+  const isPreferredWindowComplete = isPublicAnonymousPreferredWindowComplete(state);
+  const isLocationComplete = isServiceLocationComplete(state);
   const isBookingReady =
-    !!state.serviceId && isHomeComplete && isCadenceCompleteState;
+    state.bookingPublicPath !== "recurring_auth_gate" &&
+    (state.bookingPublicPath === "first_time" ||
+      state.bookingPublicPath === "move_transition") &&
+    !!state.serviceId &&
+    isHomeComplete &&
+    isPreferredWindowComplete &&
+    isLocationComplete;
   const isContactReady = isBookingContactValid(
     state.customerName,
     state.customerEmail,
   );
-  const canConfirmDirection = isBookingReady && isContactReady;
 
   const contactPayloadKey = useMemo(() => {
     if (!isContactReady) return "";
@@ -717,7 +756,7 @@ export function BookingFlowClient() {
       bathrooms: state.bathrooms.trim(),
       pets: (state.pets ?? "").trim(),
       estimateFactors,
-      frequency: String(state.frequency).trim() as BookingFrequencyOption,
+      frequency: "One-Time",
       preferredTime: String(state.preferredTime).trim() as BookingTimeOption,
       ...normalizedAttribution,
     };
@@ -750,9 +789,9 @@ export function BookingFlowClient() {
     state.deepCleanFocus,
     state.transitionState,
     appliancePresencePayloadKey,
-    state.frequency,
     state.preferredTime,
     state.deepCleanProgram,
+    state.firstTimePostEstimateVisitChoice,
     normalizedAttribution,
   ]);
 
@@ -788,6 +827,16 @@ export function BookingFlowClient() {
   }
 
   const estimatePreviewReady = isEstimateValidForReview();
+
+  const firstTimePostEstimateSelectionOk =
+    state.bookingPublicPath !== "first_time" ||
+    !isDeepCleaningBookingServiceId(state.serviceId) ||
+    !estimatePreviewReady ||
+    !!state.firstTimePostEstimateVisitChoice;
+  const canConfirmDirection =
+    isBookingReady &&
+    isContactReady &&
+    firstTimePostEstimateSelectionOk;
 
   const reviewSubmitLabel = useMemo(() => {
     if (state.step !== "review") return BOOKING_REVIEW_SEE_AVAILABLE_TEAMS_CTA;
@@ -982,7 +1031,8 @@ export function BookingFlowClient() {
     setAttemptedNext(false);
 
     if (state.step === "service") return goToStep("home");
-    if (state.step === "home") return goToStep("review");
+    if (state.step === "home") return goToStep("location");
+    if (state.step === "location") return goToStep("review");
   }
 
   async function confirmBookingDirection() {
@@ -1244,7 +1294,7 @@ export function BookingFlowClient() {
       setSubmitRecoverableFailure(false);
       setIsSubmitting(false);
       submitInFlightRef.current = false;
-      return goToStep("home");
+      return goToStep("location");
     }
     if (state.step === "schedule") {
       if (!state.schedulingConfirmed && state.schedulingBookingId.trim()) {
@@ -1281,6 +1331,7 @@ export function BookingFlowClient() {
       );
       return;
     }
+    if (state.step === "location") return goToStep("home");
     if (state.step === "home") return goToStep("service");
     return;
   }
@@ -1431,31 +1482,44 @@ export function BookingFlowClient() {
         <section className="mx-auto max-w-7xl px-6 py-16 md:px-8 lg:py-20">
           <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
             <div className="space-y-8">
-              <BookingServiceHandoffCard serviceId={state.serviceId} />
+              <BookingServiceHandoffCard
+                serviceId={state.serviceId}
+                bookingPublicPath={state.bookingPublicPath}
+              />
 
               {state.step === "service" ? (
                 <BookingStepService
+                  bookingPublicPath={state.bookingPublicPath}
                   serviceId={state.serviceId}
-                  onSelect={(serviceId) => {
+                  onSelectPublicService={(selection: PublicBookingServiceCardSelection) => {
                     setAttemptedNext(false);
                     setAttemptedConfirm(false);
                     setSubmitRecoverableFailure(false);
                     setIsSubmitting(false);
                     submitInFlightRef.current = false;
+                    if (selection.kind === "recurring_auth_gate") {
+                      setState((prev) =>
+                        clampBookingStepToStructuralMax({
+                          ...applyServiceChangeToBookingFlowState(
+                            prev,
+                            PUBLIC_BOOK_INTERNAL_FIRST_TIME,
+                          ),
+                          bookingPublicPath: "recurring_auth_gate",
+                          step: "service",
+                        }),
+                      );
+                      return;
+                    }
+                    const nextServiceId =
+                      selection.kind === "first_time"
+                        ? PUBLIC_BOOK_INTERNAL_FIRST_TIME
+                        : PUBLIC_BOOK_INTERNAL_MOVE;
                     setState((prev) =>
                       clampBookingStepToStructuralMax(
-                        applyServiceChangeToBookingFlowState(prev, serviceId),
+                        applyServiceChangeToBookingFlowState(prev, nextServiceId),
                       ),
                     );
                   }}
-                  deepCleanProgram={
-                    state.deepCleanProgram === "phased_3_visit"
-                      ? "phased_3_visit"
-                      : "single_visit"
-                  }
-                  onDeepCleanProgramChange={(value) =>
-                    patchState({ deepCleanProgram: value })
-                  }
                 />
               ) : null}
 
@@ -1464,15 +1528,27 @@ export function BookingFlowClient() {
                   state={state}
                   onChange={(patch) => patchHomeStepState(patch)}
                   selectedServiceTitle={
-                    getBookingServiceCatalogItem(state.serviceId).title
+                    state.bookingPublicPath === "move_transition"
+                      ? "Move-In / Move-Out Cleaning"
+                      : "First-Time Cleaning"
                   }
-                  deepCleanPlanLabel={
-                    isDeepCleaningBookingServiceId(state.serviceId)
-                      ? state.deepCleanProgram === "phased_3_visit"
-                        ? "Three-visit deep clean"
-                        : "One-visit deep clean"
-                      : null
-                  }
+                  deepCleanPlanLabel={null}
+                />
+              ) : null}
+
+              {state.step === "location" ? (
+                <BookingStepServiceLocation
+                  state={state}
+                  onChange={(patch) => {
+                    setAttemptedNext(false);
+                    setAttemptedConfirm(false);
+                    setSubmitRecoverableFailure(false);
+                    setState((prev) =>
+                      clampBookingStepToStructuralMax(
+                        applyServiceLocationFieldChangeToBookingFlowState(prev, patch),
+                      ),
+                    );
+                  }}
                 />
               ) : null}
 
@@ -1509,6 +1585,17 @@ export function BookingFlowClient() {
                   onContactChange={patchContactState}
                   prepGuidanceItems={prepGuidanceItems}
                   recommendedAttentionItems={recommendedAttentionItems}
+                  onFirstTimePostEstimateVisitChoiceChange={(choice) => {
+                    setSubmitRecoverableFailure(false);
+                    setState((prev) =>
+                      clampBookingStepToStructuralMax(
+                        applyFirstTimePostEstimateVisitChoiceToBookingFlowState(
+                          prev,
+                          choice,
+                        ),
+                      ),
+                    );
+                  }}
                 />
               ) : null}
 
@@ -1560,7 +1647,7 @@ export function BookingFlowClient() {
                   </button>
                 ) : (
                   <Link
-                    href={`/services/${state.serviceId}`}
+                    href={getPublicBookingOriginServiceHref(state)}
                     aria-disabled={isSubmitting}
                     onClick={(e) => {
                       if (isSubmitting) e.preventDefault();
@@ -1622,8 +1709,8 @@ export function BookingFlowClient() {
                     ref={errorRef}
                     className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
                   >
-                    Please complete home details and service cadence before
-                    saving.
+                    Please complete home details, service location, and review
+                    choices before saving.
                   </p>
                 ) : attemptedConfirm && isBookingReady && !isContactReady ? (
                   <p

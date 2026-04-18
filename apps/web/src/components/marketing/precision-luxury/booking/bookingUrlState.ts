@@ -3,10 +3,12 @@ import type {
   BookingAppliancePresenceToken,
   BookingDeepCleanFocus,
   BookingDeepCleanProgramChoice,
+  BookingFirstTimePostEstimateVisitChoice,
   BookingFlowState,
   BookingFrequencyOption,
   BookingHomeCondition,
   BookingProblemAreaToken,
+  BookingPublicPath,
   BookingScopeIntensity,
   BookingStepId,
   BookingSurfaceComplexity,
@@ -26,8 +28,20 @@ import {
   getBookingDefaultServiceId,
   isValidBookingServiceId,
 } from "./bookingServiceCatalog";
+import {
+  PUBLIC_BOOK_INTERNAL_FIRST_TIME,
+  PUBLIC_BOOK_INTERNAL_MOVE,
+  PUBLIC_BOOK_INTERNAL_RECURRING,
+  isPublicAnonymousBookingServiceId,
+} from "./publicBookingTaxonomy";
 
-const validSteps: BookingStepId[] = ["service", "home", "schedule", "review"];
+const validSteps: BookingStepId[] = [
+  "service",
+  "home",
+  "location",
+  "review",
+  "schedule",
+];
 const validFrequencies: BookingFrequencyOption[] = [
   "Weekly",
   "Bi-Weekly",
@@ -44,9 +58,16 @@ const validTimes: BookingTimeOption[] = [
 const STEP_RANK: Record<BookingStepId, number> = {
   service: 0,
   home: 1,
-  review: 2,
-  schedule: 3,
+  location: 2,
+  review: 3,
+  schedule: 4,
 };
+
+/** Serialized when the customer is on the recurring auth gate (never `service=recurring`). */
+export const BOOKING_URL_PUBLIC_PATH = "pubPath";
+
+export const BOOKING_URL_SERVICE_LOC_ZIP = "locZip";
+export const BOOKING_URL_SERVICE_LOC_ADDR = "locAddr";
 
 function isValidStep(value: string | null): value is BookingStepId {
   return !!value && validSteps.includes(value as BookingStepId);
@@ -290,8 +311,28 @@ export function isScheduleDetailsComplete(
   return !!String(s.frequency ?? "").trim() && !!String(s.preferredTime ?? "").trim();
 }
 
-/** Service cadence collected on the home step (still required for intake / estimator). */
+/** @deprecated Prefer {@link isPublicAnonymousPreferredWindowComplete} for /book. */
 export const isCadenceComplete = isScheduleDetailsComplete;
+
+/** Anonymous public funnel: preferred arrival window only (frequency is fixed one-time). */
+export function isPublicAnonymousPreferredWindowComplete(
+  s: Pick<BookingFlowState, "preferredTime">,
+): boolean {
+  return !!String(s.preferredTime ?? "").trim();
+}
+
+export function normalizeBookingServiceLocationZipParam(raw: string): string {
+  return String(raw ?? "")
+    .trim()
+    .replace(/\s+/g, "");
+}
+
+export function isServiceLocationComplete(
+  s: Pick<BookingFlowState, "serviceLocationZip">,
+): boolean {
+  const z = normalizeBookingServiceLocationZipParam(s.serviceLocationZip);
+  return z.length >= 5;
+}
 
 /** Step 4 (Choose a time): team + concrete slot chosen (hold created client-side just before confirm). */
 export function isPublicScheduleSelectionComplete(
@@ -313,7 +354,12 @@ export function isPublicScheduleSelectionComplete(
 
 /** Highest step whose prerequisites are satisfied by the given state (structural only). */
 export function computeMaxReadyStep(s: BookingFlowState): BookingStepId {
-  if (!isHomeDetailsComplete(s) || !isCadenceComplete(s)) return "home";
+  if (s.bookingPublicPath === "recurring_auth_gate") return "service";
+  if (!isPublicAnonymousBookingServiceId(s.serviceId)) return "service";
+  if (!isHomeDetailsComplete(s) || !isPublicAnonymousPreferredWindowComplete(s)) {
+    return "home";
+  }
+  if (!isServiceLocationComplete(s)) return "location";
   if (!String(s.schedulingBookingId ?? "").trim()) return "review";
   return "schedule";
 }
@@ -364,13 +410,22 @@ export function applyServiceChangeToBookingFlowState(
       : defaultBookingFlowState.appliancePresence
     : defaultBookingFlowState.appliancePresence;
 
+  const bookingPublicPath: BookingPublicPath =
+    isBookingMoveTransitionServiceId(nextServiceId)
+      ? "move_transition"
+      : "first_time";
+
   return {
     ...prev,
     serviceId: nextServiceId,
+    bookingPublicPath,
     deepCleanProgram,
     deepCleanFocus,
     transitionState,
     appliancePresence,
+    serviceLocationZip: "",
+    serviceLocationAddressLine: "",
+    firstTimePostEstimateVisitChoice: "",
     schedulingBookingId: "",
     schedulingIntakeId: "",
     selectedTeamId: "",
@@ -396,8 +451,82 @@ export function applyScheduleFieldChangeToBookingFlowState(
     ...prev,
     ...(patch.frequency !== undefined ? { frequency: patch.frequency } : {}),
     ...(patch.preferredTime !== undefined
-      ? { preferredTime: patch.preferredTime }
+      ? {
+          preferredTime: patch.preferredTime,
+          frequency: "One-Time" as BookingFlowState["frequency"],
+        }
       : {}),
+  };
+}
+
+export function applyServiceLocationFieldChangeToBookingFlowState(
+  prev: BookingFlowState,
+  patch: Partial<
+    Pick<BookingFlowState, "serviceLocationZip" | "serviceLocationAddressLine">
+  >,
+): BookingFlowState {
+  return {
+    ...prev,
+    ...(patch.serviceLocationZip !== undefined
+      ? {
+          serviceLocationZip: normalizeBookingServiceLocationZipParam(
+            patch.serviceLocationZip,
+          ),
+        }
+      : {}),
+    ...(patch.serviceLocationAddressLine !== undefined
+      ? { serviceLocationAddressLine: String(patch.serviceLocationAddressLine ?? "").trim() }
+      : {}),
+  };
+}
+
+const BOOKING_FIRST_TIME_POST_ESTIMATE_VALUES = new Set<
+  BookingFirstTimePostEstimateVisitChoice
+>(["", "one_visit", "two_visits", "three_visits", "convert_recurring"]);
+
+export function parseBookingFirstTimePostEstimateVisitChoiceParam(
+  raw: string | null | undefined,
+): BookingFirstTimePostEstimateVisitChoice {
+  const v = String(raw ?? "").trim();
+  if (BOOKING_FIRST_TIME_POST_ESTIMATE_VALUES.has(v as BookingFirstTimePostEstimateVisitChoice)) {
+    return v as BookingFirstTimePostEstimateVisitChoice;
+  }
+  return "";
+}
+
+export function applyFirstTimePostEstimateVisitChoiceToBookingFlowState(
+  prev: BookingFlowState,
+  choice: BookingFirstTimePostEstimateVisitChoice,
+): BookingFlowState {
+  const normalized = parseBookingFirstTimePostEstimateVisitChoiceParam(choice);
+  const deepCleanProgram: BookingDeepCleanProgramChoice | "" =
+    isDeepCleaningBookingServiceId(prev.serviceId)
+      ? normalized === "three_visits"
+        ? "phased_3_visit"
+        : normalized === "" ||
+            normalized === "one_visit" ||
+            normalized === "two_visits" ||
+            normalized === "convert_recurring"
+          ? "single_visit"
+          : prev.deepCleanProgram
+      : "";
+
+  return {
+    ...prev,
+    firstTimePostEstimateVisitChoice: normalized,
+    ...(isDeepCleaningBookingServiceId(prev.serviceId)
+      ? { deepCleanProgram }
+      : {}),
+    schedulingBookingId: "",
+    schedulingIntakeId: "",
+    selectedTeamId: "",
+    selectedTeamDisplayName: "",
+    availableTeams: [],
+    availableWindows: [],
+    selectedSlotStart: "",
+    selectedSlotEnd: "",
+    publicHoldId: "",
+    schedulingConfirmed: false,
   };
 }
 
@@ -513,6 +642,9 @@ export function hasUrlBookingShapeBeyondColdStart(
     "frequency",
     "preferredTime",
     "dcProgram",
+    BOOKING_URL_SERVICE_LOC_ZIP,
+    BOOKING_URL_SERVICE_LOC_ADDR,
+    BOOKING_URL_PUBLIC_PATH,
   ];
   for (const k of shapeKeys) {
     if (getParamValue(searchParams, k).trim()) return true;
@@ -553,6 +685,14 @@ export function buildBookingSearchParams(state: BookingFlowState) {
 
   params.set("step", state.step);
   params.set("service", state.serviceId.trim());
+  if (state.bookingPublicPath === "recurring_auth_gate") {
+    params.set(BOOKING_URL_PUBLIC_PATH, "recurring_gate");
+  }
+
+  const locZip = normalizeBookingServiceLocationZipParam(state.serviceLocationZip);
+  if (locZip) params.set(BOOKING_URL_SERVICE_LOC_ZIP, locZip);
+  const locAddr = String(state.serviceLocationAddressLine ?? "").trim();
+  if (locAddr) params.set(BOOKING_URL_SERVICE_LOC_ADDR, locAddr);
 
   const homeSize = normalizeBookingHomeSizeParam(state.homeSize);
   if (homeSize) params.set("homeSize", homeSize);
@@ -727,9 +867,44 @@ export function readPublicIntakeEchoFromSearchParams(
 export function parseBookingSearchParams(
   searchParams: URLSearchParams,
 ): BookingFlowState {
+  const serviceRaw = getParamValue(searchParams, "service").trim();
   const fields = parseIntakeFieldsFromSearchParams(searchParams);
+  const pubPathRaw = getParamValue(searchParams, BOOKING_URL_PUBLIC_PATH).trim();
+
+  let serviceId = fields.serviceId;
+  let deepCleanProgram = fields.deepCleanProgram;
+  let bookingPublicPath: BookingPublicPath = "first_time";
+
+  if (
+    serviceRaw === PUBLIC_BOOK_INTERNAL_RECURRING ||
+    pubPathRaw === "recurring_gate"
+  ) {
+    bookingPublicPath = "recurring_auth_gate";
+    serviceId = PUBLIC_BOOK_INTERNAL_FIRST_TIME;
+    deepCleanProgram =
+      parseDeepCleanProgramParam(searchParams.get("dcProgram")) || "single_visit";
+  } else if (serviceId === PUBLIC_BOOK_INTERNAL_MOVE) {
+    bookingPublicPath = "move_transition";
+  } else {
+    bookingPublicPath = "first_time";
+  }
+
+  const locZip = normalizeBookingServiceLocationZipParam(
+    getParamValue(searchParams, BOOKING_URL_SERVICE_LOC_ZIP),
+  );
+  const locAddr = String(
+    getParamValue(searchParams, BOOKING_URL_SERVICE_LOC_ADDR) ?? "",
+  ).trim();
+
   const partial: BookingFlowState = {
     ...fields,
+    serviceId,
+    deepCleanProgram,
+    bookingPublicPath,
+    serviceLocationZip: locZip,
+    serviceLocationAddressLine: locAddr,
+    firstTimePostEstimateVisitChoice: defaultBookingFlowState.firstTimePostEstimateVisitChoice,
+    frequency: "One-Time",
     step: defaultBookingFlowState.step,
     customerName: "",
     customerEmail: "",
@@ -772,6 +947,9 @@ export function appendPublicIntakeContextToSearchParams(
     | "frequency"
     | "preferredTime"
     | "deepCleanProgram"
+    | "bookingPublicPath"
+    | "serviceLocationZip"
+    | "serviceLocationAddressLine"
   >,
   opts?: { maxHomeSizeChars?: number },
 ): void {
@@ -787,6 +965,13 @@ export function appendPublicIntakeContextToSearchParams(
     q.set("preferredTime", String(state.preferredTime).trim());
   }
   q.set("service", state.serviceId.trim());
+  if (state.bookingPublicPath === "recurring_auth_gate") {
+    q.set(BOOKING_URL_PUBLIC_PATH, "recurring_gate");
+  }
+  const echoZip = normalizeBookingServiceLocationZipParam(state.serviceLocationZip);
+  if (echoZip) q.set(BOOKING_URL_SERVICE_LOC_ZIP, echoZip);
+  const echoAddr = String(state.serviceLocationAddressLine ?? "").trim();
+  if (echoAddr) q.set(BOOKING_URL_SERVICE_LOC_ADDR, echoAddr);
   if (
     isDeepCleaningBookingServiceId(state.serviceId) &&
     state.deepCleanProgram

@@ -127,7 +127,7 @@ export function BookingStepSchedule({
 
   return (
     <BookingSectionCard
-      eyebrow="Step 4"
+      eyebrow="Step 5"
       title={BOOKING_SCHEDULE_PAGE_TITLE}
       body={BOOKING_SCHEDULE_PAGE_LEAD}
     >

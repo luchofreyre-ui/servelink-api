@@ -11,6 +11,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   BOOKING_ADD_ON_LABELS,
   BOOKING_APPLIANCE_PRESENCE_LABELS,
+  BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE,
+  BOOKING_PUBLIC_CARD_MOVE_TITLE,
+  BOOKING_PUBLIC_CARD_RECURRING_TITLE,
+  BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
+  BOOKING_RECURRING_GATE_LOGIN_CTA,
+  BOOKING_RECURRING_GATE_REGISTER_CTA,
+  BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED,
   BOOKING_DEEP_CLEAN_FOCUS_LABELS,
   BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS,
@@ -84,6 +91,35 @@ function fillReviewContactFast() {
   fireEvent.change(screen.getByLabelText(/^email$/i), {
     target: { value: "alex@example.com" },
   });
+}
+
+async function fillReviewContactAndOptionalFirstTimePlan(timeout = 8000) {
+  fillReviewContactFast();
+  await waitFor(() => {
+    const one = screen.queryByTestId("booking-post-estimate-one_visit");
+    if (one) fireEvent.click(one);
+    expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled();
+  }, { timeout });
+}
+
+/** After home edits: advance location gate (ZIP) then review. */
+async function continueThroughLocationGateToReview() {
+  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  await waitFor(() =>
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Service location" }),
+    ).toBeInTheDocument(),
+  );
+  const zipInput = screen.getByLabelText(
+    /^service zip code$/i,
+  ) as HTMLInputElement;
+  if (!zipInput.value || zipInput.value.replace(/\s/g, "").length < 5) {
+    fireEvent.change(zipInput, { target: { value: "94103" } });
+  }
+  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  await waitFor(() =>
+    expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
+  );
 }
 
 const bookingFlowTestSearch = vi.hoisted(() => ({
@@ -220,7 +256,7 @@ vi.mock("../layout/PublicSiteFooter", () => ({
 function buildReviewSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&locZip=94103&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -246,20 +282,27 @@ function buildReviewSearchStringForService(serviceId: string): string {
   const dc = isDeepCleaningBookingServiceId(serviceId)
     ? "&dcProgram=single_visit"
     : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&locZip=94103&service=${encodeURIComponent(
     serviceId,
   )}${dc}`;
 }
 
 function goHomeFromReviewViaBackOnce() {
   fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+  if (
+    screen.queryByRole("heading", {
+      level: 2,
+      name: "Service location",
+    })
+  ) {
+    fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+  }
 }
 
 async function submitFromReviewToSchedule() {
   submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
-  fillReviewContactFast();
+  await fillReviewContactAndOptionalFirstTimePlan();
   const send = await screen.findByTestId("booking-direction-send");
-  await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 8000 });
   fireEvent.click(send);
   await waitFor(() =>
     expect(screen.getByTestId("booking-schedule-team-section")).toBeInTheDocument(),
@@ -330,10 +373,9 @@ describe("BookingFlowClient", () => {
 
     render(<BookingFlowClient />);
 
-    fillReviewContactFast();
+    await fillReviewContactAndOptionalFirstTimePlan(5000);
 
-    const send = await screen.findByTestId("booking-direction-send");
-    await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+    const send = screen.getByTestId("booking-direction-send");
 
     fireEvent.click(send);
     fireEvent.click(send);
@@ -380,9 +422,8 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      const send = await screen.findByTestId("booking-direction-send");
-      await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 8000 });
+      await fillReviewContactAndOptionalFirstTimePlan(8000);
+      const send = screen.getByTestId("booking-direction-send");
       expect(send).toHaveTextContent(BOOKING_REVIEW_SEE_AVAILABLE_TEAMS_CTA);
     });
 
@@ -677,9 +718,8 @@ describe("BookingFlowClient", () => {
     submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
     bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
     render(<BookingFlowClient />);
-    fillReviewContactFast();
-    const send = await screen.findByTestId("booking-direction-send");
-    await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 8000 });
+    await fillReviewContactAndOptionalFirstTimePlan(8000);
+    const send = screen.getByTestId("booking-direction-send");
     fireEvent.click(send);
     await waitFor(() => expect(submitBookingDirectionIntakeMock).toHaveBeenCalled());
     const payload = submitBookingDirectionIntakeMock.mock.calls[0][0] as Record<
@@ -697,10 +737,9 @@ describe("BookingFlowClient", () => {
 
     render(<BookingFlowClient />);
 
-    fillReviewContactFast();
+    await fillReviewContactAndOptionalFirstTimePlan(5000);
 
-    const send = await screen.findByTestId("booking-direction-send");
-    await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+    const send = screen.getByTestId("booking-direction-send");
 
     fireEvent.click(send);
 
@@ -727,10 +766,9 @@ describe("BookingFlowClient", () => {
 
     const { unmount } = render(<BookingFlowClient key="round-1" />);
 
-    fillReviewContactFast();
+    await fillReviewContactAndOptionalFirstTimePlan(5000);
 
-    const send = await screen.findByTestId("booking-direction-send");
-    await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+    const send = screen.getByTestId("booking-direction-send");
     fireEvent.click(send);
 
     await waitFor(() =>
@@ -796,17 +834,102 @@ describe("BookingFlowClient", () => {
     expect(screen.queryByText(BOOKING_REVIEW_STEP_TITLE)).not.toBeInTheDocument();
   });
 
-  describe("service change", () => {
-    function escapeForRegExp(s: string) {
-      return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }
+  describe("public booking architecture — taxonomy, recurring gate, location order", () => {
+    it("shows the three public service cards", () => {
+      bookingFlowTestSearch.sp = new URLSearchParams("step=service");
+      render(<BookingFlowClient />);
+      const root = screen.getByTestId("booking-public-service-options");
+      expect(within(root).getByText(BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE)).toBeInTheDocument();
+      expect(within(root).getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE)).toBeInTheDocument();
+      expect(within(root).getByText(BOOKING_PUBLIC_CARD_RECURRING_TITLE)).toBeInTheDocument();
+    });
 
-    it("leaving deep clean clears program UI and preserves home and schedule through to review; estimate uses new service", async () => {
+    it("selecting recurring shows auth gate CTAs, blocks anonymous progression, and never reaches schedule", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams("step=service");
+      render(<BookingFlowClient />);
+      const options = screen.getByTestId("booking-public-service-options");
+      fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_RECURRING_TITLE));
+      expect(screen.getByTestId("booking-recurring-auth-gate")).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: BOOKING_RECURRING_GATE_LOGIN_CTA })).toHaveAttribute(
+        "href",
+        "/customer/auth",
+      );
+      expect(
+        screen.getByRole("link", { name: BOOKING_RECURRING_GATE_REGISTER_CTA }),
+      ).toHaveAttribute("href", "/customer/auth");
+      expect(screen.queryByTestId("booking-schedule-team-section")).not.toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      expect(
+        screen.getByRole("heading", {
+          level: 2,
+          name: BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
+        }),
+      ).toBeInTheDocument();
+      expect(screen.getByText(BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED)).toBeInTheDocument();
+      expect(
+        screen.queryByRole("heading", { level: 2, name: "Tell us about your home" }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("selecting first-time allows Continue to home details", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams("step=service");
+      render(<BookingFlowClient />);
+      const options = screen.getByTestId("booking-public-service-options");
+      fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE));
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await waitFor(() =>
+        expect(
+          screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
+        ).toBeInTheDocument(),
+      );
+    });
+
+    it("selecting move-in/move-out allows Continue to home details", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams("step=service");
+      render(<BookingFlowClient />);
+      const options = screen.getByTestId("booking-public-service-options");
+      fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE));
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await waitFor(() =>
+        expect(
+          screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
+        ).toBeInTheDocument(),
+      );
+    });
+
+    it("advances home → service location before review (ZIP gate)", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&service=${encodeURIComponent(
+          getBookingDefaultServiceId(),
+        )}&dcProgram=single_visit`,
+      );
+      render(<BookingFlowClient />);
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await waitFor(() =>
+        expect(
+          screen.getByRole("heading", { level: 2, name: "Service location" }),
+        ).toBeInTheDocument(),
+      );
+    });
+
+    it("first-time review shows post-estimate visit spread and recurring conversion options", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(8000);
+      const block = await screen.findByTestId("booking-first-time-post-estimate-options");
+      expect(block).toBeInTheDocument();
+      expect(screen.getByTestId("booking-post-estimate-one_visit")).toBeInTheDocument();
+      expect(screen.getByTestId("booking-post-estimate-two_visits")).toBeInTheDocument();
+      expect(screen.getByTestId("booking-post-estimate-three_visits")).toBeInTheDocument();
+      expect(screen.getByTestId("booking-post-estimate-convert_recurring")).toBeInTheDocument();
+    });
+  });
+
+  describe("service change", () => {
+    it("switching public card from first-time to move-in preserves home context; estimate uses move service", async () => {
       const deepEntry = bookingServiceCatalog.find((x) =>
         isDeepCleaningBookingServiceId(x.id),
-      )!;
-      const shallowEntry = bookingServiceCatalog.find(
-        (x) => !isDeepCleaningBookingServiceId(x.id),
       )!;
 
       bookingFlowTestSearch.sp = new URLSearchParams(
@@ -814,29 +937,19 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      expect(
-        screen.getByText(/How should we structure your deep clean/i),
-      ).toBeInTheDocument();
-
       const serviceHeading = screen.getByRole("heading", {
         level: 2,
         name: "Choose your service",
       });
       const serviceSection = serviceHeading.closest("section")!;
-      const pickShallow = within(serviceSection).getByRole("button", {
-        name: new RegExp(escapeForRegExp(shallowEntry.title), "i"),
-      });
-      fireEvent.click(pickShallow);
-
-      await waitFor(() =>
-        expect(
-          screen.queryByText(/How should we structure your deep clean/i),
-        ).not.toBeInTheDocument(),
-      );
+      fireEvent.click(within(serviceSection).getByText("Move-In / Move-Out Cleaning"));
 
       const continueBtn = screen.getByRole("button", { name: /^continue$/i });
       fireEvent.click(continueBtn);
       fireEvent.click(continueBtn);
+      fireEvent.change(screen.getByLabelText(/^service zip code$/i), {
+        target: { value: "94103" },
+      });
       fireEvent.click(continueBtn);
 
       await waitFor(() =>
@@ -855,7 +968,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Weekly")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+      ).toBeInTheDocument();
       expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
 
       await waitFor(() =>
@@ -864,7 +979,7 @@ describe("BookingFlowClient", () => {
             (call) =>
               call[0] &&
               typeof call[0] === "object" &&
-              (call[0] as { serviceId?: string }).serviceId === shallowEntry.id,
+              (call[0] as { serviceId?: string }).serviceId === phase4ServiceIds.move,
           ),
         ).toBe(true),
       );
@@ -880,36 +995,6 @@ describe("BookingFlowClient", () => {
       )}${dc}`;
     }
 
-    it("changing frequency on home then continuing to review sends preview with the new cadence", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(
-        buildHomeStepSearchStringForCadence(),
-      );
-      previewEstimateMock.mockClear();
-      render(<BookingFlowClient />);
-
-      const cadenceSection = screen.getByTestId("booking-home-cadence-section");
-      fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /Bi-Weekly/i }),
-      );
-
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
-
-      await waitFor(() =>
-        expect(
-          previewEstimateMock.mock.calls.some(
-            (call) =>
-              call[0] &&
-              typeof call[0] === "object" &&
-              (call[0] as { frequency?: string }).frequency === "Bi-Weekly",
-          ),
-        ).toBe(true),
-      );
-    });
-
     it("changing preferred time on home then continuing to review sends preview with the new timing", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(
         buildHomeStepSearchStringForCadence(),
@@ -922,11 +1007,7 @@ describe("BookingFlowClient", () => {
         within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
       );
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -940,28 +1021,21 @@ describe("BookingFlowClient", () => {
       );
     });
 
-    it("from review, backing to home, changing frequency, then returning preserves home and uses the new cadence in preview", async () => {
+    it("from review, backing to home, changing preferred window, then returning preserves home and uses One-Time intake frequency", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(() =>
-        expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-      );
+      await fillReviewContactAndOptionalFirstTimePlan();
 
-      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      goHomeFromReviewViaBackOnce();
 
       const cadenceSection = screen.getByTestId("booking-home-cadence-section");
       fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /Bi-Weekly/i }),
+        within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
       );
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -977,7 +1051,8 @@ describe("BookingFlowClient", () => {
             (call) =>
               call[0] &&
               typeof call[0] === "object" &&
-              (call[0] as { frequency?: string }).frequency === "Bi-Weekly",
+              (call[0] as { frequency?: string }).frequency === "One-Time" &&
+              (call[0] as { preferredTime?: string }).preferredTime === "Saturday",
           ),
         ).toBe(true),
       );
@@ -991,9 +1066,8 @@ describe("BookingFlowClient", () => {
 
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      const send = await screen.findByTestId("booking-direction-send");
-      await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      const send = screen.getByTestId("booking-direction-send");
       fireEvent.click(send);
 
       await waitFor(() =>
@@ -1001,6 +1075,14 @@ describe("BookingFlowClient", () => {
       );
 
       fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      if (
+        screen.queryByRole("heading", {
+          level: 2,
+          name: "Service location",
+        })
+      ) {
+        fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      }
 
       await waitFor(() =>
         expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument(),
@@ -1034,11 +1116,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
 
@@ -1046,11 +1124,7 @@ describe("BookingFlowClient", () => {
         target: { value: "2400" },
       });
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -1058,7 +1132,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Weekly")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+      ).toBeInTheDocument();
       expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
 
       const homeBlock = within(reviewRoot)
@@ -1083,11 +1159,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
 
@@ -1096,11 +1168,7 @@ describe("BookingFlowClient", () => {
         { target: { value: "3" } },
       );
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -1140,11 +1208,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
 
@@ -1152,11 +1216,7 @@ describe("BookingFlowClient", () => {
         target: { value: "One dog" },
       });
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -1164,7 +1224,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Weekly")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+      ).toBeInTheDocument();
 
       await waitFor(() =>
         expect(
@@ -1186,9 +1248,8 @@ describe("BookingFlowClient", () => {
 
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      const send = await screen.findByTestId("booking-direction-send");
-      await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      const send = screen.getByTestId("booking-direction-send");
       fireEvent.click(send);
 
       await waitFor(() =>
@@ -1196,6 +1257,14 @@ describe("BookingFlowClient", () => {
       );
 
       fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      if (
+        screen.queryByRole("heading", {
+          level: 2,
+          name: "Service location",
+        })
+      ) {
+        fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      }
       await waitFor(() =>
         expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument(),
       );
@@ -1219,9 +1288,8 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      const send = await screen.findByTestId("booking-direction-send");
-      await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      const send = screen.getByTestId("booking-direction-send");
 
       previewEstimateMock.mockClear();
       fireEvent.change(screen.getByLabelText(/full name/i), {
@@ -1251,7 +1319,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Weekly")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+      ).toBeInTheDocument();
       expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
 
       const homeBlock = within(reviewRoot)
@@ -1272,9 +1342,8 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      const send = await screen.findByTestId("booking-direction-send");
-      await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      const send = screen.getByTestId("booking-direction-send");
 
       fireEvent.change(screen.getByLabelText(/^email$/i), {
         target: { value: "not-an-email" },
@@ -1290,7 +1359,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Weekly")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+      ).toBeInTheDocument();
 
       fireEvent.change(screen.getByLabelText(/^email$/i), {
         target: { value: "jordan@example.com" },
@@ -1324,7 +1395,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Weekly")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+      ).toBeInTheDocument();
 
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
@@ -1340,9 +1413,8 @@ describe("BookingFlowClient", () => {
 
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      const send = await screen.findByTestId("booking-direction-send");
-      await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      const send = screen.getByTestId("booking-direction-send");
       fireEvent.click(send);
 
       await waitFor(() =>
@@ -1368,9 +1440,8 @@ describe("BookingFlowClient", () => {
 
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      const send = await screen.findByTestId("booking-direction-send");
-      await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      const send = screen.getByTestId("booking-direction-send");
       fireEvent.click(send);
 
       await waitFor(() =>
@@ -1404,7 +1475,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and service cadence before continuing.",
+          "Please complete your home details and preferred arrival window before continuing.",
         ),
       ).toBeInTheDocument();
       expect(continueBtn).toHaveAttribute("aria-invalid", "true");
@@ -1427,7 +1498,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and service cadence before continuing.",
+          "Please complete your home details and preferred arrival window before continuing.",
         ),
       ).toBeInTheDocument();
 
@@ -1438,7 +1509,7 @@ describe("BookingFlowClient", () => {
       await waitFor(() =>
         expect(
           screen.queryByText(
-            "Please complete your home details and service cadence before continuing.",
+            "Please complete your home details and preferred arrival window before continuing.",
           ),
         ).not.toBeInTheDocument(),
       );
@@ -1446,13 +1517,7 @@ describe("BookingFlowClient", () => {
       expect(continueBtn).toHaveAttribute("aria-invalid", "false");
       expect(continueBtn).not.toHaveAttribute("aria-describedby");
 
-      fireEvent.click(continueBtn);
-
-      await waitFor(() =>
-        expect(
-          screen.getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE }),
-        ).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
     });
 
     it("invalid Continue from home does not advance when cadence is incomplete", () => {
@@ -1472,7 +1537,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and service cadence before continuing.",
+          "Please complete your home details and preferred arrival window before continuing.",
         ),
       ).toBeInTheDocument();
       expect(
@@ -1485,7 +1550,7 @@ describe("BookingFlowClient", () => {
       expect(screen.getByText(/2000/)).toBeInTheDocument();
     });
 
-    it("after an invalid home Continue with missing cadence, choosing frequency clears stale attempt UI and reaches review", async () => {
+    it("after an invalid home Continue with missing preferred window, choosing Saturday clears stale attempt UI and reaches review", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(
         buildIncompleteCadenceHomeSearchString(),
       );
@@ -1495,34 +1560,24 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and service cadence before continuing.",
+          "Please complete your home details and preferred arrival window before continuing.",
         ),
       ).toBeInTheDocument();
 
       const cadenceSection = screen.getByTestId("booking-home-cadence-section");
       fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /^Weekly\b/i }),
+        within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
       );
 
       await waitFor(() =>
         expect(
           screen.queryByText(
-            "Please complete your home details and service cadence before continuing.",
+            "Please complete your home details and preferred arrival window before continuing.",
           ),
         ).not.toBeInTheDocument(),
       );
 
-      fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
-      );
-
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(
-          screen.getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE }),
-        ).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
     });
 
     it("backing out of home after an invalid Continue clears the advance error", () => {
@@ -1535,7 +1590,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and service cadence before continuing.",
+          "Please complete your home details and preferred arrival window before continuing.",
         ),
       ).toBeInTheDocument();
 
@@ -1543,7 +1598,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.queryByText(
-          "Please complete your home details and service cadence before continuing.",
+          "Please complete your home details and preferred arrival window before continuing.",
         ),
       ).not.toBeInTheDocument();
 
@@ -1561,9 +1616,8 @@ describe("BookingFlowClient", () => {
 
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      const send = await screen.findByTestId("booking-direction-send");
-      await waitFor(() => expect(send).not.toBeDisabled(), { timeout: 5000 });
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      const send = screen.getByTestId("booking-direction-send");
       fireEvent.click(send);
 
       await waitFor(() =>
@@ -1571,6 +1625,14 @@ describe("BookingFlowClient", () => {
       );
 
       fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      if (
+        screen.queryByRole("heading", {
+          level: 2,
+          name: "Service location",
+        })
+      ) {
+        fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      }
 
       expect(
         screen.queryByText(BOOKING_REVIEW_SUBMIT_RECOVERY_LEAD),
@@ -1590,11 +1652,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
 
@@ -1602,11 +1660,7 @@ describe("BookingFlowClient", () => {
         target: { value: "Multiple pets" },
       });
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const homeBlock = reviewHomeDetailsSection();
       expect(within(homeBlock).getByText("Multiple pets")).toBeInTheDocument();
@@ -1628,11 +1682,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
 
@@ -1640,11 +1690,7 @@ describe("BookingFlowClient", () => {
         target: { value: "3,100" },
       });
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const homeBlock = reviewHomeDetailsSection();
       expect(within(homeBlock).getByText("3100")).toBeInTheDocument();
@@ -1662,28 +1708,20 @@ describe("BookingFlowClient", () => {
       );
     });
 
-    it("review shows Bi-Weekly in schedule summary after changing frequency on home", async () => {
+    it("review schedule shows Saturday after changing preferred window on home", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
-      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      goHomeFromReviewViaBackOnce();
 
       const cadenceSection = screen.getByTestId("booking-home-cadence-section");
       fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /Bi-Weekly/i }),
+        within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
       );
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -1691,17 +1729,12 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Bi-Weekly")).toBeInTheDocument();
+      expect(within(scheduleBlock).getByText("Saturday")).toBeInTheDocument();
     });
 
     it("non-deep service review omits deep clean plan row", async () => {
-      const shallowId = bookingServiceCatalog.find(
-        (s) => !isDeepCleaningBookingServiceId(s.id),
-      )?.id;
-      if (!shallowId) return;
-
       bookingFlowTestSearch.sp = new URLSearchParams(
-        buildReviewSearchStringForService(shallowId),
+        buildReviewSearchStringForService(phase4ServiceIds.move),
       );
       await act(async () => {
         render(<BookingFlowClient />);
@@ -1740,11 +1773,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
@@ -1753,11 +1782,7 @@ describe("BookingFlowClient", () => {
         screen.getByRole("radio", { name: /heavy buildup/i }),
       );
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -1779,11 +1804,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
@@ -1791,11 +1812,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(screen.getByRole("button", { name: /^kitchen grease$/i }));
       fireEvent.click(screen.getByRole("button", { name: /^bathroom buildup$/i }));
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -1817,22 +1834,14 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
 
       fireEvent.click(screen.getByRole("radio", { name: /dense layout/i }));
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -1851,11 +1860,7 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
 
@@ -1863,11 +1868,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(screen.getByRole("button", { name: /^pet hair$/i }));
       fireEvent.click(screen.getByRole("radio", { name: /minimal furnishings/i }));
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const homeBlock = reviewHomeDetailsSection();
       expect(within(homeBlock).getByText("Light upkeep")).toBeInTheDocument();
@@ -1880,11 +1881,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
@@ -1893,11 +1890,7 @@ describe("BookingFlowClient", () => {
         screen.getByRole("radio", { name: /move-in \/ move-out reset/i }),
       );
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -1915,7 +1908,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Weekly")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+      ).toBeInTheDocument();
       expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
     });
   });
@@ -1925,15 +1920,11 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(screen.getByRole("radio", { name: /heavy buildup/i }));
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
@@ -1947,15 +1938,11 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(screen.getByRole("button", { name: /heavy dust/i }));
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
@@ -1969,15 +1956,11 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(screen.getByRole("radio", { name: /dense layout/i }));
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
@@ -1991,11 +1974,7 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       expect(
         screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE),
@@ -2009,11 +1988,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
@@ -2021,11 +1996,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(
         screen.getByRole("radio", { name: BOOKING_SCOPE_INTENSITY_LABELS.detail_heavy }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -2045,11 +2016,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
@@ -2061,11 +2028,7 @@ describe("BookingFlowClient", () => {
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.inside_fridge }),
       );
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -2086,11 +2049,7 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
@@ -2099,11 +2058,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.baseboards_detail }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -2124,11 +2079,7 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
@@ -2137,7 +2088,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.interior_windows }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
@@ -2154,17 +2105,13 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.cabinets_detail }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
@@ -2181,11 +2128,7 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       let releasePreview: (value: unknown) => void = () => {};
       previewEstimateMock.mockImplementation(
@@ -2199,11 +2142,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(
         screen.getByRole("radio", { name: BOOKING_SCOPE_INTENSITY_LABELS.detail_heavy }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const send = screen.getByTestId("booking-direction-send");
       await waitFor(() => expect(send).toBeDisabled(), { timeout: 5000 });
@@ -2237,11 +2176,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
@@ -2249,11 +2184,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(
         screen.getByRole("radio", { name: BOOKING_SCOPE_INTENSITY_LABELS.targeted_touch_up }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -2261,7 +2192,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Weekly")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+      ).toBeInTheDocument();
       expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
 
       await waitFor(() =>
@@ -2288,11 +2221,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
@@ -2302,11 +2231,7 @@ describe("BookingFlowClient", () => {
           name: BOOKING_DEEP_CLEAN_FOCUS_LABELS.kitchen_bath_priority,
         }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -2329,11 +2254,7 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -2345,32 +2266,24 @@ describe("BookingFlowClient", () => {
         within(homeBlock).getByText(BOOKING_DEEP_CLEAN_FOCUS_LABELS.kitchen_bath_priority),
       ).toBeInTheDocument();
 
-      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      goHomeFromReviewViaBackOnce();
       fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
 
       await waitFor(() =>
         expect(
-          screen.getByRole("heading", { level: 2, name: "Choose your service" }),
+          screen.getByRole("heading", {
+            level: 2,
+            name: BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
+          }),
         ).toBeInTheDocument(),
       );
 
-      const recurringEntry = bookingServiceCatalog.find(
-        (s) => s.slug === "recurring-home-cleaning",
-      )!;
-      fireEvent.click(screen.getByText(recurringEntry.title.split(",")[0].trim()));
+      fireEvent.click(screen.getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE));
 
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await continueThroughLocationGateToReview();
 
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
-
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       const reviewRoot2 = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -2390,11 +2303,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
@@ -2406,11 +2315,7 @@ describe("BookingFlowClient", () => {
         screen.getByRole("button", { name: BOOKING_APPLIANCE_PRESENCE_LABELS.refrigerator_present }),
       );
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(
@@ -2434,11 +2339,7 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
@@ -2449,11 +2350,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_APPLIANCE_PRESENCE_LABELS.oven_present }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -2478,11 +2375,7 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
@@ -2490,7 +2383,7 @@ describe("BookingFlowClient", () => {
           name: BOOKING_DEEP_CLEAN_FOCUS_LABELS.high_touch_detail,
         }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
@@ -2506,11 +2399,7 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
@@ -2523,7 +2412,7 @@ describe("BookingFlowClient", () => {
           name: BOOKING_APPLIANCE_PRESENCE_LABELS.dishwasher_present,
         }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await continueThroughLocationGateToReview();
 
       await waitFor(() =>
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
@@ -2542,11 +2431,7 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       let releasePreview: (value: unknown) => void = () => {};
       previewEstimateMock.mockImplementation(
@@ -2562,11 +2447,7 @@ describe("BookingFlowClient", () => {
           name: BOOKING_DEEP_CLEAN_FOCUS_LABELS.kitchen_bath_priority,
         }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const send = screen.getByTestId("booking-direction-send");
       await waitFor(() => expect(send).toBeDisabled(), { timeout: 5000 });
@@ -2602,11 +2483,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
 
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
@@ -2615,11 +2492,7 @@ describe("BookingFlowClient", () => {
           name: BOOKING_DEEP_CLEAN_FOCUS_LABELS.high_touch_detail,
         }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -2627,7 +2500,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Weekly")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+      ).toBeInTheDocument();
       expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
 
       await waitFor(() =>
@@ -2652,11 +2527,7 @@ describe("BookingFlowClient", () => {
     it("default simpler request shows high-clarity planning copy", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByTestId("booking-review-planning-confidence")).toBeInTheDocument();
       expect(screen.getByText(BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE)).toBeInTheDocument();
       expect(screen.getByText(BOOKING_REVIEW_PRE_CONF_HIGH_SUPPORTING)).toBeInTheDocument();
@@ -2665,21 +2536,14 @@ describe("BookingFlowClient", () => {
     it("moderate complexity shows customized band copy", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
         screen.getByRole("radio", {
           name: BOOKING_SURFACE_COMPLEXITY_LABELS.dense_layout,
         }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
       await waitFor(
         () =>
           expect(screen.getByText(BOOKING_REVIEW_PRE_CONF_CUSTOM_HEADLINE)).toBeInTheDocument(),
@@ -2690,11 +2554,7 @@ describe("BookingFlowClient", () => {
     it("heavier combined signals show special-attention band copy", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
         screen.getByRole("radio", {
@@ -2711,10 +2571,7 @@ describe("BookingFlowClient", () => {
           name: BOOKING_SCOPE_INTENSITY_LABELS.detail_heavy,
         }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
       await waitFor(
         () =>
           expect(screen.getByText(BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE)).toBeInTheDocument(),
@@ -2725,11 +2582,7 @@ describe("BookingFlowClient", () => {
     it("hides planning confidence while quote is refreshing", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByTestId("booking-review-planning-confidence")).toBeInTheDocument();
 
       let releasePreview: (value: unknown) => void = () => {};
@@ -2746,11 +2599,7 @@ describe("BookingFlowClient", () => {
           name: BOOKING_SURFACE_COMPLEXITY_LABELS.minimal_furnishings,
         }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
       await waitFor(
         () =>
           expect(screen.getByTestId("booking-direction-send")).toHaveTextContent(
@@ -2800,11 +2649,7 @@ describe("BookingFlowClient", () => {
     it("updates planning confidence after refreshed preview resolves", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByText(BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE)).toBeInTheDocument();
 
       let releasePreview: (value: unknown) => void = () => {};
@@ -2821,11 +2666,7 @@ describe("BookingFlowClient", () => {
           name: BOOKING_SURFACE_COMPLEXITY_LABELS.dense_layout,
         }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
       await waitFor(
         () =>
           expect(screen.getByTestId("booking-direction-send")).toHaveTextContent(
@@ -2867,11 +2708,7 @@ describe("BookingFlowClient", () => {
         `${buildReviewSearchString()}&homeAddOns=inside_fridge`,
       );
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByTestId("booking-review-prep-guidance")).toBeInTheDocument();
       expect(screen.getByText(BOOKING_REVIEW_PREP_FRIDGE)).toBeInTheDocument();
     });
@@ -2881,11 +2718,7 @@ describe("BookingFlowClient", () => {
         `${buildReviewSearchStringForService(phase4ServiceIds.move)}&mvSetup=fully_furnished`,
       );
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByTestId("booking-review-prep-guidance")).toBeInTheDocument();
       expect(screen.getByText(BOOKING_REVIEW_PREP_MOVE_FURNISHED)).toBeInTheDocument();
     });
@@ -2896,11 +2729,7 @@ describe("BookingFlowClient", () => {
       sp.set("homeSurface", "dense_layout");
       bookingFlowTestSearch.sp = sp;
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       const prep = screen.getByTestId("booking-review-prep-guidance");
       expect(within(prep).getByText(BOOKING_REVIEW_PREP_PETS)).toBeInTheDocument();
       expect(within(prep).getByText(BOOKING_REVIEW_PREP_DENSE_LAYOUT)).toBeInTheDocument();
@@ -2911,11 +2740,7 @@ describe("BookingFlowClient", () => {
         `${buildReviewSearchString()}&homeCondition=heavy_buildup`,
       );
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByTestId("booking-review-recommendations")).toBeInTheDocument();
       expect(screen.getByText(BOOKING_REVIEW_REC_INSIDE_OVEN)).toBeInTheDocument();
     });
@@ -2925,21 +2750,14 @@ describe("BookingFlowClient", () => {
         `${buildReviewSearchString()}&homeProblems=kitchen_grease`,
       );
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByText(BOOKING_REVIEW_REC_INSIDE_FRIDGE)).toBeInTheDocument();
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.inside_fridge }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
       expect(screen.queryByText(BOOKING_REVIEW_REC_INSIDE_FRIDGE)).not.toBeInTheDocument();
       expect(screen.getByTestId("booking-review-prep-guidance")).toBeInTheDocument();
       expect(screen.getByText(BOOKING_REVIEW_PREP_FRIDGE)).toBeInTheDocument();
@@ -2950,11 +2768,7 @@ describe("BookingFlowClient", () => {
         `${buildReviewSearchStringForService(phase4ServiceIds.deep)}&dcFocus=high_touch_detail`,
       );
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByText(BOOKING_REVIEW_REC_CABINETS_DETAIL)).toBeInTheDocument();
     });
 
@@ -2963,11 +2777,7 @@ describe("BookingFlowClient", () => {
         `${buildReviewSearchString()}&homeProblems=bathroom_buildup`,
       );
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByText(BOOKING_REVIEW_REC_BASEBOARDS_DETAIL)).toBeInTheDocument();
     });
 
@@ -2976,22 +2786,14 @@ describe("BookingFlowClient", () => {
         `${buildReviewSearchStringForService(phase4ServiceIds.move)}&homeAddOns=interior_windows`,
       );
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.queryByText(BOOKING_REVIEW_REC_INTERIOR_WINDOWS)).not.toBeInTheDocument();
     });
 
     it("shows no prep or recommendation blocks when nothing in scope applies", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.queryByTestId("booking-review-prep-guidance")).not.toBeInTheDocument();
       expect(screen.queryByTestId("booking-review-recommendations")).not.toBeInTheDocument();
     });
@@ -2999,21 +2801,14 @@ describe("BookingFlowClient", () => {
     it("prep guidance updates after selecting inside oven from the review path", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
-      fillReviewContactFast();
-      await waitFor(
-        () => expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
-        { timeout: 5000 },
-      );
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.queryByTestId("booking-review-prep-guidance")).not.toBeInTheDocument();
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.inside_oven }),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
-      );
+      await continueThroughLocationGateToReview();
       await waitFor(
         () => expect(screen.getByTestId("booking-review-prep-guidance")).toBeInTheDocument(),
         { timeout: 5000 },

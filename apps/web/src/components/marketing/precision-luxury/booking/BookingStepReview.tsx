@@ -9,6 +9,7 @@ import {
   isDeepCleaningBookingServiceId,
 } from "./bookingDeepClean";
 import type {
+  BookingFirstTimePostEstimateVisitChoice,
   BookingFlowState,
   BookingHomeCondition,
   BookingPreviewConfidenceBand,
@@ -34,8 +35,9 @@ import {
   normalizeBookingBedroomsParam,
 } from "./bookingEstimateFactorFields";
 import {
-  isCadenceComplete,
   isHomeDetailsComplete,
+  isPublicAnonymousPreferredWindowComplete,
+  isServiceLocationComplete,
   normalizeBookingAddOnsForPayload,
   normalizeBookingAppliancePresenceForPayload,
   normalizeBookingHomeSizeParam,
@@ -95,6 +97,13 @@ import {
   BOOKING_SCOPE_INTENSITY_LABELS,
   BOOKING_SURFACE_COMPLEXITY_LABELS,
   BOOKING_TRANSITION_STATE_LABELS,
+  BOOKING_POST_ESTIMATE_CONVERT_RECURRING,
+  BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER,
+  BOOKING_POST_ESTIMATE_FIRST_TIME_BODY,
+  BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE,
+  BOOKING_POST_ESTIMATE_VISIT_ONE,
+  BOOKING_POST_ESTIMATE_VISIT_THREE,
+  BOOKING_POST_ESTIMATE_VISIT_TWO,
 } from "./bookingPublicSurfaceCopy";
 
 type BookingStepReviewProps = {
@@ -125,13 +134,20 @@ type BookingStepReviewProps = {
   ) => void;
   prepGuidanceItems: string[];
   recommendedAttentionItems: string[];
+  onFirstTimePostEstimateVisitChoiceChange: (
+    choice: BookingFirstTimePostEstimateVisitChoice,
+  ) => void;
 };
 
 function isBookingReady(state: BookingFlowState) {
   return (
     !!state.serviceId &&
+    state.bookingPublicPath !== "recurring_auth_gate" &&
+    (state.bookingPublicPath === "first_time" ||
+      state.bookingPublicPath === "move_transition") &&
     isHomeDetailsComplete(state) &&
-    isCadenceComplete(state)
+    isPublicAnonymousPreferredWindowComplete(state) &&
+    isServiceLocationComplete(state)
   );
 }
 
@@ -167,6 +183,23 @@ function ReviewSection({
 }
 
 function deepProgramFallbackLabel(state: BookingFlowState) {
+  if (
+    isDeepCleaningBookingServiceId(state.serviceId) &&
+    state.bookingPublicPath === "first_time" &&
+    state.firstTimePostEstimateVisitChoice
+  ) {
+    switch (state.firstTimePostEstimateVisitChoice) {
+      case "two_visits":
+        return "Spread across 2 visits";
+      case "three_visits":
+        return "3-visit program";
+      case "convert_recurring":
+        return "Recurring after sign-in";
+      case "one_visit":
+      default:
+        return "One visit";
+    }
+  }
   return state.deepCleanProgram === "phased_3_visit"
     ? "3-visit deep clean program"
     : "One-visit deep clean";
@@ -225,6 +258,7 @@ export function BookingStepReview({
   onContactChange,
   prepGuidanceItems,
   recommendedAttentionItems,
+  onFirstTimePostEstimateVisitChoiceChange,
 }: BookingStepReviewProps) {
   const reviewFunnelOnceRef = useRef(false);
   useEffect(() => {
@@ -235,16 +269,24 @@ export function BookingStepReview({
 
   const service = getSelectedService(state.serviceId);
   const homeOk = isHomeDetailsComplete(state);
-  const cadenceOk = isCadenceComplete(state);
+  const cadenceOk =
+    isPublicAnonymousPreferredWindowComplete(state) && isServiceLocationComplete(state);
   const ready = isBookingReady(state);
   const contactOk = isBookingContactValid(
     state.customerName,
     state.customerEmail,
   );
+  const firstTimeFollowUpOk =
+    !isDeepCleaningBookingServiceId(state.serviceId) ||
+    state.bookingPublicPath !== "first_time" ||
+    !estimatePreviewReady ||
+    Boolean(state.firstTimePostEstimateVisitChoice);
+
   const bannerFullyReady =
     ready &&
     contactOk &&
     estimatePreviewReady &&
+    firstTimeFollowUpOk &&
     !previewLoading &&
     !previewError &&
     !hasSubmitRecoverableFailure;
@@ -290,7 +332,6 @@ export function BookingStepReview({
 
   const moveTransition = isBookingMoveTransitionServiceId(state.serviceId);
 
-  const frequencySummary = String(state.frequency ?? "").trim();
   const preferredTimeSummary = String(state.preferredTime ?? "").trim();
 
   const nameError =
@@ -389,7 +430,7 @@ export function BookingStepReview({
 
   return (
     <BookingSectionCard
-      eyebrow="Step 3"
+      eyebrow="Step 4"
       title={BOOKING_REVIEW_STEP_TITLE}
       body={BOOKING_REVIEW_STEP_BODY}
     >
@@ -536,6 +577,53 @@ export function BookingStepReview({
                   ? "Final numbers may adjust slightly once we confirm details with you."
                   : "Figures are approximate; continuing lets us return a firm quote after you save."}
               </p>
+              {isDeepCleaningBookingServiceId(state.serviceId) &&
+              state.bookingPublicPath === "first_time" &&
+              estimatePreviewReady ? (
+                <div
+                  className="mt-6 rounded-2xl border border-[#C9B27C]/18 bg-[#FFF9F3] px-4 py-4 ring-1 ring-[#C9B27C]/10"
+                  data-testid="booking-first-time-post-estimate-options"
+                >
+                  <p className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]">
+                    {BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE}
+                  </p>
+                  <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                    {BOOKING_POST_ESTIMATE_FIRST_TIME_BODY}
+                  </p>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    {(
+                      [
+                        ["one_visit", BOOKING_POST_ESTIMATE_VISIT_ONE],
+                        ["two_visits", BOOKING_POST_ESTIMATE_VISIT_TWO],
+                        ["three_visits", BOOKING_POST_ESTIMATE_VISIT_THREE],
+                        ["convert_recurring", BOOKING_POST_ESTIMATE_CONVERT_RECURRING],
+                      ] as const
+                    ).map(([value, label]) => {
+                      const selected = state.firstTimePostEstimateVisitChoice === value;
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          data-testid={`booking-post-estimate-${value}`}
+                          onClick={() => onFirstTimePostEstimateVisitChoiceChange(value)}
+                          className={`rounded-2xl border px-4 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
+                            selected
+                              ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
+                              : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
+                          }`}
+                        >
+                          <span className="font-semibold text-[#0F172A]">{label}</span>
+                          {value === "convert_recurring" ? (
+                            <span className="mt-2 block text-xs leading-5 text-[#64748B]">
+                              {BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER}
+                            </span>
+                          ) : null}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
             </div>
           ) : previewFetchCompleted && !previewLoading && !previewError ? (
             <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
@@ -675,8 +763,8 @@ export function BookingStepReview({
           {cadenceOk ? (
             <div className="space-y-1">
               <p className="font-medium">
-                <span className="text-[#64748B]">Frequency:</span>{" "}
-                {frequencySummary}
+                <span className="text-[#64748B]">Visit type:</span>{" "}
+                One-time (public booking)
               </p>
               <p className="font-medium">
                 <span className="text-[#64748B]">

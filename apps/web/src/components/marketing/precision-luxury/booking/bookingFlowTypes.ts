@@ -1,4 +1,18 @@
-export type BookingStepId = "service" | "home" | "schedule" | "review";
+export type BookingStepId = "service" | "home" | "location" | "schedule" | "review";
+
+/** Anonymous /book surface only — recurring is a gated auth handoff, not an intake path. */
+export type BookingPublicPath =
+  | "first_time"
+  | "move_transition"
+  | "recurring_auth_gate";
+
+/** First-time cleaning only — after a live estimate is shown (review step). */
+export type BookingFirstTimePostEstimateVisitChoice =
+  | ""
+  | "one_visit"
+  | "two_visits"
+  | "three_visits"
+  | "convert_recurring";
 
 /** Client-only preview planning band (no scores or backend certainty). */
 export type BookingPreviewConfidenceBand =
@@ -84,6 +98,8 @@ export type BookingAvailableTeamOption = {
 export type BookingFlowState = {
   step: BookingStepId;
   serviceId: string;
+  /** Drives public step-1 cards, recurring gate, and copy — not sent as its own API field. */
+  bookingPublicPath: BookingPublicPath;
   homeSize: string;
   bedrooms: string;
   bathrooms: string;
@@ -98,12 +114,20 @@ export type BookingFlowState = {
   scopeIntensity: BookingScopeIntensity;
   /** Controlled add-ons only; normalized when patched or parsed. */
   selectedAddOns: BookingAddOnToken[];
-  /** Empty until user selects a valid option (URL/parser may omit). */
+  /**
+   * Public anonymous funnel always stores one-time; recurring cadence belongs in
+   * `/customer` after login. Kept for payload compatibility with direction intake.
+   */
   frequency: BookingFrequencyOption | "";
   /** Empty until user selects a valid option (URL/parser may omit). */
   preferredTime: BookingTimeOption | "";
-  /** Set when `serviceId` is deep clean; otherwise "". */
+  /** Set when `serviceId` is deep clean; otherwise "". Driven from review after estimate for first-time. */
   deepCleanProgram: BookingDeepCleanProgramChoice | "";
+  /** Service area — collected before review/estimate in the anonymous funnel. */
+  serviceLocationZip: string;
+  serviceLocationAddressLine: string;
+  /** First-time cleaning — chosen only after estimate is ready on review. */
+  firstTimePostEstimateVisitChoice: BookingFirstTimePostEstimateVisitChoice;
   /** Deep-clean service only; ignored in UI/intake for other services. */
   deepCleanFocus: BookingDeepCleanFocus;
   /** Move-in/move-out service only; ignored in UI/intake for other services. */

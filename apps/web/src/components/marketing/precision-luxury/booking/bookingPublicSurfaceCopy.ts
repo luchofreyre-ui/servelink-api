@@ -124,11 +124,75 @@ export function bookingConfirmationDeepPlanEchoLabel(
     : "One-visit deep clean";
 }
 
-/** Home step — cadence still feeds the estimator before you pick a team and time. */
-export const BOOKING_HOME_CADENCE_SECTION_TITLE = "Service cadence";
+/** Home step — anonymous public funnel: one-time visits + preferred window only. */
+export const BOOKING_HOME_CADENCE_SECTION_TITLE = "Scheduling preference";
 
 export const BOOKING_HOME_CADENCE_SECTION_BODY =
-  "How often you’d like visits, and the part of day that usually works for arrivals. You’ll pick a team and a concrete arrival time on the next step.";
+  "Recurring cadence (weekly, biweekly, monthly) is set in your Servelink account after you sign in. Here, choose the part of day that usually works for a one-time visit—we match teams once we know your service area.";
+
+export const BOOKING_PUBLIC_SERVICE_SECTION_TITLE = "Choose your service";
+
+export const BOOKING_PUBLIC_SERVICE_SECTION_BODY =
+  "First-time and move-related visits are planned anonymously on this page. Recurring service is reserved for signed-in customers so your home, cadence, and add-ons stay in one place.";
+
+export const BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE = "First-Time Cleaning";
+
+export const BOOKING_PUBLIC_CARD_FIRST_TIME_BODY =
+  "A full reset for homes that are new to us—scope, estimate, then optional ways to pace the work across visits or move into recurring care after you see pricing.";
+
+export const BOOKING_PUBLIC_CARD_MOVE_TITLE = "Move-In / Move-Out Cleaning";
+
+export const BOOKING_PUBLIC_CARD_MOVE_BODY =
+  "Transition-focused cleaning while occupancy and appliances are in flux—anonymous planning here, then estimate and scheduling once we know the property location.";
+
+export const BOOKING_PUBLIC_CARD_RECURRING_TITLE = "Recurring Cleaning";
+
+export const BOOKING_PUBLIC_CARD_RECURRING_BODY =
+  "Weekly, biweekly, and monthly cadence is managed in your customer account with saved home details—never as an anonymous public booking.";
+
+export const BOOKING_RECURRING_GATE_HEADLINE =
+  "Recurring cleaning is managed through your customer account";
+
+export const BOOKING_RECURRING_GATE_BODY =
+  "Log in to adjust cadence, add services to existing visits, or start a recurring plan with the home we already have on file. New to Servelink? Create an account and we’ll pick up recurring setup there—not on this public path.";
+
+export const BOOKING_RECURRING_GATE_LOGIN_CTA = "Log in to manage recurring service";
+
+export const BOOKING_RECURRING_GATE_REGISTER_CTA = "Create an account to start recurring service";
+
+export const BOOKING_LOCATION_STEP_TITLE = "Service location";
+
+export const BOOKING_LOCATION_STEP_BODY =
+  "We need the property location before we match teams or load open times. ZIP is required; add a street line if it helps us confirm access or parking.";
+
+export const BOOKING_LOCATION_ZIP_LABEL = "Service ZIP code";
+
+export const BOOKING_LOCATION_ZIP_HELPER =
+  "Use the ZIP where the cleaning will take place (at least five characters).";
+
+export const BOOKING_LOCATION_ADDR_LABEL = "Street address (optional)";
+
+export const BOOKING_LOCATION_ADDR_PLACEHOLDER = "e.g. 1200 Market Street, Apt 4B";
+
+export const BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE = "Structure this first visit";
+
+export const BOOKING_POST_ESTIMATE_FIRST_TIME_BODY =
+  "Now that you’ve seen the preview, choose how you’d like to pace the work. You can still adjust details before we save your request.";
+
+export const BOOKING_POST_ESTIMATE_VISIT_ONE = "Book as one visit";
+
+export const BOOKING_POST_ESTIMATE_VISIT_TWO = "Spread across 2 visits";
+
+export const BOOKING_POST_ESTIMATE_VISIT_THREE = "Spread across 3 visits";
+
+export const BOOKING_POST_ESTIMATE_CONVERT_RECURRING =
+  "Convert to recurring after this estimate";
+
+export const BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER =
+  "We’ll keep this request as a one-time booking until you sign in—then recurring cadence and account tools take over in the customer portal.";
+
+export const BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED =
+  "Recurring cleaning is not available on the anonymous booking path. Choose First-Time or Move-In / Move-Out above, or use Log in / Create account for recurring service.";
 
 /** Step 4 — scheduling: team, arrival window, final confirm (web shell). */
 export const BOOKING_SCHEDULE_PAGE_TITLE = "Schedule your visit";

@@ -20,7 +20,6 @@ import type {
   BookingAppliancePresenceToken,
   BookingDeepCleanFocus,
   BookingFlowState,
-  BookingFrequencyOption,
   BookingHomeCondition,
   BookingProblemAreaToken,
   BookingScopeIntensity,
@@ -57,7 +56,6 @@ import {
   BOOKING_STEP2_VISIT_CONTEXT_SECTION_TITLE,
   BOOKING_STEP_EDIT_CONTINUITY_HINT,
   BOOKING_TRANSITION_STATE_LABELS,
-  frequencyCardBody,
   timingCardBody,
 } from "./bookingPublicSurfaceCopy";
 import {
@@ -65,7 +63,7 @@ import {
   isDeepCleaningBookingServiceId,
 } from "./bookingDeepClean";
 import {
-  isCadenceComplete,
+  isPublicAnonymousPreferredWindowComplete,
   normalizeBookingAddOnsForPayload,
   normalizeBookingAppliancePresenceForPayload,
   normalizeBookingHomeSizeParam,
@@ -78,13 +76,6 @@ type BookingStepHomeDetailsProps = {
   selectedServiceTitle: string;
   deepCleanPlanLabel: string | null;
 };
-
-const cadenceFrequencyOptions: BookingFrequencyOption[] = [
-  "Weekly",
-  "Bi-Weekly",
-  "Monthly",
-  "One-Time",
-];
 
 const cadenceTimeOptions: BookingTimeOption[] = [
   "Weekday Morning",
@@ -108,7 +99,7 @@ export function BookingStepHomeDetails({
   const bedroomsOk = Boolean(String(state.bedrooms ?? "").trim());
   const bathroomsOk = Boolean(String(state.bathrooms ?? "").trim());
   const coreHomeComplete = homeSizeOk && bedroomsOk && bathroomsOk;
-  const cadenceComplete = isCadenceComplete(state);
+  const cadenceComplete = isPublicAnonymousPreferredWindowComplete(state);
 
   useEffect(() => {
     if (coreHomeComplete && !prevCoreHomeCompleteRef.current) {
@@ -247,7 +238,7 @@ export function BookingStepHomeDetails({
         </p>
         {deepCleanPlanLabel ? (
           <p className="mt-1 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A]">
-            <span className="font-medium">Deep clean plan:</span> {deepCleanPlanLabel}
+            <span className="font-medium">Visit pacing:</span> {deepCleanPlanLabel}
           </p>
         ) : null}
         <p className="mt-4 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
@@ -347,45 +338,6 @@ export function BookingStepHomeDetails({
           </div>
 
           <div className="space-y-8">
-            <div>
-              <p
-                id="booking-home-frequency-legend"
-                className="font-[var(--font-poppins)] text-sm font-semibold tracking-[-0.02em] text-[#0F172A]"
-              >
-                Visit frequency
-              </p>
-              <div
-                className="mt-4 grid gap-3 sm:grid-cols-2"
-                role="radiogroup"
-                aria-labelledby="booking-home-frequency-legend"
-              >
-                {cadenceFrequencyOptions.map((value) => {
-                  const selected = state.frequency === value;
-                  return (
-                    <button
-                      key={value}
-                      type="button"
-                      role="radio"
-                      aria-checked={selected}
-                      onClick={() => onChange({ frequency: value })}
-                      className={`rounded-2xl border px-4 py-4 text-left font-[var(--font-manrope)] text-sm transition ${
-                        selected
-                          ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
-                          : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
-                      }`}
-                    >
-                      <span className="block font-semibold text-[#0F172A]">
-                        {value}
-                      </span>
-                      <span className="mt-2 block text-xs leading-5 text-[#64748B]">
-                        {frequencyCardBody(state.serviceId, value)}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
             <div>
               <p
                 id="booking-home-preferred-time-legend"
