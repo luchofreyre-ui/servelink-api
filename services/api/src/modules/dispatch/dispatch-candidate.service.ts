@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma";
+import { resolveFranchiseOwnerCrewRange } from "../crew-capacity/franchise-owner-crew-range";
+import { getWorkloadMinCrew } from "../crew-capacity/workload-min-crew";
 import { DispatchCandidate, DispatchCandidateInput } from "./dispatch-candidate.types";
 
 @Injectable()
@@ -62,7 +64,21 @@ export class DispatchCandidateService {
       }
       if (fo.maxSquareFootage && input.squareFootage > fo.maxSquareFootage) reasons.push("MAX_SQUARE_FOOTAGE_EXCEEDED");
       if (fo.maxLaborMinutes && input.estimatedLaborMinutes > fo.maxLaborMinutes) reasons.push("MAX_LABOR_EXCEEDED");
-      if (fo.teamSize && fo.teamSize < input.recommendedTeamSize) reasons.push("TEAM_SIZE_TOO_SMALL");
+
+      const crewRange = resolveFranchiseOwnerCrewRange({
+        teamSize: fo.teamSize,
+        minCrewSize: fo.minCrewSize ?? null,
+        preferredCrewSize: fo.preferredCrewSize ?? null,
+        maxCrewSize: fo.maxCrewSize ?? null,
+      });
+      const workloadMinCrew = getWorkloadMinCrew({
+        estimatedLaborMinutes: input.estimatedLaborMinutes,
+        squareFootage: input.squareFootage,
+        serviceType: String(input.serviceType ?? "maintenance"),
+      });
+      if (crewRange.maxCrewSize < workloadMinCrew) {
+        reasons.push("WORKLOAD_MIN_CREW_NOT_MET");
+      }
 
       if (fo.maxDailyLaborMinutes) {
         const todaysBookings = await this.db.booking.findMany({

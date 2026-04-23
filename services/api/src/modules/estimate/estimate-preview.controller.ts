@@ -31,6 +31,7 @@ export class EstimatePreviewController {
         estimatedDurationMinutes: result.estimatedDurationMinutes,
         confidence: result.confidence,
         recommendedTeamSize: result.recommendedTeamSize,
+        crewCapacityMeta: result.crewCapacityMeta,
       };
     } catch (err: unknown) {
       const message =

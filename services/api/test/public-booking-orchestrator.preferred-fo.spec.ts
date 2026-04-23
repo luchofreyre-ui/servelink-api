@@ -35,8 +35,22 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
       },
       franchiseOwner: {
         findMany: jest.fn().mockResolvedValue([
-          { id: "fo_a", displayName: "Team A" },
-          { id: "fo_b", displayName: "Team B" },
+          {
+            id: "fo_a",
+            displayName: "Team A",
+            teamSize: 3,
+            minCrewSize: null,
+            preferredCrewSize: null,
+            maxCrewSize: null,
+          },
+          {
+            id: "fo_b",
+            displayName: "Team B",
+            teamSize: 3,
+            minCrewSize: null,
+            preferredCrewSize: null,
+            maxCrewSize: null,
+          },
         ]),
       },
     } as unknown as PrismaService;
@@ -59,6 +73,8 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
     if (res.kind !== "public_booking_team_options") throw new Error("unexpected kind");
     expect(res.teams.length).toBeLessThanOrEqual(2);
     expect(res.teams[0]?.isRecommended).toBe(true);
+    expect(typeof res.teams[0]?.assignedCrewSize).toBe("number");
+    expect(typeof res.teams[0]?.estimatedDurationMinutes).toBe("number");
     expect(fo.getEligibility).toHaveBeenCalled();
   });
 
@@ -68,8 +84,24 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
         findUnique: jest.fn().mockResolvedValue(schedulableBooking()),
       },
       franchiseOwner: {
-        findMany: jest.fn().mockResolvedValue([{ id: "fo_b", displayName: "Team B" }]),
-        findUnique: jest.fn().mockResolvedValue({ id: "fo_b" }),
+        findMany: jest.fn().mockResolvedValue([
+          {
+            id: "fo_b",
+            displayName: "Team B",
+            teamSize: 2,
+            minCrewSize: null,
+            preferredCrewSize: null,
+            maxCrewSize: null,
+          },
+        ]),
+        findUnique: jest.fn().mockResolvedValue({
+          id: "fo_b",
+          displayName: "Team B",
+          teamSize: 2,
+          minCrewSize: null,
+          preferredCrewSize: null,
+          maxCrewSize: null,
+        }),
       },
     } as unknown as PrismaService;
 
