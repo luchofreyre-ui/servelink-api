@@ -2,7 +2,8 @@ export type BookingStepId = "service" | "home" | "location" | "schedule" | "revi
 
 /** Anonymous /book surface only — recurring is a gated auth handoff, not an intake path. */
 export type BookingPublicPath =
-  | "first_time"
+  | "one_time_cleaning"
+  | "first_time_with_recurring"
   | "move_transition"
   | "recurring_auth_gate";
 
@@ -89,6 +90,52 @@ export type BookingAppliancePresenceToken =
   | "dishwasher_present"
   | "washer_dryer_present";
 
+/** Layer 1 — baseline home facts (structured; maps into `EstimateFactorsDto`). */
+export type BookingHalfBathroomsKey = "0" | "1" | "2_plus";
+export type BookingIntakeFloors = "1" | "2" | "3_plus";
+export type BookingIntakeStairsFlights = "none" | "one" | "two_plus" | "not_sure";
+export type BookingFloorMix = "mostly_hard" | "mixed" | "mostly_carpet";
+export type BookingLayoutType = "open_plan" | "mixed" | "segmented";
+export type BookingOccupancyLevel = "ppl_1_2" | "ppl_3_4" | "ppl_5_plus";
+export type BookingChildrenInHome = "yes" | "no";
+export type BookingPetImpactLevel = "none" | "light" | "heavy";
+
+/** Layer 2 — labor multipliers. */
+export type BookingOverallLaborCondition =
+  | "recently_maintained"
+  | "normal_lived_in"
+  | "behind_weeks"
+  | "major_reset";
+export type BookingKitchenIntensity = "light_use" | "average_use" | "heavy_use";
+export type BookingBathroomComplexity =
+  | "standard"
+  | "moderate_detailing"
+  | "heavy_detailing";
+export type BookingClutterAccess = "mostly_clear" | "moderate_clutter" | "heavy_clutter";
+export type BookingSurfaceDetailToken =
+  | "interior_glass"
+  | "heavy_mirrors"
+  | "built_ins"
+  | "detailed_trim"
+  | "many_touchpoints";
+
+/** Layer 3 — expectation / reset signals. */
+export type BookingPrimaryIntent =
+  | "maintenance_clean"
+  | "detailed_standard"
+  | "reset_level";
+export type BookingLastProCleanRecency =
+  | "within_30_days"
+  | "days_30_90"
+  | "days_90_plus"
+  | "unknown_or_not_recently";
+export type BookingFirstTimeVisitProgram = "one_visit" | "two_visit" | "three_visit";
+export type BookingRecurringCadenceIntent =
+  | "weekly"
+  | "biweekly"
+  | "monthly"
+  | "none";
+
 export type BookingAvailableTeamOption = {
   id: string;
   displayName: string;
@@ -104,7 +151,7 @@ export type BookingFlowState = {
   bedrooms: string;
   bathrooms: string;
   pets: string;
-  /** How lived-in the home feels before we arrive (defaults to standard). */
+  /** Legacy URL/radios — kept for compatibility; estimator payload uses layered intake. */
   condition: BookingHomeCondition;
   /** Controlled multi-select; sorted when sent for stable request keys. */
   problemAreas: BookingProblemAreaToken[];
@@ -125,9 +172,33 @@ export type BookingFlowState = {
   deepCleanProgram: BookingDeepCleanProgramChoice | "";
   /** Service area — collected before review/estimate in the anonymous funnel. */
   serviceLocationZip: string;
+  /** Street address (required for anonymous progression). */
+  serviceLocationStreet: string;
+  serviceLocationCity: string;
+  serviceLocationState: string;
+  /** Apt / suite / unit (optional). */
+  serviceLocationUnit: string;
+  /** Legacy single line; migrated from URL `locAddr` when structured fields are empty. */
   serviceLocationAddressLine: string;
   /** First-time cleaning — chosen only after estimate is ready on review. */
   firstTimePostEstimateVisitChoice: BookingFirstTimePostEstimateVisitChoice;
+  halfBathrooms: BookingHalfBathroomsKey;
+  intakeFloors: BookingIntakeFloors;
+  intakeStairsFlights: BookingIntakeStairsFlights;
+  floorMix: BookingFloorMix;
+  layoutType: BookingLayoutType;
+  occupancyLevel: BookingOccupancyLevel;
+  childrenInHome: BookingChildrenInHome;
+  petImpactLevel: BookingPetImpactLevel;
+  overallLaborCondition: BookingOverallLaborCondition;
+  kitchenIntensity: BookingKitchenIntensity;
+  bathroomComplexity: BookingBathroomComplexity;
+  clutterAccess: BookingClutterAccess;
+  surfaceDetailTokens: BookingSurfaceDetailToken[];
+  primaryIntent: BookingPrimaryIntent;
+  lastProCleanRecency: BookingLastProCleanRecency;
+  firstTimeVisitProgram: BookingFirstTimeVisitProgram;
+  recurringCadenceIntent: BookingRecurringCadenceIntent;
   /** Deep-clean service only; ignored in UI/intake for other services. */
   deepCleanFocus: BookingDeepCleanFocus;
   /** Move-in/move-out service only; ignored in UI/intake for other services. */

@@ -5,44 +5,9 @@
  * - `services/api/.../dto/estimate-factors.dto.ts` + `estimate-factor-enums.ts`
  * - `services/api/.../estimate-factors-sanitize.ts` `DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS`
  *
- * Mapping tables (stable, documented):
- *
- * A) `condition` (overall home feel)
- * - light_upkeep      → lastPro 2_4_weeks, clutter light, kitchen/bath light, occupancy occupied_normal, floor mostly_clear
- * - standard_lived_in → lastPro 1_3_months, clutter light, kitchen/bath normal
- * - heavy_buildup     → lastPro 6_plus_months, clutter heavy, kitchen heavy_grease, bath heavy_scale, occupancy occupied_cluttered, floor lots_of_items
- * - move_in_out_reset → lastPro 6_plus_months, clutter moderate, kitchen/bath normal, occupancy vacant, floor mostly_clear
- *
- * B) `problemAreas` (merge; never downgrade severity)
- * - kitchen_grease   → kitchenCondition heavy_grease
- * - bathroom_buildup → bathroomCondition heavy_scale
- * - pet_hair       → petPresence one, petShedding high
- * - heavy_dust     → clutter at least moderate (bump one step if lighter)
- *
- * C) `surfaceComplexity`
- * - minimal_furnishings → floorVisibility mostly_clear (min)
- * - average_furnishings → floorVisibility at least some_obstacles; clutter at least light
- * - dense_layout        → floorVisibility lots_of_items; clutter at least moderate; occupancy at least occupied_cluttered
- *
- * D) `scopeIntensity`
- * - targeted_touch_up / full_home_refresh → firstTimeWithServelink no
- * - detail_heavy      → firstTimeWithServelink yes; clutter at least moderate
- *
- * E) `selectedAddOns` (marketing token → estimator `addonIds`)
- * - inside_fridge / inside_oven / interior_windows / baseboards_detail unchanged
- * - cabinets_detail → cabinets_exterior_detail (server token)
- *
- * F) `deepCleanFocus` (only when service is deep clean)
- * - whole_home_reset     → carpetPercent 51_75; glassShowers at least one
- * - kitchen_bath_priority → kitchen heavy_grease, bath heavy_scale, glass at least one
- * - high_touch_detail    → glassShowers multiple; interior_windows add-on; floor at least some_obstacles
- *
- * G) Move service: `transitionState` + `appliancePresence`
- * - empty_home / lightly_furnished / fully_furnished → occupancy + floorVisibility as above
- * - refrigerator_present → inside_fridge; oven_present → inside_oven; dishwasher_present → dish_wash_load; washer_dryer_present → laundry_fold
- *
- * H) Free-text `pets` (when problemAreas does not already set pet hair)
- * - non-empty → petPresence one (or multiple if text suggests 2+ pets), shedding medium/high
+ * Three-layer intake (baseline facts, labor multipliers, expectation signals) is the
+ * primary source of truth. Deep-clean focus + move overlays still merge add-ons and
+ * bump severity where product cards demand it.
  */
 
 import type {
@@ -50,10 +15,7 @@ import type {
   BookingAppliancePresenceToken,
   BookingDeepCleanFocus,
   BookingFlowState,
-  BookingHomeCondition,
-  BookingProblemAreaToken,
-  BookingScopeIntensity,
-  BookingSurfaceComplexity,
+  BookingSurfaceDetailToken,
   BookingTransitionState,
 } from "./bookingFlowTypes";
 import {
@@ -63,7 +25,6 @@ import {
 import {
   normalizeBookingAddOnsForPayload,
   normalizeBookingAppliancePresenceForPayload,
-  normalizeBookingProblemAreasForPayload,
 } from "./bookingUrlState";
 
 /** Mirrors server `DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS` — keep in sync. */
@@ -85,6 +46,21 @@ export const BOOKING_INTAKE_DEFAULT_ESTIMATE_FACTORS: BookingIntakeEstimateFacto
     carpetPercent: "26_50",
     stairsFlights: "none",
     addonIds: [],
+    halfBathrooms: "0",
+    floorMix: "mixed",
+    layoutType: "mixed",
+    occupancyLevel: "ppl_1_2",
+    childrenInHome: "no",
+    petImpact: "none",
+    overallLaborCondition: "normal_lived_in",
+    kitchenIntensity: "average_use",
+    bathroomComplexity: "standard",
+    clutterAccess: "mostly_clear",
+    surfaceDetailTokens: [],
+    primaryIntent: "detailed_standard",
+    lastProCleanRecency: "days_30_90",
+    firstTimeVisitProgram: "one_visit",
+    recurringCadenceIntent: "none",
   };
 
 export type BookingIntakeEstimateFactors = {
@@ -111,15 +87,29 @@ export type BookingIntakeEstimateFactors = {
   carpetPercent: "0_25" | "26_50" | "51_75" | "76_100" | "not_sure";
   stairsFlights: "none" | "one" | "two_plus" | "not_sure";
   addonIds: string[];
-};
-
-/** Higher rank = heavier visit context for estimator factors. */
-const CLUTTER_RANK: Record<BookingIntakeEstimateFactors["clutterLevel"], number> = {
-  minimal: 0,
-  light: 1,
-  not_sure: 2,
-  moderate: 3,
-  heavy: 4,
+  halfBathrooms: "0" | "1" | "2_plus";
+  floorMix: "mostly_hard" | "mixed" | "mostly_carpet";
+  layoutType: "open_plan" | "mixed" | "segmented";
+  occupancyLevel: "ppl_1_2" | "ppl_3_4" | "ppl_5_plus";
+  childrenInHome: "yes" | "no";
+  petImpact: "none" | "light" | "heavy";
+  overallLaborCondition:
+    | "recently_maintained"
+    | "normal_lived_in"
+    | "behind_weeks"
+    | "major_reset";
+  kitchenIntensity: "light_use" | "average_use" | "heavy_use";
+  bathroomComplexity: "standard" | "moderate_detailing" | "heavy_detailing";
+  clutterAccess: "mostly_clear" | "moderate_clutter" | "heavy_clutter";
+  surfaceDetailTokens: string[];
+  primaryIntent: "maintenance_clean" | "detailed_standard" | "reset_level";
+  lastProCleanRecency:
+    | "within_30_days"
+    | "days_30_90"
+    | "days_90_plus"
+    | "unknown_or_not_recently";
+  firstTimeVisitProgram: "one_visit" | "two_visit" | "three_visit";
+  recurringCadenceIntent: "weekly" | "biweekly" | "monthly" | "none";
 };
 
 const FLOOR_RANK: Record<BookingIntakeEstimateFactors["floorVisibility"], number> = {
@@ -143,13 +133,6 @@ const GLASS_RANK: Record<BookingIntakeEstimateFactors["glassShowers"], number> =
   multiple: 3,
 };
 
-function maxClutter(
-  a: BookingIntakeEstimateFactors["clutterLevel"],
-  b: BookingIntakeEstimateFactors["clutterLevel"],
-): BookingIntakeEstimateFactors["clutterLevel"] {
-  return CLUTTER_RANK[a] >= CLUTTER_RANK[b] ? a : b;
-}
-
 function maxFloor(
   a: BookingIntakeEstimateFactors["floorVisibility"],
   b: BookingIntakeEstimateFactors["floorVisibility"],
@@ -169,103 +152,6 @@ function maxGlass(
   b: BookingIntakeEstimateFactors["glassShowers"],
 ): BookingIntakeEstimateFactors["glassShowers"] {
   return GLASS_RANK[a] >= GLASS_RANK[b] ? a : b;
-}
-
-function applyCondition(
-  f: BookingIntakeEstimateFactors,
-  condition: BookingHomeCondition,
-) {
-  switch (condition) {
-    case "light_upkeep":
-      f.lastProfessionalClean = "2_4_weeks";
-      f.clutterLevel = "light";
-      f.kitchenCondition = "light";
-      f.bathroomCondition = "light";
-      f.occupancyState = "occupied_normal";
-      f.floorVisibility = "mostly_clear";
-      break;
-    case "standard_lived_in":
-      f.lastProfessionalClean = "1_3_months";
-      f.clutterLevel = "light";
-      f.kitchenCondition = "normal";
-      f.bathroomCondition = "normal";
-      break;
-    case "heavy_buildup":
-      f.lastProfessionalClean = "6_plus_months";
-      f.clutterLevel = "heavy";
-      f.kitchenCondition = "heavy_grease";
-      f.bathroomCondition = "heavy_scale";
-      f.occupancyState = "occupied_cluttered";
-      f.floorVisibility = "lots_of_items";
-      break;
-    case "move_in_out_reset":
-      f.lastProfessionalClean = "6_plus_months";
-      f.clutterLevel = "moderate";
-      f.kitchenCondition = "normal";
-      f.bathroomCondition = "normal";
-      f.occupancyState = "vacant";
-      f.floorVisibility = "mostly_clear";
-      break;
-    default:
-      break;
-  }
-}
-
-function applyProblemAreas(
-  f: BookingIntakeEstimateFactors,
-  tokens: readonly BookingProblemAreaToken[],
-) {
-  const set = new Set(tokens);
-  if (set.has("kitchen_grease")) {
-    f.kitchenCondition = "heavy_grease";
-  }
-  if (set.has("bathroom_buildup")) {
-    f.bathroomCondition = "heavy_scale";
-  }
-  if (set.has("pet_hair")) {
-    f.petPresence = "one";
-    f.petShedding = "high";
-  }
-  if (set.has("heavy_dust")) {
-    f.clutterLevel = maxClutter(f.clutterLevel, "moderate");
-  }
-}
-
-function applySurface(
-  f: BookingIntakeEstimateFactors,
-  surface: BookingSurfaceComplexity,
-) {
-  switch (surface) {
-    case "minimal_furnishings":
-      f.floorVisibility = maxFloor(f.floorVisibility, "mostly_clear");
-      break;
-    case "average_furnishings":
-      f.floorVisibility = maxFloor(f.floorVisibility, "some_obstacles");
-      f.clutterLevel = maxClutter(f.clutterLevel, "light");
-      break;
-    case "dense_layout":
-      f.floorVisibility = "lots_of_items";
-      f.clutterLevel = maxClutter(f.clutterLevel, "moderate");
-      f.occupancyState = maxOcc(f.occupancyState, "occupied_cluttered");
-      break;
-    default:
-      break;
-  }
-}
-
-function applyScope(f: BookingIntakeEstimateFactors, scope: BookingScopeIntensity) {
-  switch (scope) {
-    case "targeted_touch_up":
-    case "full_home_refresh":
-      f.firstTimeWithServelink = "no";
-      break;
-    case "detail_heavy":
-      f.firstTimeWithServelink = "yes";
-      f.clutterLevel = maxClutter(f.clutterLevel, "moderate");
-      break;
-    default:
-      break;
-  }
 }
 
 const ADDON_TOKEN_TO_ID: Record<BookingAddOnToken, string> = {
@@ -301,6 +187,8 @@ function applyDeepCleanFocus(
       f.glassShowers = maxGlass(f.glassShowers, "one");
       break;
     case "kitchen_bath_priority":
+      f.kitchenIntensity = "heavy_use";
+      f.bathroomComplexity = "heavy_detailing";
       f.kitchenCondition = "heavy_grease";
       f.bathroomCondition = "heavy_scale";
       f.glassShowers = maxGlass(f.glassShowers, "one");
@@ -350,17 +238,94 @@ function applyAppliancePresence(
   }
 }
 
-function applyPetsFreeText(
+const SURFACE_DETAIL_ALLOWED = new Set<string>([
+  "interior_glass",
+  "heavy_mirrors",
+  "built_ins",
+  "detailed_trim",
+  "many_touchpoints",
+]);
+
+function normalizeSurfaceDetailTokens(
+  tokens: readonly BookingSurfaceDetailToken[],
+): string[] {
+  const out = tokens.filter((x) => SURFACE_DETAIL_ALLOWED.has(x));
+  return [...new Set(out)].sort();
+}
+
+/**
+ * Derives legacy estimator enum slots from layered intake so the web payload matches
+ * `sanitizePublicIntakeEstimateFactors` (services/api/.../estimate-factors-sanitize.ts).
+ */
+function syncLegacyPublicEstimateTokensFromLayered(
   f: BookingIntakeEstimateFactors,
-  petsRaw: string,
-  petHairFromProblems: boolean,
-) {
-  if (petHairFromProblems) return;
-  const t = petsRaw.trim();
-  if (!t) return;
-  const multi = /\b(two|three|2|3|multiple|several)\b/i.test(t);
-  f.petPresence = multi ? "multiple" : "one";
-  f.petShedding = multi ? "high" : "medium";
+): void {
+  f.clutterLevel =
+    f.clutterAccess === "mostly_clear"
+      ? "light"
+      : f.clutterAccess === "moderate_clutter"
+        ? "moderate"
+        : "heavy";
+  f.kitchenCondition =
+    f.kitchenIntensity === "light_use"
+      ? "light"
+      : f.kitchenIntensity === "heavy_use"
+        ? "heavy_grease"
+        : "normal";
+  f.bathroomCondition =
+    f.bathroomComplexity === "heavy_detailing" ? "heavy_scale" : "normal";
+  switch (f.lastProCleanRecency) {
+    case "within_30_days":
+      f.lastProfessionalClean = "under_2_weeks";
+      break;
+    case "days_30_90":
+      f.lastProfessionalClean = "1_3_months";
+      break;
+    case "days_90_plus":
+      f.lastProfessionalClean = "6_plus_months";
+      break;
+    default:
+      f.lastProfessionalClean = "not_sure";
+  }
+  f.firstTimeWithServelink = f.primaryIntent === "reset_level" ? "yes" : "no";
+  f.petPresence =
+    f.petImpact === "none" ? "none" : f.petImpact === "light" ? "one" : "multiple";
+  f.occupancyState =
+    f.occupancyLevel === "ppl_5_plus" ? "occupied_cluttered" : "occupied_normal";
+  f.carpetPercent =
+    f.floorMix === "mostly_hard"
+      ? "0_25"
+      : f.floorMix === "mostly_carpet"
+        ? "76_100"
+        : "26_50";
+
+  let floorVisibility = f.floorVisibility;
+  if (f.layoutType === "open_plan") {
+    floorVisibility = "mostly_clear";
+  } else if (f.layoutType === "segmented") {
+    if (floorVisibility === "mostly_clear") {
+      floorVisibility = "some_obstacles";
+    }
+  }
+  f.floorVisibility = floorVisibility;
+
+  let glass = f.glassShowers;
+  if (
+    f.surfaceDetailTokens.includes("interior_glass") ||
+    f.surfaceDetailTokens.includes("heavy_mirrors")
+  ) {
+    if (glass === "none" || glass === "not_sure") {
+      glass = "one";
+    }
+  }
+  f.glassShowers = glass;
+
+  if (f.petImpact !== "none") {
+    f.petShedding =
+      f.petImpact === "light" ? "low" : f.petImpact === "heavy" ? "high" : "medium";
+  } else {
+    delete f.petShedding;
+  }
 }
 
 /**
@@ -370,15 +335,28 @@ export function buildIntakeEstimateFactorsFromBookingHomeState(
   state: Pick<
     BookingFlowState,
     | "serviceId"
-    | "condition"
-    | "problemAreas"
-    | "surfaceComplexity"
-    | "scopeIntensity"
     | "selectedAddOns"
     | "deepCleanFocus"
     | "transitionState"
     | "appliancePresence"
     | "pets"
+    | "halfBathrooms"
+    | "intakeFloors"
+    | "intakeStairsFlights"
+    | "floorMix"
+    | "layoutType"
+    | "occupancyLevel"
+    | "childrenInHome"
+    | "petImpactLevel"
+    | "overallLaborCondition"
+    | "kitchenIntensity"
+    | "bathroomComplexity"
+    | "clutterAccess"
+    | "surfaceDetailTokens"
+    | "primaryIntent"
+    | "lastProCleanRecency"
+    | "firstTimeVisitProgram"
+    | "recurringCadenceIntent"
   >,
 ): BookingIntakeEstimateFactors {
   const f: BookingIntakeEstimateFactors = {
@@ -386,15 +364,23 @@ export function buildIntakeEstimateFactorsFromBookingHomeState(
     addonIds: [...BOOKING_INTAKE_DEFAULT_ESTIMATE_FACTORS.addonIds],
   };
 
-  /** Surface + scope before `condition` so move/reset occupancy can override dense-layout bumps. */
-  applySurface(f, state.surfaceComplexity);
-  applyScope(f, state.scopeIntensity);
-  applyCondition(f, state.condition);
-
-  const problemNorm = normalizeBookingProblemAreasForPayload([
-    ...state.problemAreas,
-  ]);
-  applyProblemAreas(f, problemNorm);
+  f.halfBathrooms = state.halfBathrooms;
+  f.floors = state.intakeFloors;
+  f.stairsFlights = state.intakeStairsFlights;
+  f.floorMix = state.floorMix;
+  f.layoutType = state.layoutType;
+  f.occupancyLevel = state.occupancyLevel;
+  f.childrenInHome = state.childrenInHome;
+  f.petImpact = state.petImpactLevel;
+  f.overallLaborCondition = state.overallLaborCondition;
+  f.kitchenIntensity = state.kitchenIntensity;
+  f.bathroomComplexity = state.bathroomComplexity;
+  f.clutterAccess = state.clutterAccess;
+  f.surfaceDetailTokens = normalizeSurfaceDetailTokens(state.surfaceDetailTokens);
+  f.primaryIntent = state.primaryIntent;
+  f.lastProCleanRecency = state.lastProCleanRecency;
+  f.firstTimeVisitProgram = state.firstTimeVisitProgram;
+  f.recurringCadenceIntent = state.recurringCadenceIntent;
 
   applySelectedAddOns(f, state.selectedAddOns);
 
@@ -407,18 +393,13 @@ export function buildIntakeEstimateFactorsFromBookingHomeState(
     applyAppliancePresence(f, state.appliancePresence);
   }
 
-  applyPetsFreeText(f, state.pets, problemNorm.includes("pet_hair"));
-
-  if (f.petPresence !== "none" && f.petShedding == null) {
-    f.petShedding = "medium";
+  if (state.petImpactLevel === "none" && (state.pets ?? "").trim()) {
+    f.petImpact = "light";
   }
+
+  syncLegacyPublicEstimateTokensFromLayered(f);
 
   f.addonIds = [...new Set(f.addonIds)].sort();
 
-  const result: BookingIntakeEstimateFactors = { ...f };
-  if (result.petPresence === "none") {
-    delete result.petShedding;
-  }
-
-  return result;
+  return { ...f };
 }

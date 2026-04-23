@@ -11,8 +11,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   BOOKING_ADD_ON_LABELS,
   BOOKING_APPLIANCE_PRESENCE_LABELS,
-  BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE,
+  BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE,
   BOOKING_PUBLIC_CARD_MOVE_TITLE,
+  BOOKING_PUBLIC_CARD_ONE_TIME_TITLE,
   BOOKING_PUBLIC_CARD_RECURRING_TITLE,
   BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
   BOOKING_RECURRING_GATE_LOGIN_CTA,
@@ -30,7 +31,6 @@ import {
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES,
   BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE,
   BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD,
-  BOOKING_HOME_CONDITION_LABELS,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_HEADLINE,
   BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE,
   BOOKING_REVIEW_PRE_CONF_HIGH_SUPPORTING,
@@ -45,15 +45,12 @@ import {
   BOOKING_REVIEW_REC_INSIDE_FRIDGE,
   BOOKING_REVIEW_REC_INSIDE_OVEN,
   BOOKING_REVIEW_REC_INTERIOR_WINDOWS,
-  BOOKING_REVIEW_SCOPE_OF_WORK_LABEL,
-  BOOKING_SURFACE_COMPLEXITY_LABELS,
   BOOKING_REVIEW_SUBMIT_RECOVERY_LEAD,
   BOOKING_REVIEW_SUBMIT_TRY_AGAIN,
   BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_REFRESHING,
   BOOKING_REVIEW_SEE_AVAILABLE_TEAMS_CTA,
   BOOKING_REVIEW_STEP_TITLE,
   BOOKING_REVIEW_TRANSITION_SETUP_LABEL,
-  BOOKING_SCOPE_INTENSITY_LABELS,
   BOOKING_SCHEDULE_CHOOSE_SLOT_HINT,
   BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE,
   BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA,
@@ -64,13 +61,14 @@ import {
   BOOKING_SCHEDULE_SUMMARY_TITLE,
   BOOKING_SCHEDULE_ZERO_TEAMS_TITLE,
   BOOKING_TRANSITION_STATE_LABELS,
+  BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
 } from "./bookingPublicSurfaceCopy";
+import { BOOKING_INTAKE_PREFERRED_TIME_DEFERRED } from "./bookingIntakePreferredTime";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import { BOOKING_BEDROOMS_FIELD_LABEL } from "./bookingEstimateFactorFields";
 import {
   bookingServiceCatalog,
   getBookingDefaultServiceId,
-  getBookingServiceCatalogItem,
 } from "./bookingServiceCatalog";
 
 const phase4ServiceIds = {
@@ -83,6 +81,9 @@ import {
   markBookingFlowFreshStartRequested,
 } from "./bookingUrlState";
 import { BookingFlowClient } from "./BookingFlowClient";
+
+const TEST_REVIEW_LOC_QUERY =
+  "&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA";
 
 function fillReviewContactFast() {
   fireEvent.change(screen.getByLabelText(/full name/i), {
@@ -110,9 +111,16 @@ async function continueThroughLocationGateToReview() {
       screen.getByRole("heading", { level: 2, name: "Service location" }),
     ).toBeInTheDocument(),
   );
-  const zipInput = screen.getByLabelText(
-    /^service zip code$/i,
-  ) as HTMLInputElement;
+  fireEvent.change(screen.getByLabelText(/^street address$/i), {
+    target: { value: "100 Market St" },
+  });
+  fireEvent.change(screen.getByLabelText(/^city$/i), {
+    target: { value: "San Francisco" },
+  });
+  fireEvent.change(screen.getByLabelText(/^state$/i), {
+    target: { value: "CA" },
+  });
+  const zipInput = screen.getByLabelText(/^ZIP code$/i) as HTMLInputElement;
   if (!zipInput.value || zipInput.value.replace(/\s/g, "").length < 5) {
     fireEvent.change(zipInput, { target: { value: "94103" } });
   }
@@ -256,7 +264,7 @@ vi.mock("../layout/PublicSiteFooter", () => ({
 function buildReviewSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&locZip=94103&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -273,7 +281,7 @@ function buildIncompleteHomeStepSearchString(): string {
 function buildIncompleteCadenceHomeSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&service=${encodeURIComponent(
+  return `step=home&homeSize=&bedrooms=2&bathrooms=2&pets=&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -282,7 +290,7 @@ function buildReviewSearchStringForService(serviceId: string): string {
   const dc = isDeepCleaningBookingServiceId(serviceId)
     ? "&dcProgram=single_visit"
     : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&locZip=94103&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}&service=${encodeURIComponent(
     serviceId,
   )}${dc}`;
 }
@@ -835,11 +843,14 @@ describe("BookingFlowClient", () => {
   });
 
   describe("public booking architecture — taxonomy, recurring gate, location order", () => {
-    it("shows the three public service cards", () => {
+    it("shows the four canonical public service options", () => {
       bookingFlowTestSearch.sp = new URLSearchParams("step=service");
       render(<BookingFlowClient />);
       const root = screen.getByTestId("booking-public-service-options");
-      expect(within(root).getByText(BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE)).toBeInTheDocument();
+      expect(within(root).getByText(BOOKING_PUBLIC_CARD_ONE_TIME_TITLE)).toBeInTheDocument();
+      expect(
+        within(root).getByText(BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE),
+      ).toBeInTheDocument();
       expect(within(root).getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE)).toBeInTheDocument();
       expect(within(root).getByText(BOOKING_PUBLIC_CARD_RECURRING_TITLE)).toBeInTheDocument();
     });
@@ -872,11 +883,26 @@ describe("BookingFlowClient", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("selecting first-time allows Continue to home details", async () => {
+    it("selecting One-Time Cleaning allows Continue to home details", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams("step=service");
       render(<BookingFlowClient />);
       const options = screen.getByTestId("booking-public-service-options");
-      fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE));
+      fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_ONE_TIME_TITLE));
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await waitFor(() =>
+        expect(
+          screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
+        ).toBeInTheDocument(),
+      );
+    });
+
+    it("selecting First-Time Cleaning With Recurring Service allows Continue to home details", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams("step=service");
+      render(<BookingFlowClient />);
+      const options = screen.getByTestId("booking-public-service-options");
+      fireEvent.click(
+        within(options).getByText(BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE),
+      );
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
       await waitFor(() =>
         expect(
@@ -910,6 +936,44 @@ describe("BookingFlowClient", () => {
         expect(
           screen.getByRole("heading", { level: 2, name: "Service location" }),
         ).toBeInTheDocument(),
+      );
+    });
+
+    it("home step has no early scheduling preference section", () => {
+      const svc = getBookingDefaultServiceId();
+      const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&service=${encodeURIComponent(svc)}${dc}`,
+      );
+      render(<BookingFlowClient />);
+      expect(screen.queryByTestId("booking-home-cadence-section")).not.toBeInTheDocument();
+    });
+
+    it("service location blocks Continue until street, city, state, and ZIP are present", async () => {
+      const svc = getBookingDefaultServiceId();
+      const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `step=location&homeSize=2000&bedrooms=2&bathrooms=2&pets=&service=${encodeURIComponent(svc)}${dc}&locZip=94103`,
+      );
+      render(<BookingFlowClient />);
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      expect(
+        screen.getByText(
+          "Enter street address, city, state, and a valid ZIP code before continuing.",
+        ),
+      ).toBeInTheDocument();
+      fireEvent.change(screen.getByLabelText(/^street address$/i), {
+        target: { value: "1 Main St" },
+      });
+      fireEvent.change(screen.getByLabelText(/^city$/i), {
+        target: { value: "SF" },
+      });
+      fireEvent.change(screen.getByLabelText(/^state$/i), {
+        target: { value: "CA" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await waitFor(() =>
+        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
       );
     });
 
@@ -947,7 +1011,16 @@ describe("BookingFlowClient", () => {
       const continueBtn = screen.getByRole("button", { name: /^continue$/i });
       fireEvent.click(continueBtn);
       fireEvent.click(continueBtn);
-      fireEvent.change(screen.getByLabelText(/^service zip code$/i), {
+      fireEvent.change(screen.getByLabelText(/^street address$/i), {
+        target: { value: "200 Main St" },
+      });
+      fireEvent.change(screen.getByLabelText(/^city$/i), {
+        target: { value: "San Francisco" },
+      });
+      fireEvent.change(screen.getByLabelText(/^state$/i), {
+        target: { value: "CA" },
+      });
+      fireEvent.change(screen.getByLabelText(/^ZIP code$/i), {
         target: { value: "94103" },
       });
       fireEvent.click(continueBtn);
@@ -962,7 +1035,7 @@ describe("BookingFlowClient", () => {
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
         .closest("div.rounded-2xl")!;
-      expect(within(homeBlock).getByText("2000")).toBeInTheDocument();
+      expect(within(homeBlock).getByText("1,800–2,199 sq ft")).toBeInTheDocument();
       expect(within(homeBlock).getByText(/Cat family/i)).toBeInTheDocument();
 
       const scheduleBlock = within(reviewRoot)
@@ -971,7 +1044,9 @@ describe("BookingFlowClient", () => {
       expect(
         within(scheduleBlock).getByText(/One-time \(public booking\)/i),
       ).toBeInTheDocument();
-      expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
+      ).toBeInTheDocument();
 
       await waitFor(() =>
         expect(
@@ -987,41 +1062,23 @@ describe("BookingFlowClient", () => {
   });
 
   describe("schedule change", () => {
-    function buildHomeStepSearchStringForCadence(): string {
-      const svc = getBookingDefaultServiceId();
-      const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-      return `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&service=${encodeURIComponent(
-        svc,
-      )}${dc}`;
-    }
-
-    it("changing preferred time on home then continuing to review sends preview with the new timing", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(
-        buildHomeStepSearchStringForCadence(),
-      );
+    it("estimate preview uses deferred preferred time (no early arrival preference on home)", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
-
-      const cadenceSection = screen.getByTestId("booking-home-cadence-section");
-      fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
-      );
-
-      await continueThroughLocationGateToReview();
-
-      await waitFor(() =>
-        expect(
-          previewEstimateMock.mock.calls.some(
-            (call) =>
-              call[0] &&
-              typeof call[0] === "object" &&
-              (call[0] as { preferredTime?: string }).preferredTime === "Saturday",
-          ),
-        ).toBe(true),
-      );
+      await waitFor(() => expect(previewEstimateMock).toHaveBeenCalled());
+      expect(previewEstimateMock.mock.calls[0]?.[0]).toMatchObject({
+        preferredTime: BOOKING_INTAKE_PREFERRED_TIME_DEFERRED,
+        serviceLocation: {
+          street: "100 Market St",
+          city: "San Francisco",
+          state: "CA",
+          zip: "94103",
+        },
+      });
     });
 
-    it("from review, backing to home, changing preferred window, then returning preserves home and uses One-Time intake frequency", async () => {
+    it("from review, backing to home, changing square footage, then returning updates the home summary", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
@@ -1030,10 +1087,9 @@ describe("BookingFlowClient", () => {
 
       goHomeFromReviewViaBackOnce();
 
-      const cadenceSection = screen.getByTestId("booking-home-cadence-section");
-      fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
-      );
+      fireEvent.change(screen.getByLabelText(/^square footage$/i), {
+        target: { value: "2400" },
+      });
 
       await continueThroughLocationGateToReview();
 
@@ -1043,7 +1099,7 @@ describe("BookingFlowClient", () => {
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
         .closest("div.rounded-2xl")!;
-      expect(within(homeBlock).getByText("2000")).toBeInTheDocument();
+      expect(within(homeBlock).getByText("2,200–2,599 sq ft")).toBeInTheDocument();
 
       await waitFor(() =>
         expect(
@@ -1051,14 +1107,13 @@ describe("BookingFlowClient", () => {
             (call) =>
               call[0] &&
               typeof call[0] === "object" &&
-              (call[0] as { frequency?: string }).frequency === "One-Time" &&
-              (call[0] as { preferredTime?: string }).preferredTime === "Saturday",
+              (call[0] as { homeSize?: string }).homeSize === "2400",
           ),
         ).toBe(true),
       );
     });
 
-    it("backing out of review during a stuck submit leaves home cadence editable (no review send control)", async () => {
+    it("backing out of review during a stuck submit leaves home details editable (no review send control)", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockImplementation(
         () => new Promise(() => {}),
@@ -1095,10 +1150,7 @@ describe("BookingFlowClient", () => {
         }),
       ).toBeInTheDocument();
 
-      const cadenceSection = screen.getByTestId("booking-home-cadence-section");
-      fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
-      );
+      expect(screen.getByTestId("booking-home-size-range")).toBeInTheDocument();
     });
   });
 
@@ -1120,7 +1172,7 @@ describe("BookingFlowClient", () => {
 
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.change(screen.getByLabelText(/^home size$/i), {
+      fireEvent.change(screen.getByLabelText(/^square footage$/i), {
         target: { value: "2400" },
       });
 
@@ -1135,12 +1187,14 @@ describe("BookingFlowClient", () => {
       expect(
         within(scheduleBlock).getByText(/One-time \(public booking\)/i),
       ).toBeInTheDocument();
-      expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
+      ).toBeInTheDocument();
 
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
         .closest("div.rounded-2xl")!;
-      expect(within(homeBlock).getByText("2400")).toBeInTheDocument();
+      expect(within(homeBlock).getByText("2,200–2,599 sq ft")).toBeInTheDocument();
 
       await waitFor(() =>
         expect(
@@ -1186,7 +1240,7 @@ describe("BookingFlowClient", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildHomeStepSearchString());
       render(<BookingFlowClient />);
 
-      fireEvent.change(screen.getByLabelText(/^home size$/i), {
+      fireEvent.change(screen.getByLabelText(/^square footage$/i), {
         target: { value: "" },
       });
 
@@ -1212,7 +1266,7 @@ describe("BookingFlowClient", () => {
 
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.change(screen.getByLabelText(/pets \(optional\)/i), {
+      fireEvent.change(screen.getByLabelText(/pets \(optional free text\)/i), {
         target: { value: "One dog" },
       });
 
@@ -1276,8 +1330,8 @@ describe("BookingFlowClient", () => {
         }),
       ).toBeInTheDocument();
 
-      fireEvent.change(screen.getByLabelText(/^home size$/i), {
-        target: { value: "2600" },
+      fireEvent.change(screen.getByLabelText(/^square footage$/i), {
+        target: { value: "2800" },
       });
     });
   });
@@ -1322,20 +1376,19 @@ describe("BookingFlowClient", () => {
       expect(
         within(scheduleBlock).getByText(/One-time \(public booking\)/i),
       ).toBeInTheDocument();
-      expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
+      ).toBeInTheDocument();
 
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
         .closest("div.rounded-2xl")!;
-      expect(within(homeBlock).getByText("2000")).toBeInTheDocument();
+      expect(within(homeBlock).getByText("1,800–2,199 sq ft")).toBeInTheDocument();
 
-      const serviceTitle = getBookingServiceCatalogItem(
-        getBookingDefaultServiceId(),
-      ).title;
       const serviceBlock = within(reviewRoot)
         .getByText("Service")
         .closest("div.rounded-2xl")!;
-      expect(within(serviceBlock).getByText(serviceTitle)).toBeInTheDocument();
+      expect(within(serviceBlock).getByText("One-Time Cleaning")).toBeInTheDocument();
     });
 
     it("from review, invalid email disables send until contact is valid again; schedule stays intact", async () => {
@@ -1402,7 +1455,7 @@ describe("BookingFlowClient", () => {
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
         .closest("div.rounded-2xl")!;
-      expect(within(homeBlock).getByText("2000")).toBeInTheDocument();
+      expect(within(homeBlock).getByText("1,800–2,199 sq ft")).toBeInTheDocument();
     });
 
     it("after a recoverable submit failure, editing contact clears the recovery banner", async () => {
@@ -1475,7 +1528,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and preferred arrival window before continuing.",
+          "Please complete your home details before continuing.",
         ),
       ).toBeInTheDocument();
       expect(continueBtn).toHaveAttribute("aria-invalid", "true");
@@ -1498,18 +1551,18 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and preferred arrival window before continuing.",
+          "Please complete your home details before continuing.",
         ),
       ).toBeInTheDocument();
 
-      fireEvent.change(screen.getByLabelText(/^home size$/i), {
-        target: { value: "2200" },
+      fireEvent.change(screen.getByLabelText(/^square footage$/i), {
+        target: { value: "2400" },
       });
 
       await waitFor(() =>
         expect(
           screen.queryByText(
-            "Please complete your home details and preferred arrival window before continuing.",
+            "Please complete your home details before continuing.",
           ),
         ).not.toBeInTheDocument(),
       );
@@ -1520,7 +1573,7 @@ describe("BookingFlowClient", () => {
       await continueThroughLocationGateToReview();
     });
 
-    it("invalid Continue from home does not advance when cadence is incomplete", () => {
+    it("invalid Continue from home does not advance when home size range is incomplete", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(
         buildIncompleteCadenceHomeSearchString(),
       );
@@ -1537,7 +1590,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and preferred arrival window before continuing.",
+          "Please complete your home details before continuing.",
         ),
       ).toBeInTheDocument();
       expect(
@@ -1547,10 +1600,10 @@ describe("BookingFlowClient", () => {
         }),
       ).not.toBeInTheDocument();
 
-      expect(screen.getByText(/2000/)).toBeInTheDocument();
+      expect(screen.getByTestId("booking-home-size-range")).toBeInTheDocument();
     });
 
-    it("after an invalid home Continue with missing preferred window, choosing Saturday clears stale attempt UI and reaches review", async () => {
+    it("after an invalid home Continue with missing size range, choosing a range clears stale attempt UI and reaches review", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(
         buildIncompleteCadenceHomeSearchString(),
       );
@@ -1560,19 +1613,18 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and preferred arrival window before continuing.",
+          "Please complete your home details before continuing.",
         ),
       ).toBeInTheDocument();
 
-      const cadenceSection = screen.getByTestId("booking-home-cadence-section");
-      fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
-      );
+      fireEvent.change(screen.getByLabelText(/^square footage$/i), {
+        target: { value: "2000" },
+      });
 
       await waitFor(() =>
         expect(
           screen.queryByText(
-            "Please complete your home details and preferred arrival window before continuing.",
+            "Please complete your home details before continuing.",
           ),
         ).not.toBeInTheDocument(),
       );
@@ -1590,7 +1642,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details and preferred arrival window before continuing.",
+          "Please complete your home details before continuing.",
         ),
       ).toBeInTheDocument();
 
@@ -1598,7 +1650,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.queryByText(
-          "Please complete your home details and preferred arrival window before continuing.",
+          "Please complete your home details before continuing.",
         ),
       ).not.toBeInTheDocument();
 
@@ -1656,7 +1708,7 @@ describe("BookingFlowClient", () => {
 
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.change(screen.getByLabelText(/pets \(optional\)/i), {
+      fireEvent.change(screen.getByLabelText(/pets \(optional free text\)/i), {
         target: { value: "Multiple pets" },
       });
 
@@ -1677,7 +1729,7 @@ describe("BookingFlowClient", () => {
       );
     });
 
-    it("review Home details shows comma-stripped home size matching submit normalization", async () => {
+    it("review Home details shows selected size range and preview uses matching numeric band", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       previewEstimateMock.mockClear();
       render(<BookingFlowClient />);
@@ -1686,15 +1738,14 @@ describe("BookingFlowClient", () => {
 
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.change(screen.getByLabelText(/^home size$/i), {
-        target: { value: "3,100" },
+      fireEvent.change(screen.getByLabelText(/^square footage$/i), {
+        target: { value: "3250" },
       });
 
       await continueThroughLocationGateToReview();
 
       const homeBlock = reviewHomeDetailsSection();
-      expect(within(homeBlock).getByText("3100")).toBeInTheDocument();
-      expect(within(homeBlock).queryByText(/3,100/)).not.toBeInTheDocument();
+      expect(within(homeBlock).getByText("3,000–3,499 sq ft")).toBeInTheDocument();
 
       await waitFor(() =>
         expect(
@@ -1702,26 +1753,17 @@ describe("BookingFlowClient", () => {
             (call) =>
               call[0] &&
               typeof call[0] === "object" &&
-              (call[0] as { homeSize?: string }).homeSize === "3100",
+              (call[0] as { homeSize?: string }).homeSize === "3250",
           ),
         ).toBe(true),
       );
     });
 
-    it("review schedule shows Saturday after changing preferred window on home", async () => {
+    it("review schedule explains timing is chosen after team selection", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
 
       await fillReviewContactAndOptionalFirstTimePlan(5000);
-
-      goHomeFromReviewViaBackOnce();
-
-      const cadenceSection = screen.getByTestId("booking-home-cadence-section");
-      fireEvent.click(
-        within(cadenceSection).getByRole("radio", { name: /^Saturday\b/i }),
-      );
-
-      await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
         .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
@@ -1729,7 +1771,9 @@ describe("BookingFlowClient", () => {
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
-      expect(within(scheduleBlock).getByText("Saturday")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
+      ).toBeInTheDocument();
     });
 
     it("non-deep service review omits deep clean plan row", async () => {
@@ -1745,10 +1789,10 @@ describe("BookingFlowClient", () => {
           screen.getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE }),
         ).toBeInTheDocument(),
       );
-      expect(screen.queryByText("Deep clean plan:")).not.toBeInTheDocument();
+      expect(screen.queryByText("First visit structure:")).not.toBeInTheDocument();
     });
 
-    it("deep-cleaning service review includes deep clean plan summary", async () => {
+    it("deep-cleaning service review includes first-visit structure summary", async () => {
       const deepId = bookingServiceCatalog.find((s) =>
         isDeepCleaningBookingServiceId(s.id),
       )?.id;
@@ -1762,7 +1806,7 @@ describe("BookingFlowClient", () => {
       });
 
       await waitFor(() =>
-        expect(screen.getByText("Deep clean plan:")).toBeInTheDocument(),
+        expect(screen.getByText("First visit structure:")).toBeInTheDocument(),
       );
     });
   });
@@ -1778,9 +1822,9 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.click(
-        screen.getByRole("radio", { name: /heavy buildup/i }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /major reset needed/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /heavy clutter/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /^Heavy use$/ }));
 
       await continueThroughLocationGateToReview();
 
@@ -1809,8 +1853,8 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.click(screen.getByRole("button", { name: /^kitchen grease$/i }));
-      fireEvent.click(screen.getByRole("button", { name: /^bathroom buildup$/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /^Heavy use$/ }));
+      fireEvent.click(screen.getByRole("radio", { name: /heavy detailing/i }));
 
       await continueThroughLocationGateToReview();
 
@@ -1821,8 +1865,8 @@ describe("BookingFlowClient", () => {
             const ef = p.estimateFactors as Record<string, unknown> | undefined;
             return (
               p.problemAreas == null &&
-              ef?.kitchenCondition === "heavy_grease" &&
-              ef?.bathroomCondition === "heavy_scale"
+              ef?.kitchenIntensity === "heavy_use" &&
+              ef?.bathroomComplexity === "heavy_detailing"
             );
           }),
         ).toBe(true),
@@ -1839,7 +1883,8 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.click(screen.getByRole("radio", { name: /dense layout/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /many segmented rooms/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /moderate clutter/i }));
 
       await continueThroughLocationGateToReview();
 
@@ -1849,7 +1894,9 @@ describe("BookingFlowClient", () => {
             const p = call[0] as Record<string, unknown>;
             const ef = p.estimateFactors as Record<string, unknown> | undefined;
             return (
-              p.surfaceComplexity == null && ef?.floorVisibility === "lots_of_items"
+              p.surfaceComplexity == null &&
+              ef?.layoutType === "segmented" &&
+              ef?.clutterAccess === "moderate_clutter"
             );
           }),
         ).toBe(true),
@@ -1864,16 +1911,16 @@ describe("BookingFlowClient", () => {
 
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.click(screen.getByRole("radio", { name: /light upkeep/i }));
-      fireEvent.click(screen.getByRole("button", { name: /^pet hair$/i }));
-      fireEvent.click(screen.getByRole("radio", { name: /minimal furnishings/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /recently maintained/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /heavy pet impact/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /mostly open plan/i }));
 
       await continueThroughLocationGateToReview();
 
       const homeBlock = reviewHomeDetailsSection();
-      expect(within(homeBlock).getByText("Light upkeep")).toBeInTheDocument();
-      expect(within(homeBlock).getByText("Pet hair")).toBeInTheDocument();
-      expect(within(homeBlock).getByText("Minimal furnishings")).toBeInTheDocument();
+      expect(within(homeBlock).getByText("Recently maintained")).toBeInTheDocument();
+      expect(within(homeBlock).getByText("Heavy pet impact")).toBeInTheDocument();
+      expect(within(homeBlock).getByText(/Mostly open plan/)).toBeInTheDocument();
     });
 
     it("changing condition from review path preserves schedule and triggers a fresh preview", async () => {
@@ -1886,9 +1933,9 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.click(
-        screen.getByRole("radio", { name: /move-in \/ move-out reset/i }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /major reset needed/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /heavy clutter/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /^Heavy use$/ }));
 
       await continueThroughLocationGateToReview();
 
@@ -1897,7 +1944,11 @@ describe("BookingFlowClient", () => {
           previewEstimateMock.mock.calls.some((call) => {
             const p = call[0] as Record<string, unknown>;
             const ef = p.estimateFactors as Record<string, unknown> | undefined;
-            return p.condition == null && ef?.occupancyState === "vacant";
+            return (
+              p.condition == null &&
+              ef?.clutterLevel === "heavy" &&
+              ef?.kitchenCondition === "heavy_grease"
+            );
           }),
         ).toBe(true),
       );
@@ -1911,7 +1962,9 @@ describe("BookingFlowClient", () => {
       expect(
         within(scheduleBlock).getByText(/One-time \(public booking\)/i),
       ).toBeInTheDocument();
-      expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
+      ).toBeInTheDocument();
     });
   });
 
@@ -1923,7 +1976,8 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(screen.getByRole("radio", { name: /heavy buildup/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /major reset needed/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /heavy clutter/i }));
       await continueThroughLocationGateToReview();
 
       await waitFor(() =>
@@ -1941,7 +1995,7 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(screen.getByRole("button", { name: /heavy dust/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /^Heavy use$/ }));
       await continueThroughLocationGateToReview();
 
       await waitFor(() =>
@@ -1959,7 +2013,8 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(screen.getByRole("radio", { name: /dense layout/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /many segmented rooms/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /moderate clutter/i }));
       await continueThroughLocationGateToReview();
 
       await waitFor(() =>
@@ -1993,9 +2048,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.click(
-        screen.getByRole("radio", { name: BOOKING_SCOPE_INTENSITY_LABELS.detail_heavy }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /reset-level clean/i }));
       await continueThroughLocationGateToReview();
 
       await waitFor(() =>
@@ -2004,7 +2057,9 @@ describe("BookingFlowClient", () => {
             const p = call[0] as Record<string, unknown>;
             const ef = p.estimateFactors as Record<string, unknown> | undefined;
             return (
-              p.scopeIntensity == null && ef?.firstTimeWithServelink === "yes"
+              p.scopeIntensity == null &&
+              ef?.primaryIntent === "reset_level" &&
+              ef?.firstTimeWithServelink === "yes"
             );
           }),
         ).toBe(true),
@@ -2052,9 +2107,7 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(
-        screen.getByRole("radio", { name: BOOKING_SCOPE_INTENSITY_LABELS.targeted_touch_up }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /maintenance clean/i }));
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.baseboards_detail }),
       );
@@ -2066,13 +2119,11 @@ describe("BookingFlowClient", () => {
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
         .closest("div.rounded-2xl")!;
-      expect(
-        within(homeBlock).getByText(BOOKING_SCOPE_INTENSITY_LABELS.targeted_touch_up),
-      ).toBeInTheDocument();
+      expect(within(homeBlock).getByText(/Maintenance clean/)).toBeInTheDocument();
       expect(
         within(homeBlock).getByText(BOOKING_ADD_ON_LABELS.baseboards_detail),
       ).toBeInTheDocument();
-      expect(within(homeBlock).getByText(`${BOOKING_REVIEW_SCOPE_OF_WORK_LABEL}:`)).toBeInTheDocument();
+      expect(within(homeBlock).getByText(/Primary intent:/)).toBeInTheDocument();
     });
 
     it("driver block shows detail-heavy and add-on bullets when relevant", async () => {
@@ -2082,9 +2133,7 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(
-        screen.getByRole("radio", { name: BOOKING_SCOPE_INTENSITY_LABELS.detail_heavy }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /reset-level clean/i }));
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.interior_windows }),
       );
@@ -2139,9 +2188,7 @@ describe("BookingFlowClient", () => {
       );
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(
-        screen.getByRole("radio", { name: BOOKING_SCOPE_INTENSITY_LABELS.detail_heavy }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /reset-level clean/i }));
       await continueThroughLocationGateToReview();
 
       const send = screen.getByTestId("booking-direction-send");
@@ -2181,9 +2228,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.click(
-        screen.getByRole("radio", { name: BOOKING_SCOPE_INTENSITY_LABELS.targeted_touch_up }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /maintenance clean/i }));
       await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
@@ -2195,7 +2240,9 @@ describe("BookingFlowClient", () => {
       expect(
         within(scheduleBlock).getByText(/One-time \(public booking\)/i),
       ).toBeInTheDocument();
-      expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
+      ).toBeInTheDocument();
 
       await waitFor(() =>
         expect(
@@ -2204,6 +2251,7 @@ describe("BookingFlowClient", () => {
             const ef = p.estimateFactors as Record<string, unknown> | undefined;
             return (
               p.scopeIntensity == null &&
+              ef?.primaryIntent === "maintenance_clean" &&
               ef?.firstTimeWithServelink === "no" &&
               typeof ef?.clutterLevel === "string"
             );
@@ -2503,7 +2551,9 @@ describe("BookingFlowClient", () => {
       expect(
         within(scheduleBlock).getByText(/One-time \(public booking\)/i),
       ).toBeInTheDocument();
-      expect(within(scheduleBlock).getByText("Friday")).toBeInTheDocument();
+      expect(
+        within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
+      ).toBeInTheDocument();
 
       await waitFor(() =>
         expect(
@@ -2538,11 +2588,8 @@ describe("BookingFlowClient", () => {
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(5000);
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(
-        screen.getByRole("radio", {
-          name: BOOKING_SURFACE_COMPLEXITY_LABELS.dense_layout,
-        }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /Many segmented rooms/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /Moderate clutter/i }));
       await continueThroughLocationGateToReview();
       await waitFor(
         () =>
@@ -2552,26 +2599,11 @@ describe("BookingFlowClient", () => {
     });
 
     it("heavier combined signals show special-attention band copy", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `${buildReviewSearchString()}&homeSurface=dense_layout&homeCondition=heavy_buildup&homeScope=detail_heavy`,
+      );
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(5000);
-      goHomeFromReviewViaBackOnce();
-      fireEvent.click(
-        screen.getByRole("radio", {
-          name: BOOKING_HOME_CONDITION_LABELS.heavy_buildup,
-        }),
-      );
-      fireEvent.click(
-        screen.getByRole("radio", {
-          name: BOOKING_SURFACE_COMPLEXITY_LABELS.dense_layout,
-        }),
-      );
-      fireEvent.click(
-        screen.getByRole("radio", {
-          name: BOOKING_SCOPE_INTENSITY_LABELS.detail_heavy,
-        }),
-      );
-      await continueThroughLocationGateToReview();
       await waitFor(
         () =>
           expect(screen.getByText(BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE)).toBeInTheDocument(),
@@ -2594,11 +2626,7 @@ describe("BookingFlowClient", () => {
       );
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(
-        screen.getByRole("radio", {
-          name: BOOKING_SURFACE_COMPLEXITY_LABELS.minimal_furnishings,
-        }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /Mostly open plan/i }));
       await continueThroughLocationGateToReview();
       await waitFor(
         () =>
@@ -2661,11 +2689,8 @@ describe("BookingFlowClient", () => {
       );
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(
-        screen.getByRole("radio", {
-          name: BOOKING_SURFACE_COMPLEXITY_LABELS.dense_layout,
-        }),
-      );
+      fireEvent.click(screen.getByRole("radio", { name: /Many segmented rooms/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /Moderate clutter/i }));
       await continueThroughLocationGateToReview();
       await waitFor(
         () =>

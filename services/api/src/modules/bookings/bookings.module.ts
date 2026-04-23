@@ -33,6 +33,7 @@ import { DeepCleanEstimatorConfigModule } from "./deep-clean-estimator-config.mo
 import { DeepCleanEstimatorConfigAdminController } from "./deep-clean-estimator-config.admin.controller";
 import { AuthorityModule } from "../authority/authority.module";
 import { AdminBookingsModule } from "../admin/bookings/admin-bookings.module";
+import { EstimateAccuracyModule } from "../estimate-accuracy/estimate-accuracy.module";
 import { AssignmentService } from "./assignment/assignment.service";
 import { BookingPaymentService } from "./payment/payment.service";
 import { StripeBookingPaymentModule } from "./stripe/stripe-booking-payment.module";
@@ -52,6 +53,7 @@ import { StripeBookingPaymentModule } from "./stripe/stripe-booking-payment.modu
     SlotHoldsModule,
     TrustModule,
     FinancialModule,
+    EstimateAccuracyModule,
   ],
   controllers: [
     BookingsController,

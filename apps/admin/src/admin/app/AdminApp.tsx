@@ -26,6 +26,14 @@ export function AdminApp() {
             <Route path="anomalies" element={<adminRouteRegistry.anomalies />} />
             <Route path="supply" element={<adminRouteRegistry.supply />} />
             <Route
+              path="supply/franchise-owners/new"
+              element={<adminRouteRegistry.supplyFoNew />}
+            />
+            <Route
+              path="supply/franchise-owners"
+              element={<adminRouteRegistry.supplyFoFleet />}
+            />
+            <Route
               path="supply/franchise-owners/:foId"
               element={<adminRouteRegistry.supplyFoDetail />}
             />

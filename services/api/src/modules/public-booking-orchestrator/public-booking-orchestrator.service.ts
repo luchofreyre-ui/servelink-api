@@ -51,7 +51,9 @@ function extractFoIdsFromEstimateOutput(outputJson: string | null): string[] {
   if (!outputJson?.trim()) return [];
   try {
     const o = JSON.parse(outputJson) as Record<string, unknown>;
-    const pools = [o.matchedCleaners, o.dispatchCandidatePool];
+    /** Prefer full dispatch rank order; `matchedCleaners` is only the top slice. */
+    const pools = [o.dispatchCandidatePool, o.matchedCleaners];
+    const seen = new Set<string>();
     const ids: string[] = [];
     for (const p of pools) {
       if (!Array.isArray(p)) continue;
@@ -61,11 +63,14 @@ function extractFoIdsFromEstimateOutput(outputJson: string | null): string[] {
           typeof item === "object" &&
           typeof (item as { id?: unknown }).id === "string"
         ) {
-          ids.push(String((item as { id: string }).id));
+          const id = String((item as { id: string }).id);
+          if (seen.has(id)) continue;
+          seen.add(id);
+          ids.push(id);
         }
       }
     }
-    return [...new Set(ids)];
+    return ids;
   } catch {
     return [];
   }
@@ -78,6 +83,7 @@ function parseEstimateJobMatchFields(snapshot: {
   squareFootage: number;
   estimatedLaborMinutes: number;
   recommendedTeamSize: number;
+  serviceType: string;
 } | null {
   try {
     const out = JSON.parse(snapshot.outputJson) as Record<string, unknown>;
@@ -111,7 +117,16 @@ function parseEstimateJobMatchFields(snapshot: {
         ? Math.max(1, Math.floor(recommendedTeamSizeRaw))
         : 1;
 
-    return { squareFootage, estimatedLaborMinutes, recommendedTeamSize };
+    const stRaw = inp.service_type;
+    const serviceType =
+      stRaw === "maintenance" ||
+      stRaw === "deep_clean" ||
+      stRaw === "move_in" ||
+      stRaw === "move_out"
+        ? stRaw
+        : "maintenance";
+
+    return { squareFootage, estimatedLaborMinutes, recommendedTeamSize, serviceType };
   } catch {
     return null;
   }
@@ -230,6 +245,7 @@ export class PublicBookingOrchestratorService {
             squareFootage: job.squareFootage,
             estimatedLaborMinutes: job.estimatedLaborMinutes,
             recommendedTeamSize: job.recommendedTeamSize,
+            serviceType: job.serviceType,
             limit: MAX_FO_CANDIDATES,
           };
           const matched = await this.fo.matchFOs(input);
@@ -375,18 +391,44 @@ export class PublicBookingOrchestratorService {
 
     const durationMinutes = this.durationMinutesFromBooking(booking);
     const candidateIds = await this.resolveFoCandidateIds(booking);
+    const jobMatch =
+      booking.estimateSnapshot?.outputJson &&
+      booking.estimateSnapshot?.inputJson
+        ? parseEstimateJobMatchFields({
+            outputJson: booking.estimateSnapshot.outputJson,
+            inputJson: booking.estimateSnapshot.inputJson,
+          })
+        : null;
+    const teamOptionsLimit =
+      jobMatch?.serviceType === "move_in" || jobMatch?.serviceType === "move_out"
+        ? 3
+        : 2;
 
     if (candidateIds.length === 0) {
+      const hasRoutableSite =
+        booking.siteLat != null &&
+        booking.siteLng != null &&
+        Number.isFinite(booking.siteLat) &&
+        Number.isFinite(booking.siteLng);
+      if (!hasRoutableSite) {
+        return teamOptionsError(
+          "PUBLIC_BOOKING_LOCATION_NOT_RESOLVED",
+          "We could not confirm a routable map location for this address yet. Please go back, double-check your service address, and try again.",
+        );
+      }
       return teamOptionsError(
         "PUBLIC_BOOKING_NO_FO_CANDIDATES",
-        "No teams are available for this booking yet. Set site location on the booking or complete dispatch matching first.",
+        "No teams are available to schedule online for this area right now. You can still save your request—we’ll follow up by email with next steps.",
       );
     }
 
     const foIdParam = dto.foId?.trim();
 
     if (!foIdParam) {
-      const teams = await this.buildRankedTeamOptions(candidateIds, 2);
+      const teams = await this.buildRankedTeamOptions(
+        candidateIds,
+        teamOptionsLimit,
+      );
       if (teams.length === 0) {
         return teamOptionsError(
           "PUBLIC_BOOKING_NO_ELIGIBLE_TEAMS",
@@ -463,14 +505,22 @@ export class PublicBookingOrchestratorService {
   }
 
   private async assertWindowMatchesAvailability(args: {
+    bookingId: string;
     foId: string;
     startAt: Date;
     endAt: Date;
     durationMinutes: number;
   }) {
-    const padMs = 5 * 60 * 1000;
-    const rangeStart = new Date(args.startAt.getTime() - padMs);
-    const rangeEnd = new Date(args.endAt.getTime() + padMs);
+    /**
+     * Match the default range used when the web client loads slots:
+     * `postPublicBookingAvailability({ bookingId, foId })` sends no preferredDate
+     * or custom range, so `resolveAvailabilityRange` uses the 14-day UTC-midnight
+     * window. Re-querying with a tight band around the slot can miss the same
+     * window set the UI listed.
+     */
+    const { rangeStart, rangeEnd } = this.resolveAvailabilityRange({
+      bookingId: args.bookingId,
+    });
     const windows = await this.slotAvailability.listAvailableWindows({
       foId: args.foId,
       rangeStart,
@@ -527,6 +577,7 @@ export class PublicBookingOrchestratorService {
     }
 
     await this.assertWindowMatchesAvailability({
+      bookingId: dto.bookingId,
       foId: dto.foId,
       startAt,
       endAt,

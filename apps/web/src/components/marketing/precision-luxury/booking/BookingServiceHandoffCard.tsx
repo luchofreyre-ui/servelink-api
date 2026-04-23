@@ -1,7 +1,8 @@
 import type { BookingPublicPath } from "./bookingFlowTypes";
 import {
-  BOOKING_PUBLIC_CARD_FIRST_TIME_BODY,
+  BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_BODY,
   BOOKING_PUBLIC_CARD_MOVE_BODY,
+  BOOKING_PUBLIC_CARD_ONE_TIME_BODY,
   BOOKING_RECURRING_GATE_BODY,
 } from "./bookingPublicSurfaceCopy";
 import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
@@ -23,9 +24,11 @@ export function BookingServiceHandoffCard({
       ? BOOKING_RECURRING_GATE_BODY
       : bookingPublicPath === "move_transition"
         ? BOOKING_PUBLIC_CARD_MOVE_BODY
-        : bookingPublicPath === "first_time"
-          ? BOOKING_PUBLIC_CARD_FIRST_TIME_BODY
-          : catalog.shortDescription;
+        : bookingPublicPath === "first_time_with_recurring"
+          ? BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_BODY
+          : bookingPublicPath === "one_time_cleaning"
+            ? BOOKING_PUBLIC_CARD_ONE_TIME_BODY
+            : catalog.shortDescription;
 
   return (
     <section className="rounded-[28px] border border-[#C9B27C]/16 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">

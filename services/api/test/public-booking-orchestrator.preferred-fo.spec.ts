@@ -134,6 +134,90 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
     ).rejects.toBeInstanceOf(BadRequestException);
   });
 
+  it("passes serviceType from estimate snapshot inputJson into matchFOs fallback", async () => {
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(
+          schedulableBooking({
+            siteLat: 36.154,
+            siteLng: -95.993,
+            estimateSnapshot: {
+              outputJson: JSON.stringify({
+                estimateMinutes: 120,
+                recommendedTeamSize: 2,
+              }),
+              inputJson: JSON.stringify({
+                sqft_band: "1200_1599",
+                service_type: "move_in",
+              }),
+            },
+          }),
+        ),
+      },
+      franchiseOwner: {
+        findMany: jest.fn().mockResolvedValue([{ id: "fo_x", displayName: "Team X" }]),
+      },
+    } as unknown as PrismaService;
+
+    const matchFOs = jest.fn().mockResolvedValue([{ id: "fo_x", displayName: "Team X" }]);
+    const fo = {
+      getEligibility: jest.fn().mockResolvedValue({ canAcceptBooking: true }),
+      matchFOs,
+    } as unknown as FoService;
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      {} as SlotAvailabilityService,
+      {} as SlotHoldsService,
+      {} as BookingsService,
+      fo,
+    );
+
+    const res = await svc.availability({ bookingId: "bk1" });
+    expect(res.kind).toBe("public_booking_team_options");
+    expect(matchFOs).toHaveBeenCalledWith(
+      expect.objectContaining({
+        serviceType: "move_in",
+        lat: 36.154,
+        lng: -95.993,
+      }),
+    );
+  });
+
+  it("returns PUBLIC_BOOKING_LOCATION_NOT_RESOLVED when there are no candidates and site coordinates are missing", async () => {
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(
+          schedulableBooking({
+            siteLat: null,
+            siteLng: null,
+            estimateSnapshot: {
+              outputJson: JSON.stringify({}),
+              inputJson: JSON.stringify({ sqft_band: "1200_1599" }),
+            },
+          }),
+        ),
+      },
+    } as unknown as PrismaService;
+
+    const fo = { matchFOs: jest.fn() } as unknown as FoService;
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      {} as SlotAvailabilityService,
+      {} as SlotHoldsService,
+      {} as BookingsService,
+      fo,
+    );
+
+    const res = await svc.availability({ bookingId: "bk1" });
+    expect(res.kind).toBe("public_booking_team_options");
+    if (res.kind !== "public_booking_team_options") throw new Error("unexpected kind");
+    expect(res.teams).toEqual([]);
+    expect(res.unavailableReason?.code).toBe("PUBLIC_BOOKING_LOCATION_NOT_RESOLVED");
+    expect(fo.matchFOs).not.toHaveBeenCalled();
+  });
+
   it("returns structured team-options unavailable when booking is not schedulable", async () => {
     const prisma = {
       booking: {

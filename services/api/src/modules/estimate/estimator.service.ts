@@ -251,6 +251,30 @@ export type EstimateInput = {
    * with split labor (orthogonal to STAGED risk mode / stagedPlan).
    */
   deep_clean_program?: "single_visit" | "phased_3_visit";
+
+  /** Structured three-layer intake (optional; neutral when omitted). */
+  half_bathrooms?: "0" | "1" | "2_plus";
+  layout_type?: "open_plan" | "mixed" | "segmented";
+  occupancy_level?: "ppl_1_2" | "ppl_3_4" | "ppl_5_plus";
+  children_in_home?: "yes" | "no";
+  pet_impact?: "none" | "light" | "heavy";
+  overall_labor_condition?:
+    | "recently_maintained"
+    | "normal_lived_in"
+    | "behind_weeks"
+    | "major_reset";
+  kitchen_intensity?: "light_use" | "average_use" | "heavy_use";
+  bathroom_complexity?: "standard" | "moderate_detailing" | "heavy_detailing";
+  clutter_access?: "mostly_clear" | "moderate_clutter" | "heavy_clutter";
+  surface_detail_tokens?: string[];
+  primary_cleaning_intent?: "maintenance_clean" | "detailed_standard" | "reset_level";
+  last_pro_clean_recency?:
+    | "within_30_days"
+    | "days_30_90"
+    | "days_90_plus"
+    | "unknown_or_not_recently";
+  first_time_visit_program?: "one_visit" | "two_visit" | "three_visit";
+  recurring_cadence_intent?: "weekly" | "biweekly" | "monthly" | "none";
 };
 
 type RangeCaps = { upsideCapPct: number; downsideCapPct: number };
@@ -455,6 +479,58 @@ function bathroomCount(value: Bathrooms): number {
     case "4_plus":
       return 4;
   }
+}
+
+function halfBathCount(v: EstimateInput["half_bathrooms"] | undefined): number {
+  if (v === "1") return 0.5;
+  if (v === "2_plus") return 1;
+  return 0;
+}
+
+const SURFACE_DETAIL_MINUTES: Record<string, number> = {
+  interior_glass: 12,
+  heavy_mirrors: 10,
+  built_ins: 14,
+  detailed_trim: 16,
+  many_touchpoints: 12,
+};
+
+/**
+ * Multiplier derived from explicit three-layer intake answers (orthogonal to
+ * legacy clutter/kitchen/bath tokens, which remain authoritative for risk tables).
+ */
+function layeredIntakeLaborMultiplier(input: EstimateInput): number {
+  let m = 1;
+  const c = input.overall_labor_condition;
+  if (c === "recently_maintained") m *= 0.94;
+  else if (c === "behind_weeks") m *= 1.06;
+  else if (c === "major_reset") m *= 1.14;
+
+  const intent = input.primary_cleaning_intent;
+  if (intent === "maintenance_clean") m *= 0.94;
+  else if (intent === "reset_level") m *= 1.1;
+
+  const layout = input.layout_type;
+  if (layout === "segmented") m *= 1.04;
+  else if (layout === "open_plan") m *= 0.99;
+
+  if (input.children_in_home === "yes") m *= 1.03;
+
+  const petImpact = input.pet_impact;
+  if (petImpact === "light") m *= 1.02;
+  else if (petImpact === "heavy") m *= 1.06;
+
+  const prog = input.first_time_visit_program;
+  if (prog === "two_visit") m *= 1.05;
+  else if (prog === "three_visit") m *= 1.08;
+
+  const cad = input.recurring_cadence_intent;
+  if (cad === "weekly") m *= 0.98;
+  else if (cad === "monthly") m *= 1.02;
+
+  if (input.bathroom_complexity === "moderate_detailing") m *= 1.02;
+
+  return m;
 }
 
 function floorCount(value: Floors): number {
@@ -1016,6 +1092,13 @@ export class EstimatorService {
       if (m > 0) adjustments.push({ label: `Add-on: ${a}`, minutes: m });
     }
 
+    for (const t of input.surface_detail_tokens ?? []) {
+      const sm = SURFACE_DETAIL_MINUTES[t] ?? 0;
+      if (sm > 0) {
+        adjustments.push({ label: `Surface detail: ${t}`, minutes: sm });
+      }
+    }
+
     const baseEstimateMinutes = baselineMinutes + adjustments.reduce((sum, li) => sum + li.minutes, 0);
     let estimateMinutes = roundInt(baseEstimateMinutes);
 
@@ -1127,7 +1210,8 @@ export class EstimatorService {
 
     const squareFeet = sqftBandMidpoint(input.sqft_band);
     const bedroomsCount = bedroomCount(input.bedrooms);
-    const bathroomsCount = bathroomCount(input.bathrooms);
+    const bathroomsCount =
+      bathroomCount(input.bathrooms) + halfBathCount(input.half_bathrooms);
     const floorsCount = floorCount(input.floors);
     const addOnCount = input.addons?.length ?? 0;
 
@@ -1147,13 +1231,16 @@ export class EstimatorService {
         ? PET_HAIR_LABOR_MULTIPLIER.none
         : PET_HAIR_LABOR_MULTIPLIER[input.pet_shedding ?? "not_sure"];
 
+    const layerMultiplier = layeredIntakeLaborMultiplier(input);
+
     const baseAdjustedLaborMinutes = Math.round(
       baseLaborMinutes *
         SERVICE_TYPE_LABOR_MULTIPLIER[input.service_type] *
         LAST_PRO_CLEAN_MULTIPLIER[input.last_professional_clean ?? "1_3_months"] *
         CLUTTER_LABOR_MULTIPLIER[input.clutter_level] *
         conditionLaborMultiplier *
-        petHairMultiplier,
+        petHairMultiplier *
+        layerMultiplier,
     );
 
     let adjustedLaborMinutes = baseAdjustedLaborMinutes;
@@ -1279,6 +1366,7 @@ export class EstimatorService {
         squareFootage: squareFeet,
         estimatedLaborMinutes: adjustedLaborMinutes,
         recommendedTeamSize,
+        serviceType: input.service_type,
         limit: 20,
       });
 

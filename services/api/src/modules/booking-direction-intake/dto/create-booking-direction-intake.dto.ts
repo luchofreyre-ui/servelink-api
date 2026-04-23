@@ -5,6 +5,7 @@ import {
   IsString,
   Matches,
   MaxLength,
+  MinLength,
   ValidateNested,
 } from "class-validator";
 import { ESTIMATE_BATHROOMS, ESTIMATE_BEDROOMS } from "./estimate-factor-enums";
@@ -18,6 +19,44 @@ const BOOKING_INTAKE_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  * Allows 3-digit (300–999) or 4–5 digit values.
  */
 const HOME_SIZE_SQFT_PATTERN = /(?:^|[^\d])([3-9]\d{2}|\d{4,5})(?:[^\d]|$)/;
+
+/** Service address where cleaning occurs — used for geocoding and booking.site*. */
+export class PublicServiceLocationDto {
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @IsString()
+  @MinLength(3)
+  @MaxLength(400)
+  street!: string;
+
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @IsString()
+  @MinLength(2)
+  @MaxLength(120)
+  city!: string;
+
+  @Transform(({ value }) => (typeof value === "string" ? value.trim() : value))
+  @IsString()
+  @MinLength(2)
+  @MaxLength(32)
+  state!: string;
+
+  @Transform(({ value }) => (typeof value === "string" ? value.replace(/\s/g, "").trim() : value))
+  @IsString()
+  @MinLength(5)
+  @MaxLength(16)
+  zip!: string;
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) return undefined;
+    if (typeof value !== "string") return value;
+    const t = value.trim();
+    return t.length ? t : undefined;
+  })
+  @IsString()
+  @MaxLength(80)
+  unit?: string;
+}
 
 export class BookingDirectionUtmDto {
   @IsOptional()
@@ -119,6 +158,15 @@ export class CreateBookingDirectionIntakeDto {
   @ValidateNested()
   @Type(() => BookingDirectionUtmDto)
   utm?: BookingDirectionUtmDto;
+
+  /**
+   * Public `/book` sends a complete service address for geocoding + team matching.
+   * Optional for legacy callers; preview/submit reject when absent (see bridge).
+   */
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PublicServiceLocationDto)
+  serviceLocation?: PublicServiceLocationDto;
 
   @IsOptional()
   @Transform(({ value }) => {

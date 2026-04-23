@@ -15,6 +15,7 @@ import {
   hasPublicIntakeEchoInSearchParams,
   markBookingFlowFreshStartRequested,
   mergeConfirmationParamsFromSessionIfUrlEmpty,
+  buildPublicServiceLocationPayload,
   BOOKING_URL_HOME_ADDONS,
   BOOKING_URL_HOME_SCOPE,
   normalizeBookingAddOnsForPayload,
@@ -127,7 +128,7 @@ describe("bookingUrlState", () => {
     expect(next.deepCleanProgram).toBe("single_visit");
     expect(next.frequency).toBe("Weekly");
     expect(next.preferredTime).toBe("Saturday");
-    expect(next.bookingPublicPath).toBe("first_time");
+    expect(next.bookingPublicPath).toBe("one_time_cleaning");
   });
 
   it("applyServiceChangeToBookingFlowState preserves phased program when staying on deep clean", () => {
@@ -147,7 +148,7 @@ describe("bookingUrlState", () => {
     };
     const next = applyServiceChangeToBookingFlowState(prev, deepId);
     expect(next.deepCleanProgram).toBe("phased_3_visit");
-    expect(next.bookingPublicPath).toBe("first_time");
+    expect(next.bookingPublicPath).toBe("one_time_cleaning");
   });
 
   it("applyHomeDetailsFieldChangeToBookingFlowState only touches home fields and preserves service, schedule, contact", () => {
@@ -400,6 +401,11 @@ describe("bookingUrlState", () => {
       frequency: "Weekly",
       preferredTime: "Friday",
       serviceLocationZip: "94103",
+      serviceLocationStreet: "100 Market St",
+      serviceLocationCity: "San Francisco",
+      serviceLocationState: "CA",
+      serviceLocationUnit: "",
+      serviceLocationAddressLine: "",
       customerName: "Pat",
       customerEmail: "pat@example.com",
     };
@@ -439,7 +445,7 @@ describe("bookingUrlState", () => {
     expect(next.customerEmail).toBe("sam@example.com");
   });
 
-  it("clamp after cadence becomes incomplete demotes review to home", () => {
+  it("clearing preferredTime no longer demotes review when location is complete", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -452,6 +458,12 @@ describe("bookingUrlState", () => {
       pets: "",
       frequency: "Weekly",
       preferredTime: "Friday",
+      serviceLocationZip: "94103",
+      serviceLocationStreet: "100 Market St",
+      serviceLocationCity: "San Francisco",
+      serviceLocationState: "CA",
+      serviceLocationUnit: "",
+      serviceLocationAddressLine: "",
       customerName: "x",
       customerEmail: "x@y.co",
     };
@@ -459,7 +471,7 @@ describe("bookingUrlState", () => {
       preferredTime: "",
     });
     const clamped = clampBookingStepToStructuralMax(patched);
-    expect(clamped.step).toBe("home");
+    expect(clamped.step).toBe("review");
     expect(clamped.homeSize).toBe("2000");
     expect(clamped.frequency).toBe("One-Time");
   });
@@ -478,6 +490,11 @@ describe("bookingUrlState", () => {
       frequency: "Weekly",
       preferredTime: "Friday",
       serviceLocationZip: "94103",
+      serviceLocationStreet: "10 Main",
+      serviceLocationCity: "SF",
+      serviceLocationState: "CA",
+      serviceLocationUnit: "",
+      serviceLocationAddressLine: "",
       customerName: "Jamie",
       customerEmail: "jamie@example.com",
     };
@@ -517,7 +534,7 @@ describe("bookingUrlState", () => {
   it("shaped URL without step lands on the deepest structurally valid step", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
-        "homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&locZip=94103",
+        "homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA",
       ),
     );
     expect(s.step).toBe("review");
@@ -526,7 +543,7 @@ describe("bookingUrlState", () => {
   it("parse/build round-trips bookingId and intakeId so review→schedule URL sync does not drop scheduling context", () => {
     const { shallowId } = catalogDeepAndShallow();
     const sp = new URLSearchParams(
-      `step=schedule&service=${encodeURIComponent(shallowId)}&homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&locZip=94103&bookingId=bk_xyz&intakeId=in_abc`,
+      `step=schedule&service=${encodeURIComponent(shallowId)}&homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA&bookingId=bk_xyz&intakeId=in_abc`,
     );
     const parsed = parseBookingSearchParams(sp);
     expect(parsed.step).toBe("schedule");
@@ -546,7 +563,7 @@ describe("bookingUrlState", () => {
     );
   });
 
-  it("clampBookingStepToStructuralMax demotes review when cadence is incomplete", () => {
+  it("clampBookingStepToStructuralMax demotes review when street address is missing", () => {
     const s: BookingFlowState = {
       ...defaultBookingFlowState,
       step: "review",
@@ -556,8 +573,13 @@ describe("bookingUrlState", () => {
       frequency: "Weekly",
       preferredTime: "",
       serviceLocationZip: "94103",
+      serviceLocationStreet: "",
+      serviceLocationCity: "San Francisco",
+      serviceLocationState: "CA",
+      serviceLocationUnit: "",
+      serviceLocationAddressLine: "",
     };
-    expect(clampBookingStepToStructuralMax(s).step).toBe("home");
+    expect(clampBookingStepToStructuralMax(s).step).toBe("location");
   });
 
   it("clampBookingStepToStructuralMax demotes review when home is incomplete", () => {
@@ -570,6 +592,11 @@ describe("bookingUrlState", () => {
       frequency: "Weekly",
       preferredTime: "Friday",
       serviceLocationZip: "94103",
+      serviceLocationStreet: "10 Main",
+      serviceLocationCity: "SF",
+      serviceLocationState: "CA",
+      serviceLocationUnit: "",
+      serviceLocationAddressLine: "",
     };
     expect(clampBookingStepToStructuralMax(s).step).toBe("home");
   });
@@ -584,6 +611,11 @@ describe("bookingUrlState", () => {
       frequency: "Weekly",
       preferredTime: "Friday",
       serviceLocationZip: "",
+      serviceLocationStreet: "10 Main",
+      serviceLocationCity: "SF",
+      serviceLocationState: "CA",
+      serviceLocationUnit: "",
+      serviceLocationAddressLine: "",
     };
     expect(clampBookingStepToStructuralMax(s).step).toBe("location");
   });
@@ -624,5 +656,19 @@ describe("bookingUrlState", () => {
     expect(merged.get("intakeId")).toBe("in_1");
     expect(merged.get("bookingId")).toBe("bk_1");
     expect(merged.get("priceCents")).toBe("100");
+  });
+
+  it("buildPublicServiceLocationPayload returns API payload when location is complete", () => {
+    const sp = new URLSearchParams(
+      "locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA",
+    );
+    const parsed = parseBookingSearchParams(sp);
+    const payload = buildPublicServiceLocationPayload(parsed);
+    expect(payload).toEqual({
+      street: "100 Market St",
+      city: "San Francisco",
+      state: "CA",
+      zip: "94103",
+    });
   });
 });

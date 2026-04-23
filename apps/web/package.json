@@ -20,6 +20,7 @@
     "test:e2e:fo": "playwright test tests/playwright/regression/fo tests/playwright/smoke/fo-smoke.spec.ts",
     "test:e2e:customer": "playwright test tests/playwright/regression/customer tests/playwright/smoke/customer-smoke.spec.ts",
     "test:e2e:public": "playwright test tests/playwright/regression/public tests/playwright/smoke/public-knowledge-smoke.spec.ts",
+    "test:e2e:public-booking-fo-supply": "playwright test tests/playwright/regression/public/public-booking-fo-fixture-matrix.spec.ts --project=fast",
     "test:e2e:report": "playwright show-report",
     "verify:local-admin-routes": "tsx scripts/verify-local-admin-routes.ts",
     "verify:local-all-routes": "tsx scripts/verify-local-all-routes.ts",

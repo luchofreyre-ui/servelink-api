@@ -30,6 +30,8 @@ export const queryKeys = {
   },
   supply: {
     overview: (filters: FilterRecord) => ["supply", "overview", filters] as const,
+    foFleetOverview: (filters: { queue?: string }) =>
+      ["supply", "foFleetOverview", filters] as const,
     foDetail: (foId: string) => ["supply", "foDetail", foId] as const,
     shipmentPlanner: (filters: FilterRecord) =>
       ["supply", "shipmentPlanner", filters] as const,

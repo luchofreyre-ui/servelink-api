@@ -97,6 +97,7 @@ model Booking {
   foId                  String?
   /// Customer preference only; actual assignment uses `foId` after scheduling / holds.
   preferredFoId         String?
+  tenantId              String                      @default("nustandard")
   geofenceRadiusMeters  Int?                        @default(100)
   siteLat               Float?
   siteLng               Float?
@@ -155,6 +156,8 @@ model Booking {
   bookingAuthorityResult         BookingAuthorityResult?
   bookingAuthorityMismatches     BookingAuthorityMismatch[]
   foAuthorityKnowledgeFeedbacks  FoAuthorityKnowledgeFeedback[]
+  directionIntake                BookingDirectionIntake?
+  estimateAccuracyAudit          EstimateAccuracyAudit?
 
   @@index([customerId])
   @@index([status])
@@ -162,6 +165,7 @@ model Booking {
   @@index([status, scheduledStart])
   @@index([foId, status, scheduledStart])
   @@index([foId, scheduledStart])
+  @@index([tenantId])
 }
 
 model BookingAuthorityResult {
@@ -1860,6 +1864,10 @@ model FranchiseOwner {
   maxTravelMinutes     Int?   @default(60)
   reliabilityScore     Float? @default(0)
 
+  /// Estimator `service_type` values this FO accepts in `FoService.matchFOs`.
+  /// Empty array = intentional unrestricted (all service types); see `fo-supply-readiness.ts`.
+  matchableServiceTypes String[] @default([])
+
   // Customer-facing profile
   displayName        String?
   photoUrl           String?
@@ -2406,6 +2414,10 @@ model BookingDirectionIntake {
   /// Validated questionnaire snapshot aligned with `EstimateFactorsDto` / `EstimateInput` (no silent defaults).
   estimateFactors Json?
 
+  /// When intake flow created a schedulable booking, links back for estimate-accuracy snapshots.
+  bookingId String? @unique
+  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
   /// Lead identity from the public booking funnel (optional for legacy rows / callers).
   customerName  String?
   customerEmail String?
@@ -2417,10 +2429,52 @@ model BookingDirectionIntake {
   utmContent  String?
   utmTerm     String?
 
+  /// Structured service address from the public location step (for audit / replay).
+  serviceLocationStreet String?
+  serviceLocationCity   String?
+  serviceLocationState  String?
+  serviceLocationZip    String?
+  serviceLocationUnit   String?
+  /// Geocoded coordinates for team matching and booking.site* persistence.
+  siteLat Float?
+  siteLng Float?
+
   createdAt DateTime @default(now())
 
   @@index([createdAt])
   @@index([serviceId, createdAt])
+}
+
+enum EstimateVarianceReasonCode {
+  home_dirtier_than_intake
+  clutter_understated
+  kitchen_underestimated
+  bathroom_underestimated
+  pet_impact_underestimated
+  customer_scope_expanded
+  estimator_model_miss
+  intake_missing_signal
+  other
+}
+
+/// Post-job comparison of quote-time signals vs observed outcome (estimate-accuracy feedback loop).
+model EstimateAccuracyAudit {
+  id                     String                       @id @default(cuid())
+  bookingId              String                       @unique
+  estimateInputSnapshot  Json
+  estimateOutputSnapshot Json
+  actualJobOutcome       Json?
+  laborVariancePct       Float?
+  pricingVariancePct     Float?
+  effortVariancePct      Float?
+  varianceReasonCodes    EstimateVarianceReasonCode[] @default([])
+  crewFeedbackNote       String?                      @db.Text
+  createdAt              DateTime                     @default(now())
+  updatedAt              DateTime                     @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
 }
 
 /// Append-only FO knowledge outcome feedback tied to a booking.
@@ -2533,6 +2587,7 @@ model RecurringPlan {
   lastGeneratedAt      DateTime?
   canceledAt           DateTime?
   pausedAt             DateTime?
+  tenantId             String                 @default("nustandard")
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
 
@@ -2541,6 +2596,7 @@ model RecurringPlan {
 
   @@index([customerId, status])
   @@index([nextAnchorAt, status])
+  @@index([tenantId])
 }
 
 model RecurringOccurrence {

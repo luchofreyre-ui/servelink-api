@@ -2,7 +2,11 @@ import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
 import type { BookingFlowState, BookingStepId } from "./bookingFlowTypes";
 import { getPublicBookingMarketingTitle } from "./publicBookingTaxonomy";
-import { normalizeBookingServiceLocationZipParam } from "./bookingUrlState";
+import {
+  isServiceLocationComplete,
+  normalizeBookingServiceLocationZipParam,
+} from "./bookingUrlState";
+import { getBookingHomeSizeRangeLabel } from "./bookingHomeSizeRanges";
 import {
   formatEstimateConfidence,
   formatEstimateDurationMinutes,
@@ -27,7 +31,7 @@ function buildHomeProfile(state: BookingFlowState) {
     return "Complete home details";
   }
 
-  return `${formatBookingBedroomsForDisplay(state.bedrooms)} · ${formatBookingBathroomsForDisplay(state.bathrooms)} · ${state.homeSize}`;
+  return `${formatBookingBedroomsForDisplay(state.bedrooms)} · ${formatBookingBathroomsForDisplay(state.bathrooms)} · ${getBookingHomeSizeRangeLabel(state.homeSize)}`;
 }
 
 export function BookingSummaryCard({
@@ -41,7 +45,11 @@ export function BookingSummaryCard({
   const marketingTitle = getPublicBookingMarketingTitle(state.bookingPublicPath);
   const deep = isDeepCleaningBookingServiceId(state.serviceId);
   const deepProgramLabel = (() => {
-    if (state.bookingPublicPath === "first_time" && state.firstTimePostEstimateVisitChoice) {
+    if (
+      (state.bookingPublicPath === "one_time_cleaning" ||
+        state.bookingPublicPath === "first_time_with_recurring") &&
+      state.firstTimePostEstimateVisitChoice
+    ) {
       switch (state.firstTimePostEstimateVisitChoice) {
         case "two_visits":
           return "2 visits";
@@ -57,14 +65,20 @@ export function BookingSummaryCard({
     return state.deepCleanProgram === "phased_3_visit" ? "3-visit program" : "One visit";
   })();
   const locZip = normalizeBookingServiceLocationZipParam(state.serviceLocationZip);
-  const locLine =
-    locZip || state.serviceLocationAddressLine.trim()
-      ? `${locZip || "—"}${
-          state.serviceLocationAddressLine.trim()
-            ? ` · ${state.serviceLocationAddressLine.trim()}`
-            : ""
-        }`
-      : "Add on location step";
+  const locLine = (() => {
+    if (!isServiceLocationComplete(state)) {
+      return "Add on location step";
+    }
+    const u = state.serviceLocationUnit.trim();
+    const parts = [
+      state.serviceLocationStreet.trim(),
+      u ? u : null,
+      state.serviceLocationCity.trim(),
+      state.serviceLocationState.trim(),
+      locZip,
+    ].filter(Boolean);
+    return parts.join(", ");
+  })();
 
   const showLiveEstimate = step === "review";
 
@@ -88,10 +102,6 @@ export function BookingSummaryCard({
     {
       label: "Home profile",
       value: buildHomeProfile(state),
-    },
-    {
-      label: "Preferred Timing",
-      value: state.preferredTime || "Not selected yet",
     },
     {
       label: "Pets",

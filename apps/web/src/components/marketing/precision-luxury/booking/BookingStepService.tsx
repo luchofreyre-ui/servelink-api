@@ -3,10 +3,12 @@ import { BookingOptionCard } from "../BookingOptionCard";
 import { BookingSectionCard } from "../BookingSectionCard";
 import type { BookingPublicPath } from "./bookingFlowTypes";
 import {
-  BOOKING_PUBLIC_CARD_FIRST_TIME_BODY,
-  BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE,
+  BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_BODY,
+  BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE,
   BOOKING_PUBLIC_CARD_MOVE_BODY,
   BOOKING_PUBLIC_CARD_MOVE_TITLE,
+  BOOKING_PUBLIC_CARD_ONE_TIME_BODY,
+  BOOKING_PUBLIC_CARD_ONE_TIME_TITLE,
   BOOKING_PUBLIC_CARD_RECURRING_BODY,
   BOOKING_PUBLIC_CARD_RECURRING_TITLE,
   BOOKING_PUBLIC_SERVICE_SECTION_BODY,
@@ -22,7 +24,8 @@ import {
 } from "./publicBookingTaxonomy";
 
 export type PublicBookingServiceCardSelection =
-  | { kind: "first_time" }
+  | { kind: "one_time_cleaning" }
+  | { kind: "first_time_with_recurring" }
   | { kind: "move_transition" }
   | { kind: "recurring_auth_gate" };
 
@@ -37,8 +40,12 @@ export function BookingStepService({
   serviceId,
   onSelectPublicService,
 }: BookingStepServiceProps) {
-  const firstSelected =
-    bookingPublicPath === "first_time" && serviceId === PUBLIC_BOOK_INTERNAL_FIRST_TIME;
+  const oneTimeSelected =
+    bookingPublicPath === "one_time_cleaning" &&
+    serviceId === PUBLIC_BOOK_INTERNAL_FIRST_TIME;
+  const firstRecurringSelected =
+    bookingPublicPath === "first_time_with_recurring" &&
+    serviceId === PUBLIC_BOOK_INTERNAL_FIRST_TIME;
   const moveSelected =
     bookingPublicPath === "move_transition" && serviceId === PUBLIC_BOOK_INTERNAL_MOVE;
   const recurringGate = bookingPublicPath === "recurring_auth_gate";
@@ -53,19 +60,37 @@ export function BookingStepService({
         <div
           role="button"
           tabIndex={0}
-          onClick={() => onSelectPublicService({ kind: "first_time" })}
+          onClick={() => onSelectPublicService({ kind: "one_time_cleaning" })}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              onSelectPublicService({ kind: "first_time" });
+              onSelectPublicService({ kind: "one_time_cleaning" });
             }
           }}
         >
           <BookingOptionCard
-            title={BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE}
-            body={BOOKING_PUBLIC_CARD_FIRST_TIME_BODY}
+            title={BOOKING_PUBLIC_CARD_ONE_TIME_TITLE}
+            body={BOOKING_PUBLIC_CARD_ONE_TIME_BODY}
             meta="Anonymous path"
-            selected={firstSelected}
+            selected={oneTimeSelected}
+          />
+        </div>
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => onSelectPublicService({ kind: "first_time_with_recurring" })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onSelectPublicService({ kind: "first_time_with_recurring" });
+            }
+          }}
+        >
+          <BookingOptionCard
+            title={BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE}
+            body={BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_BODY}
+            meta="Anonymous path"
+            selected={firstRecurringSelected}
           />
         </div>
         <div
@@ -141,13 +166,15 @@ export function BookingStepService({
           Your selection
         </p>
         <p className="mt-2 font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">
-          {firstSelected
-            ? BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE
-            : moveSelected
-              ? BOOKING_PUBLIC_CARD_MOVE_TITLE
-              : recurringGate
-                ? BOOKING_PUBLIC_CARD_RECURRING_TITLE
-                : "Choose a service to continue"}
+          {oneTimeSelected
+            ? BOOKING_PUBLIC_CARD_ONE_TIME_TITLE
+            : firstRecurringSelected
+              ? BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE
+              : moveSelected
+                ? BOOKING_PUBLIC_CARD_MOVE_TITLE
+                : recurringGate
+                  ? BOOKING_PUBLIC_CARD_RECURRING_TITLE
+                  : "Choose a service to continue"}
         </p>
         <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
           {recurringGate

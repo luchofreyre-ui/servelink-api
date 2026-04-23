@@ -38,6 +38,7 @@ import {
   BOOKING_SCHEDULE_CONFIRM_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED,
+  PUBLIC_BOOKING_ORCHESTRATOR_LOCATION_NOT_RESOLVED_CODE,
 } from "./bookingPublicSurfaceCopy";
 import {
   appendPublicIntakeContextToSearchParams,
@@ -52,13 +53,13 @@ import {
   clearBookingConfirmationSessionSnapshot,
   consumeBookingFlowFreshStartRequested,
   isHomeDetailsComplete,
-  isPublicAnonymousPreferredWindowComplete,
   isServiceLocationComplete,
   normalizeBookingAddOnsForPayload,
   normalizeBookingAppliancePresenceForPayload,
   normalizeBookingHomeSizeParam,
   normalizeBookingPetsParam,
   normalizeBookingProblemAreasForPayload,
+  buildPublicServiceLocationPayload,
   parseBookingSearchParams,
   writeBookingConfirmationSessionSnapshot,
 } from "./bookingUrlState";
@@ -67,7 +68,6 @@ import type {
   BookingFlowState,
   BookingPreviewConfidenceBand,
   BookingStepId,
-  BookingTimeOption,
 } from "./bookingFlowTypes";
 import {
   BookingStepService,
@@ -100,10 +100,13 @@ import {
   isDeepCleaningBookingServiceId,
 } from "./bookingDeepClean";
 import {
+  getPublicBookingMarketingTitle,
+  isAnonymousBookingPublicPath,
   PUBLIC_BOOK_INTERNAL_FIRST_TIME,
   PUBLIC_BOOK_INTERNAL_MOVE,
   PUBLIC_BOOK_INTERNAL_RECURRING,
 } from "./publicBookingTaxonomy";
+import { BOOKING_INTAKE_PREFERRED_TIME_DEFERRED } from "./bookingIntakePreferredTime";
 import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
 import { isBookingContactValid } from "./bookingContactValidation";
 import { emitBookingFunnelEvent } from "./bookingFunnelAnalytics";
@@ -123,6 +126,12 @@ function getPublicBookingOriginServiceHref(s: BookingFlowState): string {
   if (s.bookingPublicPath === "recurring_auth_gate") {
     return `/services/${PUBLIC_BOOK_INTERNAL_RECURRING}`;
   }
+  if (
+    s.bookingPublicPath === "one_time_cleaning" ||
+    s.bookingPublicPath === "first_time_with_recurring"
+  ) {
+    return `/services/${PUBLIC_BOOK_INTERNAL_FIRST_TIME}`;
+  }
   return `/services/${PUBLIC_BOOK_INTERNAL_FIRST_TIME}`;
 }
 
@@ -136,15 +145,12 @@ function getStepError(state: BookingFlowState): string | null {
     }
   }
 
-  if (
-    state.step === "home" &&
-    (!isHomeDetailsComplete(state) || !isPublicAnonymousPreferredWindowComplete(state))
-  ) {
-    return "Please complete your home details and preferred arrival window before continuing.";
+  if (state.step === "home" && !isHomeDetailsComplete(state)) {
+    return "Please complete your home details before continuing.";
   }
 
   if (state.step === "location" && !isServiceLocationComplete(state)) {
-    return "Add a valid service ZIP code (at least five characters) before continuing.";
+    return "Enter street address, city, state, and a valid ZIP code before continuing.";
   }
 
   if (state.step === "schedule") {
@@ -229,11 +235,17 @@ function derivePrepGuidanceItems(state: BookingFlowState): string[] {
     pushUniqueCap3(items, BOOKING_REVIEW_PREP_DEEP_KITCHEN_BATH);
   }
 
-  if (normalizeBookingPetsParam(state.pets)) {
+  if (
+    normalizeBookingPetsParam(state.pets) ||
+    state.petImpactLevel !== "none"
+  ) {
     pushUniqueCap3(items, BOOKING_REVIEW_PREP_PETS);
   }
 
-  if (state.surfaceComplexity === "dense_layout") {
+  if (
+    state.surfaceComplexity === "dense_layout" ||
+    state.layoutType === "segmented"
+  ) {
     pushUniqueCap3(items, BOOKING_REVIEW_PREP_DENSE_LAYOUT);
   }
 
@@ -248,7 +260,13 @@ function deriveRecommendedAttentionItems(state: BookingFlowState): string[] {
   const problems = new Set(
     normalizeBookingProblemAreasForPayload(state.problemAreas),
   );
+  if (state.kitchenIntensity === "heavy_use") problems.add("kitchen_grease");
+  if (state.bathroomComplexity === "heavy_detailing") {
+    problems.add("bathroom_buildup");
+  }
   const heavyCondition =
+    state.overallLaborCondition === "major_reset" ||
+    state.clutterAccess === "heavy_clutter" ||
     state.condition === "heavy_buildup" ||
     state.condition === "move_in_out_reset";
 
@@ -377,7 +395,7 @@ export function BookingFlowClient() {
           });
           return;
         }
-        const teams = (res.teams ?? []).slice(0, 2).map((t, i) => ({
+        const teams = (res.teams ?? []).map((t, i) => ({
           id: t.id,
           displayName: t.displayName,
           isRecommended: t.isRecommended ?? i === 0,
@@ -394,7 +412,12 @@ export function BookingFlowClient() {
           ok: true,
         });
         if (teams.length === 0) {
-          setTeamsEmptyState("zero");
+          setTeamsEmptyState(
+            res.unavailableReason?.code ===
+              PUBLIC_BOOKING_ORCHESTRATOR_LOCATION_NOT_RESOLVED_CODE
+              ? "location_unresolved"
+              : "zero",
+          );
           emitBookingFunnelEvent("no_teams_available", {
             bookingId: state.schedulingBookingId,
             unavailableCode: res.unavailableReason?.code ?? null,
@@ -588,15 +611,11 @@ export function BookingFlowClient() {
   const canContinue = !stepError;
 
   const isHomeComplete = isHomeDetailsComplete(state);
-  const isPreferredWindowComplete = isPublicAnonymousPreferredWindowComplete(state);
   const isLocationComplete = isServiceLocationComplete(state);
   const isBookingReady =
-    state.bookingPublicPath !== "recurring_auth_gate" &&
-    (state.bookingPublicPath === "first_time" ||
-      state.bookingPublicPath === "move_transition") &&
+    isAnonymousBookingPublicPath(state.bookingPublicPath) &&
     !!state.serviceId &&
     isHomeComplete &&
-    isPreferredWindowComplete &&
     isLocationComplete;
   const isContactReady = isBookingContactValid(
     state.customerName,
@@ -610,8 +629,12 @@ export function BookingFlowClient() {
 
   const problemAreasPayloadKey = useMemo(
     () =>
-      normalizeBookingProblemAreasForPayload(state.problemAreas).join(","),
-    [state.problemAreas],
+      [
+        normalizeBookingProblemAreasForPayload(state.problemAreas).join(","),
+        state.kitchenIntensity,
+        state.bathroomComplexity,
+      ].join("|"),
+    [state.problemAreas, state.kitchenIntensity, state.bathroomComplexity],
   );
 
   const selectedAddOnsPayloadKey = useMemo(
@@ -629,25 +652,38 @@ export function BookingFlowClient() {
 
   const isHeavyCondition = useMemo(
     () =>
+      state.overallLaborCondition === "major_reset" ||
+      state.clutterAccess === "heavy_clutter" ||
       state.condition === "heavy_buildup" ||
       state.condition === "move_in_out_reset",
-    [state.condition],
+    [
+      state.overallLaborCondition,
+      state.clutterAccess,
+      state.condition,
+    ],
   );
 
   const hasProblemAreas = useMemo(
     () =>
-      normalizeBookingProblemAreasForPayload(state.problemAreas).length > 0,
-    [state.problemAreas],
+      normalizeBookingProblemAreasForPayload(state.problemAreas).length > 0 ||
+      state.kitchenIntensity === "heavy_use" ||
+      state.bathroomComplexity === "heavy_detailing",
+    [state.problemAreas, state.kitchenIntensity, state.bathroomComplexity],
   );
 
   const isDenseLayout = useMemo(
-    () => state.surfaceComplexity === "dense_layout",
-    [state.surfaceComplexity],
+    () =>
+      state.surfaceComplexity === "dense_layout" ||
+      (state.layoutType === "segmented" &&
+        state.clutterAccess !== "mostly_clear"),
+    [state.surfaceComplexity, state.layoutType, state.clutterAccess],
   );
 
   const estimateDriverDetailHeavyScope = useMemo(
-    () => state.scopeIntensity === "detail_heavy",
-    [state.scopeIntensity],
+    () =>
+      state.scopeIntensity === "detail_heavy" ||
+      state.primaryIntent === "reset_level",
+    [state.scopeIntensity, state.primaryIntent],
   );
 
   const estimateDriverHasAddOns = useMemo(
@@ -679,9 +715,10 @@ export function BookingFlowClient() {
   );
 
   const previewConfidenceBand = useMemo((): BookingPreviewConfidenceBand => {
-    const problemAreaCount = normalizeBookingProblemAreasForPayload(
-      state.problemAreas,
-    ).length;
+    const problemAreaCount =
+      normalizeBookingProblemAreasForPayload(state.problemAreas).length +
+      (state.kitchenIntensity === "heavy_use" ? 1 : 0) +
+      (state.bathroomComplexity === "heavy_detailing" ? 1 : 0);
     const addOnCount = normalizeBookingAddOnsForPayload(
       state.selectedAddOns,
     ).length;
@@ -711,11 +748,13 @@ export function BookingFlowClient() {
     [
       state.serviceId,
       state.surfaceComplexity,
+      state.layoutType,
       state.deepCleanFocus,
       state.transitionState,
       selectedAddOnsPayloadKey,
       appliancePresencePayloadKey,
       state.pets,
+      state.petImpactLevel,
     ],
   );
 
@@ -724,6 +763,10 @@ export function BookingFlowClient() {
     [
       state.serviceId,
       state.condition,
+      state.overallLaborCondition,
+      state.clutterAccess,
+      state.kitchenIntensity,
+      state.bathroomComplexity,
       state.deepCleanFocus,
       problemAreasPayloadKey,
       selectedAddOnsPayloadKey,
@@ -744,6 +787,8 @@ export function BookingFlowClient() {
     "customerName" | "customerEmail"
   > | null => {
     if (!isBookingReady) return null;
+    const serviceLocation = buildPublicServiceLocationPayload(state);
+    if (!serviceLocation) return null;
     const estimateFactors =
       buildIntakeEstimateFactorsFromBookingHomeState(state);
     const core: Omit<
@@ -756,22 +801,19 @@ export function BookingFlowClient() {
       bathrooms: state.bathrooms.trim(),
       pets: (state.pets ?? "").trim(),
       estimateFactors,
+      serviceLocation,
       frequency: "One-Time",
-      preferredTime: String(state.preferredTime).trim() as BookingTimeOption,
+      preferredTime: BOOKING_INTAKE_PREFERRED_TIME_DEFERRED,
       ...normalizedAttribution,
     };
 
-    if (
-      isDeepCleaningBookingServiceId(state.serviceId) &&
-      state.deepCleanProgram
-    ) {
-      return {
-        ...core,
-        deepCleanProgram:
-          state.deepCleanProgram === "phased_3_visit"
-            ? "phased_3_visit"
-            : "single_visit",
-      };
+    if (isDeepCleaningBookingServiceId(state.serviceId)) {
+      const deepProgram =
+        state.firstTimeVisitProgram === "three_visit" ||
+        state.deepCleanProgram === "phased_3_visit"
+          ? "phased_3_visit"
+          : "single_visit";
+      return { ...core, deepCleanProgram: deepProgram };
     }
     return core;
   }, [
@@ -781,15 +823,33 @@ export function BookingFlowClient() {
     state.bedrooms,
     state.bathrooms,
     state.pets,
-    state.condition,
-    problemAreasPayloadKey,
-    state.surfaceComplexity,
-    state.scopeIntensity,
+    state.serviceLocationZip,
+    state.serviceLocationStreet,
+    state.serviceLocationCity,
+    state.serviceLocationState,
+    state.serviceLocationUnit,
+    state.serviceLocationAddressLine,
+    state.halfBathrooms,
+    state.intakeFloors,
+    state.intakeStairsFlights,
+    state.floorMix,
+    state.layoutType,
+    state.occupancyLevel,
+    state.childrenInHome,
+    state.petImpactLevel,
+    state.overallLaborCondition,
+    state.kitchenIntensity,
+    state.bathroomComplexity,
+    state.clutterAccess,
+    state.surfaceDetailTokens,
+    state.primaryIntent,
+    state.lastProCleanRecency,
+    state.firstTimeVisitProgram,
+    state.recurringCadenceIntent,
     selectedAddOnsPayloadKey,
     state.deepCleanFocus,
     state.transitionState,
     appliancePresencePayloadKey,
-    state.preferredTime,
     state.deepCleanProgram,
     state.firstTimePostEstimateVisitChoice,
     normalizedAttribution,
@@ -828,9 +888,13 @@ export function BookingFlowClient() {
 
   const estimatePreviewReady = isEstimateValidForReview();
 
+  const needsDeepVisitPlanAfterEstimate =
+    isDeepCleaningBookingServiceId(state.serviceId) &&
+    (state.bookingPublicPath === "one_time_cleaning" ||
+      state.bookingPublicPath === "first_time_with_recurring");
+
   const firstTimePostEstimateSelectionOk =
-    state.bookingPublicPath !== "first_time" ||
-    !isDeepCleaningBookingServiceId(state.serviceId) ||
+    !needsDeepVisitPlanAfterEstimate ||
     !estimatePreviewReady ||
     !!state.firstTimePostEstimateVisitChoice;
   const canConfirmDirection =
@@ -1378,7 +1442,7 @@ export function BookingFlowClient() {
     setScheduleCommitError(null);
     setScheduleCommitPhase("none");
     setPendingConfirmHoldId(null);
-    const teams = state.availableTeams.slice(0, 2);
+    const teams = state.availableTeams;
     const idx = Math.max(
       0,
       teams.findIndex((t) => t.id === team.id),
@@ -1428,7 +1492,7 @@ export function BookingFlowClient() {
   }
 
   function switchToAlternateTeam() {
-    const teams = state.availableTeams.slice(0, 2);
+    const teams = state.availableTeams;
     const other = teams.find((t) => t.id !== state.selectedTeamId.trim());
     if (other) handleSelectTeam(other);
   }
@@ -1510,13 +1574,35 @@ export function BookingFlowClient() {
                       );
                       return;
                     }
-                    const nextServiceId =
-                      selection.kind === "first_time"
-                        ? PUBLIC_BOOK_INTERNAL_FIRST_TIME
-                        : PUBLIC_BOOK_INTERNAL_MOVE;
+                    if (selection.kind === "move_transition") {
+                      setState((prev) =>
+                        clampBookingStepToStructuralMax(
+                          applyServiceChangeToBookingFlowState(
+                            prev,
+                            PUBLIC_BOOK_INTERNAL_MOVE,
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+                    if (selection.kind === "first_time_with_recurring") {
+                      setState((prev) =>
+                        clampBookingStepToStructuralMax({
+                          ...applyServiceChangeToBookingFlowState(
+                            prev,
+                            PUBLIC_BOOK_INTERNAL_FIRST_TIME,
+                          ),
+                          bookingPublicPath: "first_time_with_recurring",
+                        }),
+                      );
+                      return;
+                    }
                     setState((prev) =>
                       clampBookingStepToStructuralMax(
-                        applyServiceChangeToBookingFlowState(prev, nextServiceId),
+                        applyServiceChangeToBookingFlowState(
+                          prev,
+                          PUBLIC_BOOK_INTERNAL_FIRST_TIME,
+                        ),
                       ),
                     );
                   }}
@@ -1527,11 +1613,9 @@ export function BookingFlowClient() {
                 <BookingStepHomeDetails
                   state={state}
                   onChange={(patch) => patchHomeStepState(patch)}
-                  selectedServiceTitle={
-                    state.bookingPublicPath === "move_transition"
-                      ? "Move-In / Move-Out Cleaning"
-                      : "First-Time Cleaning"
-                  }
+                  selectedServiceTitle={getPublicBookingMarketingTitle(
+                    state.bookingPublicPath,
+                  )}
                   deepCleanPlanLabel={null}
                 />
               ) : null}
@@ -1748,8 +1832,8 @@ export function BookingFlowClient() {
                   Clear details mean a clearer quote.
                 </h2>
                 <p className="mt-4 font-[var(--font-manrope)] text-base leading-8 text-white/75">
-                  Home size, rooms, and timing help us scope time and pricing honestly—so the
-                  first visit reflects what you expected, not a rough guess.
+                  Home size and rooms help us scope time and pricing honestly—so the first
+                  visit reflects what you expected, not a rough guess.
                 </p>
               </section>
             </aside>

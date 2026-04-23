@@ -3,6 +3,9 @@ import type {
   SupplyOverviewResponse,
   SupplyOverviewParams,
   FoSupplyDetail,
+  FoSupplyFleetOverviewParams,
+  FoSupplyFleetOverviewResponse,
+  FoWeeklyScheduleSlot,
   ShipmentPlannerResponse,
   SupplyRulesResponse,
   SupplyRule,
@@ -23,8 +26,46 @@ export async function getSupplyOverview(
   return adminApiClient.get<SupplyOverviewResponse>(`${BASE}${qs ? `?${qs}` : ""}`);
 }
 
+export async function postCreateDraftFranchiseOwner(body: {
+  displayName: string;
+  email: string;
+}): Promise<FoSupplyDetail> {
+  return adminApiClient.post<FoSupplyDetail>(`${BASE}/franchise-owners`, body);
+}
+
+export async function getFoSupplyFleetOverview(
+  params?: FoSupplyFleetOverviewParams,
+): Promise<FoSupplyFleetOverviewResponse> {
+  const q = new URLSearchParams();
+  if (params?.queue != null) q.set("queue", params.queue);
+  const qs = q.toString();
+  return adminApiClient.get<FoSupplyFleetOverviewResponse>(
+    `${BASE}/franchise-owners${qs ? `?${qs}` : ""}`,
+  );
+}
+
 export async function getFoSupplyDetail(foId: string): Promise<FoSupplyDetail> {
   return adminApiClient.get<FoSupplyDetail>(`${BASE}/franchise-owners/${foId}`);
+}
+
+export async function patchFoSupplyDetail(
+  foId: string,
+  body: Record<string, unknown>,
+): Promise<FoSupplyDetail> {
+  return adminApiClient.patch<FoSupplyDetail>(
+    `${BASE}/franchise-owners/${foId}`,
+    body,
+  );
+}
+
+export async function putFoWeeklySchedule(
+  foId: string,
+  schedule: FoWeeklyScheduleSlot[],
+): Promise<FoSupplyDetail> {
+  return adminApiClient.put<FoSupplyDetail>(
+    `${BASE}/franchise-owners/${foId}/weekly-schedule`,
+    { schedule },
+  );
 }
 
 export async function getShipmentPlanner(

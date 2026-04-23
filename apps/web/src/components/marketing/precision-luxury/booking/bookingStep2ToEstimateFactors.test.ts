@@ -30,46 +30,51 @@ const baseState = (): BookingFlowState => ({
 });
 
 describe("buildIntakeEstimateFactorsFromBookingHomeState", () => {
-  it("returns a full factor object aligned with server defaults shape", () => {
+  it("includes three-layer intake fields expected by the API DTO", () => {
     const f = buildIntakeEstimateFactorsFromBookingHomeState(baseState());
+    expect(f.halfBathrooms).toBeDefined();
+    expect(f.floorMix).toBeDefined();
+    expect(f.layoutType).toBeDefined();
+    expect(f.occupancyLevel).toBeDefined();
+    expect(f.childrenInHome).toBeDefined();
+    expect(f.petImpact).toBeDefined();
+    expect(f.overallLaborCondition).toBeDefined();
+    expect(f.kitchenIntensity).toBeDefined();
+    expect(f.bathroomComplexity).toBeDefined();
+    expect(f.clutterAccess).toBeDefined();
+    expect(Array.isArray(f.surfaceDetailTokens)).toBe(true);
+    expect(f.primaryIntent).toBeDefined();
+    expect(f.lastProCleanRecency).toBeDefined();
+    expect(f.firstTimeVisitProgram).toBeDefined();
+    expect(f.recurringCadenceIntent).toBeDefined();
     expect(f.propertyType).toBe(BOOKING_INTAKE_DEFAULT_ESTIMATE_FACTORS.propertyType);
     expect(Array.isArray(f.addonIds)).toBe(true);
-    expect(f.petPresence).toBe("none");
-    expect(f.petShedding).toBeUndefined();
   });
 
-  it("does not emit undeclared intake top-level keys (payload contract)", () => {
+  it("maps add-on tokens into addonIds", () => {
     const f = buildIntakeEstimateFactorsFromBookingHomeState({
       ...baseState(),
-      condition: "heavy_buildup",
       selectedAddOns: ["inside_oven", "cabinets_detail"],
     });
-    expect(f.kitchenCondition).toBe("heavy_grease");
     expect(f.addonIds).toContain("inside_oven");
     expect(f.addonIds).toContain("cabinets_exterior_detail");
   });
 
-  it("maps problem areas into kitchen, bath, and pet factors", () => {
+  it("reflects layered kitchen and clutter selections", () => {
     const f = buildIntakeEstimateFactorsFromBookingHomeState({
       ...baseState(),
-      problemAreas: ["kitchen_grease", "bathroom_buildup", "pet_hair"],
+      kitchenIntensity: "heavy_use",
+      clutterAccess: "heavy_clutter",
     });
-    expect(f.kitchenCondition).toBe("heavy_grease");
-    expect(f.bathroomCondition).toBe("heavy_scale");
-    expect(f.petPresence).toBe("one");
-    expect(f.petShedding).toBe("high");
+    expect(f.kitchenIntensity).toBe("heavy_use");
+    expect(f.clutterAccess).toBe("heavy_clutter");
   });
 
-  it("changes clutter when condition changes", () => {
-    const light = buildIntakeEstimateFactorsFromBookingHomeState({
+  it("normalizes surface detail tokens", () => {
+    const f = buildIntakeEstimateFactorsFromBookingHomeState({
       ...baseState(),
-      condition: "light_upkeep",
+      surfaceDetailTokens: ["built_ins", "interior_glass", "built_ins"],
     });
-    const heavy = buildIntakeEstimateFactorsFromBookingHomeState({
-      ...baseState(),
-      condition: "heavy_buildup",
-    });
-    expect(light.clutterLevel).toBe("light");
-    expect(heavy.clutterLevel).toBe("heavy");
+    expect(f.surfaceDetailTokens).toEqual(["built_ins", "interior_glass"]);
   });
 });
