@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
   UsePipes,
@@ -18,6 +19,13 @@ import { CreateRecurringPlanDto } from "./dto/create-recurring-plan.dto";
 import { UpdateNextOccurrenceDto } from "./dto/update-next-occurrence.dto";
 import { UpdateRecurringPlanDto } from "./dto/update-recurring-plan.dto";
 import { RecurringService } from "./recurring.service";
+import { ScheduleTeamOptionsQueryDto } from "../bookings/dto/schedule-team-options-query.dto";
+
+const scheduleTeamOptionsQueryPipe = new ValidationPipe({
+  transform: true,
+  whitelist: true,
+  forbidNonWhitelisted: false,
+});
 
 const recurringBodyPipe = new ValidationPipe({
   whitelist: true,
@@ -104,6 +112,20 @@ export class RecurringController {
     return this.recurring.getNextOccurrenceForCustomer(
       planId,
       String(req.user.userId),
+    );
+  }
+
+  @Get("plans/:planId/schedule-team-options")
+  @UsePipes(scheduleTeamOptionsQueryPipe)
+  async getScheduleTeamOptions(
+    @Param("planId") planId: string,
+    @Query() query: ScheduleTeamOptionsQueryDto,
+    @Req() req: { user: { userId: string; role: Role } },
+  ) {
+    return this.recurring.getScheduleTeamOptionsForPlan(
+      planId,
+      String(req.user.userId),
+      query,
     );
   }
 

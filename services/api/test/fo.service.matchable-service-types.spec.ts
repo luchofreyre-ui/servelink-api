@@ -76,6 +76,63 @@ describe("FoService.matchFOs — matchableServiceTypes whitelist", () => {
     expect(moveIn.map((m) => m.id).sort()).toEqual(["fo_move_only", "fo_open"]);
   });
 
+  it("allows residential deep_clean for public_one_time when whitelist omits deep_clean", async () => {
+    const prisma = {
+      franchiseOwner: {
+        findMany: jest.fn().mockResolvedValue([
+          baseFo({
+            id: "fo_residential_general",
+            matchableServiceTypes: ["maintenance"],
+            reliabilityScore: 70,
+          }),
+        ]),
+      },
+      booking: { findMany: jest.fn().mockResolvedValue([]) },
+    } as unknown as PrismaService;
+
+    const svc = new FoService(prisma);
+    const out = await svc.matchFOs({
+      lat: 36.154,
+      lng: -95.993,
+      squareFootage: 1500,
+      estimatedLaborMinutes: 400,
+      recommendedTeamSize: 3,
+      serviceType: "deep_clean",
+      serviceSegment: "residential",
+      bookingMatchMode: "public_one_time",
+      limit: 10,
+    });
+    expect(out.map((m) => m.id)).toEqual(["fo_residential_general"]);
+  });
+
+  it("still applies whitelist for commercial deep_clean even in public_one_time", async () => {
+    const prisma = {
+      franchiseOwner: {
+        findMany: jest.fn().mockResolvedValue([
+          baseFo({
+            id: "fo_commercial_only_maint",
+            matchableServiceTypes: ["maintenance"],
+          }),
+        ]),
+      },
+      booking: { findMany: jest.fn().mockResolvedValue([]) },
+    } as unknown as PrismaService;
+
+    const svc = new FoService(prisma);
+    const out = await svc.matchFOs({
+      lat: 36.154,
+      lng: -95.993,
+      squareFootage: 15000,
+      estimatedLaborMinutes: 600,
+      recommendedTeamSize: 4,
+      serviceType: "deep_clean",
+      serviceSegment: "commercial",
+      bookingMatchMode: "public_one_time",
+      limit: 10,
+    });
+    expect(out).toHaveLength(0);
+  });
+
   it("excludes whitelisted FOs when serviceType is omitted (strict whitelist)", async () => {
     const prisma = {
       franchiseOwner: {

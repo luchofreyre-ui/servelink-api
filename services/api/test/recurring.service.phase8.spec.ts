@@ -10,6 +10,7 @@ import {
   buildOccurrenceBookingFingerprint,
 } from "../src/modules/recurring/recurring-occurrence-identity";
 import { RecurringService } from "../src/modules/recurring/recurring.service";
+import type { BookingTeamContinuityService } from "../src/modules/bookings/booking-team-continuity.service";
 
 const VALID_INTAKE = {
   serviceId: "recurring-home-cleaning",
@@ -88,6 +89,7 @@ describe("RecurringService Phase 8 — processOccurrence", () => {
     $transaction: jest.Mock;
   };
   let bookings: { createBooking: jest.Mock };
+  let teamContinuity: { resolveScheduleTeamOptionsForRecurringPlan: jest.Mock };
   let service: RecurringService;
 
   beforeEach(() => {
@@ -105,9 +107,13 @@ describe("RecurringService Phase 8 — processOccurrence", () => {
       $transaction: jest.fn(),
     };
     bookings = { createBooking: jest.fn() };
+    teamContinuity = {
+      resolveScheduleTeamOptionsForRecurringPlan: jest.fn(),
+    };
     service = new RecurringService(
       prisma as unknown as import("../src/prisma").PrismaService,
       bookings as unknown as BookingsService,
+      teamContinuity as unknown as BookingTeamContinuityService,
     );
   });
 
@@ -314,6 +320,11 @@ describe("RecurringService Phase 8 — processOccurrence", () => {
 
     await service.processOccurrence("occ_1");
     expect(capturedPlanUpdate?.createdFromBookingId).toBe("first_booking");
+    expect(bookings.createBooking).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bookingMatchMode: "authenticated_recurring",
+      }),
+    );
   });
 
   it("marks split-write drift when finalize transaction fails after createBooking", async () => {
@@ -360,6 +371,7 @@ describe("RecurringService Phase 8 — ops queries", () => {
     const service = new RecurringService(
       { recurringOccurrence: { findMany } } as unknown as import("../src/prisma").PrismaService,
       {} as BookingsService,
+      {} as BookingTeamContinuityService,
     );
     await service.getExhaustedRecurringOccurrences(25);
     expect(findMany).toHaveBeenCalledWith(
@@ -380,6 +392,7 @@ describe("RecurringService Phase 8 — ops queries", () => {
         recurringPlan: { count },
       } as unknown as import("../src/prisma").PrismaService,
       {} as BookingsService,
+      {} as BookingTeamContinuityService,
     );
     const summary = await service.getRecurringOpsSummary();
     expect(summary).toMatchObject({

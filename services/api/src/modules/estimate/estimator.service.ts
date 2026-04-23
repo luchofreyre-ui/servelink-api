@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { FoService } from "../fo/fo.service";
+import type { BookingMatchMode } from "../fo/service-matching-policy";
 import {
   clampCrewSizeForService,
   getServiceMaxCrewSize,
@@ -217,6 +218,8 @@ export type EstimateOptions = {
     config: DeepCleanEstimatorConfigPayload;
     meta?: { id: string; version: number; label: string };
   };
+  /** Passed through to `FoService.matchFOs` for service-type allow-list policy. */
+  bookingMatchMode?: BookingMatchMode;
 };
 
 export type EstimateInput = {
@@ -1394,6 +1397,7 @@ export class EstimatorService {
         serviceType: input.service_type,
         serviceSegment,
         limit: 20,
+        bookingMatchMode: options?.bookingMatchMode,
       });
 
       matchedCleaners = dispatchCandidatePool.slice(0, 2);
