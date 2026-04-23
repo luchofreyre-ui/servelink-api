@@ -789,6 +789,7 @@ export class PublicBookingOrchestratorService {
       holdId: dto.holdId,
       note: dto.note,
       idempotencyKey: idempotencyKey?.trim() || null,
+      useHoldElapsedDurationModel: true,
     });
 
     const scheduledStart = result.scheduledStart

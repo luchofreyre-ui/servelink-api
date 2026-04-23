@@ -10,6 +10,16 @@ import { PublicBookingOrchestratorService } from "../src/modules/public-booking-
 const START = "2030-06-01T14:00:00.000Z";
 const END = "2030-06-01T15:00:00.000Z";
 
+/** FO row that yields 60m crew-adjusted slots for default parse labor (120m) + 1h hold window. */
+function franchiseOwnerRowForPublicHoldTests() {
+  return {
+    teamSize: 4,
+    minCrewSize: 2,
+    preferredCrewSize: 2,
+    maxCrewSize: 6,
+  };
+}
+
 function schedulableHoldBooking() {
   return {
     id: "bk_hold",
@@ -45,6 +55,11 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       booking: {
         findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
         update: bookingUpdate,
+      },
+      franchiseOwner: {
+        findUnique: jest
+          .fn()
+          .mockResolvedValue(franchiseOwnerRowForPublicHoldTests()),
       },
     } as unknown as PrismaService;
 
@@ -131,6 +146,11 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       booking: {
         findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
       },
+      franchiseOwner: {
+        findUnique: jest
+          .fn()
+          .mockResolvedValue(franchiseOwnerRowForPublicHoldTests()),
+      },
     } as unknown as PrismaService;
 
     const slotAvailability = {
@@ -211,6 +231,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       holdId: "hold_1",
       note: undefined,
       idempotencyKey: "idem-key-1",
+      useHoldElapsedDurationModel: true,
     });
   });
 

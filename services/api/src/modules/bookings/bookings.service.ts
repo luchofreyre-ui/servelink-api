@@ -43,6 +43,7 @@ import {
   isAssignedState,
   isInvalidAssignmentState,
 } from "./utils/assignment-state.util";
+import { assertConfirmHoldSlotDuration } from "./confirm-hold-slot-duration";
 
 @Injectable()
 export class BookingsService {
@@ -513,6 +514,12 @@ export class BookingsService {
     holdId: string;
     note?: string;
     idempotencyKey?: string | null;
+    /**
+     * Public funnel: slot/hold duration follows crew-adjusted elapsed minutes from
+     * `PublicBookingOrchestratorService`, while `Booking.estimatedHours` reflects labor hours.
+     * When true, confirm validates hold window bounds only — not raw `estimatedHours * 60`.
+     */
+    useHoldElapsedDurationModel?: boolean;
   }) {
     try {
       return await this.db.$transaction(async (tx: any) => {
@@ -578,11 +585,15 @@ export class BookingsService {
         const holdDurationMinutes = Math.round(
           (hold.endAt.getTime() - hold.startAt.getTime()) / (60 * 1000),
         );
-        const bookingDurationMinutes = Math.round(estimatedHours * 60);
+        const bookingDurationMinutesFromEstimatedHours = Math.round(
+          estimatedHours * 60,
+        );
 
-        if (holdDurationMinutes !== bookingDurationMinutes) {
-          throw new ConflictException("BOOKING_SLOT_HOLD_DURATION_MISMATCH");
-        }
+        assertConfirmHoldSlotDuration({
+          useHoldElapsedDurationModel: args.useHoldElapsedDurationModel,
+          holdDurationMinutes,
+          bookingDurationMinutesFromEstimatedHours,
+        });
 
         const foEligibility = await this.fo.getEligibility(hold.foId);
         if (!foEligibility.canAcceptBooking) {
