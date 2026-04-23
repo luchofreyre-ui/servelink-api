@@ -5,6 +5,7 @@ import { AdminLoadingState } from "../../components/states/AdminLoadingState";
 import { AdminErrorState } from "../../components/states/AdminErrorState";
 import { AdminUnavailableState } from "../../components/states/AdminUnavailableState";
 import { SupplyBackendBanner } from "../../../features/supply/components/SupplyBackendBanner";
+import { FoSupplyConfigWorkflow } from "../../../features/supply/components/FoSupplyConfigWorkflow";
 import { FoSupplySummaryCard } from "../../../features/supply/components/FoSupplySummaryCard";
 import { FoSkuNeedTable } from "../../../features/supply/components/FoSkuNeedTable";
 import { FoShipmentHistoryTable } from "../../../features/supply/components/FoShipmentHistoryTable";
@@ -14,12 +15,14 @@ import { setAdminDocumentTitle } from "../../lib/documentTitle";
 
 export function FoSupplyDetailPage() {
   const { foId } = useParams<{ foId: string }>();
+  const { data, isLoading, isError, error, refetch } = useFoSupplyDetail(foId);
 
   useEffect(() => {
-    setAdminDocumentTitle(foId ? `FO ${foId}` : "FO Supply Detail");
-  }, [foId]);
-
-  const { data, isLoading, isError, error, refetch } = useFoSupplyDetail(foId);
+    const onboard = data?.readiness?.status === "onboarding";
+    setAdminDocumentTitle(
+      foId ? (onboard ? `FO onboarding (${foId})` : `FO ${foId}`) : "FO Supply",
+    );
+  }, [foId, data?.readiness?.status]);
   const unavailable = isError && isRouteUnavailableError(error);
   const otherError = isError && !unavailable;
 
@@ -57,11 +60,24 @@ export function FoSupplyDetailPage() {
   return (
     <div>
       <AdminPageHeader
-        title="FO Supply Detail"
+        title={
+          data.readiness?.status === "onboarding"
+            ? "FO onboarding & supply"
+            : "FO Supply Detail"
+        }
         subtitle={`${data.foName} (${data.foId})`}
       />
-      <SupplyBackendBanner />
+      {!data.readiness ? <SupplyBackendBanner /> : null}
       <div className="space-y-6">
+        {data.readiness ? (
+          <FoSupplyConfigWorkflow
+            foId={foId}
+            detail={data}
+            onRefresh={() => {
+              void refetch();
+            }}
+          />
+        ) : null}
         <FoSupplySummaryCard detail={data} />
         <section className="rounded-2xl border bg-white p-4">
           <h2 className="mb-3 text-lg font-semibold">SKU needs</h2>

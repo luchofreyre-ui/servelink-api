@@ -18,6 +18,11 @@ export const envSchema = z.object({
     .optional()
     .default("false")
     .transform((value) => value === "true"),
+
+  /** Deterministic geocode for known FO matrix addresses only (see GeocodingService). */
+  SERVELINK_GEOCODE_MATRIX_FIXTURE_LOOKUP: z.string().optional(),
+  /** When `true`, skips Nest rate limit for POST preview-estimate only (local E2E). */
+  SERVELINK_E2E_RATE_LIMIT_BYPASS: z.string().optional(),
 });
 
 export type AppEnv = z.infer<typeof envSchema>;

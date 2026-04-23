@@ -12,6 +12,8 @@ const MAIN_NAV = [
 
 const SUPPLY_NESTED = [
   { label: "Overview", to: ADMIN_ROUTES.supplyOverview },
+  { label: "FO fleet", to: ADMIN_ROUTES.foSupplyFleetOverview },
+  { label: "New FO", to: ADMIN_ROUTES.foSupplyNew },
   { label: "Shipment Planner", to: ADMIN_ROUTES.shipmentPlanner },
   { label: "Rules", to: ADMIN_ROUTES.supplyRules },
   { label: "Activity", to: ADMIN_ROUTES.supplyActivity },
@@ -41,6 +43,10 @@ export function AdminSidebar() {
             <NavLink
               key={item.to}
               to={item.to}
+              end={
+                item.to === ADMIN_ROUTES.foSupplyFleetOverview ||
+                item.to === ADMIN_ROUTES.foSupplyNew
+              }
               className={({ isActive }) =>
                 `block rounded-xl px-3 py-2 pl-5 text-sm hover:bg-gray-100 ${
                   isActive ? "bg-gray-100 font-medium" : ""

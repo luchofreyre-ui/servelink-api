@@ -1,13 +1,17 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { OpsAnomalyStatus, OpsAnomalyType } from "@prisma/client";
-import { PrismaService } from "../../prisma/prisma.service";
+import { PrismaService } from "../../prisma";
+import { EstimateAccuracyService } from "../estimate-accuracy/estimate-accuracy.service";
 import { TrustService } from "../trust/trust.service";
 
 @Injectable()
 export class ExecutionService {
+  private readonly logger = new Logger(ExecutionService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly trustService: TrustService,
+    private readonly estimateAccuracy: EstimateAccuracyService,
   ) {}
 
   async startJob(bookingId: string) {
@@ -96,6 +100,16 @@ export class ExecutionService {
       type: "complete",
       payload: { source: "execution_service" },
     });
+
+    try {
+      await this.estimateAccuracy.recordAuditAfterJobCompletion(bookingId);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : String(err ?? "unknown error");
+      this.logger.warn(
+        `estimate accuracy audit failed bookingId=${bookingId}: ${message}`,
+      );
+    }
 
     return updated;
   }

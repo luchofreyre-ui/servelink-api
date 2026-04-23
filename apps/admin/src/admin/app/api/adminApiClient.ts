@@ -8,6 +8,9 @@ const ADMIN_NEXT = "/admin";
 export type ApiError = {
   status: number;
   message: string;
+  /** Nest `BadRequestException` object payload (e.g. FO_ACTIVATION_BLOCKED). */
+  code?: string;
+  reasons?: string[];
 };
 
 type RequestOptions = {
@@ -46,13 +49,36 @@ export class AdminApiClient {
 
     if (!response.ok) {
       let message = `Request failed with status ${response.status}`;
+      let code: string | undefined;
+      let reasons: string[] | undefined;
       try {
-        const payload = await response.json();
-        message = payload?.message ?? payload?.error?.message ?? message;
+        const payload = (await response.json()) as Record<string, unknown>;
+        const inner = payload?.message;
+        if (typeof inner === "string") {
+          message = inner;
+        } else if (inner && typeof inner === "object") {
+          const o = inner as Record<string, unknown>;
+          if (typeof o.message === "string") {
+            message = o.message;
+          } else {
+            message = JSON.stringify(inner);
+          }
+          if (typeof o.code === "string") code = o.code;
+          if (Array.isArray(o.reasons)) {
+            reasons = o.reasons.map((r) => String(r));
+          }
+        } else if (typeof payload?.error === "object" && payload.error) {
+          const e = payload.error as Record<string, unknown>;
+          if (typeof e.message === "string") message = e.message;
+        }
+        if (!code && typeof payload?.code === "string") code = payload.code;
+        if (!reasons && Array.isArray(payload?.reasons)) {
+          reasons = (payload.reasons as unknown[]).map((r) => String(r));
+        }
       } catch {
         // ignore parse failure
       }
-      const error: ApiError = { status: response.status, message };
+      const error: ApiError = { status: response.status, message, code, reasons };
       throw error;
     }
 

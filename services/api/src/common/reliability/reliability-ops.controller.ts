@@ -8,12 +8,16 @@ import {
 } from "./reliability.decorators";
 import { ReliabilityAdminGuard } from "./reliability-admin.guard";
 import { OpsVisibilityService } from "./ops-visibility.service";
+import { FoService } from "../../modules/fo/fo.service";
 
 /** Drilldown `items` rows include eligibility fields from `dto/system-ops-drilldown.dto.ts`. */
 @Controller("api/v1/system/ops")
 @UseGuards(JwtAuthGuard, ReliabilityAdminGuard)
 export class ReliabilityOpsController {
-  constructor(private readonly opsVisibility: OpsVisibilityService) {}
+  constructor(
+    private readonly opsVisibility: OpsVisibilityService,
+    private readonly foService: FoService,
+  ) {}
 
   @SkipRateLimit()
   @SkipRetry()
@@ -96,6 +100,18 @@ export class ReliabilityOpsController {
       items: await this.opsVisibility.getManualDispatchActionsLast24h(
         this.parseLimit(limit),
       ),
+    };
+  }
+
+  @SkipRateLimit()
+  @SkipRetry()
+  @SkipIdempotency()
+  @SkipTimeout()
+  @Get("supply/franchise-owners")
+  async listFoSupplyReadinessDiagnostics() {
+    return {
+      ok: true,
+      items: await this.foService.listFoSupplyReadinessDiagnostics(),
     };
   }
 

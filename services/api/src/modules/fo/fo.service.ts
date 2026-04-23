@@ -1,9 +1,24 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { Role, type FoStatus as PrismaFoStatus } from "@prisma/client";
+import * as bcrypt from "bcrypt";
+import { randomBytes } from "crypto";
 import { PrismaService } from "../../prisma";
 import {
   backfillFranchiseOwnerProviders,
   ensureProviderForFranchiseOwner,
 } from "./fo-provider-sync";
+import {
+  deriveFoSupplyQueueState,
+  mergeFoSupplyReasonCodes,
+  type FoSupplyQueueState,
+} from "./fo-supply-queue";
+import { evaluateFoExecutionReadiness } from "./fo-execution-readiness";
+import { evaluateFoSupplyReadiness } from "./fo-supply-readiness";
 
 export enum FoStatus {
   onboarding = "onboarding",
@@ -19,12 +34,105 @@ export type FoEligibility = {
   reasons: string[];
 };
 
+/** Internal ops / admin supply visibility only — not a customer contract. */
+export type FoSupplyOpsCategory =
+  | "ready"
+  | "blocked_configuration"
+  | "inactive_or_restricted";
+
+export type FoExecutionReadinessSnapshot = {
+  ok: boolean;
+  reasons: string[];
+};
+
+export type FoSupplyReadinessDiagnosticItem = {
+  franchiseOwnerId: string;
+  displayName: string;
+  email: string;
+  status: string;
+  safetyHold: boolean;
+  opsCategory: FoSupplyOpsCategory;
+  supply: { ok: boolean; reasons: string[] };
+  eligibility: FoEligibility;
+  /** Provider linkage + identity checks used by dispatch / execution paths. */
+  execution: FoExecutionReadinessSnapshot;
+  configSummary: {
+    hasCoordinates: boolean;
+    homeLat: number | null;
+    homeLng: number | null;
+    maxTravelMinutes: number | null;
+    scheduleRowCount: number;
+    matchableServiceTypes: string[];
+    maxDailyLaborMinutes: number | null;
+    maxLaborMinutes: number | null;
+    maxSquareFootage: number | null;
+  };
+};
+
+export type { FoSupplyQueueState } from "./fo-supply-queue";
+
+export type AdminFoSupplyOverviewItem = {
+  id: string;
+  displayName: string;
+  email: string;
+  status: string;
+  safetyHold: boolean;
+  supplyOk: boolean;
+  executionOk: boolean;
+  bookingEligible: boolean;
+  mergedReasonCodes: string[];
+  queueState: FoSupplyQueueState;
+  configSummary: {
+    hasCoordinates: boolean;
+    scheduleRowCount: number;
+    maxTravelMinutes: number | null;
+    matchableServiceTypes: string[];
+    maxDailyLaborMinutes: number | null;
+  };
+};
+
+/** Internal admin supply FO detail — extends overview types with server readiness truth. */
+export type AdminFoSupplyScheduleSlot = {
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+};
+
+export type AdminFoSupplyDetailResponse = {
+  foId: string;
+  foName: string;
+  territory: string | null;
+  riskLevel: "low" | "medium" | "high" | "critical";
+  daysUntilStockout: number | null;
+  totalOpenDemand: number;
+  lastRestockAt: string | null;
+  skuNeeds: Array<{
+    skuId: string;
+    skuName: string;
+    quantityNeeded: number;
+    priority: number;
+  }>;
+  shipmentHistory: Array<{
+    id: string;
+    shippedAt: string;
+    value: number;
+    status: string;
+  }>;
+  readiness: FoSupplyReadinessDiagnosticItem;
+  /** Same derivation as fleet overview — server-only. */
+  queueState: FoSupplyQueueState;
+  mergedReasonCodes: string[];
+  schedules: AdminFoSupplyScheduleSlot[];
+};
+
 export type JobMatchInput = {
   lat: number;
   lng: number;
   squareFootage: number;
   estimatedLaborMinutes: number;
   recommendedTeamSize: number;
+  /** When set, FOs with a non-empty `matchableServiceTypes` must include this value. */
+  serviceType?: string;
   limit?: number;
 };
 
@@ -54,9 +162,23 @@ export class FoService {
     return backfillFranchiseOwnerProviders(this.db, batchSize);
   }
 
-  async getEligibility(foId: string): Promise<FoEligibility> {
-    const fo: any = await this.getFo(foId);
-
+  /**
+   * Booking eligibility for one FO — status / safety / ban / deleted first,
+   * then `evaluateFoSupplyReadiness` (same primitive checks as `matchFOs`).
+   */
+  eligibilityFromFranchiseOwnerRow(fo: {
+    status: string;
+    safetyHold: boolean | null;
+    isDeleted?: boolean | null;
+    isBanned?: boolean | null;
+    homeLat: number | null;
+    homeLng: number | null;
+    maxTravelMinutes: number | null;
+    maxDailyLaborMinutes: number | null;
+    maxLaborMinutes: number | null;
+    maxSquareFootage: number | null;
+    _count: { foSchedules: number };
+  }): FoEligibility {
     const reasons: string[] = [];
 
     const status = String(fo.status ?? "").toLowerCase();
@@ -70,10 +192,372 @@ export class FoService {
     if (fo.isDeleted === true) reasons.push("FO_DELETED");
     if (fo.isBanned === true) reasons.push("FO_BANNED");
 
+    if (reasons.length === 0) {
+      const supply = evaluateFoSupplyReadiness({
+        homeLat: fo.homeLat,
+        homeLng: fo.homeLng,
+        maxTravelMinutes: fo.maxTravelMinutes,
+        maxDailyLaborMinutes: fo.maxDailyLaborMinutes,
+        maxLaborMinutes: fo.maxLaborMinutes,
+        maxSquareFootage: fo.maxSquareFootage,
+        scheduleRowCount: fo._count?.foSchedules ?? 0,
+      });
+      reasons.push(...supply.reasons);
+    }
+
     return {
       canAcceptBooking: reasons.length === 0,
       reasons,
     };
+  }
+
+  async getEligibility(foId: string): Promise<FoEligibility> {
+    const fo = await this.db.franchiseOwner.findUnique({
+      where: { id: foId },
+      include: { _count: { select: { foSchedules: true } } },
+    });
+    if (!fo) throw new NotFoundException("FO_NOT_FOUND");
+    return this.eligibilityFromFranchiseOwnerRow({
+      ...fo,
+      _count: { foSchedules: fo._count.foSchedules },
+    });
+  }
+
+  private mapFranchiseOwnerRowToSupplyDiagnostic(fo: {
+    id: string;
+    userId: string;
+    providerId: string | null;
+    displayName: string | null;
+    status: string;
+    safetyHold: boolean | null;
+    homeLat: number | null;
+    homeLng: number | null;
+    maxTravelMinutes: number | null;
+    maxDailyLaborMinutes: number | null;
+    maxLaborMinutes: number | null;
+    maxSquareFootage: number | null;
+    matchableServiceTypes: string[];
+    user: { email: string };
+    provider?: { userId: string } | null;
+    _count: { foSchedules: number };
+  }): FoSupplyReadinessDiagnosticItem {
+    const foRow = fo as typeof fo & {
+      isDeleted?: boolean | null;
+      isBanned?: boolean | null;
+    };
+    const scheduleRowCount = fo._count.foSchedules;
+    const supply = evaluateFoSupplyReadiness({
+      homeLat: fo.homeLat,
+      homeLng: fo.homeLng,
+      maxTravelMinutes: fo.maxTravelMinutes,
+      maxDailyLaborMinutes: fo.maxDailyLaborMinutes,
+      maxLaborMinutes: fo.maxLaborMinutes,
+      maxSquareFootage: fo.maxSquareFootage,
+      scheduleRowCount,
+    });
+
+    const eligibility = this.eligibilityFromFranchiseOwnerRow({
+      status: fo.status,
+      safetyHold: fo.safetyHold,
+      isDeleted: foRow.isDeleted,
+      isBanned: foRow.isBanned,
+      homeLat: fo.homeLat,
+      homeLng: fo.homeLng,
+      maxTravelMinutes: fo.maxTravelMinutes,
+      maxDailyLaborMinutes: fo.maxDailyLaborMinutes,
+      maxLaborMinutes: fo.maxLaborMinutes,
+      maxSquareFootage: fo.maxSquareFootage,
+      _count: { foSchedules: scheduleRowCount },
+    });
+
+    const execution = evaluateFoExecutionReadiness({
+      franchiseOwnerUserId: fo.userId,
+      providerId: fo.providerId,
+      providerUserId: fo.provider?.userId,
+    });
+
+    const statusLc = String(fo.status ?? "").toLowerCase();
+    const inactiveOrRestricted =
+      statusLc !== FoStatus.active ||
+      foRow.isDeleted === true ||
+      foRow.isBanned === true ||
+      Boolean(fo.safetyHold);
+
+    let opsCategory: FoSupplyOpsCategory;
+    if (inactiveOrRestricted) {
+      opsCategory = "inactive_or_restricted";
+    } else if (supply.ok && eligibility.canAcceptBooking && execution.ok) {
+      opsCategory = "ready";
+    } else {
+      opsCategory = "blocked_configuration";
+    }
+
+    const hasCoordinates =
+      fo.homeLat != null &&
+      fo.homeLng != null &&
+      Number.isFinite(fo.homeLat) &&
+      Number.isFinite(fo.homeLng);
+
+    return {
+      franchiseOwnerId: fo.id,
+      displayName: (fo.displayName?.trim() || fo.user.email) ?? fo.id,
+      email: fo.user.email,
+      status: fo.status,
+      safetyHold: Boolean(fo.safetyHold),
+      opsCategory,
+      supply: { ok: supply.ok, reasons: supply.reasons },
+      eligibility,
+      execution: { ok: execution.ok, reasons: execution.reasons },
+      configSummary: {
+        hasCoordinates,
+        homeLat: fo.homeLat,
+        homeLng: fo.homeLng,
+        maxTravelMinutes: fo.maxTravelMinutes,
+        scheduleRowCount,
+        matchableServiceTypes: [...(fo.matchableServiceTypes ?? [])],
+        maxDailyLaborMinutes: fo.maxDailyLaborMinutes,
+        maxLaborMinutes: fo.maxLaborMinutes,
+        maxSquareFootage: fo.maxSquareFootage,
+      },
+    };
+  }
+
+  /**
+   * Admin / system ops: full FO list with centralized supply + eligibility truth.
+   */
+  async listFoSupplyReadinessDiagnostics(): Promise<
+    FoSupplyReadinessDiagnosticItem[]
+  > {
+    const rows = await this.db.franchiseOwner.findMany({
+      include: {
+        user: { select: { email: true } },
+        provider: { select: { userId: true } },
+        _count: { select: { foSchedules: true } },
+      },
+      orderBy: [{ displayName: "asc" }, { id: "asc" }],
+    });
+
+    return rows.map((fo) => this.mapFranchiseOwnerRowToSupplyDiagnostic(fo as never));
+  }
+
+  /**
+   * Fleet-level FO supply overview — rows are `listFoSupplyReadinessDiagnostics()`
+   * plus derived queue state and merged reason codes (no duplicated readiness math).
+   */
+  async listAdminSupplyFranchiseOwnersOverview(options?: {
+    queue?: FoSupplyQueueState | null;
+  }): Promise<{ items: AdminFoSupplyOverviewItem[] }> {
+    const diagnostics = await this.listFoSupplyReadinessDiagnostics();
+    let items: AdminFoSupplyOverviewItem[] = diagnostics.map((row) => ({
+      id: row.franchiseOwnerId,
+      displayName: row.displayName,
+      email: row.email,
+      status: row.status,
+      safetyHold: row.safetyHold,
+      supplyOk: row.supply.ok,
+      executionOk: row.execution.ok,
+      bookingEligible: row.eligibility.canAcceptBooking,
+      mergedReasonCodes: mergeFoSupplyReasonCodes({
+        opsCategory: row.opsCategory,
+        supply: row.supply,
+        eligibility: row.eligibility,
+        execution: row.execution,
+      }),
+      queueState: deriveFoSupplyQueueState({
+        opsCategory: row.opsCategory,
+        supply: row.supply,
+        eligibility: row.eligibility,
+        execution: row.execution,
+      }),
+      configSummary: {
+        hasCoordinates: row.configSummary.hasCoordinates,
+        scheduleRowCount: row.configSummary.scheduleRowCount,
+        maxTravelMinutes: row.configSummary.maxTravelMinutes,
+        matchableServiceTypes: row.configSummary.matchableServiceTypes,
+        maxDailyLaborMinutes: row.configSummary.maxDailyLaborMinutes,
+      },
+    }));
+
+    const q = options?.queue;
+    if (q) {
+      items = items.filter((i) => i.queueState === q);
+    }
+
+    return { items };
+  }
+
+  async getAdminFoSupplyDetail(foId: string): Promise<AdminFoSupplyDetailResponse> {
+    const fo = await this.db.franchiseOwner.findFirst({
+      where: { id: foId },
+      include: {
+        user: { select: { email: true } },
+        provider: { select: { userId: true } },
+        _count: { select: { foSchedules: true } },
+      },
+    });
+    if (!fo) throw new NotFoundException("FO_NOT_FOUND");
+
+    const schedules = await this.db.foSchedule.findMany({
+      where: { franchiseOwnerId: foId },
+      orderBy: [{ dayOfWeek: "asc" }],
+      select: { dayOfWeek: true, startTime: true, endTime: true },
+    });
+
+    const readiness = this.mapFranchiseOwnerRowToSupplyDiagnostic(fo as never);
+
+    return {
+      foId: fo.id,
+      foName: readiness.displayName,
+      territory: null,
+      riskLevel: "low",
+      daysUntilStockout: null,
+      totalOpenDemand: 0,
+      lastRestockAt: null,
+      skuNeeds: [],
+      shipmentHistory: [],
+      readiness,
+      queueState: deriveFoSupplyQueueState({
+        opsCategory: readiness.opsCategory,
+        supply: readiness.supply,
+        eligibility: readiness.eligibility,
+        execution: readiness.execution,
+      }),
+      mergedReasonCodes: mergeFoSupplyReasonCodes({
+        opsCategory: readiness.opsCategory,
+        supply: readiness.supply,
+        eligibility: readiness.eligibility,
+        execution: readiness.execution,
+      }),
+      schedules,
+    };
+  }
+
+  /**
+   * Admin-only draft FO: linked FO user + `onboarding` franchise owner row.
+   * Does not activate or require schedule (Prisma guard allows non-active creates).
+   */
+  async createAdminDraftFranchiseOwner(body: {
+    displayName?: unknown;
+    email?: unknown;
+  }): Promise<AdminFoSupplyDetailResponse> {
+    const displayName =
+      typeof body.displayName === "string" ? body.displayName.trim() : "";
+    const emailRaw =
+      typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+    if (!displayName) {
+      throw new BadRequestException("DISPLAY_NAME_REQUIRED");
+    }
+    if (!emailRaw) {
+      throw new BadRequestException("EMAIL_REQUIRED");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw)) {
+      throw new BadRequestException("EMAIL_INVALID");
+    }
+
+    const exists = await this.db.user.findUnique({ where: { email: emailRaw } });
+    if (exists) {
+      throw new ConflictException("USER_EMAIL_IN_USE");
+    }
+
+    const passwordHash = await bcrypt.hash(
+      `fo-admin-draft:${randomBytes(24).toString("hex")}`,
+      10,
+    );
+
+    const user = await this.db.user.create({
+      data: {
+        email: emailRaw,
+        passwordHash,
+        role: Role.fo,
+      },
+    });
+
+    const fo = await this.db.franchiseOwner.create({
+      data: {
+        userId: user.id,
+        status: FoStatus.onboarding,
+        displayName,
+        safetyHold: false,
+      },
+    });
+
+    await this.ensureProviderLinked(fo.id);
+    return this.getAdminFoSupplyDetail(fo.id);
+  }
+
+  async patchFranchiseOwnerAdmin(
+    foId: string,
+    body: Record<string, unknown>,
+  ): Promise<AdminFoSupplyDetailResponse> {
+    await this.getFo(foId);
+
+    const data: Record<string, unknown> = {};
+
+    if ("displayName" in body) {
+      const v = body.displayName;
+      data.displayName =
+        v === null || v === undefined
+          ? null
+          : typeof v === "string"
+            ? v
+            : String(v);
+    }
+    if ("homeLat" in body) {
+      data.homeLat =
+        body.homeLat === null || body.homeLat === ""
+          ? null
+          : Number(body.homeLat);
+    }
+    if ("homeLng" in body) {
+      data.homeLng =
+        body.homeLng === null || body.homeLng === ""
+          ? null
+          : Number(body.homeLng);
+    }
+    if ("maxTravelMinutes" in body) {
+      data.maxTravelMinutes =
+        body.maxTravelMinutes === null || body.maxTravelMinutes === ""
+          ? null
+          : Number(body.maxTravelMinutes);
+    }
+    if ("maxDailyLaborMinutes" in body) {
+      data.maxDailyLaborMinutes =
+        body.maxDailyLaborMinutes === null || body.maxDailyLaborMinutes === ""
+          ? null
+          : Number(body.maxDailyLaborMinutes);
+    }
+    if ("maxLaborMinutes" in body) {
+      data.maxLaborMinutes =
+        body.maxLaborMinutes === null || body.maxLaborMinutes === ""
+          ? null
+          : Number(body.maxLaborMinutes);
+    }
+    if ("maxSquareFootage" in body) {
+      data.maxSquareFootage =
+        body.maxSquareFootage === null || body.maxSquareFootage === ""
+          ? null
+          : Number(body.maxSquareFootage);
+    }
+    if ("matchableServiceTypes" in body && Array.isArray(body.matchableServiceTypes)) {
+      data.matchableServiceTypes = body.matchableServiceTypes.map((x) =>
+        String(x),
+      );
+    }
+    if ("status" in body && body.status !== undefined && body.status !== null) {
+      data.status = String(body.status) as PrismaFoStatus;
+    }
+    if ("safetyHold" in body && typeof body.safetyHold === "boolean") {
+      data.safetyHold = body.safetyHold;
+    }
+
+    if (Object.keys(data).length > 0) {
+      await this.db.franchiseOwner.update({
+        where: { id: foId },
+        data: data as never,
+      });
+    }
+
+    return this.getAdminFoSupplyDetail(foId);
   }
 
   async canAcceptBooking(foId: string) {
@@ -86,6 +570,12 @@ export class FoService {
       where: {
         status: "active",
         safetyHold: false,
+      },
+      include: {
+        _count: {
+          select: { foSchedules: true },
+        },
+        provider: { select: { userId: true } },
       },
     });
   }
@@ -131,14 +621,29 @@ export class FoService {
     const scored: any[] = [];
 
     for (const fo of fos) {
-      if (fo.homeLat == null || fo.homeLng == null) continue;
+      const supply = evaluateFoSupplyReadiness({
+        homeLat: fo.homeLat,
+        homeLng: fo.homeLng,
+        maxTravelMinutes: fo.maxTravelMinutes,
+        maxDailyLaborMinutes: fo.maxDailyLaborMinutes,
+        maxLaborMinutes: fo.maxLaborMinutes,
+        maxSquareFootage: fo.maxSquareFootage,
+        scheduleRowCount: (fo as { _count?: { foSchedules?: number } })._count
+          ?.foSchedules ?? 0,
+      });
+      if (!supply.ok) continue;
 
-      const dist = this.distanceKm(
-        input.lat,
-        input.lng,
-        fo.homeLat,
-        fo.homeLng,
-      );
+      const exec = evaluateFoExecutionReadiness({
+        franchiseOwnerUserId: fo.userId,
+        providerId: fo.providerId,
+        providerUserId: fo.provider?.userId,
+      });
+      if (!exec.ok) continue;
+
+      const homeLat = fo.homeLat as number;
+      const homeLng = fo.homeLng as number;
+
+      const dist = this.distanceKm(input.lat, input.lng, homeLat, homeLng);
 
       const travelMinutes = this.travelMinutes(dist);
 
@@ -156,6 +661,15 @@ export class FoService {
       }
 
       if (fo.teamSize && fo.teamSize < input.recommendedTeamSize) {
+        continue;
+      }
+
+      const allowed = fo.matchableServiceTypes;
+      if (
+        Array.isArray(allowed) &&
+        allowed.length > 0 &&
+        (!input.serviceType || !allowed.includes(input.serviceType))
+      ) {
         continue;
       }
 

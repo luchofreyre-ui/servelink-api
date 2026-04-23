@@ -12,6 +12,8 @@ export const ADMIN_ROUTES = {
   activity: "/activity",
   anomalies: "/anomalies",
   supplyOverview: "/supply",
+  foSupplyFleetOverview: "/supply/franchise-owners",
+  foSupplyNew: "/supply/franchise-owners/new",
   foSupplyDetail: (foId: string) => `/supply/franchise-owners/${foId}`,
   shipmentPlanner: "/supply/shipment-planner",
   supplyRules: "/supply/rules",

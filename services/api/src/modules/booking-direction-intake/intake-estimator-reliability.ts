@@ -9,3 +9,11 @@ export const INTAKE_PREVIEW_ESTIMATE_FAILED_MESSAGE =
 
 export const INTAKE_ESTIMATE_INPUT_INVALID_MESSAGE =
   "Some home or service details are not valid for an automated quote. Adjust your selections or contact us for help.";
+
+export const INTAKE_SERVICE_LOCATION_REQUIRED_CODE = "SERVICE_LOCATION_REQUIRED" as const;
+
+export const INTAKE_SERVICE_LOCATION_REQUIRED_MESSAGE =
+  "We need a complete service address (street, city, state, and ZIP) before we can preview pricing or match teams.";
+
+export const INTAKE_SERVICE_LOCATION_NOT_RESOLVABLE_CODE =
+  "SERVICE_LOCATION_NOT_RESOLVABLE" as const;

@@ -1,6 +1,12 @@
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
 import type { BookingFlowState, BookingStepId } from "./bookingFlowTypes";
+import { getPublicBookingMarketingTitle } from "./publicBookingTaxonomy";
+import {
+  isServiceLocationComplete,
+  normalizeBookingServiceLocationZipParam,
+} from "./bookingUrlState";
+import { getBookingHomeSizeRangeLabel } from "./bookingHomeSizeRanges";
 import {
   formatEstimateConfidence,
   formatEstimateDurationMinutes,
@@ -25,7 +31,7 @@ function buildHomeProfile(state: BookingFlowState) {
     return "Complete home details";
   }
 
-  return `${formatBookingBedroomsForDisplay(state.bedrooms)} · ${formatBookingBathroomsForDisplay(state.bathrooms)} · ${state.homeSize}`;
+  return `${formatBookingBedroomsForDisplay(state.bedrooms)} · ${formatBookingBathroomsForDisplay(state.bathrooms)} · ${getBookingHomeSizeRangeLabel(state.homeSize)}`;
 }
 
 export function BookingSummaryCard({
@@ -36,34 +42,66 @@ export function BookingSummaryCard({
   previewError,
 }: BookingSummaryCardProps) {
   const selectedService = getBookingServiceCatalogItem(state.serviceId);
+  const marketingTitle = getPublicBookingMarketingTitle(state.bookingPublicPath);
   const deep = isDeepCleaningBookingServiceId(state.serviceId);
-  const deepProgramLabel =
-    state.deepCleanProgram === "phased_3_visit"
-      ? "3-visit program"
-      : "One visit";
+  const deepProgramLabel = (() => {
+    if (
+      (state.bookingPublicPath === "one_time_cleaning" ||
+        state.bookingPublicPath === "first_time_with_recurring") &&
+      state.firstTimePostEstimateVisitChoice
+    ) {
+      switch (state.firstTimePostEstimateVisitChoice) {
+        case "two_visits":
+          return "2 visits";
+        case "three_visits":
+          return "3 visits";
+        case "convert_recurring":
+          return "Recurring (after sign-in)";
+        case "one_visit":
+        default:
+          return "1 visit";
+      }
+    }
+    return state.deepCleanProgram === "phased_3_visit" ? "3-visit program" : "One visit";
+  })();
+  const locZip = normalizeBookingServiceLocationZipParam(state.serviceLocationZip);
+  const locLine = (() => {
+    if (!isServiceLocationComplete(state)) {
+      return "Add on location step";
+    }
+    const u = state.serviceLocationUnit.trim();
+    const parts = [
+      state.serviceLocationStreet.trim(),
+      u ? u : null,
+      state.serviceLocationCity.trim(),
+      state.serviceLocationState.trim(),
+      locZip,
+    ].filter(Boolean);
+    return parts.join(", ");
+  })();
 
   const showLiveEstimate = step === "review";
 
   const baseRows = [
+    {
+      label: "Service area",
+      value: locLine,
+    },
     ...(deep
       ? [
           {
-            label: "Deep clean plan",
+            label: "Visit pacing",
             value: deepProgramLabel,
           },
         ]
       : []),
     {
-      label: "Frequency",
-      value: state.frequency || "Not selected yet",
+      label: "Visit type",
+      value: "One-time (public booking)",
     },
     {
       label: "Home profile",
       value: buildHomeProfile(state),
-    },
-    {
-      label: "Preferred Timing",
-      value: state.preferredTime || "Not selected yet",
     },
     {
       label: "Pets",
@@ -127,10 +165,12 @@ export function BookingSummaryCard({
 
       <div className="mt-4 flex items-center justify-between gap-4">
         <h2 className="font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.03em] text-[#0F172A]">
-          {selectedService.summaryLabel}
+          {marketingTitle}
         </h2>
         <span className="rounded-full border border-[#C9B27C]/25 bg-[#FFF9F3] px-3 py-1 font-[var(--font-manrope)] text-xs text-[#475569]">
-          {selectedService.bookingTag}
+          {state.bookingPublicPath === "recurring_auth_gate"
+            ? "Account"
+            : selectedService.bookingTag}
         </span>
       </div>
 

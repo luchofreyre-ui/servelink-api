@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { ReactNode } from "react";
-import type { OpsItemsResponse, OpsSummaryResponse } from "@/lib/api/adminOps";
+import type {
+  FoSupplyReadinessResponse,
+  OpsItemsResponse,
+  OpsSummaryResponse,
+} from "@/lib/api/adminOps";
 import { DeferredDispatchTable } from "./DeferredDispatchTable";
 import { DispatchLockedTable } from "./DispatchLockedTable";
+import { FoSupplyReadinessSection } from "./FoSupplyReadinessSection";
 import { ReviewRequiredTable } from "./ReviewRequiredTable";
 
 export type OpsSystemBacklogProps = {
@@ -12,10 +17,12 @@ export type OpsSystemBacklogProps = {
   reviewRequired: OpsItemsResponse;
   deferred: OpsItemsResponse;
   manual: OpsItemsResponse;
+  foSupply: FoSupplyReadinessResponse;
 };
 
 export default function OpsSystemBacklog(props: OpsSystemBacklogProps) {
-  const { summary, invalid, locked, reviewRequired, deferred, manual } = props;
+  const { summary, invalid, locked, reviewRequired, deferred, manual, foSupply } =
+    props;
   const s = summary?.summary;
 
   return (
@@ -73,6 +80,23 @@ export default function OpsSystemBacklog(props: OpsSystemBacklogProps) {
             <div className="text-sm text-gray-500">No hotspots</div>
           )}
         </div>
+      </Section>
+
+      <Section
+        id="fo-supply-readiness"
+        title="FO supply readiness (internal)"
+        actions={
+          <ActionLink href="/admin/ops#fo-supply-readiness">
+            Refresh section
+          </ActionLink>
+        }
+      >
+        <p className="border-b bg-gray-100 px-3 py-2 text-xs text-gray-600">
+          Customer matching uses the same supply primitives as this table. Paused
+          or ineligible FOs are excluded before team selection; reason codes match
+          server evaluation.
+        </p>
+        <FoSupplyReadinessSection items={foSupply.items ?? []} />
       </Section>
 
       <Section

@@ -1,18 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma";
 import type { CreateBookingDirectionIntakeDto } from "./dto/create-booking-direction-intake.dto";
-import { DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS } from "./estimate-factors-sanitize";
+import { resolveEstimateFactorsForPublicIntake } from "./estimate-factors-sanitize";
 import { intakeServiceIdImpliesDeepClean } from "./intake-service-type.util";
 
 @Injectable()
 export class BookingDirectionIntakeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateBookingDirectionIntakeDto) {
+  async create(
+    dto: CreateBookingDirectionIntakeDto,
+    geocoded?: { siteLat: number; siteLng: number } | null,
+  ) {
     const utm = dto.utm;
     const deepOk = intakeServiceIdImpliesDeepClean(dto.serviceId);
     const deepCleanProgram =
       deepOk && dto.deepCleanProgram ? dto.deepCleanProgram : null;
+
+    const sl = dto.serviceLocation;
 
     const row = await this.prisma.bookingDirectionIntake.create({
       data: {
@@ -25,10 +30,9 @@ export class BookingDirectionIntakeService {
         preferredTime: dto.preferredTime.trim(),
         preferredFoId: dto.preferredFoId?.trim() || null,
         deepCleanProgram,
-        estimateFactors: (dto.estimateFactors ?? {
-          ...DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS,
-          addonIds: [...DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS.addonIds],
-        }) as object,
+        estimateFactors: resolveEstimateFactorsForPublicIntake(
+          dto.estimateFactors ?? undefined,
+        ) as object,
         customerName: dto.customerName?.trim() || null,
         customerEmail: dto.customerEmail?.trim() || null,
         source: dto.source?.trim() || null,
@@ -37,6 +41,13 @@ export class BookingDirectionIntakeService {
         utmCampaign: utm?.campaign?.trim() || null,
         utmContent: utm?.content?.trim() || null,
         utmTerm: utm?.term?.trim() || null,
+        serviceLocationStreet: sl?.street?.trim() || null,
+        serviceLocationCity: sl?.city?.trim() || null,
+        serviceLocationState: sl?.state?.trim() || null,
+        serviceLocationZip: sl?.zip?.trim() || null,
+        serviceLocationUnit: sl?.unit?.trim() || null,
+        siteLat: geocoded?.siteLat ?? null,
+        siteLng: geocoded?.siteLng ?? null,
       },
       select: { id: true, createdAt: true },
     });

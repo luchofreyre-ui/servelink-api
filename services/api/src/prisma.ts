@@ -3,6 +3,7 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
+import { franchiseOwnerFoActivationGuardExtension } from "./modules/fo/fo-activation-prisma.extension";
 import { ensureProviderForFranchiseOwner } from "./modules/fo/fo-provider-sync";
 
 const connectionString = process.env.DATABASE_URL;
@@ -182,6 +183,7 @@ export class PrismaService
     // Prisma v5: apply hard immutability + FO/provider sync via client extensions.
     // Returning the extended client from the constructor is intentional.
     return this.$extends(immutableLedgerExtension)
+      .$extends(franchiseOwnerFoActivationGuardExtension)
       .$extends(franchiseOwnerProviderSyncExtension) as unknown as PrismaService;
   }
 

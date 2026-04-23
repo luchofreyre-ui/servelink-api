@@ -1,6 +1,10 @@
 import { randomBytes } from "node:crypto";
 
-import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import {
   BookingStatus,
@@ -28,7 +32,14 @@ import {
   INTAKE_ESTIMATE_EXECUTION_FAILED_MESSAGE,
   INTAKE_ESTIMATE_INPUT_INVALID_MESSAGE,
   INTAKE_PREVIEW_ESTIMATE_FAILED_MESSAGE,
+  INTAKE_SERVICE_LOCATION_REQUIRED_CODE,
+  INTAKE_SERVICE_LOCATION_REQUIRED_MESSAGE,
 } from "./intake-estimator-reliability";
+import { isCompleteServiceLocation } from "../geocoding/canonical-service-address";
+import {
+  GeocodingNotFoundError,
+  GeocodingService,
+} from "../geocoding/geocoding.service";
 
 export type DeepCleanProgramVisitSubmitDisplay = {
   visitIndex: number;
@@ -122,7 +133,24 @@ export class IntakeBookingBridgeService {
     private readonly config: ConfigService,
     private readonly estimator: EstimatorService,
     private readonly auth: AuthService,
+    private readonly geocoding: GeocodingService,
   ) {}
+
+  /**
+   * Public preview + submit require a complete service address and successful geocode
+   * so estimates can run `matchFOs` and bookings persist `siteLat` / `siteLng`.
+   */
+  private async resolvePublicSiteCoords(
+    dto: CreateBookingDirectionIntakeDto,
+  ): Promise<{ siteLat: number; siteLng: number }> {
+    if (!dto.serviceLocation || !isCompleteServiceLocation(dto.serviceLocation)) {
+      throw new BadRequestException({
+        code: INTAKE_SERVICE_LOCATION_REQUIRED_CODE,
+        message: INTAKE_SERVICE_LOCATION_REQUIRED_MESSAGE,
+      });
+    }
+    return this.geocoding.geocodeServiceLocation(dto.serviceLocation);
+  }
 
   /**
    * Stateless estimate for the public booking review step — same mapper as submit,
@@ -131,6 +159,19 @@ export class IntakeBookingBridgeService {
   async previewEstimateFromDto(
     dto: CreateBookingDirectionIntakeDto,
   ): Promise<IntakeEstimatePreviewResponse> {
+    let site: { siteLat: number; siteLng: number };
+    try {
+      site = await this.resolvePublicSiteCoords(dto);
+    } catch (err: unknown) {
+      if (err instanceof GeocodingNotFoundError) {
+        throw new BadRequestException({
+          code: err.code,
+          message: err.message,
+        });
+      }
+      throw err;
+    }
+
     let estimateInput;
     try {
       estimateInput = mapIntakeFieldsToEstimateInput({
@@ -141,6 +182,8 @@ export class IntakeBookingBridgeService {
         frequency: dto.frequency,
         deepCleanProgram: dto.deepCleanProgram ?? null,
         estimateFactors: dto.estimateFactors,
+        siteLat: site.siteLat,
+        siteLng: site.siteLng,
       });
     } catch (err: unknown) {
       if (err instanceof IntakeEstimateMappingError) {
@@ -206,7 +249,51 @@ export class IntakeBookingBridgeService {
   async submitIntakeAndCreateBooking(
     dto: CreateBookingDirectionIntakeDto,
   ): Promise<IntakeSubmitResponse> {
-    const created = await this.intakes.create(dto);
+    let site: { siteLat: number; siteLng: number };
+    try {
+      site = await this.resolvePublicSiteCoords(dto);
+    } catch (err: unknown) {
+      if (err instanceof GeocodingNotFoundError) {
+        return {
+          kind: "booking_direction_intake_submit",
+          intakeId: "location_gate",
+          bookingCreated: false,
+          bookingId: null,
+          estimate: null,
+          deepCleanProgram: null,
+          bookingError: { code: err.code, message: err.message },
+        };
+      }
+      if (err instanceof BadRequestException) {
+        const resp = err.getResponse();
+        const code =
+          typeof resp === "object" &&
+          resp !== null &&
+          "code" in resp &&
+          typeof (resp as { code: unknown }).code === "string"
+            ? (resp as { code: string }).code
+            : INTAKE_SERVICE_LOCATION_REQUIRED_CODE;
+        const message =
+          typeof resp === "object" &&
+          resp !== null &&
+          "message" in resp &&
+          typeof (resp as { message: unknown }).message === "string"
+            ? (resp as { message: string }).message
+            : INTAKE_SERVICE_LOCATION_REQUIRED_MESSAGE;
+        return {
+          kind: "booking_direction_intake_submit",
+          intakeId: "location_gate",
+          bookingCreated: false,
+          bookingId: null,
+          estimate: null,
+          deepCleanProgram: null,
+          bookingError: { code, message },
+        };
+      }
+      throw err;
+    }
+
+    const created = await this.intakes.create(dto, site);
 
     const intake = await this.prisma.bookingDirectionIntake.findUnique({
       where: { id: created.intakeId },
@@ -313,6 +400,11 @@ export class IntakeBookingBridgeService {
           },
         };
       }
+
+      await this.prisma.bookingDirectionIntake.update({
+        where: { id: intake.id },
+        data: { bookingId: booking.id },
+      });
 
       const deepCleanProgram = estimate.deepCleanProgram
         ? mapDeepCleanProgramForSubmitResponse(estimate.deepCleanProgram)

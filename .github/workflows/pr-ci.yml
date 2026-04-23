@@ -84,6 +84,10 @@ jobs:
           npx prisma generate
           npx prisma migrate deploy
 
+      - name: Seed Playwright admin scenario (admin user for verify-local-* Playwright auth)
+        working-directory: services/api
+        run: npm run seed:playwright-admin-scenario
+
       - name: API typecheck
         working-directory: services/api
         run: npm run typecheck
@@ -148,10 +152,17 @@ jobs:
 
       - name: verify:local-critical-flows
         working-directory: apps/web
+        env:
+          # Same values as services/api/src/dev/playwrightAdminScenario.ts (avoids relying on DevModule + GET in CI)
+          PLAYWRIGHT_ADMIN_EMAIL: playwright_admin_scenario_admin@servelink.local
+          PLAYWRIGHT_ADMIN_PASSWORD: Passw0rd!
         run: npm run verify:local-critical-flows
 
       - name: verify:local-system-integrity
         working-directory: apps/web
+        env:
+          PLAYWRIGHT_ADMIN_EMAIL: playwright_admin_scenario_admin@servelink.local
+          PLAYWRIGHT_ADMIN_PASSWORD: Passw0rd!
         run: npm run verify:local-system-integrity
 
       - name: Stop background servers
