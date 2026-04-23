@@ -16,6 +16,7 @@ import type {
   PublicBookingTeamOption,
   PublicBookingWindow,
 } from "./public-booking-orchestrator.types";
+import { publicBookingFixtureFoEmails } from "../../dev/publicBookingFoFixtures";
 
 const MAX_FO_CANDIDATES = 8;
 const MAX_WINDOWS_TOTAL = 60;
@@ -210,6 +211,30 @@ export class PublicBookingOrchestratorService {
     return Math.max(1, Math.round(booking.estimatedHours * 60));
   }
 
+  /**
+   * Dev-only public-booking FO fixtures (`seed:public-booking-fo-fixtures`) share the same
+   * Tulsa hub as matrix cohorts; they are not a production cohort. When live `matchFOs`
+   * returns other candidates, drop fixtures so scheduling reflects current eligibility +
+   * ranking rather than a frozen estimate snapshot.
+   */
+  private async preferNonFixtureFoIds(orderedIds: string[]): Promise<string[]> {
+    if (orderedIds.length === 0) return [];
+    const fixtureEmailSet = new Set<string>(
+      Object.values(publicBookingFixtureFoEmails) as string[],
+    );
+    const rows = await this.prisma.franchiseOwner.findMany({
+      where: { id: { in: orderedIds } },
+      select: { id: true, user: { select: { email: true } } },
+    });
+    const emailById = new Map(
+      rows.map((r) => [r.id, String(r.user?.email ?? "").trim()] as const),
+    );
+    const withoutFixtures = orderedIds.filter(
+      (id) => !fixtureEmailSet.has(emailById.get(id) ?? ""),
+    );
+    return withoutFixtures.length > 0 ? withoutFixtures : orderedIds;
+  }
+
   private async resolveFoCandidateIds(
     booking: BookingForOrchestration,
   ): Promise<string[]> {
@@ -217,44 +242,43 @@ export class PublicBookingOrchestratorService {
       return [booking.foId.trim()];
     }
 
-    let ids: string[] = [];
-
     const fromSnapshot = extractFoIdsFromEstimateOutput(
       booking.estimateSnapshot?.outputJson ?? null,
     );
-    if (fromSnapshot.length > 0) {
-      ids = [...fromSnapshot];
-    } else {
-      const lat = booking.siteLat;
-      const lng = booking.siteLng;
-      if (
-        lat != null &&
-        lng != null &&
-        Number.isFinite(lat) &&
-        Number.isFinite(lng) &&
-        booking.estimateSnapshot
-      ) {
-        const job = parseEstimateJobMatchFields({
-          outputJson: booking.estimateSnapshot.outputJson,
-          inputJson: booking.estimateSnapshot.inputJson,
-        });
-        if (job) {
-          const input: JobMatchInput = {
-            lat,
-            lng,
-            squareFootage: job.squareFootage,
-            estimatedLaborMinutes: job.estimatedLaborMinutes,
-            recommendedTeamSize: job.recommendedTeamSize,
-            serviceType: job.serviceType,
-            limit: MAX_FO_CANDIDATES,
-          };
-          const matched = await this.fo.matchFOs(input);
-          ids = matched.map((m) => m.id).filter(Boolean);
+
+    const lat = booking.siteLat;
+    const lng = booking.siteLng;
+    if (
+      lat != null &&
+      lng != null &&
+      Number.isFinite(lat) &&
+      Number.isFinite(lng) &&
+      booking.estimateSnapshot
+    ) {
+      const job = parseEstimateJobMatchFields({
+        outputJson: booking.estimateSnapshot.outputJson,
+        inputJson: booking.estimateSnapshot.inputJson,
+      });
+      if (job) {
+        const input: JobMatchInput = {
+          lat,
+          lng,
+          squareFootage: job.squareFootage,
+          estimatedLaborMinutes: job.estimatedLaborMinutes,
+          recommendedTeamSize: job.recommendedTeamSize,
+          serviceType: job.serviceType,
+          limit: MAX_FO_CANDIDATES,
+        };
+        const matched = await this.fo.matchFOs(input);
+        const liveIds = matched.map((m) => m.id).filter(Boolean);
+        if (liveIds.length > 0) {
+          const ranked = await this.preferNonFixtureFoIds(liveIds);
+          return ranked.slice(0, MAX_FO_CANDIDATES);
         }
       }
     }
 
-    return ids.slice(0, MAX_FO_CANDIDATES);
+    return fromSnapshot.slice(0, MAX_FO_CANDIDATES);
   }
 
   /**
@@ -402,7 +426,9 @@ export class PublicBookingOrchestratorService {
     const teamOptionsLimit =
       jobMatch?.serviceType === "move_in" || jobMatch?.serviceType === "move_out"
         ? 3
-        : 2;
+        : jobMatch?.serviceType === "deep_clean"
+          ? 3
+          : 2;
 
     if (candidateIds.length === 0) {
       const hasRoutableSite =
