@@ -29,6 +29,8 @@ import {
   BOOKING_SCHEDULE_TEAMS_LOADING_STILL,
   BOOKING_SCHEDULE_TEAMS_LOAD_FAILED_BODY,
   BOOKING_SCHEDULE_TEAMS_LOAD_FAILED_TITLE,
+  BOOKING_SCHEDULE_LOCATION_UNRESOLVED_BODY,
+  BOOKING_SCHEDULE_LOCATION_UNRESOLVED_TITLE,
   BOOKING_SCHEDULE_WINDOWS_LOADING,
   BOOKING_SCHEDULE_WINDOWS_LOADING_STILL,
   BOOKING_SCHEDULE_ZERO_TEAMS_ADJUST_CTA,
@@ -39,7 +41,11 @@ import {
 } from "./bookingPublicSurfaceCopy";
 import type { BookingAvailableTeamOption, BookingFlowState } from "./bookingFlowTypes";
 
-export type BookingScheduleTeamsEmptyState = "none" | "zero" | "load_error";
+export type BookingScheduleTeamsEmptyState =
+  | "none"
+  | "zero"
+  | "load_error"
+  | "location_unresolved";
 
 function formatSlotLabel(isoStart: string): string {
   const d = new Date(isoStart);
@@ -127,7 +133,7 @@ export function BookingStepSchedule({
 
   return (
     <BookingSectionCard
-      eyebrow="Step 4"
+      eyebrow="Step 5"
       title={BOOKING_SCHEDULE_PAGE_TITLE}
       body={BOOKING_SCHEDULE_PAGE_LEAD}
     >
@@ -149,12 +155,16 @@ export function BookingStepSchedule({
           <p className="font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.02em] text-[#0F172A]">
             {teamsEmptyState === "load_error"
               ? BOOKING_SCHEDULE_TEAMS_LOAD_FAILED_TITLE
-              : BOOKING_SCHEDULE_ZERO_TEAMS_TITLE}
+              : teamsEmptyState === "location_unresolved"
+                ? BOOKING_SCHEDULE_LOCATION_UNRESOLVED_TITLE
+                : BOOKING_SCHEDULE_ZERO_TEAMS_TITLE}
           </p>
           <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
             {teamsEmptyState === "load_error"
               ? BOOKING_SCHEDULE_TEAMS_LOAD_FAILED_BODY
-              : BOOKING_SCHEDULE_ZERO_TEAMS_BODY}
+              : teamsEmptyState === "location_unresolved"
+                ? BOOKING_SCHEDULE_LOCATION_UNRESOLVED_BODY
+                : BOOKING_SCHEDULE_ZERO_TEAMS_BODY}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <button
@@ -165,7 +175,7 @@ export function BookingStepSchedule({
             >
               {BOOKING_SCHEDULE_ZERO_TEAMS_ADJUST_CTA}
             </button>
-            {teamsEmptyState === "zero" ? (
+            {teamsEmptyState === "zero" || teamsEmptyState === "location_unresolved" ? (
               <button
                 type="button"
                 data-testid="booking-schedule-continue-manual"

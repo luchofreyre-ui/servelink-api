@@ -8,20 +8,35 @@ import {
 } from "class-validator";
 import {
   ESTIMATE_ADDON_IDS,
+  ESTIMATE_BATHROOM_COMPLEXITY,
   ESTIMATE_BATHROOM_CONDITION,
   ESTIMATE_CARPET_PERCENT,
+  ESTIMATE_CHILDREN_IN_HOME,
+  ESTIMATE_CLUTTER_ACCESS,
   ESTIMATE_CLUTTER_LEVELS,
   ESTIMATE_FIRST_TIME,
+  ESTIMATE_FIRST_TIME_VISIT_PROGRAM,
+  ESTIMATE_FLOOR_MIX,
   ESTIMATE_FLOOR_VISIBILITY,
   ESTIMATE_FLOORS,
   ESTIMATE_GLASS_SHOWERS,
+  ESTIMATE_HALF_BATHROOMS,
   ESTIMATE_KITCHEN_CONDITION,
+  ESTIMATE_KITCHEN_INTENSITY,
   ESTIMATE_LAST_PRO_CLEAN,
+  ESTIMATE_LAST_PRO_CLEAN_RECENCY,
+  ESTIMATE_LAYOUT_TYPE,
   ESTIMATE_OCCUPANCY,
+  ESTIMATE_OCCUPANCY_LEVEL,
+  ESTIMATE_OVERALL_LABOR_CONDITION,
   ESTIMATE_PET_ACCIDENTS,
+  ESTIMATE_PET_IMPACT,
   ESTIMATE_PET_PRESENCE,
   ESTIMATE_PET_SHEDDING,
+  ESTIMATE_PRIMARY_INTENT,
   ESTIMATE_PROPERTY_TYPES,
+  ESTIMATE_RECURRING_CADENCE_INTENT,
+  ESTIMATE_SURFACE_DETAIL_TOKENS,
   ESTIMATE_STAIRS_FLIGHTS,
   ESTIMATE_STOVETOP_TYPE,
 } from "./estimate-factor-enums";
@@ -104,4 +119,69 @@ export class EstimateFactorsDto {
   @IsString({ each: true })
   @IsIn([...ESTIMATE_ADDON_IDS], { each: true })
   addonIds!: string[];
+
+  // --- Three-layer public intake (estimate-accuracy + estimator extensions) ---
+
+  @IsString()
+  @IsIn([...ESTIMATE_HALF_BATHROOMS])
+  halfBathrooms!: (typeof ESTIMATE_HALF_BATHROOMS)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_FLOOR_MIX])
+  floorMix!: (typeof ESTIMATE_FLOOR_MIX)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_LAYOUT_TYPE])
+  layoutType!: (typeof ESTIMATE_LAYOUT_TYPE)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_OCCUPANCY_LEVEL])
+  occupancyLevel!: (typeof ESTIMATE_OCCUPANCY_LEVEL)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_CHILDREN_IN_HOME])
+  childrenInHome!: (typeof ESTIMATE_CHILDREN_IN_HOME)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_PET_IMPACT])
+  petImpact!: (typeof ESTIMATE_PET_IMPACT)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_OVERALL_LABOR_CONDITION])
+  overallLaborCondition!: (typeof ESTIMATE_OVERALL_LABOR_CONDITION)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_KITCHEN_INTENSITY])
+  kitchenIntensity!: (typeof ESTIMATE_KITCHEN_INTENSITY)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_BATHROOM_COMPLEXITY])
+  bathroomComplexity!: (typeof ESTIMATE_BATHROOM_COMPLEXITY)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_CLUTTER_ACCESS])
+  clutterAccess!: (typeof ESTIMATE_CLUTTER_ACCESS)[number];
+
+  @Transform(({ value }) => (Array.isArray(value) ? value : []))
+  @IsArray()
+  @ArrayUnique()
+  @IsString({ each: true })
+  @IsIn([...ESTIMATE_SURFACE_DETAIL_TOKENS], { each: true })
+  surfaceDetailTokens!: string[];
+
+  @IsString()
+  @IsIn([...ESTIMATE_PRIMARY_INTENT])
+  primaryIntent!: (typeof ESTIMATE_PRIMARY_INTENT)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_LAST_PRO_CLEAN_RECENCY])
+  lastProCleanRecency!: (typeof ESTIMATE_LAST_PRO_CLEAN_RECENCY)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_FIRST_TIME_VISIT_PROGRAM])
+  firstTimeVisitProgram!: (typeof ESTIMATE_FIRST_TIME_VISIT_PROGRAM)[number];
+
+  @IsString()
+  @IsIn([...ESTIMATE_RECURRING_CADENCE_INTENT])
+  recurringCadenceIntent!: (typeof ESTIMATE_RECURRING_CADENCE_INTENT)[number];
 }

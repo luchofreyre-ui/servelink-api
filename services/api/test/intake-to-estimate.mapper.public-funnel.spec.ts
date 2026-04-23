@@ -3,7 +3,10 @@ import {
   mapIntakeFieldsToEstimateInput,
   mapIntakeToEstimateInput,
 } from "../src/modules/booking-direction-intake/intake-to-estimate.mapper";
-import { DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS } from "../src/modules/booking-direction-intake/estimate-factors-sanitize";
+import {
+  DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS,
+  resolveEstimateFactorsForPublicIntake,
+} from "../src/modules/booking-direction-intake/estimate-factors-sanitize";
 
 describe("public funnel estimate factors (preview + persisted intake)", () => {
   const baseFields = {
@@ -54,5 +57,33 @@ describe("public funnel estimate factors (preview + persisted intake)", () => {
     const input = mapIntakeToEstimateInput(intake);
     expect(input.sqft_band).toBeDefined();
     expect(input.addons).toEqual([]);
+  });
+
+  it("mapIntakeFieldsToEstimateInput attaches siteLat and siteLng when provided", () => {
+    const input = mapIntakeFieldsToEstimateInput({
+      ...baseFields,
+      estimateFactors: undefined,
+      siteLat: 36.154,
+      siteLng: -95.992,
+    });
+    expect(input.siteLat).toBe(36.154);
+    expect(input.siteLng).toBe(-95.992);
+  });
+
+  it("mapIntakeFieldsToEstimateInput forwards layered questionnaire fields", () => {
+    const factors = resolveEstimateFactorsForPublicIntake({
+      ...DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS,
+      addonIds: [...DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS.addonIds],
+      halfBathrooms: "1",
+      kitchenIntensity: "heavy_use",
+      recurringCadenceIntent: "biweekly",
+    });
+    const input = mapIntakeFieldsToEstimateInput({
+      ...baseFields,
+      estimateFactors: factors,
+    });
+    expect(input.half_bathrooms).toBe("1");
+    expect(input.kitchen_intensity).toBe("heavy_use");
+    expect(input.recurring_cadence_intent).toBe("biweekly");
   });
 });

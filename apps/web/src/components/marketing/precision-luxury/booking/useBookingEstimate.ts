@@ -77,13 +77,19 @@ export function useBookingEstimate(input: Record<string, unknown> | null) {
         if (cancelled) return;
         setState((prev) => {
           if (prev.requestKey !== key) return prev;
+          const raw =
+            err instanceof Error ? err.message : String(err ?? "Estimate failed");
+          const errorMessage =
+            raw === "Failed to fetch" ||
+            raw === "NetworkError when attempting to fetch resource."
+              ? "We couldn’t reach the live quote service from this page (often a network or browser security block). Try refreshing, or try again in a moment."
+              : raw || "Estimate failed";
           return {
             status: "error",
             requestKey: key,
             data: null,
             failureType: failureTypeFromError(err),
-            errorMessage:
-              err instanceof Error ? err.message : "Estimate failed",
+            errorMessage,
           };
         });
       });

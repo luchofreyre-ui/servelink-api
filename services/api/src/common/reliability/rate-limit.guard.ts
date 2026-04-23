@@ -123,6 +123,17 @@ export class RateLimitGuard implements CanActivate {
       return true;
     }
 
+    /**
+     * Serial E2E / Playwright can exceed per-path public limits from one IP.
+     * Dedicated flag only — do not couple to geocode fixture lookup.
+     */
+    if (
+      String(process.env.SERVELINK_E2E_RATE_LIMIT_BYPASS ?? "").trim() === "true" &&
+      path === "/api/v1/booking-direction-intake/preview-estimate"
+    ) {
+      return true;
+    }
+
     const role = String(req?.user?.role ?? "");
     if (role === "admin" || role === "system") {
       return true;

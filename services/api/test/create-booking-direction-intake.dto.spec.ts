@@ -13,6 +13,12 @@ describe("CreateBookingDirectionIntakeDto — preferredFoId", () => {
       frequency: "Weekly",
       preferredTime: "Friday",
       preferredFoId: "clxy1234567890abcdefghijk",
+      serviceLocation: {
+        street: "100 Market Street",
+        city: "San Francisco",
+        state: "CA",
+        zip: "94103",
+      },
     });
     const errors = await validate(dto);
     expect(errors).toHaveLength(0);
@@ -27,6 +33,12 @@ describe("CreateBookingDirectionIntakeDto — preferredFoId", () => {
       frequency: "Weekly",
       preferredTime: "Friday",
       preferredFoId: "   ",
+      serviceLocation: {
+        street: "100 Market Street",
+        city: "San Francisco",
+        state: "CA",
+        zip: "94103",
+      },
     });
     const errors = await validate(dto);
     expect(errors).toHaveLength(0);

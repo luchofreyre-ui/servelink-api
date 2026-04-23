@@ -120,15 +120,110 @@ export function bookingConfirmationDeepPlanEchoLabel(
   program: BookingDeepCleanProgramChoice,
 ): string {
   return program === "phased_3_visit"
-    ? "3-visit deep clean program"
-    : "One-visit deep clean";
+    ? "3-visit program"
+    : "One-visit program";
 }
 
-/** Home step — cadence still feeds the estimator before you pick a team and time. */
-export const BOOKING_HOME_CADENCE_SECTION_TITLE = "Service cadence";
+export const BOOKING_PUBLIC_SERVICE_SECTION_TITLE = "Choose your service";
 
-export const BOOKING_HOME_CADENCE_SECTION_BODY =
-  "How often you’d like visits, and the part of day that usually works for arrivals. You’ll pick a team and a concrete arrival time on the next step.";
+export const BOOKING_PUBLIC_SERVICE_SECTION_BODY =
+  "One-time, first-time-with-recurring, and move-related visits are planned anonymously on this page. Recurring service continues in your Servelink account after you sign in.";
+
+export const BOOKING_PUBLIC_CARD_ONE_TIME_TITLE = "One-Time Cleaning";
+
+export const BOOKING_PUBLIC_CARD_ONE_TIME_BODY =
+  "A single planned visit—home details, estimate, then team choice and scheduling from real availability.";
+
+export const BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE =
+  "First-Time Cleaning With Recurring Service";
+
+export const BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_BODY =
+  "You want a strong opening reset and already intend recurring visits afterward—same anonymous intake and estimate as one-time, with recurring continuation framed after pricing.";
+
+export const BOOKING_PUBLIC_CARD_MOVE_TITLE = "Move-In / Move-Out Cleaning";
+
+export const BOOKING_PUBLIC_CARD_MOVE_BODY =
+  "Transition-focused cleaning while occupancy and appliances are in flux—anonymous planning here, then estimate and scheduling once we know the property location.";
+
+export const BOOKING_PUBLIC_CARD_RECURRING_TITLE = "Recurring Service";
+
+export const BOOKING_PUBLIC_CARD_RECURRING_BODY =
+  "Ongoing cadence is set up and managed in your Servelink account—not through this anonymous booking form.";
+
+export const BOOKING_RECURRING_GATE_HEADLINE =
+  "Recurring service is managed through your Servelink account";
+
+export const BOOKING_RECURRING_GATE_BODY =
+  "Log in to manage cadence and saved home details. New here? Create an account—this public path does not continue as a recurring booking.";
+
+export const BOOKING_RECURRING_GATE_LOGIN_CTA = "Log in";
+
+export const BOOKING_RECURRING_GATE_REGISTER_CTA = "Create account";
+
+export const BOOKING_LOCATION_STEP_TITLE = "Service location";
+
+export const BOOKING_LOCATION_STEP_BODY =
+  "We need a routable address where the cleaning will take place before we match teams. All fields below are required except apartment or unit.";
+
+export const BOOKING_LOCATION_STREET_LABEL = "Street address";
+
+export const BOOKING_LOCATION_STREET_PLACEHOLDER = "e.g. 1200 Market Street";
+
+export const BOOKING_LOCATION_UNIT_LABEL = "Apt / suite / unit (optional)";
+
+export const BOOKING_LOCATION_UNIT_PLACEHOLDER = "e.g. Apt 4B";
+
+export const BOOKING_LOCATION_CITY_LABEL = "City";
+
+export const BOOKING_LOCATION_STATE_LABEL = "State";
+
+export const BOOKING_LOCATION_ZIP_LABEL = "ZIP code";
+
+export const BOOKING_LOCATION_ZIP_HELPER =
+  "Use the ZIP where the cleaning will take place (at least five characters).";
+
+export const BOOKING_FIRST_TIME_WITH_RECURRING_REVIEW_INTENT =
+  "You selected First-Time Cleaning With Recurring Service—after this opening visit, recurring care is already your intended path (set up in your account after we connect).";
+
+export const BOOKING_REVIEW_VISIT_STRUCTURE_LABEL = "First visit structure:";
+
+export const BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE =
+  "Concrete arrival windows are chosen after you pick a team on the next step.";
+
+/** @deprecated Early cadence UI removed; kept for rare imports during transition. */
+export const BOOKING_HOME_CADENCE_SECTION_TITLE = "Scheduling preference";
+
+/** @deprecated */
+export const BOOKING_HOME_CADENCE_SECTION_BODY = "";
+
+/** @deprecated */
+export const BOOKING_CADENCE_ARRIVAL_WINDOW_LABEL = "Typical arrival window";
+
+/** @deprecated */
+export const BOOKING_PUBLIC_CARD_FIRST_TIME_TITLE = BOOKING_PUBLIC_CARD_ONE_TIME_TITLE;
+
+/** @deprecated */
+export const BOOKING_PUBLIC_CARD_FIRST_TIME_BODY = BOOKING_PUBLIC_CARD_ONE_TIME_BODY;
+
+export const BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE = "Structure this first visit";
+
+export const BOOKING_POST_ESTIMATE_FIRST_TIME_BODY =
+  "Now that you’ve seen the preview, choose how you’d like to pace the work. You can still adjust details before we save your request.";
+
+export const BOOKING_POST_ESTIMATE_VISIT_ONE = "Book as one visit";
+
+export const BOOKING_POST_ESTIMATE_VISIT_TWO = "Spread across 2 visits";
+
+export const BOOKING_POST_ESTIMATE_VISIT_THREE = "Spread across 3 visits";
+
+export const BOOKING_POST_ESTIMATE_CONVERT_RECURRING =
+  "Convert to recurring after this estimate";
+
+export const BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER =
+  "We’ll keep this request as a one-time booking until you sign in—then recurring cadence and account tools take over in the customer portal.";
+
+export const BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED =
+  "Recurring Service is not available on the anonymous booking path. Choose One-Time Cleaning, First-Time Cleaning With Recurring Service, or Move-In / Move-Out Cleaning above—or use Log in / Create account.";
 
 /** Step 4 — scheduling: team, arrival window, final confirm (web shell). */
 export const BOOKING_SCHEDULE_PAGE_TITLE = "Schedule your visit";
@@ -175,6 +270,16 @@ export const BOOKING_SCHEDULE_ZERO_TEAMS_TITLE = "No teams available right now";
 
 export const BOOKING_SCHEDULE_ZERO_TEAMS_BODY =
   "We couldn’t find availability for your request at the moment. You can adjust your details or we’ll follow up with options.";
+
+/** Matches `public-booking-orchestrator` when booking has no routable coordinates. */
+export const PUBLIC_BOOKING_ORCHESTRATOR_LOCATION_NOT_RESOLVED_CODE =
+  "PUBLIC_BOOKING_LOCATION_NOT_RESOLVED";
+
+export const BOOKING_SCHEDULE_LOCATION_UNRESOLVED_TITLE =
+  "We couldn’t confirm this address on the map";
+
+export const BOOKING_SCHEDULE_LOCATION_UNRESOLVED_BODY =
+  "Please go back to your service address, check street spelling, city, state, and ZIP, then try again. If the address is correct and you still see this message, continue and we’ll help you manually.";
 
 export const BOOKING_SCHEDULE_ZERO_TEAMS_ADJUST_CTA = "Adjust details";
 
@@ -234,9 +339,6 @@ export const BOOKING_SCHEDULE_CONFIRMING = "Confirming your booking…";
 export const BOOKING_REVIEW_SELECTED_TEAM_LABEL = "Selected team";
 
 export const BOOKING_REVIEW_SELECTED_ARRIVAL_LABEL = "Requested arrival";
-
-/** Cadence timing (home + review) — not the concrete booked arrival slot. */
-export const BOOKING_CADENCE_ARRIVAL_WINDOW_LABEL = "Typical arrival window";
 
 export const BOOKING_REVIEW_SAVE_AND_SCHEDULE_CTA = "See available teams";
 
@@ -333,9 +435,9 @@ export const BOOKING_ADD_ON_LABELS: Record<BookingAddOnToken, string> = {
 };
 
 /** Step 2 — deep-clean service only (Phase 4). */
-export const BOOKING_STEP2_DEEP_CLEAN_FOCUS_SECTION_TITLE = "Deep-clean focus";
+export const BOOKING_STEP2_DEEP_CLEAN_FOCUS_SECTION_TITLE = "Visit focus";
 export const BOOKING_STEP2_DEEP_CLEAN_FOCUS_SECTION_BODY =
-  "Tell us where you want the deepest attention on this reset visit.";
+  "Tell us where you want the deepest attention on this visit.";
 
 export const BOOKING_DEEP_CLEAN_FOCUS_LABELS: Record<BookingDeepCleanFocus, string> =
   {
@@ -402,7 +504,7 @@ export const BOOKING_REVIEW_ESTIMATOR_FOCUS_AREAS_LABEL = "Focus areas";
 export const BOOKING_REVIEW_ESTIMATOR_SURFACE_LABEL = "Furnishings & layout";
 export const BOOKING_REVIEW_SCOPE_OF_WORK_LABEL = "Scope of work";
 export const BOOKING_REVIEW_ADD_ONS_LABEL = "Add-ons";
-export const BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL = "Deep-clean focus";
+export const BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL = "Visit focus";
 export const BOOKING_REVIEW_TRANSITION_SETUP_LABEL = "Home transition setup";
 export const BOOKING_REVIEW_TRANSITION_APPLIANCES_LABEL = "Appliances included";
 
@@ -420,7 +522,7 @@ export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE =
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS =
   "Selected add-ons add focused work beyond the main cleaning.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DEEP_CLEAN_FOCUS =
-  "Your deep-clean focus shifts more time toward the areas that need the most attention.";
+  "Your visit focus shifts more time toward the areas that need the most attention.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION =
   "Furnishings and move-state complexity can increase the detail needed throughout the home.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES =

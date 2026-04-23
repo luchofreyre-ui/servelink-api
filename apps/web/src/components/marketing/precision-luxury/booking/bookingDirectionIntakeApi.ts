@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "@/lib/api";
 import type { BookingIntakeEstimateFactors } from "./bookingStep2ToEstimateFactors";
+import type { PublicServiceLocationPayload } from "./bookingUrlState";
 
 function normalizeApiMessage(raw: unknown): string {
   if (typeof raw === "string") return raw.trim();
@@ -18,6 +19,10 @@ function customerFacingMessageFromKnownCode(code: string): string | null {
       "We couldn’t compute a price preview for these selections. You can adjust your details or continue—we’ll follow up with a quote.",
     ESTIMATE_INPUT_INVALID:
       "Some details aren’t valid for an automated preview. Adjust your selections or continue and we’ll help you directly.",
+    SERVICE_LOCATION_REQUIRED:
+      "We need a complete service address before we can show a live preview. Please finish the location step with street, city, state, and ZIP.",
+    SERVICE_LOCATION_NOT_RESOLVABLE:
+      "We couldn’t verify that address on the map. Please check spelling and ZIP, then try again.",
   };
   return map[code] ?? null;
 }
@@ -90,7 +95,7 @@ export type DeepCleanProgramDisplay = {
 
 /**
  * Public intake body aligned with `CreateBookingDirectionIntakeDto`.
- * Step 2 richness is expressed only via `estimateFactors` (no extra top-level keys).
+ * Step 2 richness is expressed via `estimateFactors`; service location is required for preview/submit geocoding.
  */
 export type SubmitBookingDirectionIntakePayload = {
   serviceId: string;
@@ -100,6 +105,8 @@ export type SubmitBookingDirectionIntakePayload = {
   pets: string;
   /** Full questionnaire slice; maps into `EstimateInput` after sanitize/resolve. */
   estimateFactors: BookingIntakeEstimateFactors;
+  /** Geocoded on the server for `siteLat` / `siteLng` and team matching. */
+  serviceLocation?: PublicServiceLocationPayload;
   frequency: string;
   preferredTime: string;
   /** Only persisted when service is deep clean. */

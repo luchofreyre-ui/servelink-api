@@ -102,3 +102,90 @@ export const ESTIMATE_ADDON_IDS = [
 ] as const;
 
 export type EstimateAddonId = (typeof ESTIMATE_ADDON_IDS)[number];
+
+/** Half baths (explicit; full baths remain `bathrooms` on intake row). */
+export const ESTIMATE_HALF_BATHROOMS = ["0", "1", "2_plus"] as const;
+
+export const ESTIMATE_FLOOR_MIX = [
+  "mostly_hard",
+  "mixed",
+  "mostly_carpet",
+] as const;
+
+export const ESTIMATE_LAYOUT_TYPE = [
+  "open_plan",
+  "mixed",
+  "segmented",
+] as const;
+
+export const ESTIMATE_OCCUPANCY_LEVEL = [
+  "ppl_1_2",
+  "ppl_3_4",
+  "ppl_5_plus",
+] as const;
+
+export const ESTIMATE_CHILDREN_IN_HOME = ["yes", "no"] as const;
+
+/** Layer-1 pet impact (distinct from detailed pet presence tokens). */
+export const ESTIMATE_PET_IMPACT = ["none", "light", "heavy"] as const;
+
+export const ESTIMATE_OVERALL_LABOR_CONDITION = [
+  "recently_maintained",
+  "normal_lived_in",
+  "behind_weeks",
+  "major_reset",
+] as const;
+
+export const ESTIMATE_KITCHEN_INTENSITY = [
+  "light_use",
+  "average_use",
+  "heavy_use",
+] as const;
+
+export const ESTIMATE_BATHROOM_COMPLEXITY = [
+  "standard",
+  "moderate_detailing",
+  "heavy_detailing",
+] as const;
+
+export const ESTIMATE_CLUTTER_ACCESS = [
+  "mostly_clear",
+  "moderate_clutter",
+  "heavy_clutter",
+] as const;
+
+export const ESTIMATE_SURFACE_DETAIL_TOKENS = [
+  "interior_glass",
+  "heavy_mirrors",
+  "built_ins",
+  "detailed_trim",
+  "many_touchpoints",
+] as const;
+
+export const ESTIMATE_PRIMARY_INTENT = [
+  "maintenance_clean",
+  "detailed_standard",
+  "reset_level",
+] as const;
+
+/** Layer-3 recency question (mapped into `lastProfessionalClean` during sanitize). */
+export const ESTIMATE_LAST_PRO_CLEAN_RECENCY = [
+  "within_30_days",
+  "days_30_90",
+  "days_90_plus",
+  "unknown_or_not_recently",
+] as const;
+
+export const ESTIMATE_FIRST_TIME_VISIT_PROGRAM = [
+  "one_visit",
+  "two_visit",
+  "three_visit",
+] as const;
+
+/** Cadence intent (not schedule). */
+export const ESTIMATE_RECURRING_CADENCE_INTENT = [
+  "weekly",
+  "biweekly",
+  "monthly",
+  "none",
+] as const;

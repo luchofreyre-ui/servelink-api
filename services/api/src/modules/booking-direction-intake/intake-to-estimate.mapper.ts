@@ -60,6 +60,10 @@ export function sqftToBand(sqft: number): SqftBand {
 function mapServiceIdToServiceType(serviceId: string): ServiceType {
   const id = String(serviceId ?? "").toLowerCase().trim();
   if (id.includes("move")) {
+    /** Public slug `move-in-move-out` contains both substrings; treat as move-in for matching. */
+    if (id === "move-in-move-out" || id.includes("move-in-move-out")) {
+      return "move_in";
+    }
     if (id.includes("in") && !id.includes("out")) return "move_in";
     return "move_out";
   }
@@ -113,6 +117,9 @@ export type IntakeFieldsForEstimate = {
   deepCleanProgram?: string | null;
   /** Omitted by the public `/book` client; filled with defaults before estimating. */
   estimateFactors?: EstimateFactorsDto | null;
+  /** Geocoded service site — drives `matchFOs` in the estimator when both finite. */
+  siteLat?: number | null;
+  siteLng?: number | null;
 };
 
 /**
@@ -131,12 +138,13 @@ export function mapIntakeFieldsToEstimateInput(
     intake.frequency,
   );
 
+  const f = resolveEstimateFactorsForPublicIntake(intake.estimateFactors);
+
   const deepCleanProgramMode: "single_visit" | "phased_3_visit" =
-    intake.deepCleanProgram === "phased_3_visit"
+    intake.deepCleanProgram === "phased_3_visit" ||
+    f.firstTimeVisitProgram === "three_visit"
       ? "phased_3_visit"
       : "single_visit";
-
-  const f = resolveEstimateFactorsForPublicIntake(intake.estimateFactors);
 
   const estimateInput: EstimateInput = {
     property_type: assertPropertyType(f.propertyType),
@@ -165,7 +173,34 @@ export function mapIntakeFieldsToEstimateInput(
     carpet_percent: f.carpetPercent,
     stairs_flights: f.stairsFlights,
     addons: assertAddons(f.addonIds ?? []),
+    half_bathrooms: f.halfBathrooms,
+    flooring_mix: f.floorMix,
+    layout_type: f.layoutType,
+    occupancy_level: f.occupancyLevel,
+    children_in_home: f.childrenInHome,
+    pet_impact: f.petImpact,
+    overall_labor_condition: f.overallLaborCondition,
+    kitchen_intensity: f.kitchenIntensity,
+    bathroom_complexity: f.bathroomComplexity,
+    clutter_access: f.clutterAccess,
+    surface_detail_tokens: [...f.surfaceDetailTokens],
+    primary_cleaning_intent: f.primaryIntent,
+    last_pro_clean_recency: f.lastProCleanRecency,
+    first_time_visit_program: f.firstTimeVisitProgram,
+    recurring_cadence_intent: f.recurringCadenceIntent,
   };
+
+  const lat = intake.siteLat;
+  const lng = intake.siteLng;
+  if (
+    typeof lat === "number" &&
+    Number.isFinite(lat) &&
+    typeof lng === "number" &&
+    Number.isFinite(lng)
+  ) {
+    estimateInput.siteLat = lat;
+    estimateInput.siteLng = lng;
+  }
 
   return estimateInput;
 }
@@ -198,5 +233,7 @@ export function mapIntakeToEstimateInput(
     frequency: intake.frequency,
     deepCleanProgram: intake.deepCleanProgram,
     estimateFactors: resolveEstimateFactorsForPublicIntake(factors),
+    siteLat: intake.siteLat ?? null,
+    siteLng: intake.siteLng ?? null,
   });
 }

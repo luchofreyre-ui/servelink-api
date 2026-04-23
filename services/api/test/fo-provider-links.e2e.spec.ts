@@ -44,6 +44,19 @@ describe("FO provider links + readiness integrity (E2E)", () => {
         userId: user.id,
         status: "active",
         displayName: "Provider Read Target",
+        homeLat: 36.11,
+        homeLng: -115.09,
+        maxTravelMinutes: 60,
+        maxDailyLaborMinutes: 960,
+        maxLaborMinutes: 960,
+        maxSquareFootage: 5000,
+        foSchedules: {
+          create: {
+            dayOfWeek: 1,
+            startTime: "08:00",
+            endTime: "18:00",
+          },
+        },
       },
     });
 
@@ -82,6 +95,19 @@ describe("FO provider links + readiness integrity (E2E)", () => {
         userId: user.id,
         status: "active",
         displayName: "Single Provider Lookup",
+        homeLat: 36.12,
+        homeLng: -115.1,
+        maxTravelMinutes: 60,
+        maxDailyLaborMinutes: 960,
+        maxLaborMinutes: 960,
+        maxSquareFootage: 5000,
+        foSchedules: {
+          create: {
+            dayOfWeek: 2,
+            startTime: "08:00",
+            endTime: "18:00",
+          },
+        },
       },
     });
 
@@ -114,6 +140,19 @@ describe("FO provider links + readiness integrity (E2E)", () => {
         userId: user.id,
         status: "active",
         displayName: "Resolver Healthy Target",
+        homeLat: 36.13,
+        homeLng: -115.11,
+        maxTravelMinutes: 60,
+        maxDailyLaborMinutes: 960,
+        maxLaborMinutes: 960,
+        maxSquareFootage: 5000,
+        foSchedules: {
+          create: {
+            dayOfWeek: 3,
+            startTime: "08:00",
+            endTime: "18:00",
+          },
+        },
       },
     });
 
@@ -154,6 +193,19 @@ describe("FO provider links + readiness integrity (E2E)", () => {
         userId: userA.id,
         status: "active",
         displayName: "Broken Readiness Target",
+        homeLat: 36.14,
+        homeLng: -115.12,
+        maxTravelMinutes: 60,
+        maxDailyLaborMinutes: 960,
+        maxLaborMinutes: 960,
+        maxSquareFootage: 5000,
+        foSchedules: {
+          create: {
+            dayOfWeek: 4,
+            startTime: "08:00",
+            endTime: "18:00",
+          },
+        },
       },
     });
 
@@ -174,9 +226,9 @@ describe("FO provider links + readiness integrity (E2E)", () => {
 
     const res = await request(app.getHttpServer())
       .get("/api/v1/ready")
-      .expect(503);
+      .expect(200);
 
-    expect(res.body.status).toBe("not_ready");
+    expect(res.body.status).toBe("degraded");
     expect(res.body.db).toBe("ok");
     expect(res.body.providerIntegrity).toBeTruthy();
     expect(res.body.providerIntegrity.healthy).toBe(false);

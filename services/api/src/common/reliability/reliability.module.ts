@@ -1,6 +1,7 @@
 import { Global, Module } from "@nestjs/common";
 import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { AuthModule } from "../../auth/auth.module";
+import { FoModule } from "../../modules/fo/fo.module";
 import { OpsVisibilityService } from "./ops-visibility.service";
 import { HealthController } from "./health.controller";
 import { HealthService } from "./health.service";
@@ -18,7 +19,7 @@ import { TimeoutInterceptor } from "./timeout.interceptor";
 
 @Global()
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, FoModule],
   controllers: [
     HealthController,
     ReliabilityAdminController,

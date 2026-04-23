@@ -3,12 +3,13 @@ import { DeepCleanProgramCard } from "@/components/booking/deep-clean/DeepCleanP
 import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
 import { BookingSectionCard } from "../BookingSectionCard";
 import { BookingTextField } from "./BookingTextField";
-import { getSelectedService } from "./bookingFlowData";
+import { getBookingHomeSizeRangeLabel } from "./bookingHomeSizeRanges";
 import {
   isBookingMoveTransitionServiceId,
   isDeepCleaningBookingServiceId,
 } from "./bookingDeepClean";
 import type {
+  BookingFirstTimePostEstimateVisitChoice,
   BookingFlowState,
   BookingHomeCondition,
   BookingPreviewConfidenceBand,
@@ -34,8 +35,8 @@ import {
   normalizeBookingBedroomsParam,
 } from "./bookingEstimateFactorFields";
 import {
-  isCadenceComplete,
   isHomeDetailsComplete,
+  isServiceLocationComplete,
   normalizeBookingAddOnsForPayload,
   normalizeBookingAppliancePresenceForPayload,
   normalizeBookingHomeSizeParam,
@@ -46,14 +47,10 @@ import {
   BOOKING_ADD_ON_LABELS,
   BOOKING_APPLIANCE_PRESENCE_LABELS,
   BOOKING_DEEP_CLEAN_FOCUS_LABELS,
-  BOOKING_HOME_CONDITION_LABELS,
   BOOKING_PROBLEM_AREA_LABELS,
   BOOKING_REVIEW_ADD_ONS_LABEL,
   BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL,
-  BOOKING_REVIEW_ESTIMATOR_CONDITION_LABEL,
   BOOKING_REVIEW_ESTIMATOR_FOCUS_AREAS_LABEL,
-  BOOKING_REVIEW_ESTIMATOR_SURFACE_LABEL,
-  BOOKING_REVIEW_SCOPE_OF_WORK_LABEL,
   BOOKING_REVIEW_TRANSITION_APPLIANCES_LABEL,
   BOOKING_REVIEW_TRANSITION_SETUP_LABEL,
   BOOKING_REVIEW_BANNER_AFTER_SEND_DID_NOT_FINISH,
@@ -91,11 +88,19 @@ import {
   BOOKING_REVIEW_STEP_TITLE,
   BOOKING_REVIEW_SELECTED_ARRIVAL_LABEL,
   BOOKING_REVIEW_SELECTED_TEAM_LABEL,
-  BOOKING_CADENCE_ARRIVAL_WINDOW_LABEL,
-  BOOKING_SCOPE_INTENSITY_LABELS,
-  BOOKING_SURFACE_COMPLEXITY_LABELS,
+  BOOKING_FIRST_TIME_WITH_RECURRING_REVIEW_INTENT,
   BOOKING_TRANSITION_STATE_LABELS,
+  BOOKING_POST_ESTIMATE_CONVERT_RECURRING,
+  BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER,
+  BOOKING_POST_ESTIMATE_FIRST_TIME_BODY,
+  BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE,
+  BOOKING_POST_ESTIMATE_VISIT_ONE,
+  BOOKING_POST_ESTIMATE_VISIT_THREE,
+  BOOKING_POST_ESTIMATE_VISIT_TWO,
+  BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
+  BOOKING_REVIEW_VISIT_STRUCTURE_LABEL,
 } from "./bookingPublicSurfaceCopy";
+import { getPublicBookingMarketingTitle } from "./publicBookingTaxonomy";
 
 type BookingStepReviewProps = {
   state: BookingFlowState;
@@ -125,13 +130,20 @@ type BookingStepReviewProps = {
   ) => void;
   prepGuidanceItems: string[];
   recommendedAttentionItems: string[];
+  onFirstTimePostEstimateVisitChoiceChange: (
+    choice: BookingFirstTimePostEstimateVisitChoice,
+  ) => void;
 };
 
 function isBookingReady(state: BookingFlowState) {
   return (
     !!state.serviceId &&
+    state.bookingPublicPath !== "recurring_auth_gate" &&
+    (state.bookingPublicPath === "one_time_cleaning" ||
+      state.bookingPublicPath === "first_time_with_recurring" ||
+      state.bookingPublicPath === "move_transition") &&
     isHomeDetailsComplete(state) &&
-    isCadenceComplete(state)
+    isServiceLocationComplete(state)
   );
 }
 
@@ -167,9 +179,27 @@ function ReviewSection({
 }
 
 function deepProgramFallbackLabel(state: BookingFlowState) {
+  if (
+    isDeepCleaningBookingServiceId(state.serviceId) &&
+    (state.bookingPublicPath === "one_time_cleaning" ||
+      state.bookingPublicPath === "first_time_with_recurring") &&
+    state.firstTimePostEstimateVisitChoice
+  ) {
+    switch (state.firstTimePostEstimateVisitChoice) {
+      case "two_visits":
+        return "Spread across 2 visits";
+      case "three_visits":
+        return "3-visit program";
+      case "convert_recurring":
+        return "Recurring after sign-in";
+      case "one_visit":
+      default:
+        return "One visit";
+    }
+  }
   return state.deepCleanProgram === "phased_3_visit"
-    ? "3-visit deep clean program"
-    : "One-visit deep clean";
+    ? "3-visit program"
+    : "One visit";
 }
 
 function planningConfidenceCopy(band: BookingPreviewConfidenceBand): {
@@ -225,6 +255,7 @@ export function BookingStepReview({
   onContactChange,
   prepGuidanceItems,
   recommendedAttentionItems,
+  onFirstTimePostEstimateVisitChoiceChange,
 }: BookingStepReviewProps) {
   const reviewFunnelOnceRef = useRef(false);
   useEffect(() => {
@@ -233,18 +264,25 @@ export function BookingStepReview({
     emitBookingFunnelEvent("review_viewed", { serviceId: state.serviceId });
   }, [state.serviceId]);
 
-  const service = getSelectedService(state.serviceId);
   const homeOk = isHomeDetailsComplete(state);
-  const cadenceOk = isCadenceComplete(state);
+  const cadenceOk = isServiceLocationComplete(state);
   const ready = isBookingReady(state);
   const contactOk = isBookingContactValid(
     state.customerName,
     state.customerEmail,
   );
+  const firstTimeFollowUpOk =
+    !isDeepCleaningBookingServiceId(state.serviceId) ||
+    (state.bookingPublicPath !== "one_time_cleaning" &&
+      state.bookingPublicPath !== "first_time_with_recurring") ||
+    !estimatePreviewReady ||
+    Boolean(state.firstTimePostEstimateVisitChoice);
+
   const bannerFullyReady =
     ready &&
     contactOk &&
     estimatePreviewReady &&
+    firstTimeFollowUpOk &&
     !previewLoading &&
     !previewError &&
     !hasSubmitRecoverableFailure;
@@ -265,12 +303,51 @@ export function BookingStepReview({
   const problemAreasNormalized = normalizeBookingProblemAreasForPayload(
     state.problemAreas,
   );
+  const layeredLaborHints: string[] = [];
+  if (state.kitchenIntensity === "heavy_use") {
+    layeredLaborHints.push("Kitchen (heavy use)");
+  }
+  if (state.bathroomComplexity === "heavy_detailing") {
+    layeredLaborHints.push("Bathrooms (heavy detailing)");
+  }
   const problemAreasDisplay =
-    problemAreasNormalized.length > 0
-      ? problemAreasNormalized
-          .map((t) => BOOKING_PROBLEM_AREA_LABELS[t])
-          .join(", ")
+    problemAreasNormalized.length > 0 || layeredLaborHints.length > 0
+      ? [
+          ...problemAreasNormalized.map((t) => BOOKING_PROBLEM_AREA_LABELS[t]),
+          ...layeredLaborHints,
+        ].join(", ")
       : "Not specified";
+
+  const overallLaborDisplay: Record<string, string> = {
+    recently_maintained: "Recently maintained",
+    normal_lived_in: "Normal lived-in",
+    behind_weeks: "Behind several weeks",
+    major_reset: "Major reset needed",
+  };
+
+  const floorMixDisplay: Record<string, string> = {
+    mostly_hard: "Mostly hard floors",
+    mixed: "Mixed floors",
+    mostly_carpet: "Mostly carpet",
+  };
+
+  const layoutDisplay: Record<string, string> = {
+    open_plan: "Mostly open plan",
+    mixed: "Mixed layout",
+    segmented: "Many segmented rooms",
+  };
+
+  const primaryIntentDisplay: Record<string, string> = {
+    maintenance_clean: "Maintenance clean",
+    detailed_standard: "Detailed standard clean",
+    reset_level: "Reset-level clean",
+  };
+
+  const petImpactDisplay: Record<string, string> = {
+    none: "None",
+    light: "Light pet impact",
+    heavy: "Heavy pet impact",
+  };
 
   const addOnsNormalized = normalizeBookingAddOnsForPayload(state.selectedAddOns);
   const addOnsDisplay =
@@ -289,9 +366,6 @@ export function BookingStepReview({
       : "Not specified";
 
   const moveTransition = isBookingMoveTransitionServiceId(state.serviceId);
-
-  const frequencySummary = String(state.frequency ?? "").trim();
-  const preferredTimeSummary = String(state.preferredTime ?? "").trim();
 
   const nameError =
     showContactFieldErrors && !contactOk
@@ -349,7 +423,24 @@ export function BookingStepReview({
   const estimateDriverBullets = activeEstimateDrivers.slice(0, 4);
   const showEstimateDriverBlock = activeEstimateDrivers.length > 0;
 
-  const estimateDriverBlockKey = `${state.serviceId}:${condition}:${normalizeBookingProblemAreasForPayload([...problemAreas]).join(",")}:${surfaceComplexity}:${state.scopeIntensity}:${addOnsNormalized.join(",")}:${state.deepCleanFocus}:${state.transitionState}:${appliancesNormalized.join(",")}`;
+  const estimateDriverBlockKey = [
+    state.serviceId,
+    state.overallLaborCondition,
+    state.clutterAccess,
+    state.kitchenIntensity,
+    state.bathroomComplexity,
+    state.layoutType,
+    state.floorMix,
+    state.primaryIntent,
+    state.surfaceDetailTokens.join(","),
+    normalizeBookingProblemAreasForPayload([...problemAreas]).join(","),
+    surfaceComplexity,
+    state.scopeIntensity,
+    addOnsNormalized.join(","),
+    state.deepCleanFocus,
+    state.transitionState,
+    appliancesNormalized.join(","),
+  ].join(":");
 
   const showPlanningConfidenceBlock =
     estimatePreviewReady &&
@@ -389,7 +480,7 @@ export function BookingStepReview({
 
   return (
     <BookingSectionCard
-      eyebrow="Step 3"
+      eyebrow="Step 4"
       title={BOOKING_REVIEW_STEP_TITLE}
       body={BOOKING_REVIEW_STEP_BODY}
     >
@@ -411,10 +502,12 @@ export function BookingStepReview({
 
       <div className="grid gap-4">
         <ReviewSection title="Service">
-          <p className="font-medium">{service.title}</p>
+          <p className="font-medium">{getPublicBookingMarketingTitle(state.bookingPublicPath)}</p>
           {deep ? (
             <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#0F172A]">
-              <span className="font-medium text-[#475569]">Deep clean plan:</span>{" "}
+              <span className="font-medium text-[#475569]">
+                {BOOKING_REVIEW_VISIT_STRUCTURE_LABEL}
+              </span>{" "}
               {deepProgramFallbackLabel(state)}
             </p>
           ) : null}
@@ -536,6 +629,65 @@ export function BookingStepReview({
                   ? "Final numbers may adjust slightly once we confirm details with you."
                   : "Figures are approximate; continuing lets us return a firm quote after you save."}
               </p>
+              {isDeepCleaningBookingServiceId(state.serviceId) &&
+              (state.bookingPublicPath === "one_time_cleaning" ||
+                state.bookingPublicPath === "first_time_with_recurring") &&
+              estimatePreviewReady ? (
+                <div
+                  className="mt-6 rounded-2xl border border-[#C9B27C]/18 bg-[#FFF9F3] px-4 py-4 ring-1 ring-[#C9B27C]/10"
+                  data-testid="booking-first-time-post-estimate-options"
+                >
+                  {state.bookingPublicPath === "first_time_with_recurring" ? (
+                    <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A]">
+                      {BOOKING_FIRST_TIME_WITH_RECURRING_REVIEW_INTENT}
+                    </p>
+                  ) : null}
+                  <p
+                    className={`font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A] ${
+                      state.bookingPublicPath === "first_time_with_recurring"
+                        ? "mt-4"
+                        : ""
+                    }`}
+                  >
+                    {BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE}
+                  </p>
+                  <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                    {BOOKING_POST_ESTIMATE_FIRST_TIME_BODY}
+                  </p>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    {(
+                      [
+                        ["one_visit", BOOKING_POST_ESTIMATE_VISIT_ONE],
+                        ["two_visits", BOOKING_POST_ESTIMATE_VISIT_TWO],
+                        ["three_visits", BOOKING_POST_ESTIMATE_VISIT_THREE],
+                        ["convert_recurring", BOOKING_POST_ESTIMATE_CONVERT_RECURRING],
+                      ] as const
+                    ).map(([value, label]) => {
+                      const selected = state.firstTimePostEstimateVisitChoice === value;
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          data-testid={`booking-post-estimate-${value}`}
+                          onClick={() => onFirstTimePostEstimateVisitChoiceChange(value)}
+                          className={`rounded-2xl border px-4 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
+                            selected
+                              ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
+                              : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
+                          }`}
+                        >
+                          <span className="font-semibold text-[#0F172A]">{label}</span>
+                          {value === "convert_recurring" ? (
+                            <span className="mt-2 block text-xs leading-5 text-[#64748B]">
+                              {BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER}
+                            </span>
+                          ) : null}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
             </div>
           ) : previewFetchCompleted && !previewLoading && !previewError ? (
             <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
@@ -586,7 +738,9 @@ export function BookingStepReview({
               <p>
                 <span className="font-medium text-[#64748B]">Home size:</span>{" "}
                 <span className="text-[#0F172A]">
-                  {normalizeBookingHomeSizeParam(state.homeSize) || "—"}
+                  {normalizeBookingHomeSizeParam(state.homeSize)
+                    ? getBookingHomeSizeRangeLabel(state.homeSize)
+                    : "—"}
                 </span>
               </p>
               <p>
@@ -598,15 +752,31 @@ export function BookingStepReview({
                 <span className="text-[#0F172A]">{bathroomsSummary}</span>
               </p>
               <p>
-                <span className="font-medium text-[#64748B]">Pets:</span>{" "}
+                <span className="font-medium text-[#64748B]">Half baths:</span>{" "}
+                <span className="text-[#0F172A]">
+                  {state.halfBathrooms === "0"
+                    ? "None"
+                    : state.halfBathrooms === "1"
+                      ? "One"
+                      : "Two or more"}
+                </span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">Pet impact:</span>{" "}
+                <span className="text-[#0F172A]">
+                  {petImpactDisplay[state.petImpactLevel]}
+                </span>
+              </p>
+              <p>
+                <span className="font-medium text-[#64748B]">Pets (notes):</span>{" "}
                 <span className="text-[#0F172A]">{petsDisplay}</span>
               </p>
               <p>
                 <span className="font-medium text-[#64748B]">
-                  {BOOKING_REVIEW_ESTIMATOR_CONDITION_LABEL}:
+                  Overall condition (labor):
                 </span>{" "}
                 <span className="text-[#0F172A]">
-                  {BOOKING_HOME_CONDITION_LABELS[state.condition]}
+                  {overallLaborDisplay[state.overallLaborCondition] ?? "—"}
                 </span>
               </p>
               <p>
@@ -617,18 +787,19 @@ export function BookingStepReview({
               </p>
               <p>
                 <span className="font-medium text-[#64748B]">
-                  {BOOKING_REVIEW_ESTIMATOR_SURFACE_LABEL}:
+                  Floor mix and layout:
                 </span>{" "}
                 <span className="text-[#0F172A]">
-                  {BOOKING_SURFACE_COMPLEXITY_LABELS[state.surfaceComplexity]}
+                  {floorMixDisplay[state.floorMix]} ·{" "}
+                  {layoutDisplay[state.layoutType]}
                 </span>
               </p>
               <p>
                 <span className="font-medium text-[#64748B]">
-                  {BOOKING_REVIEW_SCOPE_OF_WORK_LABEL}:
+                  Primary intent:
                 </span>{" "}
                 <span className="text-[#0F172A]">
-                  {BOOKING_SCOPE_INTENSITY_LABELS[state.scopeIntensity]}
+                  {primaryIntentDisplay[state.primaryIntent]}
                 </span>
               </p>
               <p>
@@ -675,14 +846,11 @@ export function BookingStepReview({
           {cadenceOk ? (
             <div className="space-y-1">
               <p className="font-medium">
-                <span className="text-[#64748B]">Frequency:</span>{" "}
-                {frequencySummary}
+                <span className="text-[#64748B]">Visit type:</span>{" "}
+                One-time (public booking)
               </p>
-              <p className="font-medium">
-                <span className="text-[#64748B]">
-                  {BOOKING_CADENCE_ARRIVAL_WINDOW_LABEL}:
-                </span>{" "}
-                {preferredTimeSummary}
+              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                {BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE}
               </p>
               {state.selectedTeamId.trim() &&
               state.selectedTeamDisplayName.trim() ? (

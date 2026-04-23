@@ -59,6 +59,38 @@ export type OpsItemsResponse = {
   items: Array<Record<string, unknown> & Partial<OpsDrilldownItemEligibility>>;
 };
 
+export type FoSupplyOpsCategory =
+  | "ready"
+  | "blocked_configuration"
+  | "inactive_or_restricted";
+
+export type FoSupplyReadinessItem = {
+  franchiseOwnerId: string;
+  displayName: string;
+  email: string;
+  status: string;
+  safetyHold: boolean;
+  opsCategory: FoSupplyOpsCategory;
+  supply: { ok: boolean; reasons: string[] };
+  eligibility: { canAcceptBooking: boolean; reasons: string[] };
+  configSummary: {
+    hasCoordinates: boolean;
+    homeLat: number | null;
+    homeLng: number | null;
+    maxTravelMinutes: number | null;
+    scheduleRowCount: number;
+    matchableServiceTypes: string[];
+    maxDailyLaborMinutes: number | null;
+    maxLaborMinutes: number | null;
+    maxSquareFootage: number | null;
+  };
+};
+
+export type FoSupplyReadinessResponse = {
+  ok: true;
+  items: FoSupplyReadinessItem[];
+};
+
 export async function getOpsSummary() {
   return readOpsEndpointJson<OpsSummaryResponse>("/system/ops/summary");
 }
@@ -88,6 +120,11 @@ export async function getManualDispatch(limit = 50) {
   return readOpsEndpointJson<OpsItemsResponse>(path);
 }
 
+export async function getFoSupplyReadiness() {
+  const path = `/system/ops/supply/franchise-owners`;
+  return readOpsEndpointJson<FoSupplyReadinessResponse>(path);
+}
+
 const EMPTY_OPS_ITEMS: OpsItemsResponse = { ok: true, items: [] };
 
 const EMPTY_OPS_SUMMARY: OpsSummaryResponse = {
@@ -105,13 +142,16 @@ const EMPTY_OPS_SUMMARY: OpsSummaryResponse = {
   },
 };
 
+const EMPTY_FO_SUPPLY: FoSupplyReadinessResponse = { ok: true, items: [] };
+
 type OpsRequestKey =
   | "summary"
   | "dispatchLocked"
   | "reviewRequired"
   | "deferredDispatch"
   | "manualDispatch24h"
-  | "invalidAssignment";
+  | "invalidAssignment"
+  | "foSupply";
 
 /**
  * Loads all ops drilldowns for the admin ops page.
@@ -121,7 +161,9 @@ type OpsRequestKey =
 export async function loadAdminOpsPageData(limit = 25) {
   const opsRequests: Record<
     OpsRequestKey,
-    () => Promise<OpsSummaryResponse | OpsItemsResponse>
+    () => Promise<
+      OpsSummaryResponse | OpsItemsResponse | FoSupplyReadinessResponse
+    >
   > = {
     summary: () => getOpsSummary(),
     dispatchLocked: () => getDispatchLocked(limit),
@@ -129,10 +171,16 @@ export async function loadAdminOpsPageData(limit = 25) {
     deferredDispatch: () => getDeferredDispatch(limit),
     manualDispatch24h: () => getManualDispatch(limit),
     invalidAssignment: () => getInvalidAssignmentState(limit),
+    foSupply: () => getFoSupplyReadiness(),
   };
 
   const entries = Object.entries(opsRequests) as Array<
-    [OpsRequestKey, () => Promise<OpsSummaryResponse | OpsItemsResponse>]
+    [
+      OpsRequestKey,
+      () => Promise<
+        OpsSummaryResponse | OpsItemsResponse | FoSupplyReadinessResponse
+      >,
+    ]
   >;
 
   const settled = await Promise.allSettled(
@@ -145,7 +193,7 @@ export async function loadAdminOpsPageData(limit = 25) {
   const failures: { key: OpsRequestKey; message: string }[] = [];
   const fulfilled = new Map<
     OpsRequestKey,
-    OpsSummaryResponse | OpsItemsResponse
+    OpsSummaryResponse | OpsItemsResponse | FoSupplyReadinessResponse
   >();
 
   for (let i = 0; i < settled.length; i++) {
@@ -188,5 +236,8 @@ export async function loadAdminOpsPageData(limit = 25) {
     manual:
       (fulfilled.get("manualDispatch24h") as OpsItemsResponse | undefined) ??
       EMPTY_OPS_ITEMS,
+    foSupply:
+      (fulfilled.get("foSupply") as FoSupplyReadinessResponse | undefined) ??
+      EMPTY_FO_SUPPLY,
   };
 }
