@@ -17,6 +17,7 @@ import {
 } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { BookingsService } from "../bookings/bookings.service";
+import { BookingTeamContinuityService } from "../bookings/booking-team-continuity.service";
 import type { EstimateFactorsDto } from "../booking-direction-intake/dto/estimate-factors.dto";
 import {
   IntakeEstimateMappingError,
@@ -27,6 +28,7 @@ import type { CreateRecurringPlanDto } from "./dto/create-recurring-plan.dto";
 import { RecurringCadenceDto } from "./dto/create-recurring-plan.dto";
 import type { UpdateNextOccurrenceDto } from "./dto/update-next-occurrence.dto";
 import type { UpdateRecurringPlanDto } from "./dto/update-recurring-plan.dto";
+import type { ScheduleTeamOptionsQueryDto } from "../bookings/dto/schedule-team-options-query.dto";
 import {
   BOOKING_FINALIZE_ERROR_PREFIX,
   BOOKING_NOTE_FINGERPRINT_KEY,
@@ -203,6 +205,7 @@ export class RecurringService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly bookings: BookingsService,
+    private readonly teamContinuity: BookingTeamContinuityService,
   ) {}
 
   assertServiceEligibleForRecurring(serviceType: string) {
@@ -360,6 +363,21 @@ export class RecurringService {
       );
       return { ok: false, reason: "booking_cancellation_transition_failed" };
     }
+  }
+
+  async getScheduleTeamOptionsForPlan(
+    planId: string,
+    customerId: string,
+    query: ScheduleTeamOptionsQueryDto,
+  ) {
+    await this.assertPlanOwnedByCustomer(planId, customerId);
+    return this.teamContinuity.resolveScheduleTeamOptionsForRecurringPlan(
+      planId,
+      customerId,
+      {
+        includeAlternateTeams: query.includeAlternateTeams !== false,
+      },
+    );
   }
 
   async getNextOccurrenceForCustomer(planId: string, customerId: string) {
@@ -801,6 +819,7 @@ export class RecurringService {
         customerId,
         estimateInput,
         note,
+        bookingMatchMode: "authenticated_recurring",
       });
 
       if (!booking?.id || !estimate) {

@@ -269,6 +269,7 @@ export class PublicBookingOrchestratorService {
           serviceType: job.serviceType,
           serviceSegment: job.serviceSegment,
           limit: MAX_FO_CANDIDATES,
+          bookingMatchMode: "public_one_time",
         };
         const matched = await this.fo.matchFOs(input);
         const liveIds = matched.map((m) => m.id).filter(Boolean);
