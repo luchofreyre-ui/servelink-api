@@ -134,4 +134,33 @@ describe("FoService.matchFOs — matchableServiceTypes whitelist", () => {
     });
     expect(out.map((m) => m.id)).toEqual(["fo_ok"]);
   });
+
+  it("does not drop a candidate solely because legacy teamSize is below a high recommendation", async () => {
+    const prisma = {
+      franchiseOwner: {
+        findMany: jest.fn().mockResolvedValue([
+          baseFo({
+            id: "fo_two_person",
+            teamSize: 2,
+            reliabilityScore: 50,
+          }),
+        ]),
+      },
+      booking: { findMany: jest.fn().mockResolvedValue([]) },
+    } as unknown as PrismaService;
+
+    const svc = new FoService(prisma);
+    const out = await svc.matchFOs({
+      lat: 36.154,
+      lng: -95.993,
+      squareFootage: 1500,
+      estimatedLaborMinutes: 200,
+      recommendedTeamSize: 6,
+      serviceType: "maintenance",
+      limit: 10,
+    });
+    expect(out.map((m) => m.id)).toEqual(["fo_two_person"]);
+    expect(out[0]?.assignedCrewSize).toBe(2);
+    expect(out[0]?.estimatedJobDurationMinutes).toBeGreaterThan(0);
+  });
 });

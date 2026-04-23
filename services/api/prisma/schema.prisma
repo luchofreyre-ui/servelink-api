@@ -1856,6 +1856,10 @@ model FranchiseOwner {
 
   // Capability / matching
   teamSize             Int?
+  /// Optional explicit crew range; when null, derived from `teamSize` at read time.
+  minCrewSize          Int?
+  preferredCrewSize    Int?
+  maxCrewSize          Int?
   maxSquareFootage     Int?
   maxLaborMinutes      Int?
   maxDailyLaborMinutes Int?

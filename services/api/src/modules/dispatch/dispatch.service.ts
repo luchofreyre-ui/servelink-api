@@ -6,6 +6,8 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "../../prisma";
+import { clampCrewSizeForService } from "../crew-capacity/crew-capacity-policy";
+import { parseServiceSegmentFromEstimateInputJson } from "../crew-capacity/parse-estimate-job-match-fields";
 import { FoService } from "../fo/fo.service";
 import { ReputationService } from "./reputation.service";
 import { DispatchCandidateService } from "./dispatch-candidate.service";
@@ -450,10 +452,20 @@ export class DispatchService {
       typeof estimate?.adjustedLaborMinutes === "number" && Number.isFinite(estimate.adjustedLaborMinutes)
         ? estimate.adjustedLaborMinutes
         : 60;
-    const recommendedTeamSize =
+    const recommendedTeamSizeRaw =
       typeof estimate?.recommendedTeamSize === "number" && Number.isInteger(estimate.recommendedTeamSize)
         ? estimate.recommendedTeamSize
         : 2;
+    const serviceTypeRaw =
+      typeof inputJson.service_type === "string" ? inputJson.service_type : "maintenance";
+    const serviceSegment = parseServiceSegmentFromEstimateInputJson(
+      String(estimateSnapshot.inputJson ?? "{}"),
+    );
+    const recommendedTeamSize = clampCrewSizeForService(
+      serviceTypeRaw,
+      serviceSegment,
+      recommendedTeamSizeRaw,
+    );
 
     if (lat != null && lng != null) {
       const candidates = await this.candidateService.getCandidates({
@@ -462,6 +474,8 @@ export class DispatchService {
         squareFootage,
         estimatedLaborMinutes,
         recommendedTeamSize,
+        serviceType: serviceTypeRaw,
+        serviceSegment,
         limit: 10,
       });
       const { ranked, scoringVersion } = await this.rankingService.rank(candidates, 10);

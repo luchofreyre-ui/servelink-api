@@ -1,5 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { FoService } from "../fo/fo.service";
+import {
+  clampCrewSizeForService,
+  getServiceMaxCrewSize,
+  type ServiceSegment,
+} from "../crew-capacity/crew-capacity-policy";
 import { CLEANING_PRICING_POLICY_V1 } from "../pricing/pricing-policy";
 import { DeepCleanEstimatorConfigService } from "../bookings/deep-clean-estimator-config.service";
 import {
@@ -196,6 +201,14 @@ export type EstimateResult = {
   deepCleanEstimatorConfigId?: string;
   deepCleanEstimatorConfigVersion?: number;
   deepCleanEstimatorConfigLabel?: string;
+
+  /** Crew policy audit — additive for ops/debug; safe to ignore by clients. */
+  crewCapacityMeta?: {
+    serviceSegment: ServiceSegment;
+    appliedServiceMaxCrewSize: number;
+    recommendedTeamSizeBeforeClamp: number;
+    recommendedTeamSizeAfterClamp: number;
+  };
 };
 
 /** Optional overrides for admin preview / tests. Production booking flow omits this. */
@@ -245,6 +258,9 @@ export type EstimateInput = {
 
   siteLat?: number;
   siteLng?: number;
+
+  /** When `commercial`, residential crew caps (6) do not apply; platform commercial ceiling is 11. */
+  job_site_class?: "residential" | "commercial";
 
   /**
    * Deep clean only. `single_visit` (default) = one session; `phased_3_visit` = productized 3-visit program
@@ -1321,8 +1337,17 @@ export class EstimatorService {
       }
     }
 
-    const recommendedTeamSize = recommendedTeamSizeForLabor(adjustedLaborMinutes);
-    const effectiveTeamSize = TEAM_EFFICIENCY[recommendedTeamSize] ?? recommendedTeamSize;
+    const serviceSegment: ServiceSegment =
+      input.job_site_class === "commercial" ? "commercial" : "residential";
+    const recommendedTeamSizeBeforeClamp =
+      recommendedTeamSizeForLabor(adjustedLaborMinutes);
+    const recommendedTeamSize = clampCrewSizeForService(
+      input.service_type,
+      serviceSegment,
+      recommendedTeamSizeBeforeClamp,
+    );
+    const effectiveTeamSize =
+      TEAM_EFFICIENCY[recommendedTeamSize] ?? recommendedTeamSize;
 
     const estimatedDurationMinutes = Math.ceil(adjustedLaborMinutes / effectiveTeamSize);
     const estimatedPriceCents = Math.ceil(
@@ -1367,6 +1392,7 @@ export class EstimatorService {
         estimatedLaborMinutes: adjustedLaborMinutes,
         recommendedTeamSize,
         serviceType: input.service_type,
+        serviceSegment,
         limit: 20,
       });
 
@@ -1409,6 +1435,16 @@ export class EstimatorService {
       flags,
       matchedCleaners,
       dispatchCandidatePool,
+
+      crewCapacityMeta: {
+        serviceSegment,
+        appliedServiceMaxCrewSize: getServiceMaxCrewSize(
+          input.service_type,
+          serviceSegment,
+        ),
+        recommendedTeamSizeBeforeClamp,
+        recommendedTeamSizeAfterClamp: recommendedTeamSize,
+      },
 
       deepCleanProgram,
 

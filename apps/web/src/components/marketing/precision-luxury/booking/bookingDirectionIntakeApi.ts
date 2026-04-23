@@ -121,11 +121,22 @@ export type SubmitBookingDirectionIntakePayload = {
   utm?: BookingDirectionUtmPayload;
 };
 
+export type PublicBookingCrewCapacityMetaDto = {
+  requiredLaborMinutes: number;
+  recommendedCrewSize: number | null;
+  assignedCrewSize: number;
+  serviceMaxCrewSize: number;
+  serviceSegment: "residential" | "commercial";
+};
+
 export type PublicBookingTeamOptionDto = {
   id: string;
   displayName: string;
   shortLabel?: string;
   isRecommended?: boolean;
+  assignedCrewSize?: number;
+  estimatedDurationMinutes?: number;
+  crewCapacityMeta?: PublicBookingCrewCapacityMetaDto;
 };
 
 export type PublicBookingTeamOptionsResponse = {
@@ -146,7 +157,13 @@ export type PublicBookingWindowDto = {
 export type PublicBookingTeamAvailabilityResponse = {
   kind: "public_booking_team_availability";
   bookingId: string;
-  selectedTeam: { id: string; displayName: string };
+  selectedTeam: {
+    id: string;
+    displayName: string;
+    assignedCrewSize?: number;
+    estimatedDurationMinutes?: number;
+    crewCapacityMeta?: PublicBookingCrewCapacityMetaDto;
+  };
   windows: PublicBookingWindowDto[];
   unavailableReason?: { code: string; message: string };
 };

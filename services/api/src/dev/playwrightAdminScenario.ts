@@ -14,6 +14,7 @@ import {
 import { seedBookingPaymentAuthorized } from "../booking-payment-seed.util";
 import { DispatchDecisionService } from "../modules/bookings/dispatch-decision.service";
 import { DispatchConfigService } from "../modules/dispatch/dispatch-config.service";
+import { ensureProviderForFranchiseOwner } from "../modules/fo/fo-provider-sync";
 import { PrismaService } from "../prisma";
 import { ADMIN_CC_ACTIVITY } from "../modules/admin/bookings/admin-bookings.service";
 
@@ -34,6 +35,26 @@ const CUSTOMER_EMAIL = PLAYWRIGHT_ADMIN_SCENARIO_EMAILS.customer;
 const FO1_EMAIL = PLAYWRIGHT_ADMIN_SCENARIO_EMAILS.fo1;
 const FO2_EMAIL = PLAYWRIGHT_ADMIN_SCENARIO_EMAILS.fo2;
 const ADMIN_PASSWORD = PLAYWRIGHT_ADMIN_SCENARIO_PASSWORD;
+
+/** Tulsa hub — matches other dev fixtures; required for FO supply + activation guards. */
+const PLAYWRIGHT_FO_HOME = { lat: 36.15398, lng: -95.99277 } as const;
+
+async function replaceWeeklyScheduleForPlaywrightFo(
+  prisma: PrismaService,
+  franchiseOwnerId: string,
+): Promise<void> {
+  await prisma.foSchedule.deleteMany({ where: { franchiseOwnerId } });
+  const rows = [];
+  for (let dayOfWeek = 0; dayOfWeek <= 6; dayOfWeek += 1) {
+    rows.push({
+      franchiseOwnerId,
+      dayOfWeek,
+      startTime: "06:00",
+      endTime: "22:00",
+    });
+  }
+  await prisma.foSchedule.createMany({ data: rows });
+}
 
 const NOTE_PENDING = `${MARKER}:pending_dispatch`;
 const NOTE_HOLD = `${MARKER}:hold`;
@@ -133,22 +154,70 @@ export async function runPlaywrightAdminScenario(
 
   const fo1 = await prisma.franchiseOwner.upsert({
     where: { userId: foUser1.id },
-    update: { status: "active", displayName: `${MARKER} FO1` },
+    update: {
+      status: "onboarding",
+      displayName: `${MARKER} FO1`,
+      safetyHold: false,
+      homeLat: PLAYWRIGHT_FO_HOME.lat,
+      homeLng: PLAYWRIGHT_FO_HOME.lng,
+      maxTravelMinutes: 60,
+      maxSquareFootage: 5000,
+      maxLaborMinutes: 960,
+      maxDailyLaborMinutes: 960,
+    },
     create: {
       userId: foUser1.id,
-      status: "active",
+      status: "onboarding",
       displayName: `${MARKER} FO1`,
+      safetyHold: false,
+      homeLat: PLAYWRIGHT_FO_HOME.lat,
+      homeLng: PLAYWRIGHT_FO_HOME.lng,
+      maxTravelMinutes: 60,
+      maxSquareFootage: 5000,
+      maxLaborMinutes: 960,
+      maxDailyLaborMinutes: 960,
     },
   });
 
   const fo2 = await prisma.franchiseOwner.upsert({
     where: { userId: foUser2.id },
-    update: { status: "active", displayName: `${MARKER} FO2` },
+    update: {
+      status: "onboarding",
+      displayName: `${MARKER} FO2`,
+      safetyHold: false,
+      homeLat: PLAYWRIGHT_FO_HOME.lat,
+      homeLng: PLAYWRIGHT_FO_HOME.lng,
+      maxTravelMinutes: 60,
+      maxSquareFootage: 5000,
+      maxLaborMinutes: 960,
+      maxDailyLaborMinutes: 960,
+    },
     create: {
       userId: foUser2.id,
-      status: "active",
+      status: "onboarding",
       displayName: `${MARKER} FO2`,
+      safetyHold: false,
+      homeLat: PLAYWRIGHT_FO_HOME.lat,
+      homeLng: PLAYWRIGHT_FO_HOME.lng,
+      maxTravelMinutes: 60,
+      maxSquareFootage: 5000,
+      maxLaborMinutes: 960,
+      maxDailyLaborMinutes: 960,
     },
+  });
+
+  await replaceWeeklyScheduleForPlaywrightFo(prisma, fo1.id);
+  await replaceWeeklyScheduleForPlaywrightFo(prisma, fo2.id);
+  await ensureProviderForFranchiseOwner(prisma, fo1.id);
+  await ensureProviderForFranchiseOwner(prisma, fo2.id);
+
+  await prisma.franchiseOwner.update({
+    where: { id: fo1.id },
+    data: { status: "active" },
+  });
+  await prisma.franchiseOwner.update({
+    where: { id: fo2.id },
+    data: { status: "active" },
   });
 
   const foIds = [fo1.id, fo2.id];

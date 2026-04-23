@@ -148,6 +148,7 @@ export function mapIntakeFieldsToEstimateInput(
 
   const estimateInput: EstimateInput = {
     property_type: assertPropertyType(f.propertyType),
+    job_site_class: "residential",
     sqft_band,
     bedrooms,
     bathrooms,
