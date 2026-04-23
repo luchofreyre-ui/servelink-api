@@ -18,6 +18,15 @@ import {
   type FoSupplyQueueState,
 } from "./fo-supply-queue";
 import { evaluateFoExecutionReadiness } from "./fo-execution-readiness";
+import type { ServiceSegment } from "../crew-capacity/crew-capacity-policy";
+import { clampCrewSizeForService } from "../crew-capacity/crew-capacity-policy";
+import { resolveFranchiseOwnerCrewRange } from "../crew-capacity/franchise-owner-crew-range";
+import {
+  computeAssignedCrewSize,
+  computeElapsedDurationMinutesFromLabor,
+  computeMatchOpsRankScore,
+} from "../crew-capacity/assigned-crew-and-duration";
+import { getWorkloadMinCrew } from "../crew-capacity/workload-min-crew";
 import { evaluateFoSupplyReadiness } from "./fo-supply-readiness";
 
 export enum FoStatus {
@@ -66,6 +75,15 @@ export type FoSupplyReadinessDiagnosticItem = {
     maxDailyLaborMinutes: number | null;
     maxLaborMinutes: number | null;
     maxSquareFootage: number | null;
+    crewCapacity?: {
+      teamSize: number | null;
+      minCrewSize: number | null;
+      preferredCrewSize: number | null;
+      maxCrewSize: number | null;
+      resolvedMin: number;
+      resolvedPreferred: number;
+      resolvedMax: number;
+    };
   };
 };
 
@@ -133,6 +151,8 @@ export type JobMatchInput = {
   recommendedTeamSize: number;
   /** When set, FOs with a non-empty `matchableServiceTypes` must include this value. */
   serviceType?: string;
+  /** Defaults to residential when omitted (backward compatible). */
+  serviceSegment?: ServiceSegment;
   limit?: number;
 };
 
@@ -237,6 +257,10 @@ export class FoService {
     maxLaborMinutes: number | null;
     maxSquareFootage: number | null;
     matchableServiceTypes: string[];
+    teamSize: number | null;
+    minCrewSize: number | null;
+    preferredCrewSize: number | null;
+    maxCrewSize: number | null;
     user: { email: string };
     provider?: { userId: string } | null;
     _count: { foSchedules: number };
@@ -298,6 +322,13 @@ export class FoService {
       Number.isFinite(fo.homeLat) &&
       Number.isFinite(fo.homeLng);
 
+    const resolvedCrew = resolveFranchiseOwnerCrewRange({
+      teamSize: fo.teamSize,
+      minCrewSize: fo.minCrewSize,
+      preferredCrewSize: fo.preferredCrewSize,
+      maxCrewSize: fo.maxCrewSize,
+    });
+
     return {
       franchiseOwnerId: fo.id,
       displayName: (fo.displayName?.trim() || fo.user.email) ?? fo.id,
@@ -318,6 +349,15 @@ export class FoService {
         maxDailyLaborMinutes: fo.maxDailyLaborMinutes,
         maxLaborMinutes: fo.maxLaborMinutes,
         maxSquareFootage: fo.maxSquareFootage,
+        crewCapacity: {
+          teamSize: fo.teamSize,
+          minCrewSize: fo.minCrewSize,
+          preferredCrewSize: fo.preferredCrewSize,
+          maxCrewSize: fo.maxCrewSize,
+          resolvedMin: resolvedCrew.minCrewSize,
+          resolvedPreferred: resolvedCrew.preferredCrewSize,
+          resolvedMax: resolvedCrew.maxCrewSize,
+        },
       },
     };
   }
@@ -549,6 +589,30 @@ export class FoService {
     if ("safetyHold" in body && typeof body.safetyHold === "boolean") {
       data.safetyHold = body.safetyHold;
     }
+    if ("teamSize" in body) {
+      data.teamSize =
+        body.teamSize === null || body.teamSize === ""
+          ? null
+          : Number(body.teamSize);
+    }
+    if ("minCrewSize" in body) {
+      data.minCrewSize =
+        body.minCrewSize === null || body.minCrewSize === ""
+          ? null
+          : Number(body.minCrewSize);
+    }
+    if ("preferredCrewSize" in body) {
+      data.preferredCrewSize =
+        body.preferredCrewSize === null || body.preferredCrewSize === ""
+          ? null
+          : Number(body.preferredCrewSize);
+    }
+    if ("maxCrewSize" in body) {
+      data.maxCrewSize =
+        body.maxCrewSize === null || body.maxCrewSize === ""
+          ? null
+          : Number(body.maxCrewSize);
+    }
 
     if (Object.keys(data).length > 0) {
       await this.db.franchiseOwner.update({
@@ -660,7 +724,25 @@ export class FoService {
         continue;
       }
 
-      if (fo.teamSize && fo.teamSize < input.recommendedTeamSize) {
+      const segment: ServiceSegment = input.serviceSegment ?? "residential";
+      const serviceType = String(input.serviceType ?? "maintenance");
+      const normRec = clampCrewSizeForService(
+        serviceType,
+        segment,
+        input.recommendedTeamSize,
+      );
+      const crew = resolveFranchiseOwnerCrewRange({
+        teamSize: fo.teamSize,
+        minCrewSize: fo.minCrewSize ?? null,
+        preferredCrewSize: fo.preferredCrewSize ?? null,
+        maxCrewSize: fo.maxCrewSize ?? null,
+      });
+      const workloadMinCrew = getWorkloadMinCrew({
+        estimatedLaborMinutes: input.estimatedLaborMinutes,
+        squareFootage: input.squareFootage,
+        serviceType,
+      });
+      if (crew.maxCrewSize < workloadMinCrew) {
         continue;
       }
 
@@ -701,12 +783,32 @@ export class FoService {
       }
 
       const reliabilityScore = fo.reliabilityScore ?? 0;
-      const score = reliabilityScore * 2 - travelMinutes;
+
+      const assignedCrewSize = computeAssignedCrewSize({
+        serviceType,
+        serviceSegment: segment,
+        normalizedRecommendedCrewSize: normRec,
+        candidate: crew,
+        workloadMinCrew,
+      });
+      const estimatedJobDurationMinutes = computeElapsedDurationMinutesFromLabor(
+        input.estimatedLaborMinutes,
+        assignedCrewSize,
+      );
+      const score = computeMatchOpsRankScore({
+        reliabilityScore,
+        travelMinutes,
+        assignedCrewSize,
+        normalizedRecommendedCrewSize: normRec,
+        estimatedJobDurationMinutes,
+      });
 
       scored.push({
         fo,
         score,
         travelMinutes,
+        assignedCrewSize,
+        estimatedJobDurationMinutes,
       });
     }
 
@@ -729,6 +831,8 @@ export class FoService {
       teamSize: s.fo.teamSize,
       reliabilityScore: s.fo.reliabilityScore,
       travelMinutes: Math.round(s.travelMinutes),
+      assignedCrewSize: s.assignedCrewSize,
+      estimatedJobDurationMinutes: s.estimatedJobDurationMinutes,
     }));
   }
 }

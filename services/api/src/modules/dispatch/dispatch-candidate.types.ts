@@ -36,6 +36,9 @@ export type DispatchCandidateInput = {
   squareFootage: number;
   estimatedLaborMinutes: number;
   recommendedTeamSize: number;
+  /** Defaults when omitted — matches public booking / estimator defaults. */
+  serviceType?: string;
+  serviceSegment?: "residential" | "commercial";
   limit?: number;
 };
 

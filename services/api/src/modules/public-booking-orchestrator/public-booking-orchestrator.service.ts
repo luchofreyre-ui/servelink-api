@@ -6,6 +6,21 @@ import {
 import { BookingStatus } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { FoService, type JobMatchInput } from "../fo/fo.service";
+import {
+  parseEstimateJobMatchFields,
+  type EstimateJobMatchFields,
+} from "../crew-capacity/parse-estimate-job-match-fields";
+import {
+  clampCrewSizeForService,
+  getServiceMaxCrewSize,
+} from "../crew-capacity/crew-capacity-policy";
+import { resolveFranchiseOwnerCrewRange } from "../crew-capacity/franchise-owner-crew-range";
+import {
+  MIN_DURATION_MINUTES,
+  computeAssignedCrewSize,
+  computeElapsedDurationMinutesFromLabor,
+} from "../crew-capacity/assigned-crew-and-duration";
+import { getWorkloadMinCrew } from "../crew-capacity/workload-min-crew";
 import { BookingsService } from "../bookings/bookings.service";
 import { SlotAvailabilityService } from "../slot-holds/slot-availability.service";
 import { SlotHoldsService } from "../slot-holds/slot-holds.service";
@@ -34,20 +49,6 @@ type BookingForOrchestration = {
   estimateSnapshot: { outputJson: string; inputJson: string } | null;
 };
 
-function approxSqftFromBand(band: string): number {
-  const m: Record<string, number> = {
-    "0_799": 600,
-    "800_1199": 1000,
-    "1200_1599": 1400,
-    "1600_1999": 1800,
-    "2000_2499": 2250,
-    "2500_2999": 2750,
-    "3000_3499": 3250,
-    "3500_plus": 4000,
-  };
-  return m[band] ?? 1500;
-}
-
 function extractFoIdsFromEstimateOutput(outputJson: string | null): string[] {
   if (!outputJson?.trim()) return [];
   try {
@@ -74,62 +75,6 @@ function extractFoIdsFromEstimateOutput(outputJson: string | null): string[] {
     return ids;
   } catch {
     return [];
-  }
-}
-
-function parseEstimateJobMatchFields(snapshot: {
-  outputJson: string;
-  inputJson: string;
-}): {
-  squareFootage: number;
-  estimatedLaborMinutes: number;
-  recommendedTeamSize: number;
-  serviceType: string;
-} | null {
-  try {
-    const out = JSON.parse(snapshot.outputJson) as Record<string, unknown>;
-    const inp = JSON.parse(snapshot.inputJson) as Record<string, unknown>;
-    const sqftBand =
-      typeof inp.sqft_band === "string" ? inp.sqft_band : "1200_1599";
-    const squareFootage = approxSqftFromBand(sqftBand);
-    const estimateMinutesRaw = out.estimateMinutes;
-    const estimatedDurationMinutesRaw = out.estimatedDurationMinutes;
-    const effectiveTeamSizeRaw = out.effectiveTeamSize;
-    const recommendedTeamSizeRaw = out.recommendedTeamSize;
-
-    const estimatedLaborMinutes =
-      typeof estimateMinutesRaw === "number" && Number.isFinite(estimateMinutesRaw)
-        ? Math.max(1, Math.floor(estimateMinutesRaw))
-        : typeof estimatedDurationMinutesRaw === "number" &&
-            Number.isFinite(estimatedDurationMinutesRaw) &&
-            typeof effectiveTeamSizeRaw === "number" &&
-            Number.isFinite(effectiveTeamSizeRaw) &&
-            effectiveTeamSizeRaw > 0
-          ? Math.max(
-              1,
-              Math.floor(estimatedDurationMinutesRaw * effectiveTeamSizeRaw),
-            )
-          : 120;
-
-    const recommendedTeamSize =
-      typeof recommendedTeamSizeRaw === "number" &&
-      Number.isFinite(recommendedTeamSizeRaw) &&
-      recommendedTeamSizeRaw > 0
-        ? Math.max(1, Math.floor(recommendedTeamSizeRaw))
-        : 1;
-
-    const stRaw = inp.service_type;
-    const serviceType =
-      stRaw === "maintenance" ||
-      stRaw === "deep_clean" ||
-      stRaw === "move_in" ||
-      stRaw === "move_out"
-        ? stRaw
-        : "maintenance";
-
-    return { squareFootage, estimatedLaborMinutes, recommendedTeamSize, serviceType };
-  } catch {
-    return null;
   }
 }
 
@@ -208,7 +153,62 @@ export class PublicBookingOrchestratorService {
   }
 
   private durationMinutesFromBooking(booking: BookingForOrchestration): number {
+    return Math.max(
+      MIN_DURATION_MINUTES,
+      Math.round(booking.estimatedHours * 60),
+    );
+  }
+
+  private resolveRequiredLaborMinutes(
+    booking: BookingForOrchestration,
+    jobMatch: EstimateJobMatchFields | null,
+  ): number {
+    if (jobMatch && jobMatch.estimatedLaborMinutes > 0) {
+      return jobMatch.estimatedLaborMinutes;
+    }
     return Math.max(1, Math.round(booking.estimatedHours * 60));
+  }
+
+  private async computeSlotDurationMinutesForFo(
+    booking: BookingForOrchestration,
+    foId: string,
+    jobMatch: EstimateJobMatchFields | null,
+  ): Promise<number> {
+    if (!jobMatch) {
+      return this.durationMinutesFromBooking(booking);
+    }
+    const labor = this.resolveRequiredLaborMinutes(booking, jobMatch);
+    const fo = await this.prisma.franchiseOwner.findUnique({
+      where: { id: foId },
+      select: {
+        teamSize: true,
+        minCrewSize: true,
+        preferredCrewSize: true,
+        maxCrewSize: true,
+      },
+    });
+    if (!fo) {
+      return this.durationMinutesFromBooking(booking);
+    }
+    const crew = resolveFranchiseOwnerCrewRange(fo);
+    const normRec = clampCrewSizeForService(
+      jobMatch.serviceType,
+      jobMatch.serviceSegment,
+      jobMatch.recommendedTeamSize,
+    );
+    const workloadMinCrew = getWorkloadMinCrew({
+      estimatedLaborMinutes: labor,
+      squareFootage: jobMatch.squareFootage ?? 1500,
+      serviceType: jobMatch.serviceType,
+    });
+    const assigned = computeAssignedCrewSize({
+      serviceType: jobMatch.serviceType,
+      serviceSegment: jobMatch.serviceSegment,
+      normalizedRecommendedCrewSize: normRec,
+      candidate: crew,
+      workloadMinCrew,
+    });
+    return computeElapsedDurationMinutesFromLabor(labor, assigned);
   }
 
   /**
@@ -267,6 +267,7 @@ export class PublicBookingOrchestratorService {
           estimatedLaborMinutes: job.estimatedLaborMinutes,
           recommendedTeamSize: job.recommendedTeamSize,
           serviceType: job.serviceType,
+          serviceSegment: job.serviceSegment,
           limit: MAX_FO_CANDIDATES,
         };
         const matched = await this.fo.matchFOs(input);
@@ -285,8 +286,10 @@ export class PublicBookingOrchestratorService {
    * Walks candidates in backend rank order; keeps first `limit` that can accept bookings.
    */
   private async buildRankedTeamOptions(
+    booking: BookingForOrchestration,
     candidateIds: string[],
     limit: number,
+    jobMatch: EstimateJobMatchFields | null,
   ): Promise<PublicBookingTeamOption[]> {
     const chosen: string[] = [];
     for (const id of candidateIds) {
@@ -299,7 +302,14 @@ export class PublicBookingOrchestratorService {
 
     const rows = await this.prisma.franchiseOwner.findMany({
       where: { id: { in: chosen } },
-      select: { id: true, displayName: true },
+      select: {
+        id: true,
+        displayName: true,
+        teamSize: true,
+        minCrewSize: true,
+        preferredCrewSize: true,
+        maxCrewSize: true,
+      },
     });
     const labelById = new Map(
       rows.map((r) => [
@@ -308,11 +318,56 @@ export class PublicBookingOrchestratorService {
       ] as const),
     );
 
-    return chosen.map((id, index) => ({
-      id,
-      displayName: labelById.get(id) ?? "Team",
-      isRecommended: index === 0,
-    }));
+    const labor = this.resolveRequiredLaborMinutes(booking, jobMatch);
+
+    return chosen.map((id, index) => {
+      const row = rows.find((r) => r.id === id);
+      const crew = row
+        ? resolveFranchiseOwnerCrewRange(row)
+        : resolveFranchiseOwnerCrewRange({
+            teamSize: null,
+            minCrewSize: null,
+            preferredCrewSize: null,
+            maxCrewSize: null,
+          });
+      const segment = jobMatch?.serviceSegment ?? "residential";
+      const serviceType = jobMatch?.serviceType ?? "maintenance";
+      const normRec = jobMatch
+        ? clampCrewSizeForService(serviceType, segment, jobMatch.recommendedTeamSize)
+        : 1;
+      const workloadMinCrew = getWorkloadMinCrew({
+        estimatedLaborMinutes: labor,
+        squareFootage: jobMatch?.squareFootage ?? 1500,
+        serviceType,
+      });
+      const assignedCrewSize = computeAssignedCrewSize({
+        serviceType,
+        serviceSegment: segment,
+        normalizedRecommendedCrewSize: normRec,
+        candidate: crew,
+        workloadMinCrew,
+      });
+      const estimatedDurationMinutes = computeElapsedDurationMinutesFromLabor(
+        labor,
+        assignedCrewSize,
+      );
+      const serviceMaxCrewSize = getServiceMaxCrewSize(serviceType, segment);
+
+      return {
+        id,
+        displayName: labelById.get(id) ?? "Team",
+        isRecommended: index === 0,
+        assignedCrewSize,
+        estimatedDurationMinutes,
+        crewCapacityMeta: {
+          requiredLaborMinutes: labor,
+          recommendedCrewSize: jobMatch?.recommendedTeamSize ?? null,
+          assignedCrewSize,
+          serviceMaxCrewSize,
+          serviceSegment: segment,
+        },
+      };
+    });
   }
 
   private resolveAvailabilityRange(
@@ -413,7 +468,6 @@ export class PublicBookingOrchestratorService {
       throw e;
     }
 
-    const durationMinutes = this.durationMinutesFromBooking(booking);
     const candidateIds = await this.resolveFoCandidateIds(booking);
     const jobMatch =
       booking.estimateSnapshot?.outputJson &&
@@ -452,8 +506,10 @@ export class PublicBookingOrchestratorService {
 
     if (!foIdParam) {
       const teams = await this.buildRankedTeamOptions(
+        booking,
         candidateIds,
         teamOptionsLimit,
+        jobMatch,
       );
       if (teams.length === 0) {
         return teamOptionsError(
@@ -488,10 +544,50 @@ export class PublicBookingOrchestratorService {
 
     const foRow = await this.prisma.franchiseOwner.findUnique({
       where: { id: foIdParam },
-      select: { id: true, displayName: true },
+      select: {
+        id: true,
+        displayName: true,
+        teamSize: true,
+        minCrewSize: true,
+        preferredCrewSize: true,
+        maxCrewSize: true,
+      },
     });
     const displayName =
       String(foRow?.displayName ?? "").trim() || "Team";
+
+    const durationMinutes = await this.computeSlotDurationMinutesForFo(
+      booking,
+      foIdParam,
+      jobMatch,
+    );
+
+    const crew = foRow
+      ? resolveFranchiseOwnerCrewRange(foRow)
+      : resolveFranchiseOwnerCrewRange({
+          teamSize: null,
+          minCrewSize: null,
+          preferredCrewSize: null,
+          maxCrewSize: null,
+        });
+    const segment = jobMatch?.serviceSegment ?? "residential";
+    const serviceType = jobMatch?.serviceType ?? "maintenance";
+    const labor = this.resolveRequiredLaborMinutes(booking, jobMatch);
+    const normRec = jobMatch
+      ? clampCrewSizeForService(serviceType, segment, jobMatch.recommendedTeamSize)
+      : 1;
+    const workloadMinCrew = getWorkloadMinCrew({
+      estimatedLaborMinutes: labor,
+      squareFootage: jobMatch?.squareFootage ?? 1500,
+      serviceType,
+    });
+    const assignedCrewForSlot = computeAssignedCrewSize({
+      serviceType,
+      serviceSegment: segment,
+      normalizedRecommendedCrewSize: normRec,
+      candidate: crew,
+      workloadMinCrew,
+    });
 
     const rawWindows = await this.slotAvailability.listAvailableWindows({
       foId: foIdParam,
@@ -513,7 +609,19 @@ export class PublicBookingOrchestratorService {
       return {
         kind: "public_booking_team_availability" as const,
         bookingId: booking.id,
-        selectedTeam: { id: foIdParam, displayName },
+        selectedTeam: {
+          id: foIdParam,
+          displayName,
+          assignedCrewSize: assignedCrewForSlot,
+          estimatedDurationMinutes: durationMinutes,
+          crewCapacityMeta: {
+            requiredLaborMinutes: labor,
+            recommendedCrewSize: jobMatch?.recommendedTeamSize ?? null,
+            assignedCrewSize: assignedCrewForSlot,
+            serviceMaxCrewSize: getServiceMaxCrewSize(serviceType, segment),
+            serviceSegment: segment,
+          },
+        },
         windows: capped,
         unavailableReason: {
           code: "PUBLIC_BOOKING_NO_WINDOWS",
@@ -525,7 +633,19 @@ export class PublicBookingOrchestratorService {
     return {
       kind: "public_booking_team_availability" as const,
       bookingId: booking.id,
-      selectedTeam: { id: foIdParam, displayName },
+      selectedTeam: {
+        id: foIdParam,
+        displayName,
+        assignedCrewSize: assignedCrewForSlot,
+        estimatedDurationMinutes: durationMinutes,
+        crewCapacityMeta: {
+          requiredLaborMinutes: labor,
+          recommendedCrewSize: jobMatch?.recommendedTeamSize ?? null,
+          assignedCrewSize: assignedCrewForSlot,
+          serviceMaxCrewSize: getServiceMaxCrewSize(serviceType, segment),
+          serviceSegment: segment,
+        },
+      },
       windows: capped,
     };
   }
@@ -582,7 +702,19 @@ export class PublicBookingOrchestratorService {
       );
     }
 
-    const durationMinutes = this.durationMinutesFromBooking(booking);
+    const jobMatchHold =
+      booking.estimateSnapshot?.outputJson &&
+      booking.estimateSnapshot?.inputJson
+        ? parseEstimateJobMatchFields({
+            outputJson: booking.estimateSnapshot.outputJson,
+            inputJson: booking.estimateSnapshot.inputJson,
+          })
+        : null;
+    const durationMinutes = await this.computeSlotDurationMinutesForFo(
+      booking,
+      dto.foId.trim(),
+      jobMatchHold,
+    );
     const startAt = new Date(dto.startAt);
     const endAt = new Date(dto.endAt);
     if (!Number.isFinite(startAt.getTime()) || !Number.isFinite(endAt.getTime())) {
@@ -598,7 +730,7 @@ export class PublicBookingOrchestratorService {
     if (holdDuration !== durationMinutes) {
       this.throwOrchestrator(
         "PUBLIC_BOOKING_SLOT_DURATION_MISMATCH",
-        `Hold duration must match the booking estimate (${durationMinutes} minutes).`,
+        `Hold duration must match the slot model for this team (${durationMinutes} minutes).`,
       );
     }
 
