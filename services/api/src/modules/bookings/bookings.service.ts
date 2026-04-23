@@ -17,6 +17,7 @@ import { PrismaService } from "../../prisma";
 import { BookingEventsService } from "./booking-events.service";
 import { getTransition, Transition } from "./booking-state.machine";
 import { FoService } from "../fo/fo.service";
+import type { BookingMatchMode } from "../fo/service-matching-policy";
 import {
   EstimatorService,
   EstimateInput,
@@ -64,6 +65,8 @@ export class BookingsService {
     estimateInput?: EstimateInput;
     /** Optional public funnel preference only; does not assign `foId`. */
     preferredFoId?: string | null;
+    /** Forwarded to `EstimatorService` → `matchFOs` allow-list policy. */
+    bookingMatchMode?: BookingMatchMode;
   }): Promise<{
     booking: any;
     estimate?: EstimateResult;
@@ -114,7 +117,9 @@ export class BookingsService {
       let est: EstimateResult | undefined;
 
       if (input.estimateInput) {
-        est = await this.estimator.estimate(input.estimateInput);
+        est = await this.estimator.estimate(input.estimateInput, {
+          bookingMatchMode: input.bookingMatchMode,
+        });
 
         await tx.bookingEstimateSnapshot.create({
           data: {

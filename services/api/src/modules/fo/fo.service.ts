@@ -19,6 +19,12 @@ import {
 } from "./fo-supply-queue";
 import { evaluateFoExecutionReadiness } from "./fo-execution-readiness";
 import type { ServiceSegment } from "../crew-capacity/crew-capacity-policy";
+import {
+  shouldServiceTypeActAsHardWhitelist,
+  type BookingMatchMode,
+} from "./service-matching-policy";
+
+export type { BookingMatchMode } from "./service-matching-policy";
 import { clampCrewSizeForService } from "../crew-capacity/crew-capacity-policy";
 import { resolveFranchiseOwnerCrewRange } from "../crew-capacity/franchise-owner-crew-range";
 import {
@@ -149,11 +155,16 @@ export type JobMatchInput = {
   squareFootage: number;
   estimatedLaborMinutes: number;
   recommendedTeamSize: number;
-  /** When set, FOs with a non-empty `matchableServiceTypes` must include this value. */
+  /** Requested estimator service type (drives crew policy + optional allow-list). */
   serviceType?: string;
   /** Defaults to residential when omitted (backward compatible). */
   serviceSegment?: ServiceSegment;
   limit?: number;
+  /**
+   * Optional booking context for `matchableServiceTypes` policy (see `service-matching-policy`).
+   * Omitted = legacy strict allow-list behavior where applicable.
+   */
+  bookingMatchMode?: BookingMatchMode;
 };
 
 @Injectable()
@@ -747,7 +758,13 @@ export class FoService {
       }
 
       const allowed = fo.matchableServiceTypes;
+      const enforceServiceWhitelist = shouldServiceTypeActAsHardWhitelist(
+        input.serviceType,
+        segment,
+        input.bookingMatchMode,
+      );
       if (
+        enforceServiceWhitelist &&
         Array.isArray(allowed) &&
         allowed.length > 0 &&
         (!input.serviceType || !allowed.includes(input.serviceType))

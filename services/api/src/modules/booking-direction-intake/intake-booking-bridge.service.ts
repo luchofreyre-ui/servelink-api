@@ -197,7 +197,9 @@ export class IntakeBookingBridgeService {
 
     let result;
     try {
-      result = await this.estimator.estimate(estimateInput);
+      result = await this.estimator.estimate(estimateInput, {
+        bookingMatchMode: "public_one_time",
+      });
     } catch (err: unknown) {
       if (err instanceof EstimatorExecutionError) {
         this.logger.warn(
@@ -369,6 +371,7 @@ export class IntakeBookingBridgeService {
         estimateInput,
         note,
         preferredFoId: intake.preferredFoId,
+        bookingMatchMode: "public_one_time",
       });
 
       if (!booking?.id) {

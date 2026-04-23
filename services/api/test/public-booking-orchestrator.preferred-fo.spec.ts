@@ -212,6 +212,7 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
         serviceType: "move_in",
         lat: 36.154,
         lng: -95.993,
+        bookingMatchMode: "public_one_time",
       }),
     );
   });
