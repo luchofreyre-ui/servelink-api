@@ -158,6 +158,51 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
     expect(bookingUpdate).toHaveBeenCalled();
   });
 
+  it("does not treat deposit_succeeded without a PaymentIntent as satisfied", async () => {
+    delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+    process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+
+    const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "bk1",
+          tenantId: "tenant_1",
+          status: BookingStatus.pending_payment,
+          customerId: "u1",
+          publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+          publicDepositAmountCents: 10_000,
+          publicDepositPaymentIntentId: null,
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
+          estimateSnapshot: { outputJson },
+        }),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "h1",
+          bookingId: "bk1",
+          foId: "fo1",
+          startAt: new Date("2030-01-01T10:00:00.000Z"),
+          endAt: new Date("2030-01-01T12:00:00.000Z"),
+          expiresAt: new Date("2030-01-01T13:00:00.000Z"),
+        }),
+      },
+    } as unknown as PrismaService;
+
+    const stripePayments = new StripePaymentService(
+      prisma,
+      {} as PaymentReliabilityService,
+    );
+    const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
+    const svc = new PublicBookingDepositService(prisma, stripePayments);
+
+    const res = await svc.preparePublicBookingDeposit("bk1", "h1");
+
+    expect(res.paymentMode).toBe("none");
+    expect(res.classification).toBe("deposit_inconsistent");
+    expect(createPi).not.toHaveBeenCalled();
+  });
+
   it("uses the locked server-side deposit amount and hold metadata", async () => {
     delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";

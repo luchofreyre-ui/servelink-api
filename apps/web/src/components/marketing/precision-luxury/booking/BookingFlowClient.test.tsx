@@ -2963,5 +2963,77 @@ describe("BookingFlowClient", () => {
         expect(url).not.toMatch(/client_secret/i);
       }
     });
+
+    it("resumes finalization after Stripe redirects back with booking and hold ids", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `${buildReviewSearchString()}&publicBookingPayment=1&bookingId=bk_test&holdId=hold_test&redirect_status=succeeded`,
+      );
+
+      render(<BookingFlowClient />);
+
+      await waitFor(() =>
+        expect(postPublicBookingConfirmMock).toHaveBeenCalledWith(
+          { bookingId: "bk_test", holdId: "hold_test" },
+          null,
+        ),
+      );
+      await waitFor(() =>
+        expect(routerPush).toHaveBeenCalledWith(
+          expect.stringMatching(/^\/book\/confirmation\?/),
+        ),
+      );
+    });
+
+    it("refresh after payment success restores hold id from session and finalizes", async () => {
+      const raw = {
+        v: 1,
+        savedAt: Date.now(),
+        intakeId: "intake_test",
+        bookingId: "bk_test",
+        priceCents: null,
+        durationMinutes: null,
+        confidence: null,
+        bookingErrorCode: "",
+        publicDepositHoldId: "hold_test",
+        publicDepositPaymentIntentId: "pi_test",
+        selectedTeamId: "fo_test_pick",
+        selectedTeamDisplayName: "North Team",
+        selectedSlotStart: "2030-04-15T14:00:00.000Z",
+        selectedSlotEnd: "2030-04-15T16:00:00.000Z",
+      };
+      sessionStorage.setItem(BOOKING_CONFIRMATION_SESSION_KEY, JSON.stringify(raw));
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `${buildReviewSearchString()}&publicBookingPayment=1&bookingId=bk_test&redirect_status=succeeded`,
+      );
+
+      render(<BookingFlowClient />);
+
+      await waitFor(() =>
+        expect(postPublicBookingConfirmMock).toHaveBeenCalledWith(
+          { bookingId: "bk_test", holdId: "hold_test" },
+          null,
+        ),
+      );
+      await waitFor(() =>
+        expect(routerPush).toHaveBeenCalledWith(
+          expect.stringMatching(/^\/book\/confirmation\?/),
+        ),
+      );
+    });
+
+    it("missing hold id after payment return shows hard recoverable error", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `${buildReviewSearchString()}&publicBookingPayment=1&bookingId=bk_test&redirect_status=succeeded`,
+      );
+
+      render(<BookingFlowClient />);
+
+      await waitFor(() =>
+        expect(
+          screen.getByText(/booking hold could not be restored/i),
+        ).toBeInTheDocument(),
+      );
+      expect(postPublicBookingConfirmMock).not.toHaveBeenCalled();
+    });
   });
 });

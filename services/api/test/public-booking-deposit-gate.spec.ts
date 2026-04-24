@@ -143,4 +143,55 @@ describe("PublicBookingDepositService gate", () => {
       }),
     );
   });
+
+  it("rejects deposit_succeeded without a PaymentIntent before finalization", async () => {
+    process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = undefined;
+    process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+
+    const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "bk1",
+          tenantId: "tenant_1",
+          status: BookingStatus.pending_payment,
+          customerId: "u1",
+          publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+          publicDepositAmountCents: 10_000,
+          publicDepositPaymentIntentId: null,
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
+          estimateSnapshot: { outputJson },
+        }),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "h1",
+          bookingId: "bk1",
+          foId: "fo1",
+          startAt: new Date("2030-01-01T10:00:00.000Z"),
+          endAt: new Date("2030-01-01T12:00:00.000Z"),
+          expiresAt: new Date("2030-01-01T13:00:00.000Z"),
+        }),
+      },
+    } as unknown as PrismaService;
+
+    const stripePayments = new StripePaymentService(
+      prisma,
+      {} as PaymentReliabilityService,
+    );
+    const svc = new PublicBookingDepositService(prisma, stripePayments);
+
+    await expect(
+      svc.ensurePublicDepositResolvedBeforeConfirm({
+        bookingId: "bk1",
+        holdId: "h1",
+        stripePaymentMethodId: null,
+        idempotencyKey: "k1",
+      }),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_DEPOSIT_STATE_INCONSISTENT",
+      }),
+    });
+  });
 });

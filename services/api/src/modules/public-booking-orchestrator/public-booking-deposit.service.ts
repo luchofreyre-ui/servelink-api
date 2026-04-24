@@ -247,8 +247,15 @@ export class PublicBookingDepositService {
       return;
     }
 
-    if (booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded) {
-      return;
+    if (
+      booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
+      !booking.publicDepositPaymentIntentId?.trim()
+    ) {
+      throw new ConflictException({
+        code: "PUBLIC_BOOKING_DEPOSIT_STATE_INCONSISTENT",
+        message:
+          "Deposit status is inconsistent and requires payment reconciliation before booking confirmation.",
+      });
     }
 
     const stripeCustomerId = await this.stripePayments.ensureStripeCustomerForUser({
@@ -614,14 +621,53 @@ export class PublicBookingDepositService {
       };
     }
 
-    if (booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded) {
+    if (
+      booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
+      !booking.publicDepositPaymentIntentId?.trim()
+    ) {
       return {
         kind: "public_booking_deposit_prepare",
         bookingId: id,
         paymentMode: "none",
-        classification: "deposit_succeeded",
+        classification: "deposit_inconsistent",
         publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
       };
+    }
+
+    if (
+      booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
+      booking.publicDepositPaymentIntentId?.trim()
+    ) {
+      const pi = await this.stripePayments.retrievePaymentIntent(
+        booking.publicDepositPaymentIntentId.trim(),
+      );
+      if (String(pi.status ?? "") === "succeeded") {
+        this.assertPaymentIntentMatchesPublicDepositContext(pi, ctx);
+        await this.markDepositSucceededFromStripeState({
+          bookingId: booking.id,
+          paymentIntentId: booking.publicDepositPaymentIntentId.trim(),
+          estimatedTotalCentsSnapshot:
+            ctx.estimatedTotalCents > 0 ? ctx.estimatedTotalCents : null,
+          remainingBalanceAfterDepositCents:
+            ctx.estimatedTotalCents > 0
+              ? computeRemainingBalanceAfterDepositCents({
+                  estimatedTotalCents: ctx.estimatedTotalCents,
+                  depositAmountCents: booking.publicDepositAmountCents,
+                })
+              : null,
+        });
+        return {
+          kind: "public_booking_deposit_prepare",
+          bookingId: id,
+          paymentMode: "none",
+          classification: "deposit_succeeded",
+          publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+          paymentIntentId: booking.publicDepositPaymentIntentId.trim(),
+        };
+      }
+      this.log.warn(
+        `preparePublicBookingDeposit: local deposit_succeeded but Stripe PI is ${pi.status} booking=${booking.id} pi=${booking.publicDepositPaymentIntentId}`,
+      );
     }
 
     const stripeCustomerId = await this.stripePayments.ensureStripeCustomerForUser({

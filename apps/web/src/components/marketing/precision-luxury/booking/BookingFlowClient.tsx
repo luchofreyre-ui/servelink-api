@@ -64,6 +64,7 @@ import {
   normalizeBookingProblemAreasForPayload,
   buildPublicServiceLocationPayload,
   parseBookingSearchParams,
+  readBookingConfirmationSessionSnapshot,
   writeBookingConfirmationSessionSnapshot,
 } from "./bookingUrlState";
 import {
@@ -393,6 +394,7 @@ export function BookingFlowClient() {
   const depositPrepareInFlightRef = useRef(false);
   const pendingConfirmHoldIdRef = useRef<string | null>(null);
   const scheduleConfirmIdempotencyKeyRef = useRef<string | null>(null);
+  const paymentResumeAttemptedRef = useRef(false);
   /** After an explicit fresh start, one URL sync must not re-merge contact from prior React state. */
   const skipContactMergeFromUrlOnceRef = useRef(false);
   const scheduleSnapshotForAbandonRef = useRef({
@@ -433,6 +435,45 @@ export function BookingFlowClient() {
     setDepositError(null);
     setDepositProcessing(false);
     setDepositBackendProcessing(false);
+  }
+
+  function currentPaymentSessionKey(bookingId: string, holdId: string) {
+    return `public-booking:${bookingId.trim()}:hold:${holdId.trim()}`;
+  }
+
+  function writeDurablePublicBookingPaymentSession(args: {
+    bookingId: string;
+    holdId: string;
+    paymentIntentId?: string | null;
+    expiresAt?: string | null;
+  }) {
+    const bookingId = args.bookingId.trim();
+    const holdId = args.holdId.trim();
+    if (!bookingId || !holdId) return;
+    const s = stateRefForBookingUrl.current;
+    const payload: Parameters<typeof writeBookingConfirmationSessionSnapshot>[0] = {
+      intakeId: s.schedulingIntakeId.trim() || "public-booking-payment",
+      bookingId,
+      priceCents: null,
+      durationMinutes: null,
+      confidence: null,
+      bookingErrorCode: "",
+      publicDepositStatus: "deposit_required",
+      publicDepositHoldId: holdId,
+      paymentSessionKey: currentPaymentSessionKey(bookingId, holdId),
+      paymentSessionCreatedAt: new Date().toISOString(),
+    };
+    const paymentIntentId = args.paymentIntentId?.trim();
+    if (paymentIntentId) payload.publicDepositPaymentIntentId = paymentIntentId;
+    if (s.selectedTeamId.trim()) payload.selectedTeamId = s.selectedTeamId.trim();
+    if (s.selectedTeamDisplayName.trim()) {
+      payload.selectedTeamDisplayName = s.selectedTeamDisplayName.trim();
+    }
+    if (s.selectedSlotStart.trim()) payload.selectedSlotStart = s.selectedSlotStart.trim();
+    if (s.selectedSlotEnd.trim()) payload.selectedSlotEnd = s.selectedSlotEnd.trim();
+    const expiresAt = args.expiresAt?.trim();
+    if (expiresAt) payload.paymentSessionExpiresAt = expiresAt;
+    writeBookingConfirmationSessionSnapshot(payload);
   }
   /**
    * Last `state.step` written to the location bar. Same-step edits stay in React only
@@ -1187,8 +1228,11 @@ export function BookingFlowClient() {
     if (state.step === "location") return goToStep("review");
   }
 
-  async function finalizeHeldBookingAfterDepositPaid(bookingId: string) {
-    const holdId = pendingConfirmHoldIdRef.current?.trim();
+  async function finalizeHeldBookingAfterDepositPaid(
+    bookingId: string,
+    holdIdOverride?: string | null,
+  ) {
+    const holdId = holdIdOverride?.trim() || pendingConfirmHoldIdRef.current?.trim();
     if (!holdId) return false;
     const idemKey = scheduleConfirmIdempotencyKeyRef.current;
     const maxAttempts = 5;
@@ -1281,16 +1325,109 @@ export function BookingFlowClient() {
         clampBookingStepToStructuralMax({ ...prev, step: "schedule" }),
       );
       try {
-        await finalizeHeldBookingAfterDepositPaid(bookingId);
+        const finalized = await finalizeHeldBookingAfterDepositPaid(bookingId, holdId);
+        if (!finalized) {
+          setReviewPaymentPhase("finalizing_timeout");
+          setDepositError(
+            "Your deposit was received, but we could not finish booking confirmation automatically. Please retry finalization or contact support.",
+          );
+        }
       } finally {
         setConfirmScheduleLoading(false);
       }
       return;
     }
+    setReviewPaymentPhase("finalizing_timeout");
+    setDepositError(
+      "Your deposit was received, but the slot hold could not be restored. Please contact support before paying again.",
+    );
     setState((prev) =>
       clampBookingStepToStructuralMax({ ...prev, step: "schedule" }),
     );
   }
+
+  useEffect(() => {
+    if (pathname !== "/book") return;
+    if (paymentResumeAttemptedRef.current) return;
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
+    const isPaymentReturn =
+      params.get("publicBookingPayment") === "1" ||
+      params.get("redirect_status") === "succeeded";
+    if (!isPaymentReturn) return;
+    paymentResumeAttemptedRef.current = true;
+
+    const session = readBookingConfirmationSessionSnapshot();
+    const bookingId =
+      params.get("bookingId")?.trim() ||
+      stateRefForBookingUrl.current.schedulingBookingId.trim() ||
+      session?.bookingId?.trim() ||
+      "";
+    const holdId =
+      params.get("holdId")?.trim() ||
+      pendingConfirmHoldIdRef.current?.trim() ||
+      session?.publicDepositHoldId?.trim() ||
+      "";
+
+    if (!bookingId || !holdId) {
+      setRequiresDepositResolution(true);
+      setReviewPaymentPhase("finalizing_timeout");
+      setDepositError(
+        "Payment returned, but the booking hold could not be restored. Please contact support before paying again.",
+      );
+      setState((prev) =>
+        clampBookingStepToStructuralMax({
+          ...prev,
+          schedulingBookingId: bookingId || prev.schedulingBookingId,
+          step: "review",
+        }),
+      );
+      return;
+    }
+
+    const paymentIntentId =
+      params.get("paymentIntentId")?.trim() ||
+      session?.publicDepositPaymentIntentId?.trim() ||
+      null;
+    setPendingConfirmHoldId(holdId);
+    pendingConfirmHoldIdRef.current = holdId;
+    setRequiresDepositResolution(true);
+    setReviewPaymentPhase("finalizing");
+    setDepositProcessing(true);
+    setDepositError(null);
+    setState((prev) =>
+      clampBookingStepToStructuralMax({
+        ...prev,
+        schedulingBookingId: bookingId,
+        schedulingIntakeId: session?.intakeId?.trim() || prev.schedulingIntakeId,
+        selectedTeamId: session?.selectedTeamId?.trim() || prev.selectedTeamId,
+        selectedTeamDisplayName:
+          session?.selectedTeamDisplayName?.trim() || prev.selectedTeamDisplayName,
+        selectedSlotStart: session?.selectedSlotStart?.trim() || prev.selectedSlotStart,
+        selectedSlotEnd: session?.selectedSlotEnd?.trim() || prev.selectedSlotEnd,
+        step: "review",
+      }),
+    );
+    writeDurablePublicBookingPaymentSession({
+      bookingId,
+      holdId,
+      paymentIntentId,
+      expiresAt: session?.paymentSessionExpiresAt ?? null,
+    });
+
+    void (async () => {
+      try {
+        const finalized = await finalizeHeldBookingAfterDepositPaid(bookingId, holdId);
+        if (!finalized) {
+          setReviewPaymentPhase("finalizing_timeout");
+          setDepositError(
+            "Your deposit was received, but booking confirmation did not finish automatically. Please retry or contact support.",
+          );
+        }
+      } finally {
+        setDepositProcessing(false);
+      }
+    })();
+  }, [pathname, searchParams]);
 
   async function bootstrapReviewDepositAfterScheduleGate(
     bookingId: string,
@@ -1302,6 +1439,11 @@ export function BookingFlowClient() {
     setDepositError(null);
     try {
       const prep = await postPublicBookingDepositPrepare({ bookingId, holdId });
+      writeDurablePublicBookingPaymentSession({
+        bookingId,
+        holdId,
+        paymentIntentId: prep.paymentIntentId,
+      });
       setDepositBackendProcessing(
         prep.paymentMode === "deposit" &&
           prep.classification === "processing",
@@ -1359,6 +1501,11 @@ export function BookingFlowClient() {
             bookingId: id,
             holdId,
           });
+          writeDurablePublicBookingPaymentSession({
+            bookingId: id,
+            holdId,
+            paymentIntentId: prep.paymentIntentId,
+          });
           setDepositBackendProcessing(
             prep.paymentMode === "deposit" &&
               prep.classification === "processing",
@@ -1368,6 +1515,11 @@ export function BookingFlowClient() {
       );
       if (pollOutcome === "satisfied") {
         const prep = await postPublicBookingDepositPrepare({ bookingId, holdId });
+        writeDurablePublicBookingPaymentSession({
+          bookingId,
+          holdId,
+          paymentIntentId: prep.paymentIntentId,
+        });
         if (!isDepositFullySatisfied(prep)) {
           setReviewPaymentPhase("failed");
           setDepositError(
@@ -1403,6 +1555,11 @@ export function BookingFlowClient() {
     setDepositError(null);
     try {
       const prep = await postPublicBookingDepositPrepare({ bookingId, holdId });
+      writeDurablePublicBookingPaymentSession({
+        bookingId,
+        holdId,
+        paymentIntentId: prep.paymentIntentId,
+      });
       setDepositBackendProcessing(
         prep.paymentMode === "deposit" &&
           prep.classification === "processing",
@@ -1594,6 +1751,12 @@ export function BookingFlowClient() {
           confirmErr instanceof PublicBookingPaymentRequiredError &&
           confirmErr.code === "PAYMENT_REQUIRED"
         ) {
+          writeDurablePublicBookingPaymentSession({
+            bookingId: state.schedulingBookingId,
+            holdId: hold.holdId,
+            paymentIntentId: confirmErr.details.paymentIntentId,
+            expiresAt: hold.expiresAt,
+          });
           setPendingConfirmHoldId(hold.holdId);
           setScheduleCommitError(null);
           setScheduleCommitPhase("none");
@@ -1700,6 +1863,11 @@ export function BookingFlowClient() {
         err instanceof PublicBookingPaymentRequiredError &&
         err.code === "PAYMENT_REQUIRED"
       ) {
+        writeDurablePublicBookingPaymentSession({
+          bookingId: state.schedulingBookingId,
+          holdId: pendingConfirmHoldId.trim(),
+          paymentIntentId: err.details.paymentIntentId,
+        });
         setScheduleCommitError(null);
         setScheduleCommitPhase("none");
         clearDepositPaymentCredentialsOnly();
@@ -2178,6 +2346,17 @@ export function BookingFlowClient() {
                         clientSecret={depositClientSecret}
                         amountCents={depositAmountCents ?? 10_000}
                         disabled={depositProcessing}
+                        bookingId={state.schedulingBookingId}
+                        holdId={pendingConfirmHoldId ?? undefined}
+                        paymentIntentId={depositPaymentIntentId}
+                        paymentSessionKey={
+                          state.schedulingBookingId.trim() && pendingConfirmHoldId?.trim()
+                            ? currentPaymentSessionKey(
+                                state.schedulingBookingId,
+                                pendingConfirmHoldId,
+                              )
+                            : null
+                        }
                         onSuccess={() => void completeReviewDepositAfterPayment()}
                         onError={(msg) => {
                           setReviewPaymentPhase("failed");
