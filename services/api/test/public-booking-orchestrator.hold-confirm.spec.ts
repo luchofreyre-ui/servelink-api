@@ -197,10 +197,11 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
 
   it("confirmHold: happy path delegates to BookingsService.confirmBookingFromHold", async () => {
     const scheduled = new Date("2030-06-01T14:00:00.000Z");
+    const holdEnd = new Date(scheduled.getTime() + 184 * 60 * 1000);
     const confirmBookingFromHold = jest.fn().mockResolvedValue({
       id: "bk_hold",
       scheduledStart: scheduled,
-      estimatedHours: 2,
+      estimatedHours: 12.07,
       status: BookingStatus.assigned,
       alreadyApplied: false,
     });
@@ -216,6 +217,10 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
         findUnique: jest.fn().mockResolvedValue({
           id: "hold_1",
           bookingId: "bk_hold",
+          foId: "fo_a",
+          startAt: scheduled,
+          endAt: holdEnd,
+          expiresAt: new Date("2030-06-01T20:00:00.000Z"),
         }),
       },
     } as unknown as PrismaService;
@@ -251,6 +256,13 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       idempotencyKey: "idem-key-1",
       useHoldElapsedDurationModel: true,
     });
+    expect(res.scheduledStart).toBe(scheduled.toISOString());
+    expect(res.scheduledEnd).toBe(holdEnd.toISOString());
+    expect(res.scheduledEnd).not.toBe(
+      new Date(
+        scheduled.getTime() + 12.07 * 60 * 60 * 1000,
+      ).toISOString(),
+    );
   });
 
   it("confirmHold: missing hold returns structured not found", async () => {
