@@ -33,6 +33,7 @@ import type {
 } from "./public-booking-orchestrator.types";
 import { publicBookingFixtureFoEmails } from "../../dev/publicBookingFoFixtures";
 import { PublicBookingDepositService } from "./public-booking-deposit.service";
+import { computePublicHoldConfirmScheduledEndIso } from "../bookings/public-booking-confirmation-scheduled-end";
 
 const MAX_FO_CANDIDATES = 8;
 const MAX_WINDOWS_TOTAL = 60;
@@ -808,13 +809,14 @@ export class PublicBookingOrchestratorService {
     const scheduledStart = result.scheduledStart
       ? new Date(result.scheduledStart).toISOString()
       : null;
-    const scheduledEnd =
-      result.scheduledStart && Number(result.estimatedHours) > 0
-        ? new Date(
-            new Date(result.scheduledStart).getTime() +
-              Number(result.estimatedHours) * 60 * 60 * 1000,
-          ).toISOString()
-        : null;
+    const scheduledEnd = computePublicHoldConfirmScheduledEndIso({
+      scheduledStart: result.scheduledStart
+        ? new Date(result.scheduledStart)
+        : null,
+      holdEndAt: hold.endAt,
+      holdStartAt: hold.startAt,
+      estimatedHours: result.estimatedHours,
+    });
 
     return {
       kind: "public_booking_confirmation" as const,

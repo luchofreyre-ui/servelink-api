@@ -2,17 +2,7 @@ import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
 import { BookingPublicDepositStatus } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { serializeDeepCleanProgramForScreen } from "./serializers/deep-clean-program-screen.serializer";
-
-function computeScheduledEndIso(
-  scheduledStart: Date | null | undefined,
-  estimatedHours: number | null | undefined,
-): string | null {
-  if (!scheduledStart) return null;
-  const eh = Number(estimatedHours ?? 0);
-  if (!Number.isFinite(eh) || eh <= 0) return null;
-  const ms = scheduledStart.getTime() + eh * 60 * 60 * 1000;
-  return new Date(ms).toISOString();
-}
+import { computePublicBookingConfirmationScheduledEndIso } from "./public-booking-confirmation-scheduled-end";
 
 function parsePublicEstimateSnapshot(
   outputJson: string | null | undefined,
@@ -85,9 +75,18 @@ export class PublicBookingConfirmationController {
     }
 
     const scheduledStartIso = booking.scheduledStart?.toISOString() ?? null;
-    const scheduledEndIso = computeScheduledEndIso(
+    const snap = parsePublicEstimateSnapshot(
+      booking.estimateSnapshot?.outputJson,
+      booking.estimateSnapshot?.inputJson,
+    );
+    // `estimatedHours` is labor-weighted; public calendar end uses wall minutes from the
+    // persisted estimate snapshot when available (hold row is deleted after confirm).
+    const scheduledEndIso = computePublicBookingConfirmationScheduledEndIso(
       booking.scheduledStart,
-      booking.estimatedHours,
+      {
+        wallClockDurationMinutes: snap?.estimatedDurationMinutes,
+        estimatedHours: booking.estimatedHours,
+      },
     );
 
     return {
@@ -99,10 +98,7 @@ export class PublicBookingConfirmationController {
       assignedTeamDisplayName: booking.fo?.displayName?.trim() || null,
       publicDepositPaid:
         booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded,
-      estimateSnapshot: parsePublicEstimateSnapshot(
-        booking.estimateSnapshot?.outputJson,
-        booking.estimateSnapshot?.inputJson,
-      ),
+      estimateSnapshot: snap,
       deepCleanProgram: serializeDeepCleanProgramForScreen({
         bookingDeepCleanProgram: booking.deepCleanProgram,
       }),
