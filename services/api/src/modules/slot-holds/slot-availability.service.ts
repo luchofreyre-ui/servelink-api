@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { BookingStatus } from "@prisma/client";
 import { PrismaService } from "../../prisma";
+import { resolveBookingCalendarEndMs } from "../bookings/booking-scheduling-calendar-end";
 import { SlotAvailabilityCache } from "./slot-availability.cache";
 
 type ListAvailableWindowsArgs = {
@@ -104,6 +105,7 @@ export class SlotAvailabilityService {
           id: true,
           scheduledStart: true,
           estimatedHours: true,
+          estimateSnapshot: { select: { outputJson: true } },
         },
       }),
       this.db.bookingSlotHold.findMany({
@@ -132,8 +134,14 @@ export class SlotAvailabilityService {
       if (!Number.isFinite(startAt.getTime())) continue;
       if (!(estimatedHours > 0)) continue;
 
+      // estimatedHours is labor-oriented and must only be a legacy fallback for calendar overlap.
       const endAt = new Date(
-        startAt.getTime() + estimatedHours * 60 * 60 * 1000,
+        resolveBookingCalendarEndMs({
+          scheduledStart: startAt,
+          estimatedHours,
+          estimateSnapshotOutputJson: booking.estimateSnapshot?.outputJson,
+          preferWallClockFromSnapshot: true,
+        }),
       );
 
       if (endAt <= rangeStart || startAt >= rangeEnd) continue;
