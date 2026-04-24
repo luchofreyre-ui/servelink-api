@@ -40,11 +40,23 @@ const CONNECT_SRC_PARTS = [
   "https://servelink-web.vercel.app",
   "http://localhost:3001",
   "http://127.0.0.1:3001",
+  /** Stripe.js / Payment Element (public booking deposit). */
+  "https://api.stripe.com",
   ...(apiOriginForConnectSrc() ? [apiOriginForConnectSrc() as string] : []),
 ];
 
 const CONTENT_SECURITY_POLICY =
-  `default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://m.media-amazon.com https://images-na.ssl-images-amazon.com; font-src 'self' data:; connect-src ${CONNECT_SRC_PARTS.join(" ")}; frame-ancestors 'none';`;
+  [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https://m.media-amazon.com https://images-na.ssl-images-amazon.com",
+    "font-src 'self' data:",
+    `connect-src ${CONNECT_SRC_PARTS.join(" ")}`,
+    /** Payment Element iframe + 3DS challenge (Stripe-controlled origins only). */
+    "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
+    "frame-ancestors 'none'",
+  ].join("; ") + ";";
 
 const nextConfig: NextConfig = {
   async headers() {
