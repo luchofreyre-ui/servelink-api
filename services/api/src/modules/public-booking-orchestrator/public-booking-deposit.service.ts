@@ -211,6 +211,60 @@ export class PublicBookingDepositService {
     }
   }
 
+  private async recordMissingDepositPaymentIntentVisibility(args: {
+    bookingId: string;
+    holdId: string;
+    publicDepositStatus: BookingPublicDepositStatus;
+    source: "public_booking_confirm";
+  }) {
+    const idempotencyKey = `public-deposit-missing-pi:${args.bookingId}`;
+    const payload = {
+      reason: "DEPOSIT_SUCCEEDED_MISSING_PAYMENT_INTENT",
+      bookingId: args.bookingId,
+      holdId: args.holdId,
+      publicDepositStatus: args.publicDepositStatus,
+      source: args.source,
+    } as const;
+
+    try {
+      await this.prisma.bookingEvent.create({
+        data: {
+          bookingId: args.bookingId,
+          type: BookingEventType.NOTE,
+          idempotencyKey,
+          note: "Public booking deposit marked succeeded without a PaymentIntent; confirmation allowed with reconciliation visibility.",
+          payload: payload as Prisma.InputJsonValue,
+        },
+      });
+    } catch (err: any) {
+      if (err?.code !== "P2002") {
+        throw err;
+      }
+    }
+
+    const existing = await this.prisma.paymentAnomaly.findFirst({
+      where: {
+        bookingId: args.bookingId,
+        kind: "public_deposit_succeeded_missing_payment_intent",
+        status: "open",
+      },
+      select: { id: true },
+    });
+    if (existing) return;
+
+    await this.prisma.paymentAnomaly.create({
+      data: {
+        bookingId: args.bookingId,
+        kind: "public_deposit_succeeded_missing_payment_intent",
+        severity: "warning",
+        status: "open",
+        message:
+          "Public booking deposit is marked succeeded but has no persisted PaymentIntent id.",
+        details: payload as Prisma.InputJsonValue,
+      },
+    });
+  }
+
   /**
    * Ensures deposit succeeded (or skip flag). Otherwise throws structured HTTP errors.
    */
@@ -251,11 +305,13 @@ export class PublicBookingDepositService {
       booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
       !booking.publicDepositPaymentIntentId?.trim()
     ) {
-      throw new ConflictException({
-        code: "PUBLIC_BOOKING_DEPOSIT_STATE_INCONSISTENT",
-        message:
-          "Deposit status is inconsistent and requires payment reconciliation before booking confirmation.",
+      await this.recordMissingDepositPaymentIntentVisibility({
+        bookingId: booking.id,
+        holdId: ctx.hold.id,
+        publicDepositStatus: booking.publicDepositStatus,
+        source: "public_booking_confirm",
       });
+      return;
     }
 
     const stripeCustomerId = await this.stripePayments.ensureStripeCustomerForUser({
