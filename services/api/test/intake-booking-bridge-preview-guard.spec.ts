@@ -1,6 +1,6 @@
 import { BadRequestException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Role } from "@prisma/client";
+import { Role, type BookingDirectionIntake } from "@prisma/client";
 import type { CreateBookingDirectionIntakeDto } from "../src/modules/booking-direction-intake/dto/create-booking-direction-intake.dto";
 import { IntakeBookingBridgeService } from "../src/modules/booking-direction-intake/intake-booking-bridge.service";
 import {
@@ -16,6 +16,20 @@ import { PrismaService } from "../src/prisma";
 import { BookingDirectionIntakeService } from "../src/modules/booking-direction-intake/booking-direction-intake.service";
 import { BookingsService } from "../src/modules/bookings/bookings.service";
 import { AuthService } from "../src/auth/auth.service";
+import type { GeocodingService } from "../src/modules/geocoding/geocoding.service";
+
+const testServiceLocation = {
+  street: "100 Market St",
+  city: "San Francisco",
+  state: "CA",
+  zip: "94103",
+};
+
+const geocodingMock = {
+  geocodeServiceLocation: jest
+    .fn()
+    .mockResolvedValue({ siteLat: 37.7749, siteLng: -122.4194 }),
+} as unknown as GeocodingService;
 
 describe("IntakeBookingBridgeService preview estimator guard", () => {
   it("maps EstimatorExecutionError to BadRequestException with ESTIMATE_EXECUTION_FAILED", async () => {
@@ -35,6 +49,7 @@ describe("IntakeBookingBridgeService preview estimator guard", () => {
       { get: jest.fn() } as unknown as ConfigService,
       estimator,
       {} as AuthService,
+      geocodingMock,
     );
 
     const dto = {
@@ -44,6 +59,7 @@ describe("IntakeBookingBridgeService preview estimator guard", () => {
       bathrooms: "2",
       frequency: "Weekly",
       preferredTime: "Weekday Morning",
+      serviceLocation: testServiceLocation,
     } as CreateBookingDirectionIntakeDto;
 
     try {
@@ -77,6 +93,7 @@ describe("IntakeBookingBridgeService preview estimator guard", () => {
       { get: jest.fn() } as unknown as ConfigService,
       estimator,
       {} as AuthService,
+      geocodingMock,
     );
 
     const dto = {
@@ -86,6 +103,7 @@ describe("IntakeBookingBridgeService preview estimator guard", () => {
       bathrooms: "2",
       frequency: "Weekly",
       preferredTime: "Weekday Morning",
+      serviceLocation: testServiceLocation,
     } as CreateBookingDirectionIntakeDto;
 
     try {
@@ -124,7 +142,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
     utmContent: null,
     utmTerm: null,
     createdAt: new Date(),
-  };
+  } as BookingDirectionIntake;
 
   it("returns ESTIMATE_EXECUTION_FAILED when createBooking fails with EstimatorExecutionError", async () => {
     const prisma = {
@@ -153,6 +171,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
       { get: jest.fn() } as unknown as ConfigService,
       { estimate: jest.fn() } as unknown as EstimatorService,
       {} as AuthService,
+      geocodingMock,
     );
 
     const dto = {
@@ -164,6 +183,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
       preferredTime: "Weekday Morning",
       customerName: "A",
       customerEmail: "cust@example.com",
+      serviceLocation: testServiceLocation,
     } as CreateBookingDirectionIntakeDto;
 
     const result = await bridge.submitIntakeAndCreateBooking(dto);
@@ -200,6 +220,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
       { get: jest.fn() } as unknown as ConfigService,
       { estimate: jest.fn() } as unknown as EstimatorService,
       {} as AuthService,
+      geocodingMock,
     );
 
     const dto = {
@@ -211,6 +232,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
       preferredTime: "Weekday Morning",
       customerName: "A",
       customerEmail: "cust@example.com",
+      serviceLocation: testServiceLocation,
     } as CreateBookingDirectionIntakeDto;
 
     const result = await bridge.submitIntakeAndCreateBooking(dto);
@@ -243,6 +265,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
       { get: jest.fn() } as unknown as ConfigService,
       { estimate: jest.fn() } as unknown as EstimatorService,
       {} as AuthService,
+      geocodingMock,
     );
 
     const dto = {
@@ -254,6 +277,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
       preferredTime: "Weekday Morning",
       customerName: "A",
       customerEmail: "cust@example.com",
+      serviceLocation: testServiceLocation,
     } as CreateBookingDirectionIntakeDto;
 
     const result = await bridge.submitIntakeAndCreateBooking(dto);

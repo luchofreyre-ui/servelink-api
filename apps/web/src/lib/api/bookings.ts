@@ -69,6 +69,13 @@ function appendDeepCleanEstimatorImpactQuery(
 export type PublicBookingConfirmationResponse = {
   kind: "public_booking_confirmation";
   bookingId: string;
+  /** Prisma `BookingStatus` — used to distinguish assigned visits from intake-only saves. */
+  bookingStatus?: string;
+  scheduledStart?: string | null;
+  scheduledEnd?: string | null;
+  assignedTeamDisplayName?: string | null;
+  /** True when the public $100 deposit has been captured. */
+  publicDepositPaid?: boolean;
   estimateSnapshot: {
     estimatedPriceCents: number;
     estimatedDurationMinutes: number;

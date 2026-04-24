@@ -1,19 +1,10 @@
-import { BookingsService } from "../bookings.service";
+import { createBookingsServiceTestHarness } from "../../../../test/helpers/createBookingsServiceTestHarness";
 
 function makeBookingsService(db: {
   booking: { findUnique: jest.Mock; findFirst: jest.Mock };
   $transaction?: jest.Mock;
 }) {
-  return new BookingsService(
-    db as never,
-    {} as never,
-    {} as never,
-    {} as never,
-    {} as never,
-    {} as never,
-    {} as never,
-    {} as never,
-  );
+  return createBookingsServiceTestHarness({ db: db as never }).service;
 }
 
 describe("BookingsService — tenant query scoping on reads", () => {

@@ -1,4 +1,9 @@
-import type { BookingAuthorityReviewStatus } from "@prisma/client";
+import type {
+  BookingAuthorityReviewStatus,
+  BookingDepositRefundStatus,
+  BookingPublicDepositStatus,
+  BookingRemainingBalancePaymentStatus,
+} from "@prisma/client";
 
 /**
  * Stored resolver output + review workflow (from `BookingAuthorityResult`).
@@ -56,6 +61,12 @@ export type AdminBookingCommandCenterCorePayload = {
   success: true;
   bookingId: string;
   status: string;
+  publicDepositStatus: BookingPublicDepositStatus;
+  publicDepositAmountCents: number;
+  remainingBalanceAfterDepositCents: number | null;
+  remainingBalanceStatus: BookingRemainingBalancePaymentStatus;
+  cancellationFeeAmountCents: number | null;
+  depositRefundStatus: BookingDepositRefundStatus;
   workflowState: "open" | "held" | "in_review" | "approved" | "reassign_requested";
   operatorNote: string | null;
   anomaly: {

@@ -12,6 +12,9 @@ import { RefundIntentAdminController } from "./refund-intent.admin.controller";
 import { RefundReconcileController } from "./refunds.reconcile.controller";
 import { RefundReconcileService } from "./refunds.reconcile.service";
 import { RefundsCronService } from "./refunds.cron.service";
+import { PaymentLifecycleReconciliationCronService } from "./payment-lifecycle-reconciliation.cron.service";
+import { PaymentLifecycleReconciliationService } from "./payment-lifecycle-reconciliation.service";
+import { RemainingBalanceAuthorizationCronService } from "./remaining-balance-authorization.cron.service";
 import { RefundsQueueProcessor } from "./refunds.queue.processor";
 import { IntegritySweepCron } from "./integrity.sweep.cron";
 import { StripeReconcileAdminController } from "./stripe.reconcile.admin.controller";
@@ -40,7 +43,20 @@ const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
     RefundReconcileController,
     StripeReconcileAdminController,
   ],
-  providers: [PrismaService, BillingService, StripeService, StripeWebhookHandlerService, RefundReconcileService, StripeReconcileService, RefundsCronService, RefundsQueueProcessor, IntegritySweepCron],
+  providers: [
+    PrismaService,
+    BillingService,
+    StripeService,
+    StripeWebhookHandlerService,
+    RefundReconcileService,
+    StripeReconcileService,
+    RefundsCronService,
+    RefundsQueueProcessor,
+    IntegritySweepCron,
+    RemainingBalanceAuthorizationCronService,
+    PaymentLifecycleReconciliationService,
+    PaymentLifecycleReconciliationCronService,
+  ],
   exports: [BillingService],
 })
 export class BillingModule {}

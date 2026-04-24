@@ -8,6 +8,20 @@ import { EstimatorService } from "../src/modules/estimate/estimator.service";
 import { BookingDirectionIntakeService } from "../src/modules/booking-direction-intake/booking-direction-intake.service";
 import type { CreateBookingDirectionIntakeDto } from "../src/modules/booking-direction-intake/dto/create-booking-direction-intake.dto";
 import { IntakeBookingBridgeService } from "../src/modules/booking-direction-intake/intake-booking-bridge.service";
+import type { GeocodingService } from "../src/modules/geocoding/geocoding.service";
+
+const testServiceLocation = {
+  street: "100 Market St",
+  city: "San Francisco",
+  state: "CA",
+  zip: "94103",
+};
+
+const geocodingMock = {
+  geocodeServiceLocation: jest
+    .fn()
+    .mockResolvedValue({ siteLat: 37.7749, siteLng: -122.4194 }),
+} as unknown as GeocodingService;
 
 const VALID_ESTIMATE_FACTORS = {
   propertyType: "house",
@@ -50,7 +64,7 @@ function buildIntake(id: string, preferredFoId: string | null): BookingDirection
     utmTerm: null,
     preferredFoId,
     createdAt: new Date(),
-  };
+  } as unknown as BookingDirectionIntake;
 }
 
 describe("IntakeBookingBridgeService — preferredFoId → createBooking", () => {
@@ -74,6 +88,7 @@ describe("IntakeBookingBridgeService — preferredFoId → createBooking", () =>
           }
           return Promise.resolve(null);
         }),
+        update: jest.fn().mockResolvedValue({}),
       },
       booking: {
         findUnique: jest.fn().mockResolvedValue({
@@ -100,6 +115,7 @@ describe("IntakeBookingBridgeService — preferredFoId → createBooking", () =>
       { get: jest.fn().mockReturnValue(undefined) } as unknown as ConfigService,
       {} as unknown as EstimatorService,
       {} as unknown as AuthService,
+      geocodingMock,
     );
 
     const dto = {
@@ -111,8 +127,10 @@ describe("IntakeBookingBridgeService — preferredFoId → createBooking", () =>
       preferredTime: "Friday",
       preferredFoId: "fo_from_intake",
       estimateFactors: VALID_ESTIMATE_FACTORS,
+      customerName: "Test",
       customerEmail: "preferred-fo-bridge@example.com",
-    } as CreateBookingDirectionIntakeDto;
+      serviceLocation: testServiceLocation,
+    } as unknown as CreateBookingDirectionIntakeDto;
 
     const result = await bridge.submitIntakeAndCreateBooking(dto);
 

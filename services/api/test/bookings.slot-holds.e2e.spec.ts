@@ -77,6 +77,13 @@ describe("Booking slot holds + confirm from hold (E2E)", () => {
         bio: "Fast and detail-oriented.",
         yearsExperience: 5,
         completedJobsCount: 120,
+        foSchedules: {
+          create: {
+            dayOfWeek: 1,
+            startTime: "07:00",
+            endTime: "19:00",
+          },
+        },
       },
     });
 
@@ -107,6 +114,13 @@ describe("Booking slot holds + confirm from hold (E2E)", () => {
         bio: "Experienced with larger homes.",
         yearsExperience: 8,
         completedJobsCount: 240,
+        foSchedules: {
+          create: {
+            dayOfWeek: 1,
+            startTime: "07:00",
+            endTime: "19:00",
+          },
+        },
       },
     });
 

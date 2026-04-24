@@ -19,11 +19,21 @@ const apiOrigin = normalizeApiOrigin(
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001",
 );
 
+const stripePublishableKey =
+  typeof process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === "string"
+    ? process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.trim()
+    : "";
+
 export const WEB_ENV = {
   /** HTTP origin only (no `/api/v1`). */
   apiOrigin,
   /** `${apiOrigin}/api/v1` — use for all versioned API paths (`/auth/login`, `/admin/...`, …). */
   apiBaseUrl: `${apiOrigin}/api/v1`,
+  /**
+   * Stripe.js publishable key for public booking deposit (Payment Element).
+   * Never set the secret key here — server-only.
+   */
+  stripePublishableKey,
   appEnv: process.env.NEXT_PUBLIC_APP_ENV ?? "development",
   enableManualPaymentControls:
     process.env.NEXT_PUBLIC_ENABLE_MANUAL_PAYMENT_CONTROLS === "true",

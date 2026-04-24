@@ -36,7 +36,7 @@ describe("BookingDirectionIntakeService — preferredFoId persistence", () => {
         stairsFlights: "none",
         addonIds: [],
       },
-    } as CreateBookingDirectionIntakeDto;
+    } as unknown as CreateBookingDirectionIntakeDto;
 
     await svc.create(dto);
 

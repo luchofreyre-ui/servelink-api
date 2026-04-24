@@ -13,4 +13,10 @@ export class PublicSlotConfirmDto {
   @IsString()
   @MaxLength(2000)
   note?: string;
+
+  /** When set, server attempts immediate $100 deposit capture before confirming the hold. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(128)
+  stripePaymentMethodId?: string;
 }

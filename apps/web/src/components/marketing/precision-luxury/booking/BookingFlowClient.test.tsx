@@ -62,6 +62,7 @@ import {
   BOOKING_SCHEDULE_ZERO_TEAMS_TITLE,
   BOOKING_TRANSITION_STATE_LABELS,
   BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
+  BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE,
 } from "./bookingPublicSurfaceCopy";
 import { BOOKING_INTAKE_PREFERRED_TIME_DEFERRED } from "./bookingIntakePreferredTime";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
@@ -81,6 +82,7 @@ import {
   markBookingFlowFreshStartRequested,
 } from "./bookingUrlState";
 import { BookingFlowClient } from "./BookingFlowClient";
+import { PublicBookingPaymentRequiredError } from "./bookingDirectionIntakeApi";
 
 const TEST_REVIEW_LOC_QUERY =
   "&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA";
@@ -248,6 +250,47 @@ vi.mock("./bookingDirectionIntakeApi", async (importOriginal) => {
   };
 });
 
+const postPublicBookingDepositPrepareMock = vi.hoisted(() =>
+  vi.fn(async (body: { bookingId: string }) => ({
+    kind: "public_booking_deposit_prepare" as const,
+    bookingId: body.bookingId,
+    paymentMode: "none" as const,
+    classification: "skip_deposit_env",
+  })),
+);
+
+vi.mock("./bookingPaymentClient", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("./bookingPaymentClient")>();
+  return {
+    ...mod,
+    postPublicBookingDepositPrepare: postPublicBookingDepositPrepareMock,
+  };
+});
+
+vi.mock("@/lib/stripe/stripeClient", () => ({
+  getStripePromise: () =>
+    Promise.resolve({} as import("@stripe/stripe-js").Stripe),
+}));
+
+vi.mock("./DepositPaymentElement", () => ({
+  DepositPaymentElement: ({
+    onSuccess,
+    disabled,
+  }: {
+    onSuccess: () => void | Promise<void>;
+    disabled?: boolean;
+  }) => (
+    <button
+      type="button"
+      data-testid="deposit-mock-pay"
+      disabled={Boolean(disabled)}
+      onClick={() => void Promise.resolve(onSuccess())}
+    >
+      Pay deposit
+    </button>
+  ),
+}));
+
 const emitBookingFunnelEventMock = vi.hoisted(() => vi.fn());
 
 vi.mock("./bookingFunnelAnalytics", () => ({
@@ -355,6 +398,15 @@ describe("BookingFlowClient", () => {
       deepCleanProgram: null,
     });
     submitBookingDirectionIntakeMock.mockReset();
+    postPublicBookingDepositPrepareMock.mockReset();
+    postPublicBookingDepositPrepareMock.mockImplementation(async (body: {
+      bookingId: string;
+    }) => ({
+      kind: "public_booking_deposit_prepare",
+      bookingId: body.bookingId,
+      paymentMode: "none",
+      classification: "skip_deposit_env",
+    }));
     postPublicBookingAvailabilityMock.mockClear();
     postPublicBookingHoldMock.mockClear();
     postPublicBookingConfirmMock.mockClear();
@@ -2839,6 +2891,89 @@ describe("BookingFlowClient", () => {
         { timeout: 5000 },
       );
       expect(screen.getByText(BOOKING_REVIEW_PREP_OVEN)).toBeInTheDocument();
+    });
+  });
+
+  describe("Deposit payment authority", () => {
+    it("review submit calls deposit-prepare once and shows review payment control when deposit is required", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingDepositPrepareMock.mockResolvedValue({
+        kind: "public_booking_deposit_prepare",
+        bookingId: "bk_test",
+        paymentMode: "deposit",
+        classification: "payment_required",
+        clientSecret: "cs_test_123",
+        paymentIntentId: "pi_test",
+        amountCents: 10000,
+      });
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(8000);
+      fireEvent.click(screen.getByTestId("booking-direction-send"));
+      await waitFor(() =>
+        expect(screen.getByTestId("deposit-mock-pay")).toBeInTheDocument(),
+      );
+      expect(postPublicBookingDepositPrepareMock).toHaveBeenCalledTimes(1);
+      expect(screen.queryByTestId("booking-schedule-team-section")).not.toBeInTheDocument();
+    });
+
+    it("schedule confirm 402 returns to review with gate copy and never mirrors client_secret into URL or session snapshot", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingDepositPrepareMock
+        .mockResolvedValueOnce({
+          kind: "public_booking_deposit_prepare",
+          bookingId: "bk_test",
+          paymentMode: "none",
+          classification: "skip_deposit_env",
+        })
+        .mockResolvedValue({
+          kind: "public_booking_deposit_prepare",
+          bookingId: "bk_test",
+          paymentMode: "deposit",
+          classification: "payment_required",
+          clientSecret: "cs_review_only",
+          paymentIntentId: "pi_review",
+          amountCents: 10000,
+        });
+      postPublicBookingConfirmMock.mockRejectedValueOnce(
+        new PublicBookingPaymentRequiredError({
+          kind: "public_booking_deposit_required",
+          code: "PUBLIC_BOOKING_DEPOSIT_REQUIRED",
+          message: "need deposit",
+          amountCents: 10000,
+          currency: "usd",
+          clientSecret: "cs_from_server_should_not_persist",
+          paymentIntentId: "pi_from_server",
+        }),
+      );
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      fireEvent.click(screen.getByText("North Team"));
+      await screen.findByTestId("booking-schedule-slot-section");
+      const confirmEl = screen.getByTestId("booking-schedule-confirm-booking");
+      const slotSection = screen.getByTestId("booking-schedule-slot-section");
+      const slotBtn = within(slotSection)
+        .getAllByRole("button")
+        .find((b) => b !== confirmEl)!;
+      fireEvent.click(slotBtn);
+      await waitFor(() => expect(confirmEl).not.toBeDisabled());
+      fireEvent.click(confirmEl);
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-review-deposit-gate-message")).toHaveTextContent(
+          BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE,
+        ),
+      );
+      expect(screen.queryByTestId("booking-schedule-team-section")).not.toBeInTheDocument();
+      await waitFor(() =>
+        expect(screen.getByTestId("deposit-mock-pay")).toBeInTheDocument(),
+      );
+      const snap = sessionStorage.getItem(BOOKING_CONFIRMATION_SESSION_KEY) ?? "";
+      expect(snap).not.toMatch(/client_secret/i);
+      for (const call of routerReplace.mock.calls) {
+        const url = typeof call[0] === "string" ? call[0] : "";
+        expect(url).not.toMatch(/client_secret/i);
+      }
     });
   });
 });

@@ -6,6 +6,11 @@ import { FoService } from "../src/modules/fo/fo.service";
 import { SlotAvailabilityService } from "../src/modules/slot-holds/slot-availability.service";
 import { SlotHoldsService } from "../src/modules/slot-holds/slot-holds.service";
 import { PublicBookingOrchestratorService } from "../src/modules/public-booking-orchestrator/public-booking-orchestrator.service";
+import type { PublicBookingDepositService } from "../src/modules/public-booking-orchestrator/public-booking-deposit.service";
+
+const noopPublicDeposit = {
+  ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
+} as unknown as PublicBookingDepositService;
 
 const START = "2030-06-01T14:00:00.000Z";
 const END = "2030-06-01T15:00:00.000Z";
@@ -80,6 +85,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       slotHolds,
       bookings,
       fo,
+      noopPublicDeposit,
     );
 
     const res = await svc.createHold({
@@ -124,6 +130,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
         getEligibility: jest.fn().mockResolvedValue({ canAcceptBooking: true }),
         matchFOs: jest.fn(),
       } as unknown as FoService,
+      noopPublicDeposit,
     );
 
     await expect(
@@ -173,6 +180,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
         getEligibility: jest.fn().mockResolvedValue({ canAcceptBooking: true }),
         matchFOs: jest.fn(),
       } as unknown as FoService,
+      noopPublicDeposit,
     );
 
     await expect(
@@ -196,6 +204,9 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       status: BookingStatus.assigned,
       alreadyApplied: false,
     });
+    const deposit = {
+      ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
+    } as unknown as PublicBookingDepositService;
 
     const prisma = {
       booking: {
@@ -215,6 +226,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       {} as SlotHoldsService,
       { confirmBookingFromHold } as unknown as BookingsService,
       {} as FoService,
+      deposit,
     );
 
     const res = await svc.confirmHold(
@@ -222,6 +234,12 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       "idem-key-1",
     );
 
+    expect(deposit.ensurePublicDepositResolvedBeforeConfirm).toHaveBeenCalledWith({
+      bookingId: "bk_hold",
+      holdId: "hold_1",
+      stripePaymentMethodId: null,
+      idempotencyKey: "idem-key-1",
+    });
     expect(res.kind).toBe("public_booking_confirmation");
     if (res.kind !== "public_booking_confirmation") throw new Error("unexpected kind");
     expect(res.bookingId).toBe("bk_hold");
@@ -252,6 +270,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       {} as SlotHoldsService,
       { confirmBookingFromHold } as unknown as BookingsService,
       {} as FoService,
+      noopPublicDeposit,
     );
 
     await expect(
@@ -281,6 +300,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       {} as SlotHoldsService,
       { confirmBookingFromHold } as unknown as BookingsService,
       {} as FoService,
+      noopPublicDeposit,
     );
 
     await expect(

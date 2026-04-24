@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import type { Request, Response } from "express";
 
-import { fail } from "../utils/http";
+import { fail, type ApiErrorCode } from "../utils/http";
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
@@ -19,11 +19,13 @@ export class ApiExceptionFilter implements ExceptionFilter {
     // Default
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = "Internal error";
+    let details: unknown = null;
     let code:
       | "UNAUTHENTICATED"
       | "FORBIDDEN"
       | "INVALID_REQUEST"
       | "NOT_FOUND"
+      | "PAYMENT_REQUIRED"
       | "STRIPE_NOT_CONFIGURED"
       | "WEBHOOK_INVALID_SIGNATURE"
       | "INTERNAL_ERROR" = "INTERNAL_ERROR";
@@ -47,11 +49,48 @@ export class ApiExceptionFilter implements ExceptionFilter {
 
       message = String(rawMessage ?? message);
 
+      // Preserve structured public-booking deposit payloads for clients (402 + related).
+      if (typeof r === "object" && r !== null && !Array.isArray(r)) {
+        const kind = (r as { kind?: unknown }).kind;
+        if (
+          typeof kind === "string" &&
+          kind.startsWith("public_booking_deposit")
+        ) {
+          const { statusCode: _sc, error: _err, ...rest } = r as Record<
+            string,
+            unknown
+          >;
+          details = rest;
+          if (typeof (rest as { message?: unknown }).message === "string") {
+            message = String((rest as { message: string }).message);
+          }
+        }
+      }
+
       // Map by status first
       if (status === HttpStatus.UNAUTHORIZED) code = "UNAUTHENTICATED";
       else if (status === HttpStatus.FORBIDDEN) code = "FORBIDDEN";
       else if (status === HttpStatus.NOT_FOUND) code = "NOT_FOUND";
-      else if (status >= 400 && status < 500) code = "INVALID_REQUEST";
+      else if (status === HttpStatus.PAYMENT_REQUIRED) code = "PAYMENT_REQUIRED";
+      else if (status === HttpStatus.SERVICE_UNAVAILABLE) {
+        const rc =
+          typeof r === "object" && r !== null
+            ? (r as { code?: unknown }).code
+            : null;
+        if (rc === "PUBLIC_BOOKING_STRIPE_NOT_CONFIGURED") {
+          code = "STRIPE_NOT_CONFIGURED";
+          const msg = (r as { message?: unknown }).message;
+          message =
+            typeof msg === "string" && msg.trim().length > 0
+              ? msg.trim()
+              : "Stripe is not configured for public booking deposits.";
+          const { statusCode: _sc, error: _err, ...rest } = r as Record<
+            string,
+            unknown
+          >;
+          details = rest;
+        } else code = "INTERNAL_ERROR";
+      } else if (status >= 400 && status < 500) code = "INVALID_REQUEST";
       else code = "INTERNAL_ERROR";
 
       // If the message is one of our known codes, preserve it
@@ -61,6 +100,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
         "FORBIDDEN",
         "INVALID_REQUEST",
         "NOT_FOUND",
+        "PAYMENT_REQUIRED",
         "STRIPE_NOT_CONFIGURED",
         "WEBHOOK_INVALID_SIGNATURE",
         "INTERNAL_ERROR",
@@ -100,6 +140,8 @@ export class ApiExceptionFilter implements ExceptionFilter {
       );
     }
 
-    res.status(status).json(fail(code as any, message));
+    res
+      .status(status)
+      .json(fail(code as ApiErrorCode, message, details));
   }
 }

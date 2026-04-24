@@ -14,17 +14,22 @@ import {
   formatBookingBedroomsForDisplay,
 } from "./bookingEstimateFactorFields";
 import {
+  BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE,
   BOOKING_CONFIRMATION_HEADLINE_BOOKING_SAVED,
   BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY,
   BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED,
+  BOOKING_CONFIRMATION_HEADLINE_VISIT_CONFIRMED,
   BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL,
   BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD,
   BOOKING_CONFIRMATION_INTRO_NEUTRAL_REENTRY,
   BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL,
   BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD,
+  BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_DETAIL,
+  BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_LEAD,
   BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED,
   BOOKING_CONFIRMATION_NEXT_STEPS_NEUTRAL_REENTRY,
   BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED,
+  BOOKING_CONFIRMATION_NEXT_STEPS_VISIT_CONFIRMED,
   BOOKING_CONFIRMATION_REQUEST_SECTION_TITLE,
   BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE,
   BOOKING_CONFIRMATION_RETURN_TO_BOOKING_CTA,
@@ -50,6 +55,30 @@ function formatUsdFromCents(cents: number): string {
     currency: "USD",
     maximumFractionDigits: 0,
   }).format(n);
+}
+
+function formatVisitDateTime(iso: string): string {
+  const d = new Date(iso);
+  if (!Number.isFinite(d.getTime())) return iso;
+  return d.toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+function formatVisitWindowLabel(startIso: string, endIso: string | null | undefined): string {
+  const start = formatVisitDateTime(startIso);
+  if (!endIso?.trim()) return start;
+  const end = new Date(endIso);
+  if (!Number.isFinite(end.getTime())) return `${start} – ${endIso}`;
+  const endPart = end.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  return `${start} – ${endPart}`;
 }
 
 function parseDcProgramFromQuery(raw: string | null | undefined) {
@@ -195,15 +224,42 @@ export function BookingConfirmationClient() {
     return urlConfidence;
   }, [remote, urlConfidence]);
 
-  const hasEstimate = outcomeMode === "booking_saved";
-  const bookingSavedWithLiveQuote = hasEstimate;
+  const visitConfirmedFromRemote = useMemo(() => {
+    if (!remote) return false;
+    if (remote.bookingStatus !== "assigned") return false;
+    return Boolean(remote.scheduledStart && remote.scheduledStart.trim().length > 0);
+  }, [remote]);
+
+  const hasEstimateFromRemote = useMemo(() => {
+    const s = remote?.estimateSnapshot;
+    if (!s) return false;
+    return (
+      Number.isFinite(s.estimatedPriceCents) &&
+      s.estimatedPriceCents >= 0 &&
+      s.estimatedPriceCents < 1e12 &&
+      Number.isFinite(s.estimatedDurationMinutes) &&
+      s.estimatedDurationMinutes > 0 &&
+      s.estimatedDurationMinutes < 1e7 &&
+      Number.isFinite(s.confidence) &&
+      s.confidence >= 0 &&
+      s.confidence <= 1
+    );
+  }, [remote]);
+
+  const hasEstimate =
+    outcomeMode === "booking_saved" ||
+    hasEstimateFromRemote ||
+    visitConfirmedFromRemote;
+  const showBookingSavedIntro = hasEstimate && !visitConfirmedFromRemote;
 
   const headline =
     outcomeMode === "neutral_reentry"
       ? BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY
-      : outcomeMode === "booking_saved"
-        ? BOOKING_CONFIRMATION_HEADLINE_BOOKING_SAVED
-        : BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED;
+      : visitConfirmedFromRemote
+        ? BOOKING_CONFIRMATION_HEADLINE_VISIT_CONFIRMED
+        : outcomeMode === "booking_saved"
+          ? BOOKING_CONFIRMATION_HEADLINE_BOOKING_SAVED
+          : BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED;
 
   const programDisplay = useMemo(
     () => mapBookingScreenProgramToDisplay(remote?.deepCleanProgram ?? null),
@@ -291,7 +347,12 @@ export function BookingConfirmationClient() {
           </h1>
           <p className="mt-6 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
             Thank you.{" "}
-            {bookingSavedWithLiveQuote ? (
+            {visitConfirmedFromRemote ? (
+              <>
+                {BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_LEAD}{" "}
+                {BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_DETAIL}
+              </>
+            ) : showBookingSavedIntro ? (
               <>
                 {BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD}{" "}
                 {BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL}
@@ -312,7 +373,37 @@ export function BookingConfirmationClient() {
             )}
           </p>
 
-          {bookingErrorCode && outcomeMode === "request_received" ? (
+          {visitConfirmedFromRemote && remote ? (
+            <div className="mt-8 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
+              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                Your visit
+              </p>
+              {remote.assignedTeamDisplayName ? (
+                <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
+                  <span className="font-semibold text-[#0F172A]">Team: </span>
+                  {remote.assignedTeamDisplayName}
+                </p>
+              ) : null}
+              {remote.scheduledStart ? (
+                <p className="mt-2 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
+                  <span className="font-semibold text-[#0F172A]">Scheduled: </span>
+                  {formatVisitWindowLabel(
+                    remote.scheduledStart,
+                    remote.scheduledEnd ?? null,
+                  )}
+                </p>
+              ) : null}
+              {remote.publicDepositPaid ? (
+                <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                  {BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+
+          {bookingErrorCode &&
+          outcomeMode === "request_received" &&
+          !visitConfirmedFromRemote ? (
             <p className="mt-4 rounded-2xl border border-amber-200/80 bg-amber-50 px-4 py-3 font-[var(--font-manrope)] text-sm text-amber-950">
               {bookingConfirmationNoticeForBookingErrorCode(bookingErrorCode)}
             </p>
@@ -483,9 +574,11 @@ export function BookingConfirmationClient() {
                 Next steps
               </p>
               <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
-                {bookingSavedWithLiveQuote
-                  ? BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED
-                  : BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED}
+                {visitConfirmedFromRemote
+                  ? BOOKING_CONFIRMATION_NEXT_STEPS_VISIT_CONFIRMED
+                  : showBookingSavedIntro
+                    ? BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED
+                    : BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED}
               </p>
             </div>
           </div>

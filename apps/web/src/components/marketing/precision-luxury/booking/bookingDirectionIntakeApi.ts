@@ -13,6 +13,72 @@ function normalizeApiMessage(raw: unknown): string {
   return "";
 }
 
+function parseApiFailEnvelope(parsed: Record<string, unknown> | null): {
+  code: string;
+  message: string;
+  details: Record<string, unknown> | null;
+} {
+  if (!parsed) {
+    return { code: "", message: "", details: null };
+  }
+  const err = parsed.error;
+  if (err && typeof err === "object" && !Array.isArray(err)) {
+    const e = err as Record<string, unknown>;
+    const details =
+      e.details && typeof e.details === "object" && !Array.isArray(e.details)
+        ? (e.details as Record<string, unknown>)
+        : null;
+    return {
+      code: typeof e.code === "string" ? e.code.trim() : "",
+      message: normalizeApiMessage(e.message),
+      details,
+    };
+  }
+  return {
+    code: typeof parsed.code === "string" ? parsed.code.trim() : "",
+    message: normalizeApiMessage(parsed.message),
+    details: null,
+  };
+}
+
+export type PublicBookingDepositRequiredPayload = {
+  kind: "public_booking_deposit_required";
+  code: string;
+  message: string;
+  amountCents: number;
+  currency: string;
+  clientSecret: string | null;
+  paymentIntentId: string;
+};
+
+/** API `error.code === "PAYMENT_REQUIRED"`; deposit fields live in `details` (same shape as this payload). */
+export class PublicBookingPaymentRequiredError extends Error {
+  readonly code = "PAYMENT_REQUIRED" as const;
+  readonly details: PublicBookingDepositRequiredPayload;
+
+  constructor(details: PublicBookingDepositRequiredPayload) {
+    super(details.message || "Deposit required");
+    this.name = "PublicBookingPaymentRequiredError";
+    this.details = details;
+  }
+}
+
+export class PublicBookingDepositProcessingError extends Error {
+  readonly details: {
+    kind: "public_booking_deposit_processing";
+    message: string;
+    paymentIntentId?: string;
+  };
+
+  constructor(
+    details: PublicBookingDepositProcessingError["details"],
+  ) {
+    super(details.message);
+    this.name = "PublicBookingDepositProcessingError";
+    this.details = details;
+  }
+}
+
 function customerFacingMessageFromKnownCode(code: string): string | null {
   const map: Record<string, string> = {
     ESTIMATE_EXECUTION_FAILED:
@@ -39,13 +105,45 @@ async function throwIfResponseNotOk(
   } catch {
     parsed = null;
   }
-  const message = parsed ? normalizeApiMessage(parsed.message) : "";
-  const code =
-    parsed && typeof parsed.code === "string" ? parsed.code.trim() : "";
+  const env = parseApiFailEnvelope(parsed);
+  const message = env.message;
+  const code = env.code;
 
   const fromCode = code ? customerFacingMessageFromKnownCode(code) : null;
   if (fromCode) {
     throw new Error(fromCode);
+  }
+
+  const depositDetails = env.details;
+  const depositKind =
+    depositDetails && typeof depositDetails.kind === "string"
+      ? depositDetails.kind
+      : null;
+
+  if (
+    (code === "PAYMENT_REQUIRED" || response.status === 402) &&
+    depositKind === "public_booking_deposit_required" &&
+    depositDetails
+  ) {
+    throw new PublicBookingPaymentRequiredError(
+      depositDetails as PublicBookingDepositRequiredPayload,
+    );
+  }
+  if (
+    response.status === 409 &&
+    depositKind === "public_booking_deposit_processing" &&
+    depositDetails
+  ) {
+    throw new PublicBookingDepositProcessingError({
+      kind: "public_booking_deposit_processing",
+      message:
+        message.trim() ||
+        "Deposit payment is processing. Retry confirmation shortly.",
+      paymentIntentId:
+        typeof depositDetails.paymentIntentId === "string"
+          ? depositDetails.paymentIntentId
+          : undefined,
+    });
   }
   if (
     message &&
@@ -332,7 +430,12 @@ export async function postPublicBookingHold(body: {
 }
 
 export async function postPublicBookingConfirm(
-  body: { bookingId: string; holdId: string; note?: string },
+  body: {
+    bookingId: string;
+    holdId: string;
+    note?: string;
+    stripePaymentMethodId?: string;
+  },
   idempotencyKey?: string | null,
 ): Promise<PublicBookingConfirmResponse> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
