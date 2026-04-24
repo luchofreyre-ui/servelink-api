@@ -2895,7 +2895,20 @@ describe("BookingFlowClient", () => {
   });
 
   describe("Deposit payment authority", () => {
-    it("review submit calls deposit-prepare once and shows review payment control when deposit is required", async () => {
+    it("review submit does not create a PaymentIntent before a slot hold exists", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(8000);
+      fireEvent.click(screen.getByTestId("booking-direction-send"));
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-schedule-team-section")).toBeInTheDocument(),
+      );
+      expect(postPublicBookingDepositPrepareMock).not.toHaveBeenCalled();
+      expect(screen.queryByTestId("deposit-mock-pay")).not.toBeInTheDocument();
+    });
+
+    it("schedule confirm 402 returns to review with gate copy and never mirrors client_secret into URL or session snapshot", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
       postPublicBookingDepositPrepareMock.mockResolvedValue({
@@ -2903,39 +2916,10 @@ describe("BookingFlowClient", () => {
         bookingId: "bk_test",
         paymentMode: "deposit",
         classification: "payment_required",
-        clientSecret: "cs_test_123",
-        paymentIntentId: "pi_test",
+        clientSecret: "cs_review_only",
+        paymentIntentId: "pi_review",
         amountCents: 10000,
       });
-      render(<BookingFlowClient />);
-      await fillReviewContactAndOptionalFirstTimePlan(8000);
-      fireEvent.click(screen.getByTestId("booking-direction-send"));
-      await waitFor(() =>
-        expect(screen.getByTestId("deposit-mock-pay")).toBeInTheDocument(),
-      );
-      expect(postPublicBookingDepositPrepareMock).toHaveBeenCalledTimes(1);
-      expect(screen.queryByTestId("booking-schedule-team-section")).not.toBeInTheDocument();
-    });
-
-    it("schedule confirm 402 returns to review with gate copy and never mirrors client_secret into URL or session snapshot", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
-      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
-      postPublicBookingDepositPrepareMock
-        .mockResolvedValueOnce({
-          kind: "public_booking_deposit_prepare",
-          bookingId: "bk_test",
-          paymentMode: "none",
-          classification: "skip_deposit_env",
-        })
-        .mockResolvedValue({
-          kind: "public_booking_deposit_prepare",
-          bookingId: "bk_test",
-          paymentMode: "deposit",
-          classification: "payment_required",
-          clientSecret: "cs_review_only",
-          paymentIntentId: "pi_review",
-          amountCents: 10000,
-        });
       postPublicBookingConfirmMock.mockRejectedValueOnce(
         new PublicBookingPaymentRequiredError({
           kind: "public_booking_deposit_required",
@@ -2968,6 +2952,10 @@ describe("BookingFlowClient", () => {
       await waitFor(() =>
         expect(screen.getByTestId("deposit-mock-pay")).toBeInTheDocument(),
       );
+      expect(postPublicBookingDepositPrepareMock).toHaveBeenCalledWith({
+        bookingId: "bk_test",
+        holdId: "hold_test",
+      });
       const snap = sessionStorage.getItem(BOOKING_CONFIRMATION_SESSION_KEY) ?? "";
       expect(snap).not.toMatch(/client_secret/i);
       for (const call of routerReplace.mock.calls) {

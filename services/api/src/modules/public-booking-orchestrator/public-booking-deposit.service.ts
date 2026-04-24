@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -7,6 +8,7 @@ import {
   NotFoundException,
   ServiceUnavailableException,
 } from "@nestjs/common";
+import { createHash } from "node:crypto";
 import {
   BookingEventType,
   BookingPublicDepositStatus,
@@ -25,8 +27,12 @@ import { StripePaymentService } from "../bookings/stripe/stripe-payment.service"
 const SKIP_DEPOSIT_ENV = "PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM";
 
 /** Stable Stripe idempotency for public-deposit PI creation (shared by prepare + confirm). */
-export function publicBookingDepositPiIdempotencyKey(bookingId: string): string {
-  return `pb-deposit-pi:booking:${bookingId.trim()}`.slice(0, 255);
+export function publicBookingDepositPiIdempotencyKey(
+  bookingId: string,
+  holdId?: string | null,
+): string {
+  const hold = holdId?.trim();
+  return `pb-deposit-pi:booking:${bookingId.trim()}${hold ? `:hold:${hold}` : ""}`.slice(0, 255);
 }
 
 export type PublicBookingDepositPrepareResult = {
@@ -56,6 +62,38 @@ function readEstimatedPriceCentsFromSnapshot(outputJson: string | null): number 
   return 0;
 }
 
+function estimateSnapshotHash(outputJson: string | null | undefined): string {
+  return createHash("sha256")
+    .update(outputJson?.trim() || "")
+    .digest("hex")
+    .slice(0, 32);
+}
+
+type PublicDepositContext = {
+  booking: {
+    id: string;
+    tenantId: string;
+    status: BookingStatus;
+    customerId: string;
+    publicDepositStatus: BookingPublicDepositStatus;
+    publicDepositAmountCents: number;
+    publicDepositPaymentIntentId: string | null;
+    stripeCustomerId: string | null;
+    customer: { id: string; email: string | null; stripeCustomerId: string | null };
+    estimateSnapshot: { outputJson: string | null } | null;
+  };
+  hold: {
+    id: string;
+    bookingId: string;
+    foId: string;
+    startAt: Date;
+    endAt: Date;
+    expiresAt: Date;
+  };
+  estimatedTotalCents: number;
+  estimateHash: string;
+};
+
 /**
  * Public booking deposit: $100 immediate capture before hold confirmation assigns the booking.
  * Skipped only when {@link SKIP_DEPOSIT_ENV} is set to `1` (local/CI opt-in — never for production policy).
@@ -68,6 +106,110 @@ export class PublicBookingDepositService {
     private readonly prisma: PrismaService,
     private readonly stripePayments: StripePaymentService,
   ) {}
+
+  private async loadPublicDepositContext(args: {
+    bookingId: string;
+    holdId: string;
+    requireUnexpiredHold: boolean;
+  }): Promise<PublicDepositContext> {
+    const bookingId = args.bookingId.trim();
+    const holdId = args.holdId.trim();
+    if (!bookingId) {
+      throw new BadRequestException({
+        code: "BOOKING_ID_REQUIRED",
+        message: "bookingId is required",
+      });
+    }
+    if (!holdId) {
+      throw new BadRequestException({
+        code: "PUBLIC_BOOKING_HOLD_REQUIRED",
+        message: "A valid slot hold is required before preparing payment.",
+      });
+    }
+
+    const [booking, hold] = await Promise.all([
+      this.prisma.booking.findUnique({
+        where: { id: bookingId },
+        select: {
+          id: true,
+          tenantId: true,
+          status: true,
+          customerId: true,
+          publicDepositStatus: true,
+          publicDepositAmountCents: true,
+          publicDepositPaymentIntentId: true,
+          stripeCustomerId: true,
+          customer: { select: { id: true, email: true, stripeCustomerId: true } },
+          estimateSnapshot: { select: { outputJson: true } },
+        },
+      }),
+      this.prisma.bookingSlotHold.findUnique({
+        where: { id: holdId },
+        select: {
+          id: true,
+          bookingId: true,
+          foId: true,
+          startAt: true,
+          endAt: true,
+          expiresAt: true,
+        },
+      }),
+    ]);
+
+    if (!booking) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+    if (!booking.tenantId?.trim()) {
+      throw new BadRequestException({
+        code: "PUBLIC_BOOKING_TENANT_REQUIRED",
+        message: "A tenant context is required before preparing payment.",
+      });
+    }
+    if (!hold || hold.bookingId !== booking.id) {
+      throw new NotFoundException("PUBLIC_BOOKING_HOLD_NOT_FOUND");
+    }
+    if (args.requireUnexpiredHold && hold.expiresAt.getTime() <= Date.now()) {
+      throw new ConflictException({
+        code: "BOOKING_SLOT_HOLD_EXPIRED",
+        message: "The selected slot hold expired before payment could be finalized.",
+      });
+    }
+
+    const outputJson = booking.estimateSnapshot?.outputJson ?? null;
+    return {
+      booking,
+      hold,
+      estimatedTotalCents: readEstimatedPriceCentsFromSnapshot(outputJson),
+      estimateHash: estimateSnapshotHash(outputJson),
+    };
+  }
+
+  private assertPaymentIntentMatchesPublicDepositContext(
+    pi: Stripe.PaymentIntent,
+    ctx: PublicDepositContext,
+  ) {
+    const metadata = pi.metadata ?? {};
+    const expectedAmount =
+      ctx.booking.publicDepositAmountCents ?? PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS;
+    if (pi.amount !== expectedAmount) {
+      throw new BadRequestException({
+        code: "PUBLIC_BOOKING_DEPOSIT_AMOUNT_MISMATCH",
+        message: "Deposit PaymentIntent amount does not match the locked booking deposit.",
+      });
+    }
+    if (
+      metadata.bookingId !== ctx.booking.id ||
+      metadata.bookingSessionKey !== ctx.booking.id ||
+      metadata.holdId !== ctx.hold.id ||
+      metadata.tenantId !== ctx.booking.tenantId ||
+      metadata.estimateSnapshotHash !== ctx.estimateHash
+    ) {
+      throw new BadRequestException({
+        code: "PUBLIC_BOOKING_DEPOSIT_SESSION_MISMATCH",
+        message: "Deposit PaymentIntent does not match this booking session and hold.",
+      });
+    }
+  }
 
   /**
    * Ensures deposit succeeded (or skip flag). Otherwise throws structured HTTP errors.
@@ -93,17 +235,13 @@ export class PublicBookingDepositService {
       });
     }
 
-    const booking = await this.prisma.booking.findUnique({
-      where: { id: args.bookingId },
-      include: {
-        customer: { select: { id: true, email: true, stripeCustomerId: true } },
-        estimateSnapshot: { select: { outputJson: true } },
-      },
+    const ctx = await this.loadPublicDepositContext({
+      bookingId: args.bookingId,
+      holdId: args.holdId,
+      requireUnexpiredHold: false,
     });
-
-    if (!booking) {
-      throw new BadRequestException({ code: "BOOKING_NOT_FOUND", message: "Booking not found" });
-    }
+    const booking = ctx.booking;
+    const holdExpired = ctx.hold.expiresAt.getTime() <= Date.now();
 
     if (booking.status !== BookingStatus.pending_payment) {
       return;
@@ -120,12 +258,10 @@ export class PublicBookingDepositService {
 
     const idemBase =
       (args.idempotencyKey?.trim() || `pb:${args.bookingId}:${args.holdId}`).slice(0, 200);
-    const idemPi = publicBookingDepositPiIdempotencyKey(booking.id);
+    const idemPi = publicBookingDepositPiIdempotencyKey(booking.id, args.holdId);
     const idemConfirm = `pb-deposit-confirm:${idemBase}`;
 
-    const estimatedTotal = readEstimatedPriceCentsFromSnapshot(
-      booking.estimateSnapshot?.outputJson ?? null,
-    );
+    const estimatedTotal = ctx.estimatedTotalCents;
     const remaining = computeRemainingBalanceAfterDepositCents({
       estimatedTotalCents: estimatedTotal,
       depositAmountCents: booking.publicDepositAmountCents,
@@ -133,6 +269,20 @@ export class PublicBookingDepositService {
 
     const existingPiId = booking.publicDepositPaymentIntentId?.trim() || null;
     const pm = args.stripePaymentMethodId?.trim() || null;
+
+    if (holdExpired && !existingPiId) {
+      throw new ConflictException({
+        code: "BOOKING_SLOT_HOLD_EXPIRED",
+        message: "The selected slot hold expired before payment could be finalized.",
+      });
+    }
+
+    if (holdExpired && pm) {
+      throw new ConflictException({
+        code: "BOOKING_SLOT_HOLD_EXPIRED",
+        message: "The selected slot hold expired before payment could be finalized.",
+      });
+    }
 
     if (pm) {
       await this.chargeOrConfirmWithPaymentMethod({
@@ -144,6 +294,8 @@ export class PublicBookingDepositService {
         estimatedTotalCentsSnapshot: estimatedTotal > 0 ? estimatedTotal : null,
         remainingBalanceAfterDepositCents: estimatedTotal > 0 ? remaining : null,
         existingPaymentIntentId: existingPiId,
+        tenantId: booking.tenantId,
+        estimateSnapshotHash: ctx.estimateHash,
       });
       return;
     }
@@ -153,6 +305,7 @@ export class PublicBookingDepositService {
       const pi = await this.stripePayments.retrievePaymentIntent(activeDepositPiId);
       const st = pi.status;
       if (st === "succeeded") {
+        this.assertPaymentIntentMatchesPublicDepositContext(pi, ctx);
         await this.markDepositSucceededFromStripeState({
           bookingId: booking.id,
           paymentIntentId: activeDepositPiId,
@@ -160,6 +313,12 @@ export class PublicBookingDepositService {
           remainingBalanceAfterDepositCents: estimatedTotal > 0 ? remaining : null,
         });
         return;
+      }
+      if (holdExpired) {
+        throw new ConflictException({
+          code: "BOOKING_SLOT_HOLD_EXPIRED",
+          message: "The selected slot hold expired before payment could be finalized.",
+        });
       }
       if (st === "processing") {
         throw new HttpException(
@@ -226,11 +385,21 @@ export class PublicBookingDepositService {
       }
     }
 
+    if (holdExpired) {
+      throw new ConflictException({
+        code: "BOOKING_SLOT_HOLD_EXPIRED",
+        message: "The selected slot hold expired before payment could be finalized.",
+      });
+    }
+
     const pi = await this.stripePayments.createPublicBookingDepositPaymentIntent({
       bookingId: booking.id,
       stripeCustomerId,
       idempotencyKey: idemPi,
       holdId: args.holdId,
+      tenantId: booking.tenantId,
+      estimateSnapshotHash: ctx.estimateHash,
+      estimatedTotalCents: estimatedTotal,
     });
 
     await this.prisma.booking.update({
@@ -267,6 +436,8 @@ export class PublicBookingDepositService {
     estimatedTotalCentsSnapshot: number | null;
     remainingBalanceAfterDepositCents: number | null;
     existingPaymentIntentId: string | null;
+    tenantId: string;
+    estimateSnapshotHash: string;
   }): Promise<void> {
     let pi: Stripe.PaymentIntent | null = null;
 
@@ -321,6 +492,9 @@ export class PublicBookingDepositService {
           paymentMethodId: args.paymentMethodId,
           idempotencyKey: args.idempotencyKey,
           holdId: args.holdId,
+          tenantId: args.tenantId,
+          estimateSnapshotHash: args.estimateSnapshotHash,
+          estimatedTotalCents: args.estimatedTotalCentsSnapshot,
         });
       }
     } else {
@@ -330,6 +504,9 @@ export class PublicBookingDepositService {
         paymentMethodId: args.paymentMethodId,
         idempotencyKey: args.idempotencyKey,
         holdId: args.holdId,
+        tenantId: args.tenantId,
+        estimateSnapshotHash: args.estimateSnapshotHash,
+        estimatedTotalCents: args.estimatedTotalCentsSnapshot,
       });
     }
 
@@ -380,16 +557,25 @@ export class PublicBookingDepositService {
   /**
    * Public, unauthenticated: returns a PaymentIntent `client_secret` when the booking
    * still requires deposit capture, or `paymentMode: "none"` when deposit is already
-   * satisfied / skipped. Used by `/book` review step before scheduling.
+   * satisfied / skipped. Used after a public slot hold exists so payment is tied
+   * to the exact booking session + hold being finalized.
    */
   async preparePublicBookingDeposit(
     bookingId: string,
+    holdId: string,
   ): Promise<PublicBookingDepositPrepareResult> {
     const id = bookingId.trim();
+    const hold = holdId.trim();
     if (!id) {
       throw new BadRequestException({
         code: "BOOKING_ID_REQUIRED",
         message: "bookingId is required",
+      });
+    }
+    if (!hold) {
+      throw new BadRequestException({
+        code: "PUBLIC_BOOKING_HOLD_REQUIRED",
+        message: "A valid slot hold is required before preparing payment.",
       });
     }
 
@@ -410,17 +596,13 @@ export class PublicBookingDepositService {
       });
     }
 
-    const booking = await this.prisma.booking.findUnique({
-      where: { id },
-      include: {
-        customer: { select: { id: true, email: true, stripeCustomerId: true } },
-        estimateSnapshot: { select: { outputJson: true } },
-      },
+    const ctx = await this.loadPublicDepositContext({
+      bookingId: id,
+      holdId: hold,
+      requireUnexpiredHold: false,
     });
-
-    if (!booking) {
-      throw new NotFoundException("BOOKING_NOT_FOUND");
-    }
+    const booking = ctx.booking;
+    const holdExpired = ctx.hold.expiresAt.getTime() <= Date.now();
 
     if (booking.status !== BookingStatus.pending_payment) {
       return {
@@ -449,9 +631,7 @@ export class PublicBookingDepositService {
         `customer+${booking.customerId}@servelink.invalid`,
     });
 
-    const estimatedTotal = readEstimatedPriceCentsFromSnapshot(
-      booking.estimateSnapshot?.outputJson ?? null,
-    );
+    const estimatedTotal = ctx.estimatedTotalCents;
     const remaining = computeRemainingBalanceAfterDepositCents({
       estimatedTotalCents: estimatedTotal,
       depositAmountCents: booking.publicDepositAmountCents,
@@ -481,6 +661,7 @@ export class PublicBookingDepositService {
       const pi = await this.stripePayments.retrievePaymentIntent(activeDepositPiId);
       const st = String(pi.status ?? "");
       if (st === "succeeded") {
+        this.assertPaymentIntentMatchesPublicDepositContext(pi, ctx);
         await this.markDepositSucceededFromStripeState({
           bookingId: booking.id,
           paymentIntentId: activeDepositPiId,
@@ -494,6 +675,12 @@ export class PublicBookingDepositService {
           classification: "deposit_succeeded",
           publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
         };
+      }
+      if (holdExpired) {
+        throw new ConflictException({
+          code: "BOOKING_SLOT_HOLD_EXPIRED",
+          message: "The selected slot hold expired before payment could be finalized.",
+        });
       }
       if (st === "processing") {
         return depositReturn(
@@ -536,12 +723,22 @@ export class PublicBookingDepositService {
       }
     }
 
-    const idemPi = publicBookingDepositPiIdempotencyKey(booking.id);
+    if (holdExpired) {
+      throw new ConflictException({
+        code: "BOOKING_SLOT_HOLD_EXPIRED",
+        message: "The selected slot hold expired before payment could be finalized.",
+      });
+    }
+
+    const idemPi = publicBookingDepositPiIdempotencyKey(booking.id, hold);
     const pi = await this.stripePayments.createPublicBookingDepositPaymentIntent({
       bookingId: booking.id,
       stripeCustomerId,
       idempotencyKey: idemPi,
-      holdId: null,
+      holdId: hold,
+      tenantId: booking.tenantId,
+      estimateSnapshotHash: ctx.estimateHash,
+      estimatedTotalCents: estimatedTotal,
     });
 
     await this.prisma.booking.update({

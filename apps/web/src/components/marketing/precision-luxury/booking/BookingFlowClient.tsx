@@ -1292,13 +1292,16 @@ export function BookingFlowClient() {
     );
   }
 
-  async function bootstrapReviewDepositAfterScheduleGate(bookingId: string) {
-    if (!bookingId.trim() || depositPrepareInFlightRef.current) return;
+  async function bootstrapReviewDepositAfterScheduleGate(
+    bookingId: string,
+    holdId: string,
+  ) {
+    if (!bookingId.trim() || !holdId.trim() || depositPrepareInFlightRef.current) return;
     depositPrepareInFlightRef.current = true;
     setReviewPaymentPhase("preparing");
     setDepositError(null);
     try {
-      const prep = await postPublicBookingDepositPrepare({ bookingId });
+      const prep = await postPublicBookingDepositPrepare({ bookingId, holdId });
       setDepositBackendProcessing(
         prep.paymentMode === "deposit" &&
           prep.classification === "processing",
@@ -1342,7 +1345,8 @@ export function BookingFlowClient() {
 
   async function runPostStripeDepositFinalizePoll() {
     const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
-    if (!bookingId) return;
+    const holdId = pendingConfirmHoldIdRef.current?.trim() || "";
+    if (!bookingId || !holdId) return;
     setDepositProcessing(true);
     setDepositError(null);
     setReviewPaymentPhase("finalizing");
@@ -1353,6 +1357,7 @@ export function BookingFlowClient() {
         async (id) => {
           const prep = await postPublicBookingDepositPrepare({
             bookingId: id,
+            holdId,
           });
           setDepositBackendProcessing(
             prep.paymentMode === "deposit" &&
@@ -1362,7 +1367,7 @@ export function BookingFlowClient() {
         },
       );
       if (pollOutcome === "satisfied") {
-        const prep = await postPublicBookingDepositPrepare({ bookingId });
+        const prep = await postPublicBookingDepositPrepare({ bookingId, holdId });
         if (!isDepositFullySatisfied(prep)) {
           setReviewPaymentPhase("failed");
           setDepositError(
@@ -1390,13 +1395,14 @@ export function BookingFlowClient() {
 
   async function checkDepositPaymentStatusAgain() {
     const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
-    if (!bookingId || depositPrepareInFlightRef.current) return;
+    const holdId = pendingConfirmHoldIdRef.current?.trim() || "";
+    if (!bookingId || !holdId || depositPrepareInFlightRef.current) return;
     depositPrepareInFlightRef.current = true;
     setDepositProcessing(true);
     setReviewPaymentPhase("preparing");
     setDepositError(null);
     try {
-      const prep = await postPublicBookingDepositPrepare({ bookingId });
+      const prep = await postPublicBookingDepositPrepare({ bookingId, holdId });
       setDepositBackendProcessing(
         prep.paymentMode === "deposit" &&
           prep.classification === "processing",
@@ -1483,36 +1489,6 @@ export function BookingFlowClient() {
         result.bookingId &&
         result.estimate
       ) {
-        let depositPrepare: Awaited<
-          ReturnType<typeof postPublicBookingDepositPrepare>
-        > | null = null;
-        if (depositPrepareInFlightRef.current) {
-          return;
-        }
-        depositPrepareInFlightRef.current = true;
-        setReviewPaymentPhase("preparing");
-        try {
-          depositPrepare = await postPublicBookingDepositPrepare({
-            bookingId: result.bookingId,
-          });
-        } catch (prepErr) {
-          console.error("public booking deposit prepare failed", prepErr);
-          setSubmitRecoverableFailure(true);
-          setReviewPaymentPhase("failed");
-          setDepositError(
-            prepErr instanceof Error
-              ? prepErr.message
-              : "We couldn’t start card payment. Please try again.",
-          );
-          return;
-        } finally {
-          depositPrepareInFlightRef.current = false;
-        }
-
-        const needsReviewDeposit =
-          depositPrepare.paymentMode === "deposit" &&
-          Boolean(depositPrepare.clientSecret?.trim());
-
         writeBookingConfirmationSessionSnapshot({
           intakeId: result.intakeId,
           bookingId: result.bookingId ?? "",
@@ -1520,30 +1496,10 @@ export function BookingFlowClient() {
           durationMinutes: result.estimate?.durationMinutes ?? null,
           confidence: result.estimate?.confidence ?? null,
           bookingErrorCode: result.bookingError?.code ?? "",
-          publicDepositPaymentIntentId:
-            depositPrepare.paymentIntentId?.trim() || undefined,
-          publicDepositStatus: depositPrepare.publicDepositStatus,
         });
 
         clearDepositUi();
-        if (needsReviewDeposit) {
-          setDepositRequired(true);
-          setDepositClientSecret(depositPrepare.clientSecret ?? null);
-          setDepositPaymentIntentId(
-            depositPrepare.paymentIntentId?.trim() || null,
-          );
-          setDepositAmountCents(
-            typeof depositPrepare.amountCents === "number"
-              ? depositPrepare.amountCents
-              : null,
-          );
-          setDepositError(null);
-          setRequiresDepositResolution(false);
-          setReviewDepositGateMessage(null);
-          setReviewPaymentPhase("ready_for_payment");
-        } else {
-          setReviewPaymentPhase("idle");
-        }
+        setReviewPaymentPhase("idle");
 
         setScheduleSurfaceError(null);
         setState((prev) =>
@@ -1559,7 +1515,7 @@ export function BookingFlowClient() {
             selectedSlotEnd: "",
             publicHoldId: "",
             schedulingConfirmed: false,
-            step: needsReviewDeposit ? "review" : "schedule",
+            step: "schedule",
           }),
         );
         return;
@@ -1649,7 +1605,10 @@ export function BookingFlowClient() {
           setState((prev) =>
             clampBookingStepToStructuralMax({ ...prev, step: "review" }),
           );
-          void bootstrapReviewDepositAfterScheduleGate(bookingIdForDeposit);
+          void bootstrapReviewDepositAfterScheduleGate(
+            bookingIdForDeposit,
+            hold.holdId,
+          );
           return;
         }
         setScheduleCommitError(BOOKING_SCHEDULE_CONFIRM_FAILED);
@@ -1751,7 +1710,10 @@ export function BookingFlowClient() {
         setState((prev) =>
           clampBookingStepToStructuralMax({ ...prev, step: "review" }),
         );
-        void bootstrapReviewDepositAfterScheduleGate(bookingIdForDeposit);
+        void bootstrapReviewDepositAfterScheduleGate(
+          bookingIdForDeposit,
+          pendingConfirmHoldId.trim(),
+        );
         return;
       }
       setScheduleCommitError(BOOKING_SCHEDULE_CONFIRM_FAILED);

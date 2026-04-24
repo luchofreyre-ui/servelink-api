@@ -1,4 +1,5 @@
 import { ServiceUnavailableException } from "@nestjs/common";
+import { createHash } from "node:crypto";
 import {
   BookingPublicDepositStatus,
   BookingRemainingBalancePaymentStatus,
@@ -8,6 +9,10 @@ import { PrismaService } from "../src/prisma";
 import { StripePaymentService } from "../src/modules/bookings/stripe/stripe-payment.service";
 import { PaymentReliabilityService } from "../src/modules/bookings/payment-reliability/payment-reliability.service";
 import { PublicBookingDepositService } from "../src/modules/public-booking-orchestrator/public-booking-deposit.service";
+
+function estimateHash(outputJson: string) {
+  return createHash("sha256").update(outputJson.trim()).digest("hex").slice(0, 32);
+}
 
 describe("PublicBookingDepositService gate", () => {
   const OLD_SKIP = process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
@@ -26,6 +31,7 @@ describe("PublicBookingDepositService gate", () => {
       booking: {
         findUnique: jest.fn().mockResolvedValue({
           id: "bk1",
+          tenantId: "tenant_1",
           status: BookingStatus.pending_payment,
           customerId: "u1",
           publicDepositStatus: BookingPublicDepositStatus.deposit_required,
@@ -33,6 +39,16 @@ describe("PublicBookingDepositService gate", () => {
           publicDepositPaymentIntentId: null,
           customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
           estimateSnapshot: { outputJson: JSON.stringify({ estimatedPriceCents: 27_100 }) },
+        }),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "h1",
+          bookingId: "bk1",
+          foId: "fo1",
+          startAt: new Date("2030-01-01T10:00:00.000Z"),
+          endAt: new Date("2030-01-01T12:00:00.000Z"),
+          expiresAt: new Date("2030-01-01T13:00:00.000Z"),
         }),
       },
     } as unknown as PrismaService;
@@ -57,20 +73,32 @@ describe("PublicBookingDepositService gate", () => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = undefined;
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
+    const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
     const bookingUpdate = jest.fn().mockResolvedValue({});
     const prisma = {
       booking: {
         findUnique: jest.fn().mockResolvedValue({
           id: "bk1",
+          tenantId: "tenant_1",
           status: BookingStatus.pending_payment,
           customerId: "u1",
           publicDepositStatus: BookingPublicDepositStatus.deposit_required,
           publicDepositAmountCents: 10_000,
           publicDepositPaymentIntentId: "pi_existing",
           customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
-          estimateSnapshot: { outputJson: JSON.stringify({ estimatedPriceCents: 27_100 }) },
+          estimateSnapshot: { outputJson },
         }),
         update: bookingUpdate,
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "h1",
+          bookingId: "bk1",
+          foId: "fo1",
+          startAt: new Date("2030-01-01T10:00:00.000Z"),
+          endAt: new Date("2030-01-01T12:00:00.000Z"),
+          expiresAt: new Date("2030-01-01T13:00:00.000Z"),
+        }),
       },
     } as unknown as PrismaService;
 
@@ -82,6 +110,14 @@ describe("PublicBookingDepositService gate", () => {
     jest.spyOn(stripePayments, "retrievePaymentIntent").mockResolvedValue({
       id: "pi_existing",
       status: "succeeded",
+      amount: 10_000,
+      metadata: {
+        bookingId: "bk1",
+        bookingSessionKey: "bk1",
+        holdId: "h1",
+        tenantId: "tenant_1",
+        estimateSnapshotHash: estimateHash(outputJson),
+      },
       client_secret: "cs_test",
     } as any);
     const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");

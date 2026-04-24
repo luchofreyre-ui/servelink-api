@@ -110,6 +110,12 @@ enum BookingDepositRefundStatus {
   refund_failed
 }
 
+enum BookingRecoveryStatus {
+  none
+  auto_adjusted
+  failed
+}
+
 model Booking {
   id                    String                      @id @default(cuid())
   customerId            String
@@ -175,6 +181,9 @@ model Booking {
   depositRefundId                 String?
   depositRefundStatus             BookingDepositRefundStatus  @default(refund_not_required)
   depositRefundedAt               DateTime?
+  recoveryStatus                  BookingRecoveryStatus       @default(none)
+  originalRequestedTime           DateTime?
+  recoveryAttemptedAt             DateTime?
   canceledAt                      DateTime?
   canceledReason                  String?
   acceptedAt            DateTime?

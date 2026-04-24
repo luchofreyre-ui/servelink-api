@@ -834,6 +834,9 @@ export class StripePaymentService {
     stripeCustomerId: string;
     idempotencyKey: string;
     holdId?: string | null;
+    tenantId: string;
+    estimateSnapshotHash: string;
+    estimatedTotalCents: number | null;
   }) {
     const stripe = this.requireStripe();
     return stripe.paymentIntents.create(
@@ -846,6 +849,9 @@ export class StripePaymentService {
           ...this.buildPublicDepositMetadata({
             bookingId: args.bookingId,
             holdId: args.holdId,
+            tenantId: args.tenantId,
+            estimateSnapshotHash: args.estimateSnapshotHash,
+            estimatedTotalCents: args.estimatedTotalCents,
           }),
         },
       },
@@ -872,6 +878,9 @@ export class StripePaymentService {
     paymentMethodId: string;
     idempotencyKey: string;
     holdId?: string | null;
+    tenantId: string;
+    estimateSnapshotHash: string;
+    estimatedTotalCents: number | null;
   }) {
     const stripe = this.requireStripe();
     return stripe.paymentIntents.create(
@@ -886,6 +895,9 @@ export class StripePaymentService {
           ...this.buildPublicDepositMetadata({
             bookingId: args.bookingId,
             holdId: args.holdId,
+            tenantId: args.tenantId,
+            estimateSnapshotHash: args.estimateSnapshotHash,
+            estimatedTotalCents: args.estimatedTotalCents,
           }),
         },
       },
@@ -894,11 +906,23 @@ export class StripePaymentService {
   }
 
   /** Metadata-only helper so PM-based create matches Element-based PI shape. */
-  buildPublicDepositMetadata(args: { bookingId: string; holdId?: string | null }) {
+  buildPublicDepositMetadata(args: {
+    bookingId: string;
+    holdId?: string | null;
+    tenantId: string;
+    estimateSnapshotHash: string;
+    estimatedTotalCents: number | null;
+  }) {
     const holdId = args.holdId?.trim() || "";
     return {
       bookingId: args.bookingId,
+      bookingSessionKey: args.bookingId,
+      tenantId: args.tenantId,
       ...(holdId ? { holdId } : {}),
+      estimateSnapshotHash: args.estimateSnapshotHash,
+      estimatedTotalCents:
+        args.estimatedTotalCents != null ? String(args.estimatedTotalCents) : "",
+      publicBookingSource: "precision_luxury_booking_flow",
       servelinkPurpose: "public_deposit",
     } as const;
   }

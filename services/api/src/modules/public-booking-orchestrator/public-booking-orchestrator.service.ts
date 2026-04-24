@@ -1,9 +1,10 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { BookingStatus } from "@prisma/client";
+import { BookingRecoveryStatus, BookingStatus, Prisma } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { FoService, type JobMatchInput } from "../fo/fo.service";
 import {
@@ -33,7 +34,10 @@ import type {
 } from "./public-booking-orchestrator.types";
 import { publicBookingFixtureFoEmails } from "../../dev/publicBookingFoFixtures";
 import { PublicBookingDepositService } from "./public-booking-deposit.service";
-import { computePublicHoldConfirmScheduledEndIso } from "../bookings/public-booking-confirmation-scheduled-end";
+import {
+  computePublicBookingConfirmationScheduledEndIso,
+  computePublicHoldConfirmScheduledEndIso,
+} from "../bookings/public-booking-confirmation-scheduled-end";
 
 const MAX_FO_CANDIDATES = 8;
 const MAX_WINDOWS_TOTAL = 60;
@@ -49,6 +53,29 @@ type BookingForOrchestration = {
   siteLat: number | null;
   siteLng: number | null;
   estimateSnapshot: { outputJson: string; inputJson: string } | null;
+};
+
+type RecoveryFailureReason =
+  | "HOLD_EXPIRED"
+  | "SLOT_TAKEN"
+  | "FO_UNAVAILABLE"
+  | "NO_RECOVERY_AVAILABLE";
+
+type RecoveryConfirmResult = {
+  result: {
+    id: string;
+    scheduledStart: Date | string | null;
+    estimatedHours: number;
+    status: BookingStatus;
+    alreadyApplied?: boolean;
+  };
+  hold: {
+    id: string;
+    foId: string;
+    startAt: Date;
+    endAt: Date;
+  };
+  autoAdjusted: boolean;
 };
 
 function extractFoIdsFromEstimateOutput(outputJson: string | null): string[] {
@@ -690,6 +717,264 @@ export class PublicBookingOrchestratorService {
     }
   }
 
+  private classifyFinalizationFailure(err: unknown): RecoveryFailureReason | null {
+    const response =
+      err instanceof BadRequestException ||
+      err instanceof ConflictException ||
+      err instanceof NotFoundException
+        ? err.getResponse()
+        : null;
+    const responseCode =
+      response && typeof response === "object" && "code" in response
+        ? String((response as { code?: unknown }).code ?? "")
+        : "";
+    const message =
+      err instanceof Error ? err.message : typeof response === "string" ? response : "";
+    const marker = `${responseCode} ${message}`;
+    if (marker.includes("BOOKING_SLOT_HOLD_EXPIRED")) return "HOLD_EXPIRED";
+    if (
+      marker.includes("FO_SLOT_ALREADY_BOOKED") ||
+      marker.includes("PUBLIC_BOOKING_SLOT_NOT_AVAILABLE")
+    ) {
+      return "SLOT_TAKEN";
+    }
+    if (
+      marker.includes("FO_NOT_AVAILABLE_AT_SCHEDULED_TIME") ||
+      marker.includes("FO_NOT_ELIGIBLE")
+    ) {
+      return "FO_UNAVAILABLE";
+    }
+    return null;
+  }
+
+  private sameUtcDayRange(anchor: Date): { rangeStart: Date; rangeEnd: Date } {
+    const rangeStart = new Date(anchor);
+    rangeStart.setUTCHours(0, 0, 0, 0);
+    const rangeEnd = new Date(rangeStart.getTime() + 24 * 60 * 60 * 1000);
+    return { rangeStart, rangeEnd };
+  }
+
+  private sortWindowsNearestFirst<T extends { startAt: Date }>(
+    windows: T[],
+    target: Date,
+  ): T[] {
+    const targetMs = target.getTime();
+    return [...windows].sort(
+      (a, b) =>
+        Math.abs(a.startAt.getTime() - targetMs) -
+        Math.abs(b.startAt.getTime() - targetMs),
+    );
+  }
+
+  private async listRecoveryWindows(args: {
+    booking: BookingForOrchestration;
+    foId: string;
+    durationMinutes: number;
+    originalStart: Date;
+    sameDayOnly: boolean;
+  }) {
+    const range = args.sameDayOnly
+      ? this.sameUtcDayRange(args.originalStart)
+      : this.resolveAvailabilityRange({ bookingId: args.booking.id });
+    return this.slotAvailability.listAvailableWindows({
+      foId: args.foId,
+      rangeStart: range.rangeStart,
+      rangeEnd: range.rangeEnd,
+      durationMinutes: args.durationMinutes,
+    });
+  }
+
+  private async confirmRecoveredWindow(args: {
+    booking: BookingForOrchestration;
+    foId: string;
+    startAt: Date;
+    endAt: Date;
+    originalHold: { id: string; foId: string; startAt: Date; endAt: Date };
+    note?: string;
+    idempotencyKey: string | null;
+    recoveryAttemptedAt: Date;
+  }): Promise<RecoveryConfirmResult | null> {
+    let hold: Awaited<ReturnType<SlotHoldsService["createHold"]>>;
+    try {
+      hold = await this.slotHolds.createHold({
+        bookingId: args.booking.id,
+        foId: args.foId,
+        startAt: args.startAt.toISOString(),
+        endAt: args.endAt.toISOString(),
+      });
+    } catch {
+      return null;
+    }
+
+    try {
+      const result = await this.bookings.confirmBookingFromHold({
+        bookingId: args.booking.id,
+        holdId: hold.id,
+        note: args.note,
+        idempotencyKey: args.idempotencyKey,
+        useHoldElapsedDurationModel: true,
+      });
+      const autoAdjusted =
+        args.foId !== args.originalHold.foId ||
+        args.startAt.getTime() !== args.originalHold.startAt.getTime() ||
+        args.endAt.getTime() !== args.originalHold.endAt.getTime();
+      await this.prisma.booking.update({
+        where: { id: args.booking.id },
+        data: {
+          recoveryStatus: autoAdjusted
+            ? BookingRecoveryStatus.auto_adjusted
+            : BookingRecoveryStatus.none,
+          originalRequestedTime: args.originalHold.startAt,
+          recoveryAttemptedAt: args.recoveryAttemptedAt,
+          ...(autoAdjusted ? { preferredFoId: args.foId } : {}),
+        },
+      });
+      return {
+        result,
+        hold: {
+          id: hold.id,
+          foId: hold.foId,
+          startAt: hold.startAt,
+          endAt: hold.endAt,
+        },
+        autoAdjusted,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  private async attemptPostPaymentRecovery(args: {
+    booking: BookingForOrchestration;
+    originalHold: { id: string; bookingId: string; foId: string; startAt: Date; endAt: Date };
+    note?: string;
+    idempotencyKey: string | null;
+  }): Promise<RecoveryConfirmResult | null> {
+    const recoveryAttemptedAt = new Date();
+    const jobMatch =
+      args.booking.estimateSnapshot?.outputJson &&
+      args.booking.estimateSnapshot?.inputJson
+        ? parseEstimateJobMatchFields({
+            outputJson: args.booking.estimateSnapshot.outputJson,
+            inputJson: args.booking.estimateSnapshot.inputJson,
+          })
+        : null;
+    const candidateIds = await this.resolveFoCandidateIds(args.booking);
+    const orderedFoIds = [
+      args.originalHold.foId,
+      ...candidateIds.filter((id) => id !== args.originalHold.foId),
+    ];
+
+    const originalDuration = Math.round(
+      (args.originalHold.endAt.getTime() - args.originalHold.startAt.getTime()) /
+        (60 * 1000),
+    );
+    if (originalDuration <= 0) return null;
+
+    const originalFoWindows = await this.listRecoveryWindows({
+      booking: args.booking,
+      foId: args.originalHold.foId,
+      durationMinutes: originalDuration,
+      originalStart: args.originalHold.startAt,
+      sameDayOnly: false,
+    });
+    const originalAvailable = originalFoWindows.some(
+      (w) =>
+        w.startAt.getTime() === args.originalHold.startAt.getTime() &&
+        w.endAt.getTime() === args.originalHold.endAt.getTime(),
+    );
+    if (originalAvailable) {
+      const recovered = await this.confirmRecoveredWindow({
+        booking: args.booking,
+        foId: args.originalHold.foId,
+        startAt: args.originalHold.startAt,
+        endAt: args.originalHold.endAt,
+        originalHold: args.originalHold,
+        note: args.note,
+        idempotencyKey: args.idempotencyKey,
+        recoveryAttemptedAt,
+      });
+      if (recovered) return recovered;
+    }
+
+    for (const sameDayOnly of [true, false]) {
+      for (const foId of orderedFoIds) {
+        const durationMinutes = await this.computeSlotDurationMinutesForFo(
+          args.booking,
+          foId,
+          jobMatch,
+        );
+        const windows = await this.listRecoveryWindows({
+          booking: args.booking,
+          foId,
+          durationMinutes,
+          originalStart: args.originalHold.startAt,
+          sameDayOnly,
+        });
+        for (const w of this.sortWindowsNearestFirst(windows, args.originalHold.startAt)) {
+          if (
+            w.startAt.getTime() === args.originalHold.startAt.getTime() &&
+            w.endAt.getTime() === args.originalHold.endAt.getTime() &&
+            foId === args.originalHold.foId
+          ) {
+            continue;
+          }
+          const recovered = await this.confirmRecoveredWindow({
+            booking: args.booking,
+            foId,
+            startAt: w.startAt,
+            endAt: w.endAt,
+            originalHold: args.originalHold,
+            note: args.note,
+            idempotencyKey: args.idempotencyKey,
+            recoveryAttemptedAt,
+          });
+          if (recovered) return recovered;
+        }
+      }
+    }
+
+    await this.prisma.booking.update({
+      where: { id: args.booking.id },
+      data: {
+        recoveryStatus: BookingRecoveryStatus.failed,
+        originalRequestedTime: args.originalHold.startAt,
+        recoveryAttemptedAt,
+      },
+    });
+    return null;
+  }
+
+  private async recordPostPaymentRecoveryFailure(args: {
+    bookingId: string;
+    holdId: string;
+    reason: RecoveryFailureReason;
+    err: unknown;
+  }) {
+    await this.prisma.paymentAnomaly.create({
+      data: {
+        bookingId: args.bookingId,
+        kind: "public_deposit_succeeded_booking_finalization_failed",
+        severity: "critical",
+        status: "open",
+        message:
+          args.err instanceof Error
+            ? args.err.message
+            : "Public deposit succeeded but booking finalization failed.",
+        details: {
+          holdId: args.holdId,
+          reason: "PAID_NO_AVAILABLE_SLOT",
+          recoveryReason: args.reason,
+          structuredReason: "NO_RECOVERY_AVAILABLE",
+          code:
+            args.err instanceof Error && args.err.message
+              ? args.err.message
+              : "PUBLIC_BOOKING_FINALIZATION_FAILED",
+        } as Prisma.InputJsonValue,
+      },
+    });
+  }
+
   async createHold(dto: PublicSlotSelectDto) {
     const booking = await this.loadBookingForOrchestration(dto.bookingId);
     if (!booking) {
@@ -771,8 +1056,11 @@ export class PublicBookingOrchestratorService {
     };
   }
 
-  preparePublicDeposit(body: { bookingId: string }) {
-    return this.publicBookingDeposit.preparePublicBookingDeposit(body.bookingId);
+  preparePublicDeposit(body: { bookingId: string; holdId: string }) {
+    return this.publicBookingDeposit.preparePublicBookingDeposit(
+      body.bookingId,
+      body.holdId,
+    );
   }
 
   async confirmHold(
@@ -788,6 +1076,38 @@ export class PublicBookingOrchestratorService {
       where: { id: dto.holdId },
     });
     if (!hold || hold.bookingId !== dto.bookingId) {
+      if (
+        booking.status === BookingStatus.assigned &&
+        booking.scheduledStart != null
+      ) {
+        let wallClockDurationMinutes: number | null = null;
+        try {
+          const out = JSON.parse(
+            booking.estimateSnapshot?.outputJson ?? "{}",
+          ) as Record<string, unknown>;
+          const raw = out.estimatedDurationMinutes;
+          wallClockDurationMinutes =
+            typeof raw === "number" && Number.isFinite(raw) && raw > 0
+              ? Math.floor(raw)
+              : null;
+        } catch {
+          wallClockDurationMinutes = null;
+        }
+        return {
+          kind: "public_booking_confirmation" as const,
+          bookingId: booking.id,
+          scheduledStart: booking.scheduledStart.toISOString(),
+          scheduledEnd: computePublicBookingConfirmationScheduledEndIso(
+            booking.scheduledStart,
+            {
+              wallClockDurationMinutes,
+              estimatedHours: booking.estimatedHours,
+            },
+          ),
+          status: booking.status,
+          alreadyApplied: true,
+        };
+      }
       throw new NotFoundException("PUBLIC_BOOKING_HOLD_NOT_FOUND");
     }
 
@@ -798,13 +1118,53 @@ export class PublicBookingOrchestratorService {
       idempotencyKey: idempotencyKey?.trim() || null,
     });
 
-    const result = await this.bookings.confirmBookingFromHold({
-      bookingId: dto.bookingId,
-      holdId: dto.holdId,
-      note: dto.note,
-      idempotencyKey: idempotencyKey?.trim() || null,
-      useHoldElapsedDurationModel: true,
-    });
+    let result;
+    let responseHold: { startAt: Date; endAt: Date } = hold;
+    try {
+      result = await this.bookings.confirmBookingFromHold({
+        bookingId: dto.bookingId,
+        holdId: dto.holdId,
+        note: dto.note,
+        idempotencyKey: idempotencyKey?.trim() || null,
+        useHoldElapsedDurationModel: true,
+      });
+    } catch (err) {
+      const reason = this.classifyFinalizationFailure(err);
+      if (reason) {
+        const recovered = await this.attemptPostPaymentRecovery({
+          booking,
+          originalHold: {
+            id: hold.id,
+            bookingId: hold.bookingId,
+            foId: hold.foId,
+            startAt: hold.startAt,
+            endAt: hold.endAt,
+          },
+          note: dto.note,
+          idempotencyKey: idempotencyKey?.trim() || null,
+        });
+        if (recovered) {
+          result = recovered.result;
+          responseHold = recovered.hold;
+        } else {
+          await this.recordPostPaymentRecoveryFailure({
+            bookingId: dto.bookingId,
+            holdId: dto.holdId,
+            reason,
+            err,
+          });
+          throw err;
+        }
+      } else {
+        await this.recordPostPaymentRecoveryFailure({
+          bookingId: dto.bookingId,
+          holdId: dto.holdId,
+          reason: "NO_RECOVERY_AVAILABLE",
+          err,
+        });
+        throw err;
+      }
+    }
 
     const scheduledStart = result.scheduledStart
       ? new Date(result.scheduledStart).toISOString()
@@ -813,8 +1173,8 @@ export class PublicBookingOrchestratorService {
       scheduledStart: result.scheduledStart
         ? new Date(result.scheduledStart)
         : null,
-      holdEndAt: hold.endAt,
-      holdStartAt: hold.startAt,
+      holdEndAt: responseHold.endAt,
+      holdStartAt: responseHold.startAt,
       estimatedHours: result.estimatedHours,
     });
 

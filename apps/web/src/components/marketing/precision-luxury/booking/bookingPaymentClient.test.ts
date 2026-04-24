@@ -33,10 +33,19 @@ describe("bookingPaymentClient", () => {
         }),
     });
 
-    const res = await postPublicBookingDepositPrepare({ bookingId: "bk_1" });
+    const res = await postPublicBookingDepositPrepare({
+      bookingId: "bk_1",
+      holdId: "hold_1",
+    });
     expect(res.paymentMode).toBe("deposit");
     expect(res.clientSecret).toBe("cs_test");
     expect(res.amountCents).toBe(10_000);
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        body: JSON.stringify({ bookingId: "bk_1", holdId: "hold_1" }),
+      }),
+    );
   });
 
   it("isDepositFullySatisfied is true for skip and succeeded none modes", () => {
