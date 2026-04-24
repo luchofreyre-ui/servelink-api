@@ -27,6 +27,22 @@ export const BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED =
 export const BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY =
   "Pick up where you left off";
 
+/** `/book/confirmation` — assigned booking with a scheduled start from the live API read. */
+export const BOOKING_CONFIRMATION_HEADLINE_VISIT_CONFIRMED =
+  "Your cleaning is confirmed.";
+
+export const BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_LEAD =
+  "Your deposit is received and your visit is on the calendar.";
+
+export const BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_DETAIL =
+  "We’ll follow up by email with any final details before we arrive.";
+
+export const BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE =
+  "A $100 deposit has been applied to secure this booking.";
+
+export const BOOKING_CONFIRMATION_NEXT_STEPS_VISIT_CONFIRMED =
+  "You’ll receive a confirmation email with your booking reference and arrival window. If anything changes on your side, reply from that thread and we’ll help adjust.";
+
 export const BOOKING_CONFIRMATION_INTRO_NEUTRAL_REENTRY =
   "This screen usually appears right after you send a request. If you refreshed, used a bookmark, or arrived here without the usual details, we can’t safely show a finished summary from here alone.";
 

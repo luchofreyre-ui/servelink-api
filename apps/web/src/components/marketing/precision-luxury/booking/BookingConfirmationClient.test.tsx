@@ -3,9 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BookingConfirmationClient } from "./BookingConfirmationClient";
 import * as bookingsApi from "@/lib/api/bookings";
 import {
+  BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE,
   BOOKING_CONFIRMATION_HEADLINE_BOOKING_SAVED,
   BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY,
   BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED,
+  BOOKING_CONFIRMATION_HEADLINE_VISIT_CONFIRMED,
   BOOKING_CONFIRMATION_RETURN_TO_BOOKING_CTA,
   BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA,
 } from "./bookingPublicSurfaceCopy";
@@ -106,6 +108,39 @@ describe("BookingConfirmationClient", () => {
     await waitFor(() => {
       expect(screen.getByText("Surface reset")).toBeTruthy();
     });
+  });
+
+  it("shows visit-confirmed headline when API reports assigned booking with schedule", async () => {
+    mockConfirmationSearch.value = "intakeId=in_c&bookingId=bk_assigned";
+    vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockResolvedValue({
+      kind: "public_booking_confirmation",
+      bookingId: "bk_assigned",
+      bookingStatus: "assigned",
+      scheduledStart: "2026-05-01T14:00:00.000Z",
+      scheduledEnd: "2026-05-01T18:00:00.000Z",
+      assignedTeamDisplayName: "Test Team",
+      publicDepositPaid: true,
+      estimateSnapshot: {
+        estimatedPriceCents: 27100,
+        estimatedDurationMinutes: 180,
+        confidence: 0.75,
+        serviceType: "first_time",
+      },
+      deepCleanProgram: null,
+    });
+
+    render(<BookingConfirmationClient />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", {
+          level: 1,
+          name: BOOKING_CONFIRMATION_HEADLINE_VISIT_CONFIRMED,
+        }),
+      ).toBeTruthy();
+    });
+    expect(screen.getByText(/Test Team/)).toBeTruthy();
+    expect(screen.getByText(BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE)).toBeTruthy();
   });
 
   it("shows request-received headline when live booking estimate bundle is absent", () => {

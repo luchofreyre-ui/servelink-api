@@ -6,7 +6,11 @@ import { test, expect } from "@playwright/test";
 const PLAYWRIGHT_BASE_URL =
   process.env.PLAYWRIGHT_BASE_URL?.replace(/\/$/, "") || "http://127.0.0.1:3000";
 
-/** Fixture FO ids (stable for this dev DB after `seed:public-booking-fo-fixtures`). */
+/**
+ * Legacy public-booking fixture ids (`seed:public-booking-fo-fixtures`).
+ * Public scheduling prefers live `matchFOs` and drops these when other FOs match
+ * (e.g. `fo_test_matrix15` cohort) — see `PublicBookingOrchestratorService`.
+ */
 const FO = {
   baseline: "cmoah8mu40003sauvkhrljzo7",
   limitedTravel: "cmoah8muh000dsauv5l5rrpwa",
@@ -184,12 +188,18 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
       (p) => Array.isArray((p as { teams?: unknown }).teams) && (p as { teams: unknown[] }).teams.length > 0,
     ) as { teams: { id: string }[] }[];
     const firstTeams = teamOptions[0];
-    /** Public booking team list is capped server-side (see `buildRankedTeamOptions(..., 2)`). */
-    expect(firstTeams?.teams?.map((t) => t.id).sort()).toEqual(
-      [FO.baseline, FO.limitedTravel].sort(),
+    /** Deep-clean public team list is capped server-side at 3 when `fo_test_matrix15` is active. */
+    expect(firstTeams?.teams?.length).toBe(3);
+    const names = (firstTeams?.teams ?? []).map((t) =>
+      String(
+        (t as { displayName?: string; name?: string }).displayName ??
+          (t as { name?: string }).name ??
+          "",
+      ),
     );
+    expect(names.every((n) => /TEST FO/i.test(n))).toBeTruthy();
     expect(firstTeams?.teams?.some((t) => t.id === FO.moveOnly)).toBe(false);
-    await page.getByRole("button", { name: /Fixture FO — Baseline Core/i }).click();
+    await page.getByRole("button", { name: /TEST FO 01 — Tulsa Core Baseline A/i }).click();
 
     await expect(page.getByTestId("booking-schedule-slot-section")).toBeVisible({
       timeout: 60_000,
@@ -318,14 +328,15 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
         .count();
     }
 
-    const baselineWindows = await countSlotsAfterPickingTeam(/Fixture FO — Baseline Core/i);
-    const limitedWindows = await countSlotsAfterPickingTeam(/Limited Travel/i);
+    const baselineWindows = await countSlotsAfterPickingTeam(
+      /TEST FO 01 — Tulsa Core Baseline A/i,
+    );
+    const altWindows = await countSlotsAfterPickingTeam(/TEST FO 02 — Tulsa Core Baseline B/i);
 
     expect(baselineWindows).toBeGreaterThan(0);
-    expect(limitedWindows).toBeGreaterThan(0);
-    /** FO3 scarcity vs FO1 is enforced in `npm run validate:public-booking-fo-fixtures` (API); UI lists top 2 teams only. */
+    expect(altWindows).toBeGreaterThan(0);
     expect(
-      Math.max(baselineWindows, limitedWindows),
+      Math.max(baselineWindows, altWindows),
       "at least one FO should expose multiple slot buttons in the default range",
     ).toBeGreaterThan(1);
   });
@@ -386,6 +397,63 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
       return [...new Set(ids)];
     }
 
+    async function teamNamesAfterSubmit(opts: {
+      service: string;
+      pubPath: string;
+    }): Promise<string[]> {
+      const names: string[] = [];
+      page.removeAllListeners("response");
+      page.removeAllListeners("request");
+      page.on("response", async (res) => {
+        if (
+          !res.url().includes("/public-booking/availability") ||
+          res.request().method() !== "POST"
+        ) {
+          return;
+        }
+        try {
+          const j = (await res.json()) as {
+            teams?: { id: string; name?: string; displayName?: string }[];
+          };
+          if (Array.isArray(j.teams) && j.teams.length) {
+            names.length = 0;
+            names.push(
+              ...j.teams.map((t) => String(t.name ?? t.displayName ?? "")),
+            );
+          }
+        } catch {
+          /* ignore */
+        }
+      });
+
+      await page.goto(
+        `${PLAYWRIGHT_BASE_URL}${bookingUrl({
+          service: opts.service,
+          pubPath: opts.pubPath,
+          locStreet: "1 E 2nd St",
+          locCity: "Tulsa",
+          locState: "OK",
+          locZip: "74103",
+          step: "review",
+        })}`,
+      );
+      await waitForReviewReady(page, { contactName: "Service type probe" });
+      const submit201 = page.waitForResponse(
+        (r) =>
+          r.url().includes("/booking-direction-intake/submit") &&
+          r.request().method() === "POST" &&
+          r.status() === 201,
+        { timeout: 120_000 },
+      );
+      await page.getByTestId("booking-direction-send").click();
+      await submit201;
+      await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
+        timeout: 60_000,
+      });
+      await page.waitForTimeout(2500);
+      return names;
+    }
+
     const apiOrigin = process.env.PLAYWRIGHT_NEST_API_ORIGIN || "http://127.0.0.1:3001";
     const movePreview = await request.post(
       `${apiOrigin}/api/v1/booking-direction-intake/preview-estimate`,
@@ -412,17 +480,20 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
       movePreview.ok(),
       `move preview-estimate must return 200 (got ${movePreview.status()}). Body: ${movePreviewBody.slice(0, 400)}`,
     ).toBeTruthy();
-    const moveTeams = await teamIdsAfterSubmit({
+    const moveNames = await teamNamesAfterSubmit({
       service: "move-in-move-out",
       pubPath: "move",
     });
-    expect(moveTeams).toContain(FO.moveOnly);
+    expect(
+      moveNames.some((n) => /Move Only/i.test(n)),
+      `expected a move-only-capable team in: ${moveNames.join(" | ")}`,
+    ).toBeTruthy();
 
-    const maintTeams = await teamIdsAfterSubmit({
+    const deepNames = await teamNamesAfterSubmit({
       service: "deep-cleaning",
       pubPath: "one_time",
     });
-    expect(maintTeams).not.toContain(FO.moveOnly);
+    expect(deepNames.some((n) => /Move Only/i.test(n))).toBe(false);
   });
 
   test("4) geography: edge address drops limitedTravel from team API", async ({ page }) => {
@@ -468,9 +539,9 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
     });
     await page.waitForTimeout(3000);
     const uniq = [...new Set(teams)];
-    expect(uniq).toContain(FO.baseline);
+    expect(uniq.length).toBeGreaterThanOrEqual(2);
     expect(uniq).not.toContain(FO.limitedTravel);
-    expect(uniq).toContain(FO.slotConstrained);
+    expect(uniq.some((id) => !String(id).startsWith("cmoah8mu"))).toBeTruthy();
   });
 
   test("5) far market: NO_FO_CANDIDATES, not location unresolved", async ({ page }) => {
