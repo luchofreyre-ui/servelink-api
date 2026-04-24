@@ -7,6 +7,8 @@ import {
   Booking,
   BookingEventType,
   BookingPaymentStatus,
+  BookingPublicDepositStatus,
+  BookingRemainingBalancePaymentStatus,
   Prisma,
 } from "@prisma/client";
 import Stripe from "stripe";
@@ -15,6 +17,8 @@ import { PrismaService } from "../../../prisma";
 import { fail } from "../../../utils/http";
 import { PaymentReliabilityService } from "../payment-reliability/payment-reliability.service";
 import type { CreateBookingCheckoutInput } from "../payment/payment.types";
+import { initialRemainingBalanceStatusFromRemainingCents } from "../payment-lifecycle-policy";
+import { PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS } from "../public-deposit-policy";
 
 /** Observability context for booking reconciliation from the single Stripe webhook ingress. */
 export type StripeBookingWebhookObs = {
@@ -201,6 +205,10 @@ export class StripePaymentService {
   /**
    * Idempotent booking payment updates from verified Stripe webhook events.
    * Caller must create StripeWebhookReceipt first (exactly-once gate), except when invoked from the billing webhook after its receipt insert.
+   *
+   * **Webhooks are reconciliation signals**, not the sole authority for payment lifecycle: missing
+   * Dashboard subscriptions (for example `payment_intent.amount_capturable_updated`) must not
+   * permanently strand state — `PaymentLifecycleReconciliationCronService` + T−24h auth cron backstop DB/Stripe drift.
    */
   async applyBookingStripeEvent(
     event: Stripe.Event,
@@ -219,6 +227,9 @@ export class StripePaymentService {
       case "checkout.session.expired":
         await this.onCheckoutSessionExpired(event.id, object, obs);
         break;
+      case "payment_intent.amount_capturable_updated":
+        await this.onPaymentIntentAmountCapturableUpdated(event.id, object, obs);
+        break;
       case "payment_intent.succeeded":
         await this.onPaymentIntentSucceeded(event.id, object, obs);
         break;
@@ -233,6 +244,9 @@ export class StripePaymentService {
   /**
    * Shared ingress: verify signature, idempotent receipt insert, booking reconciliation.
    * Invoked only from POST /api/v1/stripe/webhook (see STRIPE_WEBHOOK_HTTP_PATH).
+   *
+   * If Stripe stops delivering certain event types, **scheduled reconciliation** still converges
+   * remaining-balance and deposit rows against Stripe PaymentIntents.
    */
   async processBookingStripeWebhookIngress(
     raw: Buffer,
@@ -443,6 +457,42 @@ export class StripePaymentService {
     });
   }
 
+  private async onPaymentIntentAmountCapturableUpdated(
+    stripeEventId: string,
+    piObj: Record<string, unknown>,
+    ctx?: StripeBookingWebhookObs,
+  ) {
+    const piId = String(piObj.id ?? "");
+    const meta = (piObj.metadata ?? {}) as Record<string, string>;
+    if (meta.servelinkPurpose !== "remaining_balance_authorization") return;
+
+    const booking = await this.findBookingForStripe({
+      metadataBookingId: meta.bookingId,
+      sessionId: null,
+      paymentIntentId: piId || null,
+    });
+    if (!booking) {
+      this.log.warn(
+        `Stripe booking webhook: no booking for payment_intent.amount_capturable_updated (event=${stripeEventId})`,
+      );
+      return;
+    }
+
+    const capturable =
+      typeof piObj.amount_capturable === "number" ? piObj.amount_capturable : 0;
+    if (capturable > 0) {
+      await this.prisma.booking.update({
+        where: { id: booking.id },
+        data: {
+          remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_authorized,
+          remainingBalanceAuthorizedAt: new Date(),
+          remainingBalancePaymentIntentId: piId,
+          remainingBalanceAuthorizationFailureReason: null,
+        },
+      });
+    }
+  }
+
   private async onCheckoutSessionExpired(
     stripeEventId: string,
     session: Record<string, unknown>,
@@ -514,6 +564,39 @@ export class StripePaymentService {
       this.log.warn(
         `Stripe booking webhook: no booking for payment_intent.succeeded (event=${stripeEventId})`,
       );
+      return;
+    }
+
+    if (meta.servelinkPurpose === "public_deposit") {
+      await this.persistPublicDepositWebhookSuccess({
+        bookingId: booking.id,
+        paymentIntentId: piId,
+        stripeEventId,
+      });
+      return;
+    }
+
+    if (meta.servelinkPurpose === "remaining_balance_authorization") {
+      const status = String(piObj.status ?? "");
+      if (status === "succeeded") {
+        await this.prisma.booking.update({
+          where: { id: booking.id },
+          data: {
+            remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_captured,
+            remainingBalanceCapturedAt: new Date(),
+            remainingBalancePaymentIntentId: piId,
+          },
+        });
+      } else if (status === "requires_capture") {
+        await this.prisma.booking.update({
+          where: { id: booking.id },
+          data: {
+            remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_authorized,
+            remainingBalanceAuthorizedAt: new Date(),
+            remainingBalancePaymentIntentId: piId,
+          },
+        });
+      }
       return;
     }
 
@@ -589,6 +672,33 @@ export class StripePaymentService {
       return;
     }
 
+    if (meta.servelinkPurpose === "public_deposit") {
+      await this.prisma.booking.update({
+        where: { id: booking.id },
+        data: {
+          publicDepositStatus: BookingPublicDepositStatus.deposit_failed,
+          publicDepositPaymentIntentId: piId,
+        },
+      });
+      return;
+    }
+
+    if (meta.servelinkPurpose === "remaining_balance_authorization") {
+      const err =
+        (piObj.last_payment_error as { message?: string } | null)?.message ??
+        "payment_failed";
+      await this.prisma.booking.update({
+        where: { id: booking.id },
+        data: {
+          remainingBalanceStatus:
+            BookingRemainingBalancePaymentStatus.balance_authorization_failed,
+          remainingBalanceAuthorizationFailureReason: String(err).slice(0, 500),
+          remainingBalancePaymentIntentId: piId,
+        },
+      });
+      return;
+    }
+
     await this.persistBookingStripeUpdate({
       bookingId: booking.id,
       paymentStatus: BookingPaymentStatus.failed,
@@ -598,6 +708,209 @@ export class StripePaymentService {
       note: "Stripe payment_intent.payment_failed",
       payload: {
         lastPaymentError: piObj.last_payment_error ?? null,
+      },
+    });
+  }
+
+  async ensureStripeCustomerForUser(args: {
+    userId: string;
+    email: string;
+  }): Promise<string> {
+    const stripe = this.requireStripe();
+    const user = await this.prisma.user.findUnique({
+      where: { id: args.userId },
+      select: { stripeCustomerId: true, email: true },
+    });
+    if (!user) {
+      throw new BadRequestException("USER_NOT_FOUND");
+    }
+    const existing = user.stripeCustomerId?.trim();
+    if (existing) return existing;
+    const customer = await stripe.customers.create({
+      email: (args.email || user.email || "").trim() || undefined,
+      metadata: { servelinkUserId: args.userId },
+    });
+    await this.prisma.user.update({
+      where: { id: args.userId },
+      data: { stripeCustomerId: customer.id },
+    });
+    return customer.id;
+  }
+
+  async retrievePaymentIntent(paymentIntentId: string) {
+    const stripe = this.requireStripe();
+    return stripe.paymentIntents.retrieve(paymentIntentId);
+  }
+
+  async retrievePaymentIntentForRemainingBalanceAuth(paymentIntentId: string) {
+    const stripe = this.requireStripe();
+    return stripe.paymentIntents.retrieve(paymentIntentId, {
+      expand: ["latest_charge.payment_method"],
+    });
+  }
+
+  async createRemainingBalanceAuthorizationPaymentIntent(args: {
+    bookingId: string;
+    stripeCustomerId: string;
+    paymentMethodId: string;
+    amountCents: number;
+    idempotencyKey: string;
+  }) {
+    const stripe = this.requireStripe();
+    return stripe.paymentIntents.create(
+      {
+        amount: args.amountCents,
+        currency: "usd",
+        customer: args.stripeCustomerId,
+        payment_method: args.paymentMethodId,
+        capture_method: "manual",
+        confirm: true,
+        confirmation_method: "automatic",
+        metadata: {
+          bookingId: args.bookingId,
+          servelinkPurpose: "remaining_balance_authorization",
+        },
+      },
+      { idempotencyKey: args.idempotencyKey.slice(0, 255) },
+    );
+  }
+
+  async captureRemainingBalancePaymentIntent(
+    paymentIntentId: string,
+    idempotencyKey: string,
+  ) {
+    const stripe = this.requireStripe();
+    return stripe.paymentIntents.capture(
+      paymentIntentId,
+      {},
+      { idempotencyKey: idempotencyKey.slice(0, 255) },
+    );
+  }
+
+  async refundPaymentIntent(args: { paymentIntentId: string; idempotencyKey: string }) {
+    const stripe = this.requireStripe();
+    return stripe.refunds.create(
+      { payment_intent: args.paymentIntentId },
+      { idempotencyKey: args.idempotencyKey.slice(0, 255) },
+    );
+  }
+
+  async createPublicBookingDepositPaymentIntent(args: {
+    bookingId: string;
+    stripeCustomerId: string;
+    idempotencyKey: string;
+    holdId?: string | null;
+  }) {
+    const stripe = this.requireStripe();
+    return stripe.paymentIntents.create(
+      {
+        amount: PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
+        currency: "usd",
+        customer: args.stripeCustomerId,
+        automatic_payment_methods: { enabled: true },
+        metadata: {
+          ...this.buildPublicDepositMetadata({
+            bookingId: args.bookingId,
+            holdId: args.holdId,
+          }),
+        },
+      },
+      { idempotencyKey: args.idempotencyKey.slice(0, 255) },
+    );
+  }
+
+  async confirmPaymentIntentWithPaymentMethod(args: {
+    paymentIntentId: string;
+    paymentMethodId: string;
+    idempotencyKey: string;
+  }) {
+    const stripe = this.requireStripe();
+    return stripe.paymentIntents.confirm(
+      args.paymentIntentId,
+      { payment_method: args.paymentMethodId },
+      { idempotencyKey: args.idempotencyKey.slice(0, 255) },
+    );
+  }
+
+  async createAndConfirmPublicDepositPaymentIntent(args: {
+    bookingId: string;
+    stripeCustomerId: string;
+    paymentMethodId: string;
+    idempotencyKey: string;
+    holdId?: string | null;
+  }) {
+    const stripe = this.requireStripe();
+    return stripe.paymentIntents.create(
+      {
+        amount: PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
+        currency: "usd",
+        customer: args.stripeCustomerId,
+        payment_method: args.paymentMethodId,
+        confirmation_method: "automatic",
+        confirm: true,
+        metadata: {
+          ...this.buildPublicDepositMetadata({
+            bookingId: args.bookingId,
+            holdId: args.holdId,
+          }),
+        },
+      },
+      { idempotencyKey: args.idempotencyKey.slice(0, 255) },
+    );
+  }
+
+  /** Metadata-only helper so PM-based create matches Element-based PI shape. */
+  buildPublicDepositMetadata(args: { bookingId: string; holdId?: string | null }) {
+    const holdId = args.holdId?.trim() || "";
+    return {
+      bookingId: args.bookingId,
+      ...(holdId ? { holdId } : {}),
+      servelinkPurpose: "public_deposit",
+    } as const;
+  }
+
+  private async persistPublicDepositWebhookSuccess(args: {
+    bookingId: string;
+    paymentIntentId: string;
+    stripeEventId: string;
+  }) {
+    const snap = await this.prisma.booking.findUnique({
+      where: { id: args.bookingId },
+      select: { estimateSnapshot: { select: { outputJson: true } } },
+    });
+    const out = snap?.estimateSnapshot?.outputJson ?? null;
+    let estimatedTotal = 0;
+    if (out?.trim()) {
+      try {
+        const j = JSON.parse(out) as Record<string, unknown>;
+        const v = j.estimatedPriceCents;
+        if (typeof v === "number" && Number.isFinite(v)) {
+          estimatedTotal = Math.max(0, Math.floor(v));
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+    const remaining =
+      estimatedTotal > 0
+        ? Math.max(0, estimatedTotal - PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS)
+        : null;
+
+    await this.prisma.booking.update({
+      where: { id: args.bookingId },
+      data: {
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        publicDepositPaidAt: new Date(),
+        publicDepositPaymentIntentId: args.paymentIntentId,
+        publicDepositAmountCents: PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
+        ...(estimatedTotal > 0
+          ? {
+              estimatedTotalCentsSnapshot: estimatedTotal,
+              remainingBalanceAfterDepositCents: remaining,
+              remainingBalanceStatus:
+                initialRemainingBalanceStatusFromRemainingCents(remaining),
+            }
+          : {}),
       },
     });
   }
@@ -620,8 +933,15 @@ export class StripePaymentService {
       if (b) return b;
     }
     if (params.paymentIntentId?.trim()) {
+      const id = params.paymentIntentId.trim();
       const b = await this.prisma.booking.findFirst({
-        where: { stripePaymentIntentId: params.paymentIntentId.trim() },
+        where: {
+          OR: [
+            { stripePaymentIntentId: id },
+            { publicDepositPaymentIntentId: id },
+            { remainingBalancePaymentIntentId: id },
+          ],
+        },
       });
       if (b) return b;
     }

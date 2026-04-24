@@ -143,6 +143,7 @@ async function main() {
     {} as never,
     {} as never,
     foSvc,
+    { ensurePublicDepositResolvedBeforeConfirm: async () => undefined } as never,
   );
   const resFar = await orchFar.availability({
     bookingId: "bk_validate_fixture_matrix",
@@ -154,6 +155,7 @@ async function main() {
     {} as never,
     {} as never,
     foSvc,
+    { ensurePublicDepositResolvedBeforeConfirm: async () => undefined } as never,
   );
   const resNoSite = await orchNoSite.availability({
     bookingId: "bk_validate_fixture_matrix",

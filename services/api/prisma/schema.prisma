@@ -78,6 +78,38 @@ enum BookingPaymentStatus {
   waived
 }
 
+/// Public funnel deposit + future balance lifecycle (see `PublicBookingDepositService`).
+enum BookingPublicDepositStatus {
+  deposit_required
+  deposit_succeeded
+  deposit_failed
+  balance_pending_authorization
+  balance_authorized
+  balance_captured
+  refunded
+  cancellation_fee_retained
+}
+
+/// Remaining job balance after deposit (manual-capture PI lifecycle).
+enum BookingRemainingBalancePaymentStatus {
+  balance_not_required
+  balance_pending_authorization
+  balance_authorization_required
+  balance_authorized
+  balance_authorization_failed
+  balance_captured
+  balance_capture_failed
+  balance_canceled
+}
+
+/// Stripe deposit refund bookkeeping for public-booking cancellations.
+enum BookingDepositRefundStatus {
+  refund_not_required
+  refund_pending
+  refund_succeeded
+  refund_failed
+}
+
 model Booking {
   id                    String                      @id @default(cuid())
   customerId            String
@@ -123,6 +155,28 @@ model Booking {
   paymentWaivedAt       DateTime?
   paymentMeta           Json?
   paymentIntentId       String?
+  /// Stripe PaymentIntent id for the $100 public-booking deposit (distinct from full-booking PI when used).
+  publicDepositPaymentIntentId String?                     @unique
+  publicDepositStatus          BookingPublicDepositStatus  @default(deposit_required)
+  publicDepositAmountCents     Int                         @default(10000)
+  publicDepositPaidAt          DateTime?
+  /// Total job estimate in cents at confirmation time (snapshot for remaining balance).
+  estimatedTotalCentsSnapshot  Int?
+  /// `estimatedTotalCentsSnapshot - publicDepositAmountCents` when snapshot exists.
+  remainingBalanceAfterDepositCents Int?
+  /// Stripe PaymentIntent for remaining balance (manual capture; distinct from deposit + checkout PIs).
+  remainingBalancePaymentIntentId String?                     @unique
+  remainingBalanceStatus          BookingRemainingBalancePaymentStatus @default(balance_not_required)
+  remainingBalanceAuthorizedAt    DateTime?
+  remainingBalanceCapturedAt      DateTime?
+  remainingBalanceAuthorizationFailureReason String?
+  cancellationFeeAmountCents      Int?
+  cancellationFeeRetainedAt       DateTime?
+  depositRefundId                 String?
+  depositRefundStatus             BookingDepositRefundStatus  @default(refund_not_required)
+  depositRefundedAt               DateTime?
+  canceledAt                      DateTime?
+  canceledReason                  String?
   acceptedAt            DateTime?
   dispatchLockedAt      DateTime?
   enRouteAt             DateTime?
@@ -165,6 +219,7 @@ model Booking {
   @@index([status, scheduledStart])
   @@index([foId, status, scheduledStart])
   @@index([foId, scheduledStart])
+  @@index([status, scheduledStart, remainingBalanceStatus])
   @@index([tenantId])
 }
 

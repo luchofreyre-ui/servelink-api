@@ -11,7 +11,19 @@ import type {
 } from "./admin-booking-command-center.types";
 
 export type CommandCenterRow = {
-  booking: Pick<Booking, "id" | "status" | "foId" | "notes">;
+  booking: Pick<
+    Booking,
+    | "id"
+    | "status"
+    | "foId"
+    | "notes"
+    | "publicDepositStatus"
+    | "publicDepositAmountCents"
+    | "remainingBalanceAfterDepositCents"
+    | "remainingBalanceStatus"
+    | "cancellationFeeAmountCents"
+    | "depositRefundStatus"
+  >;
   control: BookingDispatchControl | null;
   anomaly: OpsAlert | null;
   activityPreview: AdminBookingCommandCenterActivityPreview[];
@@ -90,6 +102,12 @@ export function toCommandCenterPayload(
     success: true,
     bookingId: booking.id,
     status: booking.status,
+    publicDepositStatus: booking.publicDepositStatus,
+    publicDepositAmountCents: booking.publicDepositAmountCents,
+    remainingBalanceAfterDepositCents: booking.remainingBalanceAfterDepositCents,
+    remainingBalanceStatus: booking.remainingBalanceStatus,
+    cancellationFeeAmountCents: booking.cancellationFeeAmountCents,
+    depositRefundStatus: booking.depositRefundStatus,
     workflowState: workflow as AdminBookingCommandCenterPayload["workflowState"],
     operatorNote: control?.commandCenterOperatorNote ?? null,
     anomaly: anomaly

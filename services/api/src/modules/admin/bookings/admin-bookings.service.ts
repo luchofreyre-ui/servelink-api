@@ -437,7 +437,18 @@ export class AdminBookingsService {
   private async loadRow(bookingId: string): Promise<CommandCenterRow | null> {
     const booking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
-      select: { id: true, status: true, foId: true, notes: true },
+      select: {
+        id: true,
+        status: true,
+        foId: true,
+        notes: true,
+        publicDepositStatus: true,
+        publicDepositAmountCents: true,
+        remainingBalanceAfterDepositCents: true,
+        remainingBalanceStatus: true,
+        cancellationFeeAmountCents: true,
+        depositRefundStatus: true,
+      },
     });
     if (!booking) {
       return null;

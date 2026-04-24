@@ -4,6 +4,7 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import {
@@ -44,9 +45,13 @@ import {
   isInvalidAssignmentState,
 } from "./utils/assignment-state.util";
 import { assertConfirmHoldSlotDuration } from "./confirm-hold-slot-duration";
+import { BookingCancellationPaymentInvariantService } from "./payment-lifecycle/booking-cancellation-payment-invariant.service";
+import { RemainingBalanceCaptureService } from "./payment-lifecycle/remaining-balance-capture.service";
 
 @Injectable()
 export class BookingsService {
+  private readonly log = new Logger(BookingsService.name);
+
   constructor(
     private readonly db: PrismaService,
     private readonly events: BookingEventsService,
@@ -57,7 +62,23 @@ export class BookingsService {
     private readonly dispatch: DispatchService,
     private readonly reputationService: ReputationService,
     private readonly bookingPaymentService: BookingPaymentService,
+    private readonly remainingBalanceCapture: RemainingBalanceCaptureService,
+    private readonly cancellationPaymentInvariant: BookingCancellationPaymentInvariantService,
   ) {}
+
+  /**
+   * Reusable cancellation **financial** invariant: refund vs retained fee after status is canceled.
+   * Default: log and swallow Stripe/DB outcome errors. `strict: true` surfaces failures after logging.
+   */
+  async enforceCancellationPaymentInvariantForBooking(
+    bookingId: string,
+    options?: { strict?: boolean; reason?: string },
+  ): Promise<void> {
+    await this.cancellationPaymentInvariant.enforceCancellationPaymentInvariantForBooking(
+      bookingId,
+      options,
+    );
+  }
 
   async createBooking(input: {
     customerId: string;
@@ -752,6 +773,12 @@ export class BookingsService {
     }
   }
 
+  /**
+   * Booking status transitions. For `cancel`, public deposit / fee enforcement runs via
+   * {@link enforceCancellationPaymentInvariantForBooking}. Any future code that sets a booking to
+   * `canceled` / `cancelled` without going through this method must call that invariant explicitly
+   * (repository search: no other production writers today).
+   */
   async transitionBooking(args: {
     id: string;
     transition: Transition;
@@ -810,6 +837,16 @@ export class BookingsService {
             status: to,
             ...(args.scheduledStart
               ? { scheduledStart: new Date(args.scheduledStart) }
+              : {}),
+            ...(to === BookingStatus.canceled &&
+            expectedCurrentStatus !== BookingStatus.canceled &&
+            expectedCurrentStatus !== BookingStatus.cancelled
+              ? {
+                  canceledAt: new Date(),
+                  canceledReason: args.note?.trim()
+                    ? args.note.trim().slice(0, 2000)
+                    : null,
+                }
               : {}),
           },
         });
@@ -945,6 +982,20 @@ export class BookingsService {
       }
 
       if (
+        result.status === BookingStatus.completed &&
+        prevStatus !== BookingStatus.completed
+      ) {
+        void this.remainingBalanceCapture
+          .captureRemainingBalanceForBooking(result.id)
+          .catch((err) => {
+            console.error("REMAINING_BALANCE_CAPTURE_FAILED", {
+              bookingId: result.id,
+              error: err,
+            });
+          });
+      }
+
+      if (
         result.status === BookingStatus.canceled &&
         prevStatus !== BookingStatus.canceled &&
         result.foId
@@ -966,6 +1017,23 @@ export class BookingsService {
         if (result.foId) {
           void this.reputationService.recomputeForFoSafe(result.foId);
         }
+      }
+
+      if (
+        result.status === BookingStatus.canceled &&
+        prevStatus !== BookingStatus.canceled &&
+        prevStatus !== BookingStatus.cancelled
+      ) {
+        void this.enforceCancellationPaymentInvariantForBooking(result.id, {
+          reason: "transitionBooking:cancel",
+        }).catch((err) => {
+          this.log.error({
+            kind: "cancellation_payment_invariant",
+            event: "unexpected_reject",
+            bookingId: result.id,
+            message: err instanceof Error ? err.message : String(err),
+          });
+        });
       }
 
       return result;

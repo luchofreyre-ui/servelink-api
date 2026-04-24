@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import {
+  BookingDepositRefundStatus,
   BookingEventType,
+  BookingPublicDepositStatus,
   JournalEntryType,
   LedgerAccount,
   LineDirection,
@@ -10,6 +12,11 @@ import { PrismaService } from "../../prisma";
 import { LedgerService } from "../ledger/ledger.service";
 import { type PricingPolicyV1, splitCharge } from "./pricing.policy";
 
+/**
+ * Ledger-oriented Stripe webhook handlers. Treat these events as **reconciliation signals**:
+ * missed or misconfigured Dashboard subscriptions must not be the only path to financial truth —
+ * booking payment lifecycle crons backstop drift for remaining balance / deposit refund rows.
+ */
 const PRICING_POLICY_V1: PricingPolicyV1 = {
   platformFeeBps: 2000,
   minPlatformFeeCents: 0,
@@ -195,19 +202,64 @@ export class StripeWebhookHandlerService {
     const chargeId = String(refund?.charge ?? "");
     if (!chargeId) return { processed: true };
 
+    const paymentIntentId = String(refund?.payment_intent ?? "").trim();
+
     const pointer = await this.db.bookingStripePayment.findUnique({
       where: { stripeChargeId: chargeId },
     });
 
+    const publicDepositBooking =
+      paymentIntentId.length > 0
+        ? await this.db.booking.findFirst({
+            where: { publicDepositPaymentIntentId: paymentIntentId },
+            select: { id: true },
+          })
+        : null;
+
+    if (publicDepositBooking) {
+      const st = String(refund?.status ?? "");
+      if (st === "succeeded") {
+        await this.db.booking.update({
+          where: { id: publicDepositBooking.id },
+          data: {
+            depositRefundId: refundId || null,
+            depositRefundStatus: BookingDepositRefundStatus.refund_succeeded,
+            depositRefundedAt: new Date(),
+            publicDepositStatus: BookingPublicDepositStatus.refunded,
+          },
+        });
+      } else if (st === "pending") {
+        await this.db.booking.update({
+          where: { id: publicDepositBooking.id },
+          data: {
+            depositRefundId: refundId || null,
+            depositRefundStatus: BookingDepositRefundStatus.refund_pending,
+          },
+        });
+      } else if (st === "failed" || st === "canceled") {
+        await this.db.booking.update({
+          where: { id: publicDepositBooking.id },
+          data: {
+            depositRefundId: refundId || null,
+            depositRefundStatus: BookingDepositRefundStatus.refund_failed,
+          },
+        });
+      }
+    }
+
     await this.db.stripeWebhookReceipt.update({
       where: { stripeEventId: String(event.id) },
       data: {
-        stripePaymentIntentId: pointer?.stripePaymentIntentId ?? null,
-        bookingId: pointer?.bookingId ?? null,
+        stripePaymentIntentId:
+          pointer?.stripePaymentIntentId ?? (paymentIntentId || null),
+        bookingId: pointer?.bookingId ?? publicDepositBooking?.id ?? null,
       },
     });
 
     if (!pointer) {
+      if (publicDepositBooking) {
+        return { processed: true };
+      }
       await this.emitNote({
         bookingId: "UNKNOWN",
         idempotencyKey: `STRIPE_REFUND_ORPHAN:${chargeId}:${event.id}`,

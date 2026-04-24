@@ -32,6 +32,7 @@ import type {
   PublicBookingWindow,
 } from "./public-booking-orchestrator.types";
 import { publicBookingFixtureFoEmails } from "../../dev/publicBookingFoFixtures";
+import { PublicBookingDepositService } from "./public-booking-deposit.service";
 
 const MAX_FO_CANDIDATES = 8;
 const MAX_WINDOWS_TOTAL = 60;
@@ -86,6 +87,7 @@ export class PublicBookingOrchestratorService {
     private readonly slotHolds: SlotHoldsService,
     private readonly bookings: BookingsService,
     private readonly fo: FoService,
+    private readonly publicBookingDeposit: PublicBookingDepositService,
   ) {}
 
   private throwOrchestrator(code: string, message: string): never {
@@ -783,6 +785,13 @@ export class PublicBookingOrchestratorService {
     if (!hold || hold.bookingId !== dto.bookingId) {
       throw new NotFoundException("PUBLIC_BOOKING_HOLD_NOT_FOUND");
     }
+
+    await this.publicBookingDeposit.ensurePublicDepositResolvedBeforeConfirm({
+      bookingId: dto.bookingId,
+      holdId: dto.holdId,
+      stripePaymentMethodId: dto.stripePaymentMethodId ?? null,
+      idempotencyKey: idempotencyKey?.trim() || null,
+    });
 
     const result = await this.bookings.confirmBookingFromHold({
       bookingId: dto.bookingId,

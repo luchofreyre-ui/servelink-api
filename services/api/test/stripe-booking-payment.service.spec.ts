@@ -1,5 +1,9 @@
 import { Test } from "@nestjs/testing";
-import { BookingPaymentStatus } from "@prisma/client";
+import {
+  BookingPaymentStatus,
+  BookingPublicDepositStatus,
+  BookingRemainingBalancePaymentStatus,
+} from "@prisma/client";
 
 import { PrismaService } from "../src/prisma";
 import { PaymentReliabilityService } from "../src/modules/bookings/payment-reliability/payment-reliability.service";
@@ -138,6 +142,55 @@ describe("StripePaymentService", () => {
 
     const row = await prisma.booking.findUnique({ where: { id: booking.id } });
     expect(row?.paymentStatus).toBe(BookingPaymentStatus.paid);
+
+    await prisma.booking.delete({ where: { id: booking.id } });
+    await prisma.user.delete({ where: { id: customer.id } });
+  });
+
+  it("applyBookingStripeEvent amount_capturable_updated marks remaining balance authorized", async () => {
+    const customer = await prisma.user.create({
+      data: {
+        email: `stripe_rb_${Date.now()}@servelink.local`,
+        passwordHash: "x",
+        role: "customer",
+      },
+    });
+
+    const booking = await prisma.booking.create({
+      data: {
+        customerId: customer.id,
+        hourlyRateCents: 1000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: "assigned",
+        paymentStatus: BookingPaymentStatus.unpaid,
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        remainingBalancePaymentIntentId: "pi_rb_cap",
+        remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_pending_authorization,
+      },
+    });
+
+    await service.applyBookingStripeEvent({
+      id: "evt_rb_cap_1",
+      type: "payment_intent.amount_capturable_updated",
+      livemode: false,
+      data: {
+        object: {
+          id: "pi_rb_cap",
+          amount_capturable: 5000,
+          metadata: {
+            bookingId: booking.id,
+            servelinkPurpose: "remaining_balance_authorization",
+          },
+        },
+      },
+    } as any);
+
+    const row = await prisma.booking.findUnique({ where: { id: booking.id } });
+    expect(row?.remainingBalanceStatus).toBe(
+      BookingRemainingBalancePaymentStatus.balance_authorized,
+    );
+    expect(row?.remainingBalanceAuthorizedAt).toBeTruthy();
 
     await prisma.booking.delete({ where: { id: booking.id } });
     await prisma.user.delete({ where: { id: customer.id } });

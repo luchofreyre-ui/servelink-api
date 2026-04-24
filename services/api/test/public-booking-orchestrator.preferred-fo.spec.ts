@@ -6,6 +6,11 @@ import { FoService } from "../src/modules/fo/fo.service";
 import { SlotAvailabilityService } from "../src/modules/slot-holds/slot-availability.service";
 import { SlotHoldsService } from "../src/modules/slot-holds/slot-holds.service";
 import { PublicBookingOrchestratorService } from "../src/modules/public-booking-orchestrator/public-booking-orchestrator.service";
+import type { PublicBookingDepositService } from "../src/modules/public-booking-orchestrator/public-booking-deposit.service";
+
+const noopPublicDeposit = {
+  ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
+} as unknown as PublicBookingDepositService;
 
 function schedulableBooking(overrides: Record<string, unknown> = {}) {
   return {
@@ -66,6 +71,7 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
       {} as SlotHoldsService,
       {} as BookingsService,
       fo,
+      noopPublicDeposit,
     );
 
     const res = await svc.availability({ bookingId: "bk1" });
@@ -125,6 +131,7 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
       {} as SlotHoldsService,
       {} as BookingsService,
       fo,
+      noopPublicDeposit,
     );
 
     const res = await svc.availability({ bookingId: "bk1", foId: "fo_b" });
@@ -159,6 +166,7 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
       {} as SlotHoldsService,
       {} as BookingsService,
       fo,
+      noopPublicDeposit,
     );
 
     await expect(
@@ -203,6 +211,7 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
       {} as SlotHoldsService,
       {} as BookingsService,
       fo,
+      noopPublicDeposit,
     );
 
     const res = await svc.availability({ bookingId: "bk1" });
@@ -241,6 +250,7 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
       {} as SlotHoldsService,
       {} as BookingsService,
       fo,
+      noopPublicDeposit,
     );
 
     const res = await svc.availability({ bookingId: "bk1" });
@@ -266,6 +276,7 @@ describe("PublicBookingOrchestratorService — team options + team-specific avai
       {} as SlotHoldsService,
       {} as BookingsService,
       {} as FoService,
+      noopPublicDeposit,
     );
 
     const res = await svc.availability({ bookingId: "bk1" });

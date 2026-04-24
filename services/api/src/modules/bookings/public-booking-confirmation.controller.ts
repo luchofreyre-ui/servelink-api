@@ -1,6 +1,18 @@
 import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
+import { BookingPublicDepositStatus } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { serializeDeepCleanProgramForScreen } from "./serializers/deep-clean-program-screen.serializer";
+
+function computeScheduledEndIso(
+  scheduledStart: Date | null | undefined,
+  estimatedHours: number | null | undefined,
+): string | null {
+  if (!scheduledStart) return null;
+  const eh = Number(estimatedHours ?? 0);
+  if (!Number.isFinite(eh) || eh <= 0) return null;
+  const ms = scheduledStart.getTime() + eh * 60 * 60 * 1000;
+  return new Date(ms).toISOString();
+}
 
 function parsePublicEstimateSnapshot(
   outputJson: string | null | undefined,
@@ -58,8 +70,13 @@ export class PublicBookingConfirmationController {
       where: { id },
       select: {
         id: true,
+        status: true,
+        scheduledStart: true,
+        estimatedHours: true,
+        publicDepositStatus: true,
         estimateSnapshot: { select: { outputJson: true, inputJson: true } },
         deepCleanProgram: true,
+        fo: { select: { displayName: true } },
       },
     });
 
@@ -67,9 +84,21 @@ export class PublicBookingConfirmationController {
       throw new NotFoundException("BOOKING_NOT_FOUND");
     }
 
+    const scheduledStartIso = booking.scheduledStart?.toISOString() ?? null;
+    const scheduledEndIso = computeScheduledEndIso(
+      booking.scheduledStart,
+      booking.estimatedHours,
+    );
+
     return {
       kind: "public_booking_confirmation" as const,
       bookingId: booking.id,
+      bookingStatus: booking.status,
+      scheduledStart: scheduledStartIso,
+      scheduledEnd: scheduledEndIso,
+      assignedTeamDisplayName: booking.fo?.displayName?.trim() || null,
+      publicDepositPaid:
+        booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded,
       estimateSnapshot: parsePublicEstimateSnapshot(
         booking.estimateSnapshot?.outputJson,
         booking.estimateSnapshot?.inputJson,
