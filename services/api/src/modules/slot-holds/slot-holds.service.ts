@@ -10,6 +10,7 @@ import {
 } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { FoService } from "../fo/fo.service";
+import { resolveBookingCalendarEndMs } from "../bookings/booking-scheduling-calendar-end";
 import { SlotAvailabilityCache } from "./slot-availability.cache";
 import { SlotHoldMetrics } from "./slot-holds.metrics";
 
@@ -87,6 +88,7 @@ export class SlotHoldsService {
         id: true,
         scheduledStart: true,
         estimatedHours: true,
+        estimateSnapshot: { select: { outputJson: true } },
       },
     });
 
@@ -99,8 +101,14 @@ export class SlotHoldsService {
       if (!Number.isFinite(bookingStart.getTime())) return false;
       if (!(estimatedHours > 0)) return false;
 
+      // estimatedHours is labor-oriented and must only be a legacy fallback for calendar overlap.
       const bookingEnd = new Date(
-        bookingStart.getTime() + estimatedHours * 60 * 60 * 1000,
+        resolveBookingCalendarEndMs({
+          scheduledStart: bookingStart,
+          estimatedHours,
+          estimateSnapshotOutputJson: booking.estimateSnapshot?.outputJson,
+          preferWallClockFromSnapshot: true,
+        }),
       );
 
       return this.windowsOverlap(
