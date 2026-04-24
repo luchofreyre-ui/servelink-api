@@ -45,6 +45,7 @@ import {
   isInvalidAssignmentState,
 } from "./utils/assignment-state.util";
 import { assertConfirmHoldSlotDuration } from "./confirm-hold-slot-duration";
+import { resolveBookingCalendarEndMs } from "./booking-scheduling-calendar-end";
 import { BookingCancellationPaymentInvariantService } from "./payment-lifecycle/booking-cancellation-payment-invariant.service";
 import { RemainingBalanceCaptureService } from "./payment-lifecycle/remaining-balance-capture.service";
 
@@ -611,6 +612,7 @@ export class BookingsService {
 
         const requestedStart = new Date(hold.startAt);
         const requestedEnd = new Date(hold.endAt);
+        const useWallClockOverlap = args.useHoldElapsedDurationModel === true;
 
         const existingBookings = await tx.booking.findMany({
           where: {
@@ -630,6 +632,7 @@ export class BookingsService {
             id: true,
             scheduledStart: true,
             estimatedHours: true,
+            estimateSnapshot: { select: { outputJson: true } },
           },
         });
 
@@ -642,9 +645,13 @@ export class BookingsService {
           if (!Number.isFinite(existingStart.getTime())) return false;
           if (!(existingEstimatedHours > 0)) return false;
 
-          const existingEnd = new Date(
-            existingStart.getTime() + existingEstimatedHours * 60 * 60 * 1000,
-          );
+          const existingEndMs = resolveBookingCalendarEndMs({
+            scheduledStart: existingStart,
+            estimatedHours: existingEstimatedHours,
+            estimateSnapshotOutputJson: existing.estimateSnapshot?.outputJson,
+            preferWallClockFromSnapshot: useWallClockOverlap,
+          });
+          const existingEnd = new Date(existingEndMs);
 
           return requestedStart < existingEnd && existingStart < requestedEnd;
         });
@@ -669,17 +676,28 @@ export class BookingsService {
             id: true,
             scheduledStart: true,
             estimatedHours: true,
+            estimateSnapshot: { select: { outputJson: true } },
           },
         });
 
-        const conflict = otherBookings.find((b: { scheduledStart: Date | null; estimatedHours: number | null }) => {
-          if (b.scheduledStart == null || b.estimatedHours == null) return false;
-          const end = new Date(
-            new Date(b.scheduledStart).getTime() +
-              Number(b.estimatedHours) * 60 * 60 * 1000,
-          );
-          return end > hold.startAt;
-        });
+        const conflict = otherBookings.find(
+          (b: {
+            scheduledStart: Date | null;
+            estimatedHours: number | null;
+            estimateSnapshot: { outputJson: string } | null;
+          }) => {
+            if (b.scheduledStart == null || b.estimatedHours == null) return false;
+            const eh = Number(b.estimatedHours);
+            if (!(eh > 0)) return false;
+            const endMs = resolveBookingCalendarEndMs({
+              scheduledStart: new Date(b.scheduledStart),
+              estimatedHours: eh,
+              estimateSnapshotOutputJson: b.estimateSnapshot?.outputJson,
+              preferWallClockFromSnapshot: useWallClockOverlap,
+            });
+            return endMs > hold.startAt.getTime();
+          },
+        );
 
         if (conflict) {
           throw new ConflictException("FO_SLOT_ALREADY_BOOKED");
