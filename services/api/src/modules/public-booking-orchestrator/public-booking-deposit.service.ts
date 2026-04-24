@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Injectable,
   Logger,
+  NotFoundException,
   ServiceUnavailableException,
 } from "@nestjs/common";
 import {
@@ -22,6 +23,24 @@ import type Stripe from "stripe";
 import { StripePaymentService } from "../bookings/stripe/stripe-payment.service";
 
 const SKIP_DEPOSIT_ENV = "PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM";
+
+/** Stable Stripe idempotency for public-deposit PI creation (shared by prepare + confirm). */
+export function publicBookingDepositPiIdempotencyKey(bookingId: string): string {
+  return `pb-deposit-pi:booking:${bookingId.trim()}`.slice(0, 255);
+}
+
+export type PublicBookingDepositPrepareResult = {
+  kind: "public_booking_deposit_prepare";
+  bookingId: string;
+  paymentMode: "none" | "deposit";
+  classification: string;
+  publicDepositStatus?: string;
+  clientSecret?: string | null;
+  paymentIntentId?: string;
+  amountCents?: number;
+  currency?: string;
+  stripeStatus?: string;
+};
 
 function readEstimatedPriceCentsFromSnapshot(outputJson: string | null): number {
   if (!outputJson?.trim()) return 0;
@@ -101,7 +120,7 @@ export class PublicBookingDepositService {
 
     const idemBase =
       (args.idempotencyKey?.trim() || `pb:${args.bookingId}:${args.holdId}`).slice(0, 200);
-    const idemPi = `pb-deposit-pi:${idemBase}`;
+    const idemPi = publicBookingDepositPiIdempotencyKey(booking.id);
     const idemConfirm = `pb-deposit-confirm:${idemBase}`;
 
     const estimatedTotal = readEstimatedPriceCentsFromSnapshot(
@@ -356,6 +375,191 @@ export class PublicBookingDepositService {
       code: "PUBLIC_BOOKING_DEPOSIT_FAILED",
       message: `Deposit did not succeed (status=${pi.status}).`,
     });
+  }
+
+  /**
+   * Public, unauthenticated: returns a PaymentIntent `client_secret` when the booking
+   * still requires deposit capture, or `paymentMode: "none"` when deposit is already
+   * satisfied / skipped. Used by `/book` review step before scheduling.
+   */
+  async preparePublicBookingDeposit(
+    bookingId: string,
+  ): Promise<PublicBookingDepositPrepareResult> {
+    const id = bookingId.trim();
+    if (!id) {
+      throw new BadRequestException({
+        code: "BOOKING_ID_REQUIRED",
+        message: "bookingId is required",
+      });
+    }
+
+    if (process.env[SKIP_DEPOSIT_ENV]?.trim() === "1") {
+      return {
+        kind: "public_booking_deposit_prepare",
+        bookingId: id,
+        paymentMode: "none",
+        classification: "skip_deposit_env",
+      };
+    }
+
+    if (!process.env.STRIPE_SECRET_KEY?.trim()) {
+      throw new ServiceUnavailableException({
+        code: "PUBLIC_BOOKING_STRIPE_NOT_CONFIGURED",
+        message:
+          "Stripe is not configured on the server; public booking deposit cannot proceed.",
+      });
+    }
+
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+      include: {
+        customer: { select: { id: true, email: true, stripeCustomerId: true } },
+        estimateSnapshot: { select: { outputJson: true } },
+      },
+    });
+
+    if (!booking) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
+
+    if (booking.status !== BookingStatus.pending_payment) {
+      return {
+        kind: "public_booking_deposit_prepare",
+        bookingId: id,
+        paymentMode: "none",
+        classification: "booking_not_pending_payment",
+        publicDepositStatus: String(booking.publicDepositStatus ?? ""),
+      };
+    }
+
+    if (booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded) {
+      return {
+        kind: "public_booking_deposit_prepare",
+        bookingId: id,
+        paymentMode: "none",
+        classification: "deposit_succeeded",
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+      };
+    }
+
+    const stripeCustomerId = await this.stripePayments.ensureStripeCustomerForUser({
+      userId: booking.customerId,
+      email:
+        String(booking.customer.email ?? "").trim() ||
+        `customer+${booking.customerId}@servelink.invalid`,
+    });
+
+    const estimatedTotal = readEstimatedPriceCentsFromSnapshot(
+      booking.estimateSnapshot?.outputJson ?? null,
+    );
+    const remaining = computeRemainingBalanceAfterDepositCents({
+      estimatedTotalCents: estimatedTotal,
+      depositAmountCents: booking.publicDepositAmountCents,
+    });
+
+    const depositReturn = (
+      stripeStatus: string,
+      clientSecret: string | null,
+      paymentIntentId: string,
+      classification: string,
+    ): PublicBookingDepositPrepareResult => ({
+      kind: "public_booking_deposit_prepare",
+      bookingId: booking.id,
+      paymentMode: "deposit",
+      classification,
+      publicDepositStatus: String(booking.publicDepositStatus ?? ""),
+      clientSecret,
+      paymentIntentId,
+      amountCents: booking.publicDepositAmountCents ?? PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
+      currency: "usd",
+      stripeStatus,
+    });
+
+    let activeDepositPiId = booking.publicDepositPaymentIntentId?.trim() || null;
+
+    if (activeDepositPiId) {
+      const pi = await this.stripePayments.retrievePaymentIntent(activeDepositPiId);
+      const st = String(pi.status ?? "");
+      if (st === "succeeded") {
+        await this.markDepositSucceededFromStripeState({
+          bookingId: booking.id,
+          paymentIntentId: activeDepositPiId,
+          estimatedTotalCentsSnapshot: estimatedTotal > 0 ? estimatedTotal : null,
+          remainingBalanceAfterDepositCents: estimatedTotal > 0 ? remaining : null,
+        });
+        return {
+          kind: "public_booking_deposit_prepare",
+          bookingId: booking.id,
+          paymentMode: "none",
+          classification: "deposit_succeeded",
+          publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        };
+      }
+      if (st === "processing") {
+        return depositReturn(
+          st,
+          typeof pi.client_secret === "string" ? pi.client_secret : null,
+          pi.id,
+          "processing",
+        );
+      }
+      if (st === "canceled" || st === "failed") {
+        await this.prisma.booking.update({
+          where: { id: booking.id },
+          data: {
+            publicDepositPaymentIntentId: null,
+            publicDepositStatus: BookingPublicDepositStatus.deposit_required,
+          },
+        });
+        activeDepositPiId = null;
+      } else if (
+        st === "requires_action" ||
+        st === "requires_payment_method" ||
+        st === "requires_confirmation"
+      ) {
+        return depositReturn(
+          st,
+          typeof pi.client_secret === "string" ? pi.client_secret : null,
+          pi.id,
+          "payment_required",
+        );
+      } else {
+        this.log.warn(
+          `preparePublicBookingDeposit: unexpected PI status booking=${booking.id} status=${st}`,
+        );
+        return depositReturn(
+          st,
+          typeof pi.client_secret === "string" ? pi.client_secret : null,
+          pi.id,
+          "payment_required",
+        );
+      }
+    }
+
+    const idemPi = publicBookingDepositPiIdempotencyKey(booking.id);
+    const pi = await this.stripePayments.createPublicBookingDepositPaymentIntent({
+      bookingId: booking.id,
+      stripeCustomerId,
+      idempotencyKey: idemPi,
+      holdId: null,
+    });
+
+    await this.prisma.booking.update({
+      where: { id: booking.id },
+      data: {
+        publicDepositPaymentIntentId: pi.id,
+        stripeCustomerId,
+        publicDepositStatus: BookingPublicDepositStatus.deposit_required,
+        publicDepositAmountCents: PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
+      },
+    });
+
+    return depositReturn(
+      String(pi.status ?? ""),
+      typeof pi.client_secret === "string" ? pi.client_secret : null,
+      pi.id,
+      "payment_required",
+    );
   }
 
   private async markDepositSucceededFromStripeState(args: {

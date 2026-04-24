@@ -9,6 +9,7 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 import { PublicAvailabilityQueryDto } from "./dto/public-availability-query.dto";
+import { PublicDepositPrepareDto } from "./dto/public-deposit-prepare.dto";
 import { PublicSlotConfirmDto } from "./dto/public-slot-confirm.dto";
 import { PublicSlotSelectDto } from "./dto/public-slot-select.dto";
 import { PublicBookingOrchestratorService } from "./public-booking-orchestrator.service";
@@ -35,6 +36,13 @@ export class PublicBookingOrchestratorController {
   @UsePipes(publicBookingPipe)
   hold(@Body() body: PublicSlotSelectDto) {
     return this.orchestrator.createHold(body);
+  }
+
+  @Post("deposit-prepare")
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(publicBookingPipe)
+  depositPrepare(@Body() body: PublicDepositPrepareDto) {
+    return this.orchestrator.preparePublicDeposit(body);
   }
 
   @Post("confirm")

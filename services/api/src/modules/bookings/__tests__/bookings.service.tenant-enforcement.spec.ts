@@ -1,20 +1,11 @@
-import { BookingsService } from "../bookings.service";
 import { MissingTenantContextException } from "../../tenant/tenant.errors";
+import { createBookingsServiceTestHarness } from "../../../../test/helpers/createBookingsServiceTestHarness";
 
 function makeBookingsService(db: {
   $transaction: jest.Mock;
   booking: { findUnique: jest.Mock; update?: jest.Mock };
 }) {
-  return new BookingsService(
-    db as never,
-    {} as never,
-    {} as never,
-    {} as never,
-    {} as never,
-    {} as never,
-    {} as never,
-    {} as never,
-  );
+  return createBookingsServiceTestHarness({ db: db as never }).service;
 }
 
 describe("BookingsService — tenant enforcement on createBooking", () => {

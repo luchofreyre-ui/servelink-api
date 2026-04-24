@@ -324,6 +324,15 @@ export const BOOKING_SCHEDULE_HOLD_FAILED_HINT =
 export const BOOKING_SCHEDULE_CONFIRM_FAILED =
   "We couldn’t finalize your booking. Please try again.";
 
+/** Shown on review when scheduling hits deposit gate (402) — payment only happens on review. */
+export const BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE =
+  "A deposit is required before we can reserve a team. Complete payment here, then continue to scheduling.";
+
+export const BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT =
+  "Payment was submitted and is still finalizing. Please try checking again.";
+
+export const BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA = "Check payment status";
+
 export const BOOKING_SCHEDULE_RETRY_CONFIRM_CTA = "Try again";
 
 export const BOOKING_SCHEDULE_CHOOSE_DIFFERENT_TIME_CTA = "Choose a different time";

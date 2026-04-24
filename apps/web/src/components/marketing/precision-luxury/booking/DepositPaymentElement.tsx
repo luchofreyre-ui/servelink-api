@@ -10,6 +10,15 @@ import {
 } from "@stripe/react-stripe-js";
 import type { Stripe, StripeElementsOptions } from "@stripe/stripe-js";
 
+function formatDepositCentsLabel(amountCents: number): string {
+  const n = Math.max(0, Math.round(amountCents));
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(n / 100);
+}
+
 export type DepositPaymentElementProps = {
   stripePromise: Promise<Stripe | null>;
   clientSecret: string;
@@ -23,7 +32,10 @@ function DepositPaymentForm({
   disabled,
   onSuccess,
   onError,
-}: Pick<DepositPaymentElementProps, "onSuccess" | "onError" | "disabled">) {
+  payLabel,
+}: Pick<DepositPaymentElementProps, "onSuccess" | "onError" | "disabled"> & {
+  payLabel: string;
+}) {
   const stripe = useStripe();
   const elements = useElements();
   const [busy, setBusy] = useState(false);
@@ -36,11 +48,14 @@ function DepositPaymentForm({
       return;
     }
     setBusy(true);
+    const returnUrl =
+      typeof window !== "undefined"
+        ? `${window.location.origin}${window.location.pathname}`
+        : "";
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url:
-          typeof window !== "undefined" ? window.location.href : "",
+        return_url: returnUrl,
       },
       redirect: "if_required",
     });
@@ -68,7 +83,7 @@ function DepositPaymentForm({
         disabled={submitDisabled}
         className="inline-flex w-full items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Pay $100 Deposit
+        {payLabel}
       </button>
     </form>
   );
@@ -77,12 +92,12 @@ function DepositPaymentForm({
 export function DepositPaymentElement({
   stripePromise,
   clientSecret,
-  amountCents: _amountCents,
+  amountCents,
   disabled,
   onSuccess,
   onError,
 }: DepositPaymentElementProps) {
-  void _amountCents;
+  const payLabel = `Pay ${formatDepositCentsLabel(amountCents)} deposit`;
   const options: StripeElementsOptions = {
     clientSecret,
     appearance: { theme: "stripe" },
@@ -93,6 +108,7 @@ export function DepositPaymentElement({
         disabled={disabled}
         onSuccess={onSuccess}
         onError={onError}
+        payLabel={payLabel}
       />
     </Elements>
   );

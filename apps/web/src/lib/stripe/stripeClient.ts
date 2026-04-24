@@ -1,9 +1,8 @@
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
 
-const publishableKey =
-  typeof process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === "string"
-    ? process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.trim()
-    : "";
+import { WEB_ENV } from "@/lib/env";
+
+const publishableKey = WEB_ENV.stripePublishableKey;
 
 let stripePromise: Promise<Stripe | null> | null = null;
 

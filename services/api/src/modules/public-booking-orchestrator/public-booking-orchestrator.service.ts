@@ -770,6 +770,10 @@ export class PublicBookingOrchestratorService {
     };
   }
 
+  preparePublicDeposit(body: { bookingId: string }) {
+    return this.publicBookingDeposit.preparePublicBookingDeposit(body.bookingId);
+  }
+
   async confirmHold(
     dto: PublicSlotConfirmDto,
     idempotencyKey: string | null | undefined,

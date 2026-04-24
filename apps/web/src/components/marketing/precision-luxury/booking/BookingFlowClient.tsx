@@ -36,6 +36,9 @@ import {
   BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_NEEDS_ATTENTION,
   BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_REFRESHING,
   BOOKING_SCHEDULE_CONFIRM_FAILED,
+  BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA,
+  BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT,
+  BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE,
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED,
   PUBLIC_BOOKING_ORCHESTRATOR_LOCATION_NOT_RESOLVED_CODE,
@@ -63,6 +66,12 @@ import {
   parseBookingSearchParams,
   writeBookingConfirmationSessionSnapshot,
 } from "./bookingUrlState";
+import {
+  isDepositFullySatisfied,
+  postPublicBookingDepositPrepare,
+  type PublicBookingDepositPrepareResponse,
+} from "./bookingPaymentClient";
+import { pollDepositPrepareUntilSatisfiedOrCap } from "./bookingDepositPreparePoll";
 import type {
   BookingAvailableTeamOption,
   BookingFlowState,
@@ -114,6 +123,16 @@ import { BOOKING_INTAKE_PREFERRED_TIME_DEFERRED } from "./bookingIntakePreferred
 import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
 import { isBookingContactValid } from "./bookingContactValidation";
 import { emitBookingFunnelEvent } from "./bookingFunnelAnalytics";
+
+type ReviewPaymentPhase =
+  | "idle"
+  | "preparing"
+  | "ready_for_payment"
+  | "confirming"
+  | "finalizing"
+  | "satisfied"
+  | "failed"
+  | "finalizing_timeout";
 
 function getStepOrder(step: BookingStepId) {
   return bookingSteps.find((item) => item.id === step)?.order ?? 1;
@@ -358,12 +377,21 @@ export function BookingFlowClient() {
   const [depositError, setDepositError] = useState<string | null>(null);
   const [depositBackendProcessing, setDepositBackendProcessing] =
     useState(false);
+  const [reviewPaymentPhase, setReviewPaymentPhase] =
+    useState<ReviewPaymentPhase>("idle");
+  const [requiresDepositResolution, setRequiresDepositResolution] =
+    useState(false);
+  const [reviewDepositGateMessage, setReviewDepositGateMessage] = useState<
+    string | null
+  >(null);
   const [attemptedNext, setAttemptedNext] = useState(false);
   const [attemptedConfirm, setAttemptedConfirm] = useState(false);
   const [submitRecoverableFailure, setSubmitRecoverableFailure] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
   const submitInFlightRef = useRef(false);
+  const depositPrepareInFlightRef = useRef(false);
+  const pendingConfirmHoldIdRef = useRef<string | null>(null);
   const scheduleConfirmIdempotencyKeyRef = useRef<string | null>(null);
   /** After an explicit fresh start, one URL sync must not re-merge contact from prior React state. */
   const skipContactMergeFromUrlOnceRef = useRef(false);
@@ -380,11 +408,28 @@ export function BookingFlowClient() {
 
   const stripePromise = useMemo(() => getStripePromise(), []);
 
+  useEffect(() => {
+    pendingConfirmHoldIdRef.current = pendingConfirmHoldId;
+  }, [pendingConfirmHoldId]);
+
   function clearDepositUi() {
     setDepositRequired(false);
     setDepositClientSecret(null);
     setDepositPaymentIntentId(null);
     setDepositAmountCents(null);
+    setDepositError(null);
+    setDepositProcessing(false);
+    setDepositBackendProcessing(false);
+    setReviewPaymentPhase("idle");
+    setRequiresDepositResolution(false);
+    setReviewDepositGateMessage(null);
+  }
+
+  function clearDepositPaymentCredentialsOnly() {
+    setDepositClientSecret(null);
+    setDepositPaymentIntentId(null);
+    setDepositAmountCents(null);
+    setDepositRequired(false);
     setDepositError(null);
     setDepositProcessing(false);
     setDepositBackendProcessing(false);
@@ -966,13 +1011,25 @@ export function BookingFlowClient() {
     submitRecoverableFailure,
   ]);
 
+  const reviewAwaitingDepositPayment =
+    state.step === "review" &&
+    Boolean(state.schedulingBookingId.trim()) &&
+    (depositRequired ||
+      requiresDepositResolution ||
+      reviewPaymentPhase === "preparing" ||
+      reviewPaymentPhase === "ready_for_payment" ||
+      reviewPaymentPhase === "confirming" ||
+      reviewPaymentPhase === "finalizing" ||
+      reviewPaymentPhase === "finalizing_timeout");
+
   const disableNext =
     state.step === "review" &&
     (isSubmitting ||
       !canConfirmDirection ||
       estimate.status === "loading" ||
       estimate.status === "error" ||
-      !estimatePreviewReady);
+      !estimatePreviewReady ||
+      reviewAwaitingDepositPayment);
 
   const previewEstimate = useMemo((): FunnelReviewEstimate | null => {
     if (estimate.status !== "success" || !estimate.data || !estimateInput) {
@@ -1130,8 +1187,268 @@ export function BookingFlowClient() {
     if (state.step === "location") return goToStep("review");
   }
 
+  async function finalizeHeldBookingAfterDepositPaid(bookingId: string) {
+    const holdId = pendingConfirmHoldIdRef.current?.trim();
+    if (!holdId) return false;
+    const idemKey = scheduleConfirmIdempotencyKeyRef.current;
+    const maxAttempts = 5;
+    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+      if (attempt > 0) {
+        await new Promise((r) => setTimeout(r, 2000));
+      }
+      try {
+        await postPublicBookingConfirm(
+          { bookingId, holdId },
+          idemKey,
+        );
+        const s = stateRefForBookingUrl.current;
+        emitBookingFunnelEvent("booking_confirmed", {
+          bookingId,
+          teamId: s.selectedTeamId,
+          holdId,
+        });
+        clearDepositUi();
+        setScheduleCommitError(null);
+        setScheduleCommitPhase("none");
+        setPendingConfirmHoldId(null);
+        setState((prev) => ({
+          ...prev,
+          schedulingConfirmed: true,
+          publicHoldId: holdId,
+        }));
+        const q = new URLSearchParams();
+        q.set("intakeId", s.schedulingIntakeId.trim());
+        q.set("bookingId", bookingId);
+        appendPublicIntakeContextToSearchParams(q, s);
+        router.push(`/book/confirmation?${q.toString()}`);
+        return true;
+      } catch (e) {
+        if (e instanceof PublicBookingDepositProcessingError) {
+          if (attempt === maxAttempts - 1) {
+            setScheduleCommitError(
+              "Payment is still processing. Please wait a moment and try again.",
+            );
+            setScheduleCommitPhase("confirm_failed");
+            return false;
+          }
+          continue;
+        }
+        if (
+          e instanceof PublicBookingPaymentRequiredError &&
+          e.code === "PAYMENT_REQUIRED"
+        ) {
+          setScheduleCommitError(
+            e.details.message ||
+              "Deposit is still required before we can confirm.",
+          );
+          setScheduleCommitPhase("confirm_failed");
+          return false;
+        }
+        setScheduleCommitError(
+          e instanceof Error
+            ? e.message
+            : "We couldn’t confirm your booking. Please try again.",
+        );
+        setScheduleCommitPhase("confirm_failed");
+        return false;
+      }
+    }
+    return false;
+  }
+
+  async function advanceAfterPublicDepositSatisfied(
+    prep: PublicBookingDepositPrepareResponse,
+  ) {
+    const bookingId = prep.bookingId.trim();
+    if (!bookingId) return;
+    const intakeId = stateRefForBookingUrl.current.schedulingIntakeId.trim();
+    writeBookingConfirmationSessionSnapshot({
+      intakeId,
+      bookingId,
+      priceCents: null,
+      durationMinutes: null,
+      confidence: null,
+      bookingErrorCode: "",
+      publicDepositPaymentIntentId: prep.paymentIntentId?.trim() || undefined,
+      publicDepositStatus:
+        prep.publicDepositStatus?.trim() || "deposit_succeeded",
+    });
+    clearDepositUi();
+    const holdId = pendingConfirmHoldIdRef.current?.trim();
+    if (holdId) {
+      setConfirmScheduleLoading(true);
+      setState((prev) =>
+        clampBookingStepToStructuralMax({ ...prev, step: "schedule" }),
+      );
+      try {
+        await finalizeHeldBookingAfterDepositPaid(bookingId);
+      } finally {
+        setConfirmScheduleLoading(false);
+      }
+      return;
+    }
+    setState((prev) =>
+      clampBookingStepToStructuralMax({ ...prev, step: "schedule" }),
+    );
+  }
+
+  async function bootstrapReviewDepositAfterScheduleGate(bookingId: string) {
+    if (!bookingId.trim() || depositPrepareInFlightRef.current) return;
+    depositPrepareInFlightRef.current = true;
+    setReviewPaymentPhase("preparing");
+    setDepositError(null);
+    try {
+      const prep = await postPublicBookingDepositPrepare({ bookingId });
+      setDepositBackendProcessing(
+        prep.paymentMode === "deposit" &&
+          prep.classification === "processing",
+      );
+      if (isDepositFullySatisfied(prep)) {
+        setRequiresDepositResolution(false);
+        setReviewDepositGateMessage(null);
+        setReviewPaymentPhase("idle");
+        await advanceAfterPublicDepositSatisfied(prep);
+        return;
+      }
+      if (
+        prep.paymentMode === "deposit" &&
+        Boolean(prep.clientSecret?.trim())
+      ) {
+        setDepositRequired(true);
+        setDepositClientSecret(prep.clientSecret?.trim() ?? null);
+        setDepositPaymentIntentId(prep.paymentIntentId?.trim() || null);
+        setDepositAmountCents(
+          typeof prep.amountCents === "number" ? prep.amountCents : null,
+        );
+        setReviewPaymentPhase("ready_for_payment");
+        return;
+      }
+      setReviewPaymentPhase("failed");
+      setDepositError(
+        "We couldn’t start card payment. Please try again shortly.",
+      );
+    } catch (e) {
+      setReviewPaymentPhase("failed");
+      setDepositError(
+        e instanceof Error
+          ? e.message
+          : "We couldn’t start card payment. Please try again.",
+      );
+    } finally {
+      depositPrepareInFlightRef.current = false;
+      setDepositBackendProcessing(false);
+    }
+  }
+
+  async function runPostStripeDepositFinalizePoll() {
+    const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
+    if (!bookingId) return;
+    setDepositProcessing(true);
+    setDepositError(null);
+    setReviewPaymentPhase("finalizing");
+    setDepositBackendProcessing(false);
+    try {
+      const pollOutcome = await pollDepositPrepareUntilSatisfiedOrCap(
+        bookingId,
+        async (id) => {
+          const prep = await postPublicBookingDepositPrepare({
+            bookingId: id,
+          });
+          setDepositBackendProcessing(
+            prep.paymentMode === "deposit" &&
+              prep.classification === "processing",
+          );
+          return prep;
+        },
+      );
+      if (pollOutcome === "satisfied") {
+        const prep = await postPublicBookingDepositPrepare({ bookingId });
+        if (!isDepositFullySatisfied(prep)) {
+          setReviewPaymentPhase("failed");
+          setDepositError(
+            "We could not confirm deposit status. Please refresh and try again.",
+          );
+          return;
+        }
+        setReviewPaymentPhase("satisfied");
+        await advanceAfterPublicDepositSatisfied(prep);
+        return;
+      }
+      if (pollOutcome === "failed") {
+        setReviewPaymentPhase("failed");
+        setDepositError(
+          "We could not confirm deposit status. Please refresh and try again.",
+        );
+        return;
+      }
+      setReviewPaymentPhase("finalizing_timeout");
+    } finally {
+      setDepositProcessing(false);
+      setDepositBackendProcessing(false);
+    }
+  }
+
+  async function checkDepositPaymentStatusAgain() {
+    const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
+    if (!bookingId || depositPrepareInFlightRef.current) return;
+    depositPrepareInFlightRef.current = true;
+    setDepositProcessing(true);
+    setReviewPaymentPhase("preparing");
+    setDepositError(null);
+    try {
+      const prep = await postPublicBookingDepositPrepare({ bookingId });
+      setDepositBackendProcessing(
+        prep.paymentMode === "deposit" &&
+          prep.classification === "processing",
+      );
+      if (isDepositFullySatisfied(prep)) {
+        setRequiresDepositResolution(false);
+        setReviewDepositGateMessage(null);
+        setReviewPaymentPhase("satisfied");
+        await advanceAfterPublicDepositSatisfied(prep);
+        return;
+      }
+      if (
+        prep.paymentMode === "deposit" &&
+        Boolean(prep.clientSecret?.trim())
+      ) {
+        setDepositRequired(true);
+        setDepositClientSecret(prep.clientSecret?.trim() ?? null);
+        setDepositPaymentIntentId(prep.paymentIntentId?.trim() || null);
+        setDepositAmountCents(
+          typeof prep.amountCents === "number" ? prep.amountCents : null,
+        );
+        setReviewPaymentPhase("ready_for_payment");
+        return;
+      }
+      setReviewPaymentPhase("finalizing_timeout");
+    } catch (e) {
+      setReviewPaymentPhase("finalizing_timeout");
+      setDepositError(
+        e instanceof Error
+          ? e.message
+          : "Could not check payment status. Try again.",
+      );
+    } finally {
+      depositPrepareInFlightRef.current = false;
+      setDepositBackendProcessing(false);
+      setDepositProcessing(false);
+    }
+  }
+
   async function confirmBookingDirection() {
     if (submitInFlightRef.current) return;
+    if (
+      state.schedulingBookingId.trim() &&
+      state.step === "review" &&
+      (depositRequired ||
+        reviewPaymentPhase === "preparing" ||
+        reviewPaymentPhase === "ready_for_payment" ||
+        reviewPaymentPhase === "confirming" ||
+        reviewPaymentPhase === "finalizing")
+    ) {
+      return;
+    }
     submitInFlightRef.current = true;
     setSubmitRecoverableFailure(false);
     setAttemptedConfirm(true);
@@ -1166,6 +1483,68 @@ export function BookingFlowClient() {
         result.bookingId &&
         result.estimate
       ) {
+        let depositPrepare: Awaited<
+          ReturnType<typeof postPublicBookingDepositPrepare>
+        > | null = null;
+        if (depositPrepareInFlightRef.current) {
+          return;
+        }
+        depositPrepareInFlightRef.current = true;
+        setReviewPaymentPhase("preparing");
+        try {
+          depositPrepare = await postPublicBookingDepositPrepare({
+            bookingId: result.bookingId,
+          });
+        } catch (prepErr) {
+          console.error("public booking deposit prepare failed", prepErr);
+          setSubmitRecoverableFailure(true);
+          setReviewPaymentPhase("failed");
+          setDepositError(
+            prepErr instanceof Error
+              ? prepErr.message
+              : "We couldn’t start card payment. Please try again.",
+          );
+          return;
+        } finally {
+          depositPrepareInFlightRef.current = false;
+        }
+
+        const needsReviewDeposit =
+          depositPrepare.paymentMode === "deposit" &&
+          Boolean(depositPrepare.clientSecret?.trim());
+
+        writeBookingConfirmationSessionSnapshot({
+          intakeId: result.intakeId,
+          bookingId: result.bookingId ?? "",
+          priceCents: result.estimate?.priceCents ?? null,
+          durationMinutes: result.estimate?.durationMinutes ?? null,
+          confidence: result.estimate?.confidence ?? null,
+          bookingErrorCode: result.bookingError?.code ?? "",
+          publicDepositPaymentIntentId:
+            depositPrepare.paymentIntentId?.trim() || undefined,
+          publicDepositStatus: depositPrepare.publicDepositStatus,
+        });
+
+        clearDepositUi();
+        if (needsReviewDeposit) {
+          setDepositRequired(true);
+          setDepositClientSecret(depositPrepare.clientSecret ?? null);
+          setDepositPaymentIntentId(
+            depositPrepare.paymentIntentId?.trim() || null,
+          );
+          setDepositAmountCents(
+            typeof depositPrepare.amountCents === "number"
+              ? depositPrepare.amountCents
+              : null,
+          );
+          setDepositError(null);
+          setRequiresDepositResolution(false);
+          setReviewDepositGateMessage(null);
+          setReviewPaymentPhase("ready_for_payment");
+        } else {
+          setReviewPaymentPhase("idle");
+        }
+
         setScheduleSurfaceError(null);
         setState((prev) =>
           clampBookingStepToStructuralMax({
@@ -1180,7 +1559,7 @@ export function BookingFlowClient() {
             selectedSlotEnd: "",
             publicHoldId: "",
             schedulingConfirmed: false,
-            step: "schedule",
+            step: needsReviewDeposit ? "review" : "schedule",
           }),
         );
         return;
@@ -1202,81 +1581,11 @@ export function BookingFlowClient() {
     }
   }
 
-  async function completeDepositAfterPayment() {
-    const holdId = pendingConfirmHoldId?.trim();
+  async function completeReviewDepositAfterPayment() {
     const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
-    if (!holdId || !bookingId) return;
-
-    setDepositProcessing(true);
-    setDepositError(null);
-    setDepositBackendProcessing(false);
-
-    const idemKey = scheduleConfirmIdempotencyKeyRef.current;
-    const maxAttempts = 5;
-
-    try {
-      for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        if (attempt > 0) {
-          await new Promise((r) => setTimeout(r, 2000));
-        }
-        try {
-          await postPublicBookingConfirm(
-            { bookingId, holdId },
-            idemKey,
-          );
-          const s = stateRefForBookingUrl.current;
-          emitBookingFunnelEvent("booking_confirmed", {
-            bookingId,
-            teamId: s.selectedTeamId,
-            holdId,
-          });
-          clearDepositUi();
-          setScheduleCommitError(null);
-          setScheduleCommitPhase("none");
-          setPendingConfirmHoldId(null);
-          setState((prev) => ({
-            ...prev,
-            schedulingConfirmed: true,
-            publicHoldId: holdId,
-          }));
-          const q = new URLSearchParams();
-          q.set("intakeId", s.schedulingIntakeId.trim());
-          q.set("bookingId", bookingId);
-          appendPublicIntakeContextToSearchParams(q, s);
-          router.push(`/book/confirmation?${q.toString()}`);
-          return;
-        } catch (e) {
-          if (e instanceof PublicBookingDepositProcessingError) {
-            setDepositBackendProcessing(true);
-            if (attempt === maxAttempts - 1) {
-              setDepositError(
-                "Payment is still processing. Please wait a moment and try again.",
-              );
-            }
-            continue;
-          }
-          if (
-            e instanceof PublicBookingPaymentRequiredError &&
-            e.code === "PAYMENT_REQUIRED"
-          ) {
-            setDepositError(
-              e.details.message ||
-                "Deposit is still required before we can confirm.",
-            );
-            return;
-          }
-          setDepositError(
-            e instanceof Error
-              ? e.message
-              : "We couldn’t confirm your booking. Please try again.",
-          );
-          return;
-        }
-      }
-    } finally {
-      setDepositProcessing(false);
-      setDepositBackendProcessing(false);
-    }
+    if (!bookingId) return;
+    setReviewPaymentPhase("confirming");
+    await runPostStripeDepositFinalizePoll();
   }
 
   async function confirmScheduleHoldAndFinish() {
@@ -1329,21 +1638,18 @@ export function BookingFlowClient() {
           confirmErr instanceof PublicBookingPaymentRequiredError &&
           confirmErr.code === "PAYMENT_REQUIRED"
         ) {
-          const d = confirmErr.details;
-          setDepositRequired(true);
-          setDepositClientSecret(
-            typeof d.clientSecret === "string" ? d.clientSecret : null,
-          );
-          setDepositPaymentIntentId(
-            typeof d.paymentIntentId === "string" ? d.paymentIntentId : null,
-          );
-          setDepositAmountCents(
-            typeof d.amountCents === "number" ? d.amountCents : null,
-          );
-          setDepositError(null);
+          setPendingConfirmHoldId(hold.holdId);
           setScheduleCommitError(null);
           setScheduleCommitPhase("none");
-          setPendingConfirmHoldId(hold.holdId);
+          clearDepositPaymentCredentialsOnly();
+          setRequiresDepositResolution(true);
+          setReviewDepositGateMessage(BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE);
+          setReviewPaymentPhase("idle");
+          const bookingIdForDeposit = state.schedulingBookingId.trim();
+          setState((prev) =>
+            clampBookingStepToStructuralMax({ ...prev, step: "review" }),
+          );
+          void bootstrapReviewDepositAfterScheduleGate(bookingIdForDeposit);
           return;
         }
         setScheduleCommitError(BOOKING_SCHEDULE_CONFIRM_FAILED);
@@ -1435,20 +1741,17 @@ export function BookingFlowClient() {
         err instanceof PublicBookingPaymentRequiredError &&
         err.code === "PAYMENT_REQUIRED"
       ) {
-        const d = err.details;
-        setDepositRequired(true);
-        setDepositClientSecret(
-          typeof d.clientSecret === "string" ? d.clientSecret : null,
-        );
-        setDepositPaymentIntentId(
-          typeof d.paymentIntentId === "string" ? d.paymentIntentId : null,
-        );
-        setDepositAmountCents(
-          typeof d.amountCents === "number" ? d.amountCents : null,
-        );
-        setDepositError(null);
         setScheduleCommitError(null);
         setScheduleCommitPhase("none");
+        clearDepositPaymentCredentialsOnly();
+        setRequiresDepositResolution(true);
+        setReviewDepositGateMessage(BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE);
+        setReviewPaymentPhase("idle");
+        const bookingIdForDeposit = state.schedulingBookingId.trim();
+        setState((prev) =>
+          clampBookingStepToStructuralMax({ ...prev, step: "review" }),
+        );
+        void bootstrapReviewDepositAfterScheduleGate(bookingIdForDeposit);
         return;
       }
       setScheduleCommitError(BOOKING_SCHEDULE_CONFIRM_FAILED);
@@ -1844,23 +2147,66 @@ export function BookingFlowClient() {
                 />
               ) : null}
 
-              {state.step === "schedule" && depositRequired ? (
+              {state.step === "review" &&
+              Boolean(state.schedulingBookingId.trim()) &&
+              (requiresDepositResolution ||
+                depositRequired ||
+                reviewPaymentPhase === "preparing" ||
+                reviewPaymentPhase === "ready_for_payment" ||
+                reviewPaymentPhase === "confirming" ||
+                reviewPaymentPhase === "finalizing" ||
+                reviewPaymentPhase === "finalizing_timeout" ||
+                reviewPaymentPhase === "failed" ||
+                reviewPaymentPhase === "satisfied") ? (
                 <div className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-8 shadow-sm ring-1 ring-[#C9B27C]/10">
                   <h2 className="font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.02em] text-[#0F172A]">
                     Secure your booking
                   </h2>
+                  {reviewDepositGateMessage ? (
+                    <p
+                      data-testid="booking-review-deposit-gate-message"
+                      className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm font-medium leading-6 text-[#0F172A]"
+                    >
+                      {reviewDepositGateMessage}
+                    </p>
+                  ) : null}
                   <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-                    A $100 deposit is required to reserve your time.
+                    A deposit is required before you can pick a team and arrival time. Your
+                    quote above stays locked until payment succeeds.
                   </p>
+                  {reviewPaymentPhase === "preparing" && !depositClientSecret ? (
+                    <p className="mt-4 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
+                      Preparing secure payment…
+                    </p>
+                  ) : null}
                   {depositBackendProcessing ? (
                     <p className="mt-4 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
-                      Processing your payment...
+                      Confirming payment with our server…
+                    </p>
+                  ) : null}
+                  {reviewPaymentPhase === "finalizing_timeout" ? (
+                    <p
+                      data-testid="booking-deposit-finalizing-timeout"
+                      className="mt-4 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]"
+                    >
+                      {BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT}
                     </p>
                   ) : null}
                   {depositError ? (
                     <p className="mt-4 font-[var(--font-manrope)] text-sm text-[#B91C1C]">
                       {depositError}
                     </p>
+                  ) : null}
+                  {reviewPaymentPhase === "finalizing_timeout" ? (
+                    <button
+                      type="button"
+                      data-testid="booking-deposit-check-status"
+                      disabled={depositProcessing}
+                      onClick={() => void checkDepositPaymentStatusAgain()}
+                      className="mt-4 inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 bg-white px-5 py-3 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] transition hover:bg-[#FFF9F3] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA}
+                    </button>
                   ) : null}
                   {stripePromise && depositClientSecret ? (
                     <div className="mt-6 max-w-xl">
@@ -1870,17 +2216,22 @@ export function BookingFlowClient() {
                         clientSecret={depositClientSecret}
                         amountCents={depositAmountCents ?? 10_000}
                         disabled={depositProcessing}
-                        onSuccess={() => completeDepositAfterPayment()}
-                        onError={(msg) => setDepositError(msg)}
+                        onSuccess={() => void completeReviewDepositAfterPayment()}
+                        onError={(msg) => {
+                          setReviewPaymentPhase("failed");
+                          setDepositError(msg);
+                        }}
                       />
                     </div>
-                  ) : (
+                  ) : reviewPaymentPhase === "ready_for_payment" ||
+                    reviewPaymentPhase === "confirming" ||
+                    reviewPaymentPhase === "failed" ? (
                     <p className="mt-6 font-[var(--font-manrope)] text-sm text-[#B91C1C]">
                       {depositClientSecret
                         ? "Payments are not available in this environment (missing Stripe publishable key)."
                         : "We couldn’t start card payment. Please refresh and try again."}
                     </p>
-                  )}
+                  ) : null}
                 </div>
               ) : state.step === "schedule" ? (
                 <BookingStepSchedule
@@ -1922,9 +2273,7 @@ export function BookingFlowClient() {
                     disabled={
                       (isSubmitting && state.step !== "review") ||
                       confirmScheduleLoading ||
-                      (state.step === "schedule" &&
-                        depositRequired &&
-                        depositProcessing)
+                      (state.step === "review" && reviewAwaitingDepositPayment)
                     }
                     onClick={goBack}
                     className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"

@@ -25,10 +25,11 @@ jest.mock("stripe", () => {
       sessions: {
         create: jest.fn().mockImplementation(() => {
           n += 1;
+          const u = `${Date.now()}_${n}_${Math.random().toString(36).slice(2, 11)}`;
           return Promise.resolve({
-            id: `cs_test_mock_${n}`,
-            url: `https://checkout.stripe.com/c/pay/cs_test_mock_${n}`,
-            payment_intent: `pi_test_mock_${n}`,
+            id: `cs_test_mock_${u}`,
+            url: `https://checkout.stripe.com/c/pay/cs_test_mock_${u}`,
+            payment_intent: `pi_test_mock_${u}`,
             customer: null,
           });
         }),
@@ -94,8 +95,39 @@ describe("Booking transitions (E2E)", () => {
     });
     await prisma.franchiseOwner.upsert({
       where: { id: FO_ID },
-      update: { status: "active", userId: foUser.id },
-      create: { id: FO_ID, userId: foUser.id, status: "active" },
+      update: {
+        userId: foUser.id,
+        status: "active",
+        safetyHold: false,
+        teamSize: 2,
+        maxSquareFootage: 2600,
+        maxLaborMinutes: 480,
+        maxDailyLaborMinutes: 600,
+        homeLat: 36.15398,
+        homeLng: -95.99277,
+        maxTravelMinutes: 60,
+      },
+      create: {
+        id: FO_ID,
+        userId: foUser.id,
+        status: "active",
+        safetyHold: false,
+        teamSize: 2,
+        maxSquareFootage: 2600,
+        maxLaborMinutes: 480,
+        maxDailyLaborMinutes: 600,
+        homeLat: 36.15398,
+        homeLng: -95.99277,
+        maxTravelMinutes: 60,
+        displayName: "Transition FO",
+        foSchedules: {
+          create: {
+            dayOfWeek: 1,
+            startTime: "07:00",
+            endTime: "19:00",
+          },
+        },
+      },
     });
 
     const foWithProvider = await prisma.franchiseOwner.findUnique({
@@ -125,6 +157,21 @@ describe("Booking transitions (E2E)", () => {
         userId: repairUser.id,
         status: "active",
         displayName: "Repair Target",
+        safetyHold: false,
+        teamSize: 2,
+        maxSquareFootage: 2600,
+        maxLaborMinutes: 480,
+        maxDailyLaborMinutes: 600,
+        homeLat: 36.21,
+        homeLng: -95.21,
+        maxTravelMinutes: 60,
+        foSchedules: {
+          create: {
+            dayOfWeek: 1,
+            startTime: "07:00",
+            endTime: "19:00",
+          },
+        },
       },
     });
 
@@ -390,7 +437,12 @@ describe("Booking transitions (E2E)", () => {
     const assignEvents = await prisma.bookingEvent.findMany({
       where: {
         bookingId: booking.id,
-        type: BookingEventType.STATUS_CHANGED,
+        type: {
+          in: [
+            BookingEventType.STATUS_CHANGED,
+            BookingEventType.BOOKING_ASSIGNED,
+          ],
+        },
         fromStatus: BookingStatus.pending_dispatch,
         toStatus: BookingStatus.assigned,
       },
@@ -532,6 +584,23 @@ describe("Booking transitions (E2E)", () => {
           },
         },
         status: FoStatus.active,
+        safetyHold: false,
+        teamSize: 2,
+        maxSquareFootage: 2600,
+        maxLaborMinutes: 480,
+        maxDailyLaborMinutes: 600,
+        homeLat: 36.154,
+        homeLng: -95.993,
+        maxTravelMinutes: 60,
+        reliabilityScore: 80,
+        displayName: "Reassign block FO",
+        foSchedules: {
+          create: {
+            dayOfWeek: 1,
+            startTime: "07:00",
+            endTime: "19:00",
+          },
+        },
       },
     });
 

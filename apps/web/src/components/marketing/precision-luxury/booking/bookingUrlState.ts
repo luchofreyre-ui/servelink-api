@@ -1293,6 +1293,9 @@ export type BookingConfirmationSessionSnapshotV1 = {
   durationMinutes: number | null;
   confidence: number | null;
   bookingErrorCode: string;
+  /** Last known public deposit PI id (never store `client_secret`). */
+  publicDepositPaymentIntentId?: string;
+  publicDepositStatus?: string;
 };
 
 export function writeBookingConfirmationSessionSnapshot(
@@ -1323,6 +1326,14 @@ export function writeBookingConfirmationSessionSnapshot(
           ? partial.confidence
           : null,
       bookingErrorCode: partial.bookingErrorCode.trim(),
+      ...(typeof partial.publicDepositPaymentIntentId === "string" &&
+      partial.publicDepositPaymentIntentId.trim()
+        ? { publicDepositPaymentIntentId: partial.publicDepositPaymentIntentId.trim() }
+        : {}),
+      ...(typeof partial.publicDepositStatus === "string" &&
+      partial.publicDepositStatus.trim()
+        ? { publicDepositStatus: partial.publicDepositStatus.trim() }
+        : {}),
     };
     window.sessionStorage.setItem(
       BOOKING_CONFIRMATION_SESSION_KEY,
@@ -1362,6 +1373,14 @@ export function readBookingConfirmationSessionSnapshot(): BookingConfirmationSes
           : null,
       bookingErrorCode:
         typeof o.bookingErrorCode === "string" ? o.bookingErrorCode.trim() : "",
+      publicDepositPaymentIntentId:
+        typeof o.publicDepositPaymentIntentId === "string"
+          ? o.publicDepositPaymentIntentId.trim()
+          : undefined,
+      publicDepositStatus:
+        typeof o.publicDepositStatus === "string"
+          ? o.publicDepositStatus.trim()
+          : undefined,
     };
   } catch {
     return null;

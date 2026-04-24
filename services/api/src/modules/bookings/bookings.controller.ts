@@ -43,6 +43,7 @@ import { TransitionBookingDto } from "./dto/transition-booking.dto";
 import { UpdateBookingPatchDto } from "./dto/update-booking-patch.dto";
 import { CreateBookingCheckoutDto } from "./dto/create-booking-checkout.dto";
 import { UpdateBookingPaymentStatusDto } from "./dto/update-booking-payment-status.dto";
+import { SkipIdempotency } from "../../common/reliability/reliability.decorators";
 
 @UseGuards(JwtAuthGuard)
 @Controller("/api/v1/bookings")
@@ -191,6 +192,7 @@ export class BookingsController {
   }
 
   @Post(":id/confirm-hold")
+  @SkipIdempotency()
   async confirmHold(
     @Param() params: ConfirmHoldParamsDto,
     @Body()
@@ -315,6 +317,7 @@ export class BookingsController {
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post(":id/assign-recommended")
+  @SkipIdempotency()
   async assignRecommended(
     @Param("id") id: string,
     @Req() req: { user?: { userId?: string; role?: string } },
@@ -492,6 +495,7 @@ export class BookingsController {
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post(":id/assign")
+  @SkipIdempotency()
   @UsePipes(
     new ValidationPipe({
       transform: true,
@@ -530,6 +534,7 @@ export class BookingsController {
   }
 
   @Post(":id/schedule")
+  @SkipIdempotency()
   async schedule(
     @Param("id") id: string,
     @Body() dto: TransitionBookingDto,
@@ -545,6 +550,7 @@ export class BookingsController {
   }
 
   @Post(":id/start")
+  @SkipIdempotency()
   async start(
     @Param("id") id: string,
     @Body() dto: TransitionBookingDto,
@@ -559,6 +565,7 @@ export class BookingsController {
   }
 
   @Post(":id/complete")
+  @SkipIdempotency()
   async complete(
     @Param("id") id: string,
     @Body() dto: TransitionBookingDto,
@@ -573,6 +580,7 @@ export class BookingsController {
   }
 
   @Post(":id/cancel")
+  @SkipIdempotency()
   async cancel(
     @Param("id") id: string,
     @Body() dto: TransitionBookingDto,
@@ -588,6 +596,7 @@ export class BookingsController {
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post(":id/reopen")
+  @SkipIdempotency()
   async reopen(
     @Param("id") id: string,
     @Headers("idempotency-key") idempotencyKey: string | undefined,

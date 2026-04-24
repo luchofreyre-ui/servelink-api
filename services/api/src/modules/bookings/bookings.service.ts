@@ -309,26 +309,15 @@ export class BookingsService {
           refetched.status === args.toStatus &&
           this.sameFo(refetched.foId, args.foId)
         ) {
-          try {
-            await this.insertAssignmentBookingEvent(tx, {
-              bookingId: args.bookingId,
-              fromStatus: before.status,
-              toStatus: args.toStatus,
-              foId: args.foId,
-              idempotencyKey: idem,
-              metadata: args.metadata,
-              note: args.note ?? null,
-            });
-          } catch (e: any) {
-            if (e?.code === "P2002") {
-              const row = await tx.booking.findUnique({
-                where: { id: args.bookingId },
-              });
-              if (!row) throw new NotFoundException("BOOKING_NOT_FOUND");
-              return { booking: row, bookingRowUpdated: false };
-            }
-            throw e;
-          }
+          await this.insertAssignmentBookingEvent(tx, {
+            bookingId: args.bookingId,
+            fromStatus: before.status,
+            toStatus: args.toStatus,
+            foId: args.foId,
+            idempotencyKey: idem,
+            metadata: args.metadata,
+            note: args.note ?? null,
+          });
           return { booking: refetched, bookingRowUpdated: false };
         }
         args.onOptimisticWriteMiss?.();
@@ -355,26 +344,15 @@ export class BookingsService {
     }
 
     if (bookingRowUpdated) {
-      try {
-        await this.insertAssignmentBookingEvent(tx, {
-          bookingId: args.bookingId,
-          fromStatus: before.status,
-          toStatus: args.toStatus,
-          foId: args.foId,
-          idempotencyKey: idem,
-          metadata: args.metadata,
-          note: args.note ?? null,
-        });
-      } catch (e: any) {
-        if (e?.code === "P2002") {
-          const row = await tx.booking.findUnique({
-            where: { id: args.bookingId },
-          });
-          if (!row) throw new NotFoundException("BOOKING_NOT_FOUND");
-          return { booking: row, bookingRowUpdated: false };
-        }
-        throw e;
-      }
+      await this.insertAssignmentBookingEvent(tx, {
+        bookingId: args.bookingId,
+        fromStatus: before.status,
+        toStatus: args.toStatus,
+        foId: args.foId,
+        idempotencyKey: idem,
+        metadata: args.metadata,
+        note: args.note ?? null,
+      });
     }
 
     const out = await tx.booking.findUnique({ where: { id: args.bookingId } });
@@ -409,13 +387,23 @@ export class BookingsService {
       ...(args.note ? { note: args.note } : {}),
     };
 
-    await tx.bookingEvent.create({
-      data: {
+    await tx.bookingEvent.upsert({
+      where: {
+        bookingId_idempotencyKey: {
+          bookingId: args.bookingId,
+          idempotencyKey: args.idempotencyKey,
+        },
+      },
+      create: {
         bookingId: args.bookingId,
         type: eventType,
         fromStatus: args.fromStatus,
         toStatus: args.toStatus,
         idempotencyKey: args.idempotencyKey,
+        note: args.note,
+        payload,
+      },
+      update: {
         note: args.note,
         payload,
       },
@@ -1109,10 +1097,11 @@ export class BookingsService {
     // IMPORTANT: allow reassignment
     // only block if already assigned AND same FO target
     if (isAssignedState(currentBooking) && currentBooking.foId === foId) {
-      return {
-        ok: true,
-        alreadyAssigned: true,
-      };
+      const row = await this.db.booking.findUnique({
+        where: { id: params.bookingId },
+      });
+      if (!row) throw new NotFoundException("BOOKING_NOT_FOUND");
+      return { ...row, alreadyApplied: true };
     }
 
     const ok = await this.fo.getEligibility(foId);
@@ -1158,7 +1147,9 @@ export class BookingsService {
       }
 
       if (isAssignedState(txBooking) && txBooking.foId === foId) {
-        return { ok: true, alreadyAssigned: true };
+        const row = await tx.booking.findUnique({ where: { id: booking.id } });
+        if (!row) throw new NotFoundException("BOOKING_NOT_FOUND");
+        return { ...row, alreadyApplied: true };
       }
 
       const updateWhere: Prisma.BookingWhereInput = {

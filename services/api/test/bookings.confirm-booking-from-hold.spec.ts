@@ -1,30 +1,19 @@
 import { ConflictException } from "@nestjs/common";
 import { BookingStatus } from "@prisma/client";
-import { BookingsService } from "../src/modules/bookings/bookings.service";
 import type { PrismaService } from "../src/prisma";
-import type { BookingEventsService } from "../src/modules/bookings/booking-events.service";
 import type { FoService } from "../src/modules/fo/fo.service";
-import type { EstimatorService } from "../src/modules/estimate/estimator.service";
-import type { LedgerService } from "../src/modules/ledger/ledger.service";
-import type { DispatchService } from "../src/modules/dispatch/dispatch.service";
-import type { ReputationService } from "../src/modules/dispatch/reputation.service";
-import type { BookingPaymentService } from "../src/modules/bookings/payment/payment.service";
+import { createBookingsServiceTestHarness } from "./helpers/createBookingsServiceTestHarness";
 
 function makeService(tx: Record<string, unknown>) {
   const db = {
     $transaction: jest.fn((fn: (t: typeof tx) => Promise<unknown>) => fn(tx as any)),
   } as unknown as PrismaService;
 
-  return new BookingsService(
+  const { service } = createBookingsServiceTestHarness({
     db,
-    {} as BookingEventsService,
-    { getEligibility: jest.fn() } as unknown as FoService,
-    {} as EstimatorService,
-    {} as LedgerService,
-    {} as DispatchService,
-    {} as ReputationService,
-    {} as BookingPaymentService,
-  );
+    fo: { getEligibility: jest.fn() } as unknown as FoService,
+  });
+  return service;
 }
 
 describe("BookingsService.confirmBookingFromHold", () => {
@@ -126,16 +115,10 @@ describe("BookingsService.confirmBookingFromHold", () => {
       $transaction: jest.fn((fn: (t: typeof tx) => Promise<unknown>) => fn(tx as any)),
     } as unknown as PrismaService;
 
-    const svc = new BookingsService(
+    const { service: svc } = createBookingsServiceTestHarness({
       db,
-      {} as BookingEventsService,
       fo,
-      {} as EstimatorService,
-      {} as LedgerService,
-      {} as DispatchService,
-      {} as ReputationService,
-      {} as BookingPaymentService,
-    );
+    });
 
     tx.booking.findUnique = jest
       .fn()

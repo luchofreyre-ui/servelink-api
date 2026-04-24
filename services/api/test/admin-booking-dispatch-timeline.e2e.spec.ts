@@ -77,11 +77,19 @@ describe("Admin booking dispatch timeline (E2E)", () => {
         teamSize: 2,
         maxSquareFootage: 2600,
         maxLaborMinutes: 480,
+        maxDailyLaborMinutes: 600,
         homeLat: 36.15398,
         homeLng: -95.99277,
         maxTravelMinutes: 60,
         reliabilityScore: 95,
         displayName: "Timeline FO1",
+        foSchedules: {
+          create: {
+            dayOfWeek: 1,
+            startTime: "07:00",
+            endTime: "19:00",
+          },
+        },
       },
     });
 
@@ -92,11 +100,20 @@ describe("Admin booking dispatch timeline (E2E)", () => {
         safetyHold: false,
         teamSize: 2,
         maxSquareFootage: 2600,
+        maxLaborMinutes: 480,
+        maxDailyLaborMinutes: 600,
         homeLat: 36.1612,
         homeLng: -95.9895,
         maxTravelMinutes: 60,
         reliabilityScore: 88,
         displayName: "Timeline FO2",
+        foSchedules: {
+          create: {
+            dayOfWeek: 1,
+            startTime: "07:00",
+            endTime: "19:00",
+          },
+        },
       },
     });
   });
@@ -133,6 +150,8 @@ describe("Admin booking dispatch timeline (E2E)", () => {
 
     const bookingId = createRes.body?.booking?.id;
     expect(bookingId).toBeTruthy();
+
+    await seedBookingPaymentAuthorized(prisma, bookingId);
 
     const scheduledStart = new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString();
 
