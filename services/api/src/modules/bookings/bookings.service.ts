@@ -495,6 +495,7 @@ export class BookingsService {
         id: true,
         scheduledStart: true,
         estimatedHours: true,
+        estimateSnapshot: { select: { outputJson: true } },
       },
     });
 
@@ -507,8 +508,14 @@ export class BookingsService {
       if (!Number.isFinite(existingStart.getTime())) return false;
       if (!(existingEstimatedHours > 0)) return false;
 
+      // estimatedHours is labor-oriented and must only be a legacy fallback for calendar overlap.
       const existingEnd = new Date(
-        existingStart.getTime() + existingEstimatedHours * 60 * 60 * 1000,
+        resolveBookingCalendarEndMs({
+          scheduledStart: existingStart,
+          estimatedHours: existingEstimatedHours,
+          estimateSnapshotOutputJson: existing.estimateSnapshot?.outputJson,
+          preferWallClockFromSnapshot: true,
+        }),
       );
 
       return requestedStart < existingEnd && existingStart < requestedEnd;
