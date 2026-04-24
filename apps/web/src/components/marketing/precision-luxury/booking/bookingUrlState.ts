@@ -1296,6 +1296,14 @@ export type BookingConfirmationSessionSnapshotV1 = {
   /** Last known public deposit PI id (never store `client_secret`). */
   publicDepositPaymentIntentId?: string;
   publicDepositStatus?: string;
+  publicDepositHoldId?: string;
+  paymentSessionKey?: string;
+  selectedTeamId?: string;
+  selectedTeamDisplayName?: string;
+  selectedSlotStart?: string;
+  selectedSlotEnd?: string;
+  paymentSessionCreatedAt?: string;
+  paymentSessionExpiresAt?: string;
 };
 
 export function writeBookingConfirmationSessionSnapshot(
@@ -1333,6 +1341,36 @@ export function writeBookingConfirmationSessionSnapshot(
       ...(typeof partial.publicDepositStatus === "string" &&
       partial.publicDepositStatus.trim()
         ? { publicDepositStatus: partial.publicDepositStatus.trim() }
+        : {}),
+      ...(typeof partial.publicDepositHoldId === "string" &&
+      partial.publicDepositHoldId.trim()
+        ? { publicDepositHoldId: partial.publicDepositHoldId.trim() }
+        : {}),
+      ...(typeof partial.paymentSessionKey === "string" &&
+      partial.paymentSessionKey.trim()
+        ? { paymentSessionKey: partial.paymentSessionKey.trim() }
+        : {}),
+      ...(typeof partial.selectedTeamId === "string" && partial.selectedTeamId.trim()
+        ? { selectedTeamId: partial.selectedTeamId.trim() }
+        : {}),
+      ...(typeof partial.selectedTeamDisplayName === "string" &&
+      partial.selectedTeamDisplayName.trim()
+        ? { selectedTeamDisplayName: partial.selectedTeamDisplayName.trim() }
+        : {}),
+      ...(typeof partial.selectedSlotStart === "string" &&
+      partial.selectedSlotStart.trim()
+        ? { selectedSlotStart: partial.selectedSlotStart.trim() }
+        : {}),
+      ...(typeof partial.selectedSlotEnd === "string" && partial.selectedSlotEnd.trim()
+        ? { selectedSlotEnd: partial.selectedSlotEnd.trim() }
+        : {}),
+      ...(typeof partial.paymentSessionCreatedAt === "string" &&
+      partial.paymentSessionCreatedAt.trim()
+        ? { paymentSessionCreatedAt: partial.paymentSessionCreatedAt.trim() }
+        : {}),
+      ...(typeof partial.paymentSessionExpiresAt === "string" &&
+      partial.paymentSessionExpiresAt.trim()
+        ? { paymentSessionExpiresAt: partial.paymentSessionExpiresAt.trim() }
         : {}),
     };
     window.sessionStorage.setItem(
@@ -1380,6 +1418,34 @@ export function readBookingConfirmationSessionSnapshot(): BookingConfirmationSes
       publicDepositStatus:
         typeof o.publicDepositStatus === "string"
           ? o.publicDepositStatus.trim()
+          : undefined,
+      publicDepositHoldId:
+        typeof o.publicDepositHoldId === "string"
+          ? o.publicDepositHoldId.trim()
+          : undefined,
+      paymentSessionKey:
+        typeof o.paymentSessionKey === "string"
+          ? o.paymentSessionKey.trim()
+          : undefined,
+      selectedTeamId:
+        typeof o.selectedTeamId === "string" ? o.selectedTeamId.trim() : undefined,
+      selectedTeamDisplayName:
+        typeof o.selectedTeamDisplayName === "string"
+          ? o.selectedTeamDisplayName.trim()
+          : undefined,
+      selectedSlotStart:
+        typeof o.selectedSlotStart === "string"
+          ? o.selectedSlotStart.trim()
+          : undefined,
+      selectedSlotEnd:
+        typeof o.selectedSlotEnd === "string" ? o.selectedSlotEnd.trim() : undefined,
+      paymentSessionCreatedAt:
+        typeof o.paymentSessionCreatedAt === "string"
+          ? o.paymentSessionCreatedAt.trim()
+          : undefined,
+      paymentSessionExpiresAt:
+        typeof o.paymentSessionExpiresAt === "string"
+          ? o.paymentSessionExpiresAt.trim()
           : undefined,
     };
   } catch {

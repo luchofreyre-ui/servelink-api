@@ -35,7 +35,31 @@ export type DepositPaymentElementProps = {
   onSuccess: () => void | Promise<void>;
   onError: (message: string) => void;
   disabled?: boolean;
+  bookingId?: string;
+  holdId?: string;
+  paymentIntentId?: string | null;
+  paymentSessionKey?: string | null;
 };
+
+function buildPublicBookingPaymentReturnUrl(args: {
+  bookingId?: string;
+  holdId?: string;
+  paymentIntentId?: string | null;
+  paymentSessionKey?: string | null;
+}): string {
+  if (typeof window === "undefined") return "";
+  const url = new URL(window.location.href);
+  url.searchParams.set("publicBookingPayment", "1");
+  const bookingId = args.bookingId?.trim();
+  const holdId = args.holdId?.trim();
+  const paymentIntentId = args.paymentIntentId?.trim();
+  const paymentSessionKey = args.paymentSessionKey?.trim();
+  if (bookingId) url.searchParams.set("bookingId", bookingId);
+  if (holdId) url.searchParams.set("holdId", holdId);
+  if (paymentIntentId) url.searchParams.set("paymentIntentId", paymentIntentId);
+  if (paymentSessionKey) url.searchParams.set("paymentSessionKey", paymentSessionKey);
+  return url.toString();
+}
 
 function DepositPaymentForm({
   disabled,
@@ -43,9 +67,20 @@ function DepositPaymentForm({
   onError,
   payLabel,
   clientSecret,
+  bookingId,
+  holdId,
+  paymentIntentId,
+  paymentSessionKey,
 }: Pick<
   DepositPaymentElementProps,
-  "onSuccess" | "onError" | "disabled" | "clientSecret"
+  | "onSuccess"
+  | "onError"
+  | "disabled"
+  | "clientSecret"
+  | "bookingId"
+  | "holdId"
+  | "paymentIntentId"
+  | "paymentSessionKey"
 > & {
   payLabel: string;
 }) {
@@ -88,10 +123,12 @@ function DepositPaymentForm({
     if (!stripe || !elements) return;
 
     setBusy(true);
-    const returnUrl =
-      typeof window !== "undefined"
-        ? `${window.location.origin}${window.location.pathname}`
-        : "";
+    const returnUrl = buildPublicBookingPaymentReturnUrl({
+      bookingId,
+      holdId,
+      paymentIntentId,
+      paymentSessionKey,
+    });
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
@@ -162,6 +199,10 @@ function DepositPaymentElementWithStripe({
   disabled,
   onSuccess,
   onError,
+  bookingId,
+  holdId,
+  paymentIntentId,
+  paymentSessionKey,
 }: DepositPaymentElementProps) {
   const payLabel = `Pay ${formatDepositCentsLabel(amountCents)} deposit`;
   const [stripeInstance, setStripeInstance] = useState<
@@ -219,6 +260,10 @@ function DepositPaymentElementWithStripe({
         onError={onError}
         payLabel={payLabel}
         clientSecret={clientSecret}
+        bookingId={bookingId}
+        holdId={holdId}
+        paymentIntentId={paymentIntentId}
+        paymentSessionKey={paymentSessionKey}
       />
     </Elements>
   );

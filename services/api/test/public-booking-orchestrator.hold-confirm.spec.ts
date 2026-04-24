@@ -1,5 +1,5 @@
-import { BookingStatus } from "@prisma/client";
-import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { BookingRecoveryStatus, BookingStatus } from "@prisma/client";
+import { BadRequestException, ConflictException, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../src/prisma";
 import { BookingsService } from "../src/modules/bookings/bookings.service";
 import { FoService } from "../src/modules/fo/fo.service";
@@ -320,5 +320,301 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
     ).rejects.toBeInstanceOf(NotFoundException);
 
     expect(confirmBookingFromHold).not.toHaveBeenCalled();
+  });
+
+  it("confirmHold: duplicate retry after successful finalization returns existing booking", async () => {
+    const scheduled = new Date("2030-06-01T14:00:00.000Z");
+    const booking = {
+      ...schedulableHoldBooking(),
+      status: BookingStatus.assigned,
+      scheduledStart: scheduled,
+      estimatedHours: 1,
+      estimateSnapshot: {
+        outputJson: JSON.stringify({ estimatedDurationMinutes: 60 }),
+        inputJson: "{}",
+      },
+    };
+    const confirmBookingFromHold = jest.fn();
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(booking),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue(null),
+      },
+    } as unknown as PrismaService;
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      {} as SlotAvailabilityService,
+      {} as SlotHoldsService,
+      { confirmBookingFromHold } as unknown as BookingsService,
+      {} as FoService,
+      noopPublicDeposit,
+    );
+
+    const res = await svc.confirmHold(
+      { bookingId: "bk_hold", holdId: "deleted_hold" },
+      "idem-key-1",
+    );
+
+    expect(res.alreadyApplied).toBe(true);
+    expect(res.bookingId).toBe("bk_hold");
+    expect(res.scheduledStart).toBe(scheduled.toISOString());
+    expect(res.scheduledEnd).toBe("2030-06-01T15:00:00.000Z");
+    expect(confirmBookingFromHold).not.toHaveBeenCalled();
+  });
+
+  it("confirmHold: payment success + expired hold recovers the same wall-clock slot", async () => {
+    const scheduled = new Date("2030-06-01T14:00:00.000Z");
+    const holdEnd = new Date(scheduled.getTime() + 184 * 60 * 1000);
+    const recoveryUpdate = jest.fn().mockResolvedValue({});
+    const anomalyCreate = jest.fn().mockResolvedValue({});
+    const confirmBookingFromHold = jest
+      .fn()
+      .mockRejectedValueOnce(new ConflictException("BOOKING_SLOT_HOLD_EXPIRED"))
+      .mockResolvedValueOnce({
+        id: "bk_hold",
+        scheduledStart: scheduled,
+        estimatedHours: 12.07,
+        status: BookingStatus.assigned,
+        alreadyApplied: false,
+      });
+    const deposit = {
+      ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
+    } as unknown as PublicBookingDepositService;
+
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+        update: recoveryUpdate,
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "hold_1",
+          bookingId: "bk_hold",
+          foId: "fo_a",
+          startAt: scheduled,
+          endAt: holdEnd,
+          expiresAt: new Date("2030-06-01T20:00:00.000Z"),
+        }),
+      },
+      paymentAnomaly: {
+        create: anomalyCreate,
+      },
+    } as unknown as PrismaService;
+    const slotAvailability = {
+      listAvailableWindows: jest
+        .fn()
+        .mockResolvedValue([{ startAt: scheduled, endAt: holdEnd }]),
+    } as unknown as SlotAvailabilityService;
+    const slotHolds = {
+      createHold: jest.fn().mockResolvedValue({
+        id: "hold_recovered",
+        bookingId: "bk_hold",
+        foId: "fo_a",
+        startAt: scheduled,
+        endAt: holdEnd,
+        expiresAt: new Date("2030-06-01T20:00:00.000Z"),
+      }),
+    } as unknown as SlotHoldsService;
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      slotAvailability,
+      slotHolds,
+      { confirmBookingFromHold } as unknown as BookingsService,
+      {} as FoService,
+      deposit,
+    );
+
+    const res = await svc.confirmHold(
+      { bookingId: "bk_hold", holdId: "hold_1" },
+      "idem-key-1",
+    );
+
+    expect(res.status).toBe(BookingStatus.assigned);
+    expect(res.scheduledEnd).toBe(holdEnd.toISOString());
+    expect(confirmBookingFromHold).toHaveBeenCalledTimes(2);
+    expect(slotAvailability.listAvailableWindows).toHaveBeenCalledWith(
+      expect.objectContaining({ durationMinutes: 184 }),
+    );
+    expect(recoveryUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          recoveryStatus: BookingRecoveryStatus.none,
+          originalRequestedTime: scheduled,
+          recoveryAttemptedAt: expect.any(Date),
+        }),
+      }),
+    );
+    expect(anomalyCreate).not.toHaveBeenCalled();
+  });
+
+  it("confirmHold: payment success + slot taken finds an alternative and marks auto-adjusted", async () => {
+    const scheduled = new Date("2030-06-01T14:00:00.000Z");
+    const holdEnd = new Date(scheduled.getTime() + 60 * 60 * 1000);
+    const altStart = new Date("2030-06-01T16:00:00.000Z");
+    const altEnd = new Date("2030-06-01T17:00:00.000Z");
+    const recoveryUpdate = jest.fn().mockResolvedValue({});
+    const anomalyCreate = jest.fn().mockResolvedValue({});
+    const confirmBookingFromHold = jest
+      .fn()
+      .mockRejectedValueOnce(new ConflictException("FO_SLOT_ALREADY_BOOKED"))
+      .mockResolvedValueOnce({
+        id: "bk_hold",
+        scheduledStart: altStart,
+        estimatedHours: 1,
+        status: BookingStatus.assigned,
+        alreadyApplied: false,
+      });
+    const deposit = {
+      ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
+    } as unknown as PublicBookingDepositService;
+
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+        update: recoveryUpdate,
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "hold_1",
+          bookingId: "bk_hold",
+          foId: "fo_a",
+          startAt: scheduled,
+          endAt: holdEnd,
+          expiresAt: new Date("2030-06-01T20:00:00.000Z"),
+        }),
+      },
+      paymentAnomaly: { create: anomalyCreate },
+      franchiseOwner: {
+        findUnique: jest
+          .fn()
+          .mockResolvedValue(franchiseOwnerRowForPublicHoldTests()),
+      },
+    } as unknown as PrismaService;
+    const slotAvailability = {
+      listAvailableWindows: jest
+        .fn()
+        .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([{ startAt: altStart, endAt: altEnd }]),
+    } as unknown as SlotAvailabilityService;
+    const slotHolds = {
+      createHold: jest.fn().mockResolvedValue({
+        id: "hold_recovered",
+        bookingId: "bk_hold",
+        foId: "fo_a",
+        startAt: altStart,
+        endAt: altEnd,
+        expiresAt: new Date("2030-06-01T20:00:00.000Z"),
+      }),
+    } as unknown as SlotHoldsService;
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      slotAvailability,
+      slotHolds,
+      { confirmBookingFromHold } as unknown as BookingsService,
+      {} as FoService,
+      deposit,
+    );
+
+    const res = await svc.confirmHold(
+      { bookingId: "bk_hold", holdId: "hold_1" },
+      "idem-key-1",
+    );
+
+    expect(res.scheduledStart).toBe(altStart.toISOString());
+    expect(res.scheduledEnd).toBe(altEnd.toISOString());
+    expect(slotHolds.createHold).toHaveBeenCalledTimes(1);
+    expect(confirmBookingFromHold).toHaveBeenCalledTimes(2);
+    expect(recoveryUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          recoveryStatus: BookingRecoveryStatus.auto_adjusted,
+          originalRequestedTime: scheduled,
+          recoveryAttemptedAt: expect.any(Date),
+        }),
+      }),
+    );
+    expect(anomalyCreate).not.toHaveBeenCalled();
+  });
+
+  it("confirmHold: payment success + no recovery slots marks failed and records anomaly", async () => {
+    const scheduled = new Date("2030-06-01T14:00:00.000Z");
+    const holdEnd = new Date(scheduled.getTime() + 60 * 60 * 1000);
+    const recoveryUpdate = jest.fn().mockResolvedValue({});
+    const anomalyCreate = jest.fn().mockResolvedValue({});
+    const confirmBookingFromHold = jest
+      .fn()
+      .mockRejectedValue(new ConflictException("FO_SLOT_ALREADY_BOOKED"));
+    const deposit = {
+      ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
+    } as unknown as PublicBookingDepositService;
+
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+        update: recoveryUpdate,
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "hold_1",
+          bookingId: "bk_hold",
+          foId: "fo_a",
+          startAt: scheduled,
+          endAt: holdEnd,
+          expiresAt: new Date("2030-06-01T20:00:00.000Z"),
+        }),
+      },
+      paymentAnomaly: { create: anomalyCreate },
+      franchiseOwner: {
+        findUnique: jest
+          .fn()
+          .mockResolvedValue(franchiseOwnerRowForPublicHoldTests()),
+      },
+    } as unknown as PrismaService;
+    const slotAvailability = {
+      listAvailableWindows: jest.fn().mockResolvedValue([]),
+    } as unknown as SlotAvailabilityService;
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      slotAvailability,
+      { createHold: jest.fn() } as unknown as SlotHoldsService,
+      { confirmBookingFromHold } as unknown as BookingsService,
+      {} as FoService,
+      deposit,
+    );
+
+    await expect(
+      svc.confirmHold({ bookingId: "bk_hold", holdId: "hold_1" }, "idem-key-1"),
+    ).rejects.toBeInstanceOf(ConflictException);
+
+    expect(recoveryUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          recoveryStatus: BookingRecoveryStatus.failed,
+          originalRequestedTime: scheduled,
+          recoveryAttemptedAt: expect.any(Date),
+        }),
+      }),
+    );
+
+    expect(anomalyCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          bookingId: "bk_hold",
+          kind: "public_deposit_succeeded_booking_finalization_failed",
+          status: "open",
+          details: expect.objectContaining({
+            reason: "PAID_NO_AVAILABLE_SLOT",
+            recoveryReason: "SLOT_TAKEN",
+            structuredReason: "NO_RECOVERY_AVAILABLE",
+          }),
+        }),
+      }),
+    );
   });
 });

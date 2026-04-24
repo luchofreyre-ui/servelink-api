@@ -250,6 +250,46 @@ describe("DepositPaymentElement", () => {
     await waitFor(() => expect(confirmPayment).toHaveBeenCalledTimes(1));
   });
 
+  it("includes public booking identifiers in the Stripe return_url", async () => {
+    stripeHooks.elements = {};
+    stripeHooks.autoFireReady = true;
+
+    render(
+      <DepositPaymentElement
+        stripePromise={Promise.resolve(buildStripeStub())}
+        clientSecret="cs_test_abc"
+        amountCents={10000}
+        bookingId="bk_test"
+        holdId="hold_test"
+        paymentIntentId="pi_test"
+        paymentSessionKey="public-booking:bk_test:hold:hold_test"
+        onSuccess={async () => {}}
+        onError={() => {}}
+      />,
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: /pay \$100 deposit/i }),
+      ).not.toBeDisabled(),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /pay \$100 deposit/i }));
+
+    await waitFor(() => expect(confirmPayment).toHaveBeenCalledTimes(1));
+    const args = confirmPayment.mock.calls[0]?.[0] as {
+      confirmParams?: { return_url?: string };
+    };
+    const returnUrl = new URL(args.confirmParams?.return_url ?? "");
+    expect(returnUrl.searchParams.get("publicBookingPayment")).toBe("1");
+    expect(returnUrl.searchParams.get("bookingId")).toBe("bk_test");
+    expect(returnUrl.searchParams.get("holdId")).toBe("hold_test");
+    expect(returnUrl.searchParams.get("paymentIntentId")).toBe("pi_test");
+    expect(returnUrl.searchParams.get("paymentSessionKey")).toBe(
+      "public-booking:bk_test:hold:hold_test",
+    );
+  });
+
   it("shows element load error copy and retry, keeping pay disabled", async () => {
     stripeHooks.elements = {};
     stripeHooks.autoFireReady = false;
