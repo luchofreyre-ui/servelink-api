@@ -795,6 +795,40 @@ export class StripePaymentService {
     );
   }
 
+  /**
+   * Narrow read for deposit refund reconciliation (cron safety net). Throws on Stripe errors
+   * so callers can log and skip DB mutation.
+   */
+  async retrieveRefundForDepositReconciliation(refundId: string): Promise<{
+    id: string;
+    status: string | null;
+    paymentIntentId: string | null;
+    chargeId: string | null;
+  }> {
+    const stripe = this.requireStripe();
+    const r = await stripe.refunds.retrieve(refundId.trim());
+    const pi = (r as { payment_intent?: unknown }).payment_intent;
+    let paymentIntentId: string | null = null;
+    if (typeof pi === "string" && pi.trim()) {
+      paymentIntentId = pi.trim();
+    } else if (pi && typeof pi === "object" && "id" in pi && typeof (pi as { id: unknown }).id === "string") {
+      paymentIntentId = String((pi as { id: string }).id).trim() || null;
+    }
+    const ch = (r as { charge?: unknown }).charge;
+    let chargeId: string | null = null;
+    if (typeof ch === "string" && ch.trim()) {
+      chargeId = ch.trim();
+    } else if (ch && typeof ch === "object" && "id" in ch && typeof (ch as { id: unknown }).id === "string") {
+      chargeId = String((ch as { id: string }).id).trim() || null;
+    }
+    return {
+      id: r.id,
+      status: r.status != null ? String(r.status) : null,
+      paymentIntentId,
+      chargeId,
+    };
+  }
+
   async createPublicBookingDepositPaymentIntent(args: {
     bookingId: string;
     stripeCustomerId: string;

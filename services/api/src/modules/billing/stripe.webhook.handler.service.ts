@@ -196,6 +196,10 @@ export class StripeWebhookHandlerService {
     return { processed: true };
   }
 
+  /**
+   * `charge.refund.updated` is the fast path for deposit refunds (and ledger-backed refunds).
+   * `PaymentLifecycleReconciliationService` cron backfills missed or delayed Stripe refund events.
+   */
   async handleChargeRefundUpdated(event: any): Promise<{ processed: true }> {
     const refund = event.data?.object;
     const refundId = String(refund?.id ?? "");

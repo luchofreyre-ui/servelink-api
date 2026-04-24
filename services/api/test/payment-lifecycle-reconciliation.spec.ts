@@ -1,5 +1,7 @@
+import { Logger } from "@nestjs/common";
 import {
   BookingDepositRefundStatus,
+  BookingPublicDepositStatus,
   BookingRemainingBalancePaymentStatus,
 } from "@prisma/client";
 import { PaymentLifecycleReconciliationCronService } from "../src/modules/billing/payment-lifecycle-reconciliation.cron.service";
@@ -8,6 +10,54 @@ import { isCronDisabledByExplicitFalse } from "../src/modules/billing/payment-li
 import { RemainingBalanceAuthorizationCronService } from "../src/modules/billing/remaining-balance-authorization.cron.service";
 import { StripePaymentService } from "../src/modules/bookings/stripe/stripe-payment.service";
 
+type RefundShape = {
+  id: string;
+  status: string | null;
+  paymentIntentId: string | null;
+  chargeId: string | null;
+};
+
+function makeReconciliationService(
+  booking: Record<string, unknown>,
+  opts?: {
+    pi?: { status: string };
+    refund?: RefundShape | "throw";
+  },
+): {
+  svc: PaymentLifecycleReconciliationService;
+  prisma: any;
+  stripe: StripePaymentService;
+} {
+  process.env.STRIPE_SECRET_KEY = "sk_test_x";
+  const bookingUpdate = jest.fn().mockResolvedValue({});
+  const prisma = {
+    booking: {
+      findUnique: jest.fn().mockResolvedValue(booking),
+      update: bookingUpdate,
+    },
+  } as any;
+  const stripe = new StripePaymentService(prisma, {} as any);
+  if (opts?.pi) {
+    jest.spyOn(stripe, "retrievePaymentIntent").mockResolvedValue(opts.pi as any);
+  } else {
+    jest.spyOn(stripe, "retrievePaymentIntent");
+  }
+  if (opts?.refund === "throw") {
+    jest
+      .spyOn(stripe, "retrieveRefundForDepositReconciliation")
+      .mockRejectedValue(new Error("stripe_refund_missing"));
+  } else if (opts?.refund) {
+    jest.spyOn(stripe, "retrieveRefundForDepositReconciliation").mockResolvedValue(opts.refund);
+  } else {
+    jest.spyOn(stripe, "retrieveRefundForDepositReconciliation");
+  }
+  return {
+    svc: new PaymentLifecycleReconciliationService(prisma, stripe),
+    prisma,
+    stripe,
+  };
+}
+
 describe("PaymentLifecycleReconciliationService", () => {
   const OLD_STRIPE = process.env.STRIPE_SECRET_KEY;
 
@@ -15,25 +65,8 @@ describe("PaymentLifecycleReconciliationService", () => {
     process.env.STRIPE_SECRET_KEY = OLD_STRIPE;
   });
 
-  function makeService(
-    booking: Record<string, unknown>,
-    pi: { status: string },
-  ): PaymentLifecycleReconciliationService {
-    process.env.STRIPE_SECRET_KEY = "sk_test_x";
-    const bookingUpdate = jest.fn().mockResolvedValue({});
-    const prisma = {
-      booking: {
-        findUnique: jest.fn().mockResolvedValue(booking),
-        update: bookingUpdate,
-      },
-    } as any;
-    const stripePayments = new StripePaymentService(prisma, {} as any);
-    jest.spyOn(stripePayments, "retrievePaymentIntent").mockResolvedValue(pi as any);
-    return new PaymentLifecycleReconciliationService(prisma, stripePayments);
-  }
-
   it("requires_capture reconciles to balance_authorized", async () => {
-    const svc = makeService(
+    const { svc, prisma } = makeReconciliationService(
       {
         id: "b1",
         remainingBalancePaymentIntentId: "pi_1",
@@ -43,11 +76,13 @@ describe("PaymentLifecycleReconciliationService", () => {
         remainingBalanceCapturedAt: null,
         remainingBalanceAuthorizationFailureReason: null,
         publicDepositPaymentIntentId: null,
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
         depositRefundStatus: BookingDepositRefundStatus.refund_not_required,
+        depositRefundId: null,
+        depositRefundedAt: null,
       },
-      { status: "requires_capture" },
+      { pi: { status: "requires_capture" } },
     );
-    const prisma = (svc as any).prisma;
     const r = await svc.reconcileBookingPaymentLifecycle("b1");
     expect(r.touched).toBe(true);
     expect(prisma.booking.update).toHaveBeenCalledWith(
@@ -61,7 +96,7 @@ describe("PaymentLifecycleReconciliationService", () => {
   });
 
   it("succeeded reconciles to balance_captured", async () => {
-    const svc = makeService(
+    const { svc, prisma } = makeReconciliationService(
       {
         id: "b1",
         remainingBalancePaymentIntentId: "pi_1",
@@ -70,11 +105,13 @@ describe("PaymentLifecycleReconciliationService", () => {
         remainingBalanceCapturedAt: null,
         remainingBalanceAuthorizationFailureReason: null,
         publicDepositPaymentIntentId: null,
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
         depositRefundStatus: BookingDepositRefundStatus.refund_not_required,
+        depositRefundId: null,
+        depositRefundedAt: null,
       },
-      { status: "succeeded" },
+      { pi: { status: "succeeded" } },
     );
-    const prisma = (svc as any).prisma;
     const r = await svc.reconcileBookingPaymentLifecycle("b1");
     expect(r.touched).toBe(true);
     expect(prisma.booking.update).toHaveBeenCalledWith(
@@ -88,7 +125,7 @@ describe("PaymentLifecycleReconciliationService", () => {
   });
 
   it("requires_payment_method reconciles to balance_authorization_required", async () => {
-    const svc = makeService(
+    const { svc, prisma } = makeReconciliationService(
       {
         id: "b1",
         remainingBalancePaymentIntentId: "pi_1",
@@ -98,11 +135,13 @@ describe("PaymentLifecycleReconciliationService", () => {
         remainingBalanceCapturedAt: null,
         remainingBalanceAuthorizationFailureReason: "prior",
         publicDepositPaymentIntentId: null,
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
         depositRefundStatus: BookingDepositRefundStatus.refund_not_required,
+        depositRefundId: null,
+        depositRefundedAt: null,
       },
-      { status: "requires_payment_method" },
+      { pi: { status: "requires_payment_method" } },
     );
-    const prisma = (svc as any).prisma;
     const r = await svc.reconcileBookingPaymentLifecycle("b1");
     expect(r.touched).toBe(true);
     expect(prisma.booking.update).toHaveBeenCalledWith(
@@ -116,7 +155,7 @@ describe("PaymentLifecycleReconciliationService", () => {
   });
 
   it("failed reconciles to balance_authorization_failed", async () => {
-    const svc = makeService(
+    const { svc, prisma } = makeReconciliationService(
       {
         id: "b1",
         remainingBalancePaymentIntentId: "pi_1",
@@ -126,11 +165,13 @@ describe("PaymentLifecycleReconciliationService", () => {
         remainingBalanceCapturedAt: null,
         remainingBalanceAuthorizationFailureReason: null,
         publicDepositPaymentIntentId: null,
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
         depositRefundStatus: BookingDepositRefundStatus.refund_not_required,
+        depositRefundId: null,
+        depositRefundedAt: null,
       },
-      { status: "failed" },
+      { pi: { status: "failed" } },
     );
-    const prisma = (svc as any).prisma;
     const r = await svc.reconcileBookingPaymentLifecycle("b1");
     expect(r.touched).toBe(true);
     expect(prisma.booking.update).toHaveBeenCalledWith(
@@ -144,7 +185,7 @@ describe("PaymentLifecycleReconciliationService", () => {
   });
 
   it("does not downgrade balance_captured", async () => {
-    const svc = makeService(
+    const { svc, prisma, stripe } = makeReconciliationService(
       {
         id: "b1",
         remainingBalancePaymentIntentId: "pi_1",
@@ -153,19 +194,21 @@ describe("PaymentLifecycleReconciliationService", () => {
         remainingBalanceCapturedAt: new Date(),
         remainingBalanceAuthorizationFailureReason: null,
         publicDepositPaymentIntentId: null,
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
         depositRefundStatus: BookingDepositRefundStatus.refund_not_required,
+        depositRefundId: null,
+        depositRefundedAt: null,
       },
-      { status: "requires_capture" },
+      { pi: { status: "requires_capture" } },
     );
-    const prisma = (svc as any).prisma;
     const r = await svc.reconcileBookingPaymentLifecycle("b1");
     expect(r.touched).toBe(false);
     expect(prisma.booking.update).not.toHaveBeenCalled();
-    expect((svc as any).stripePayments.retrievePaymentIntent).not.toHaveBeenCalled();
+    expect(stripe.retrievePaymentIntent).not.toHaveBeenCalled();
   });
 
   it("does not change balance_canceled", async () => {
-    const svc = makeService(
+    const { svc, prisma, stripe } = makeReconciliationService(
       {
         id: "b1",
         remainingBalancePaymentIntentId: "pi_1",
@@ -174,15 +217,282 @@ describe("PaymentLifecycleReconciliationService", () => {
         remainingBalanceCapturedAt: null,
         remainingBalanceAuthorizationFailureReason: null,
         publicDepositPaymentIntentId: null,
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
         depositRefundStatus: BookingDepositRefundStatus.refund_not_required,
+        depositRefundId: null,
+        depositRefundedAt: null,
       },
-      { status: "succeeded" },
+      { pi: { status: "succeeded" } },
     );
-    const prisma = (svc as any).prisma;
     const r = await svc.reconcileBookingPaymentLifecycle("b1");
     expect(r.touched).toBe(false);
     expect(prisma.booking.update).not.toHaveBeenCalled();
-    expect((svc as any).stripePayments.retrievePaymentIntent).not.toHaveBeenCalled();
+    expect(stripe.retrievePaymentIntent).not.toHaveBeenCalled();
+  });
+
+  it("depositRefundId + Stripe refund succeeded → refund_succeeded and depositRefundedAt", async () => {
+    const { svc, prisma } = makeReconciliationService(
+      {
+        id: "b1",
+        remainingBalancePaymentIntentId: null,
+        remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_not_required,
+        remainingBalanceAuthorizedAt: null,
+        remainingBalanceCapturedAt: null,
+        remainingBalanceAuthorizationFailureReason: null,
+        publicDepositPaymentIntentId: "pi_dep",
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        depositRefundStatus: BookingDepositRefundStatus.refund_pending,
+        depositRefundId: "re_1",
+        depositRefundedAt: null,
+      },
+      {
+        refund: {
+          id: "re_1",
+          status: "succeeded",
+          paymentIntentId: "pi_dep",
+          chargeId: "ch_1",
+        },
+      },
+    );
+    const r = await svc.reconcileBookingPaymentLifecycle("b1");
+    expect(r.touched).toBe(true);
+    expect(prisma.booking.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          depositRefundStatus: BookingDepositRefundStatus.refund_succeeded,
+          publicDepositStatus: BookingPublicDepositStatus.refunded,
+        }),
+      }),
+    );
+    const patch = prisma.booking.update.mock.calls[0][0].data;
+    expect(patch.depositRefundedAt).toBeTruthy();
+  });
+
+  it("depositRefundId + Stripe refund pending → refund_pending", async () => {
+    const { svc, prisma } = makeReconciliationService(
+      {
+        id: "b1",
+        remainingBalancePaymentIntentId: null,
+        remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_not_required,
+        remainingBalanceAuthorizedAt: null,
+        remainingBalanceCapturedAt: null,
+        remainingBalanceAuthorizationFailureReason: null,
+        publicDepositPaymentIntentId: "pi_dep",
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        depositRefundStatus: BookingDepositRefundStatus.refund_failed,
+        depositRefundId: "re_1",
+        depositRefundedAt: null,
+      },
+      {
+        refund: {
+          id: "re_1",
+          status: "pending",
+          paymentIntentId: "pi_dep",
+          chargeId: null,
+        },
+      },
+    );
+    const r = await svc.reconcileBookingPaymentLifecycle("b1");
+    expect(r.touched).toBe(true);
+    expect(prisma.booking.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          depositRefundStatus: BookingDepositRefundStatus.refund_pending,
+        }),
+      }),
+    );
+  });
+
+  it("depositRefundId + Stripe refund failed → refund_failed", async () => {
+    const { svc, prisma } = makeReconciliationService(
+      {
+        id: "b1",
+        remainingBalancePaymentIntentId: null,
+        remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_not_required,
+        remainingBalanceAuthorizedAt: null,
+        remainingBalanceCapturedAt: null,
+        remainingBalanceAuthorizationFailureReason: null,
+        publicDepositPaymentIntentId: "pi_dep",
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        depositRefundStatus: BookingDepositRefundStatus.refund_pending,
+        depositRefundId: "re_1",
+        depositRefundedAt: null,
+      },
+      {
+        refund: {
+          id: "re_1",
+          status: "failed",
+          paymentIntentId: "pi_dep",
+          chargeId: null,
+        },
+      },
+    );
+    const r = await svc.reconcileBookingPaymentLifecycle("b1");
+    expect(r.touched).toBe(true);
+    expect(prisma.booking.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          depositRefundStatus: BookingDepositRefundStatus.refund_failed,
+        }),
+      }),
+    );
+    expect(prisma.booking.update.mock.calls[0][0].data.depositRefundedAt).toBeUndefined();
+  });
+
+  it("depositRefundId + Stripe refund canceled → refund_failed", async () => {
+    const { svc, prisma } = makeReconciliationService(
+      {
+        id: "b1",
+        remainingBalancePaymentIntentId: null,
+        remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_not_required,
+        remainingBalanceAuthorizedAt: null,
+        remainingBalanceCapturedAt: null,
+        remainingBalanceAuthorizationFailureReason: null,
+        publicDepositPaymentIntentId: "pi_dep",
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        depositRefundStatus: BookingDepositRefundStatus.refund_pending,
+        depositRefundId: "re_1",
+        depositRefundedAt: null,
+      },
+      {
+        refund: {
+          id: "re_1",
+          status: "canceled",
+          paymentIntentId: "pi_dep",
+          chargeId: null,
+        },
+      },
+    );
+    const r = await svc.reconcileBookingPaymentLifecycle("b1");
+    expect(r.touched).toBe(true);
+    expect(prisma.booking.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          depositRefundStatus: BookingDepositRefundStatus.refund_failed,
+        }),
+      }),
+    );
+  });
+
+  it("existing refund_succeeded is not downgraded by Stripe pending", async () => {
+    const { svc, prisma, stripe } = makeReconciliationService(
+      {
+        id: "b1",
+        remainingBalancePaymentIntentId: null,
+        remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_not_required,
+        remainingBalanceAuthorizedAt: null,
+        remainingBalanceCapturedAt: null,
+        remainingBalanceAuthorizationFailureReason: null,
+        publicDepositPaymentIntentId: "pi_dep",
+        publicDepositStatus: BookingPublicDepositStatus.refunded,
+        depositRefundStatus: BookingDepositRefundStatus.refund_succeeded,
+        depositRefundId: "re_1",
+        depositRefundedAt: new Date("2026-01-01T00:00:00.000Z"),
+      },
+      {
+        refund: {
+          id: "re_1",
+          status: "pending",
+          paymentIntentId: "pi_dep",
+          chargeId: null,
+        },
+      },
+    );
+    const r = await svc.reconcileBookingPaymentLifecycle("b1");
+    expect(r.touched).toBe(false);
+    expect(prisma.booking.update).not.toHaveBeenCalled();
+    expect(stripe.retrieveRefundForDepositReconciliation).not.toHaveBeenCalled();
+    expect(r.detail).toContain("deposit_refund_already_succeeded_no_downgrade");
+  });
+
+  it("paymentIntentId mismatch does not mutate booking", async () => {
+    const { svc, prisma } = makeReconciliationService(
+      {
+        id: "b1",
+        remainingBalancePaymentIntentId: null,
+        remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_not_required,
+        remainingBalanceAuthorizedAt: null,
+        remainingBalanceCapturedAt: null,
+        remainingBalanceAuthorizationFailureReason: null,
+        publicDepositPaymentIntentId: "pi_dep",
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        depositRefundStatus: BookingDepositRefundStatus.refund_pending,
+        depositRefundId: "re_1",
+        depositRefundedAt: null,
+      },
+      {
+        refund: {
+          id: "re_1",
+          status: "succeeded",
+          paymentIntentId: "pi_other",
+          chargeId: null,
+        },
+      },
+    );
+    const r = await svc.reconcileBookingPaymentLifecycle("b1");
+    expect(r.touched).toBe(false);
+    expect(prisma.booking.update).not.toHaveBeenCalled();
+    expect(r.detail).toContain("deposit_refund_pi_mismatch");
+  });
+
+  it("refund_pending with null depositRefundId logs and skips without mutation", async () => {
+    const warn = jest.spyOn(Logger.prototype, "warn").mockImplementation(() => undefined);
+    const { svc, prisma } = makeReconciliationService(
+      {
+        id: "b1",
+        remainingBalancePaymentIntentId: null,
+        remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_not_required,
+        remainingBalanceAuthorizedAt: null,
+        remainingBalanceCapturedAt: null,
+        remainingBalanceAuthorizationFailureReason: null,
+        publicDepositPaymentIntentId: "pi_dep",
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        depositRefundStatus: BookingDepositRefundStatus.refund_pending,
+        depositRefundId: null,
+        depositRefundedAt: null,
+      },
+    );
+    const r = await svc.reconcileBookingPaymentLifecycle("b1");
+    expect(r.touched).toBe(false);
+    expect(prisma.booking.update).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledWith(
+      expect.objectContaining({
+        kind: "payment_lifecycle_reconcile",
+        event: "refund_pending_missing_refund_id",
+        bookingId: "b1",
+      }),
+    );
+    expect(r.detail).toContain("refund_pending_missing_refund_id");
+    warn.mockRestore();
+  });
+
+  it("allows refund reconciliation when Stripe omits paymentIntentId", async () => {
+    const { svc, prisma } = makeReconciliationService(
+      {
+        id: "b1",
+        remainingBalancePaymentIntentId: null,
+        remainingBalanceStatus: BookingRemainingBalancePaymentStatus.balance_not_required,
+        remainingBalanceAuthorizedAt: null,
+        remainingBalanceCapturedAt: null,
+        remainingBalanceAuthorizationFailureReason: null,
+        publicDepositPaymentIntentId: "pi_dep",
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        depositRefundStatus: BookingDepositRefundStatus.refund_pending,
+        depositRefundId: "re_1",
+        depositRefundedAt: null,
+      },
+      {
+        refund: {
+          id: "re_1",
+          status: "succeeded",
+          paymentIntentId: null,
+          chargeId: "ch_1",
+        },
+      },
+    );
+    const r = await svc.reconcileBookingPaymentLifecycle("b1");
+    expect(r.touched).toBe(true);
+    expect(prisma.booking.update).toHaveBeenCalled();
   });
 });
 

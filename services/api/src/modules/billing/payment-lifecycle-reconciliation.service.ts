@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import {
   BookingDepositRefundStatus,
+  BookingPublicDepositStatus,
   BookingRemainingBalancePaymentStatus,
   Prisma,
 } from "@prisma/client";
@@ -33,11 +34,14 @@ export class PaymentLifecycleReconciliationService {
         OR: [
           { remainingBalancePaymentIntentId: { not: null } },
           { remainingBalanceStatus: { in: REMAINING_RECONCILE_STATUSES } },
+          { depositRefundId: { not: null } },
           {
-            AND: [
-              { publicDepositPaymentIntentId: { not: null } },
-              { depositRefundStatus: BookingDepositRefundStatus.refund_pending },
-            ],
+            depositRefundStatus: {
+              in: [
+                BookingDepositRefundStatus.refund_pending,
+                BookingDepositRefundStatus.refund_failed,
+              ],
+            },
           },
         ],
       },
@@ -66,7 +70,10 @@ export class PaymentLifecycleReconciliationService {
         remainingBalanceCapturedAt: true,
         remainingBalanceAuthorizationFailureReason: true,
         publicDepositPaymentIntentId: true,
+        publicDepositStatus: true,
         depositRefundStatus: true,
+        depositRefundId: true,
+        depositRefundedAt: true,
       },
     });
     if (!booking) {
@@ -74,25 +81,106 @@ export class PaymentLifecycleReconciliationService {
     }
 
     let touched = false;
+    const details: string[] = [];
 
     if (
       booking.depositRefundStatus === BookingDepositRefundStatus.refund_pending &&
-      booking.publicDepositPaymentIntentId?.trim()
+      !booking.depositRefundId?.trim()
     ) {
-      // TODO: Narrow refund_pending reconciliation against Stripe (e.g. refunds.list on the
-      // deposit PaymentIntent) once a small, idempotent helper exists on StripePaymentService —
-      // today `charge.refund.updated` + `handleChargeRefundUpdated` is the primary path.
-      this.log.debug({
+      this.log.warn({
         kind: "payment_lifecycle_reconcile",
-        event: "deposit_refund_pending_skipped",
+        event: "refund_pending_missing_refund_id",
         bookingId,
-        note: "webhook_and_manual_refund_flows_are_source_of_truth_until_pi_refund_list_helper_exists",
       });
+      details.push("refund_pending_missing_refund_id");
+    }
+
+    const refundId = booking.depositRefundId?.trim() ?? null;
+    if (refundId) {
+      if (booking.depositRefundStatus === BookingDepositRefundStatus.refund_succeeded) {
+        details.push("deposit_refund_already_succeeded_no_downgrade");
+      } else {
+        try {
+          const rf = await this.stripePayments.retrieveRefundForDepositReconciliation(refundId);
+          const expectedPi = booking.publicDepositPaymentIntentId?.trim() || null;
+          if (rf.paymentIntentId && expectedPi && rf.paymentIntentId !== expectedPi) {
+            this.log.error({
+              kind: "payment_lifecycle_reconcile",
+              event: "deposit_refund_payment_intent_mismatch",
+              bookingId,
+              expectedPaymentIntentId: expectedPi,
+              observedPaymentIntentId: rf.paymentIntentId,
+            });
+            details.push("deposit_refund_pi_mismatch");
+          } else {
+            const st = (rf.status ?? "").toLowerCase();
+            if (
+              st !== "succeeded" &&
+              st !== "pending" &&
+              st !== "failed" &&
+              st !== "canceled"
+            ) {
+              this.log.warn({
+                kind: "payment_lifecycle_reconcile",
+                event: "deposit_refund_unknown_status",
+                bookingId,
+                stripeRefundStatus: rf.status,
+              });
+              details.push(`deposit_refund_unknown_status_${st || "empty"}`);
+            } else {
+              const patch: Prisma.BookingUpdateInput = {};
+              if (st === "succeeded") {
+                patch.depositRefundStatus = BookingDepositRefundStatus.refund_succeeded;
+                patch.depositRefundedAt = booking.depositRefundedAt ?? new Date();
+                if (
+                  booking.publicDepositStatus !==
+                  BookingPublicDepositStatus.cancellation_fee_retained
+                ) {
+                  patch.publicDepositStatus = BookingPublicDepositStatus.refunded;
+                }
+              } else if (st === "pending") {
+                patch.depositRefundStatus = BookingDepositRefundStatus.refund_pending;
+              } else if (st === "failed" || st === "canceled") {
+                patch.depositRefundStatus = BookingDepositRefundStatus.refund_failed;
+              }
+
+              if (Object.keys(patch).length > 0) {
+                await this.prisma.booking.update({
+                  where: { id: bookingId },
+                  data: patch,
+                });
+                touched = true;
+                this.log.log({
+                  kind: "payment_lifecycle_reconcile",
+                  event: "deposit_refund_updated",
+                  bookingId,
+                  refundId,
+                  stripeRefundStatus: rf.status,
+                });
+                details.push("deposit_refund_reconciled");
+              }
+            }
+          }
+        } catch (e) {
+          this.log.warn({
+            kind: "payment_lifecycle_reconcile",
+            event: "deposit_refund_retrieve_failed",
+            bookingId,
+            refundId,
+            message: e instanceof Error ? e.message : String(e),
+          });
+          details.push("deposit_refund_retrieve_failed");
+        }
+      }
     }
 
     const piId = booking.remainingBalancePaymentIntentId?.trim();
     if (!piId) {
-      return { touched, detail: touched ? "partial" : "no_remaining_balance_pi" };
+      return {
+        touched,
+        detail:
+          details.join(",") || (touched ? "deposit_refund_only" : "no_remaining_balance_pi"),
+      };
     }
 
     if (booking.remainingBalanceStatus === BookingRemainingBalancePaymentStatus.balance_canceled) {
@@ -101,11 +189,21 @@ export class PaymentLifecycleReconciliationService {
         event: "skipped_balance_canceled_immutable",
         bookingId,
       });
-      return { touched: false, detail: "balance_canceled_immutable" };
+      return {
+        touched,
+        detail:
+          details.join(",") ||
+          (touched ? "deposit_plus_balance_canceled_skip" : "balance_canceled_immutable"),
+      };
     }
 
     if (booking.remainingBalanceStatus === BookingRemainingBalancePaymentStatus.balance_captured) {
-      return { touched: false, detail: "already_captured_no_downgrade" };
+      return {
+        touched,
+        detail:
+          details.join(",") ||
+          (touched ? "deposit_plus_already_captured" : "already_captured_no_downgrade"),
+      };
     }
 
     const pi = await this.stripePayments.retrievePaymentIntent(piId);
@@ -141,7 +239,10 @@ export class PaymentLifecycleReconciliationService {
           "stripe_reconcile_requires_payment_method";
       }
     } else {
-      return { touched: false, detail: `pi_status_noop_${st}` };
+      return {
+        touched,
+        detail: details.join(",") || `pi_status_noop_${st}`,
+      };
     }
 
     const nextStatus =
@@ -154,7 +255,10 @@ export class PaymentLifecycleReconciliationService {
       !patch.remainingBalanceCapturedAt &&
       !patch.remainingBalanceAuthorizationFailureReason
     ) {
-      return { touched: false, detail: "no_status_change" };
+      return {
+        touched,
+        detail: details.join(",") || "no_status_change",
+      };
     }
 
     await this.prisma.booking.update({
@@ -173,6 +277,7 @@ export class PaymentLifecycleReconciliationService {
       nextRemainingBalanceStatus: nextStatus,
     });
 
-    return { touched: true, detail: "remaining_balance_reconciled" };
+    details.push("remaining_balance_reconciled");
+    return { touched: true, detail: details.join(",") };
   }
 }
