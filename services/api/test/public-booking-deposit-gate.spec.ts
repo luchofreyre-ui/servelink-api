@@ -144,11 +144,20 @@ describe("PublicBookingDepositService gate", () => {
     );
   });
 
-  it("rejects deposit_succeeded without a PaymentIntent before finalization", async () => {
+  it("allows deposit_succeeded without a PaymentIntent and records idempotent visibility", async () => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = undefined;
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
+    const bookingEventCreate = jest
+      .fn()
+      .mockResolvedValueOnce({})
+      .mockRejectedValueOnce({ code: "P2002" });
+    const anomalyFindFirst = jest
+      .fn()
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ id: "anom_existing" });
+    const anomalyCreate = jest.fn().mockResolvedValue({});
     const prisma = {
       booking: {
         findUnique: jest.fn().mockResolvedValue({
@@ -162,6 +171,13 @@ describe("PublicBookingDepositService gate", () => {
           customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
           estimateSnapshot: { outputJson },
         }),
+      },
+      bookingEvent: {
+        create: bookingEventCreate,
+      },
+      paymentAnomaly: {
+        findFirst: anomalyFindFirst,
+        create: anomalyCreate,
       },
       bookingSlotHold: {
         findUnique: jest.fn().mockResolvedValue({
@@ -181,6 +197,98 @@ describe("PublicBookingDepositService gate", () => {
     );
     const svc = new PublicBookingDepositService(prisma, stripePayments);
 
+    await svc.ensurePublicDepositResolvedBeforeConfirm({
+      bookingId: "bk1",
+      holdId: "h1",
+      stripePaymentMethodId: null,
+      idempotencyKey: "k1",
+    });
+    await svc.ensurePublicDepositResolvedBeforeConfirm({
+      bookingId: "bk1",
+      holdId: "h1",
+      stripePaymentMethodId: null,
+      idempotencyKey: "k1",
+    });
+
+    expect(bookingEventCreate).toHaveBeenCalledTimes(2);
+    expect(bookingEventCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          idempotencyKey: "public-deposit-missing-pi:bk1",
+          payload: expect.objectContaining({
+            reason: "DEPOSIT_SUCCEEDED_MISSING_PAYMENT_INTENT",
+            bookingId: "bk1",
+            holdId: "h1",
+            publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+            source: "public_booking_confirm",
+          }),
+        }),
+      }),
+    );
+    expect(anomalyCreate).toHaveBeenCalledTimes(1);
+    expect(anomalyCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          bookingId: "bk1",
+          kind: "public_deposit_succeeded_missing_payment_intent",
+          details: expect.objectContaining({
+            reason: "DEPOSIT_SUCCEEDED_MISSING_PAYMENT_INTENT",
+          }),
+        }),
+      }),
+    );
+  });
+
+  it.each([
+    BookingPublicDepositStatus.deposit_required,
+    BookingPublicDepositStatus.deposit_failed,
+  ])("still blocks %s by requiring payment", async (publicDepositStatus) => {
+    process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = undefined;
+    process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+
+    const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
+    const bookingUpdate = jest.fn().mockResolvedValue({});
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "bk1",
+          tenantId: "tenant_1",
+          status: BookingStatus.pending_payment,
+          customerId: "u1",
+          publicDepositStatus,
+          publicDepositAmountCents: 10_000,
+          publicDepositPaymentIntentId: null,
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
+          estimateSnapshot: { outputJson },
+        }),
+        update: bookingUpdate,
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "h1",
+          bookingId: "bk1",
+          foId: "fo1",
+          startAt: new Date("2030-01-01T10:00:00.000Z"),
+          endAt: new Date("2030-01-01T12:00:00.000Z"),
+          expiresAt: new Date("2030-01-01T13:00:00.000Z"),
+        }),
+      },
+    } as unknown as PrismaService;
+
+    const stripePayments = new StripePaymentService(
+      prisma,
+      {} as PaymentReliabilityService,
+    );
+    jest.spyOn(stripePayments, "ensureStripeCustomerForUser").mockResolvedValue("cus_x");
+    jest
+      .spyOn(stripePayments, "createPublicBookingDepositPaymentIntent")
+      .mockResolvedValue({
+        id: "pi_required",
+        status: "requires_payment_method",
+        client_secret: "cs_required",
+      } as never);
+    const svc = new PublicBookingDepositService(prisma, stripePayments);
+
     await expect(
       svc.ensurePublicDepositResolvedBeforeConfirm({
         bookingId: "bk1",
@@ -190,7 +298,7 @@ describe("PublicBookingDepositService gate", () => {
       }),
     ).rejects.toMatchObject({
       response: expect.objectContaining({
-        code: "PUBLIC_BOOKING_DEPOSIT_STATE_INCONSISTENT",
+        code: "PUBLIC_BOOKING_DEPOSIT_REQUIRED",
       }),
     });
   });
