@@ -87,9 +87,13 @@ import {
   postPublicBookingAvailability,
   postPublicBookingConfirm,
   postPublicBookingHold,
+  PublicBookingDepositProcessingError,
+  PublicBookingPaymentRequiredError,
   submitBookingDirectionIntake,
   type SubmitBookingDirectionIntakePayload,
 } from "./bookingDirectionIntakeApi";
+import { DepositPaymentElement } from "./DepositPaymentElement";
+import { getStripePromise } from "@/lib/stripe/stripeClient";
 import { buildIntakeEstimateFactorsFromBookingHomeState } from "./bookingStep2ToEstimateFactors";
 import { buildEstimateRequestKey } from "./bookingEstimateKey";
 import { useBookingEstimate } from "./useBookingEstimate";
@@ -340,12 +344,27 @@ export function BookingFlowClient() {
     null,
   );
   const [confirmScheduleLoading, setConfirmScheduleLoading] = useState(false);
+  const [depositRequired, setDepositRequired] = useState(false);
+  const [depositClientSecret, setDepositClientSecret] = useState<string | null>(
+    null,
+  );
+  const [depositPaymentIntentId, setDepositPaymentIntentId] = useState<
+    string | null
+  >(null);
+  const [depositAmountCents, setDepositAmountCents] = useState<number | null>(
+    null,
+  );
+  const [depositProcessing, setDepositProcessing] = useState(false);
+  const [depositError, setDepositError] = useState<string | null>(null);
+  const [depositBackendProcessing, setDepositBackendProcessing] =
+    useState(false);
   const [attemptedNext, setAttemptedNext] = useState(false);
   const [attemptedConfirm, setAttemptedConfirm] = useState(false);
   const [submitRecoverableFailure, setSubmitRecoverableFailure] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
   const submitInFlightRef = useRef(false);
+  const scheduleConfirmIdempotencyKeyRef = useRef<string | null>(null);
   /** After an explicit fresh start, one URL sync must not re-merge contact from prior React state. */
   const skipContactMergeFromUrlOnceRef = useRef(false);
   const scheduleSnapshotForAbandonRef = useRef({
@@ -358,6 +377,18 @@ export function BookingFlowClient() {
   /** Latest booking state when committing the URL at step boundaries. */
   const stateRefForBookingUrl = useRef(state);
   stateRefForBookingUrl.current = state;
+
+  const stripePromise = useMemo(() => getStripePromise(), []);
+
+  function clearDepositUi() {
+    setDepositRequired(false);
+    setDepositClientSecret(null);
+    setDepositPaymentIntentId(null);
+    setDepositAmountCents(null);
+    setDepositError(null);
+    setDepositProcessing(false);
+    setDepositBackendProcessing(false);
+  }
   /**
    * Last `state.step` written to the location bar. Same-step edits stay in React only
    * (no `router.replace`) to avoid App Router remount/scroll reset loops.
@@ -1171,6 +1202,83 @@ export function BookingFlowClient() {
     }
   }
 
+  async function completeDepositAfterPayment() {
+    const holdId = pendingConfirmHoldId?.trim();
+    const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
+    if (!holdId || !bookingId) return;
+
+    setDepositProcessing(true);
+    setDepositError(null);
+    setDepositBackendProcessing(false);
+
+    const idemKey = scheduleConfirmIdempotencyKeyRef.current;
+    const maxAttempts = 5;
+
+    try {
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        if (attempt > 0) {
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+        try {
+          await postPublicBookingConfirm(
+            { bookingId, holdId },
+            idemKey,
+          );
+          const s = stateRefForBookingUrl.current;
+          emitBookingFunnelEvent("booking_confirmed", {
+            bookingId,
+            teamId: s.selectedTeamId,
+            holdId,
+          });
+          clearDepositUi();
+          setScheduleCommitError(null);
+          setScheduleCommitPhase("none");
+          setPendingConfirmHoldId(null);
+          setState((prev) => ({
+            ...prev,
+            schedulingConfirmed: true,
+            publicHoldId: holdId,
+          }));
+          const q = new URLSearchParams();
+          q.set("intakeId", s.schedulingIntakeId.trim());
+          q.set("bookingId", bookingId);
+          appendPublicIntakeContextToSearchParams(q, s);
+          router.push(`/book/confirmation?${q.toString()}`);
+          return;
+        } catch (e) {
+          if (e instanceof PublicBookingDepositProcessingError) {
+            setDepositBackendProcessing(true);
+            if (attempt === maxAttempts - 1) {
+              setDepositError(
+                "Payment is still processing. Please wait a moment and try again.",
+              );
+            }
+            continue;
+          }
+          if (
+            e instanceof PublicBookingPaymentRequiredError &&
+            e.code === "PAYMENT_REQUIRED"
+          ) {
+            setDepositError(
+              e.details.message ||
+                "Deposit is still required before we can confirm.",
+            );
+            return;
+          }
+          setDepositError(
+            e instanceof Error
+              ? e.message
+              : "We couldn’t confirm your booking. Please try again.",
+          );
+          return;
+        }
+      }
+    } finally {
+      setDepositProcessing(false);
+      setDepositBackendProcessing(false);
+    }
+  }
+
   async function confirmScheduleHoldAndFinish() {
     if (
       !state.schedulingBookingId.trim() ||
@@ -1180,6 +1288,11 @@ export function BookingFlowClient() {
     ) {
       return;
     }
+    scheduleConfirmIdempotencyKeyRef.current =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `bk-confirm-${Date.now()}`;
+    clearDepositUi();
     emitBookingFunnelEvent("confirm_clicked", {
       bookingId: state.schedulingBookingId,
       teamId: state.selectedTeamId,
@@ -1203,9 +1316,7 @@ export function BookingFlowClient() {
             bookingId: state.schedulingBookingId,
             holdId: hold.holdId,
           },
-          typeof crypto !== "undefined" && "randomUUID" in crypto
-            ? crypto.randomUUID()
-            : null,
+          scheduleConfirmIdempotencyKeyRef.current,
         );
       } catch (confirmErr) {
         console.error("public booking confirm failed", confirmErr);
@@ -1214,6 +1325,27 @@ export function BookingFlowClient() {
           teamId: state.selectedTeamId,
           holdId: hold.holdId,
         });
+        if (
+          confirmErr instanceof PublicBookingPaymentRequiredError &&
+          confirmErr.code === "PAYMENT_REQUIRED"
+        ) {
+          const d = confirmErr.details;
+          setDepositRequired(true);
+          setDepositClientSecret(
+            typeof d.clientSecret === "string" ? d.clientSecret : null,
+          );
+          setDepositPaymentIntentId(
+            typeof d.paymentIntentId === "string" ? d.paymentIntentId : null,
+          );
+          setDepositAmountCents(
+            typeof d.amountCents === "number" ? d.amountCents : null,
+          );
+          setDepositError(null);
+          setScheduleCommitError(null);
+          setScheduleCommitPhase("none");
+          setPendingConfirmHoldId(hold.holdId);
+          return;
+        }
         setScheduleCommitError(BOOKING_SCHEDULE_CONFIRM_FAILED);
         setScheduleCommitPhase("confirm_failed");
         setPendingConfirmHoldId(hold.holdId);
@@ -1252,6 +1384,12 @@ export function BookingFlowClient() {
 
   async function retryScheduleConfirm() {
     if (!state.schedulingBookingId.trim() || !pendingConfirmHoldId?.trim()) return;
+    if (!scheduleConfirmIdempotencyKeyRef.current) {
+      scheduleConfirmIdempotencyKeyRef.current =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `bk-confirm-${Date.now()}`;
+    }
     emitBookingFunnelEvent("confirm_clicked", {
       bookingId: state.schedulingBookingId,
       teamId: state.selectedTeamId,
@@ -1265,9 +1403,7 @@ export function BookingFlowClient() {
           bookingId: state.schedulingBookingId,
           holdId: pendingConfirmHoldId.trim(),
         },
-        typeof crypto !== "undefined" && "randomUUID" in crypto
-          ? crypto.randomUUID()
-          : null,
+        scheduleConfirmIdempotencyKeyRef.current,
       );
       emitBookingFunnelEvent("booking_confirmed", {
         bookingId: state.schedulingBookingId,
@@ -1295,6 +1431,26 @@ export function BookingFlowClient() {
         bookingId: state.schedulingBookingId,
         retry: true,
       });
+      if (
+        err instanceof PublicBookingPaymentRequiredError &&
+        err.code === "PAYMENT_REQUIRED"
+      ) {
+        const d = err.details;
+        setDepositRequired(true);
+        setDepositClientSecret(
+          typeof d.clientSecret === "string" ? d.clientSecret : null,
+        );
+        setDepositPaymentIntentId(
+          typeof d.paymentIntentId === "string" ? d.paymentIntentId : null,
+        );
+        setDepositAmountCents(
+          typeof d.amountCents === "number" ? d.amountCents : null,
+        );
+        setDepositError(null);
+        setScheduleCommitError(null);
+        setScheduleCommitPhase("none");
+        return;
+      }
       setScheduleCommitError(BOOKING_SCHEDULE_CONFIRM_FAILED);
       setScheduleCommitPhase("confirm_failed");
     } finally {
@@ -1303,6 +1459,7 @@ export function BookingFlowClient() {
   }
 
   function chooseDifferentTimeAfterConfirmFail() {
+    clearDepositUi();
     setPendingConfirmHoldId(null);
     setScheduleCommitError(null);
     setScheduleCommitPhase("none");
@@ -1318,6 +1475,7 @@ export function BookingFlowClient() {
   }
 
   function exitScheduleToAdjustDetails() {
+    clearDepositUi();
     setScheduleSurfaceError(null);
     setScheduleCommitError(null);
     setScheduleCommitPhase("none");
@@ -1375,6 +1533,7 @@ export function BookingFlowClient() {
           });
         }
       }
+      clearDepositUi();
       setScheduleSurfaceError(null);
       setScheduleCommitError(null);
       setScheduleCommitPhase("none");
@@ -1438,6 +1597,7 @@ export function BookingFlowClient() {
   }
 
   function handleSelectTeam(team: BookingAvailableTeamOption) {
+    clearDepositUi();
     setScheduleSurfaceError(null);
     setScheduleCommitError(null);
     setScheduleCommitPhase("none");
@@ -1470,6 +1630,7 @@ export function BookingFlowClient() {
   }
 
   function handleSelectSlot(startAt: string, endAt: string) {
+    clearDepositUi();
     setScheduleSurfaceError(null);
     setScheduleCommitError(null);
     setScheduleCommitPhase("none");
@@ -1683,7 +1844,45 @@ export function BookingFlowClient() {
                 />
               ) : null}
 
-              {state.step === "schedule" ? (
+              {state.step === "schedule" && depositRequired ? (
+                <div className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-8 shadow-sm ring-1 ring-[#C9B27C]/10">
+                  <h2 className="font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.02em] text-[#0F172A]">
+                    Secure your booking
+                  </h2>
+                  <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                    A $100 deposit is required to reserve your time.
+                  </p>
+                  {depositBackendProcessing ? (
+                    <p className="mt-4 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
+                      Processing your payment...
+                    </p>
+                  ) : null}
+                  {depositError ? (
+                    <p className="mt-4 font-[var(--font-manrope)] text-sm text-[#B91C1C]">
+                      {depositError}
+                    </p>
+                  ) : null}
+                  {stripePromise && depositClientSecret ? (
+                    <div className="mt-6 max-w-xl">
+                      <DepositPaymentElement
+                        key={depositPaymentIntentId ?? "deposit-pi"}
+                        stripePromise={stripePromise}
+                        clientSecret={depositClientSecret}
+                        amountCents={depositAmountCents ?? 10_000}
+                        disabled={depositProcessing}
+                        onSuccess={() => completeDepositAfterPayment()}
+                        onError={(msg) => setDepositError(msg)}
+                      />
+                    </div>
+                  ) : (
+                    <p className="mt-6 font-[var(--font-manrope)] text-sm text-[#B91C1C]">
+                      {depositClientSecret
+                        ? "Payments are not available in this environment (missing Stripe publishable key)."
+                        : "We couldn’t start card payment. Please refresh and try again."}
+                    </p>
+                  )}
+                </div>
+              ) : state.step === "schedule" ? (
                 <BookingStepSchedule
                   state={state}
                   serviceId={state.serviceId}
@@ -1722,7 +1921,10 @@ export function BookingFlowClient() {
                     type="button"
                     disabled={
                       (isSubmitting && state.step !== "review") ||
-                      confirmScheduleLoading
+                      confirmScheduleLoading ||
+                      (state.step === "schedule" &&
+                        depositRequired &&
+                        depositProcessing)
                     }
                     onClick={goBack}
                     className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
