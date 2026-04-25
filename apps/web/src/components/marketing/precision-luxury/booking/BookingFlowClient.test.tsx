@@ -2908,18 +2908,9 @@ describe("BookingFlowClient", () => {
       expect(screen.queryByTestId("deposit-mock-pay")).not.toBeInTheDocument();
     });
 
-    it("schedule confirm 402 returns to review with gate copy and never mirrors client_secret into URL or session snapshot", async () => {
+    it("schedule confirm 402 renders deposit payment directly and never mirrors client_secret into URL or session snapshot", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
-      postPublicBookingDepositPrepareMock.mockResolvedValue({
-        kind: "public_booking_deposit_prepare",
-        bookingId: "bk_test",
-        paymentMode: "deposit",
-        classification: "payment_required",
-        clientSecret: "cs_review_only",
-        paymentIntentId: "pi_review",
-        amountCents: 10000,
-      });
       postPublicBookingConfirmMock.mockRejectedValueOnce(
         new PublicBookingPaymentRequiredError({
           kind: "public_booking_deposit_required",
@@ -2952,16 +2943,112 @@ describe("BookingFlowClient", () => {
       await waitFor(() =>
         expect(screen.getByTestId("deposit-mock-pay")).toBeInTheDocument(),
       );
-      expect(postPublicBookingDepositPrepareMock).toHaveBeenCalledWith({
-        bookingId: "bk_test",
-        holdId: "hold_test",
-      });
+      expect(postPublicBookingDepositPrepareMock).not.toHaveBeenCalled();
+      expect(screen.queryByTestId("booking-schedule-commit-error")).not.toBeInTheDocument();
       const snap = sessionStorage.getItem(BOOKING_CONFIRMATION_SESSION_KEY) ?? "";
       expect(snap).not.toMatch(/client_secret/i);
       for (const call of routerReplace.mock.calls) {
         const url = typeof call[0] === "string" ? call[0] : "";
         expect(url).not.toMatch(/client_secret/i);
       }
+    });
+
+    it("schedule confirm 402 without payment details falls back to deposit prepare", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingDepositPrepareMock.mockResolvedValue({
+        kind: "public_booking_deposit_prepare",
+        bookingId: "bk_test",
+        paymentMode: "deposit",
+        classification: "payment_required",
+        clientSecret: "cs_from_prepare",
+        paymentIntentId: "pi_from_prepare",
+        amountCents: 10000,
+      });
+      postPublicBookingConfirmMock.mockRejectedValueOnce(
+        new PublicBookingPaymentRequiredError({
+          kind: "public_booking_deposit_required",
+          code: "PUBLIC_BOOKING_DEPOSIT_REQUIRED",
+          message: "need deposit",
+          amountCents: 10000,
+          currency: "usd",
+          clientSecret: null,
+        }),
+      );
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      fireEvent.click(screen.getByText("North Team"));
+      await screen.findByTestId("booking-schedule-slot-section");
+      const confirmEl = screen.getByTestId("booking-schedule-confirm-booking");
+      const slotSection = screen.getByTestId("booking-schedule-slot-section");
+      const slotBtn = within(slotSection)
+        .getAllByRole("button")
+        .find((b) => b !== confirmEl)!;
+      fireEvent.click(slotBtn);
+      await waitFor(() => expect(confirmEl).not.toBeDisabled());
+      fireEvent.click(confirmEl);
+
+      await waitFor(() =>
+        expect(postPublicBookingDepositPrepareMock).toHaveBeenCalledWith({
+          bookingId: "bk_test",
+          holdId: "hold_test",
+        }),
+      );
+      await waitFor(() =>
+        expect(screen.getByTestId("deposit-mock-pay")).toBeInTheDocument(),
+      );
+      expect(screen.queryByTestId("booking-schedule-commit-error")).not.toBeInTheDocument();
+    });
+
+    it("deposit_inconsistent prepare state finalizes instead of waiting for payment", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingDepositPrepareMock.mockResolvedValue({
+        kind: "public_booking_deposit_prepare",
+        bookingId: "bk_test",
+        paymentMode: "none",
+        classification: "deposit_inconsistent",
+        publicDepositStatus: "deposit_succeeded",
+      });
+      postPublicBookingConfirmMock
+        .mockRejectedValueOnce(
+          new PublicBookingPaymentRequiredError({
+            kind: "public_booking_deposit_required",
+            code: "PUBLIC_BOOKING_DEPOSIT_REQUIRED",
+            message: "need deposit",
+            amountCents: 10000,
+            currency: "usd",
+            clientSecret: null,
+          }),
+        )
+        .mockResolvedValueOnce({
+          kind: "public_booking_confirmation" as const,
+          bookingId: "bk_test",
+          scheduledStart: "2030-04-15T14:00:00.000Z",
+          scheduledEnd: "2030-04-15T16:00:00.000Z",
+          status: "confirmed",
+          alreadyApplied: false,
+        });
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      fireEvent.click(screen.getByText("North Team"));
+      await screen.findByTestId("booking-schedule-slot-section");
+      const confirmEl = screen.getByTestId("booking-schedule-confirm-booking");
+      const slotSection = screen.getByTestId("booking-schedule-slot-section");
+      const slotBtn = within(slotSection)
+        .getAllByRole("button")
+        .find((b) => b !== confirmEl)!;
+      fireEvent.click(slotBtn);
+      await waitFor(() => expect(confirmEl).not.toBeDisabled());
+      fireEvent.click(confirmEl);
+
+      await waitFor(() => expect(postPublicBookingConfirmMock).toHaveBeenCalledTimes(2));
+      await waitFor(() =>
+        expect(routerPush).toHaveBeenCalledWith(
+          expect.stringMatching(/^\/book\/confirmation\?/),
+        ),
+      );
+      expect(screen.queryByTestId("deposit-mock-pay")).not.toBeInTheDocument();
     });
 
     it("resumes finalization after Stripe redirects back with booking and hold ids", async () => {

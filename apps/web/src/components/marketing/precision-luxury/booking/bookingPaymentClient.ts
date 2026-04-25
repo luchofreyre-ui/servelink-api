@@ -116,6 +116,7 @@ export function isDepositFullySatisfied(
   if (res.paymentMode !== "none") return false;
   return (
     res.classification === "deposit_succeeded" ||
+    res.classification === "deposit_inconsistent" ||
     res.classification === "skip_deposit_env" ||
     res.classification === "booking_not_pending_payment"
   );
