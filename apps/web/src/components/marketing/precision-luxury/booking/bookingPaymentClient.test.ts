@@ -48,6 +48,32 @@ describe("bookingPaymentClient", () => {
     );
   });
 
+  it("postPublicBookingDepositPrepare can prepare pre-schedule deposit without holdId", async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: async () =>
+        JSON.stringify({
+          kind: "public_booking_deposit_prepare",
+          bookingId: "bk_1",
+          paymentMode: "deposit",
+          classification: "payment_required",
+          clientSecret: "cs_test",
+          paymentIntentId: "pi_test",
+          amountCents: 10_000,
+        }),
+    });
+
+    await postPublicBookingDepositPrepare({ bookingId: "bk_1" });
+
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        body: JSON.stringify({ bookingId: "bk_1" }),
+      }),
+    );
+  });
+
   it("isDepositFullySatisfied is true for skip and succeeded none modes", () => {
     expect(
       isDepositFullySatisfied({

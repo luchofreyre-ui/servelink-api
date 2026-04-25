@@ -922,6 +922,7 @@ export class StripePaymentService {
       estimateSnapshotHash: args.estimateSnapshotHash,
       estimatedTotalCents:
         args.estimatedTotalCents != null ? String(args.estimatedTotalCents) : "",
+      source: "public_booking_deposit",
       publicBookingSource: "precision_luxury_booking_flow",
       servelinkPurpose: "public_deposit",
     } as const;

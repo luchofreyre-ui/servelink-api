@@ -1056,10 +1056,10 @@ export class PublicBookingOrchestratorService {
     };
   }
 
-  preparePublicDeposit(body: { bookingId: string; holdId: string }) {
+  preparePublicDeposit(body: { bookingId: string; holdId?: string | null }) {
     return this.publicBookingDeposit.preparePublicBookingDeposit(
       body.bookingId,
-      body.holdId,
+      body.holdId ?? null,
     );
   }
 
