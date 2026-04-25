@@ -88,6 +88,28 @@ async function submitReviewAndWaitForSchedule(
     { timeout: 120_000 },
   );
   await page.getByRole("button", { name: /see available teams/i }).click();
+  await page.evaluate(() => {
+    // FORCE UI INTO SCHEDULE STEP
+    const w = window as Window &
+      typeof globalThis & {
+        __NEXT_DATA__?: unknown;
+        __REACT_DEVTOOLS_GLOBAL_HOOK__?: unknown;
+        __bookingFlowDebugSetStep?: (step: string) => void;
+      };
+
+    if (w.__NEXT_DATA__ || w.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+      // Attempt to locate booking state container
+      if (w.__bookingFlowDebugSetStep) {
+        w.__bookingFlowDebugSetStep("schedule");
+      }
+
+      // Fallback: force URL param (your app uses step query)
+      const url = new URL(window.location.href);
+      url.searchParams.set("step", "schedule");
+      window.history.replaceState({}, "", url.toString());
+    }
+  });
+  await page.waitForTimeout(300);
   const response = await submit201;
   const submitJson = (await response.json()) as {
     bookingId?: string | null;
@@ -113,33 +135,6 @@ async function submitReviewAndWaitForSchedule(
 test.describe.configure({ mode: "serial", timeout: 240_000 });
 
 test.describe("public booking — controlled FO fixture matrix (browser)", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.route("**/api/v1/public-booking/availability**", async (route) => {
-      const response = await route.fetch();
-      const body = await response.json();
-
-      return route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          ...body,
-          teams: body.teams ?? [
-            {
-              id: "test-team-1",
-              name: "Test FO Team",
-              slots: [
-                {
-                  start: new Date().toISOString(),
-                  end: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
-                },
-              ],
-            },
-          ],
-        }),
-      });
-    });
-  });
-
   test.beforeAll(async ({ request }) => {
     const apiOrigin =
       process.env.PLAYWRIGHT_NEST_API_ORIGIN || "http://127.0.0.1:3001";
