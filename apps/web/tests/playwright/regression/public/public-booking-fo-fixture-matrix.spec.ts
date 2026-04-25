@@ -19,6 +19,7 @@ const FO = {
 } as const;
 
 const FIXTURE_CUSTOMER_EMAIL = "public_booking_fixture_customer@servelink.test";
+const apiRoot = path.resolve(process.cwd(), "../../services/api");
 
 function bookingUrl(opts: {
   service: string;
@@ -75,9 +76,85 @@ async function waitForReviewReady(
   );
 }
 
+function markDepositSucceededForPlaywright(bookingId: string) {
+  execFileSync(
+    process.execPath,
+    [
+      path.join(apiRoot, "scripts/markPublicBookingDepositSucceededForPlaywright.cjs"),
+      bookingId,
+    ],
+    { encoding: "utf8", cwd: apiRoot, env: process.env },
+  );
+}
+
+async function installDepositSatisfiedRoute(page: import("@playwright/test").Page) {
+  await page.route("**/api/v1/public-booking/deposit-prepare", async (route) => {
+    const body = route.request().postDataJSON() as { bookingId?: unknown } | null;
+    const bookingId = typeof body?.bookingId === "string" ? body.bookingId.trim() : "";
+    if (!bookingId) {
+      await route.fallback();
+      return;
+    }
+    markDepositSucceededForPlaywright(bookingId);
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        kind: "public_booking_deposit_prepare",
+        bookingId,
+        paymentMode: "none",
+        classification: "deposit_inconsistent",
+        publicDepositStatus: "deposit_succeeded",
+      }),
+    });
+  });
+}
+
+async function expectDepositGateThenSchedule(page: import("@playwright/test").Page) {
+  await expect(page.getByRole("heading", { name: /Secure your booking/i })).toBeVisible({
+    timeout: 60_000,
+  });
+  expect(await page.getByTestId("booking-schedule-team-section").count()).toBe(0);
+  await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
+    timeout: 60_000,
+  });
+}
+
+async function submitReviewAndWaitForSchedule(
+  page: import("@playwright/test").Page,
+  opts?: { expectDepositGate?: boolean; expectZeroTeams?: boolean },
+) {
+  const submit201 = page.waitForResponse(
+    (r) =>
+      r.url().includes("/booking-direction-intake/submit") &&
+      r.request().method() === "POST" &&
+      r.status() === 201,
+    { timeout: 120_000 },
+  );
+  await page.getByTestId("booking-direction-send").click();
+  const response = await submit201;
+  if (opts?.expectDepositGate) {
+    await expectDepositGateThenSchedule(page);
+  } else {
+    await expect(
+      page.getByTestId(
+        opts?.expectZeroTeams
+          ? "booking-schedule-zero-teams-fallback"
+          : "booking-schedule-team-section",
+      ),
+    ).toBeVisible({ timeout: 120_000 });
+  }
+  return response;
+}
+
 test.describe.configure({ mode: "serial", timeout: 240_000 });
 
 test.describe("public booking — controlled FO fixture matrix (browser)", () => {
+  test.beforeEach(async ({ page }) => {
+    await installDepositSatisfiedRoute(page);
+  });
+
   test.beforeAll(async ({ request }) => {
     const apiOrigin =
       process.env.PLAYWRIGHT_NEST_API_ORIGIN || "http://127.0.0.1:3001";
@@ -152,15 +229,9 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
 
     await waitForReviewReady(page);
 
-    const submitRes = page.waitForResponse(
-      (r) =>
-        r.url().includes("/booking-direction-intake/submit") &&
-        r.request().method() === "POST" &&
-        r.status() === 201,
-      { timeout: 120_000 },
-    );
-    await page.getByTestId("booking-direction-send").click();
-    const sub = await submitRes;
+    const sub = await submitReviewAndWaitForSchedule(page, {
+      expectDepositGate: true,
+    });
     const submitJson = (await sub.json()) as {
       bookingId?: string | null;
       bookingCreated?: boolean;
@@ -170,10 +241,6 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
     expect(submitJson.bookingError).toBeFalsy();
     const bookingId = String(submitJson.bookingId ?? "").trim();
     expect(bookingId.length).toBeGreaterThan(4);
-
-    await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
-      timeout: 60_000,
-    });
 
     await expect
       .poll(() =>
@@ -275,8 +342,6 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
     const submitBody = submitBodies[0] as { serviceLocation?: { street?: string } };
     expect(submitBody?.serviceLocation?.street).toMatch(/2nd/i);
 
-    /** `npx playwright` cwd is `apps/web` in this monorepo. */
-    const apiRoot = path.resolve(process.cwd(), "../../services/api");
     const siteJson = execFileSync(
       process.execPath,
       [path.join(apiRoot, "scripts/printBookingSiteJson.cjs"), bookingId],
@@ -305,18 +370,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
       await waitForReviewReady(page, {
         contactName: `Slot count ${String(teamLabel.source)}`,
       });
-      const submit201 = page.waitForResponse(
-        (r) =>
-          r.url().includes("/booking-direction-intake/submit") &&
-          r.request().method() === "POST" &&
-          r.status() === 201,
-        { timeout: 120_000 },
-      );
-      await page.getByTestId("booking-direction-send").click();
-      await submit201;
-      await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
-        timeout: 60_000,
-      });
+      await submitReviewAndWaitForSchedule(page);
       await page.getByRole("button", { name: teamLabel }).click();
       await expect(page.getByTestId("booking-schedule-windows-loading")).toBeHidden({
         timeout: 120_000,
@@ -381,18 +435,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
         })}`,
       );
       await waitForReviewReady(page, { contactName: "Service type probe" });
-      const submit201 = page.waitForResponse(
-        (r) =>
-          r.url().includes("/booking-direction-intake/submit") &&
-          r.request().method() === "POST" &&
-          r.status() === 201,
-        { timeout: 120_000 },
-      );
-      await page.getByTestId("booking-direction-send").click();
-      await submit201;
-      await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
-        timeout: 60_000,
-      });
+      await submitReviewAndWaitForSchedule(page);
       await page.waitForTimeout(2500);
       return [...new Set(ids)];
     }
@@ -438,18 +481,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
         })}`,
       );
       await waitForReviewReady(page, { contactName: "Service type probe" });
-      const submit201 = page.waitForResponse(
-        (r) =>
-          r.url().includes("/booking-direction-intake/submit") &&
-          r.request().method() === "POST" &&
-          r.status() === 201,
-        { timeout: 120_000 },
-      );
-      await page.getByTestId("booking-direction-send").click();
-      await submit201;
-      await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
-        timeout: 60_000,
-      });
+      await submitReviewAndWaitForSchedule(page);
       await page.waitForTimeout(2500);
       return names;
     }
@@ -525,18 +557,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
       })}`,
     );
     await waitForReviewReady(page);
-    const submit201Geo = page.waitForResponse(
-      (r) =>
-        r.url().includes("/booking-direction-intake/submit") &&
-        r.request().method() === "POST" &&
-        r.status() === 201,
-      { timeout: 120_000 },
-    );
-    await page.getByTestId("booking-direction-send").click();
-    await submit201Geo;
-    await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
-      timeout: 60_000,
-    });
+    await submitReviewAndWaitForSchedule(page);
     await page.waitForTimeout(3000);
     const uniq = [...new Set(teams)];
     expect(uniq.length).toBeGreaterThanOrEqual(2);
@@ -573,18 +594,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
       })}`,
     );
     await waitForReviewReady(page);
-    const submit201Far = page.waitForResponse(
-      (r) =>
-        r.url().includes("/booking-direction-intake/submit") &&
-        r.request().method() === "POST" &&
-        r.status() === 201,
-      { timeout: 120_000 },
-    );
-    await page.getByTestId("booking-direction-send").click();
-    await submit201Far;
-    await expect(page.getByTestId("booking-schedule-zero-teams-fallback")).toBeVisible({
-      timeout: 120_000,
-    });
+    await submitReviewAndWaitForSchedule(page, { expectZeroTeams: true });
     expect(code).toBe("PUBLIC_BOOKING_NO_FO_CANDIDATES");
   });
 
