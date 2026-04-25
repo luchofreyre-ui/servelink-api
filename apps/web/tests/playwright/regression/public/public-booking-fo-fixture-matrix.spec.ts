@@ -76,10 +76,79 @@ async function waitForReviewReady(
   );
 }
 
+function shouldLogBookingDiagnosticUrl(url: string) {
+  return (
+    url.includes("public-booking") ||
+    url.includes("booking-direction-intake") ||
+    url.includes("preview-estimate")
+  );
+}
+
+async function logReviewToScheduleSnapshot(page: import("@playwright/test").Page) {
+  const mainBookingText = await page
+    .locator('[data-testid="booking-flow"], [data-testid="booking-page"], main')
+    .first()
+    .innerText({ timeout: 1_000 })
+    .catch(() => null);
+  const scheduleTeamSectionCount = await page
+    .getByTestId("booking-schedule-team-section")
+    .count();
+  const depositPaymentHeadingCount = await page
+    .getByRole("heading", { name: /deposit|payment|secure your booking/i })
+    .count();
+  const depositPaymentButtonCount = await page
+    .getByRole("button", { name: /pay|deposit|payment|check payment status/i })
+    .count();
+  const errorBannerCount = await page
+    .locator('[role="alert"], [data-testid*="error"], [data-testid*="banner"]')
+    .count();
+
+  console.log(
+    "FO_FIXTURE_REVIEW_TO_SCHEDULE_AFTER_CLICK:",
+    JSON.stringify({
+      url: page.url(),
+      mainBookingText,
+      scheduleTeamSectionCount,
+      depositPaymentHeadingCount,
+      depositPaymentButtonCount,
+      errorBannerCount,
+    }),
+  );
+}
+
 async function submitReviewAndWaitForSchedule(
   page: import("@playwright/test").Page,
   opts?: { expectZeroTeams?: boolean },
 ) {
+  page.on("request", (req) => {
+    if (shouldLogBookingDiagnosticUrl(req.url())) {
+      console.log("FO_FIXTURE_REQ:", req.method(), req.url());
+    }
+  });
+  page.on("response", async (res) => {
+    const url = res.url();
+    if (!shouldLogBookingDiagnosticUrl(url)) return;
+
+    const contentType = res.headers()["content-type"] ?? "";
+    let jsonBody: unknown = undefined;
+    if (contentType.includes("application/json")) {
+      try {
+        jsonBody = await res.json();
+      } catch {
+        jsonBody = "[json parse failed]";
+      }
+    }
+
+    console.log(
+      "FO_FIXTURE_RES:",
+      JSON.stringify({
+        status: res.status(),
+        url,
+        jsonBody,
+      }),
+    );
+  });
+
   const submit201 = page.waitForResponse(
     (r) =>
       r.url().includes("/booking-direction-intake/submit") &&
@@ -88,28 +157,7 @@ async function submitReviewAndWaitForSchedule(
     { timeout: 120_000 },
   );
   await page.getByRole("button", { name: /see available teams/i }).click();
-  await page.evaluate(() => {
-    // FORCE UI INTO SCHEDULE STEP
-    const w = window as Window &
-      typeof globalThis & {
-        __NEXT_DATA__?: unknown;
-        __REACT_DEVTOOLS_GLOBAL_HOOK__?: unknown;
-        __bookingFlowDebugSetStep?: (step: string) => void;
-      };
-
-    if (w.__NEXT_DATA__ || w.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
-      // Attempt to locate booking state container
-      if (w.__bookingFlowDebugSetStep) {
-        w.__bookingFlowDebugSetStep("schedule");
-      }
-
-      // Fallback: force URL param (your app uses step query)
-      const url = new URL(window.location.href);
-      url.searchParams.set("step", "schedule");
-      window.history.replaceState({}, "", url.toString());
-    }
-  });
-  await page.waitForTimeout(300);
+  await logReviewToScheduleSnapshot(page);
   const response = await submit201;
   const submitJson = (await response.json()) as {
     bookingId?: string | null;
