@@ -261,6 +261,55 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       }),
     );
   });
+
+  it("creates a booking-scoped deposit before a hold exists", async () => {
+    delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+    process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+
+    const outputJson = JSON.stringify({ estimatedPriceCents: 42_500 });
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "bk1",
+          tenantId: "tenant_1",
+          status: BookingStatus.pending_payment,
+          customerId: "u1",
+          publicDepositStatus: BookingPublicDepositStatus.deposit_required,
+          publicDepositAmountCents: 10_000,
+          publicDepositPaymentIntentId: null,
+          stripeCustomerId: null,
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
+          estimateSnapshot: { outputJson },
+        }),
+        update: jest.fn().mockResolvedValue({}),
+      },
+    } as unknown as PrismaService;
+    const stripePayments = new StripePaymentService(
+      prisma,
+      {} as PaymentReliabilityService,
+    );
+    jest.spyOn(stripePayments, "ensureStripeCustomerForUser").mockResolvedValue("cus_x");
+    const createPi = jest
+      .spyOn(stripePayments, "createPublicBookingDepositPaymentIntent")
+      .mockResolvedValue({
+        id: "pi_new",
+        status: "requires_payment_method",
+        client_secret: "cs_new",
+      } as never);
+
+    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const res = await svc.preparePublicBookingDeposit("bk1");
+
+    expect(res.paymentMode).toBe("deposit");
+    expect(createPi).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bookingId: "bk1",
+        holdId: null,
+        tenantId: "tenant_1",
+        estimatedTotalCents: 42_500,
+      }),
+    );
+  });
 });
 
 describe("publicBookingDepositPiIdempotencyKey", () => {

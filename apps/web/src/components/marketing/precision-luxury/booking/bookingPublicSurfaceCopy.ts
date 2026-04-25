@@ -324,9 +324,15 @@ export const BOOKING_SCHEDULE_HOLD_FAILED_HINT =
 export const BOOKING_SCHEDULE_CONFIRM_FAILED =
   "We couldn’t finalize your booking. Please try again.";
 
-/** Shown on review when scheduling hits deposit gate (402) — payment only happens on review. */
+/** Shown on review before team/time selection while deposit payment is active. */
 export const BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE =
-  "Your team and arrival time are being held while you complete your $100 deposit.";
+  "Secure your booking with a $100 deposit.";
+
+export const BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE =
+  "After payment, you’ll choose your team and arrival time.";
+
+export const BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE =
+  "Your deposit is applied toward your booking.";
 
 export const BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT =
   "Payment was submitted and is still finalizing. Please try checking again.";

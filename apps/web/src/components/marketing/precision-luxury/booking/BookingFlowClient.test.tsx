@@ -410,7 +410,15 @@ describe("BookingFlowClient", () => {
     }));
     postPublicBookingAvailabilityMock.mockClear();
     postPublicBookingHoldMock.mockClear();
-    postPublicBookingConfirmMock.mockClear();
+    postPublicBookingConfirmMock.mockReset();
+    postPublicBookingConfirmMock.mockResolvedValue({
+      kind: "public_booking_confirmation" as const,
+      bookingId: "bk_test",
+      scheduledStart: "2030-04-15T14:00:00.000Z",
+      scheduledEnd: "2030-04-15T16:00:00.000Z",
+      status: "confirmed",
+      alreadyApplied: false,
+    });
     emitBookingFunnelEventMock.mockClear();
     sessionStorage.removeItem(BOOKING_CONFIRMATION_SESSION_KEY);
     sessionStorage.removeItem(BOOKING_FLOW_FRESH_START_FLAG);
@@ -2898,16 +2906,41 @@ describe("BookingFlowClient", () => {
   });
 
   describe("Deposit payment authority", () => {
-    it("review submit does not create a PaymentIntent before a slot hold exists", async () => {
+    it("deposit screen appears before team selection and advances to schedule after payment", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingDepositPrepareMock
+        .mockResolvedValueOnce({
+          kind: "public_booking_deposit_prepare",
+          bookingId: "bk_test",
+          paymentMode: "deposit",
+          classification: "payment_required",
+          clientSecret: "cs_before_schedule",
+          paymentIntentId: "pi_before_schedule",
+          amountCents: 10000,
+        })
+        .mockResolvedValue({
+          kind: "public_booking_deposit_prepare",
+          bookingId: "bk_test",
+          paymentMode: "none",
+          classification: "deposit_succeeded",
+          publicDepositStatus: "deposit_succeeded",
+          paymentIntentId: "pi_before_schedule",
+        });
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(8000);
       fireEvent.click(screen.getByTestId("booking-direction-send"));
       await waitFor(() =>
+        expect(screen.getByTestId("deposit-mock-pay")).toBeInTheDocument(),
+      );
+      expect(screen.queryByTestId("booking-schedule-team-section")).not.toBeInTheDocument();
+      expect(postPublicBookingDepositPrepareMock).toHaveBeenCalledWith({
+        bookingId: "bk_test",
+      });
+      fireEvent.click(screen.getByTestId("deposit-mock-pay"));
+      await waitFor(() =>
         expect(screen.getByTestId("booking-schedule-team-section")).toBeInTheDocument(),
       );
-      expect(postPublicBookingDepositPrepareMock).not.toHaveBeenCalled();
       expect(screen.queryByTestId("deposit-mock-pay")).not.toBeInTheDocument();
     });
 
@@ -2943,14 +2976,18 @@ describe("BookingFlowClient", () => {
         ),
       );
       expect(
-        screen.getByText(/booking will finalize automatically after payment/i),
+        screen.getByText(/after payment, you’ll choose your team and arrival time/i),
       ).toBeInTheDocument();
+      expect(screen.getByText(/deposit is applied toward your booking/i)).toBeInTheDocument();
       expect(screen.queryByTestId("booking-schedule-team-section")).not.toBeInTheDocument();
       expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument();
       await waitFor(() =>
         expect(screen.getByTestId("deposit-mock-pay")).toBeInTheDocument(),
       );
-      expect(postPublicBookingDepositPrepareMock).not.toHaveBeenCalled();
+      expect(postPublicBookingDepositPrepareMock).toHaveBeenCalledTimes(1);
+      expect(postPublicBookingDepositPrepareMock).toHaveBeenCalledWith({
+        bookingId: "bk_test",
+      });
       expect(screen.queryByTestId("booking-schedule-commit-error")).not.toBeInTheDocument();
       const snap = sessionStorage.getItem(BOOKING_CONFIRMATION_SESSION_KEY) ?? "";
       expect(snap).not.toMatch(/client_secret/i);
@@ -3030,15 +3067,22 @@ describe("BookingFlowClient", () => {
     it("schedule confirm 402 without payment details falls back to deposit prepare", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
-      postPublicBookingDepositPrepareMock.mockResolvedValue({
-        kind: "public_booking_deposit_prepare",
-        bookingId: "bk_test",
-        paymentMode: "deposit",
-        classification: "payment_required",
-        clientSecret: "cs_from_prepare",
-        paymentIntentId: "pi_from_prepare",
-        amountCents: 10000,
-      });
+      postPublicBookingDepositPrepareMock
+        .mockResolvedValueOnce({
+          kind: "public_booking_deposit_prepare",
+          bookingId: "bk_test",
+          paymentMode: "none",
+          classification: "skip_deposit_env",
+        })
+        .mockResolvedValue({
+          kind: "public_booking_deposit_prepare",
+          bookingId: "bk_test",
+          paymentMode: "deposit",
+          classification: "payment_required",
+          clientSecret: "cs_from_prepare",
+          paymentIntentId: "pi_from_prepare",
+          amountCents: 10000,
+        });
       postPublicBookingConfirmMock.mockRejectedValueOnce(
         new PublicBookingPaymentRequiredError({
           kind: "public_booking_deposit_required",
@@ -3085,25 +3129,14 @@ describe("BookingFlowClient", () => {
         classification: "deposit_inconsistent",
         publicDepositStatus: "deposit_succeeded",
       });
-      postPublicBookingConfirmMock
-        .mockRejectedValueOnce(
-          new PublicBookingPaymentRequiredError({
-            kind: "public_booking_deposit_required",
-            code: "PUBLIC_BOOKING_DEPOSIT_REQUIRED",
-            message: "need deposit",
-            amountCents: 10000,
-            currency: "usd",
-            clientSecret: null,
-          }),
-        )
-        .mockResolvedValueOnce({
-          kind: "public_booking_confirmation" as const,
-          bookingId: "bk_test",
-          scheduledStart: "2030-04-15T14:00:00.000Z",
-          scheduledEnd: "2030-04-15T16:00:00.000Z",
-          status: "confirmed",
-          alreadyApplied: false,
-        });
+      postPublicBookingConfirmMock.mockResolvedValueOnce({
+        kind: "public_booking_confirmation" as const,
+        bookingId: "bk_test",
+        scheduledStart: "2030-04-15T14:00:00.000Z",
+        scheduledEnd: "2030-04-15T16:00:00.000Z",
+        status: "confirmed",
+        alreadyApplied: false,
+      });
       render(<BookingFlowClient />);
       await submitFromReviewToSchedule();
       fireEvent.click(screen.getByText("North Team"));
@@ -3117,7 +3150,7 @@ describe("BookingFlowClient", () => {
       await waitFor(() => expect(confirmEl).not.toBeDisabled());
       fireEvent.click(confirmEl);
 
-      await waitFor(() => expect(postPublicBookingConfirmMock).toHaveBeenCalledTimes(2));
+      await waitFor(() => expect(postPublicBookingConfirmMock).toHaveBeenCalledTimes(1));
       await waitFor(() =>
         expect(routerPush).toHaveBeenCalledWith(
           expect.stringMatching(/^\/book\/confirmation\?/),
@@ -3238,17 +3271,23 @@ describe("BookingFlowClient", () => {
       );
     });
 
-    it("missing hold id after payment return shows hard recoverable error", async () => {
+    it("redirect payment without hold id syncs deposit and advances to schedule", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(
         `${buildReviewSearchString()}&publicBookingPayment=1&bookingId=bk_test&redirect_status=succeeded`,
       );
+      postPublicBookingDepositPrepareMock.mockResolvedValue({
+        kind: "public_booking_deposit_prepare",
+        bookingId: "bk_test",
+        paymentMode: "none",
+        classification: "deposit_succeeded",
+        publicDepositStatus: "deposit_succeeded",
+        paymentIntentId: "pi_test",
+      });
 
       render(<BookingFlowClient />);
 
       await waitFor(() =>
-        expect(
-          screen.getByText(/booking hold could not be restored/i),
-        ).toBeInTheDocument(),
+        expect(screen.getByTestId("booking-schedule-team-section")).toBeInTheDocument(),
       );
       expect(postPublicBookingConfirmMock).not.toHaveBeenCalled();
     });

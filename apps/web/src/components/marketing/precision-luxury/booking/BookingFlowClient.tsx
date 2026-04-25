@@ -36,8 +36,10 @@ import {
   BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_NEEDS_ATTENTION,
   BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_REFRESHING,
   BOOKING_SCHEDULE_CONFIRM_FAILED,
+  BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA,
   BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT,
+  BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE,
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED,
@@ -456,8 +458,11 @@ export function BookingFlowClient() {
     setDepositBackendProcessing(false);
   }
 
-  function currentPaymentSessionKey(bookingId: string, holdId: string) {
-    return `public-booking:${bookingId.trim()}:hold:${holdId.trim()}`;
+  function currentPaymentSessionKey(bookingId: string, holdId?: string | null) {
+    const hold = holdId?.trim();
+    return hold
+      ? `public-booking:${bookingId.trim()}:hold:${hold}`
+      : `public-booking:${bookingId.trim()}:deposit`;
   }
 
   function setDepositLock() {
@@ -503,13 +508,13 @@ export function BookingFlowClient() {
 
   function writeDurablePublicBookingPaymentSession(args: {
     bookingId: string;
-    holdId: string;
+    holdId?: string | null;
     paymentIntentId?: string | null;
     expiresAt?: string | null;
   }) {
     const bookingId = args.bookingId.trim();
-    const holdId = args.holdId.trim();
-    if (!bookingId || !holdId) return;
+    const holdId = args.holdId?.trim() || "";
+    if (!bookingId) return;
     const s = stateRefForBookingUrl.current;
     const payload: Parameters<typeof writeBookingConfirmationSessionSnapshot>[0] = {
       intakeId: s.schedulingIntakeId.trim() || "public-booking-payment",
@@ -519,7 +524,7 @@ export function BookingFlowClient() {
       confidence: null,
       bookingErrorCode: "",
       publicDepositStatus: "deposit_required",
-      publicDepositHoldId: holdId,
+      publicDepositHoldId: holdId || undefined,
       paymentSessionKey: currentPaymentSessionKey(bookingId, holdId),
       paymentSessionCreatedAt: new Date().toISOString(),
     };
@@ -1402,6 +1407,7 @@ export function BookingFlowClient() {
       publicDepositStatus:
         prep.publicDepositStatus?.trim() || "deposit_succeeded",
       publicDepositHoldId: holdId || undefined,
+      paymentSessionKey: currentPaymentSessionKey(bookingId, holdId),
     });
     clearDepositUi();
     if (holdId) {
@@ -1421,12 +1427,25 @@ export function BookingFlowClient() {
       }
       return;
     }
-    setReviewPaymentPhase("finalizing_timeout");
-    setDepositError(
-      "Your deposit was received, but the slot hold could not be restored. Please contact support before paying again.",
-    );
+    clearDepositLock();
+    setScheduleSurfaceError(null);
+    setScheduleCommitError(null);
+    setScheduleCommitPhase("none");
     setState((prev) =>
-      clampBookingStepToStructuralMax({ ...prev, step: "review" }),
+      clampBookingStepToStructuralMax({
+        ...prev,
+        schedulingBookingId: bookingId,
+        schedulingIntakeId: intakeId || prev.schedulingIntakeId,
+        selectedTeamId: "",
+        selectedTeamDisplayName: "",
+        availableTeams: [],
+        availableWindows: [],
+        selectedSlotStart: "",
+        selectedSlotEnd: "",
+        publicHoldId: "",
+        schedulingConfirmed: false,
+        step: "schedule",
+      }),
     );
   }
 
@@ -1452,11 +1471,11 @@ export function BookingFlowClient() {
       session?.publicDepositHoldId?.trim() ||
       "";
 
-    if (!bookingId || !holdId) {
+    if (!bookingId) {
       setRequiresDepositResolution(true);
       setReviewPaymentPhase("finalizing_timeout");
       setDepositError(
-        "Payment returned, but the booking hold could not be restored. Please contact support before paying again.",
+        "Payment returned, but the booking session could not be restored. Please contact support before paying again.",
       );
       setState((prev) =>
         clampBookingStepToStructuralMax({
@@ -1472,8 +1491,8 @@ export function BookingFlowClient() {
       params.get("paymentIntentId")?.trim() ||
       session?.publicDepositPaymentIntentId?.trim() ||
       null;
-    setPendingConfirmHoldId(holdId);
-    pendingConfirmHoldIdRef.current = holdId;
+    setPendingConfirmHoldId(holdId || null);
+    pendingConfirmHoldIdRef.current = holdId || null;
     setDepositLock();
     setRequiresDepositResolution(true);
     setReviewPaymentPhase("finalizing");
@@ -1494,21 +1513,28 @@ export function BookingFlowClient() {
     );
     writeDurablePublicBookingPaymentSession({
       bookingId,
-      holdId,
+      holdId: holdId || null,
       paymentIntentId,
       expiresAt: session?.paymentSessionExpiresAt ?? null,
     });
 
     void (async () => {
       try {
-        const finalized = await finalizeHeldBookingAfterDepositPaid(bookingId, holdId);
-        if (!finalized) {
-          setReviewPaymentPhase("finalizing_timeout");
-          if (!lastDepositFinalizationErrorRef.current) {
-            setDepositError(
-              "Your deposit was received, but booking confirmation did not finish automatically. Please retry or contact support.",
-            );
+        if (holdId) {
+          const finalized = await finalizeHeldBookingAfterDepositPaid(bookingId, holdId);
+          if (!finalized) {
+            setReviewPaymentPhase("finalizing_timeout");
+            if (!lastDepositFinalizationErrorRef.current) {
+              setDepositError(
+                "Your deposit was received, but booking confirmation did not finish automatically. Please retry or contact support.",
+              );
+            }
           }
+          return;
+        }
+        await runPostStripeDepositFinalizePoll(bookingId, null);
+        if (lastDepositFinalizationErrorRef.current) {
+          setReviewPaymentPhase("finalizing_timeout");
         }
       } finally {
         setDepositProcessing(false);
@@ -1516,19 +1542,26 @@ export function BookingFlowClient() {
     })();
   }, [pathname, searchParams]);
 
-  async function bootstrapReviewDepositAfterScheduleGate(
+  async function bootstrapReviewDepositPayment(
     bookingId: string,
-    holdId: string,
+    holdId?: string | null,
   ) {
-    if (!bookingId.trim() || !holdId.trim() || depositPrepareInFlightRef.current) return;
+    const hold = holdId?.trim() || "";
+    if (!bookingId.trim() || depositPrepareInFlightRef.current) return;
     depositPrepareInFlightRef.current = true;
+    setDepositLock();
+    setRequiresDepositResolution(true);
+    setReviewDepositGateMessage(BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE);
     setReviewPaymentPhase("preparing");
     setDepositError(null);
     try {
-      const prep = await postPublicBookingDepositPrepare({ bookingId, holdId });
+      const prep = await postPublicBookingDepositPrepare({
+        bookingId,
+        ...(hold ? { holdId: hold } : {}),
+      });
       writeDurablePublicBookingPaymentSession({
         bookingId,
-        holdId,
+        holdId: hold || null,
         paymentIntentId: prep.paymentIntentId,
       });
       setDepositBackendProcessing(
@@ -1572,14 +1605,19 @@ export function BookingFlowClient() {
     }
   }
 
-  async function runPostStripeDepositFinalizePoll() {
+  async function runPostStripeDepositFinalizePoll(
+    bookingIdOverride?: string | null,
+    holdIdOverride?: string | null,
+  ) {
     if (!isDepositInFlightRef.current) {
       console.warn("BLOCKED: finalize poll outside deposit context");
       return;
     }
-    const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
-    const holdId = pendingConfirmHoldIdRef.current?.trim() || "";
-    if (!bookingId || !holdId) return;
+    const bookingId =
+      bookingIdOverride?.trim() ||
+      stateRefForBookingUrl.current.schedulingBookingId.trim();
+    const holdId = holdIdOverride?.trim() || pendingConfirmHoldIdRef.current?.trim() || "";
+    if (!bookingId) return;
     setDepositProcessing(true);
     setDepositError(null);
     setReviewPaymentPhase("finalizing");
@@ -1590,11 +1628,11 @@ export function BookingFlowClient() {
         async (id) => {
           const prep = await postPublicBookingDepositPrepare({
             bookingId: id,
-            holdId,
+            ...(holdId ? { holdId } : {}),
           });
           writeDurablePublicBookingPaymentSession({
             bookingId: id,
-            holdId,
+            holdId: holdId || null,
             paymentIntentId: prep.paymentIntentId,
           });
           setDepositBackendProcessing(
@@ -1605,10 +1643,13 @@ export function BookingFlowClient() {
         },
       );
       if (pollOutcome === "satisfied") {
-        const prep = await postPublicBookingDepositPrepare({ bookingId, holdId });
+        const prep = await postPublicBookingDepositPrepare({
+          bookingId,
+          ...(holdId ? { holdId } : {}),
+        });
         writeDurablePublicBookingPaymentSession({
           bookingId,
-          holdId,
+          holdId: holdId || null,
           paymentIntentId: prep.paymentIntentId,
         });
         if (!isDepositFullySatisfied(prep)) {
@@ -1639,16 +1680,19 @@ export function BookingFlowClient() {
   async function checkDepositPaymentStatusAgain() {
     const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
     const holdId = pendingConfirmHoldIdRef.current?.trim() || "";
-    if (!bookingId || !holdId || depositPrepareInFlightRef.current) return;
+    if (!bookingId || depositPrepareInFlightRef.current) return;
     depositPrepareInFlightRef.current = true;
     setDepositProcessing(true);
     setReviewPaymentPhase("preparing");
     setDepositError(null);
     try {
-      const prep = await postPublicBookingDepositPrepare({ bookingId, holdId });
+      const prep = await postPublicBookingDepositPrepare({
+        bookingId,
+        ...(holdId ? { holdId } : {}),
+      });
       writeDurablePublicBookingPaymentSession({
         bookingId,
-        holdId,
+        holdId: holdId || null,
         paymentIntentId: prep.paymentIntentId,
       });
       setDepositBackendProcessing(
@@ -1746,9 +1790,6 @@ export function BookingFlowClient() {
           bookingErrorCode: result.bookingError?.code ?? "",
         });
 
-        clearDepositUi();
-        setReviewPaymentPhase("idle");
-
         setScheduleSurfaceError(null);
         setState((prev) =>
           clampBookingStepToStructuralMax({
@@ -1763,9 +1804,10 @@ export function BookingFlowClient() {
             selectedSlotEnd: "",
             publicHoldId: "",
             schedulingConfirmed: false,
-            step: "schedule",
+            step: "review",
           }),
         );
+        void bootstrapReviewDepositPayment(result.bookingId);
         return;
       }
 
@@ -1841,7 +1883,7 @@ export function BookingFlowClient() {
     }
 
     setReviewPaymentPhase("idle");
-    void bootstrapReviewDepositAfterScheduleGate(bookingId, holdId);
+    void bootstrapReviewDepositPayment(bookingId, holdId);
   }
 
   async function confirmScheduleHoldAndFinish() {
@@ -2423,7 +2465,10 @@ export function BookingFlowClient() {
                     </p>
                   ) : null}
                   <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-                    Your booking will finalize automatically after payment.
+                    {BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE}
+                  </p>
+                  <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                    {BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE}
                   </p>
                   {reviewPaymentPhase === "preparing" && !depositClientSecret ? (
                     <p className="mt-4 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
@@ -2471,7 +2516,7 @@ export function BookingFlowClient() {
                         holdId={pendingConfirmHoldId ?? undefined}
                         paymentIntentId={depositPaymentIntentId}
                         paymentSessionKey={
-                          state.schedulingBookingId.trim() && pendingConfirmHoldId?.trim()
+                          state.schedulingBookingId.trim()
                             ? currentPaymentSessionKey(
                                 state.schedulingBookingId,
                                 pendingConfirmHoldId,

@@ -89,7 +89,7 @@ type PublicDepositContext = {
     startAt: Date;
     endAt: Date;
     expiresAt: Date;
-  };
+  } | null;
   estimatedTotalCents: number;
   estimateHash: string;
 };
@@ -109,21 +109,15 @@ export class PublicBookingDepositService {
 
   private async loadPublicDepositContext(args: {
     bookingId: string;
-    holdId: string;
+    holdId?: string | null;
     requireUnexpiredHold: boolean;
   }): Promise<PublicDepositContext> {
     const bookingId = args.bookingId.trim();
-    const holdId = args.holdId.trim();
+    const holdId = args.holdId?.trim() || "";
     if (!bookingId) {
       throw new BadRequestException({
         code: "BOOKING_ID_REQUIRED",
         message: "bookingId is required",
-      });
-    }
-    if (!holdId) {
-      throw new BadRequestException({
-        code: "PUBLIC_BOOKING_HOLD_REQUIRED",
-        message: "A valid slot hold is required before preparing payment.",
       });
     }
 
@@ -143,17 +137,19 @@ export class PublicBookingDepositService {
           estimateSnapshot: { select: { outputJson: true } },
         },
       }),
-      this.prisma.bookingSlotHold.findUnique({
-        where: { id: holdId },
-        select: {
-          id: true,
-          bookingId: true,
-          foId: true,
-          startAt: true,
-          endAt: true,
-          expiresAt: true,
-        },
-      }),
+      holdId
+        ? this.prisma.bookingSlotHold.findUnique({
+            where: { id: holdId },
+            select: {
+              id: true,
+              bookingId: true,
+              foId: true,
+              startAt: true,
+              endAt: true,
+              expiresAt: true,
+            },
+          })
+        : Promise.resolve(null),
     ]);
 
     if (!booking) {
@@ -165,10 +161,16 @@ export class PublicBookingDepositService {
         message: "A tenant context is required before preparing payment.",
       });
     }
-    if (!hold || hold.bookingId !== booking.id) {
+    if (holdId && (!hold || hold.bookingId !== booking.id)) {
       throw new NotFoundException("PUBLIC_BOOKING_HOLD_NOT_FOUND");
     }
-    if (args.requireUnexpiredHold && hold.expiresAt.getTime() <= Date.now()) {
+    if (!hold && args.requireUnexpiredHold) {
+      throw new BadRequestException({
+        code: "PUBLIC_BOOKING_HOLD_REQUIRED",
+        message: "A valid slot hold is required before confirming this booking.",
+      });
+    }
+    if (hold && args.requireUnexpiredHold && hold.expiresAt.getTime() <= Date.now()) {
       throw new ConflictException({
         code: "BOOKING_SLOT_HOLD_EXPIRED",
         message: "The selected slot hold expired before payment could be finalized.",
@@ -200,10 +202,16 @@ export class PublicBookingDepositService {
     if (
       metadata.bookingId !== ctx.booking.id ||
       metadata.bookingSessionKey !== ctx.booking.id ||
-      metadata.holdId !== ctx.hold.id ||
       metadata.tenantId !== ctx.booking.tenantId ||
       metadata.estimateSnapshotHash !== ctx.estimateHash
     ) {
+      throw new BadRequestException({
+        code: "PUBLIC_BOOKING_DEPOSIT_SESSION_MISMATCH",
+        message: "Deposit PaymentIntent does not match this booking session and hold.",
+      });
+    }
+    const metadataHoldId = metadata.holdId?.trim();
+    if (metadataHoldId && ctx.hold && metadataHoldId !== ctx.hold.id) {
       throw new BadRequestException({
         code: "PUBLIC_BOOKING_DEPOSIT_SESSION_MISMATCH",
         message: "Deposit PaymentIntent does not match this booking session and hold.",
@@ -295,6 +303,12 @@ export class PublicBookingDepositService {
       requireUnexpiredHold: false,
     });
     const booking = ctx.booking;
+    if (!ctx.hold) {
+      throw new BadRequestException({
+        code: "PUBLIC_BOOKING_HOLD_REQUIRED",
+        message: "A valid slot hold is required before confirming this booking.",
+      });
+    }
     const holdExpired = ctx.hold.expiresAt.getTime() <= Date.now();
 
     if (booking.status !== BookingStatus.pending_payment) {
@@ -620,25 +634,19 @@ export class PublicBookingDepositService {
   /**
    * Public, unauthenticated: returns a PaymentIntent `client_secret` when the booking
    * still requires deposit capture, or `paymentMode: "none"` when deposit is already
-   * satisfied / skipped. Used after a public slot hold exists so payment is tied
-   * to the exact booking session + hold being finalized.
+   * satisfied / skipped. Initial review payment can happen before a slot hold
+   * exists; final confirmation still binds the paid booking to a concrete hold.
    */
   async preparePublicBookingDeposit(
     bookingId: string,
-    holdId: string,
+    holdId?: string | null,
   ): Promise<PublicBookingDepositPrepareResult> {
     const id = bookingId.trim();
-    const hold = holdId.trim();
+    const hold = holdId?.trim() || "";
     if (!id) {
       throw new BadRequestException({
         code: "BOOKING_ID_REQUIRED",
         message: "bookingId is required",
-      });
-    }
-    if (!hold) {
-      throw new BadRequestException({
-        code: "PUBLIC_BOOKING_HOLD_REQUIRED",
-        message: "A valid slot hold is required before preparing payment.",
       });
     }
 
@@ -661,11 +669,11 @@ export class PublicBookingDepositService {
 
     const ctx = await this.loadPublicDepositContext({
       bookingId: id,
-      holdId: hold,
+      holdId: hold || null,
       requireUnexpiredHold: false,
     });
     const booking = ctx.booking;
-    const holdExpired = ctx.hold.expiresAt.getTime() <= Date.now();
+    const holdExpired = ctx.hold ? ctx.hold.expiresAt.getTime() <= Date.now() : false;
 
     if (booking.status !== BookingStatus.pending_payment) {
       return {
@@ -832,12 +840,12 @@ export class PublicBookingDepositService {
       });
     }
 
-    const idemPi = publicBookingDepositPiIdempotencyKey(booking.id, hold);
+    const idemPi = publicBookingDepositPiIdempotencyKey(booking.id, hold || null);
     const pi = await this.stripePayments.createPublicBookingDepositPaymentIntent({
       bookingId: booking.id,
       stripeCustomerId,
       idempotencyKey: idemPi,
-      holdId: hold,
+      holdId: hold || null,
       tenantId: booking.tenantId,
       estimateSnapshotHash: ctx.estimateHash,
       estimatedTotalCents: estimatedTotal,

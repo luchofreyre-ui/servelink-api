@@ -61,26 +61,26 @@ function parsePrepareJson(raw: unknown): PublicBookingDepositPrepareResponse {
 
 /**
  * Prepare (or sync) the public booking deposit PaymentIntent for `/book` review step.
- * Unauthenticated — booking id + hold id are the capability keys for the
- * payment session being finalized.
+ * Unauthenticated — booking id is the pre-schedule capability key; hold id is
+ * included only when syncing an older hold-scoped payment.
  */
 export async function postPublicBookingDepositPrepare(body: {
   bookingId: string;
-  holdId: string;
+  holdId?: string | null;
 }): Promise<PublicBookingDepositPrepareResponse> {
   const bookingId = body.bookingId.trim();
-  const holdId = body.holdId.trim();
+  const holdId = body.holdId?.trim() || "";
   if (!bookingId) {
     throw new Error("bookingId is required");
-  }
-  if (!holdId) {
-    throw new Error("holdId is required");
   }
 
   const response = await fetch(`${API_BASE_URL}/public-booking/deposit-prepare`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ bookingId, holdId }),
+    body: JSON.stringify({
+      bookingId,
+      ...(holdId ? { holdId } : {}),
+    }),
     cache: "no-store",
   });
 
