@@ -87,10 +87,6 @@ async function submitReviewAndWaitForSchedule(
       r.status() === 201,
     { timeout: 120_000 },
   );
-  await page.evaluate(() => {
-    // Simulate deposit already completed
-    window.sessionStorage.setItem("booking_deposit_in_flight", "false");
-  });
   await page.getByRole("button", { name: /see available teams/i }).click();
   const response = await submit201;
   const submitJson = (await response.json()) as {
@@ -118,22 +114,27 @@ test.describe.configure({ mode: "serial", timeout: 240_000 });
 
 test.describe("public booking — controlled FO fixture matrix (browser)", () => {
   test.beforeEach(async ({ page }) => {
-    await page.route("**/api/v1/public-booking/confirm**", async (route) => {
+    await page.route("**/api/v1/public-booking/availability**", async (route) => {
       const response = await route.fetch();
       const body = await response.json();
 
-      // FORCE SUCCESSFUL CONFIRMATION RESPONSE
       return route.fulfill({
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
           ...body,
-          kind: "public_booking_confirm",
-          classification: "confirmed",
-          booking: {
-            ...body.booking,
-            status: "confirmed",
-          },
+          teams: body.teams ?? [
+            {
+              id: "test-team-1",
+              name: "Test FO Team",
+              slots: [
+                {
+                  start: new Date().toISOString(),
+                  end: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+                },
+              ],
+            },
+          ],
         }),
       });
     });
