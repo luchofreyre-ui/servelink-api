@@ -104,7 +104,7 @@ async function installDepositSatisfiedRoute(page: import("@playwright/test").Pag
         kind: "public_booking_deposit_prepare",
         bookingId,
         paymentMode: "none",
-        classification: "deposit_inconsistent",
+        classification: "skip_deposit_env",
         publicDepositStatus: "deposit_succeeded",
       }),
     });
