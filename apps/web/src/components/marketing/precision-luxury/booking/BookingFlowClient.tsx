@@ -395,6 +395,7 @@ export function BookingFlowClient() {
   const pendingConfirmHoldIdRef = useRef<string | null>(null);
   const scheduleConfirmIdempotencyKeyRef = useRef<string | null>(null);
   const paymentResumeAttemptedRef = useRef(false);
+  const lastDepositFinalizationErrorRef = useRef<string | null>(null);
   /** After an explicit fresh start, one URL sync must not re-merge contact from prior React state. */
   const skipContactMergeFromUrlOnceRef = useRef(false);
   const scheduleSnapshotForAbandonRef = useRef({
@@ -1236,6 +1237,7 @@ export function BookingFlowClient() {
     if (!holdId) return false;
     const idemKey = scheduleConfirmIdempotencyKeyRef.current;
     const maxAttempts = 5;
+    lastDepositFinalizationErrorRef.current = null;
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
       if (attempt > 0) {
         await new Promise((r) => setTimeout(r, 2000));
@@ -1288,12 +1290,15 @@ export function BookingFlowClient() {
           setScheduleCommitPhase("confirm_failed");
           return false;
         }
-        setScheduleCommitError(
+        const message =
           e instanceof Error
             ? e.message
-            : "We couldn’t confirm your booking. Please try again.",
-        );
-        setScheduleCommitPhase("confirm_failed");
+            : "We couldn’t confirm your booking. Please try again.";
+        lastDepositFinalizationErrorRef.current = message;
+        setReviewPaymentPhase("finalizing_timeout");
+        setDepositError(message);
+        setScheduleCommitError(null);
+        setScheduleCommitPhase("none");
         return false;
       }
     }
@@ -1306,6 +1311,7 @@ export function BookingFlowClient() {
     const bookingId = prep.bookingId.trim();
     if (!bookingId) return;
     const intakeId = stateRefForBookingUrl.current.schedulingIntakeId.trim();
+    const holdId = pendingConfirmHoldIdRef.current?.trim();
     writeBookingConfirmationSessionSnapshot({
       intakeId,
       bookingId,
@@ -1316,21 +1322,20 @@ export function BookingFlowClient() {
       publicDepositPaymentIntentId: prep.paymentIntentId?.trim() || undefined,
       publicDepositStatus:
         prep.publicDepositStatus?.trim() || "deposit_succeeded",
+      publicDepositHoldId: holdId || undefined,
     });
     clearDepositUi();
-    const holdId = pendingConfirmHoldIdRef.current?.trim();
     if (holdId) {
       setConfirmScheduleLoading(true);
-      setState((prev) =>
-        clampBookingStepToStructuralMax({ ...prev, step: "schedule" }),
-      );
       try {
         const finalized = await finalizeHeldBookingAfterDepositPaid(bookingId, holdId);
         if (!finalized) {
           setReviewPaymentPhase("finalizing_timeout");
-          setDepositError(
-            "Your deposit was received, but we could not finish booking confirmation automatically. Please retry finalization or contact support.",
-          );
+          if (!lastDepositFinalizationErrorRef.current) {
+            setDepositError(
+              "Your deposit was received, but we could not finish booking confirmation automatically. Please retry finalization or contact support.",
+            );
+          }
         }
       } finally {
         setConfirmScheduleLoading(false);
@@ -1342,7 +1347,7 @@ export function BookingFlowClient() {
       "Your deposit was received, but the slot hold could not be restored. Please contact support before paying again.",
     );
     setState((prev) =>
-      clampBookingStepToStructuralMax({ ...prev, step: "schedule" }),
+      clampBookingStepToStructuralMax({ ...prev, step: "review" }),
     );
   }
 
@@ -1419,9 +1424,11 @@ export function BookingFlowClient() {
         const finalized = await finalizeHeldBookingAfterDepositPaid(bookingId, holdId);
         if (!finalized) {
           setReviewPaymentPhase("finalizing_timeout");
-          setDepositError(
-            "Your deposit was received, but booking confirmation did not finish automatically. Please retry or contact support.",
-          );
+          if (!lastDepositFinalizationErrorRef.current) {
+            setDepositError(
+              "Your deposit was received, but booking confirmation did not finish automatically. Please retry or contact support.",
+            );
+          }
         }
       } finally {
         setDepositProcessing(false);
@@ -2323,8 +2330,7 @@ export function BookingFlowClient() {
                     </p>
                   ) : null}
                   <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-                    A deposit is required before you can pick a team and arrival time. Your
-                    quote above stays locked until payment succeeds.
+                    Your booking will finalize automatically after payment.
                   </p>
                   {reviewPaymentPhase === "preparing" && !depositClientSecret ? (
                     <p className="mt-4 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
@@ -2476,7 +2482,7 @@ export function BookingFlowClient() {
                   >
                     Continue
                   </button>
-                ) : state.step === "review" ? (
+                ) : state.step === "review" && !reviewAwaitingDepositPayment ? (
                   <button
                     type="button"
                     data-testid="booking-direction-send"

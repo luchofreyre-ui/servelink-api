@@ -278,8 +278,25 @@ describe("DepositPaymentElement", () => {
 
     await waitFor(() => expect(confirmPayment).toHaveBeenCalledTimes(1));
     const args = confirmPayment.mock.calls[0]?.[0] as {
+      bookingId?: string;
+      holdId?: string;
+      paymentIntentId?: string;
+      paymentSessionKey?: string;
+      elements?: unknown;
       confirmParams?: { return_url?: string };
+      redirect?: string;
     };
+    expect(Object.keys(args).sort()).toEqual([
+      "confirmParams",
+      "elements",
+      "redirect",
+    ]);
+    expect(Object.keys(args.confirmParams ?? {})).toEqual(["return_url"]);
+    expect(args.redirect).toBe("if_required");
+    expect(args.bookingId).toBeUndefined();
+    expect(args.holdId).toBeUndefined();
+    expect(args.paymentIntentId).toBeUndefined();
+    expect(args.paymentSessionKey).toBeUndefined();
     const returnUrl = new URL(args.confirmParams?.return_url ?? "");
     expect(returnUrl.searchParams.get("publicBookingPayment")).toBe("1");
     expect(returnUrl.searchParams.get("bookingId")).toBe("bk_test");
