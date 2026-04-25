@@ -76,6 +76,7 @@ const phase4ServiceIds = {
   deep: bookingServiceCatalog.find((s) => s.slug === "deep-cleaning")!.id,
   move: bookingServiceCatalog.find((s) => s.slug === "move-in-move-out")!.id,
 };
+const DEPOSIT_LOCK_KEY = "booking_deposit_in_flight";
 import {
   BOOKING_CONFIRMATION_SESSION_KEY,
   BOOKING_FLOW_FRESH_START_FLAG,
@@ -413,12 +414,14 @@ describe("BookingFlowClient", () => {
     emitBookingFunnelEventMock.mockClear();
     sessionStorage.removeItem(BOOKING_CONFIRMATION_SESSION_KEY);
     sessionStorage.removeItem(BOOKING_FLOW_FRESH_START_FLAG);
+    sessionStorage.removeItem(DEPOSIT_LOCK_KEY);
   });
 
   afterEach(() => {
     cleanup();
     sessionStorage.removeItem(BOOKING_CONFIRMATION_SESSION_KEY);
     sessionStorage.removeItem(BOOKING_FLOW_FRESH_START_FLAG);
+    sessionStorage.removeItem(DEPOSIT_LOCK_KEY);
   });
 
   it("does not start a second submit while the first is still in flight", async () => {

@@ -135,6 +135,8 @@ type ReviewPaymentPhase =
   | "failed"
   | "finalizing_timeout";
 
+const DEPOSIT_LOCK_KEY = "booking_deposit_in_flight";
+
 function getStepOrder(step: BookingStepId) {
   return bookingSteps.find((item) => item.id === step)?.order ?? 1;
 }
@@ -396,6 +398,7 @@ export function BookingFlowClient() {
   const scheduleConfirmIdempotencyKeyRef = useRef<string | null>(null);
   const paymentResumeAttemptedRef = useRef(false);
   const lastDepositFinalizationErrorRef = useRef<string | null>(null);
+  const isDepositInFlightRef = useRef(false);
   /** After an explicit fresh start, one URL sync must not re-merge contact from prior React state. */
   const skipContactMergeFromUrlOnceRef = useRef(false);
   const scheduleSnapshotForAbandonRef = useRef({
@@ -414,6 +417,21 @@ export function BookingFlowClient() {
   useEffect(() => {
     pendingConfirmHoldIdRef.current = pendingConfirmHoldId;
   }, [pendingConfirmHoldId]);
+
+  useEffect(() => {
+    restoreDepositLock();
+    if (
+      isDepositInFlightRef.current &&
+      stateRefForBookingUrl.current.step === "schedule"
+    ) {
+      console.warn("BLOCKED: schedule step during restored deposit payment");
+      setState((prev) =>
+        clampBookingStepToStructuralMax({ ...prev, step: "review" }),
+      );
+    }
+    // Restore once on mount; subsequent state transitions are guarded separately.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function clearDepositUi() {
     setDepositRequired(false);
@@ -440,6 +458,47 @@ export function BookingFlowClient() {
 
   function currentPaymentSessionKey(bookingId: string, holdId: string) {
     return `public-booking:${bookingId.trim()}:hold:${holdId.trim()}`;
+  }
+
+  function setDepositLock() {
+    isDepositInFlightRef.current = true;
+    try {
+      window.sessionStorage.setItem(DEPOSIT_LOCK_KEY, "1");
+    } catch {
+      // private mode / quota
+    }
+  }
+
+  function clearDepositLock() {
+    isDepositInFlightRef.current = false;
+    try {
+      window.sessionStorage.removeItem(DEPOSIT_LOCK_KEY);
+    } catch {
+      // private mode / quota
+    }
+  }
+
+  function restoreDepositLock() {
+    try {
+      if (window.sessionStorage.getItem(DEPOSIT_LOCK_KEY) === "1") {
+        isDepositInFlightRef.current = true;
+      }
+    } catch {
+      // private mode / quota
+    }
+  }
+
+  function isDepositPaymentLocked() {
+    return (
+      isDepositInFlightRef.current ||
+      depositRequired ||
+      requiresDepositResolution ||
+      reviewPaymentPhase === "preparing" ||
+      reviewPaymentPhase === "ready_for_payment" ||
+      reviewPaymentPhase === "confirming" ||
+      reviewPaymentPhase === "finalizing" ||
+      reviewPaymentPhase === "finalizing_timeout"
+    );
   }
 
   function writeDurablePublicBookingPaymentSession(args: {
@@ -1073,6 +1132,18 @@ export function BookingFlowClient() {
       !estimatePreviewReady ||
       reviewAwaitingDepositPayment);
 
+  useEffect(() => {
+    if (state.step !== "schedule") return;
+    if (!isDepositPaymentLocked()) return;
+    console.warn("BLOCKED: schedule step during deposit payment");
+    setState((prev) =>
+      clampBookingStepToStructuralMax({ ...prev, step: "review" }),
+    );
+    // `isDepositInFlightRef` intentionally stays out of deps; state changes above are
+    // enough to rerun this guard, and the ref is checked synchronously.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.step, depositRequired, requiresDepositResolution, reviewPaymentPhase]);
+
   const previewEstimate = useMemo((): FunnelReviewEstimate | null => {
     if (estimate.status !== "success" || !estimate.data || !estimateInput) {
       return null;
@@ -1212,6 +1283,13 @@ export function BookingFlowClient() {
   }, [state.step, pathname, router]);
 
   function goToStep(step: BookingStepId) {
+    if (step === "schedule" && isDepositPaymentLocked()) {
+      console.warn("BLOCKED: schedule step during deposit payment");
+      setState((prev) =>
+        clampBookingStepToStructuralMax({ ...prev, step: "review" }),
+      );
+      return;
+    }
     setState((prev) =>
       clampBookingStepToStructuralMax({ ...prev, step }),
     );
@@ -1247,6 +1325,7 @@ export function BookingFlowClient() {
           { bookingId, holdId },
           idemKey,
         );
+        clearDepositLock();
         const s = stateRefForBookingUrl.current;
         emitBookingFunnelEvent("booking_confirmed", {
           bookingId,
@@ -1395,6 +1474,7 @@ export function BookingFlowClient() {
       null;
     setPendingConfirmHoldId(holdId);
     pendingConfirmHoldIdRef.current = holdId;
+    setDepositLock();
     setRequiresDepositResolution(true);
     setReviewPaymentPhase("finalizing");
     setDepositProcessing(true);
@@ -1493,6 +1573,10 @@ export function BookingFlowClient() {
   }
 
   async function runPostStripeDepositFinalizePoll() {
+    if (!isDepositInFlightRef.current) {
+      console.warn("BLOCKED: finalize poll outside deposit context");
+      return;
+    }
     const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
     const holdId = pendingConfirmHoldIdRef.current?.trim() || "";
     if (!bookingId || !holdId) return;
@@ -1722,6 +1806,7 @@ export function BookingFlowClient() {
     const clientSecret = args.error.details.clientSecret?.trim() || "";
     const paymentIntentId = args.error.details.paymentIntentId?.trim() || "";
 
+    setDepositLock();
     writeDurablePublicBookingPaymentSession({
       bookingId,
       holdId,
@@ -1760,6 +1845,10 @@ export function BookingFlowClient() {
   }
 
   async function confirmScheduleHoldAndFinish() {
+    if (isDepositInFlightRef.current) {
+      console.warn("BLOCKED: confirmScheduleHoldAndFinish during deposit");
+      return;
+    }
     if (
       !state.schedulingBookingId.trim() ||
       !state.selectedTeamId.trim() ||
@@ -1854,6 +1943,10 @@ export function BookingFlowClient() {
   }
 
   async function retryScheduleConfirm() {
+    if (isDepositInFlightRef.current) {
+      console.warn("BLOCKED: retryScheduleConfirm during deposit");
+      return;
+    }
     if (!state.schedulingBookingId.trim() || !pendingConfirmHoldId?.trim()) return;
     if (!scheduleConfirmIdempotencyKeyRef.current) {
       scheduleConfirmIdempotencyKeyRef.current =
