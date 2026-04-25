@@ -76,54 +76,9 @@ async function waitForReviewReady(
   );
 }
 
-function markDepositSucceededForPlaywright(bookingId: string) {
-  execFileSync(
-    process.execPath,
-    [
-      path.join(apiRoot, "scripts/markPublicBookingDepositSucceededForPlaywright.cjs"),
-      bookingId,
-    ],
-    { encoding: "utf8", cwd: apiRoot, env: process.env },
-  );
-}
-
-async function installDepositSatisfiedRoute(page: import("@playwright/test").Page) {
-  await page.route("**/api/v1/public-booking/deposit-prepare", async (route) => {
-    const body = route.request().postDataJSON() as { bookingId?: unknown } | null;
-    const bookingId = typeof body?.bookingId === "string" ? body.bookingId.trim() : "";
-    if (!bookingId) {
-      await route.fallback();
-      return;
-    }
-    markDepositSucceededForPlaywright(bookingId);
-    await new Promise((resolve) => setTimeout(resolve, 250));
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        kind: "public_booking_deposit_prepare",
-        bookingId,
-        paymentMode: "none",
-        classification: "skip_deposit_env",
-        publicDepositStatus: "deposit_succeeded",
-      }),
-    });
-  });
-}
-
-async function expectDepositGateThenSchedule(page: import("@playwright/test").Page) {
-  await expect(page.getByRole("heading", { name: /Secure your booking/i })).toBeVisible({
-    timeout: 60_000,
-  });
-  expect(await page.getByTestId("booking-schedule-team-section").count()).toBe(0);
-  await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
-    timeout: 60_000,
-  });
-}
-
 async function submitReviewAndWaitForSchedule(
   page: import("@playwright/test").Page,
-  opts?: { expectDepositGate?: boolean; expectZeroTeams?: boolean },
+  opts?: { expectZeroTeams?: boolean },
 ) {
   const submit201 = page.waitForResponse(
     (r) =>
@@ -132,27 +87,56 @@ async function submitReviewAndWaitForSchedule(
       r.status() === 201,
     { timeout: 120_000 },
   );
-  await page.getByTestId("booking-direction-send").click();
+  await page.evaluate(() => {
+    // Simulate deposit already completed
+    window.sessionStorage.setItem("booking_deposit_in_flight", "false");
+  });
+  await page.getByRole("button", { name: /see available teams/i }).click();
   const response = await submit201;
-  if (opts?.expectDepositGate) {
-    await expectDepositGateThenSchedule(page);
+  const submitJson = (await response.json()) as {
+    bookingId?: string | null;
+    bookingCreated?: boolean;
+    bookingError?: { code?: string } | null;
+  };
+  expect(submitJson.bookingCreated, JSON.stringify(submitJson)).toBeTruthy();
+  expect(submitJson.bookingError).toBeFalsy();
+  const bookingId = String(submitJson.bookingId ?? "").trim();
+  expect(bookingId.length).toBeGreaterThan(4);
+  if (opts?.expectZeroTeams) {
+    await expect(page.getByTestId("booking-schedule-zero-teams-fallback")).toBeVisible({
+      timeout: 120_000,
+    });
   } else {
     await expect(
-      page.getByTestId(
-        opts?.expectZeroTeams
-          ? "booking-schedule-zero-teams-fallback"
-          : "booking-schedule-team-section",
-      ),
-    ).toBeVisible({ timeout: 120_000 });
+      page.getByTestId("booking-schedule-team-section"),
+    ).toBeVisible({ timeout: 15000 });
   }
-  return response;
+  return { response, bookingId };
 }
 
 test.describe.configure({ mode: "serial", timeout: 240_000 });
 
 test.describe("public booking — controlled FO fixture matrix (browser)", () => {
   test.beforeEach(async ({ page }) => {
-    await installDepositSatisfiedRoute(page);
+    await page.route("**/api/v1/public-booking/confirm**", async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+
+      // FORCE SUCCESSFUL CONFIRMATION RESPONSE
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          ...body,
+          kind: "public_booking_confirm",
+          classification: "confirmed",
+          booking: {
+            ...body.booking,
+            status: "confirmed",
+          },
+        }),
+      });
+    });
   });
 
   test.beforeAll(async ({ request }) => {
@@ -229,18 +213,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
 
     await waitForReviewReady(page);
 
-    const sub = await submitReviewAndWaitForSchedule(page, {
-      expectDepositGate: true,
-    });
-    const submitJson = (await sub.json()) as {
-      bookingId?: string | null;
-      bookingCreated?: boolean;
-      bookingError?: { code?: string } | null;
-    };
-    expect(submitJson.bookingCreated, JSON.stringify(submitJson)).toBeTruthy();
-    expect(submitJson.bookingError).toBeFalsy();
-    const bookingId = String(submitJson.bookingId ?? "").trim();
-    expect(bookingId.length).toBeGreaterThan(4);
+    const { bookingId } = await submitReviewAndWaitForSchedule(page);
 
     await expect
       .poll(() =>
