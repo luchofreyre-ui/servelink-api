@@ -69,6 +69,14 @@ describe("bookingPaymentClient", () => {
       isDepositFullySatisfied({
         kind: "public_booking_deposit_prepare",
         bookingId: "b",
+        paymentMode: "none",
+        classification: "deposit_inconsistent",
+      }),
+    ).toBe(true);
+    expect(
+      isDepositFullySatisfied({
+        kind: "public_booking_deposit_prepare",
+        bookingId: "b",
         paymentMode: "deposit",
         classification: "payment_required",
       }),

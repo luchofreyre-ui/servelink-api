@@ -1701,6 +1701,57 @@ export function BookingFlowClient() {
     await runPostStripeDepositFinalizePoll();
   }
 
+  function handlePublicBookingPaymentRequiredFromConfirm(args: {
+    error: PublicBookingPaymentRequiredError;
+    bookingId: string;
+    holdId: string;
+    expiresAt?: string | null;
+  }) {
+    const bookingId =
+      args.error.details.bookingId?.trim() || args.bookingId.trim();
+    const holdId = args.error.details.holdId?.trim() || args.holdId.trim();
+    if (!bookingId || !holdId) return;
+
+    const clientSecret = args.error.details.clientSecret?.trim() || "";
+    const paymentIntentId = args.error.details.paymentIntentId?.trim() || "";
+
+    writeDurablePublicBookingPaymentSession({
+      bookingId,
+      holdId,
+      paymentIntentId,
+      expiresAt: args.expiresAt ?? null,
+    });
+    setPendingConfirmHoldId(holdId);
+    setScheduleCommitError(null);
+    setScheduleCommitPhase("none");
+    clearDepositPaymentCredentialsOnly();
+    setRequiresDepositResolution(true);
+    setReviewDepositGateMessage(BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE);
+    setState((prev) =>
+      clampBookingStepToStructuralMax({
+        ...prev,
+        schedulingBookingId: bookingId,
+        step: "review",
+      }),
+    );
+
+    if (clientSecret && paymentIntentId) {
+      setDepositRequired(true);
+      setDepositClientSecret(clientSecret);
+      setDepositPaymentIntentId(paymentIntentId);
+      setDepositAmountCents(
+        Number.isFinite(args.error.details.amountCents)
+          ? args.error.details.amountCents
+          : 10_000,
+      );
+      setReviewPaymentPhase("ready_for_payment");
+      return;
+    }
+
+    setReviewPaymentPhase("idle");
+    void bootstrapReviewDepositAfterScheduleGate(bookingId, holdId);
+  }
+
   async function confirmScheduleHoldAndFinish() {
     if (
       !state.schedulingBookingId.trim() ||
@@ -1751,27 +1802,12 @@ export function BookingFlowClient() {
           confirmErr instanceof PublicBookingPaymentRequiredError &&
           confirmErr.code === "PAYMENT_REQUIRED"
         ) {
-          writeDurablePublicBookingPaymentSession({
+          handlePublicBookingPaymentRequiredFromConfirm({
+            error: confirmErr,
             bookingId: state.schedulingBookingId,
             holdId: hold.holdId,
-            paymentIntentId: confirmErr.details.paymentIntentId,
             expiresAt: hold.expiresAt,
           });
-          setPendingConfirmHoldId(hold.holdId);
-          setScheduleCommitError(null);
-          setScheduleCommitPhase("none");
-          clearDepositPaymentCredentialsOnly();
-          setRequiresDepositResolution(true);
-          setReviewDepositGateMessage(BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE);
-          setReviewPaymentPhase("idle");
-          const bookingIdForDeposit = state.schedulingBookingId.trim();
-          setState((prev) =>
-            clampBookingStepToStructuralMax({ ...prev, step: "review" }),
-          );
-          void bootstrapReviewDepositAfterScheduleGate(
-            bookingIdForDeposit,
-            hold.holdId,
-          );
           return;
         }
         setScheduleCommitError(BOOKING_SCHEDULE_CONFIRM_FAILED);
@@ -1863,25 +1899,11 @@ export function BookingFlowClient() {
         err instanceof PublicBookingPaymentRequiredError &&
         err.code === "PAYMENT_REQUIRED"
       ) {
-        writeDurablePublicBookingPaymentSession({
+        handlePublicBookingPaymentRequiredFromConfirm({
+          error: err,
           bookingId: state.schedulingBookingId,
           holdId: pendingConfirmHoldId.trim(),
-          paymentIntentId: err.details.paymentIntentId,
         });
-        setScheduleCommitError(null);
-        setScheduleCommitPhase("none");
-        clearDepositPaymentCredentialsOnly();
-        setRequiresDepositResolution(true);
-        setReviewDepositGateMessage(BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE);
-        setReviewPaymentPhase("idle");
-        const bookingIdForDeposit = state.schedulingBookingId.trim();
-        setState((prev) =>
-          clampBookingStepToStructuralMax({ ...prev, step: "review" }),
-        );
-        void bootstrapReviewDepositAfterScheduleGate(
-          bookingIdForDeposit,
-          pendingConfirmHoldId.trim(),
-        );
         return;
       }
       setScheduleCommitError(BOOKING_SCHEDULE_CONFIRM_FAILED);

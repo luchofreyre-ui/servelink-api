@@ -48,7 +48,10 @@ export type PublicBookingDepositRequiredPayload = {
   amountCents: number;
   currency: string;
   clientSecret: string | null;
-  paymentIntentId: string;
+  paymentIntentId?: string;
+  bookingId?: string;
+  holdId?: string;
+  paymentSessionKey?: string;
 };
 
 /** API `error.code === "PAYMENT_REQUIRED"`; deposit fields live in `details` (same shape as this payload). */
@@ -93,6 +96,106 @@ function customerFacingMessageFromKnownCode(code: string): string | null {
   return map[code] ?? null;
 }
 
+const PUBLIC_BOOKING_DEPOSIT_REQUIRED_CODES = new Set([
+  "PAYMENT_REQUIRED",
+  "PUBLIC_BOOKING_DEPOSIT_REQUIRED",
+]);
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function stringFromAny(...values: unknown[]): string {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return "";
+}
+
+function numberFromAny(...values: unknown[]): number | null {
+  for (const value of values) {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return Math.max(0, Math.round(value));
+    }
+  }
+  return null;
+}
+
+function normalizePublicBookingDepositRequiredPayload(args: {
+  responseStatus: number;
+  parsed: Record<string, unknown> | null;
+  env: ReturnType<typeof parseApiFailEnvelope>;
+}): PublicBookingDepositRequiredPayload | null {
+  const root = args.parsed;
+  const error = asRecord(root?.error);
+  const rootDetails = asRecord(root?.details);
+  const errorDetails = asRecord(error?.details);
+  const details = args.env.details;
+  const candidates = [root, error, rootDetails, errorDetails, details].filter(
+    (candidate): candidate is Record<string, unknown> => Boolean(candidate),
+  );
+
+  const codes = [
+    args.env.code,
+    ...candidates.map((candidate) => stringFromAny(candidate.code)),
+  ].filter(Boolean);
+  const hasDepositCode = codes.some((code) =>
+    PUBLIC_BOOKING_DEPOSIT_REQUIRED_CODES.has(code),
+  );
+  const hasDepositKind = candidates.some(
+    (candidate) => candidate.kind === "public_booking_deposit_required",
+  );
+  const clientSecret = stringFromAny(
+    ...candidates.map((candidate) => candidate.clientSecret),
+  );
+  const paymentIntentId = stringFromAny(
+    ...candidates.map((candidate) => candidate.paymentIntentId),
+  );
+  const isDepositRequired =
+    args.responseStatus === 402 ||
+    hasDepositCode ||
+    hasDepositKind ||
+    Boolean(clientSecret) ||
+    Boolean(paymentIntentId);
+
+  if (!isDepositRequired) return null;
+
+  const message =
+    stringFromAny(
+      ...candidates.map((candidate) => candidate.message),
+      args.env.message,
+    ) || "A $100 deposit is required to confirm this booking.";
+  const amountCents =
+    numberFromAny(...candidates.map((candidate) => candidate.amountCents)) ??
+    10_000;
+  const currency =
+    stringFromAny(...candidates.map((candidate) => candidate.currency)) || "usd";
+  const bookingId = stringFromAny(
+    ...candidates.map((candidate) => candidate.bookingId),
+  );
+  const holdId = stringFromAny(...candidates.map((candidate) => candidate.holdId));
+  const paymentSessionKey = stringFromAny(
+    ...candidates.map((candidate) => candidate.paymentSessionKey),
+  );
+
+  return {
+    kind: "public_booking_deposit_required",
+    code:
+      codes.find((code) => PUBLIC_BOOKING_DEPOSIT_REQUIRED_CODES.has(code)) ??
+      "PUBLIC_BOOKING_DEPOSIT_REQUIRED",
+    message,
+    amountCents,
+    currency,
+    clientSecret: clientSecret || null,
+    ...(paymentIntentId ? { paymentIntentId } : {}),
+    ...(bookingId ? { bookingId } : {}),
+    ...(holdId ? { holdId } : {}),
+    ...(paymentSessionKey ? { paymentSessionKey } : {}),
+  };
+}
+
 async function throwIfResponseNotOk(
   response: Response,
   kind: "preview" | "submit",
@@ -121,15 +224,6 @@ async function throwIfResponseNotOk(
       : null;
 
   if (
-    (code === "PAYMENT_REQUIRED" || response.status === 402) &&
-    depositKind === "public_booking_deposit_required" &&
-    depositDetails
-  ) {
-    throw new PublicBookingPaymentRequiredError(
-      depositDetails as PublicBookingDepositRequiredPayload,
-    );
-  }
-  if (
     response.status === 409 &&
     depositKind === "public_booking_deposit_processing" &&
     depositDetails
@@ -144,6 +238,15 @@ async function throwIfResponseNotOk(
           ? depositDetails.paymentIntentId
           : undefined,
     });
+  }
+  const publicBookingDepositRequired =
+    normalizePublicBookingDepositRequiredPayload({
+      responseStatus: response.status,
+      parsed,
+      env,
+    });
+  if (publicBookingDepositRequired) {
+    throw new PublicBookingPaymentRequiredError(publicBookingDepositRequired);
   }
   if (
     message &&
