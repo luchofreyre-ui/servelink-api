@@ -156,7 +156,25 @@ async function submitReviewAndWaitForSchedule(
       r.status() === 201,
     { timeout: 120_000 },
   );
+  page.on("request", (req) => {
+    if (req.url().includes("public-booking/confirm")) {
+      console.log("CONFIRM REQUEST:", req.method(), req.url());
+    }
+  });
+
+  page.on("response", async (res) => {
+    if (res.url().includes("public-booking/confirm")) {
+      console.log("CONFIRM RESPONSE STATUS:", res.status());
+      try {
+        const body = await res.json();
+        console.log("CONFIRM RESPONSE BODY:", JSON.stringify(body));
+      } catch {}
+    }
+  });
+
   await page.getByRole("button", { name: /see available teams/i }).click();
+  console.log("CLICKED SEE AVAILABLE TEAMS");
+  console.log("CURRENT URL:", page.url());
   await logReviewToScheduleSnapshot(page);
   const response = await submit201;
   const submitJson = (await response.json()) as {
