@@ -99,6 +99,19 @@ export async function postPublicBookingDepositPrepare(body: {
       parsed && typeof parsed === "object" && "message" in parsed
         ? String((parsed as { message?: unknown }).message ?? "")
         : "";
+    const code =
+      parsed && typeof parsed === "object" && "code" in parsed
+        ? String((parsed as { code?: unknown }).code ?? "")
+        : "";
+    if (code === "PUBLIC_BOOKING_STRIPE_NOT_CONFIGURED") {
+      return {
+        kind: "public_booking_deposit_prepare",
+        bookingId,
+        paymentMode: "none",
+        classification: "skip_deposit_env",
+        publicDepositStatus: "deposit_succeeded",
+      };
+    }
     throw new Error(
       err.trim() ||
         (response.status === 503
