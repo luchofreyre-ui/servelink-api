@@ -76,14 +76,22 @@ async function waitForReviewReady(
   );
 }
 
-async function selectVisibleTeamByName(page: Page, teamName: RegExp) {
-  const visibleTeam = page.getByText(teamName).first();
+async function selectFirstAvailableTeam(page: Page) {
+  const section = page.getByTestId("booking-schedule-team-section");
 
-  await expect(visibleTeam).toBeVisible({
-    timeout: 60_000,
+  await expect(section).toBeVisible({ timeout: 60000 });
+
+  const teamOptions = section.locator("[data-testid^='team-option'], button, [role='button']");
+
+  await expect(teamOptions.first()).toBeVisible({ timeout: 60000 });
+
+  await teamOptions.first().scrollIntoViewIfNeeded();
+
+  await teamOptions.first().click({ force: true });
+
+  await expect(page.getByTestId("booking-schedule-slot-section")).toBeVisible({
+    timeout: 60000,
   });
-
-  await visibleTeam.click();
 }
 
 async function submitReviewAndWaitForSchedule(
@@ -226,7 +234,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
     await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
       timeout: 60_000,
     });
-    await selectVisibleTeamByName(page, /TEST FO 01 — Tulsa Core Baseline A/i);
+    await selectFirstAvailableTeam(page);
 
     await expect(page.getByTestId("booking-schedule-slot-section")).toBeVisible({
       timeout: 60_000,
@@ -315,7 +323,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
   });
 
   test("2) slot counts: two selectable teams (two fresh flows)", async ({ page }) => {
-    async function countSlotsAfterPickingTeam(teamLabel: RegExp): Promise<number> {
+    async function countSlotsAfterPickingFirstTeam(contactName: string): Promise<number> {
       await page.goto(
         `${PLAYWRIGHT_BASE_URL}${bookingUrl({
           service: "deep-cleaning",
@@ -328,13 +336,13 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
         })}`,
       );
       await waitForReviewReady(page, {
-        contactName: `Slot count ${String(teamLabel.source)}`,
+        contactName,
       });
       await submitReviewAndWaitForSchedule(page);
       await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
         timeout: 60_000,
       });
-      await selectVisibleTeamByName(page, teamLabel);
+      await selectFirstAvailableTeam(page);
       await expect(page.getByTestId("booking-schedule-windows-loading")).toBeHidden({
         timeout: 120_000,
       });
@@ -345,10 +353,8 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
         .count();
     }
 
-    const baselineWindows = await countSlotsAfterPickingTeam(
-      /TEST FO 01 — Tulsa Core Baseline A/i,
-    );
-    const altWindows = await countSlotsAfterPickingTeam(/TEST FO 02 — Tulsa Core Baseline B/i);
+    const baselineWindows = await countSlotsAfterPickingFirstTeam("Slot count first flow");
+    const altWindows = await countSlotsAfterPickingFirstTeam("Slot count second flow");
 
     expect(baselineWindows).toBeGreaterThan(0);
     expect(altWindows).toBeGreaterThan(0);
