@@ -81,13 +81,11 @@ async function selectFirstAvailableTeam(page: Page) {
 
   await expect(section).toBeVisible({ timeout: 60000 });
 
-  const teamOptions = section.locator("[data-testid^='team-option'], button, [role='button']");
+  const teamOptions = section.locator("[data-testid^='team-option']");
 
   await expect(teamOptions.first()).toBeVisible({ timeout: 60000 });
 
-  await teamOptions.first().scrollIntoViewIfNeeded();
-
-  await teamOptions.first().click({ force: true });
+  await teamOptions.first().click();
 
   await expect(page.getByTestId("booking-schedule-slot-section")).toBeVisible({
     timeout: 60000,
