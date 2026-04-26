@@ -99,12 +99,20 @@ export async function postPublicBookingDepositPrepare(body: {
       parsed && typeof parsed === "object" && "message" in parsed
         ? String((parsed as { message?: unknown }).message ?? "")
         : "";
-    throw new Error(
+    const code =
+      parsed && typeof parsed === "object" && "code" in parsed
+        ? String((parsed as { code?: unknown }).code ?? "")
+        : "";
+    const error = new Error(
       err.trim() ||
         (response.status === 503
           ? "Payment service is temporarily unavailable."
           : "Could not prepare deposit payment."),
     );
+    if (code.trim()) {
+      (error as Error & { code?: string }).code = code.trim();
+    }
+    throw error;
   }
 
   return parsePrepareJson(parsed);
