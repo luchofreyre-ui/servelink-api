@@ -1462,6 +1462,39 @@ export function clearBookingConfirmationSessionSnapshot(): void {
   }
 }
 
+export function clearBookingConfirmationPaymentSessionState(
+  bookingId?: string | null,
+): void {
+  if (typeof window === "undefined") return;
+  try {
+    const raw = window.sessionStorage.getItem(BOOKING_CONFIRMATION_SESSION_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw) as Partial<BookingConfirmationSessionSnapshotV1>;
+    if (parsed.v !== 1 || typeof parsed.intakeId !== "string") return;
+    const expectedBookingId = bookingId?.trim();
+    if (
+      expectedBookingId &&
+      typeof parsed.bookingId === "string" &&
+      parsed.bookingId.trim() !== expectedBookingId
+    ) {
+      return;
+    }
+    const cleaned = { ...parsed };
+    delete cleaned.publicDepositPaymentIntentId;
+    delete cleaned.publicDepositStatus;
+    delete cleaned.publicDepositHoldId;
+    delete cleaned.paymentSessionKey;
+    delete cleaned.paymentSessionCreatedAt;
+    delete cleaned.paymentSessionExpiresAt;
+    window.sessionStorage.setItem(
+      BOOKING_CONFIRMATION_SESSION_KEY,
+      JSON.stringify(cleaned),
+    );
+  } catch {
+    // ignore
+  }
+}
+
 /** When the address bar lost all confirmation pairs (common after refresh glitches). */
 export function isConfirmationUrlQueryEmpty(searchParams: URLSearchParams): boolean {
   return [...searchParams.keys()].length === 0;
