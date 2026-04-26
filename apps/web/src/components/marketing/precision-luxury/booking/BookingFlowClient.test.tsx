@@ -3062,6 +3062,22 @@ describe("BookingFlowClient", () => {
           expect.stringMatching(/^\/book\/confirmation\?/),
         ),
       );
+      await waitFor(() =>
+        expect(screen.queryByTestId("deposit-mock-pay")).not.toBeInTheDocument(),
+      );
+      expect(sessionStorage.getItem(DEPOSIT_LOCK_KEY)).toBeNull();
+      const snap = JSON.parse(
+        sessionStorage.getItem(BOOKING_CONFIRMATION_SESSION_KEY) ?? "{}",
+      ) as {
+        publicDepositPaymentIntentId?: string;
+        publicDepositStatus?: string;
+        publicDepositHoldId?: string;
+        paymentSessionKey?: string;
+      };
+      expect(snap.publicDepositPaymentIntentId).toBeUndefined();
+      expect(snap.publicDepositStatus).toBeUndefined();
+      expect(snap.publicDepositHoldId).toBeUndefined();
+      expect(snap.paymentSessionKey).toBeUndefined();
     });
 
     it("schedule confirm 402 without payment details falls back to deposit prepare", async () => {

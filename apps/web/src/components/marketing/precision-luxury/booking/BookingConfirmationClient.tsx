@@ -39,6 +39,7 @@ import {
 } from "./bookingPublicSurfaceCopy";
 import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
 import {
+  clearBookingConfirmationPaymentSessionState,
   clearBookingConfirmationSessionSnapshot,
   hasPublicIntakeEchoInSearchParams,
   markBookingFlowFreshStartRequested,
@@ -228,6 +229,17 @@ export function BookingConfirmationClient() {
     if (!remote) return false;
     if (remote.bookingStatus !== "assigned") return false;
     return Boolean(remote.scheduledStart && remote.scheduledStart.trim().length > 0);
+  }, [remote]);
+
+  useEffect(() => {
+    if (!remote) return;
+    if (remote.bookingStatus !== "assigned" && remote.publicDepositPaid !== true) return;
+    clearBookingConfirmationPaymentSessionState(remote.bookingId);
+    try {
+      window.sessionStorage.removeItem("booking_deposit_in_flight");
+    } catch {
+      // ignore
+    }
   }, [remote]);
 
   const hasEstimateFromRemote = useMemo(() => {

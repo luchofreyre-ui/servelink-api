@@ -112,6 +112,24 @@ describe("BookingConfirmationClient", () => {
 
   it("shows visit-confirmed headline when API reports assigned booking with schedule", async () => {
     mockConfirmationSearch.value = "intakeId=in_c&bookingId=bk_assigned";
+    sessionStorage.setItem(
+      BOOKING_CONFIRMATION_SESSION_KEY,
+      JSON.stringify({
+        v: 1,
+        savedAt: Date.now(),
+        intakeId: "in_c",
+        bookingId: "bk_assigned",
+        priceCents: null,
+        durationMinutes: null,
+        confidence: null,
+        bookingErrorCode: "",
+        publicDepositPaymentIntentId: "pi_stale",
+        publicDepositStatus: "deposit_required",
+        publicDepositHoldId: "hold_stale",
+        paymentSessionKey: "public-booking:bk_assigned:hold:hold_stale",
+      }),
+    );
+    sessionStorage.setItem("booking_deposit_in_flight", "1");
     vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockResolvedValue({
       kind: "public_booking_confirmation",
       bookingId: "bk_assigned",
@@ -141,6 +159,23 @@ describe("BookingConfirmationClient", () => {
     });
     expect(screen.getByText(/Test Team/)).toBeTruthy();
     expect(screen.getByText(BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE)).toBeTruthy();
+    expect(screen.queryByText(/pay .*deposit/i)).toBeNull();
+    expect(screen.queryByText(/secure payment/i)).toBeNull();
+    await waitFor(() => {
+      const snap = JSON.parse(
+        sessionStorage.getItem(BOOKING_CONFIRMATION_SESSION_KEY) ?? "{}",
+      ) as {
+        publicDepositPaymentIntentId?: string;
+        publicDepositStatus?: string;
+        publicDepositHoldId?: string;
+        paymentSessionKey?: string;
+      };
+      expect(snap.publicDepositPaymentIntentId).toBeUndefined();
+      expect(snap.publicDepositStatus).toBeUndefined();
+      expect(snap.publicDepositHoldId).toBeUndefined();
+      expect(snap.paymentSessionKey).toBeUndefined();
+      expect(sessionStorage.getItem("booking_deposit_in_flight")).toBeNull();
+    });
   });
 
   it("shows request-received headline when live booking estimate bundle is absent", () => {

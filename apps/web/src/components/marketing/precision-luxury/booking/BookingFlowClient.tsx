@@ -55,6 +55,7 @@ import {
   applyServiceLocationFieldChangeToBookingFlowState,
   buildBookingSearchParams,
   clampBookingStepToStructuralMax,
+  clearBookingConfirmationPaymentSessionState,
   clearBookingConfirmationSessionSnapshot,
   consumeBookingFlowFreshStartRequested,
   isHomeDetailsComplete,
@@ -1338,6 +1339,7 @@ export function BookingFlowClient() {
           holdId,
         });
         clearDepositUi();
+        clearBookingConfirmationPaymentSessionState(bookingId);
         setScheduleCommitError(null);
         setScheduleCommitPhase("none");
         setPendingConfirmHoldId(null);
