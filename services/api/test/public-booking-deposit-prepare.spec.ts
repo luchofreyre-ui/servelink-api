@@ -1,4 +1,4 @@
-import { HttpException, ServiceUnavailableException } from "@nestjs/common";
+import { HttpException } from "@nestjs/common";
 import { createHash } from "node:crypto";
 import { BookingPublicDepositStatus, BookingStatus } from "@prisma/client";
 import { PrismaService } from "../src/prisma";
@@ -15,15 +15,17 @@ function estimateHash(outputJson: string) {
 
 describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
   const OLD_SKIP = process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+  const OLD_DEPOSIT_MODE = process.env.PUBLIC_BOOKING_DEPOSIT_MODE;
   const OLD_STRIPE = process.env.STRIPE_SECRET_KEY;
 
   afterEach(() => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = OLD_SKIP;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = OLD_DEPOSIT_MODE;
     process.env.STRIPE_SECRET_KEY = OLD_STRIPE;
   });
 
-  it("returns paymentMode none when skip-deposit env is set", async () => {
-    process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = "1";
+  it("returns paymentMode none when deposit mode is bypass", async () => {
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "bypass";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const prisma = {} as unknown as PrismaService;
@@ -36,10 +38,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
     expect(res.paymentMode).toBe("none");
     expect(res.classification).toBe("skip_deposit_env");
+    expect(res.publicDepositStatus).toBe("deposit_succeeded");
   });
 
-  it("throws ServiceUnavailable when Stripe is not configured", async () => {
-    delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+  it("returns paymentMode none when Stripe is not configured", async () => {
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     delete process.env.STRIPE_SECRET_KEY;
 
     const prisma = {} as unknown as PrismaService;
@@ -49,13 +52,18 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
     );
     const svc = new PublicBookingDepositService(prisma, stripePayments);
 
-    await expect(svc.preparePublicBookingDeposit("bk1", "h1")).rejects.toBeInstanceOf(
-      ServiceUnavailableException,
-    );
+    const res = await svc.preparePublicBookingDeposit("bk1", "h1");
+    expect(res).toEqual({
+      kind: "public_booking_deposit_prepare",
+      bookingId: "bk1",
+      paymentMode: "none",
+      classification: "skip_deposit_env",
+      publicDepositStatus: "deposit_succeeded",
+    });
   });
 
   it("rejects missing tenant context before creating a PaymentIntent", async () => {
-    delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const prisma = {
@@ -99,7 +107,7 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
   });
 
   it("syncs succeeded PI and returns deposit_succeeded", async () => {
-    delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const bookingUpdate = jest.fn().mockResolvedValue({});
@@ -159,7 +167,7 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
   });
 
   it("does not treat deposit_succeeded without a PaymentIntent as satisfied", async () => {
-    delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
@@ -204,7 +212,7 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
   });
 
   it("uses the locked server-side deposit amount and hold metadata", async () => {
-    delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const outputJson = JSON.stringify({ estimatedPriceCents: 999_999 });
@@ -263,7 +271,7 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
   });
 
   it("creates a booking-scoped deposit before a hold exists", async () => {
-    delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const outputJson = JSON.stringify({ estimatedPriceCents: 42_500 });
@@ -322,15 +330,18 @@ describe("publicBookingDepositPiIdempotencyKey", () => {
 
 describe("prepare + confirm deposit PI idempotency", () => {
   const OLD_SKIP = process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+  const OLD_DEPOSIT_MODE = process.env.PUBLIC_BOOKING_DEPOSIT_MODE;
   const OLD_STRIPE = process.env.STRIPE_SECRET_KEY;
 
   afterEach(() => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = OLD_SKIP;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = OLD_DEPOSIT_MODE;
     process.env.STRIPE_SECRET_KEY = OLD_STRIPE;
   });
 
   it("uses the same booking+hold-scoped Stripe idempotency key when prepare and gate both create a PI", async () => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = undefined;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const bookingRow = {

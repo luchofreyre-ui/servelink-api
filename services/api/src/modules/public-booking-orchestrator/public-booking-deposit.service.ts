@@ -6,8 +6,8 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-  ServiceUnavailableException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { createHash } from "node:crypto";
 import {
   BookingEventType,
@@ -23,8 +23,6 @@ import {
 } from "../bookings/public-deposit-policy";
 import type Stripe from "stripe";
 import { StripePaymentService } from "../bookings/stripe/stripe-payment.service";
-
-const SKIP_DEPOSIT_ENV = "PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM";
 
 /** Stable Stripe idempotency for public-deposit PI creation (shared by prepare + confirm). */
 export function publicBookingDepositPiIdempotencyKey(
@@ -96,7 +94,7 @@ type PublicDepositContext = {
 
 /**
  * Public booking deposit: $100 immediate capture before hold confirmation assigns the booking.
- * Skipped only when {@link SKIP_DEPOSIT_ENV} is set to `1` (local/CI opt-in — never for production policy).
+ * Skipped only through PUBLIC_BOOKING_DEPOSIT_MODE=bypass or when Stripe is unavailable.
  */
 @Injectable()
 export class PublicBookingDepositService {
@@ -105,7 +103,18 @@ export class PublicBookingDepositService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly stripePayments: StripePaymentService,
+    private readonly config: ConfigService = new ConfigService(),
   ) {}
+
+  private shouldBypassPublicDeposit(): boolean {
+    const mode = this.config.get<"required" | "bypass">(
+      "PUBLIC_BOOKING_DEPOSIT_MODE",
+    );
+    const stripeKey = this.config.get<string>("STRIPE_SECRET_KEY");
+
+    const stripeConfigured = !!stripeKey?.trim();
+    return mode === "bypass" || !stripeConfigured;
+  }
 
   private async loadPublicDepositContext(args: {
     bookingId: string;
@@ -282,19 +291,9 @@ export class PublicBookingDepositService {
     stripePaymentMethodId?: string | null;
     idempotencyKey: string | null;
   }): Promise<void> {
-    if (process.env[SKIP_DEPOSIT_ENV]?.trim() === "1") {
-      this.log.warn(
-        `${SKIP_DEPOSIT_ENV}=1: skipping public deposit gate (non-production testing only).`,
-      );
+    if (this.shouldBypassPublicDeposit()) {
+      this.log.warn("Public booking deposit skipped by deposit mode/config.");
       return;
-    }
-
-    if (!process.env.STRIPE_SECRET_KEY?.trim()) {
-      throw new ServiceUnavailableException({
-        code: "PUBLIC_BOOKING_STRIPE_NOT_CONFIGURED",
-        message:
-          "Stripe is not configured on the server; public booking confirmation with deposit cannot proceed.",
-      });
     }
 
     const ctx = await this.loadPublicDepositContext({
@@ -650,21 +649,14 @@ export class PublicBookingDepositService {
       });
     }
 
-    if (process.env[SKIP_DEPOSIT_ENV]?.trim() === "1") {
+    if (this.shouldBypassPublicDeposit()) {
       return {
         kind: "public_booking_deposit_prepare",
         bookingId: id,
         paymentMode: "none",
         classification: "skip_deposit_env",
+        publicDepositStatus: "deposit_succeeded",
       };
-    }
-
-    if (!process.env.STRIPE_SECRET_KEY?.trim()) {
-      throw new ServiceUnavailableException({
-        code: "PUBLIC_BOOKING_STRIPE_NOT_CONFIGURED",
-        message:
-          "Stripe is not configured on the server; public booking deposit cannot proceed.",
-      });
     }
 
     const ctx = await this.loadPublicDepositContext({

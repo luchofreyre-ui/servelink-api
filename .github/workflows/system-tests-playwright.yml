@@ -79,6 +79,7 @@ jobs:
       JWT_ACCESS_SECRET: ci-system-tests-jwt-access-secret-not-for-production-use
       APP_BASE_URL: http://127.0.0.1:3001
       WEB_BASE_URL: http://127.0.0.1:3000
+      PUBLIC_BOOKING_DEPOSIT_MODE: bypass
       DISABLE_DEV_SCENARIO_API: "0"
 
       # Playwright + web client target the runner-local stack
