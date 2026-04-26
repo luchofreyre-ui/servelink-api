@@ -81,7 +81,7 @@ async function selectFirstAvailableTeam(page: Page) {
 
   await expect(section).toBeVisible({ timeout: 60000 });
 
-  const teamOptions = section.locator("[data-testid^='team-option']");
+  const teamOptions = section.locator("button").filter({ hasText: /TEST FO/i });
 
   await expect(teamOptions.first()).toBeVisible({ timeout: 60000 });
 
