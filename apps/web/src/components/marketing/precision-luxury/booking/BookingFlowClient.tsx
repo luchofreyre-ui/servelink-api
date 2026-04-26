@@ -139,12 +139,6 @@ type ReviewPaymentPhase =
 
 const DEPOSIT_LOCK_KEY = "booking_deposit_in_flight";
 
-function getPublicBookingErrorCode(error: unknown) {
-  if (!error || typeof error !== "object") return "";
-  const code = (error as { code?: unknown }).code;
-  return typeof code === "string" ? code : "";
-}
-
 function getStepOrder(step: BookingStepId) {
   return bookingSteps.find((item) => item.id === step)?.order ?? 1;
 }
@@ -1599,17 +1593,6 @@ export function BookingFlowClient() {
         "We couldn’t start card payment. Please try again shortly.",
       );
     } catch (e) {
-      if (getPublicBookingErrorCode(e) === "PUBLIC_BOOKING_STRIPE_NOT_CONFIGURED") {
-        console.warn("Deposit skipped: Stripe not configured");
-        await advanceAfterPublicDepositSatisfied({
-          kind: "public_booking_deposit_prepare",
-          bookingId,
-          paymentMode: "none",
-          classification: "skip_deposit_env",
-          publicDepositStatus: "deposit_succeeded",
-        });
-        return;
-      }
       setReviewPaymentPhase("failed");
       setDepositError(
         e instanceof Error
