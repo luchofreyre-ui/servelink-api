@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { getStripePublicConfig } from "@/lib/api/payments";
+import { getStripeConstructorOptions } from "@/lib/stripe/stripeClient";
 
 export function useStripeClient() {
   const [publishableKey, setPublishableKey] = useState<string | null>(null);
@@ -46,7 +47,7 @@ export function useStripeClient() {
 
   const stripePromise = useMemo(() => {
     if (!publishableKey) return null;
-    return loadStripe(publishableKey);
+    return loadStripe(publishableKey, getStripeConstructorOptions());
   }, [publishableKey]);
 
   return {
