@@ -176,6 +176,11 @@ jobs:
         working-directory: apps/web
         run: npx playwright install --with-deps chromium
 
+      - name: Seed FO fixtures for CI
+        run: |
+          cd services/api
+          npx ts-node scripts/seedPlaywrightFoFixtures.ts
+
       - name: Run Playwright (list + JSON report)
         id: playwright
         working-directory: apps/web
