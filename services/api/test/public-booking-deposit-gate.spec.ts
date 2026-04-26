@@ -1,4 +1,3 @@
-import { ServiceUnavailableException } from "@nestjs/common";
 import { createHash } from "node:crypto";
 import {
   BookingPublicDepositStatus,
@@ -16,15 +15,17 @@ function estimateHash(outputJson: string) {
 
 describe("PublicBookingDepositService gate", () => {
   const OLD_SKIP = process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+  const OLD_DEPOSIT_MODE = process.env.PUBLIC_BOOKING_DEPOSIT_MODE;
   const OLD_STRIPE = process.env.STRIPE_SECRET_KEY;
 
   afterEach(() => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = OLD_SKIP;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = OLD_DEPOSIT_MODE;
     process.env.STRIPE_SECRET_KEY = OLD_STRIPE;
   });
 
-  it("throws ServiceUnavailable when Stripe is not configured", async () => {
-    delete process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM;
+  it("bypasses deposit gate when Stripe is not configured", async () => {
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     delete process.env.STRIPE_SECRET_KEY;
 
     const prisma = {
@@ -66,11 +67,12 @@ describe("PublicBookingDepositService gate", () => {
         stripePaymentMethodId: null,
         idempotencyKey: "k1",
       }),
-    ).rejects.toBeInstanceOf(ServiceUnavailableException);
+    ).resolves.toBeUndefined();
   });
 
   it("syncs deposit from Stripe when local row is pending but PaymentIntent already succeeded", async () => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = undefined;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
@@ -146,6 +148,7 @@ describe("PublicBookingDepositService gate", () => {
 
   it("allows deposit_succeeded without a PaymentIntent and records idempotent visibility", async () => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = undefined;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
@@ -244,6 +247,7 @@ describe("PublicBookingDepositService gate", () => {
     BookingPublicDepositStatus.deposit_failed,
   ])("still blocks %s by requiring payment", async (publicDepositStatus) => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = undefined;
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
 
     const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });

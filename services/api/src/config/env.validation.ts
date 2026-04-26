@@ -11,6 +11,9 @@ export const envSchema = z.object({
   STRIPE_PUBLISHABLE_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
   STRIPE_CURRENCY: z.string().default("usd"),
+  PUBLIC_BOOKING_DEPOSIT_MODE: z
+    .enum(["required", "bypass"])
+    .default("required"),
   APP_BASE_URL: z.string().url().default("http://localhost:3001"),
   WEB_BASE_URL: z.string().url().default("http://localhost:3000"),
   REQUIRE_STRIPE: z
