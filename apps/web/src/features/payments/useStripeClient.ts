@@ -47,7 +47,10 @@ export function useStripeClient() {
 
   const stripePromise = useMemo(() => {
     if (!publishableKey) return null;
-    return loadStripe(publishableKey, getStripeConstructorOptions());
+    const stripeOptions = getStripeConstructorOptions();
+    return stripeOptions
+      ? loadStripe(publishableKey, stripeOptions)
+      : loadStripe(publishableKey);
   }, [publishableKey]);
 
   return {

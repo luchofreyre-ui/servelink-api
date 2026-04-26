@@ -13,11 +13,18 @@ let stripePromise: Promise<Stripe | null> | null = null;
 /**
  * Stripe.js loader for Payment Element. Uses `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` only.
  */
-export function getStripeConstructorOptions(): StripeConstructorOptions {
+export function getStripeConstructorOptions(): StripeConstructorOptions | undefined {
+  if (
+    process.env.NODE_ENV === "production" ||
+    process.env.NEXT_PUBLIC_STRIPE_DEBUG_TOOLS !== "true"
+  ) {
+    return undefined;
+  }
+
   return {
     developerTools: {
       assistant: {
-        enabled: WEB_ENV.stripeDebugToolsEnabled,
+        enabled: true,
       },
     },
   };
@@ -26,7 +33,10 @@ export function getStripeConstructorOptions(): StripeConstructorOptions {
 export function getStripePromise(): Promise<Stripe | null> | null {
   if (!publishableKey) return null;
   if (!stripePromise) {
-    stripePromise = loadStripe(publishableKey, getStripeConstructorOptions());
+    const stripeOptions = getStripeConstructorOptions();
+    stripePromise = stripeOptions
+      ? loadStripe(publishableKey, stripeOptions)
+      : loadStripe(publishableKey);
   }
   return stripePromise;
 }

@@ -24,10 +24,6 @@ const stripePublishableKey =
     ? process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.trim()
     : "";
 
-const stripeDebugToolsEnabled =
-  process.env.NODE_ENV !== "production" &&
-  process.env.NEXT_PUBLIC_STRIPE_DEBUG_TOOLS === "true";
-
 export const WEB_ENV = {
   /** HTTP origin only (no `/api/v1`). */
   apiOrigin,
@@ -38,7 +34,6 @@ export const WEB_ENV = {
    * Never set the secret key here — server-only.
    */
   stripePublishableKey,
-  stripeDebugToolsEnabled,
   appEnv: process.env.NEXT_PUBLIC_APP_ENV ?? "development",
   enableManualPaymentControls:
     process.env.NEXT_PUBLIC_ENABLE_MANUAL_PAYMENT_CONTROLS === "true",
