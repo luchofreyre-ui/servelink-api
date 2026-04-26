@@ -1,7 +1,7 @@
 import { execFileSync } from "child_process";
 import path from "path";
 
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 const PLAYWRIGHT_BASE_URL =
   process.env.PLAYWRIGHT_BASE_URL?.replace(/\/$/, "") || "http://127.0.0.1:3000";
@@ -76,79 +76,20 @@ async function waitForReviewReady(
   );
 }
 
-function shouldLogBookingDiagnosticUrl(url: string) {
-  return (
-    url.includes("public-booking") ||
-    url.includes("booking-direction-intake") ||
-    url.includes("preview-estimate")
-  );
-}
+async function selectVisibleTeamByName(page: Page, teamName: RegExp) {
+  const visibleTeam = page.getByText(teamName).first();
 
-async function logReviewToScheduleSnapshot(page: import("@playwright/test").Page) {
-  const mainBookingText = await page
-    .locator('[data-testid="booking-flow"], [data-testid="booking-page"], main')
-    .first()
-    .innerText({ timeout: 1_000 })
-    .catch(() => null);
-  const scheduleTeamSectionCount = await page
-    .getByTestId("booking-schedule-team-section")
-    .count();
-  const depositPaymentHeadingCount = await page
-    .getByRole("heading", { name: /deposit|payment|secure your booking/i })
-    .count();
-  const depositPaymentButtonCount = await page
-    .getByRole("button", { name: /pay|deposit|payment|check payment status/i })
-    .count();
-  const errorBannerCount = await page
-    .locator('[role="alert"], [data-testid*="error"], [data-testid*="banner"]')
-    .count();
+  await expect(visibleTeam).toBeVisible({
+    timeout: 60_000,
+  });
 
-  console.log(
-    "FO_FIXTURE_REVIEW_TO_SCHEDULE_AFTER_CLICK:",
-    JSON.stringify({
-      url: page.url(),
-      mainBookingText,
-      scheduleTeamSectionCount,
-      depositPaymentHeadingCount,
-      depositPaymentButtonCount,
-      errorBannerCount,
-    }),
-  );
+  await visibleTeam.click();
 }
 
 async function submitReviewAndWaitForSchedule(
   page: import("@playwright/test").Page,
   opts?: { expectZeroTeams?: boolean },
 ) {
-  page.on("request", (req) => {
-    if (shouldLogBookingDiagnosticUrl(req.url())) {
-      console.log("FO_FIXTURE_REQ:", req.method(), req.url());
-    }
-  });
-  page.on("response", async (res) => {
-    const url = res.url();
-    if (!shouldLogBookingDiagnosticUrl(url)) return;
-
-    const contentType = res.headers()["content-type"] ?? "";
-    let jsonBody: unknown = undefined;
-    if (contentType.includes("application/json")) {
-      try {
-        jsonBody = await res.json();
-      } catch {
-        jsonBody = "[json parse failed]";
-      }
-    }
-
-    console.log(
-      "FO_FIXTURE_RES:",
-      JSON.stringify({
-        status: res.status(),
-        url,
-        jsonBody,
-      }),
-    );
-  });
-
   const submit201 = page.waitForResponse(
     (r) =>
       r.url().includes("/booking-direction-intake/submit") &&
@@ -156,26 +97,7 @@ async function submitReviewAndWaitForSchedule(
       r.status() === 201,
     { timeout: 120_000 },
   );
-  page.on("request", (req) => {
-    if (req.url().includes("public-booking/confirm")) {
-      console.log("CONFIRM REQUEST:", req.method(), req.url());
-    }
-  });
-
-  page.on("response", async (res) => {
-    if (res.url().includes("public-booking/confirm")) {
-      console.log("CONFIRM RESPONSE STATUS:", res.status());
-      try {
-        const body = await res.json();
-        console.log("CONFIRM RESPONSE BODY:", JSON.stringify(body));
-      } catch {}
-    }
-  });
-
   await page.getByRole("button", { name: /see available teams/i }).click();
-  console.log("CLICKED SEE AVAILABLE TEAMS");
-  console.log("CURRENT URL:", page.url());
-  await logReviewToScheduleSnapshot(page);
   const response = await submit201;
   const submitJson = (await response.json()) as {
     bookingId?: string | null;
@@ -301,7 +223,10 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
     );
     expect(names.every((n) => /TEST FO/i.test(n))).toBeTruthy();
     expect(firstTeams?.teams?.some((t) => t.id === FO.moveOnly)).toBe(false);
-    await page.getByRole("button", { name: /TEST FO 01 — Tulsa Core Baseline A/i }).click();
+    await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
+      timeout: 60_000,
+    });
+    await selectVisibleTeamByName(page, /TEST FO 01 — Tulsa Core Baseline A/i);
 
     await expect(page.getByTestId("booking-schedule-slot-section")).toBeVisible({
       timeout: 60_000,
@@ -406,7 +331,10 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
         contactName: `Slot count ${String(teamLabel.source)}`,
       });
       await submitReviewAndWaitForSchedule(page);
-      await page.getByRole("button", { name: teamLabel }).click();
+      await expect(page.getByTestId("booking-schedule-team-section")).toBeVisible({
+        timeout: 60_000,
+      });
+      await selectVisibleTeamByName(page, teamLabel);
       await expect(page.getByTestId("booking-schedule-windows-loading")).toBeHidden({
         timeout: 120_000,
       });
