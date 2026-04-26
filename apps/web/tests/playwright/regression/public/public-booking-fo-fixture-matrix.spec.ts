@@ -71,8 +71,12 @@ async function waitForReviewReady(
     }
     await page.waitForTimeout(250);
   }
+  const visibleState = await page
+    .locator("main")
+    .innerText({ timeout: 5_000 })
+    .catch(() => "<main text unavailable>");
   throw new Error(
-    "Review send stayed disabled — check live preview (estimate) and deep-clean visit choice for this service.",
+    `Review send stayed disabled after waiting for contact, preview, and optional deep-clean visit choice.\n\nVisible page state:\n${visibleState.slice(0, 2000)}`,
   );
 }
 

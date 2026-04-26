@@ -81,6 +81,8 @@ jobs:
       WEB_BASE_URL: http://127.0.0.1:3000
       PUBLIC_BOOKING_DEPOSIT_MODE: bypass
       DISABLE_DEV_SCENARIO_API: "0"
+      SERVELINK_GEOCODE_MATRIX_FIXTURE_LOOKUP: "true"
+      SERVELINK_E2E_RATE_LIMIT_BYPASS: "true"
 
       # Playwright + web client target the runner-local stack
       PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
