@@ -81,11 +81,7 @@ async function selectFirstAvailableTeam(page: Page) {
 
   await expect(section).toBeVisible({ timeout: 60000 });
 
-  console.log(await section.locator("*").allInnerTexts());
-  console.log(await section.innerHTML());
-
-  // Select clickable team cards/buttons inside the section
-  const teamOptions = section.locator("button:has([data-testid])");
+  const teamOptions = section.locator("button[type='button']:has(h3)");
 
   await expect(teamOptions.first()).toBeVisible({ timeout: 60000 });
 
