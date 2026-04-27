@@ -1,7 +1,17 @@
 "use client";
 
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import type { StripePaymentElementOptions } from "@stripe/stripe-js";
 import { type FormEvent, useState } from "react";
+
+const CUSTOMER_PAYMENT_ELEMENT_OPTIONS = {
+  paymentMethodOrder: ["card"],
+  wallets: {
+    applePay: "never",
+    googlePay: "never",
+    link: "never",
+  },
+} satisfies StripePaymentElementOptions;
 
 export function StripeCheckoutForm(props: {
   bookingId: string;
@@ -54,7 +64,7 @@ export function StripeCheckoutForm(props: {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-        <PaymentElement />
+        <PaymentElement options={CUSTOMER_PAYMENT_ELEMENT_OPTIONS} />
       </div>
 
       {localError ? (
