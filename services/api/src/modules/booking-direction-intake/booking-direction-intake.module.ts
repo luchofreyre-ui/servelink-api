@@ -5,6 +5,7 @@ import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guar
 import { BookingsModule } from "../bookings/bookings.module";
 import { EstimateModule } from "../estimate/estimate.module";
 import { GeocodingModule } from "../geocoding/geocoding.module";
+import { TenantModule } from "../tenant/tenant.module";
 import { BookingDirectionIntakeService } from "./booking-direction-intake.service";
 import { BookingDirectionIntakePublicController } from "./booking-direction-intake.public.controller";
 import { BookingDirectionIntakeSubmitController } from "./booking-direction-intake-submit.controller";
@@ -12,7 +13,14 @@ import { AdminBookingDirectionIntakeController } from "./admin-booking-direction
 import { IntakeBookingBridgeService } from "./intake-booking-bridge.service";
 
 @Module({
-  imports: [PrismaModule, AuthModule, BookingsModule, EstimateModule, GeocodingModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    BookingsModule,
+    EstimateModule,
+    GeocodingModule,
+    TenantModule,
+  ],
   controllers: [
     BookingDirectionIntakePublicController,
     BookingDirectionIntakeSubmitController,

@@ -44,6 +44,7 @@ import { UpdateBookingPatchDto } from "./dto/update-booking-patch.dto";
 import { CreateBookingCheckoutDto } from "./dto/create-booking-checkout.dto";
 import { UpdateBookingPaymentStatusDto } from "./dto/update-booking-payment-status.dto";
 import { SkipIdempotency } from "../../common/reliability/reliability.decorators";
+import { TenantResolver } from "../tenant/tenant.resolver";
 
 @UseGuards(JwtAuthGuard)
 @Controller("/api/v1/bookings")
@@ -60,16 +61,20 @@ export class BookingsController {
     private readonly deepCleanVisitExecution: DeepCleanVisitExecutionService,
     private readonly adminBookings: AdminBookingsService,
     private readonly assignmentService: AssignmentService,
+    private readonly tenantResolver: TenantResolver,
   ) {}
 
   @Post()
   async create(
     @Req() req: any,
     @Body() dto: CreateBookingDto,
+    @Headers("host") host?: string,
     @Headers("idempotency-key") idempotencyKey?: string,
   ) {
+    const tenantId = this.tenantResolver.resolve({ host }).tenantId;
     return this.bookings.createBooking({
       customerId: String(req.user.userId),
+      tenantId,
       estimateInput: dto.estimateInput as any,
       note: dto.note,
       idempotencyKey: idempotencyKey ?? null,

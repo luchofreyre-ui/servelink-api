@@ -53,7 +53,10 @@ describe("IntakeBookingBridgeService — public service location", () => {
 
     const bridge = moduleRef.get(IntakeBookingBridgeService);
     const { serviceLocation: _s, ...rest } = baseDto();
-    const r = await bridge.submitIntakeAndCreateBooking(rest as CreateBookingDirectionIntakeDto);
+    const r = await bridge.submitIntakeAndCreateBooking(
+      rest as CreateBookingDirectionIntakeDto,
+      "nustandard",
+    );
 
     expect(r.bookingCreated).toBe(false);
     expect(r.bookingError?.code).toBe(INTAKE_SERVICE_LOCATION_REQUIRED_CODE);
@@ -83,7 +86,7 @@ describe("IntakeBookingBridgeService — public service location", () => {
     }).compile();
 
     const bridge = moduleRef.get(IntakeBookingBridgeService);
-    const r = await bridge.submitIntakeAndCreateBooking(baseDto());
+    const r = await bridge.submitIntakeAndCreateBooking(baseDto(), "nustandard");
 
     expect(r.bookingCreated).toBe(false);
     expect(r.bookingError?.code).toBe("SERVICE_LOCATION_NOT_RESOLVABLE");

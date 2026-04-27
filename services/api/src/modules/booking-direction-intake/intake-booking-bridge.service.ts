@@ -250,6 +250,7 @@ export class IntakeBookingBridgeService {
    */
   async submitIntakeAndCreateBooking(
     dto: CreateBookingDirectionIntakeDto,
+    tenantId: string,
   ): Promise<IntakeSubmitResponse> {
     let site: { siteLat: number; siteLng: number };
     try {
@@ -368,6 +369,7 @@ export class IntakeBookingBridgeService {
     try {
       const { booking, estimate } = await this.bookings.createBooking({
         customerId,
+        tenantId,
         estimateInput,
         note,
         preferredFoId: intake.preferredFoId,

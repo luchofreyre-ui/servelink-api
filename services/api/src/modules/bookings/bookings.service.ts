@@ -48,6 +48,7 @@ import { assertConfirmHoldSlotDuration } from "./confirm-hold-slot-duration";
 import { resolveBookingCalendarEndMs } from "./booking-scheduling-calendar-end";
 import { BookingCancellationPaymentInvariantService } from "./payment-lifecycle/booking-cancellation-payment-invariant.service";
 import { RemainingBalanceCaptureService } from "./payment-lifecycle/remaining-balance-capture.service";
+import { requireReadTenantId, requireTenantId } from "../tenant/tenant.enforcement";
 
 @Injectable()
 export class BookingsService {
@@ -83,6 +84,7 @@ export class BookingsService {
 
   async createBooking(input: {
     customerId: string;
+    tenantId: string;
     note?: string;
     idempotencyKey?: string | null;
     estimateInput?: EstimateInput;
@@ -94,6 +96,8 @@ export class BookingsService {
     booking: any;
     estimate?: EstimateResult;
   }> {
+    const tenantId = requireTenantId(input.tenantId, "BookingsService.createBooking");
+
     const { bookingId, estimate } = await this.db.$transaction(async (tx: any) => {
       const siteLat =
         typeof input.estimateInput?.siteLat === "number" &&
@@ -118,6 +122,7 @@ export class BookingsService {
           hourlyRateCents: 0,
           estimatedHours: 0,
           currency: "usd",
+          tenantId,
           customer: { connect: { id: input.customerId } },
           notes: input.note ?? null,
           siteLat,
@@ -221,6 +226,20 @@ export class BookingsService {
     const booking = await this.db.booking.findUnique({ where: { id } });
     if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
     return booking;
+  }
+
+  async getBookingForTenant(id: string, tenantId: string): Promise<Booking | null> {
+    const scopedTenantId = requireReadTenantId(
+      tenantId,
+      "BookingsService.getBookingForTenant",
+    );
+
+    return this.db.booking.findFirst({
+      where: {
+        id,
+        tenantId: scopedTenantId,
+      },
+    });
   }
 
   /**
@@ -459,23 +478,37 @@ export class BookingsService {
     foId: string;
     scheduledStart: Date | string;
     estimatedHours: number | null | undefined;
+    requestedDurationMinutes?: number | null;
+    requestedEstimateSnapshotOutputJson?: string | null;
   }) {
     const requestedStart = new Date(args.scheduledStart);
     const requestedEstimatedHours = Number(args.estimatedHours ?? 0);
+    const requestedDurationMinutes = Number(args.requestedDurationMinutes ?? 0);
 
     if (!Number.isFinite(requestedStart.getTime())) {
       throw new BadRequestException("BOOKING_SCHEDULED_START_INVALID");
     }
 
-    if (!(requestedEstimatedHours > 0)) {
+    if (
+      !(requestedDurationMinutes > 0) &&
+      !(requestedEstimatedHours > 0)
+    ) {
       throw new ConflictException(
         "BOOKING_ESTIMATED_HOURS_REQUIRED_FOR_AVAILABILITY_CHECK",
       );
     }
 
-    const requestedEnd = new Date(
-      requestedStart.getTime() + requestedEstimatedHours * 60 * 60 * 1000,
-    );
+    const requestedEnd =
+      requestedDurationMinutes > 0
+        ? new Date(requestedStart.getTime() + Math.floor(requestedDurationMinutes) * 60 * 1000)
+        : new Date(
+            resolveBookingCalendarEndMs({
+              scheduledStart: requestedStart,
+              estimatedHours: requestedEstimatedHours,
+              estimateSnapshotOutputJson: args.requestedEstimateSnapshotOutputJson,
+              preferWallClockFromSnapshot: true,
+            }),
+          );
 
     const existingBookings = await this.db.booking.findMany({
       where: {
@@ -838,6 +871,8 @@ export class BookingsService {
         foId: booking.foId,
         scheduledStart: args.scheduledStart,
         estimatedHours: booking.estimatedHours,
+        // Generic/manual scheduling currently has no snapshot payload in this path;
+        // availability falls back explicitly to estimatedHours when wall minutes are unavailable.
       });
     }
 
@@ -1140,6 +1175,7 @@ export class BookingsService {
         foId,
         scheduledStart: booking.scheduledStart,
         estimatedHours: booking.estimatedHours,
+        // Assignment reads the booking row only; use explicit estimatedHours fallback.
       });
     }
 

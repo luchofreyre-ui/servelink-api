@@ -47,49 +47,17 @@ describe("BookingsService — tenant-required read enforcement", () => {
       where: { id: "b1", tenantId: "nustandard" },
     });
   });
-});
 
-describe("BookingsService — transitional getBooking preserved", () => {
-  it("getBooking without tenant uses findUnique (unscoped)", async () => {
-    const findUnique = jest.fn().mockResolvedValue({
-      id: "b1",
-      tenantId: "nustandard",
-    });
-    const findFirst = jest.fn();
-    const svc = makeBookingsService({
-      booking: { findUnique, findFirst },
-    });
-    await svc.getBooking("b1");
-    expect(findUnique).toHaveBeenCalledWith({ where: { id: "b1" } });
-    expect(findFirst).not.toHaveBeenCalled();
-  });
-
-  it("getBooking with tenant uses findFirst (scoped)", async () => {
+  it("getBookingForTenant returns null when tenant does not match", async () => {
     const findUnique = jest.fn();
-    const findFirst = jest.fn().mockResolvedValue({
-      id: "b1",
-      tenantId: "nustandard",
-    });
+    const findFirst = jest.fn().mockResolvedValue(null);
     const svc = makeBookingsService({
       booking: { findUnique, findFirst },
     });
-    await svc.getBooking("b1", "nustandard");
+    await expect(svc.getBookingForTenant("b1", "other")).resolves.toBeNull();
     expect(findFirst).toHaveBeenCalledWith({
-      where: { id: "b1", tenantId: "nustandard" },
+      where: { id: "b1", tenantId: "other" },
     });
-  });
-
-  it("getBooking with blank tenant uses findUnique (unscoped)", async () => {
-    const findUnique = jest.fn().mockResolvedValue({
-      id: "b1",
-      tenantId: "nustandard",
-    });
-    const findFirst = jest.fn();
-    const svc = makeBookingsService({
-      booking: { findUnique, findFirst },
-    });
-    await svc.getBooking("b1", "   ");
-    expect(findUnique).toHaveBeenCalledWith({ where: { id: "b1" } });
-    expect(findFirst).not.toHaveBeenCalled();
+    expect(findUnique).not.toHaveBeenCalled();
   });
 });

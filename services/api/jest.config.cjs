@@ -3,7 +3,7 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: [
     '**/test/**/*.spec.ts',
-    '**/src/modules/franchise-owner/__tests__/**/*.spec.ts',
+    '**/src/modules/**/__tests__/**/*.spec.ts',
   ],
   moduleFileExtensions: ['ts', 'js', 'json'],
   verbose: true,

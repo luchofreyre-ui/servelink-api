@@ -132,11 +132,12 @@ describe("IntakeBookingBridgeService — preferredFoId → createBooking", () =>
       serviceLocation: testServiceLocation,
     } as unknown as CreateBookingDirectionIntakeDto;
 
-    const result = await bridge.submitIntakeAndCreateBooking(dto);
+    const result = await bridge.submitIntakeAndCreateBooking(dto, "nustandard");
 
     expect(result.bookingCreated).toBe(true);
     expect(createBooking).toHaveBeenCalledWith(
       expect.objectContaining({
+        tenantId: "nustandard",
         preferredFoId: "fo_from_intake",
       }),
     );

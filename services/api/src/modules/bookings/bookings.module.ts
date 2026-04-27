@@ -38,6 +38,7 @@ import { AssignmentService } from "./assignment/assignment.service";
 import { BookingPaymentService } from "./payment/payment.service";
 import { StripeBookingPaymentModule } from "./stripe/stripe-booking-payment.module";
 import { BookingTeamContinuityService } from "./booking-team-continuity.service";
+import { TenantModule } from "../tenant/tenant.module";
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { BookingTeamContinuityService } from "./booking-team-continuity.service"
     TrustModule,
     FinancialModule,
     EstimateAccuracyModule,
+    TenantModule,
   ],
   controllers: [
     BookingsController,

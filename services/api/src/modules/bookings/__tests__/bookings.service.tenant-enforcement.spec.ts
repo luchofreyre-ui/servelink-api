@@ -16,9 +16,9 @@ describe("BookingsService — tenant enforcement on createBooking", () => {
       booking: { findUnique: jest.fn() },
     });
     await expect(
-      svc.createBooking({
-        customerId: "c1",
-      } as { customerId: string; tenantId?: string | null }),
+      svc.createBooking({ customerId: "c1" } as unknown as Parameters<
+        typeof svc.createBooking
+      >[0]),
     ).rejects.toThrow(MissingTenantContextException);
     expect($transaction).not.toHaveBeenCalled();
   });
