@@ -817,6 +817,7 @@ export class RecurringService {
     try {
       const { booking, estimate } = await this.bookings.createBooking({
         customerId,
+        tenantId: plan.tenantId,
         estimateInput,
         note,
         bookingMatchMode: "authenticated_recurring",

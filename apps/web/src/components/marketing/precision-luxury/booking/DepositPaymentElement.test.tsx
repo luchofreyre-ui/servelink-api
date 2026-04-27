@@ -17,6 +17,7 @@ const stripeHooks = vi.hoisted(() => ({
   firePaymentElementLoadError: (() => {
     /* no-op until PaymentElement mounts */
   }) as () => void,
+  paymentElementOptions: null as unknown,
 }));
 
 vi.mock("@stripe/react-stripe-js", () => {
@@ -44,10 +45,12 @@ vi.mock("@stripe/react-stripe-js", () => {
       </ElementsCtx.Provider>
     ),
     PaymentElement: (props: {
+      options?: unknown;
       onReady?: () => void;
       onLoadError?: () => void;
     }) => {
       React.useEffect(() => {
+        stripeHooks.paymentElementOptions = props.options;
         stripeHooks.firePaymentElementReady = () => {
           props.onReady?.();
         };
@@ -85,6 +88,7 @@ describe("DepositPaymentElement", () => {
     webEnvTest.stripePublishableKey = "pk_test_123";
     stripeHooks.elements = null;
     stripeHooks.autoFireReady = true;
+    stripeHooks.paymentElementOptions = null;
   });
 
   it("shows unavailable message and logs when publishable key is missing", () => {
@@ -196,6 +200,33 @@ describe("DepositPaymentElement", () => {
         screen.getByRole("button", { name: /pay \$100 deposit/i }),
       ).not.toBeDisabled(),
     );
+  });
+
+  it("configures Payment Element to suppress Link and wallet UI", async () => {
+    stripeHooks.elements = {};
+    stripeHooks.autoFireReady = true;
+
+    render(
+      <DepositPaymentElement
+        stripePromise={Promise.resolve(buildStripeStub())}
+        clientSecret="cs_test_abc"
+        amountCents={10000}
+        onSuccess={async () => {}}
+        onError={() => {}}
+      />,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId("payment-element-mock")).toBeInTheDocument(),
+    );
+    expect(stripeHooks.paymentElementOptions).toEqual({
+      paymentMethodOrder: ["card"],
+      wallets: {
+        applePay: "never",
+        googlePay: "never",
+        link: "never",
+      },
+    });
   });
 
   it("does not call confirmPayment on programmatic submit while not ready", async () => {

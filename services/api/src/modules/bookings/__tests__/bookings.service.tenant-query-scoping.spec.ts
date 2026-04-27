@@ -24,7 +24,7 @@ describe("BookingsService — tenant query scoping on reads", () => {
     expect(findFirst).not.toHaveBeenCalled();
   });
 
-  it("getBooking with tenant uses findFirst with scoped where", async () => {
+  it("getBookingForTenant uses findFirst with scoped where", async () => {
     const findUnique = jest.fn();
     const findFirst = jest.fn().mockResolvedValue({
       id: "b1",
@@ -34,7 +34,7 @@ describe("BookingsService — tenant query scoping on reads", () => {
       booking: { findUnique, findFirst },
     });
 
-    await svc.getBooking("b1", "nustandard");
+    await svc.getBookingForTenant("b1", "nustandard");
 
     expect(findFirst).toHaveBeenCalledWith({
       where: { id: "b1", tenantId: "nustandard" },
@@ -42,19 +42,16 @@ describe("BookingsService — tenant query scoping on reads", () => {
     expect(findUnique).not.toHaveBeenCalled();
   });
 
-  it("getBooking with blank tenant behaves as unscoped (no tenantId in where)", async () => {
-    const findUnique = jest.fn().mockResolvedValue({
-      id: "b1",
-      tenantId: "nustandard",
-    });
+  it("getBookingForTenant with blank tenant fails closed before querying", async () => {
+    const findUnique = jest.fn();
     const findFirst = jest.fn();
     const svc = makeBookingsService({
       booking: { findUnique, findFirst },
     });
 
-    await svc.getBooking("b1", "   ");
+    await expect(svc.getBookingForTenant("b1", "   ")).rejects.toThrow();
 
-    expect(findUnique).toHaveBeenCalledWith({ where: { id: "b1" } });
+    expect(findUnique).not.toHaveBeenCalled();
     expect(findFirst).not.toHaveBeenCalled();
   });
 });

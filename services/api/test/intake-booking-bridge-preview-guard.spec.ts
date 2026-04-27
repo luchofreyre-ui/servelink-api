@@ -186,7 +186,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
       serviceLocation: testServiceLocation,
     } as CreateBookingDirectionIntakeDto;
 
-    const result = await bridge.submitIntakeAndCreateBooking(dto);
+    const result = await bridge.submitIntakeAndCreateBooking(dto, "nustandard");
     expect(result.bookingCreated).toBe(false);
     expect(result.bookingError?.code).toBe("ESTIMATE_EXECUTION_FAILED");
   });
@@ -235,7 +235,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
       serviceLocation: testServiceLocation,
     } as CreateBookingDirectionIntakeDto;
 
-    const result = await bridge.submitIntakeAndCreateBooking(dto);
+    const result = await bridge.submitIntakeAndCreateBooking(dto, "nustandard");
     expect(result.bookingCreated).toBe(false);
     expect(result.bookingError?.code).toBe("ESTIMATE_INPUT_INVALID");
   });
@@ -280,7 +280,7 @@ describe("IntakeBookingBridgeService submit estimator guard", () => {
       serviceLocation: testServiceLocation,
     } as CreateBookingDirectionIntakeDto;
 
-    const result = await bridge.submitIntakeAndCreateBooking(dto);
+    const result = await bridge.submitIntakeAndCreateBooking(dto, "nustandard");
     expect(result.bookingCreated).toBe(false);
     expect(result.bookingError?.code).toBe("BOOKING_CREATE_FAILED");
   });

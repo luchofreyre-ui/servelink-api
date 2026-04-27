@@ -5,10 +5,21 @@ import { BookingStripePaymentSection } from "./BookingStripePaymentSection";
 import { useStripeClient } from "@/features/payments/useStripeClient";
 import * as paymentsApi from "@/lib/api/payments";
 
+const stripeElementsOptionsMock = vi.hoisted(() => ({
+  lastOptions: null as unknown,
+}));
+
 vi.mock("@stripe/react-stripe-js", () => ({
-  Elements: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="stripe-elements">{children}</div>
-  ),
+  Elements: ({
+    children,
+    options,
+  }: {
+    children: React.ReactNode;
+    options?: unknown;
+  }) => {
+    stripeElementsOptionsMock.lastOptions = options;
+    return <div data-testid="stripe-elements">{children}</div>;
+  },
 }));
 
 vi.mock("@/components/bookings/StripeCheckoutForm", () => ({
@@ -52,6 +63,7 @@ describe("BookingStripePaymentSection", () => {
   beforeEach(() => {
     vi.mocked(useStripeClient).mockReset();
     vi.mocked(paymentsApi.createBookingPaymentIntent).mockReset();
+    stripeElementsOptionsMock.lastOptions = null;
   });
 
   it("shows config loading state", () => {
@@ -146,6 +158,9 @@ describe("BookingStripePaymentSection", () => {
     await waitFor(() => {
       expect(screen.getByTestId("stripe-elements")).toBeInTheDocument();
       expect(screen.getByTestId("stripe-checkout-form")).toBeInTheDocument();
+    });
+    expect(stripeElementsOptionsMock.lastOptions).toEqual({
+      clientSecret: "cs_test_secret",
     });
   });
 });

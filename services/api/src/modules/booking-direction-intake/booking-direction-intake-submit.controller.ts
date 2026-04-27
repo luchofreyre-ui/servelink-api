@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Headers,
   HttpCode,
   HttpStatus,
   Post,
@@ -9,6 +10,7 @@ import {
 } from "@nestjs/common";
 import { CreateBookingDirectionIntakeDto } from "./dto/create-booking-direction-intake.dto";
 import { IntakeBookingBridgeService } from "./intake-booking-bridge.service";
+import { TenantResolver } from "../tenant/tenant.resolver";
 
 const intakeBodyPipe = new ValidationPipe({
   whitelist: true,
@@ -18,7 +20,10 @@ const intakeBodyPipe = new ValidationPipe({
 
 @Controller("/api/v1/booking-direction-intake")
 export class BookingDirectionIntakeSubmitController {
-  constructor(private readonly bridge: IntakeBookingBridgeService) {}
+  constructor(
+    private readonly bridge: IntakeBookingBridgeService,
+    private readonly tenantResolver: TenantResolver,
+  ) {}
 
   /**
    * Pre-submit estimate for the public booking flow — no persistence.
@@ -33,7 +38,11 @@ export class BookingDirectionIntakeSubmitController {
   @Post("submit")
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(intakeBodyPipe)
-  submit(@Body() body: CreateBookingDirectionIntakeDto) {
-    return this.bridge.submitIntakeAndCreateBooking(body);
+  submit(
+    @Body() body: CreateBookingDirectionIntakeDto,
+    @Headers("host") host?: string,
+  ) {
+    const tenantId = this.tenantResolver.resolve({ host }).tenantId;
+    return this.bridge.submitIntakeAndCreateBooking(body, tenantId);
   }
 }

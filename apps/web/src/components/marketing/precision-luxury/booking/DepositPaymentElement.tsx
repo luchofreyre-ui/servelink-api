@@ -8,7 +8,11 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import type { Stripe, StripeElementsOptions } from "@stripe/stripe-js";
+import type {
+  Stripe,
+  StripeElementsOptions,
+  StripePaymentElementOptions,
+} from "@stripe/stripe-js";
 
 import { WEB_ENV } from "@/lib/env";
 
@@ -27,6 +31,15 @@ const MSG_ELEMENT_STILL_LOADING =
   "Secure payment is still loading. Please wait.";
 const BTN_LOADING = "Loading secure payment…";
 const BTN_PROCESSING = "Processing payment…";
+
+const PUBLIC_BOOKING_PAYMENT_ELEMENT_OPTIONS = {
+  paymentMethodOrder: ["card"],
+  wallets: {
+    applePay: "never",
+    googlePay: "never",
+    link: "never",
+  },
+} satisfies StripePaymentElementOptions;
 
 export type DepositPaymentElementProps = {
   stripePromise: Promise<Stripe | null>;
@@ -172,6 +185,7 @@ function DepositPaymentForm({
       ) : (
         <PaymentElement
           key={elementMountKey}
+          options={PUBLIC_BOOKING_PAYMENT_ELEMENT_OPTIONS}
           onReady={() => {
             setPaymentElementReady(true);
           }}

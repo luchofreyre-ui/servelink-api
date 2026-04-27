@@ -4,6 +4,7 @@ import type { PrismaService } from "../src/prisma";
 import type { FoService } from "../src/modules/fo/fo.service";
 import { SlotAvailabilityService } from "../src/modules/slot-holds/slot-availability.service";
 import { SlotHoldsService } from "../src/modules/slot-holds/slot-holds.service";
+import { createBookingsServiceTestHarness } from "./helpers/createBookingsServiceTestHarness";
 
 describe("slot availability and holds — wall-clock existing booking overlap", () => {
   const foId = "fo-wall-clock";
@@ -117,5 +118,37 @@ describe("slot availability and holds — wall-clock existing booking overlap", 
         endAt: new Date(bookingStart.getTime() + 120 * 60 * 1000),
       }),
     ).rejects.toBeInstanceOf(ConflictException);
+  });
+
+  it("allows requested booking adjacency using requested snapshot wall-clock duration instead of labor hours", async () => {
+    const requestedStart = new Date("2035-06-04T10:00:00.000Z");
+    const adjacentExistingStart = new Date("2035-06-04T12:00:00.000Z");
+    const db = {
+      booking: {
+        findMany: jest.fn().mockResolvedValue([
+          {
+            id: "booking-existing-after-request",
+            scheduledStart: adjacentExistingStart,
+            estimatedHours: 1,
+            estimateSnapshot: {
+              outputJson: JSON.stringify({ estimatedDurationMinutes: 60 }),
+            },
+          },
+        ]),
+      },
+    } as unknown as PrismaService;
+    const { service } = createBookingsServiceTestHarness({ db });
+
+    await expect(
+      (service as any).assertFoAvailableForWindow({
+        bookingId: "booking-requested",
+        foId,
+        scheduledStart: requestedStart,
+        estimatedHours: 5,
+        requestedEstimateSnapshotOutputJson: JSON.stringify({
+          estimatedDurationMinutes: 120,
+        }),
+      }),
+    ).resolves.toBeUndefined();
   });
 });
