@@ -25,9 +25,11 @@ export class ReliabilityOpsController {
   @SkipTimeout()
   @Get("summary")
   async getSummary() {
+    const summary = await this.opsVisibility.getSummary();
     return {
       ok: true,
-      summary: await this.opsVisibility.getSummary(),
+      ...summary,
+      summary,
     };
   }
 

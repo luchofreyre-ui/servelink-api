@@ -8,13 +8,16 @@ import { AdminAnomaliesQueue } from "@/components/admin/anomalies/AdminAnomalies
 import { AdminLaunchReadinessCard } from "@/components/admin/AdminLaunchReadinessCard";
 import { AdminBookingRevenueReadinessCard } from "@/components/admin/AdminBookingRevenueReadinessCard";
 import { AdminOpsAnomaliesPanel } from "@/components/admin/AdminOpsAnomaliesPanel";
-import { RecurringSystemProbe } from "@/components/admin/ops/RecurringSystemProbe";
 import { WEB_ENV } from "@/lib/env";
 import {
   clearStoredAccessToken,
   getStoredAccessToken,
 } from "@/lib/auth";
 import { fetchDispatchExceptionActions } from "@/lib/api/dispatchExceptionActions";
+import type {
+  OpsCronHealthSnapshot,
+  OpsSummaryResponse,
+} from "@/lib/api/adminOps";
 import type {
   AdminPaymentAnomalyRow,
   AdminPaymentOpsSummary,
@@ -44,6 +47,10 @@ type AdminActivityItem = {
   createdAt: string;
 };
 
+type AdminOpsSummary = OpsSummaryResponse["summary"];
+
+type StatusTone = "HEALTHY" | "WARNING" | "CRITICAL";
+
 const API_BASE_URL = WEB_ENV.apiBaseUrl;
 
 function formatDateTime(value: string | null | undefined) {
@@ -61,6 +68,34 @@ function formatDateTime(value: string | null | undefined) {
 function formatReasons(reasons: string[]) {
   if (!reasons.length) return "—";
   return reasons.join(", ");
+}
+
+function latestFailureAfterSuccess(
+  snapshot: OpsCronHealthSnapshot | null | undefined,
+) {
+  if (!snapshot?.lastFailureAt) return false;
+  if (!snapshot.lastSuccessAt) return true;
+
+  return (
+    new Date(snapshot.lastFailureAt).getTime() >
+    new Date(snapshot.lastSuccessAt).getTime()
+  );
+}
+
+function cronStatus(snapshot: OpsCronHealthSnapshot | null | undefined): StatusTone {
+  if (!snapshot || snapshot.stale) return "CRITICAL";
+  if (latestFailureAfterSuccess(snapshot)) return "WARNING";
+  return "HEALTHY";
+}
+
+function slotHoldStatus(expired: number): StatusTone {
+  return expired > 0 ? "WARNING" : "HEALTHY";
+}
+
+function statusClass(status: StatusTone) {
+  if (status === "CRITICAL") return "border-rose-400/30 bg-rose-500/15 text-rose-100";
+  if (status === "WARNING") return "border-amber-400/30 bg-amber-500/15 text-amber-100";
+  return "border-emerald-400/30 bg-emerald-500/15 text-emerald-100";
 }
 
 function DashboardShell(props: { children: ReactNode }) {
@@ -173,6 +208,8 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
     AdminPaymentAnomalyRow[]
   >([]);
   const [paymentBookingsLoading, setPaymentBookingsLoading] = useState(true);
+  const [opsSummary, setOpsSummary] = useState<AdminOpsSummary | null>(null);
+  const [opsSummaryError, setOpsSummaryError] = useState<string | null>(null);
 
   useEffect(() => {
     const nextToken = getStoredAccessToken();
@@ -278,6 +315,48 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
     }
 
     void loadDashboardData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, tokenChecked]);
+
+  useEffect(() => {
+    if (!tokenChecked || !token) {
+      setOpsSummary(null);
+      return;
+    }
+
+    let cancelled = false;
+    const authToken = token;
+    setOpsSummaryError(null);
+
+    async function loadOpsSummary() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/system/ops/summary`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Ops summary request failed: ${response.status}`);
+        }
+
+        const payload = (await response.json()) as OpsSummaryResponse;
+        if (!cancelled) {
+          setOpsSummary(payload.summary);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setOpsSummary(null);
+          setOpsSummaryError(
+            err instanceof Error ? err.message : "Failed to load ops summary.",
+          );
+        }
+      }
+    }
+
+    void loadOpsSummary();
 
     return () => {
       cancelled = true;
@@ -517,9 +596,109 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
         </div>
       </section>
 
-      <RecurringSystemProbe />
-
       {children}
+
+      <DashboardCard eyebrow="Control layer" title="System Health">
+        {opsSummaryError ? (
+          <p className="text-sm text-amber-200/90">{opsSummaryError}</p>
+        ) : (
+          <div className="grid gap-3 lg:grid-cols-2">
+            {[
+              {
+                label: "Payment reconciliation cron",
+                snapshot: opsSummary?.cron?.reconciliation,
+              },
+              {
+                label: "Remaining balance auth cron",
+                snapshot: opsSummary?.cron?.remainingBalanceAuth,
+              },
+            ].map(({ label, snapshot }) => {
+              const status = cronStatus(snapshot);
+              return (
+                <div
+                  key={label}
+                  className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="text-sm font-semibold text-slate-100">
+                      {label}
+                    </p>
+                    <span
+                      className={`rounded-full border px-2 py-1 text-xs font-semibold ${statusClass(status)}`}
+                    >
+                      {status}
+                    </span>
+                  </div>
+                  <dl className="mt-3 space-y-2 text-sm text-slate-400">
+                    <div className="flex justify-between gap-4">
+                      <dt>Last run</dt>
+                      <dd className="text-right text-slate-200">
+                        {formatDateTime(snapshot?.lastRunAt)}
+                      </dd>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <dt>Last success</dt>
+                      <dd className="text-right text-slate-200">
+                        {formatDateTime(snapshot?.lastSuccessAt)}
+                      </dd>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <dt>Last failure</dt>
+                      <dd className="text-right text-slate-200">
+                        {formatDateTime(snapshot?.lastFailureAt)}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </DashboardCard>
+
+      <DashboardCard eyebrow="Scheduling" title="Slot Hold Integrity">
+        {opsSummaryError ? (
+          <p className="text-sm text-amber-200/90">{opsSummaryError}</p>
+        ) : (
+          <>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <p className="text-sm text-slate-400">
+                Read-only view of persisted slot holds plus confirmed hold metrics.
+              </p>
+              {(() => {
+                const expired = opsSummary?.slotHolds?.expired ?? 0;
+                const status = slotHoldStatus(expired);
+                return (
+                  <span
+                    className={`rounded-full border px-2 py-1 text-xs font-semibold ${statusClass(status)}`}
+                  >
+                    {status}
+                  </span>
+                );
+              })()}
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                ["Active holds", opsSummary?.slotHolds?.active ?? 0],
+                ["Expired holds", opsSummary?.slotHolds?.expired ?? 0],
+                ["Consumed holds", opsSummary?.slotHolds?.consumed ?? 0],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm"
+                >
+                  <div className="text-xs uppercase tracking-wide text-slate-500">
+                    {label}
+                  </div>
+                  <div className="mt-1 font-semibold text-slate-50">
+                    {value}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </DashboardCard>
 
       <DashboardCard eyebrow="Billing" title="Payment operations">
         {paymentBookingsLoading ? (
@@ -999,6 +1178,16 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
             <p className="mt-1 text-sm text-slate-400">
               Version history, restore prior configs to draft, rollback readiness, and decision intelligence vs
               impact. Use this surface for estimator health context (there is no separate monitoring route yet).
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/ops/recurring"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+          >
+            <p className="text-sm font-semibold text-slate-100">Recurring ops</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Generation backlog, retry exhaustion, and reconciliation drift.
             </p>
           </Link>
 

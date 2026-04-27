@@ -84,6 +84,10 @@ jobs:
           npx prisma generate
           npx prisma migrate deploy
 
+      - name: Seed encyclopedia content
+        working-directory: services/api
+        run: npm run seed:encyclopedia
+
       - name: Seed Playwright admin scenario (admin user for verify-local-* Playwright auth)
         working-directory: services/api
         run: npm run seed:playwright-admin-scenario

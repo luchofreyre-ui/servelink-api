@@ -3,14 +3,38 @@ import { Cron } from "@nestjs/schedule";
 import { isCronDisabledByExplicitFalse } from "./payment-lifecycle-cron-env";
 import { PaymentLifecycleReconciliationService } from "./payment-lifecycle-reconciliation.service";
 
+const EXPECTED_INTERVAL_MS = 15 * 60 * 1000;
+
+export type CronHealthSnapshot = {
+  lastRunAt: string | null;
+  lastSuccessAt: string | null;
+  lastFailureAt: string | null;
+  stale: boolean;
+};
+
 @Injectable()
 export class PaymentLifecycleReconciliationCronService {
   private readonly log = new Logger(PaymentLifecycleReconciliationCronService.name);
+  private lastRunAt: Date | null = null;
+  private lastSuccessAt: Date | null = null;
+  private lastFailureAt: Date | null = null;
 
   constructor(private readonly reconciliation: PaymentLifecycleReconciliationService) {}
 
+  getHealthSnapshot(now = new Date()): CronHealthSnapshot {
+    return {
+      lastRunAt: this.lastRunAt?.toISOString() ?? null,
+      lastSuccessAt: this.lastSuccessAt?.toISOString() ?? null,
+      lastFailureAt: this.lastFailureAt?.toISOString() ?? null,
+      stale:
+        this.lastRunAt === null ||
+        now.getTime() - this.lastRunAt.getTime() > EXPECTED_INTERVAL_MS * 2,
+    };
+  }
+
   @Cron("*/15 * * * *")
   async run(): Promise<void> {
+    this.lastRunAt = new Date();
     if (isCronDisabledByExplicitFalse(process.env.ENABLE_PAYMENT_LIFECYCLE_RECONCILIATION_CRON)) {
       this.log.log({
         kind: "payment_lifecycle_reconcile_cron",
@@ -48,6 +72,12 @@ export class PaymentLifecycleReconciliationCronService {
           message: e instanceof Error ? e.message : String(e),
         });
       }
+    }
+
+    if (failed > 0) {
+      this.lastFailureAt = new Date();
+    } else {
+      this.lastSuccessAt = new Date();
     }
 
     this.log.log({
