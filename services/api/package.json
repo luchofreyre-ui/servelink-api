@@ -15,6 +15,7 @@
     "promote:encyclopedia": "ts-node src/scripts/encyclopedia/promote-approved.ts",
     "approve:all": "ts-node src/scripts/encyclopedia/approve-all-pending.ts",
     "import:encyclopedia-review-records": "ts-node src/scripts/encyclopedia/import-review-records.ts",
+    "seed:encyclopedia": "ts-node src/scripts/seed-encyclopedia.ts",
     "seed:playwright-admin-scenario": "ts-node -P scripts/tsconfig.json scripts/seedPlaywrightAdminScenario.ts",
     "seed:public-booking-fo-fixtures": "ts-node -P scripts/tsconfig.json scripts/seedPublicBookingFoFixtures.ts",
     "validate:public-booking-fo-fixtures": "ts-node -P scripts/tsconfig.json scripts/validatePublicBookingFoFixtures.ts",
