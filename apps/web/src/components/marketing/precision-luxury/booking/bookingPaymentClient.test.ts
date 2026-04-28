@@ -30,6 +30,7 @@ describe("bookingPaymentClient", () => {
           amountCents: 10_000,
           currency: "usd",
           stripeStatus: "requires_payment_method",
+          nextAction: "confirm_deposit",
         }),
     });
 
@@ -61,6 +62,7 @@ describe("bookingPaymentClient", () => {
           clientSecret: "cs_test",
           paymentIntentId: "pi_test",
           amountCents: 10_000,
+          nextAction: "confirm_deposit",
         }),
     });
 
@@ -81,6 +83,7 @@ describe("bookingPaymentClient", () => {
         bookingId: "b",
         paymentMode: "none",
         classification: "skip_deposit_env",
+        nextAction: "finalize_booking",
       }),
     ).toBe(true);
     expect(
@@ -89,6 +92,7 @@ describe("bookingPaymentClient", () => {
         bookingId: "b",
         paymentMode: "none",
         classification: "deposit_succeeded",
+        nextAction: "finalize_booking",
       }),
     ).toBe(true);
     expect(
@@ -97,6 +101,7 @@ describe("bookingPaymentClient", () => {
         bookingId: "b",
         paymentMode: "none",
         classification: "deposit_inconsistent",
+        nextAction: "finalize_booking",
       }),
     ).toBe(true);
     expect(
@@ -105,6 +110,7 @@ describe("bookingPaymentClient", () => {
         bookingId: "b",
         paymentMode: "deposit",
         classification: "payment_required",
+        nextAction: "confirm_deposit",
       }),
     ).toBe(false);
   });
