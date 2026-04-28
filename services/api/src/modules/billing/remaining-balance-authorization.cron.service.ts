@@ -29,83 +29,89 @@ export class RemainingBalanceAuthorizationCronService {
   @Cron("*/15 * * * *")
   async run(): Promise<void> {
     this.lastRunAt = new Date();
-    if (isCronDisabledByExplicitFalse(process.env.ENABLE_REMAINING_BALANCE_AUTH_CRON)) {
+    try {
+      if (isCronDisabledByExplicitFalse(process.env.ENABLE_REMAINING_BALANCE_AUTH_CRON)) {
+        this.log.log({
+          kind: "remaining_balance_auth_cron",
+          event: "disabled_by_env",
+          env: "ENABLE_REMAINING_BALANCE_AUTH_CRON=false",
+        });
+        return;
+      }
+
+      const batch =
+        Number(process.env.REMAINING_BALANCE_AUTH_CRON_BATCH ?? 25) || 25;
+      const now = new Date();
+      const ids = await this.authz.findBookingsNeedingAuthorizationWindow({
+        now,
+        limit: batch,
+      });
+
       this.log.log({
         kind: "remaining_balance_auth_cron",
-        event: "disabled_by_env",
-        env: "ENABLE_REMAINING_BALANCE_AUTH_CRON=false",
+        event: "batch_start",
+        batchSize: batch,
+        candidateCount: ids.length,
+        at: now.toISOString(),
       });
-      return;
-    }
 
-    const batch =
-      Number(process.env.REMAINING_BALANCE_AUTH_CRON_BATCH ?? 25) || 25;
-    const now = new Date();
-    const ids = await this.authz.findBookingsNeedingAuthorizationWindow({
-      now,
-      limit: batch,
-    });
+      if (!ids.length) {
+        this.lastSuccessAt = new Date();
+        this.log.log({
+          kind: "remaining_balance_auth_cron",
+          event: "batch_end",
+          processed: 0,
+          ok: 0,
+          failedOrSkipped: 0,
+        });
+        return;
+      }
 
-    this.log.log({
-      kind: "remaining_balance_auth_cron",
-      event: "batch_start",
-      batchSize: batch,
-      candidateCount: ids.length,
-      at: now.toISOString(),
-    });
+      let ok = 0;
+      let failedOrSkipped = 0;
+      for (const id of ids) {
+        try {
+          const r = await this.authz.authorizeRemainingBalanceForBooking(id);
+          if (r.ok) {
+            ok += 1;
+          } else {
+            failedOrSkipped += 1;
+            this.log.warn({
+              kind: "remaining_balance_auth_cron",
+              event: "booking_authorization_not_ok",
+              bookingId: id,
+              skipped: r.skipped ?? null,
+              paymentIntentId: r.paymentIntentId ?? null,
+            });
+          }
+        } catch (e) {
+          failedOrSkipped += 1;
+          this.lastFailureAt = new Date();
+          this.log.error({
+            kind: "remaining_balance_auth_cron",
+            event: "booking_authorization_exception",
+            bookingId: id,
+            message: e instanceof Error ? e.message : String(e),
+          });
+        }
+      }
 
-    if (!ids.length) {
       this.lastSuccessAt = new Date();
       this.log.log({
         kind: "remaining_balance_auth_cron",
         event: "batch_end",
-        processed: 0,
-        ok: 0,
-        failedOrSkipped: 0,
+        processed: ids.length,
+        ok,
+        failedOrSkipped,
       });
-      return;
-    }
-
-    let ok = 0;
-    let failedOrSkipped = 0;
-    for (const id of ids) {
-      try {
-        const r = await this.authz.authorizeRemainingBalanceForBooking(id);
-        if (r.ok) {
-          ok += 1;
-        } else {
-          failedOrSkipped += 1;
-          this.log.warn({
-            kind: "remaining_balance_auth_cron",
-            event: "booking_authorization_not_ok",
-            bookingId: id,
-            skipped: r.skipped ?? null,
-            paymentIntentId: r.paymentIntentId ?? null,
-          });
-        }
-      } catch (e) {
-        failedOrSkipped += 1;
-        this.log.error({
-          kind: "remaining_balance_auth_cron",
-          event: "booking_authorization_exception",
-          bookingId: id,
-          message: e instanceof Error ? e.message : String(e),
-        });
-      }
-    }
-
-    if (failedOrSkipped > 0) {
+    } catch (e) {
       this.lastFailureAt = new Date();
-    } else {
-      this.lastSuccessAt = new Date();
+      this.log.error({
+        kind: "remaining_balance_auth_cron",
+        event: "batch_failed",
+        message: e instanceof Error ? e.message : String(e),
+      });
+      throw e;
     }
-
-    this.log.log({
-      kind: "remaining_balance_auth_cron",
-      event: "batch_end",
-      processed: ids.length,
-      ok,
-      failedOrSkipped,
-    });
   }
 }

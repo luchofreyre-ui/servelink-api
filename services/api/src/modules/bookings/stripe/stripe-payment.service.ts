@@ -745,7 +745,7 @@ export class StripePaymentService {
   async retrievePaymentIntentForRemainingBalanceAuth(paymentIntentId: string) {
     const stripe = this.requireStripe();
     return stripe.paymentIntents.retrieve(paymentIntentId, {
-      expand: ["latest_charge.payment_method"],
+      expand: ["payment_method"],
     });
   }
 

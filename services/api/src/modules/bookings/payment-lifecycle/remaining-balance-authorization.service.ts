@@ -11,20 +11,11 @@ import { StripePaymentService } from "../stripe/stripe-payment.service";
 
 function paymentMethodIdFromDepositIntent(pi: {
   payment_method?: string | { id?: string } | null;
-  latest_charge?: string | { payment_method?: string | { id?: string } | null } | null;
 }): string | null {
   const pm = pi.payment_method;
   if (typeof pm === "string" && pm.trim()) return pm.trim();
   if (pm && typeof pm === "object" && typeof pm.id === "string" && pm.id.trim()) {
     return pm.id.trim();
-  }
-  const ch = pi.latest_charge;
-  if (ch && typeof ch === "object") {
-    const lpm = ch.payment_method;
-    if (typeof lpm === "string" && lpm.trim()) return lpm.trim();
-    if (lpm && typeof lpm === "object" && typeof lpm.id === "string" && lpm.id.trim()) {
-      return lpm.id.trim();
-    }
   }
   return null;
 }

@@ -514,6 +514,45 @@ describe("payment lifecycle crons default-enabled", () => {
     const cron = new RemainingBalanceAuthorizationCronService(authz as any);
     await cron.run();
     expect(authz.findBookingsNeedingAuthorizationWindow).toHaveBeenCalled();
+    expect(cron.getHealthSnapshot().lastRunAt).toEqual(expect.any(String));
+    expect(cron.getHealthSnapshot().lastSuccessAt).toEqual(expect.any(String));
+  });
+
+  it("remaining balance auth cron records per-booking failure and completed run", async () => {
+    delete process.env.ENABLE_REMAINING_BALANCE_AUTH_CRON;
+    const authz = {
+      findBookingsNeedingAuthorizationWindow: jest.fn().mockResolvedValue(["b1"]),
+      authorizeRemainingBalanceForBooking: jest
+        .fn()
+        .mockRejectedValue(new Error("stripe_expand_failed")),
+    };
+    const cron = new RemainingBalanceAuthorizationCronService(authz as any);
+
+    await cron.run();
+
+    const snapshot = cron.getHealthSnapshot();
+    expect(snapshot.lastRunAt).toEqual(expect.any(String));
+    expect(snapshot.lastFailureAt).toEqual(expect.any(String));
+    expect(snapshot.lastSuccessAt).toEqual(expect.any(String));
+    expect(snapshot.stale).toBe(false);
+  });
+
+  it("remaining balance auth cron records top-level failure", async () => {
+    delete process.env.ENABLE_REMAINING_BALANCE_AUTH_CRON;
+    const authz = {
+      findBookingsNeedingAuthorizationWindow: jest
+        .fn()
+        .mockRejectedValue(new Error("stripe_down")),
+      authorizeRemainingBalanceForBooking: jest.fn(),
+    };
+    const cron = new RemainingBalanceAuthorizationCronService(authz as any);
+
+    await expect(cron.run()).rejects.toThrow("stripe_down");
+
+    const snapshot = cron.getHealthSnapshot();
+    expect(snapshot.lastRunAt).toEqual(expect.any(String));
+    expect(snapshot.lastFailureAt).toEqual(expect.any(String));
+    expect(snapshot.lastSuccessAt).toBeNull();
   });
 
   it("remaining balance auth cron skips when env is false", async () => {
@@ -536,6 +575,8 @@ describe("payment lifecycle crons default-enabled", () => {
     const cron = new PaymentLifecycleReconciliationCronService(recon as any);
     await cron.run();
     expect(recon.findBookingsForLifecycleReconciliation).toHaveBeenCalled();
+    expect(cron.getHealthSnapshot().lastRunAt).toEqual(expect.any(String));
+    expect(cron.getHealthSnapshot().lastSuccessAt).toEqual(expect.any(String));
   });
 
   it("reconciliation cron skips when env is false", async () => {
