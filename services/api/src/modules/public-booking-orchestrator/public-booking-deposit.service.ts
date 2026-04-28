@@ -69,6 +69,26 @@ function estimateSnapshotHash(outputJson: string | null | undefined): string {
     .slice(0, 32);
 }
 
+function isDuplicateBookingEventIdempotencyError(error: unknown): boolean {
+  if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
+    return false;
+  }
+  if (error.code !== "P2002") {
+    return false;
+  }
+  const target = error.meta?.target;
+  if (!target) {
+    return false;
+  }
+  if (Array.isArray(target)) {
+    return target.includes("bookingId") && target.includes("idempotencyKey");
+  }
+  if (typeof target === "string") {
+    return target.includes("bookingId") && target.includes("idempotencyKey");
+  }
+  return false;
+}
+
 type PublicDepositContext = {
   booking: {
     id: string;
@@ -932,20 +952,27 @@ export class PublicBookingDepositService {
 
     await this.prisma.booking.update({
       where: { id: args.bookingId },
-      data: {
-        ...patch,
-        BookingEvent: {
-          create: {
-            type: BookingEventType.NOTE,
-            idempotencyKey: `public-deposit-sync:${args.paymentIntentId}`,
-            note: "Public booking deposit captured",
-            payload: {
-              publicDeposit: true,
-              paymentIntentId: args.paymentIntentId,
-            } as Prisma.InputJsonValue,
-          },
-        },
-      },
+      data: patch,
     });
+
+    try {
+      await this.prisma.bookingEvent.create({
+        data: {
+          bookingId: args.bookingId,
+          type: BookingEventType.NOTE,
+          idempotencyKey: `public-deposit-sync:${args.paymentIntentId}`,
+          note: "Public booking deposit captured",
+          payload: {
+            publicDeposit: true,
+            paymentIntentId: args.paymentIntentId,
+          } as Prisma.InputJsonValue,
+        },
+      });
+    } catch (err) {
+      if (isDuplicateBookingEventIdempotencyError(err)) {
+        return;
+      }
+      throw err;
+    }
   }
 }
