@@ -45,7 +45,7 @@ export type DepositPaymentElementProps = {
   stripePromise: Promise<Stripe | null>;
   clientSecret: string;
   amountCents: number;
-  onSuccess: () => void | Promise<void>;
+  onSuccess: (paymentIntentId?: string | null) => void | Promise<void>;
   onError: (message: string) => void;
   disabled?: boolean;
   bookingId?: string;
@@ -53,6 +53,37 @@ export type DepositPaymentElementProps = {
   paymentIntentId?: string | null;
   paymentSessionKey?: string | null;
 };
+
+function succeededPaymentIntentIdFromUnexpectedState(error: unknown): string | null {
+  if (!error || typeof error !== "object") return null;
+  const stripeError = error as {
+    code?: unknown;
+    payment_intent?: {
+      id?: unknown;
+      status?: unknown;
+    } | null;
+  };
+  if (stripeError.code !== "payment_intent_unexpected_state") return null;
+  const paymentIntent = stripeError.payment_intent;
+  if (paymentIntent?.status !== "succeeded") return null;
+  return typeof paymentIntent.id === "string" && paymentIntent.id.trim()
+    ? paymentIntent.id.trim()
+    : null;
+}
+
+function succeededPaymentIntentIdFromResult(result: unknown): string | null {
+  if (!result || typeof result !== "object") return null;
+  const paymentIntent = (result as {
+    paymentIntent?: {
+      id?: unknown;
+      status?: unknown;
+    } | null;
+  }).paymentIntent;
+  if (paymentIntent?.status !== "succeeded") return null;
+  return typeof paymentIntent.id === "string" && paymentIntent.id.trim()
+    ? paymentIntent.id.trim()
+    : null;
+}
 
 function buildPublicBookingPaymentReturnUrl(args: {
   bookingId?: string;
@@ -104,6 +135,8 @@ function DepositPaymentForm({
   const [elementLoadError, setElementLoadError] = useState(false);
   const [elementMountKey, setElementMountKey] = useState(0);
   const prevClientSecretRef = useRef<string | null>(null);
+  const confirmInFlightRef = useRef(false);
+  const succeededPaymentIntentIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     const prev = prevClientSecretRef.current;
@@ -111,6 +144,9 @@ function DepositPaymentForm({
     if (prev !== null && prev !== clientSecret) {
       setPaymentElementReady(false);
       setElementLoadError(false);
+      confirmInFlightRef.current = false;
+      succeededPaymentIntentIdRef.current = null;
+      setBusy(false);
     }
   }, [clientSecret]);
 
@@ -122,10 +158,15 @@ function DepositPaymentForm({
     hasClientSecret &&
     !elementLoadError;
 
-  const submitDisabled = Boolean(disabled || busy || !fullyReady);
+  const depositAlreadySucceeded = Boolean(succeededPaymentIntentIdRef.current);
+  const submitDisabled = Boolean(
+    disabled || busy || depositAlreadySucceeded || !fullyReady,
+  );
 
   const buttonLabel = busy
     ? BTN_PROCESSING
+    : depositAlreadySucceeded
+      ? "Payment received"
     : fullyReady
       ? payLabel
       : BTN_LOADING;
@@ -134,7 +175,9 @@ function DepositPaymentForm({
     e.preventDefault();
     if (submitDisabled) return;
     if (!stripe || !elements) return;
+    if (confirmInFlightRef.current || succeededPaymentIntentIdRef.current) return;
 
+    confirmInFlightRef.current = true;
     setBusy(true);
     const returnUrl = buildPublicBookingPaymentReturnUrl({
       bookingId,
@@ -142,20 +185,40 @@ function DepositPaymentForm({
       paymentIntentId,
       paymentSessionKey,
     });
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: returnUrl,
-      },
-      redirect: "if_required",
-    });
-    if (error) {
-      onError(error.message ?? "Payment failed");
-      setBusy(false);
-      return;
+    try {
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: returnUrl,
+        },
+        redirect: "if_required",
+      });
+      if (result.error) {
+        const succeededPaymentIntentId =
+          succeededPaymentIntentIdFromUnexpectedState(result.error);
+        if (succeededPaymentIntentId) {
+          succeededPaymentIntentIdRef.current = succeededPaymentIntentId;
+          await Promise.resolve(onSuccess(succeededPaymentIntentId));
+          return;
+        }
+        onError(result.error.message ?? "Payment failed");
+        return;
+      }
+      const succeededPaymentIntentId = succeededPaymentIntentIdFromResult(result);
+      if (succeededPaymentIntentId) {
+        succeededPaymentIntentIdRef.current = succeededPaymentIntentId;
+      } else if (paymentIntentId?.trim()) {
+        succeededPaymentIntentIdRef.current = paymentIntentId.trim();
+      }
+      await Promise.resolve(
+        onSuccess(succeededPaymentIntentIdRef.current ?? succeededPaymentIntentId),
+      );
+    } finally {
+      confirmInFlightRef.current = false;
+      if (!succeededPaymentIntentIdRef.current) {
+        setBusy(false);
+      }
     }
-    setBusy(false);
-    await Promise.resolve(onSuccess());
   }
 
   return (
