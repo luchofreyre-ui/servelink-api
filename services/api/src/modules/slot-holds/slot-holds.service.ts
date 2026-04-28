@@ -29,6 +29,12 @@ type ReleaseHoldArgs = {
   holdId: string;
 };
 
+export type SlotHoldIntegritySummary = {
+  active: number;
+  expired: number;
+  consumed: number;
+};
+
 @Injectable()
 export class SlotHoldsService {
   static readonly HOLD_SECONDS = 60;
@@ -244,6 +250,26 @@ export class SlotHoldsService {
 
     SlotAvailabilityCache.invalidateByFo(hold.foId);
     return { deleted: true };
+  }
+
+  async getSlotHoldIntegritySummary(): Promise<SlotHoldIntegritySummary> {
+    const now = new Date();
+    const [active, expired] = await Promise.all([
+      this.db.bookingSlotHold.count({
+        where: { expiresAt: { gt: now } },
+      }),
+      this.db.bookingSlotHold.count({
+        where: { expiresAt: { lte: now } },
+      }),
+    ]);
+
+    return {
+      active,
+      expired,
+      // Confirmed holds are deleted on booking confirmation, so the durable table
+      // cannot count them after consumption. Use the existing process metric.
+      consumed: SlotHoldMetrics.confirmed,
+    };
   }
 
   async cleanupExpired() {

@@ -2,15 +2,33 @@ import { Injectable, Logger } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
 import { RemainingBalanceAuthorizationService } from "../bookings/payment-lifecycle/remaining-balance-authorization.service";
 import { isCronDisabledByExplicitFalse } from "./payment-lifecycle-cron-env";
+import type { CronHealthSnapshot } from "./payment-lifecycle-reconciliation.cron.service";
+
+const EXPECTED_INTERVAL_MS = 15 * 60 * 1000;
 
 @Injectable()
 export class RemainingBalanceAuthorizationCronService {
   private readonly log = new Logger(RemainingBalanceAuthorizationCronService.name);
+  private lastRunAt: Date | null = null;
+  private lastSuccessAt: Date | null = null;
+  private lastFailureAt: Date | null = null;
 
   constructor(private readonly authz: RemainingBalanceAuthorizationService) {}
 
+  getHealthSnapshot(now = new Date()): CronHealthSnapshot {
+    return {
+      lastRunAt: this.lastRunAt?.toISOString() ?? null,
+      lastSuccessAt: this.lastSuccessAt?.toISOString() ?? null,
+      lastFailureAt: this.lastFailureAt?.toISOString() ?? null,
+      stale:
+        this.lastRunAt === null ||
+        now.getTime() - this.lastRunAt.getTime() > EXPECTED_INTERVAL_MS * 2,
+    };
+  }
+
   @Cron("*/15 * * * *")
   async run(): Promise<void> {
+    this.lastRunAt = new Date();
     if (isCronDisabledByExplicitFalse(process.env.ENABLE_REMAINING_BALANCE_AUTH_CRON)) {
       this.log.log({
         kind: "remaining_balance_auth_cron",
@@ -37,6 +55,7 @@ export class RemainingBalanceAuthorizationCronService {
     });
 
     if (!ids.length) {
+      this.lastSuccessAt = new Date();
       this.log.log({
         kind: "remaining_balance_auth_cron",
         event: "batch_end",
@@ -73,6 +92,12 @@ export class RemainingBalanceAuthorizationCronService {
           message: e instanceof Error ? e.message : String(e),
         });
       }
+    }
+
+    if (failedOrSkipped > 0) {
+      this.lastFailureAt = new Date();
+    } else {
+      this.lastSuccessAt = new Date();
     }
 
     this.log.log({

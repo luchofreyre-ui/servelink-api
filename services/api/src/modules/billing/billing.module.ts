@@ -57,6 +57,10 @@ const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
     PaymentLifecycleReconciliationService,
     PaymentLifecycleReconciliationCronService,
   ],
-  exports: [BillingService],
+  exports: [
+    BillingService,
+    RemainingBalanceAuthorizationCronService,
+    PaymentLifecycleReconciliationCronService,
+  ],
 })
 export class BillingModule {}

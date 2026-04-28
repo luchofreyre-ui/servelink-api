@@ -24,8 +24,26 @@ async function readOpsEndpointJson<T>(path: string): Promise<T> {
 
 export type OpsSummaryResponse = {
   ok: true;
+  cron?: {
+    reconciliation?: OpsCronHealthSnapshot;
+    remainingBalanceAuth?: OpsCronHealthSnapshot;
+  };
+  slotHolds?: {
+    active?: number;
+    expired?: number;
+    consumed?: number;
+  };
   summary: {
     hotspots?: string[];
+    cron?: {
+      reconciliation?: OpsCronHealthSnapshot;
+      remainingBalanceAuth?: OpsCronHealthSnapshot;
+    };
+    slotHolds?: {
+      active?: number;
+      expired?: number;
+      consumed?: number;
+    };
     bookings?: {
       invalidAssignmentState?: number;
       dispatchLocked?: number;
@@ -35,6 +53,13 @@ export type OpsSummaryResponse = {
       deferredDecisions?: number;
     };
   };
+};
+
+export type OpsCronHealthSnapshot = {
+  lastRunAt: string | null;
+  lastSuccessAt: string | null;
+  lastFailureAt: string | null;
+  stale: boolean;
 };
 
 /**
@@ -91,6 +116,35 @@ export type FoSupplyReadinessResponse = {
   items: FoSupplyReadinessItem[];
 };
 
+export type RecurringOpsSummary = {
+  pendingGenerationCount: number;
+  processingCount: number;
+  failedRetryableCount: number;
+  exhaustedCount: number;
+  reconciliationDriftCount: number;
+  canceledPlanWithBookedNextCount: number;
+};
+
+export type RecurringOpsExhaustedItem = {
+  occurrenceId: string;
+  planId: string;
+  customerId: string;
+  customerEmail: string;
+  processingAttempts: number;
+  status: string;
+  reconciliationState: string | null;
+  bookingId: string | null;
+  bookingFingerprint: string | null;
+  generationError: string | null;
+  updatedAt: string;
+};
+
+export type RecurringOpsPageData = {
+  summary: RecurringOpsSummary | null;
+  exhausted: RecurringOpsExhaustedItem[];
+  unavailableReason: string | null;
+};
+
 export async function getOpsSummary() {
   return readOpsEndpointJson<OpsSummaryResponse>("/system/ops/summary");
 }
@@ -125,6 +179,49 @@ export async function getFoSupplyReadiness() {
   return readOpsEndpointJson<FoSupplyReadinessResponse>(path);
 }
 
+export async function getRecurringOpsSummary() {
+  const body = await readOpsEndpointJson<{
+    ok: true;
+    item: RecurringOpsSummary;
+  }>("/recurring/ops/summary");
+  return body.item;
+}
+
+export async function getExhaustedRecurringOccurrences(limit = 50) {
+  const body = await readOpsEndpointJson<{
+    ok: true;
+    items: RecurringOpsExhaustedItem[];
+  }>(`/recurring/ops/exhausted?limit=${limit}`);
+  return body.items;
+}
+
+export async function loadRecurringOpsPageData(
+  limit = 50,
+): Promise<RecurringOpsPageData> {
+  const [summary, exhausted] = await Promise.allSettled([
+    getRecurringOpsSummary(),
+    getExhaustedRecurringOccurrences(limit),
+  ]);
+
+  const failures = [summary, exhausted]
+    .filter((r): r is PromiseRejectedResult => r.status === "rejected")
+    .map((r) => (r.reason instanceof Error ? r.reason.message : String(r.reason)));
+
+  if (failures.length > 0) {
+    return {
+      summary: summary.status === "fulfilled" ? summary.value : null,
+      exhausted: exhausted.status === "fulfilled" ? exhausted.value : [],
+      unavailableReason: failures.join(" | "),
+    };
+  }
+
+  return {
+    summary: summary.status === "fulfilled" ? summary.value : null,
+    exhausted: exhausted.status === "fulfilled" ? exhausted.value : [],
+    unavailableReason: null,
+  };
+}
+
 const EMPTY_OPS_ITEMS: OpsItemsResponse = { ok: true, items: [] };
 
 const EMPTY_OPS_SUMMARY: OpsSummaryResponse = {
@@ -138,6 +235,25 @@ const EMPTY_OPS_SUMMARY: OpsSummaryResponse = {
     },
     dispatch: {
       deferredDecisions: 0,
+    },
+    cron: {
+      reconciliation: {
+        lastRunAt: null,
+        lastSuccessAt: null,
+        lastFailureAt: null,
+        stale: true,
+      },
+      remainingBalanceAuth: {
+        lastRunAt: null,
+        lastSuccessAt: null,
+        lastFailureAt: null,
+        stale: true,
+      },
+    },
+    slotHolds: {
+      active: 0,
+      expired: 0,
+      consumed: 0,
     },
   },
 };

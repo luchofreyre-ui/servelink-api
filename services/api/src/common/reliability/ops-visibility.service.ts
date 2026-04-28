@@ -1,6 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import type { BookingStatus } from "@prisma/client";
+import { PaymentLifecycleReconciliationCronService } from "../../modules/billing/payment-lifecycle-reconciliation.cron.service";
+import { RemainingBalanceAuthorizationCronService } from "../../modules/billing/remaining-balance-authorization.cron.service";
 import { buildSystemOpsDrilldownEligibility } from "../../modules/dispatch/dispatch-ops-eligibility";
+import { SlotHoldsService } from "../../modules/slot-holds/slot-holds.service";
 import { PrismaService } from "../../prisma";
 import { HealthService } from "./health.service";
 import { ReliabilityMetricsService } from "./reliability-metrics.service";
@@ -13,6 +16,9 @@ export class OpsVisibilityService {
     private readonly prisma: PrismaService,
     private readonly health: HealthService,
     private readonly reliabilityMetrics: ReliabilityMetricsService,
+    private readonly paymentLifecycleReconciliationCron: PaymentLifecycleReconciliationCronService,
+    private readonly remainingBalanceAuthorizationCron: RemainingBalanceAuthorizationCronService,
+    private readonly slotHolds: SlotHoldsService,
   ) {}
 
   async getSummary() {
@@ -31,6 +37,7 @@ export class OpsVisibilityService {
       openOpsAnomalies,
       openSystemTestIncidents,
       activeSystemTestAutomationJobs,
+      slotHoldIntegrity,
     ] = await Promise.all([
       this.safeCount("booking"),
       this.safeCount("booking", {
@@ -95,6 +102,7 @@ export class OpsVisibilityService {
           },
         },
       }),
+      this.slotHolds.getSlotHoldIntegritySummary(),
     ]);
 
     const hotspots: string[] = [];
@@ -144,6 +152,13 @@ export class OpsVisibilityService {
         openIncidents: openSystemTestIncidents,
         activeAutomationJobs: activeSystemTestAutomationJobs,
       },
+      cron: {
+        reconciliation:
+          this.paymentLifecycleReconciliationCron.getHealthSnapshot(now),
+        remainingBalanceAuth:
+          this.remainingBalanceAuthorizationCron.getHealthSnapshot(now),
+      },
+      slotHolds: slotHoldIntegrity,
       hotspots,
     };
   }
