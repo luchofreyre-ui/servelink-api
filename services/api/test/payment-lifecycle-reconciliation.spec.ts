@@ -574,7 +574,10 @@ describe("payment lifecycle crons default-enabled", () => {
     const scheduledStart = new Date(Date.now() + 2 * 60 * 60 * 1000);
     const retrieve = jest.fn().mockResolvedValue({
       id: "pi_deposit",
-      payment_method: "pm_card",
+      payment_method: {
+        id: "pm_card",
+        customer: "cus_x",
+      },
     });
     const create = jest.fn().mockResolvedValue({
       id: "pi_remaining",
@@ -593,6 +596,7 @@ describe("payment lifecycle crons default-enabled", () => {
             BookingRemainingBalancePaymentStatus.balance_pending_authorization,
           remainingBalancePaymentIntentId: null,
           publicDepositPaymentIntentId: "pi_deposit",
+          stripeCustomerId: "cus_x",
           remainingBalanceAuthorizedAt: null,
           customerId: "u1",
           customer: { id: "u1", email: "a@b.c", stripeCustomerId: "cus_x" },

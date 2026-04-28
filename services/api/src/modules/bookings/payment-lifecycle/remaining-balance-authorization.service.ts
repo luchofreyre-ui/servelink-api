@@ -9,15 +9,37 @@ import { PrismaService } from "../../../prisma";
 import { computeRemainingBalanceAuthorizationEligibility } from "../payment-lifecycle-policy";
 import { StripePaymentService } from "../stripe/stripe-payment.service";
 
-function paymentMethodIdFromDepositIntent(pi: {
-  payment_method?: string | { id?: string } | null;
-}): string | null {
-  const pm = pi.payment_method;
-  if (typeof pm === "string" && pm.trim()) return pm.trim();
-  if (pm && typeof pm === "object" && typeof pm.id === "string" && pm.id.trim()) {
-    return pm.id.trim();
+function customerIdFromPaymentMethodCustomer(customer: unknown): string | null {
+  if (typeof customer === "string" && customer.trim()) return customer.trim();
+  if (
+    customer &&
+    typeof customer === "object" &&
+    "id" in customer &&
+    typeof (customer as { id?: unknown }).id === "string" &&
+    (customer as { id: string }).id.trim()
+  ) {
+    return (customer as { id: string }).id.trim();
   }
   return null;
+}
+
+function reusablePaymentMethodFromDepositIntent(
+  pi: {
+    payment_method?: string | { id?: string; customer?: unknown } | null;
+  },
+  expectedCustomerId: string,
+): { paymentMethodId: string | null; reason?: "no_payment_method" | "non_reusable_payment_method" } {
+  const pm = pi.payment_method;
+  if (!pm) {
+    return { paymentMethodId: null, reason: "no_payment_method" };
+  }
+  if (pm && typeof pm === "object" && typeof pm.id === "string" && pm.id.trim()) {
+    const paymentMethodCustomerId = customerIdFromPaymentMethodCustomer(pm.customer);
+    if (paymentMethodCustomerId === expectedCustomerId) {
+      return { paymentMethodId: pm.id.trim() };
+    }
+  }
+  return { paymentMethodId: null, reason: "non_reusable_payment_method" };
 }
 
 @Injectable()
@@ -116,33 +138,63 @@ export class RemainingBalanceAuthorizationService {
       }
     }
 
-    const stripeCustomerId = await this.stripePayments.ensureStripeCustomerForUser({
-      userId: booking.customerId,
-      email:
-        String(booking.customer.email ?? "").trim() ||
-        `customer+${booking.customerId}@servelink.invalid`,
-    });
+    const stripeCustomerId = booking.stripeCustomerId?.trim();
+    if (!stripeCustomerId) {
+      this.log.warn({
+        kind: "remaining_balance_authorization",
+        event: "authorization_skipped",
+        bookingId,
+        reason: "missing_customer",
+      });
+      await this.prisma.booking.update({
+        where: { id: bookingId },
+        data: {
+          remainingBalanceStatus:
+            BookingRemainingBalancePaymentStatus.balance_authorization_required,
+          remainingBalanceAuthorizationFailureReason: "missing_customer",
+        },
+      });
+      return { ok: false, skipped: "missing_customer" };
+    }
 
     const depositPiId = booking.publicDepositPaymentIntentId?.trim();
     let paymentMethodId: string | null = null;
+    let missingPaymentMethodReason: "no_payment_method" | "non_reusable_payment_method" =
+      "no_payment_method";
     if (depositPiId) {
       const expanded = await this.stripePayments.retrievePaymentIntentForRemainingBalanceAuth(
         depositPiId,
       );
-      paymentMethodId = paymentMethodIdFromDepositIntent(expanded as never);
+      const reusable = reusablePaymentMethodFromDepositIntent(
+        expanded as never,
+        stripeCustomerId,
+      );
+      paymentMethodId = reusable.paymentMethodId;
+      missingPaymentMethodReason = reusable.reason ?? missingPaymentMethodReason;
     }
 
     if (!paymentMethodId) {
+      this.log.warn({
+        kind: "remaining_balance_authorization",
+        event: "authorization_skipped",
+        bookingId,
+        reason: missingPaymentMethodReason,
+      });
       await this.prisma.booking.update({
         where: { id: bookingId },
         data: {
           remainingBalanceStatus:
             BookingRemainingBalancePaymentStatus.balance_authorization_required,
           remainingBalanceAuthorizationFailureReason:
-            "no_payment_method_from_deposit_intent",
+            missingPaymentMethodReason === "non_reusable_payment_method"
+              ? "non_reusable_payment_method"
+              : "no_payment_method_from_deposit_intent",
         },
       });
-      return { ok: false, skipped: "no_payment_method" };
+      return {
+        ok: false,
+        skipped: missingPaymentMethodReason,
+      };
     }
 
     if (remaining == null || remaining <= 0) {

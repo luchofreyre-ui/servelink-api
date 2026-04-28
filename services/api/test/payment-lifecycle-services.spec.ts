@@ -43,6 +43,7 @@ describe("payment lifecycle services", () => {
             BookingRemainingBalancePaymentStatus.balance_pending_authorization,
           remainingBalancePaymentIntentId: null,
           publicDepositPaymentIntentId: "pi_dep",
+          stripeCustomerId: "cus_x",
           customerId: "u1",
           customer: { id: "u1", email: "a@b.c", stripeCustomerId: "cus_x" },
         }),
@@ -73,6 +74,7 @@ describe("payment lifecycle services", () => {
             BookingRemainingBalancePaymentStatus.balance_pending_authorization,
           remainingBalancePaymentIntentId: null,
           publicDepositPaymentIntentId: "pi_dep",
+          stripeCustomerId: "cus_x",
           customerId: "u1",
           customer: { id: "u1", email: "a@b.c", stripeCustomerId: "cus_x" },
         }),
@@ -125,7 +127,7 @@ describe("payment lifecycle services", () => {
     );
   });
 
-  it("authorization uses deposit PaymentIntent payment_method string", async () => {
+  it("authorization uses reusable deposit PaymentIntent payment_method", async () => {
     process.env.STRIPE_SECRET_KEY = "sk_test_x";
     const scheduledStart = new Date(Date.now() + 2 * 60 * 60 * 1000);
     const bookingUpdate = jest.fn().mockResolvedValue({});
@@ -141,6 +143,7 @@ describe("payment lifecycle services", () => {
             BookingRemainingBalancePaymentStatus.balance_pending_authorization,
           remainingBalancePaymentIntentId: null,
           publicDepositPaymentIntentId: "pi_dep",
+          stripeCustomerId: "cus_x",
           remainingBalanceAuthorizedAt: null,
           customerId: "u1",
           customer: { id: "u1", email: "a@b.c", stripeCustomerId: "cus_x" },
@@ -154,7 +157,10 @@ describe("payment lifecycle services", () => {
     jest
       .spyOn(stripePayments, "retrievePaymentIntentForRemainingBalanceAuth")
       .mockResolvedValue({
-        payment_method: "pm_card",
+        payment_method: {
+          id: "pm_card",
+          customer: "cus_x",
+        },
       } as any);
     jest
       .spyOn(stripePayments, "createRemainingBalanceAuthorizationPaymentIntent")
@@ -180,6 +186,104 @@ describe("payment lifecycle services", () => {
         data: expect.objectContaining({
           remainingBalanceStatus:
             BookingRemainingBalancePaymentStatus.balance_authorized,
+        }),
+      }),
+    );
+  });
+
+  it("authorization skips when booking has no Stripe customer", async () => {
+    process.env.STRIPE_SECRET_KEY = "sk_test_x";
+    const scheduledStart = new Date(Date.now() + 2 * 60 * 60 * 1000);
+    const bookingUpdate = jest.fn().mockResolvedValue({});
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "b1",
+          status: BookingStatus.assigned,
+          scheduledStart,
+          publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+          remainingBalanceAfterDepositCents: 20_000,
+          remainingBalanceStatus:
+            BookingRemainingBalancePaymentStatus.balance_pending_authorization,
+          remainingBalancePaymentIntentId: null,
+          publicDepositPaymentIntentId: "pi_dep",
+          stripeCustomerId: null,
+          customerId: "u1",
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
+        }),
+        update: bookingUpdate,
+      },
+    } as any;
+
+    const stripePayments = new StripePaymentService(prisma, {} as any);
+    const retrieve = jest.spyOn(stripePayments, "retrievePaymentIntentForRemainingBalanceAuth");
+    const create = jest.spyOn(
+      stripePayments,
+      "createRemainingBalanceAuthorizationPaymentIntent",
+    );
+
+    const svc = new RemainingBalanceAuthorizationService(prisma, stripePayments);
+    const r = await svc.authorizeRemainingBalanceForBooking("b1");
+
+    expect(r).toEqual({ ok: false, skipped: "missing_customer" });
+    expect(retrieve).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+    expect(bookingUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          remainingBalanceAuthorizationFailureReason: "missing_customer",
+        }),
+      }),
+    );
+  });
+
+  it("authorization skips when deposit PaymentMethod is not attached to the customer", async () => {
+    process.env.STRIPE_SECRET_KEY = "sk_test_x";
+    const scheduledStart = new Date(Date.now() + 2 * 60 * 60 * 1000);
+    const bookingUpdate = jest.fn().mockResolvedValue({});
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "b1",
+          status: BookingStatus.assigned,
+          scheduledStart,
+          publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+          remainingBalanceAfterDepositCents: 20_000,
+          remainingBalanceStatus:
+            BookingRemainingBalancePaymentStatus.balance_pending_authorization,
+          remainingBalancePaymentIntentId: null,
+          publicDepositPaymentIntentId: "pi_dep",
+          stripeCustomerId: "cus_x",
+          customerId: "u1",
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: "cus_x" },
+        }),
+        update: bookingUpdate,
+      },
+    } as any;
+
+    const stripePayments = new StripePaymentService(prisma, {} as any);
+    jest
+      .spyOn(stripePayments, "retrievePaymentIntentForRemainingBalanceAuth")
+      .mockResolvedValue({
+        payment_method: {
+          id: "pm_card",
+          customer: "cus_other",
+        },
+      } as any);
+    const create = jest.spyOn(
+      stripePayments,
+      "createRemainingBalanceAuthorizationPaymentIntent",
+    );
+
+    const svc = new RemainingBalanceAuthorizationService(prisma, stripePayments);
+    const r = await svc.authorizeRemainingBalanceForBooking("b1");
+
+    expect(r).toEqual({ ok: false, skipped: "non_reusable_payment_method" });
+    expect(create).not.toHaveBeenCalled();
+    expect(bookingUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          remainingBalanceAuthorizationFailureReason: "non_reusable_payment_method",
         }),
       }),
     );
@@ -242,9 +346,33 @@ describe("payment lifecycle services", () => {
           enabled: true,
           allow_redirects: "never",
         },
+        customer: "cus_x",
+        setup_future_usage: "off_session",
       }),
     );
     expect(createArgs.payment_method_types).toBeUndefined();
+  });
+
+  it("public deposit PI creation rejects missing Stripe customer", async () => {
+    process.env.STRIPE_SECRET_KEY = "sk_test_x";
+    const stripePayments = new StripePaymentService({} as any, {} as any);
+    const create = jest.fn();
+    (stripePayments as any).stripeClient = {
+      paymentIntents: { create },
+    };
+
+    await expect(
+      stripePayments.createPublicBookingDepositPaymentIntent({
+        bookingId: "b1",
+        stripeCustomerId: " ",
+        idempotencyKey: "idem",
+        holdId: "h1",
+        tenantId: "tenant_1",
+        estimateSnapshotHash: "hash",
+        estimatedTotalCents: 30_000,
+      }),
+    ).rejects.toThrow("Deposit PaymentIntent must be attached to a Customer for cron reuse");
+    expect(create).not.toHaveBeenCalled();
   });
 
   it("server-confirmed public deposit PI creation is card-only", async () => {
@@ -272,8 +400,10 @@ describe("payment lifecycle services", () => {
     const createArgs = create.mock.calls[0]?.[0] as Record<string, unknown>;
     expect(createArgs).toEqual(
       expect.objectContaining({
+        customer: "cus_x",
         payment_method: "pm_card",
         payment_method_types: ["card"],
+        setup_future_usage: "off_session",
       }),
     );
     expect(createArgs.automatic_payment_methods).toBeUndefined();

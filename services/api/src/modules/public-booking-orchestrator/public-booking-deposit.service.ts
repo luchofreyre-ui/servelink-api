@@ -282,6 +282,25 @@ export class PublicBookingDepositService {
     });
   }
 
+  private async ensureDepositStripeCustomer(ctx: PublicDepositContext): Promise<string> {
+    const existing = ctx.booking.stripeCustomerId?.trim();
+    if (existing) return existing;
+
+    const stripeCustomerId = await this.stripePayments.ensureStripeCustomerForUser({
+      userId: ctx.booking.customerId,
+      email:
+        String(ctx.booking.customer.email ?? "").trim() ||
+        `customer+${ctx.booking.customerId}@servelink.invalid`,
+      bookingId: ctx.booking.id,
+    });
+    await this.prisma.booking.update({
+      where: { id: ctx.booking.id },
+      data: { stripeCustomerId },
+    });
+    ctx.booking.stripeCustomerId = stripeCustomerId;
+    return stripeCustomerId;
+  }
+
   /**
    * Ensures deposit succeeded (or skip flag). Otherwise throws structured HTTP errors.
    */
@@ -327,10 +346,7 @@ export class PublicBookingDepositService {
       return;
     }
 
-    const stripeCustomerId = await this.stripePayments.ensureStripeCustomerForUser({
-      userId: booking.customerId,
-      email: String(booking.customer.email ?? "").trim() || `customer+${booking.customerId}@servelink.invalid`,
-    });
+    const stripeCustomerId = await this.ensureDepositStripeCustomer(ctx);
 
     const idemBase =
       (args.idempotencyKey?.trim() || `pb:${args.bookingId}:${args.holdId}`).slice(0, 200);
@@ -726,12 +742,7 @@ export class PublicBookingDepositService {
       );
     }
 
-    const stripeCustomerId = await this.stripePayments.ensureStripeCustomerForUser({
-      userId: booking.customerId,
-      email:
-        String(booking.customer.email ?? "").trim() ||
-        `customer+${booking.customerId}@servelink.invalid`,
-    });
+    const stripeCustomerId = await this.ensureDepositStripeCustomer(ctx);
 
     const estimatedTotal = ctx.estimatedTotalCents;
     const remaining = computeRemainingBalanceAfterDepositCents({

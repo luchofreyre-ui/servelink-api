@@ -715,6 +715,7 @@ export class StripePaymentService {
   async ensureStripeCustomerForUser(args: {
     userId: string;
     email: string;
+    bookingId?: string;
   }): Promise<string> {
     const stripe = this.requireStripe();
     const user = await this.prisma.user.findUnique({
@@ -728,7 +729,10 @@ export class StripePaymentService {
     if (existing) return existing;
     const customer = await stripe.customers.create({
       email: (args.email || user.email || "").trim() || undefined,
-      metadata: { servelinkUserId: args.userId },
+      metadata: {
+        servelinkUserId: args.userId,
+        ...(args.bookingId ? { bookingId: args.bookingId } : {}),
+      },
     });
     await this.prisma.user.update({
       where: { id: args.userId },
@@ -840,15 +844,20 @@ export class StripePaymentService {
     estimatedTotalCents: number | null;
   }) {
     const stripe = this.requireStripe();
+    const stripeCustomerId = args.stripeCustomerId.trim();
+    if (!stripeCustomerId) {
+      throw new Error("Deposit PaymentIntent must be attached to a Customer for cron reuse");
+    }
     return stripe.paymentIntents.create(
       {
         amount: PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
         currency: "usd",
-        customer: args.stripeCustomerId,
+        customer: stripeCustomerId,
         automatic_payment_methods: {
           enabled: true,
           allow_redirects: "never",
         },
+        setup_future_usage: "off_session",
         metadata: {
           ...this.buildPublicDepositMetadata({
             bookingId: args.bookingId,
@@ -871,7 +880,10 @@ export class StripePaymentService {
     const stripe = this.requireStripe();
     return stripe.paymentIntents.confirm(
       args.paymentIntentId,
-      { payment_method: args.paymentMethodId },
+      {
+        payment_method: args.paymentMethodId,
+        setup_future_usage: "off_session",
+      },
       { idempotencyKey: args.idempotencyKey.slice(0, 255) },
     );
   }
@@ -887,13 +899,18 @@ export class StripePaymentService {
     estimatedTotalCents: number | null;
   }) {
     const stripe = this.requireStripe();
+    const stripeCustomerId = args.stripeCustomerId.trim();
+    if (!stripeCustomerId) {
+      throw new Error("Deposit PaymentIntent must be attached to a Customer for cron reuse");
+    }
     return stripe.paymentIntents.create(
       {
         amount: PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
         currency: "usd",
-        customer: args.stripeCustomerId,
+        customer: stripeCustomerId,
         payment_method: args.paymentMethodId,
         payment_method_types: ["card"],
+        setup_future_usage: "off_session",
         confirmation_method: "automatic",
         confirm: true,
         metadata: {
