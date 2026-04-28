@@ -71,11 +71,9 @@ import {
   writeBookingConfirmationSessionSnapshot,
 } from "./bookingUrlState";
 import {
-  isDepositFullySatisfied,
   postPublicBookingDepositPrepare,
   type PublicBookingDepositPrepareResponse,
 } from "./bookingPaymentClient";
-import { pollDepositPrepareUntilSatisfiedOrCap } from "./bookingDepositPreparePoll";
 import type {
   BookingAvailableTeamOption,
   BookingFlowState,
@@ -402,6 +400,7 @@ export function BookingFlowClient() {
   const paymentResumeAttemptedRef = useRef(false);
   const lastDepositFinalizationErrorRef = useRef<string | null>(null);
   const isDepositInFlightRef = useRef(false);
+  const depositFinalizeInFlightRef = useRef(false);
   /** After an explicit fresh start, one URL sync must not re-merge contact from prior React state. */
   const skipContactMergeFromUrlOnceRef = useRef(false);
   const scheduleSnapshotForAbandonRef = useRef({
@@ -1451,6 +1450,49 @@ export function BookingFlowClient() {
     );
   }
 
+  async function followDepositPrepareNextAction(
+    prep: PublicBookingDepositPrepareResponse,
+    opts?: { postStripeResume?: boolean },
+  ) {
+    writeDurablePublicBookingPaymentSession({
+      bookingId: prep.bookingId,
+      holdId: pendingConfirmHoldIdRef.current?.trim() || null,
+      paymentIntentId: prep.paymentIntentId,
+    });
+    setDepositBackendProcessing(
+      prep.paymentMode === "deposit" && prep.classification === "processing",
+    );
+    if (prep.nextAction === "finalize_booking") {
+      setRequiresDepositResolution(false);
+      setReviewDepositGateMessage(null);
+      setReviewPaymentPhase("satisfied");
+      await advanceAfterPublicDepositSatisfied(prep);
+      return;
+    }
+    if (prep.nextAction === "confirm_deposit" && prep.clientSecret?.trim()) {
+      if (opts?.postStripeResume) {
+        setReviewPaymentPhase("failed");
+        setDepositError(
+          "Payment succeeded, but we could not safely resume the booking. Please contact support before retrying.",
+        );
+        return;
+      }
+      setDepositRequired(true);
+      setDepositClientSecret(prep.clientSecret.trim());
+      setDepositPaymentIntentId(prep.paymentIntentId?.trim() || null);
+      setDepositAmountCents(
+        typeof prep.amountCents === "number" ? prep.amountCents : null,
+      );
+      setReviewPaymentPhase("ready_for_payment");
+      return;
+    }
+    setReviewPaymentPhase("failed");
+    setDepositError(
+      prep.errorMessage?.trim() ||
+        "We couldn’t start card payment. Please try again shortly.",
+    );
+  }
+
   useEffect(() => {
     if (pathname !== "/book") return;
     if (paymentResumeAttemptedRef.current) return;
@@ -1561,39 +1603,7 @@ export function BookingFlowClient() {
         bookingId,
         ...(hold ? { holdId: hold } : {}),
       });
-      writeDurablePublicBookingPaymentSession({
-        bookingId,
-        holdId: hold || null,
-        paymentIntentId: prep.paymentIntentId,
-      });
-      setDepositBackendProcessing(
-        prep.paymentMode === "deposit" &&
-          prep.classification === "processing",
-      );
-      if (isDepositFullySatisfied(prep)) {
-        setRequiresDepositResolution(false);
-        setReviewDepositGateMessage(null);
-        setReviewPaymentPhase("idle");
-        await advanceAfterPublicDepositSatisfied(prep);
-        return;
-      }
-      if (
-        prep.paymentMode === "deposit" &&
-        Boolean(prep.clientSecret?.trim())
-      ) {
-        setDepositRequired(true);
-        setDepositClientSecret(prep.clientSecret?.trim() ?? null);
-        setDepositPaymentIntentId(prep.paymentIntentId?.trim() || null);
-        setDepositAmountCents(
-          typeof prep.amountCents === "number" ? prep.amountCents : null,
-        );
-        setReviewPaymentPhase("ready_for_payment");
-        return;
-      }
-      setReviewPaymentPhase("failed");
-      setDepositError(
-        "We couldn’t start card payment. Please try again shortly.",
-      );
+      await followDepositPrepareNextAction(prep);
     } catch (e) {
       setReviewPaymentPhase("failed");
       setDepositError(
@@ -1615,65 +1625,32 @@ export function BookingFlowClient() {
       console.warn("BLOCKED: finalize poll outside deposit context");
       return;
     }
+    if (depositFinalizeInFlightRef.current) return;
     const bookingId =
       bookingIdOverride?.trim() ||
       stateRefForBookingUrl.current.schedulingBookingId.trim();
     const holdId = holdIdOverride?.trim() || pendingConfirmHoldIdRef.current?.trim() || "";
     if (!bookingId) return;
+    depositFinalizeInFlightRef.current = true;
     setDepositProcessing(true);
     setDepositError(null);
     setReviewPaymentPhase("finalizing");
     setDepositBackendProcessing(false);
     try {
-      const pollOutcome = await pollDepositPrepareUntilSatisfiedOrCap(
-        bookingId,
-        async (id) => {
-          const prep = await postPublicBookingDepositPrepare({
-            bookingId: id,
-            ...(holdId ? { holdId } : {}),
-          });
-          writeDurablePublicBookingPaymentSession({
-            bookingId: id,
-            holdId: holdId || null,
-            paymentIntentId: prep.paymentIntentId,
-          });
-          setDepositBackendProcessing(
-            prep.paymentMode === "deposit" &&
-              prep.classification === "processing",
-          );
-          return prep;
-        },
-      );
-      if (pollOutcome === "satisfied") {
-        const prep = await postPublicBookingDepositPrepare({
-          bookingId,
-          ...(holdId ? { holdId } : {}),
-        });
-        writeDurablePublicBookingPaymentSession({
-          bookingId,
-          holdId: holdId || null,
-          paymentIntentId: prep.paymentIntentId,
-        });
-        if (!isDepositFullySatisfied(prep)) {
-          setReviewPaymentPhase("failed");
+      if (holdId) {
+        const finalized = await finalizeHeldBookingAfterDepositPaid(bookingId, holdId);
+        if (!finalized && !lastDepositFinalizationErrorRef.current) {
+          setReviewPaymentPhase("finalizing_timeout");
           setDepositError(
-            "We could not confirm deposit status. Please refresh and try again.",
+            "Your deposit was received, but booking confirmation did not finish automatically. Please retry or contact support.",
           );
-          return;
         }
-        setReviewPaymentPhase("satisfied");
-        await advanceAfterPublicDepositSatisfied(prep);
         return;
       }
-      if (pollOutcome === "failed") {
-        setReviewPaymentPhase("failed");
-        setDepositError(
-          "We could not confirm deposit status. Please refresh and try again.",
-        );
-        return;
-      }
-      setReviewPaymentPhase("finalizing_timeout");
+      const prep = await postPublicBookingDepositPrepare({ bookingId });
+      await followDepositPrepareNextAction(prep, { postStripeResume: true });
     } finally {
+      depositFinalizeInFlightRef.current = false;
       setDepositProcessing(false);
       setDepositBackendProcessing(false);
     }
@@ -1692,36 +1669,7 @@ export function BookingFlowClient() {
         bookingId,
         ...(holdId ? { holdId } : {}),
       });
-      writeDurablePublicBookingPaymentSession({
-        bookingId,
-        holdId: holdId || null,
-        paymentIntentId: prep.paymentIntentId,
-      });
-      setDepositBackendProcessing(
-        prep.paymentMode === "deposit" &&
-          prep.classification === "processing",
-      );
-      if (isDepositFullySatisfied(prep)) {
-        setRequiresDepositResolution(false);
-        setReviewDepositGateMessage(null);
-        setReviewPaymentPhase("satisfied");
-        await advanceAfterPublicDepositSatisfied(prep);
-        return;
-      }
-      if (
-        prep.paymentMode === "deposit" &&
-        Boolean(prep.clientSecret?.trim())
-      ) {
-        setDepositRequired(true);
-        setDepositClientSecret(prep.clientSecret?.trim() ?? null);
-        setDepositPaymentIntentId(prep.paymentIntentId?.trim() || null);
-        setDepositAmountCents(
-          typeof prep.amountCents === "number" ? prep.amountCents : null,
-        );
-        setReviewPaymentPhase("ready_for_payment");
-        return;
-      }
-      setReviewPaymentPhase("finalizing_timeout");
+      await followDepositPrepareNextAction(prep);
     } catch (e) {
       setReviewPaymentPhase("finalizing_timeout");
       setDepositError(
@@ -1829,9 +1777,18 @@ export function BookingFlowClient() {
     }
   }
 
-  async function completeReviewDepositAfterPayment() {
+  async function completeReviewDepositAfterPayment(
+    paymentIntentId?: string | null,
+  ) {
     const bookingId = stateRefForBookingUrl.current.schedulingBookingId.trim();
     if (!bookingId) return;
+    if (paymentIntentId?.trim()) {
+      writeDurablePublicBookingPaymentSession({
+        bookingId,
+        holdId: pendingConfirmHoldIdRef.current?.trim() || null,
+        paymentIntentId: paymentIntentId.trim(),
+      });
+    }
     setReviewPaymentPhase("confirming");
     await runPostStripeDepositFinalizePoll();
   }
@@ -2525,7 +2482,9 @@ export function BookingFlowClient() {
                               )
                             : null
                         }
-                        onSuccess={() => void completeReviewDepositAfterPayment()}
+                        onSuccess={(paymentIntentId) =>
+                          void completeReviewDepositAfterPayment(paymentIntentId)
+                        }
                         onError={(msg) => {
                           setReviewPaymentPhase("failed");
                           setDepositError(msg);

@@ -7,11 +7,17 @@ import { API_BASE_URL } from "@/lib/api";
 export type PublicBookingDepositPrepareResponse = {
   kind: "public_booking_deposit_prepare";
   bookingId: string;
+  depositStatus?: string;
   paymentMode: "none" | "deposit";
   classification: string;
   publicDepositStatus?: string;
   clientSecret?: string | null;
   paymentIntentId?: string;
+  alreadyExists?: boolean;
+  alreadyCompleted?: boolean;
+  nextAction: "confirm_deposit" | "finalize_booking" | "show_error";
+  errorCode?: string;
+  errorMessage?: string;
   amountCents?: number;
   currency?: string;
   stripeStatus?: string;
@@ -34,10 +40,19 @@ function parsePrepareJson(raw: unknown): PublicBookingDepositPrepareResponse {
   if (typeof o.classification !== "string") {
     throw new Error("deposit prepare: missing classification");
   }
+  if (
+    o.nextAction !== "confirm_deposit" &&
+    o.nextAction !== "finalize_booking" &&
+    o.nextAction !== "show_error"
+  ) {
+    throw new Error("deposit prepare: invalid nextAction");
+  }
   return {
     kind: "public_booking_deposit_prepare",
     bookingId: o.bookingId.trim(),
     paymentMode: o.paymentMode,
+    depositStatus:
+      typeof o.depositStatus === "string" ? o.depositStatus : undefined,
     classification: o.classification,
     publicDepositStatus:
       typeof o.publicDepositStatus === "string"
@@ -49,6 +64,12 @@ function parsePrepareJson(raw: unknown): PublicBookingDepositPrepareResponse {
         : undefined,
     paymentIntentId:
       typeof o.paymentIntentId === "string" ? o.paymentIntentId : undefined,
+    alreadyExists: o.alreadyExists === true ? true : undefined,
+    alreadyCompleted: o.alreadyCompleted === true ? true : undefined,
+    nextAction: o.nextAction,
+    errorCode: typeof o.errorCode === "string" ? o.errorCode : undefined,
+    errorMessage:
+      typeof o.errorMessage === "string" ? o.errorMessage : undefined,
     amountCents:
       typeof o.amountCents === "number" && Number.isFinite(o.amountCents)
         ? o.amountCents
@@ -107,9 +128,12 @@ export async function postPublicBookingDepositPrepare(body: {
       return {
         kind: "public_booking_deposit_prepare",
         bookingId,
+        depositStatus: "deposit_succeeded",
         paymentMode: "none",
         classification: "skip_deposit_env",
         publicDepositStatus: "deposit_succeeded",
+        alreadyCompleted: true,
+        nextAction: "finalize_booking",
       };
     }
     throw new Error(
@@ -126,6 +150,7 @@ export async function postPublicBookingDepositPrepare(body: {
 export function isDepositFullySatisfied(
   res: PublicBookingDepositPrepareResponse,
 ): boolean {
+  if (res.nextAction === "finalize_booking") return true;
   if (res.paymentMode !== "none") return false;
   return (
     res.classification === "deposit_succeeded" ||

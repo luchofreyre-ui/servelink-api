@@ -35,6 +35,7 @@ describe("bookingDepositPreparePoll", () => {
             bookingId: "bk1",
             paymentMode: "deposit",
             classification: "processing",
+            nextAction: "confirm_deposit",
           };
         }
         return {
@@ -42,6 +43,7 @@ describe("bookingDepositPreparePoll", () => {
           bookingId: "bk1",
           paymentMode: "none",
           classification: "deposit_succeeded",
+          nextAction: "finalize_booking",
         };
       },
     );
@@ -71,6 +73,7 @@ describe("bookingDepositPreparePoll", () => {
         bookingId: "bk1",
         paymentMode: "deposit",
         classification: "processing",
+        nextAction: "confirm_deposit",
       }),
     );
     const outcome = await pollDepositPrepareUntilSatisfiedOrCap(
