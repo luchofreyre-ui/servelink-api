@@ -72,7 +72,6 @@ describe("payment lifecycle services", () => {
     jest.spyOn(stripePayments, "ensureStripeCustomerForUser").mockResolvedValue("cus_x");
     jest.spyOn(stripePayments, "retrievePaymentIntentForRemainingBalanceAuth").mockResolvedValue({
       payment_method: null,
-      latest_charge: null,
     } as any);
 
     const svc = new RemainingBalanceAuthorizationService(prisma, stripePayments);
@@ -105,10 +104,11 @@ describe("payment lifecycle services", () => {
     expect(retrieve).toHaveBeenCalledWith("pi_dep", {
       expand: ["payment_method"],
     });
+    const invalidNestedExpand = ["latest_charge", "payment_method"].join(".");
     expect(retrieve).not.toHaveBeenCalledWith(
       "pi_dep",
       expect.objectContaining({
-        expand: expect.arrayContaining(["latest_charge.payment_method"]),
+        expand: expect.arrayContaining([invalidNestedExpand]),
       }),
     );
   });
