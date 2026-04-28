@@ -4,10 +4,22 @@ import {
   BookingRemainingBalancePaymentStatus,
   BookingStatus,
 } from "@prisma/client";
+import fs from "node:fs";
+import path from "node:path";
 import { BookingCancellationPaymentService } from "../src/modules/bookings/payment-lifecycle/booking-cancellation-payment.service";
 import { RemainingBalanceAuthorizationService } from "../src/modules/bookings/payment-lifecycle/remaining-balance-authorization.service";
 import { RemainingBalanceCaptureService } from "../src/modules/bookings/payment-lifecycle/remaining-balance-capture.service";
 import { StripePaymentService } from "../src/modules/bookings/stripe/stripe-payment.service";
+
+function listSourceFiles(dir: string): string[] {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      return listSourceFiles(fullPath);
+    }
+    return entry.isFile() && /\.(ts|js)$/.test(entry.name) ? [fullPath] : [];
+  });
+}
 
 describe("payment lifecycle services", () => {
   const OLD_STRIPE = process.env.STRIPE_SECRET_KEY;
@@ -172,6 +184,100 @@ describe("payment lifecycle services", () => {
     );
   });
 
+  it("remaining-balance authorization PI creation is card-only for cron safety", async () => {
+    process.env.STRIPE_SECRET_KEY = "sk_test_x";
+    const stripePayments = new StripePaymentService({} as any, {} as any);
+    const create = jest.fn().mockResolvedValue({
+      id: "pi_remaining",
+      status: "requires_capture",
+    });
+    (stripePayments as any).stripeClient = {
+      paymentIntents: { create },
+    };
+
+    await stripePayments.createRemainingBalanceAuthorizationPaymentIntent({
+      bookingId: "b1",
+      stripeCustomerId: "cus_x",
+      paymentMethodId: "pm_card",
+      amountCents: 20_000,
+      idempotencyKey: "idem",
+    });
+
+    const createArgs = create.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(createArgs).toEqual(
+      expect.objectContaining({
+        payment_method: "pm_card",
+        payment_method_types: ["card"],
+      }),
+    );
+    expect(createArgs.automatic_payment_methods).toBeUndefined();
+  });
+
+  it("public deposit PI creation disables redirect-capable automatic methods", async () => {
+    process.env.STRIPE_SECRET_KEY = "sk_test_x";
+    const stripePayments = new StripePaymentService({} as any, {} as any);
+    const create = jest.fn().mockResolvedValue({
+      id: "pi_deposit",
+      status: "requires_payment_method",
+    });
+    (stripePayments as any).stripeClient = {
+      paymentIntents: { create },
+    };
+
+    await stripePayments.createPublicBookingDepositPaymentIntent({
+      bookingId: "b1",
+      stripeCustomerId: "cus_x",
+      idempotencyKey: "idem",
+      holdId: "h1",
+      tenantId: "tenant_1",
+      estimateSnapshotHash: "hash",
+      estimatedTotalCents: 30_000,
+    });
+
+    const createArgs = create.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(createArgs).toEqual(
+      expect.objectContaining({
+        automatic_payment_methods: {
+          enabled: true,
+          allow_redirects: "never",
+        },
+      }),
+    );
+    expect(createArgs.payment_method_types).toBeUndefined();
+  });
+
+  it("server-confirmed public deposit PI creation is card-only", async () => {
+    process.env.STRIPE_SECRET_KEY = "sk_test_x";
+    const stripePayments = new StripePaymentService({} as any, {} as any);
+    const create = jest.fn().mockResolvedValue({
+      id: "pi_deposit",
+      status: "succeeded",
+    });
+    (stripePayments as any).stripeClient = {
+      paymentIntents: { create },
+    };
+
+    await stripePayments.createAndConfirmPublicDepositPaymentIntent({
+      bookingId: "b1",
+      stripeCustomerId: "cus_x",
+      paymentMethodId: "pm_card",
+      idempotencyKey: "idem",
+      holdId: "h1",
+      tenantId: "tenant_1",
+      estimateSnapshotHash: "hash",
+      estimatedTotalCents: 30_000,
+    });
+
+    const createArgs = create.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(createArgs).toEqual(
+      expect.objectContaining({
+        payment_method: "pm_card",
+        payment_method_types: ["card"],
+      }),
+    );
+    expect(createArgs.automatic_payment_methods).toBeUndefined();
+  });
+
   it("capture is idempotent when already captured", async () => {
     process.env.STRIPE_SECRET_KEY = "sk_test_x";
     const prisma = {
@@ -255,5 +361,28 @@ describe("payment lifecycle services", () => {
     const r = await svc.enforcePublicDepositOnCancellation({ bookingId: "b1" });
     expect(r.ok).toBe(true);
     expect(r.skipped).toBe("no_deposit_succeeded");
+  });
+});
+
+describe("Stripe PaymentIntent creation source invariant", () => {
+  it("does not leave automatic payment methods redirect-capable", () => {
+    const sourceRoots = [
+      path.resolve(__dirname, "../src/modules/bookings"),
+      path.resolve(__dirname, "../src/modules/billing"),
+    ];
+    const offenders = sourceRoots
+      .flatMap(listSourceFiles)
+      .flatMap((filePath) => {
+        const source = fs.readFileSync(filePath, "utf8");
+        const matches = [...source.matchAll(/automatic_payment_methods\s*:/g)];
+        return matches
+          .filter((match) => {
+            const block = source.slice(match.index ?? 0, (match.index ?? 0) + 180);
+            return !block.includes("allow_redirects");
+          })
+          .map(() => filePath);
+      });
+
+    expect([...new Set(offenders)]).toEqual([]);
   });
 });

@@ -763,6 +763,7 @@ export class StripePaymentService {
         currency: "usd",
         customer: args.stripeCustomerId,
         payment_method: args.paymentMethodId,
+        payment_method_types: ["card"],
         capture_method: "manual",
         confirm: true,
         confirmation_method: "automatic",
@@ -844,7 +845,10 @@ export class StripePaymentService {
         amount: PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
         currency: "usd",
         customer: args.stripeCustomerId,
-        automatic_payment_methods: { enabled: true },
+        automatic_payment_methods: {
+          enabled: true,
+          allow_redirects: "never",
+        },
         metadata: {
           ...this.buildPublicDepositMetadata({
             bookingId: args.bookingId,
@@ -889,6 +893,7 @@ export class StripePaymentService {
         currency: "usd",
         customer: args.stripeCustomerId,
         payment_method: args.paymentMethodId,
+        payment_method_types: ["card"],
         confirmation_method: "automatic",
         confirm: true,
         metadata: {
