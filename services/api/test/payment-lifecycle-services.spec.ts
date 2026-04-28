@@ -172,6 +172,7 @@ describe("payment lifecycle services", () => {
     ).toHaveBeenCalledWith(
       expect.objectContaining({
         paymentMethodId: "pm_card",
+        idempotencyKey: "rb-auth:v2:b1:20000",
       }),
     );
     expect(bookingUpdate).toHaveBeenCalledWith(
@@ -365,6 +366,16 @@ describe("payment lifecycle services", () => {
 });
 
 describe("Stripe PaymentIntent creation source invariant", () => {
+  it("does not use the old remaining-balance authorization idempotency key format", () => {
+    const sourceRoot = path.resolve(__dirname, "../src/modules/bookings");
+    const oldKeyPattern = ["rb-auth", ":${bookingId}"].join("");
+    const offenders = listSourceFiles(sourceRoot).filter((filePath) =>
+      fs.readFileSync(filePath, "utf8").includes(oldKeyPattern),
+    );
+
+    expect(offenders).toEqual([]);
+  });
+
   it("does not leave automatic payment methods redirect-capable", () => {
     const sourceRoots = [
       path.resolve(__dirname, "../src/modules/bookings"),

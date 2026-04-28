@@ -149,7 +149,7 @@ export class RemainingBalanceAuthorizationService {
       return { ok: false, skipped: "no_remaining_balance" };
     }
 
-    const idemKey = `rb-auth:${bookingId}`.slice(0, 255);
+    const idemKey = `rb-auth:v2:${bookingId}:${remaining}`.slice(0, 255);
     const pi = await this.stripePayments.createRemainingBalanceAuthorizationPaymentIntent({
       bookingId,
       stripeCustomerId,
