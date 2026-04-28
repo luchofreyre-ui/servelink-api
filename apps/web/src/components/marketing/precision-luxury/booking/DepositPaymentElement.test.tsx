@@ -81,6 +81,14 @@ function buildStripeStub(): Stripe {
   return { confirmPayment } as unknown as Stripe;
 }
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((res) => {
+    resolve = res;
+  });
+  return { promise, resolve };
+}
+
 describe("DepositPaymentElement", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -279,6 +287,156 @@ describe("DepositPaymentElement", () => {
     fireEvent.click(screen.getByRole("button", { name: /pay \$100 deposit/i }));
 
     await waitFor(() => expect(confirmPayment).toHaveBeenCalledTimes(1));
+  });
+
+  it("treats succeeded confirmPayment result as success exactly once", async () => {
+    stripeHooks.elements = {};
+    stripeHooks.autoFireReady = true;
+    confirmPayment.mockResolvedValue({
+      error: undefined,
+      paymentIntent: {
+        id: "pi_succeeded",
+        status: "succeeded",
+      },
+    });
+    const onSuccess = vi.fn();
+    const onError = vi.fn();
+
+    render(
+      <DepositPaymentElement
+        stripePromise={Promise.resolve(buildStripeStub())}
+        clientSecret="cs_test_abc"
+        amountCents={10000}
+        paymentIntentId="pi_succeeded"
+        onSuccess={onSuccess}
+        onError={onError}
+      />,
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: /pay \$100 deposit/i }),
+      ).not.toBeDisabled(),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /pay \$100 deposit/i }));
+    await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
+
+    expect(onSuccess).toHaveBeenCalledWith("pi_succeeded");
+    expect(onError).not.toHaveBeenCalled();
+    expect(confirmPayment).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("button", { name: /processing payment/i })).toBeDisabled();
+  });
+
+  it("does not duplicate confirmPayment while confirmation is in flight", async () => {
+    stripeHooks.elements = {};
+    stripeHooks.autoFireReady = true;
+    const pending = deferred<{ error: undefined }>();
+    confirmPayment.mockReturnValue(pending.promise);
+    const onSuccess = vi.fn();
+
+    render(
+      <DepositPaymentElement
+        stripePromise={Promise.resolve(buildStripeStub())}
+        clientSecret="cs_test_abc"
+        amountCents={10000}
+        onSuccess={onSuccess}
+        onError={() => {}}
+      />,
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: /pay \$100 deposit/i }),
+      ).not.toBeDisabled(),
+    );
+
+    const button = screen.getByRole("button", { name: /pay \$100 deposit/i });
+    fireEvent.click(button);
+    fireEvent.click(button);
+
+    expect(confirmPayment).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      pending.resolve({ error: undefined });
+      await pending.promise;
+    });
+    await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
+  });
+
+  it("treats unexpected-state succeeded PaymentIntent error as success", async () => {
+    stripeHooks.elements = {};
+    stripeHooks.autoFireReady = true;
+    confirmPayment.mockResolvedValue({
+      error: {
+        code: "payment_intent_unexpected_state",
+        message:
+          "You cannot confirm this PaymentIntent because it has already succeeded.",
+        payment_intent: {
+          id: "pi_already_succeeded",
+          status: "succeeded",
+        },
+      },
+    });
+    const onSuccess = vi.fn();
+    const onError = vi.fn();
+
+    render(
+      <DepositPaymentElement
+        stripePromise={Promise.resolve(buildStripeStub())}
+        clientSecret="cs_test_abc"
+        amountCents={10000}
+        onSuccess={onSuccess}
+        onError={onError}
+      />,
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: /pay \$100 deposit/i }),
+      ).not.toBeDisabled(),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /pay \$100 deposit/i }));
+
+    await waitFor(() =>
+      expect(onSuccess).toHaveBeenCalledWith("pi_already_succeeded"),
+    );
+    expect(onError).not.toHaveBeenCalled();
+    expect(confirmPayment).toHaveBeenCalledTimes(1);
+  });
+
+  it("passes through non-success Stripe confirm errors", async () => {
+    stripeHooks.elements = {};
+    stripeHooks.autoFireReady = true;
+    confirmPayment.mockResolvedValue({
+      error: {
+        code: "card_declined",
+        message: "Your card was declined.",
+      },
+    });
+    const onSuccess = vi.fn();
+    const onError = vi.fn();
+
+    render(
+      <DepositPaymentElement
+        stripePromise={Promise.resolve(buildStripeStub())}
+        clientSecret="cs_test_abc"
+        amountCents={10000}
+        onSuccess={onSuccess}
+        onError={onError}
+      />,
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: /pay \$100 deposit/i }),
+      ).not.toBeDisabled(),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /pay \$100 deposit/i }));
+
+    await waitFor(() => expect(onError).toHaveBeenCalledWith("Your card was declined."));
+    expect(onSuccess).not.toHaveBeenCalled();
   });
 
   it("includes public booking identifiers in the Stripe return_url", async () => {
