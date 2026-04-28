@@ -978,6 +978,9 @@ export class PublicBookingDepositService {
       data: patch,
     });
 
+    // Idempotency guard:
+    // Deposit success may be processed multiple times (prepare + confirm paths).
+    // Duplicate BookingEvent for same (bookingId, idempotencyKey) is expected and safe.
     try {
       await this.prisma.bookingEvent.create({
         data: {
