@@ -108,7 +108,10 @@ export class BillingStripeController {
         {
           amount: amountCents,
           currency,
-          automatic_payment_methods: { enabled: true },
+          automatic_payment_methods: {
+            enabled: true,
+            allow_redirects: "never",
+          },
           metadata: {
             bookingId,
           },
