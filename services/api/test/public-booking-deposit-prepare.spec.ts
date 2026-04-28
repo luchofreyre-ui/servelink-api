@@ -260,14 +260,267 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
 
     expect(res.amountCents).toBe(10_000);
+    expect(createPi).toHaveBeenCalledTimes(1);
     expect(createPi).toHaveBeenCalledWith(
       expect.objectContaining({
         bookingId: "bk1",
+        stripeCustomerId: "cus_x",
         holdId: "h1",
         tenantId: "tenant_1",
         estimatedTotalCents: 999_999,
       }),
     );
+  });
+
+  it("returns existing non-succeeded deposit PaymentIntent without creating another one", async () => {
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
+    process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+
+    const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "bk1",
+          tenantId: "tenant_1",
+          status: BookingStatus.pending_payment,
+          customerId: "u1",
+          publicDepositStatus: BookingPublicDepositStatus.deposit_required,
+          publicDepositAmountCents: 10_000,
+          publicDepositPaymentIntentId: "pi_existing",
+          stripeCustomerId: "cus_x",
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: "cus_x" },
+          estimateSnapshot: { outputJson },
+        }),
+        update: jest.fn().mockResolvedValue({}),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "h1",
+          bookingId: "bk1",
+          foId: "fo1",
+          startAt: new Date("2030-01-01T10:00:00.000Z"),
+          endAt: new Date("2030-01-01T12:00:00.000Z"),
+          expiresAt: new Date("2030-01-01T13:00:00.000Z"),
+        }),
+      },
+    } as unknown as PrismaService;
+    const stripePayments = new StripePaymentService(
+      prisma,
+      {} as PaymentReliabilityService,
+    );
+    const retrievePi = jest.spyOn(stripePayments, "retrievePaymentIntent").mockResolvedValue({
+      id: "pi_existing",
+      status: "requires_payment_method",
+      amount: 10_000,
+      metadata: {
+        bookingId: "bk1",
+        bookingSessionKey: "bk1",
+        holdId: "h1",
+        tenantId: "tenant_1",
+        estimateSnapshotHash: estimateHash(outputJson),
+      },
+      client_secret: "cs_existing",
+    } as never);
+    const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
+
+    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const res = await svc.preparePublicBookingDeposit("bk1", "h1");
+
+    expect(createPi).not.toHaveBeenCalled();
+    expect(retrievePi).toHaveBeenCalledWith("pi_existing");
+    expect(res).toEqual(
+      expect.objectContaining({
+        paymentMode: "deposit",
+        classification: "payment_required",
+        clientSecret: "cs_existing",
+        paymentIntentId: "pi_existing",
+        alreadyExists: true,
+      }),
+    );
+  });
+
+  it("returns alreadyCompleted after deposit succeeded without creating another PaymentIntent", async () => {
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
+    process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+
+    const bookingUpdate = jest.fn().mockResolvedValue({});
+    const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "bk1",
+          tenantId: "tenant_1",
+          status: BookingStatus.pending_payment,
+          customerId: "u1",
+          publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+          publicDepositAmountCents: 10_000,
+          publicDepositPaymentIntentId: "pi_existing",
+          stripeCustomerId: null,
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
+          estimateSnapshot: { outputJson },
+        }),
+        update: bookingUpdate,
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "h1",
+          bookingId: "bk1",
+          foId: "fo1",
+          startAt: new Date("2030-01-01T10:00:00.000Z"),
+          endAt: new Date("2030-01-01T12:00:00.000Z"),
+          expiresAt: new Date("2030-01-01T13:00:00.000Z"),
+        }),
+      },
+    } as unknown as PrismaService;
+    const stripePayments = new StripePaymentService(
+      prisma,
+      {} as PaymentReliabilityService,
+    );
+    jest.spyOn(stripePayments, "retrievePaymentIntent").mockResolvedValue({
+      id: "pi_existing",
+      status: "succeeded",
+      amount: 10_000,
+      metadata: {
+        bookingId: "bk1",
+        bookingSessionKey: "bk1",
+        holdId: "h1",
+        tenantId: "tenant_1",
+        estimateSnapshotHash: estimateHash(outputJson),
+      },
+      client_secret: "cs_existing",
+    } as never);
+    const ensureCustomer = jest.spyOn(stripePayments, "ensureStripeCustomerForUser");
+    const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
+
+    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const res = await svc.preparePublicBookingDeposit("bk1", "h1");
+
+    expect(createPi).not.toHaveBeenCalled();
+    expect(ensureCustomer).not.toHaveBeenCalled();
+    expect(res).toEqual(
+      expect.objectContaining({
+        paymentMode: "none",
+        classification: "deposit_succeeded",
+        publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+        paymentIntentId: "pi_existing",
+        alreadyCompleted: true,
+      }),
+    );
+  });
+
+  it("duplicate deposit prepare for same booking creates PaymentIntent only once", async () => {
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
+    process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+
+    const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
+    let publicDepositPaymentIntentId: string | null = null;
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockImplementation(async () => ({
+          id: "bk1",
+          tenantId: "tenant_1",
+          status: BookingStatus.pending_payment,
+          customerId: "u1",
+          publicDepositStatus: BookingPublicDepositStatus.deposit_required,
+          publicDepositAmountCents: 10_000,
+          publicDepositPaymentIntentId,
+          stripeCustomerId: "cus_x",
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: "cus_x" },
+          estimateSnapshot: { outputJson },
+        })),
+        update: jest.fn().mockImplementation(async (args: { data?: { publicDepositPaymentIntentId?: string | null } }) => {
+          if (args.data?.publicDepositPaymentIntentId !== undefined) {
+            publicDepositPaymentIntentId = args.data.publicDepositPaymentIntentId;
+          }
+          return {};
+        }),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "h1",
+          bookingId: "bk1",
+          foId: "fo1",
+          startAt: new Date("2030-01-01T10:00:00.000Z"),
+          endAt: new Date("2030-01-01T12:00:00.000Z"),
+          expiresAt: new Date("2030-01-01T13:00:00.000Z"),
+        }),
+      },
+    } as unknown as PrismaService;
+    const stripePayments = new StripePaymentService(
+      prisma,
+      {} as PaymentReliabilityService,
+    );
+    const createPi = jest
+      .spyOn(stripePayments, "createPublicBookingDepositPaymentIntent")
+      .mockResolvedValue({
+        id: "pi_new",
+        status: "requires_payment_method",
+        client_secret: "cs_new",
+      } as never);
+    const retrievePi = jest.spyOn(stripePayments, "retrievePaymentIntent").mockResolvedValue({
+      id: "pi_new",
+      status: "requires_payment_method",
+      client_secret: "cs_new",
+    } as never);
+
+    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const first = await svc.preparePublicBookingDeposit("bk1", "h1");
+    const second = await svc.preparePublicBookingDeposit("bk1", "h1");
+
+    expect(first.paymentIntentId).toBe("pi_new");
+    expect(second).toEqual(
+      expect.objectContaining({
+        paymentIntentId: "pi_new",
+        clientSecret: "cs_new",
+        alreadyExists: true,
+      }),
+    );
+    expect(createPi).toHaveBeenCalledTimes(1);
+    expect(retrievePi).toHaveBeenCalledWith("pi_new");
+  });
+
+  it("returns controlled error when existing deposit PaymentIntent cannot be retrieved", async () => {
+    process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
+    process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "bk1",
+          tenantId: "tenant_1",
+          status: BookingStatus.pending_payment,
+          customerId: "u1",
+          publicDepositStatus: BookingPublicDepositStatus.deposit_required,
+          publicDepositAmountCents: 10_000,
+          publicDepositPaymentIntentId: "pi_missing",
+          stripeCustomerId: "cus_x",
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: "cus_x" },
+          estimateSnapshot: { outputJson: JSON.stringify({ estimatedPriceCents: 27_100 }) },
+        }),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue(null),
+      },
+    } as unknown as PrismaService;
+    const stripePayments = new StripePaymentService(
+      prisma,
+      {} as PaymentReliabilityService,
+    );
+    jest
+      .spyOn(stripePayments, "retrievePaymentIntent")
+      .mockRejectedValue(new Error("No such payment_intent"));
+    const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
+
+    const svc = new PublicBookingDepositService(prisma, stripePayments);
+
+    await expect(svc.preparePublicBookingDeposit("bk1")).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_DEPOSIT_PAYMENT_INTENT_RETRIEVE_FAILED",
+        message: "Existing deposit PaymentIntent could not be retrieved",
+        paymentIntentId: "pi_missing",
+      }),
+    });
+    expect(createPi).not.toHaveBeenCalled();
   });
 
   it("creates a booking-scoped deposit before a hold exists", async () => {
