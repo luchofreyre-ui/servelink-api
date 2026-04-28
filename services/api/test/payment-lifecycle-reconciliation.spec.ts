@@ -1,4 +1,6 @@
 import { Logger } from "@nestjs/common";
+import fs from "node:fs";
+import path from "node:path";
 import {
   BookingDepositRefundStatus,
   BookingPublicDepositStatus,
@@ -8,6 +10,7 @@ import { PaymentLifecycleReconciliationCronService } from "../src/modules/billin
 import { PaymentLifecycleReconciliationService } from "../src/modules/billing/payment-lifecycle-reconciliation.service";
 import { isCronDisabledByExplicitFalse } from "../src/modules/billing/payment-lifecycle-cron-env";
 import { RemainingBalanceAuthorizationCronService } from "../src/modules/billing/remaining-balance-authorization.cron.service";
+import { RemainingBalanceAuthorizationService } from "../src/modules/bookings/payment-lifecycle/remaining-balance-authorization.service";
 import { StripePaymentService } from "../src/modules/bookings/stripe/stripe-payment.service";
 
 type RefundShape = {
@@ -16,6 +19,16 @@ type RefundShape = {
   paymentIntentId: string | null;
   chargeId: string | null;
 };
+
+function listSourceFiles(dir: string): string[] {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      return listSourceFiles(fullPath);
+    }
+    return entry.isFile() && /\.(ts|js)$/.test(entry.name) ? [fullPath] : [];
+  });
+}
 
 function makeReconciliationService(
   booking: Record<string, unknown>,
@@ -555,6 +568,72 @@ describe("payment lifecycle crons default-enabled", () => {
     expect(snapshot.lastSuccessAt).toBeNull();
   });
 
+  it("remaining balance auth cron active path retrieves deposit PI with safe expansion", async () => {
+    delete process.env.ENABLE_REMAINING_BALANCE_AUTH_CRON;
+    process.env.STRIPE_SECRET_KEY = "sk_test_x";
+    const scheduledStart = new Date(Date.now() + 2 * 60 * 60 * 1000);
+    const retrieve = jest.fn().mockResolvedValue({
+      id: "pi_deposit",
+      payment_method: "pm_card",
+    });
+    const create = jest.fn().mockResolvedValue({
+      id: "pi_remaining",
+      status: "requires_capture",
+    });
+    const prisma = {
+      booking: {
+        findMany: jest.fn().mockResolvedValue([{ id: "b1" }]),
+        findUnique: jest.fn().mockResolvedValue({
+          id: "b1",
+          status: "assigned",
+          scheduledStart,
+          publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+          remainingBalanceAfterDepositCents: 20_000,
+          remainingBalanceStatus:
+            BookingRemainingBalancePaymentStatus.balance_pending_authorization,
+          remainingBalancePaymentIntentId: null,
+          publicDepositPaymentIntentId: "pi_deposit",
+          remainingBalanceAuthorizedAt: null,
+          customerId: "u1",
+          customer: { id: "u1", email: "a@b.c", stripeCustomerId: "cus_x" },
+        }),
+        update: jest.fn().mockResolvedValue({}),
+      },
+      user: {
+        findUnique: jest.fn().mockResolvedValue({
+          email: "a@b.c",
+          stripeCustomerId: "cus_x",
+        }),
+      },
+    } as any;
+    const stripe = new StripePaymentService(prisma, {} as any);
+    (stripe as any).stripeClient = {
+      paymentIntents: { retrieve, create },
+    };
+    const authz = new RemainingBalanceAuthorizationService(prisma, stripe);
+    const cron = new RemainingBalanceAuthorizationCronService(authz);
+
+    await cron.run();
+
+    expect(retrieve).toHaveBeenCalledWith("pi_deposit", {
+      expand: ["payment_method"],
+    });
+    const invalidNestedExpand = ["latest_charge", "payment_method"].join(".");
+    expect(retrieve).not.toHaveBeenCalledWith(
+      "pi_deposit",
+      expect.objectContaining({
+        expand: expect.arrayContaining([invalidNestedExpand]),
+      }),
+    );
+    expect(create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payment_method: "pm_card",
+      }),
+      expect.any(Object),
+    );
+    expect(cron.getHealthSnapshot().lastRunAt).toEqual(expect.any(String));
+  });
+
   it("remaining balance auth cron skips when env is false", async () => {
     process.env.ENABLE_REMAINING_BALANCE_AUTH_CRON = "false";
     const authz = {
@@ -593,5 +672,17 @@ describe("payment lifecycle crons default-enabled", () => {
   it("documents shared env convention", () => {
     expect(isCronDisabledByExplicitFalse(undefined)).toBe(false);
     expect(isCronDisabledByExplicitFalse("false")).toBe(true);
+  });
+});
+
+describe("Stripe expansion source invariant", () => {
+  it("does not allow nested latest-charge payment method expansion in API source", () => {
+    const forbidden = ["latest_charge", "payment_method"].join(".");
+    const sourceRoot = path.resolve(__dirname, "../src");
+    const offenders = listSourceFiles(sourceRoot).filter((filePath) =>
+      fs.readFileSync(filePath, "utf8").includes(forbidden),
+    );
+
+    expect(offenders).toEqual([]);
   });
 });
