@@ -56,6 +56,7 @@ import {
   BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA,
   BOOKING_SCHEDULE_CONFIRM_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED,
+  BOOKING_SCHEDULE_HOLD_FAILED_HINT,
   BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_TITLE,
   BOOKING_SCHEDULE_SLOTS_TITLE,
   BOOKING_SCHEDULE_SUMMARY_TITLE,
@@ -83,7 +84,12 @@ import {
   markBookingFlowFreshStartRequested,
 } from "./bookingUrlState";
 import { BookingFlowClient } from "./BookingFlowClient";
-import { PublicBookingPaymentRequiredError } from "./bookingDirectionIntakeApi";
+import { BookingStepSchedule } from "./BookingStepSchedule";
+import { defaultBookingFlowState } from "./bookingFlowData";
+import {
+  PublicBookingApiError,
+  PublicBookingPaymentRequiredError,
+} from "./bookingDirectionIntakeApi";
 
 const TEST_REVIEW_LOC_QUERY =
   "&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA";
@@ -364,6 +370,18 @@ async function submitFromReviewToSchedule() {
   await waitFor(() =>
     expect(screen.getByTestId("booking-schedule-team-section")).toBeInTheDocument(),
   );
+}
+
+async function selectNorthTeamAndFirstSlot() {
+  fireEvent.click(screen.getByText("North Team"));
+  const slotSection = await screen.findByTestId("booking-schedule-slot-section");
+  const confirm = screen.getByTestId("booking-schedule-confirm-booking");
+  const slotBtn = within(slotSection)
+    .getAllByRole("button")
+    .find((b) => b !== confirm)!;
+  fireEvent.click(slotBtn);
+  await waitFor(() => expect(confirm).not.toBeDisabled());
+  return { confirm };
 }
 
 function reviewHomeDetailsSection() {
@@ -676,30 +694,32 @@ describe("BookingFlowClient", () => {
       );
     });
 
-    it("hold failure shows copy, keeps selection, and refetches team windows", async () => {
+    it("hold slot-not-available clears selection and refreshes availability", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
-      postPublicBookingHoldMock.mockRejectedValueOnce(new Error("slot gone"));
+      postPublicBookingHoldMock.mockRejectedValueOnce(
+        new PublicBookingApiError({
+          code: "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE",
+          status: 400,
+          message: BOOKING_SCHEDULE_HOLD_FAILED,
+        }),
+      );
       render(<BookingFlowClient />);
       await submitFromReviewToSchedule();
-      fireEvent.click(screen.getByText("North Team"));
-      await screen.findByTestId("booking-schedule-slot-section");
-      const confirmEl = screen.getByTestId("booking-schedule-confirm-booking");
-      const slotSection = screen.getByTestId("booking-schedule-slot-section");
-      const slotBtn = within(slotSection)
-        .getAllByRole("button")
-        .find((b) => b !== confirmEl)!;
-      fireEvent.click(slotBtn);
-      await waitFor(() => expect(confirmEl).not.toBeDisabled());
+      const { confirm } = await selectNorthTeamAndFirstSlot();
       const availabilityCallsBefore = postPublicBookingAvailabilityMock.mock.calls.filter(
         (c) => (c[0] as { foId?: string }).foId === "fo_test_pick",
       ).length;
-      fireEvent.click(confirmEl);
+      fireEvent.click(confirm);
       await waitFor(() =>
         expect(screen.getByTestId("booking-schedule-commit-error")).toHaveTextContent(
           BOOKING_SCHEDULE_HOLD_FAILED,
         ),
       );
+      expect(screen.getByText(BOOKING_SCHEDULE_HOLD_FAILED_HINT)).toBeInTheDocument();
+      expect(screen.queryByTestId("booking-schedule-summary")).not.toBeInTheDocument();
+      await waitFor(() => expect(confirm).toBeDisabled());
+      expect(postPublicBookingConfirmMock).not.toHaveBeenCalled();
       expect(emitBookingFunnelEventMock).toHaveBeenCalledWith(
         "hold_failed",
         expect.objectContaining({ bookingId: "bk_test" }),
@@ -710,6 +730,143 @@ describe("BookingFlowClient", () => {
         ).length;
         expect(after).toBeGreaterThan(availabilityCallsBefore);
       });
+    });
+
+    it("clears selected slot when refreshed availability no longer contains its slotId", async () => {
+      let teamAvailabilityCalls = 0;
+      postPublicBookingAvailabilityMock.mockImplementation(async (body) => {
+        if (!body.foId) return defaultPostPublicBookingAvailability(body);
+        teamAvailabilityCalls += 1;
+        if (teamAvailabilityCalls === 1) return defaultPostPublicBookingAvailability(body);
+        return {
+          kind: "public_booking_team_availability" as const,
+          bookingId: body.bookingId,
+          selectedTeam: { id: body.foId, displayName: "North Team" },
+          windows: [
+            {
+              slotId: `server-slot:${body.foId}:2030-04-15T18:00:00.000Z`,
+              foId: body.foId,
+              foDisplayName: "North Team",
+              startAt: "2030-04-15T18:00:00.000Z",
+              endAt: "2030-04-15T20:00:00.000Z",
+              durationMinutes: 120,
+            },
+          ],
+        };
+      });
+      postPublicBookingHoldMock.mockRejectedValueOnce(new Error("transient hold failure"));
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      const { confirm } = await selectNorthTeamAndFirstSlot();
+      fireEvent.click(confirm);
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-schedule-commit-error")).toHaveTextContent(
+          BOOKING_SCHEDULE_HOLD_FAILED,
+        ),
+      );
+      await waitFor(() => expect(screen.queryByTestId("booking-schedule-summary")).toBeNull());
+      expect(confirm).toBeDisabled();
+      expect(screen.getByText(BOOKING_SCHEDULE_CHOOSE_SLOT_HINT)).toBeInTheDocument();
+    });
+
+    it("invalid signed slotId response does not proceed", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingHoldMock.mockRejectedValueOnce(
+        new PublicBookingApiError({
+          code: "PUBLIC_BOOKING_INVALID_SLOT_ID",
+          status: 400,
+          message: BOOKING_SCHEDULE_HOLD_FAILED,
+        }),
+      );
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      const { confirm } = await selectNorthTeamAndFirstSlot();
+      const depositPrepareCallsBefore = postPublicBookingDepositPrepareMock.mock.calls.length;
+      fireEvent.click(confirm);
+      await waitFor(() => expect(confirm).toBeDisabled());
+      expect(screen.queryByTestId("booking-schedule-summary")).not.toBeInTheDocument();
+      expect(postPublicBookingDepositPrepareMock).toHaveBeenCalledTimes(
+        depositPrepareCallsBefore,
+      );
+      expect(postPublicBookingConfirmMock).not.toHaveBeenCalled();
+      await waitFor(() => {
+        const after = postPublicBookingAvailabilityMock.mock.calls.filter(
+          (c) => (c[0] as { foId?: string }).foId === "fo_test_pick",
+        ).length;
+        expect(after).toBeGreaterThan(1);
+      });
+    });
+
+    it("restored selected slot is not trusted unless present in latest availability", () => {
+      render(
+        <BookingStepSchedule
+          state={{
+            ...defaultBookingFlowState,
+            step: "schedule",
+            schedulingBookingId: "bk_test",
+            selectedTeamId: "fo_test_pick",
+            selectedTeamDisplayName: "North Team",
+            selectedSlotId: "stale-slot-id",
+            selectedSlotStart: "2030-04-15T14:00:00.000Z",
+            selectedSlotEnd: "2030-04-15T16:00:00.000Z",
+            availableTeams: [
+              { id: "fo_test_pick", displayName: "North Team", isRecommended: true },
+            ],
+            availableWindows: [
+              {
+                slotId: "current-slot-id",
+                startAt: "2030-04-15T18:00:00.000Z",
+                endAt: "2030-04-15T20:00:00.000Z",
+                durationMinutes: 120,
+              },
+            ],
+          }}
+          serviceId={defaultBookingFlowState.serviceId}
+          teamsLoading={false}
+          windowsLoading={false}
+          confirmLoading={false}
+          surfaceError={null}
+          teamsEmptyState="none"
+          teamsLoadSlowHint={false}
+          windowsLoadSlowHint={false}
+          slotsEmptyForSelectedTeam={false}
+          scheduleCommitError={BOOKING_SCHEDULE_HOLD_FAILED}
+          scheduleCommitPhase="hold_failed"
+          hasAlternateTeamToSwitchTo={false}
+          onSelectTeam={vi.fn()}
+          onSelectSlot={vi.fn()}
+          onConfirmArrival={vi.fn()}
+          onAdjustScheduleDetails={vi.fn()}
+          onContinueManualFollowUp={vi.fn()}
+          onBackToReviewFromSchedule={vi.fn()}
+          onSwitchToAlternateTeam={vi.fn()}
+          onRetryConfirmBooking={vi.fn()}
+          onChooseDifferentTimeAfterConfirmFail={vi.fn()}
+        />,
+      );
+      expect(screen.queryByTestId("booking-schedule-summary")).not.toBeInTheDocument();
+      expect(screen.getByTestId("booking-schedule-confirm-booking")).toBeDisabled();
+      expect(screen.getByText(BOOKING_SCHEDULE_CHOOSE_SLOT_HINT)).toBeInTheDocument();
+    });
+
+    it("current slotId remains selected after availability refresh when still present", async () => {
+      postPublicBookingHoldMock.mockRejectedValueOnce(new Error("transient hold failure"));
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      const { confirm } = await selectNorthTeamAndFirstSlot();
+      fireEvent.click(confirm);
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-schedule-commit-error")).toHaveTextContent(
+          BOOKING_SCHEDULE_HOLD_FAILED,
+        ),
+      );
+      await waitFor(() => expect(screen.getByTestId("booking-schedule-summary")).toBeInTheDocument());
+      expect(confirm).not.toBeDisabled();
     });
 
     it("confirm failure shows retry and second confirm succeeds", async () => {

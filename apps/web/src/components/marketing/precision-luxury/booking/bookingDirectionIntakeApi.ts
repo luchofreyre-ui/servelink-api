@@ -82,6 +82,18 @@ export class PublicBookingDepositProcessingError extends Error {
   }
 }
 
+export class PublicBookingApiError extends Error {
+  readonly code: string;
+  readonly status: number;
+
+  constructor(args: { code: string; message: string; status: number }) {
+    super(args.message);
+    this.name = "PublicBookingApiError";
+    this.code = args.code;
+    this.status = args.status;
+  }
+}
+
 function customerFacingMessageFromKnownCode(code: string): string | null {
   const map: Record<string, string> = {
     ESTIMATE_EXECUTION_FAILED:
@@ -247,6 +259,17 @@ async function throwIfResponseNotOk(
     });
   if (publicBookingDepositRequired) {
     throw new PublicBookingPaymentRequiredError(publicBookingDepositRequired);
+  }
+  if (code) {
+    throw new PublicBookingApiError({
+      code,
+      status: response.status,
+      message:
+        message ||
+        (kind === "preview"
+          ? "We couldn’t load a price preview right now. You can still continue."
+          : "We couldn’t complete that request as entered. Please check your details and try again."),
+    });
   }
   if (
     message &&
