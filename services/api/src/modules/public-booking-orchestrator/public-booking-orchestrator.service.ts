@@ -122,6 +122,14 @@ export class PublicBookingOrchestratorService {
     throw new BadRequestException({ code, message });
   }
 
+  private throwPastPublicSlot(): never {
+    throw new ConflictException({
+      code: "PUBLIC_BOOKING_SLOT_IN_PAST",
+      message:
+        "Selected arrival time is no longer available. Please choose a future time.",
+    });
+  }
+
   private async loadBookingForOrchestration(
     bookingId: string,
   ): Promise<BookingForOrchestration | null> {
@@ -1109,6 +1117,14 @@ export class PublicBookingOrchestratorService {
         };
       }
       throw new NotFoundException("PUBLIC_BOOKING_HOLD_NOT_FOUND");
+    }
+
+    const now = new Date();
+    if (hold.expiresAt.getTime() <= now.getTime()) {
+      throw new ConflictException("BOOKING_SLOT_HOLD_EXPIRED");
+    }
+    if (hold.startAt.getTime() <= now.getTime()) {
+      this.throwPastPublicSlot();
     }
 
     await this.publicBookingDeposit.ensurePublicDepositResolvedBeforeConfirm({

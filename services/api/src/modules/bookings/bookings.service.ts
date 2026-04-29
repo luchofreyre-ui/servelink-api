@@ -608,8 +608,17 @@ export class BookingsService {
           throw new NotFoundException("BOOKING_SLOT_HOLD_NOT_FOUND");
         }
 
-        if (hold.expiresAt.getTime() <= Date.now()) {
+        const now = new Date();
+        if (hold.expiresAt.getTime() <= now.getTime()) {
           throw new ConflictException("BOOKING_SLOT_HOLD_EXPIRED");
+        }
+
+        if (hold.startAt.getTime() <= now.getTime()) {
+          throw new ConflictException({
+            code: "PUBLIC_BOOKING_SLOT_IN_PAST",
+            message:
+              "Selected arrival time is no longer available. Please choose a future time.",
+          });
         }
 
         const estimatedHours = Number(current.estimatedHours ?? 0);

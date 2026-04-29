@@ -11,6 +11,10 @@ describe("slot availability and holds — wall-clock existing booking overlap", 
   const bookingStart = new Date("2035-06-04T19:00:00.000Z");
   const wallEnd = new Date(bookingStart.getTime() + 139 * 60 * 1000);
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   const existingBooking = {
     id: "booking-existing",
     scheduledStart: bookingStart,
@@ -50,6 +54,72 @@ describe("slot availability and holds — wall-clock existing booking overlap", 
         },
       }),
     );
+  });
+
+  it("filters past candidate windows from availability", async () => {
+    const now = new Date("2026-04-28T23:50:00.000Z");
+    jest.useFakeTimers().setSystemTime(now);
+    const db = {
+      booking: {
+        findMany: jest.fn().mockResolvedValue([]),
+      },
+      bookingSlotHold: {
+        findMany: jest.fn().mockResolvedValue([]),
+      },
+    } as unknown as PrismaService;
+    const service = new SlotAvailabilityService(db);
+
+    const windows = await service.listAvailableWindows({
+      foId: "fo-stale-filter",
+      rangeStart: new Date("2026-04-27T00:00:00.000Z"),
+      rangeEnd: new Date("2026-04-29T03:00:00.000Z"),
+      durationMinutes: 60,
+      slotIntervalMinutes: 30,
+    });
+
+    expect(windows.length).toBeGreaterThan(0);
+    expect(windows.every((w) => w.startAt.getTime() > now.getTime())).toBe(true);
+    expect(
+      windows.some((w) => w.startAt.toISOString().startsWith("2026-04-27")),
+    ).toBe(false);
+  });
+
+  it("rejects hold creation for a past start before mutations", async () => {
+    const now = new Date("2026-04-28T23:50:00.000Z");
+    jest.useFakeTimers().setSystemTime(now);
+    const tx = {
+      booking: {
+        findMany: jest.fn(),
+      },
+      bookingSlotHold: {
+        deleteMany: jest.fn(),
+        create: jest.fn(),
+      },
+    };
+    const db = {
+      $transaction: jest.fn((fn: (txArg: typeof tx) => Promise<unknown>) => fn(tx)),
+    } as unknown as PrismaService;
+    const fo = {
+      getEligibility: jest.fn(),
+    } as unknown as FoService;
+    const service = new SlotHoldsService(db, fo);
+
+    await expect(
+      service.createHold({
+        bookingId: "booking-new",
+        foId,
+        startAt: new Date("2026-04-28T23:50:00.000Z"),
+        endAt: new Date("2026-04-29T00:50:00.000Z"),
+      }),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_SLOT_IN_PAST",
+      }),
+    });
+
+    expect(fo.getEligibility).not.toHaveBeenCalled();
+    expect((db as any).$transaction).not.toHaveBeenCalled();
+    expect(tx.bookingSlotHold.create).not.toHaveBeenCalled();
   });
 
   it("allows a hold adjacent to the existing booking wall-clock end", async () => {
