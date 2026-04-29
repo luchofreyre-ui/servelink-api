@@ -38,6 +38,10 @@ import {
   computePublicBookingConfirmationScheduledEndIso,
   computePublicHoldConfirmScheduledEndIso,
 } from "../bookings/public-booking-confirmation-scheduled-end";
+import {
+  decodePublicSlotId,
+  encodePublicSlotId,
+} from "../slot-holds/public-slot-id";
 
 const MAX_FO_CANDIDATES = 8;
 const MAX_WINDOWS_TOTAL = 60;
@@ -636,10 +640,17 @@ export class PublicBookingOrchestratorService {
     });
 
     const windows: PublicBookingWindow[] = rawWindows.map((w) => ({
+      slotId: encodePublicSlotId({
+        foId: foIdParam,
+        startAt: w.startAt,
+        endAt: w.endAt,
+        durationMinutes,
+      }),
       foId: foIdParam,
       foDisplayName: displayName,
       startAt: w.startAt.toISOString(),
       endAt: w.endAt.toISOString(),
+      durationMinutes,
     }));
 
     const capped = windows.slice(0, MAX_WINDOWS_TOTAL);
@@ -695,6 +706,7 @@ export class PublicBookingOrchestratorService {
     startAt: Date;
     endAt: Date;
     durationMinutes: number;
+    slotId?: string | null;
   }) {
     /**
      * Match the default range used when the web client loads slots:
@@ -712,15 +724,25 @@ export class PublicBookingOrchestratorService {
       rangeEnd,
       durationMinutes: args.durationMinutes,
     });
-    const match = windows.some(
-      (w) =>
+    const match = windows.some((w) => {
+      const slotId = encodePublicSlotId({
+        foId: args.foId,
+        startAt: w.startAt,
+        endAt: w.endAt,
+        durationMinutes: args.durationMinutes,
+      });
+      if (args.slotId?.trim()) {
+        return slotId === args.slotId.trim();
+      }
+      return (
         w.startAt.getTime() === args.startAt.getTime() &&
-        w.endAt.getTime() === args.endAt.getTime(),
-    );
+        w.endAt.getTime() === args.endAt.getTime()
+      );
+    });
     if (!match) {
       this.throwOrchestrator(
         "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE",
-        "The requested window is not currently offered as available for this franchise owner.",
+        "The requested window is not currently offered as available.",
       );
     }
   }
@@ -991,8 +1013,28 @@ export class PublicBookingOrchestratorService {
 
     this.assertSchedulableForAvailability(booking);
 
+    const decodedSlot = dto.slotId?.trim()
+      ? decodePublicSlotId(dto.slotId)
+      : null;
+    if (dto.slotId?.trim() && !decodedSlot) {
+      this.throwOrchestrator(
+        "PUBLIC_BOOKING_INVALID_SLOT_ID",
+        "Selected arrival time is no longer valid. Please choose another time.",
+      );
+    }
+
+    const requestedFoId = decodedSlot?.foId ?? dto.foId?.trim() ?? "";
+    const requestedStartAt = decodedSlot?.startAt ?? dto.startAt;
+    const requestedEndAt = decodedSlot?.endAt ?? dto.endAt;
+    if (!requestedFoId || !requestedStartAt || !requestedEndAt) {
+      this.throwOrchestrator(
+        "PUBLIC_BOOKING_INVALID_SLOT_ID",
+        "Selected arrival time is no longer valid. Please choose another time.",
+      );
+    }
+
     const foIds = await this.resolveFoCandidateIds(booking);
-    if (!foIds.includes(dto.foId)) {
+    if (!foIds.includes(requestedFoId)) {
       this.throwOrchestrator(
         "PUBLIC_BOOKING_FO_NOT_ALLOWED",
         "The selected franchise owner is not a candidate for this booking.",
@@ -1009,11 +1051,11 @@ export class PublicBookingOrchestratorService {
         : null;
     const durationMinutes = await this.computeSlotDurationMinutesForFo(
       booking,
-      dto.foId.trim(),
+      requestedFoId,
       jobMatchHold,
     );
-    const startAt = new Date(dto.startAt);
-    const endAt = new Date(dto.endAt);
+    const startAt = new Date(requestedStartAt);
+    const endAt = new Date(requestedEndAt);
     if (!Number.isFinite(startAt.getTime()) || !Number.isFinite(endAt.getTime())) {
       this.throwOrchestrator(
         "PUBLIC_BOOKING_SLOT_TIME_INVALID",
@@ -1030,25 +1072,32 @@ export class PublicBookingOrchestratorService {
         `Hold duration must match the slot model for this team (${durationMinutes} minutes).`,
       );
     }
+    if (decodedSlot && decodedSlot.durationMinutes !== durationMinutes) {
+      this.throwOrchestrator(
+        "PUBLIC_BOOKING_SLOT_DURATION_MISMATCH",
+        `Hold duration must match the slot model for this team (${durationMinutes} minutes).`,
+      );
+    }
 
     await this.assertWindowMatchesAvailability({
       bookingId: dto.bookingId,
-      foId: dto.foId,
+      foId: requestedFoId,
       startAt,
       endAt,
       durationMinutes,
+      slotId: dto.slotId ?? null,
     });
 
     const hold = await this.slotHolds.createHold({
       bookingId: dto.bookingId,
-      foId: dto.foId,
-      startAt: dto.startAt,
-      endAt: dto.endAt,
+      foId: requestedFoId,
+      startAt,
+      endAt,
     });
 
     await this.prisma.booking.update({
       where: { id: dto.bookingId },
-      data: { preferredFoId: dto.foId.trim() },
+      data: { preferredFoId: requestedFoId },
     });
 
     return {

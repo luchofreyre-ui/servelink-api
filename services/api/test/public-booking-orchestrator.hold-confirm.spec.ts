@@ -7,6 +7,10 @@ import { SlotAvailabilityService } from "../src/modules/slot-holds/slot-availabi
 import { SlotHoldsService } from "../src/modules/slot-holds/slot-holds.service";
 import { PublicBookingOrchestratorService } from "../src/modules/public-booking-orchestrator/public-booking-orchestrator.service";
 import type { PublicBookingDepositService } from "../src/modules/public-booking-orchestrator/public-booking-deposit.service";
+import {
+  decodePublicSlotId,
+  encodePublicSlotId,
+} from "../src/modules/slot-holds/public-slot-id";
 
 const noopPublicDeposit = {
   ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
@@ -108,13 +112,199 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
     expect(createHold).toHaveBeenCalledWith({
       bookingId: "bk_hold",
       foId: "fo_a",
-      startAt: START,
-      endAt: END,
+      startAt: start,
+      endAt: end,
     });
     expect(bookingUpdate).toHaveBeenCalledWith({
       where: { id: "bk_hold" },
       data: { preferredFoId: "fo_a" },
     });
+  });
+
+  it("availability: returns deterministic slotId for each public window", async () => {
+    const start = new Date(START);
+    const end = new Date("2030-06-01T16:00:00.000Z");
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          ...schedulableHoldBooking(),
+          foId: "fo_a",
+        }),
+      },
+      franchiseOwner: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "fo_a",
+          displayName: "North Team",
+          teamSize: null,
+          minCrewSize: null,
+          preferredCrewSize: null,
+          maxCrewSize: null,
+        }),
+      },
+    } as unknown as PrismaService;
+    const slotAvailability = {
+      listAvailableWindows: jest.fn().mockResolvedValue([{ startAt: start, endAt: end }]),
+    } as unknown as SlotAvailabilityService;
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      slotAvailability,
+      {} as SlotHoldsService,
+      {} as BookingsService,
+      {
+        getEligibility: jest.fn().mockResolvedValue({ canAcceptBooking: true }),
+        matchFOs: jest.fn(),
+      } as unknown as FoService,
+      noopPublicDeposit,
+    );
+
+    const res = await svc.availability({ bookingId: "bk_hold", foId: "fo_a" });
+
+    expect(res.kind).toBe("public_booking_team_availability");
+    if (res.kind !== "public_booking_team_availability") {
+      throw new Error("unexpected kind");
+    }
+    expect(res.windows[0]).toEqual(
+      expect.objectContaining({
+        slotId: expect.any(String),
+        foId: "fo_a",
+        startAt: START,
+        endAt: end.toISOString(),
+        durationMinutes: 120,
+      }),
+    );
+    expect(decodePublicSlotId(res.windows[0].slotId)).toEqual({
+      foId: "fo_a",
+      startAt: START,
+      endAt: end.toISOString(),
+      durationMinutes: 120,
+    });
+  });
+
+  it("createHold: accepts exact server slotId", async () => {
+    const start = new Date(START);
+    const end = new Date(END);
+    const slotId = encodePublicSlotId({
+      foId: "fo_a",
+      startAt: start,
+      endAt: end,
+      durationMinutes: 60,
+    });
+    const createHold = jest.fn().mockResolvedValue({
+      id: "hold_1",
+      expiresAt: new Date("2030-06-01T16:00:00.000Z"),
+      foId: "fo_a",
+      startAt: start,
+      endAt: end,
+    });
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+        update: jest.fn().mockResolvedValue({}),
+      },
+      franchiseOwner: {
+        findUnique: jest
+          .fn()
+          .mockResolvedValue(franchiseOwnerRowForPublicHoldTests()),
+      },
+    } as unknown as PrismaService;
+    const slotAvailability = {
+      listAvailableWindows: jest.fn().mockResolvedValue([{ startAt: start, endAt: end }]),
+    } as unknown as SlotAvailabilityService;
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      slotAvailability,
+      { createHold } as unknown as SlotHoldsService,
+      {} as BookingsService,
+      {
+        getEligibility: jest.fn().mockResolvedValue({ canAcceptBooking: true }),
+        matchFOs: jest.fn(),
+      } as unknown as FoService,
+      noopPublicDeposit,
+    );
+
+    const res = await svc.createHold({ bookingId: "bk_hold", slotId });
+
+    expect(res.kind).toBe("public_booking_hold");
+    expect(createHold).toHaveBeenCalledWith({
+      bookingId: "bk_hold",
+      foId: "fo_a",
+      startAt: start,
+      endAt: end,
+    });
+  });
+
+  it("createHold: rejects invalid slotId without creating hold", async () => {
+    const createHold = jest.fn();
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+      },
+    } as unknown as PrismaService;
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      {} as SlotAvailabilityService,
+      { createHold } as unknown as SlotHoldsService,
+      {} as BookingsService,
+      {} as FoService,
+      noopPublicDeposit,
+    );
+
+    await expect(
+      svc.createHold({ bookingId: "bk_hold", slotId: "not-base64-json" }),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_INVALID_SLOT_ID",
+      }),
+    });
+    expect(createHold).not.toHaveBeenCalled();
+  });
+
+  it("createHold: rejects stale slotId that is no longer offered", async () => {
+    const createHold = jest.fn();
+    const slotId = encodePublicSlotId({
+      foId: "fo_a",
+      startAt: START,
+      endAt: END,
+      durationMinutes: 60,
+    });
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+      },
+      franchiseOwner: {
+        findUnique: jest
+          .fn()
+          .mockResolvedValue(franchiseOwnerRowForPublicHoldTests()),
+      },
+    } as unknown as PrismaService;
+    const slotAvailability = {
+      listAvailableWindows: jest.fn().mockResolvedValue([
+        {
+          startAt: new Date("2030-06-01T16:00:00.000Z"),
+          endAt: new Date("2030-06-01T17:00:00.000Z"),
+        },
+      ]),
+    } as unknown as SlotAvailabilityService;
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      slotAvailability,
+      { createHold } as unknown as SlotHoldsService,
+      {} as BookingsService,
+      {
+        getEligibility: jest.fn().mockResolvedValue({ canAcceptBooking: true }),
+        matchFOs: jest.fn(),
+      } as unknown as FoService,
+      noopPublicDeposit,
+    );
+
+    await expect(
+      svc.createHold({ bookingId: "bk_hold", slotId }),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE",
+      }),
+    });
+    expect(createHold).not.toHaveBeenCalled();
   });
 
   it("createHold: rejects foId not in candidate set and does not create hold", async () => {

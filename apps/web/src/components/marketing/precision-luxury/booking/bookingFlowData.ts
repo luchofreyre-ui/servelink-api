@@ -74,6 +74,7 @@ export const defaultBookingFlowState: BookingFlowState = {
   availableWindows: [],
   selectedTeamId: "",
   selectedTeamDisplayName: "",
+  selectedSlotId: "",
   selectedSlotStart: "",
   selectedSlotEnd: "",
   publicHoldId: "",

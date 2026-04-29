@@ -349,10 +349,12 @@ export type PublicBookingTeamOptionsResponse = {
 };
 
 export type PublicBookingWindowDto = {
+  slotId: string;
   foId: string;
   foDisplayName: string | null;
   startAt: string;
   endAt: string;
+  durationMinutes?: number;
 };
 
 export type PublicBookingTeamAvailabilityResponse = {
@@ -516,6 +518,7 @@ export async function postPublicBookingAvailability(body: {
 
 export async function postPublicBookingHold(body: {
   bookingId: string;
+  slotId?: string;
   foId: string;
   startAt: string;
   endAt: string;
