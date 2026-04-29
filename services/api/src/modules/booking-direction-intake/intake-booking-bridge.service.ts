@@ -19,6 +19,8 @@ import {
   EstimatorExecutionError,
   EstimatorInputValidationError,
 } from "../estimate/errors/estimator.errors";
+import { EstimateEngineV2Service } from "../estimate/estimate-engine-v2.service";
+import type { EstimateV2Output } from "../estimate/estimate-engine-v2.types";
 import { EstimatorService } from "../estimate/estimator.service";
 import { BookingDirectionIntakeService } from "./booking-direction-intake.service";
 import type { CreateBookingDirectionIntakeDto } from "./dto/create-booking-direction-intake.dto";
@@ -95,6 +97,8 @@ export type IntakeSubmitSuccess = {
     durationMinutes: number;
     confidence: number;
   };
+  estimateVersion: "estimate_engine_v2_core_v1";
+  estimateV2: EstimateV2Output;
   /** Present when estimate included a deep clean program breakdown. */
   deepCleanProgram: DeepCleanProgramSubmitDisplay | null;
   bookingError: null;
@@ -119,6 +123,8 @@ export type IntakeEstimatePreviewResponse = {
     durationMinutes: number;
     confidence: number;
   };
+  estimateVersion: "estimate_engine_v2_core_v1";
+  estimateV2: EstimateV2Output;
   deepCleanProgram: DeepCleanProgramSubmitDisplay | null;
 };
 
@@ -132,6 +138,7 @@ export class IntakeBookingBridgeService {
     private readonly bookings: BookingsService,
     private readonly config: ConfigService,
     private readonly estimator: EstimatorService,
+    private readonly estimateEngineV2: EstimateEngineV2Service,
     private readonly auth: AuthService,
     private readonly geocoding: GeocodingService,
   ) {}
@@ -229,6 +236,7 @@ export class IntakeBookingBridgeService {
     const deepCleanProgram = result.deepCleanProgram
       ? mapDeepCleanProgramForSubmitResponse(result.deepCleanProgram)
       : null;
+    const estimateV2 = this.estimateEngineV2.estimateV2(estimateInput);
 
     return {
       kind: "booking_direction_estimate_preview",
@@ -240,6 +248,8 @@ export class IntakeBookingBridgeService {
         ),
         confidence: result.confidence,
       },
+      estimateVersion: estimateV2.snapshotVersion,
+      estimateV2,
       deepCleanProgram,
     };
   }
@@ -414,6 +424,7 @@ export class IntakeBookingBridgeService {
       const deepCleanProgram = estimate.deepCleanProgram
         ? mapDeepCleanProgramForSubmitResponse(estimate.deepCleanProgram)
         : null;
+      const estimateV2 = this.estimateEngineV2.estimateV2(estimateInput);
 
       const schedulableRow = await this.prisma.booking.findUnique({
         where: { id: booking.id },
@@ -445,6 +456,8 @@ export class IntakeBookingBridgeService {
           ),
           confidence: estimate.confidence,
         },
+        estimateVersion: estimateV2.snapshotVersion,
+        estimateV2,
         deepCleanProgram,
         bookingError: null,
       };

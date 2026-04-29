@@ -330,8 +330,9 @@ export function sanitizePublicIntakeEstimateFactors(
     return {
       ...base,
       petShedding:
-        petSheddingFromImpact ??
-        pick(merged.petShedding, ESTIMATE_PET_SHEDDING, "medium"),
+        merged.petShedding != null
+          ? pick(merged.petShedding, ESTIMATE_PET_SHEDDING, "medium")
+          : (petSheddingFromImpact ?? "medium"),
     };
   }
 
@@ -364,6 +365,9 @@ export function resolveEstimateFactorsForPublicIntake(
 
   if (merged.petPresence !== "none" && merged.petShedding == null) {
     merged.petShedding = "medium";
+  }
+  if (partial.petImpact == null && merged.petPresence !== "none") {
+    merged.petImpact = merged.petPresence === "multiple" ? "heavy" : "light";
   }
 
   return sanitizePublicIntakeEstimateFactors(merged);

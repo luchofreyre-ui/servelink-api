@@ -6,12 +6,16 @@ import {
   HttpStatus,
   Post,
 } from "@nestjs/common";
+import { EstimateEngineV2Service } from "./estimate-engine-v2.service";
 import type { EstimateInput } from "./estimator.service";
 import { EstimatorService } from "./estimator.service";
 
 @Controller("/api/v1/estimation")
 export class EstimatePreviewController {
-  constructor(private readonly estimator: EstimatorService) {}
+  constructor(
+    private readonly estimator: EstimatorService,
+    private readonly estimateEngineV2: EstimateEngineV2Service,
+  ) {}
 
   /**
    * Stateless estimate preview — does not persist bookings or snapshots.
@@ -25,8 +29,11 @@ export class EstimatePreviewController {
 
     try {
       const result = await this.estimator.estimate(body as EstimateInput);
+      const estimateV2 = this.estimateEngineV2.estimateV2(body as EstimateInput);
       return {
         kind: "estimate_preview" as const,
+        estimateVersion: estimateV2.snapshotVersion,
+        estimateV2,
         estimatedPriceCents: result.estimatedPriceCents,
         estimatedDurationMinutes: result.estimatedDurationMinutes,
         confidence: result.confidence,
