@@ -1,4 +1,4 @@
-import { HttpException } from "@nestjs/common";
+import { HttpException, Logger } from "@nestjs/common";
 import { createHash } from "node:crypto";
 import { BookingPublicDepositStatus, BookingStatus, Prisma } from "@prisma/client";
 import { PrismaService } from "../src/prisma";
@@ -38,6 +38,7 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
     process.env.PUBLIC_BOOKING_SKIP_DEPOSIT_AT_CONFIRM = OLD_SKIP;
     process.env.PUBLIC_BOOKING_DEPOSIT_MODE = OLD_DEPOSIT_MODE;
     process.env.STRIPE_SECRET_KEY = OLD_STRIPE;
+    jest.restoreAllMocks();
   });
 
   it("returns paymentMode none when deposit mode is bypass", async () => {
@@ -898,8 +899,10 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
   });
 
   it("returns show_error when existing deposit PaymentIntent cannot be retrieved", async () => {
+    const logSpy = jest.spyOn(Logger.prototype, "log").mockImplementation(() => undefined);
     process.env.PUBLIC_BOOKING_DEPOSIT_MODE = "required";
     process.env.STRIPE_SECRET_KEY = "sk_test_mock";
+    const anomalyCreate = jest.fn().mockResolvedValue({});
 
     const prisma = {
       booking: {
@@ -919,6 +922,7 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       bookingSlotHold: {
         findUnique: jest.fn().mockResolvedValue(null),
       },
+      paymentAnomaly: { create: anomalyCreate },
     } as unknown as PrismaService;
     const stripePayments = new StripePaymentService(
       prisma,
@@ -942,6 +946,28 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       }),
     );
     expect(createPi).not.toHaveBeenCalled();
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        kind: "public_booking_lifecycle",
+        event: "deposit_prepare_result",
+        bookingId: "bk1",
+        nextAction: "show_error",
+        paymentIntentIdPresent: true,
+      }),
+    );
+    expect(anomalyCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          bookingId: "bk1",
+          kind: "public_booking_deposit_failed",
+          details: expect.objectContaining({
+            code: "PUBLIC_BOOKING_DEPOSIT_PAYMENT_INTENT_RETRIEVE_FAILED",
+            stage: "payment_intent_retrieve_failed",
+            nextAction: "show_error",
+          }),
+        }),
+      }),
+    );
   });
 
   it("creates a booking-scoped deposit before a hold exists", async () => {

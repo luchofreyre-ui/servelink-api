@@ -1,5 +1,5 @@
 import { BookingRecoveryStatus, BookingStatus } from "@prisma/client";
-import { BadRequestException, ConflictException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Logger, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../src/prisma";
 import { BookingsService } from "../src/modules/bookings/bookings.service";
 import { FoService } from "../src/modules/fo/fo.service";
@@ -72,6 +72,7 @@ function schedulableHoldBooking() {
 describe("PublicBookingOrchestratorService — public hold + confirm", () => {
   afterEach(() => {
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
   it("createHold: happy path delegates to slot holds and returns public hold shape", async () => {
@@ -193,12 +194,14 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
         durationMinutes: 120,
       }),
     );
-    expect(decodePublicSlotId(res.windows[0].slotId)).toEqual({
+    expect(decodePublicSlotId(res.windows[0].slotId)).toEqual(expect.objectContaining({
       foId: "fo_a",
       startAt: START,
       endAt: end.toISOString(),
       durationMinutes: 120,
-    });
+      issuedAt: expect.any(String),
+      expiresAt: expect.any(String),
+    }));
     const envelope = decodeSlotEnvelope(res.windows[0].slotId);
     expect(envelope).toEqual(
       expect.objectContaining({
@@ -208,8 +211,102 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
           startAt: START,
           endAt: end.toISOString(),
           durationMinutes: 120,
+          issuedAt: expect.any(String),
+          expiresAt: expect.any(String),
         }),
         sig: expect.any(String),
+      }),
+    );
+  });
+
+  it("slotId: decodes before expiration and rejects after expiration", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2030-06-01T13:00:00.000Z"));
+    const slotId = encodePublicSlotId({
+      foId: "fo_a",
+      startAt: START,
+      endAt: END,
+      durationMinutes: 60,
+    });
+
+    expect(decodePublicSlotId(slotId)).toEqual(
+      expect.objectContaining({
+        foId: "fo_a",
+        startAt: START,
+        endAt: END,
+        durationMinutes: 60,
+        issuedAt: "2030-06-01T13:00:00.000Z",
+        expiresAt: "2030-06-01T13:05:00.000Z",
+      }),
+    );
+
+    jest.setSystemTime(new Date("2030-06-01T13:05:00.001Z"));
+    expect(decodePublicSlotId(slotId)).toBeNull();
+  });
+
+  it("slotId: tampered expiresAt fails signature verification", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2030-06-01T13:00:00.000Z"));
+    const slotId = encodePublicSlotId({
+      foId: "fo_a",
+      startAt: START,
+      endAt: END,
+      durationMinutes: 60,
+    });
+    const envelope = decodeSlotEnvelope(slotId);
+    const tamperedSlotId = encodeSlotEnvelope({
+      ...envelope,
+      payload: {
+        ...envelope.payload,
+        expiresAt: "2030-06-01T14:00:00.000Z",
+      },
+    });
+
+    expect(decodePublicSlotId(tamperedSlotId)).toBeNull();
+  });
+
+  it("createHold: rejects expired signed slotId as invalid without creating hold", async () => {
+    jest.useFakeTimers().setSystemTime(new Date("2030-06-01T13:00:00.000Z"));
+    const createHold = jest.fn();
+    const anomalyCreate = jest.fn().mockResolvedValue({});
+    const slotId = encodePublicSlotId({
+      foId: "fo_a",
+      startAt: START,
+      endAt: END,
+      durationMinutes: 60,
+    });
+    jest.setSystemTime(new Date("2030-06-01T13:05:00.001Z"));
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+      },
+      paymentAnomaly: { create: anomalyCreate },
+    } as unknown as PrismaService;
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      {} as SlotAvailabilityService,
+      { createHold } as unknown as SlotHoldsService,
+      {} as BookingsService,
+      {} as FoService,
+      noopPublicDeposit,
+    );
+
+    await expect(
+      svc.createHold({ bookingId: "bk_hold", slotId }),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_INVALID_SLOT_ID",
+      }),
+    });
+    expect(createHold).not.toHaveBeenCalled();
+    expect(anomalyCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          kind: "public_booking_hold_failed",
+          details: expect.objectContaining({
+            code: "PUBLIC_BOOKING_INVALID_SLOT_ID",
+            stage: "decode_slot_id",
+            decodedSlotIdValid: false,
+          }),
+        }),
       }),
     );
   });
@@ -367,7 +464,9 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
   });
 
   it("createHold: rejects stale slotId that is no longer offered", async () => {
+    const logSpy = jest.spyOn(Logger.prototype, "log").mockImplementation(() => undefined);
     const createHold = jest.fn();
+    const anomalyCreate = jest.fn().mockResolvedValue({});
     const slotId = encodePublicSlotId({
       foId: "fo_a",
       startAt: START,
@@ -383,6 +482,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
           .fn()
           .mockResolvedValue(franchiseOwnerRowForPublicHoldTests()),
       },
+      paymentAnomaly: { create: anomalyCreate },
     } as unknown as PrismaService;
     const slotAvailability = {
       listAvailableWindows: jest.fn().mockResolvedValue([
@@ -412,6 +512,26 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       }),
     });
     expect(createHold).not.toHaveBeenCalled();
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        kind: "public_booking_lifecycle",
+        event: "hold_failed",
+        bookingId: "bk_hold",
+        failureCode: "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE",
+        failureStage: "availability_revalidation",
+      }),
+    );
+    expect(anomalyCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          kind: "public_booking_hold_failed",
+          details: expect.objectContaining({
+            code: "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE",
+            stage: "availability_revalidation",
+          }),
+        }),
+      }),
+    );
   });
 
   it("createHold: rejects foId not in candidate set and does not create hold", async () => {
@@ -552,6 +672,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
   });
 
   it("confirmHold: happy path delegates to BookingsService.confirmBookingFromHold", async () => {
+    const logSpy = jest.spyOn(Logger.prototype, "log").mockImplementation(() => undefined);
     const scheduled = new Date("2030-06-01T14:00:00.000Z");
     const holdEnd = new Date(scheduled.getTime() + 184 * 60 * 1000);
     const confirmBookingFromHold = jest.fn().mockResolvedValue({
@@ -618,6 +739,14 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       new Date(
         scheduled.getTime() + 12.07 * 60 * 60 * 1000,
       ).toISOString(),
+    );
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        kind: "public_booking_lifecycle",
+        event: "confirm_succeeded",
+        bookingId: "bk_hold",
+        holdId: "hold_1",
+      }),
     );
   });
 

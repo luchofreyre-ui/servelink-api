@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { BookingRecoveryStatus, BookingStatus, Prisma } from "@prisma/client";
@@ -46,6 +47,21 @@ import {
 const MAX_FO_CANDIDATES = 8;
 const MAX_WINDOWS_TOTAL = 60;
 const DEFAULT_RANGE_DAYS = 14;
+const PUBLIC_BOOKING_HOLD_ANOMALY_CODES = new Set([
+  "PUBLIC_BOOKING_INVALID_SLOT_ID",
+  "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE",
+  "PUBLIC_BOOKING_SLOT_IN_PAST",
+]);
+const PUBLIC_BOOKING_CONFIRM_ANOMALY_CODES = new Set([
+  "PUBLIC_BOOKING_HOLD_EXPIRED",
+  "PUBLIC_BOOKING_HOLD_NOT_FOUND",
+  "PUBLIC_BOOKING_SLOT_IN_PAST",
+  "PUBLIC_BOOKING_DEPOSIT_UNRESOLVED",
+  "PUBLIC_BOOKING_DEPOSIT_REQUIRED",
+  "BOOKING_SLOT_HOLD_EXPIRED",
+  "FO_SLOT_ALREADY_BOOKED",
+  "FO_NOT_AVAILABLE_AT_SCHEDULED_TIME",
+]);
 
 type BookingForOrchestration = {
   id: string;
@@ -113,6 +129,8 @@ function extractFoIdsFromEstimateOutput(outputJson: string | null): string[] {
 
 @Injectable()
 export class PublicBookingOrchestratorService {
+  private readonly log = new Logger(PublicBookingOrchestratorService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly slotAvailability: SlotAvailabilityService,
@@ -132,6 +150,70 @@ export class PublicBookingOrchestratorService {
       message:
         "Selected arrival time is no longer available. Please choose a future time.",
     });
+  }
+
+  private logLifecycle(event: Record<string, unknown>) {
+    this.log.log({
+      kind: "public_booking_lifecycle",
+      ...event,
+    });
+  }
+
+  private codeFromError(err: unknown, fallback: string): string {
+    if (err && typeof err === "object" && "getResponse" in err) {
+      const getResponse = (err as { getResponse?: unknown }).getResponse;
+      const response =
+        typeof getResponse === "function" ? getResponse.call(err) : null;
+      if (
+        response &&
+        typeof response === "object" &&
+        "code" in response &&
+        typeof (response as { code?: unknown }).code === "string"
+      ) {
+        return (response as { code: string }).code;
+      }
+      if (
+        response &&
+        typeof response === "object" &&
+        "message" in response &&
+        typeof (response as { message?: unknown }).message === "string" &&
+        (response as { message: string }).message.trim()
+      ) {
+        return (response as { message: string }).message.trim();
+      }
+      if (typeof response === "string" && response.trim()) return response.trim();
+    }
+    return fallback;
+  }
+
+  private async recordLifecycleAnomaly(args: {
+    bookingId?: string | null;
+    kind: "public_booking_hold_failed" | "public_booking_deposit_failed" | "public_booking_confirm_failed";
+    severity?: "info" | "warning" | "critical";
+    message: string;
+    details: Record<string, unknown>;
+  }) {
+    if (!this.prisma.paymentAnomaly?.create) return;
+    try {
+      await this.prisma.paymentAnomaly.create({
+        data: {
+          bookingId: args.bookingId?.trim() || undefined,
+          kind: args.kind,
+          severity: args.severity ?? "warning",
+          status: "open",
+          message: args.message,
+          details: args.details as Prisma.InputJsonValue,
+        },
+      });
+    } catch (err) {
+      this.log.error({
+        kind: "public_booking_lifecycle",
+        event: "anomaly_record_failed",
+        anomalyKind: args.kind,
+        bookingId: args.bookingId ?? null,
+        message: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 
   private async loadBookingForOrchestration(
@@ -479,13 +561,22 @@ export class PublicBookingOrchestratorService {
       teams: PublicBookingTeamOption[];
       selectionRequired: true;
       unavailableReason: { code: string; message: string };
-    } => ({
-      kind: "public_booking_team_options" as const,
-      bookingId: booking.id,
-      teams: [],
-      selectionRequired: true as const,
-      unavailableReason: { code, message },
-    });
+    } => {
+      this.logLifecycle({
+        event: "availability_result",
+        bookingId: booking.id,
+        teamCount: 0,
+        windowCount: 0,
+        unavailableReasonCode: code,
+      });
+      return {
+        kind: "public_booking_team_options" as const,
+        bookingId: booking.id,
+        teams: [],
+        selectionRequired: true as const,
+        unavailableReason: { code, message },
+      };
+    };
 
     try {
       this.assertSchedulableForAvailability(booking);
@@ -560,6 +651,13 @@ export class PublicBookingOrchestratorService {
           "No eligible teams are available to schedule this booking right now.",
         );
       }
+      this.logLifecycle({
+        event: "availability_result",
+        bookingId: booking.id,
+        serviceType: jobMatch?.serviceType ?? null,
+        teamCount: teams.length,
+        windowCount: 0,
+      });
       return {
         kind: "public_booking_team_options" as const,
         bookingId: booking.id,
@@ -656,6 +754,14 @@ export class PublicBookingOrchestratorService {
     const capped = windows.slice(0, MAX_WINDOWS_TOTAL);
 
     if (capped.length === 0) {
+      this.logLifecycle({
+        event: "availability_result",
+        bookingId: booking.id,
+        serviceType,
+        teamCount: 1,
+        windowCount: 0,
+        unavailableReasonCode: "PUBLIC_BOOKING_NO_WINDOWS",
+      });
       return {
         kind: "public_booking_team_availability" as const,
         bookingId: booking.id,
@@ -679,6 +785,14 @@ export class PublicBookingOrchestratorService {
         },
       };
     }
+
+    this.logLifecycle({
+      event: "availability_result",
+      bookingId: booking.id,
+      serviceType,
+      teamCount: 1,
+      windowCount: capped.length,
+    });
 
     return {
       kind: "public_booking_team_availability" as const,
@@ -725,15 +839,6 @@ export class PublicBookingOrchestratorService {
       durationMinutes: args.durationMinutes,
     });
     const match = windows.some((w) => {
-      const slotId = encodePublicSlotId({
-        foId: args.foId,
-        startAt: w.startAt,
-        endAt: w.endAt,
-        durationMinutes: args.durationMinutes,
-      });
-      if (args.slotId?.trim()) {
-        return slotId === args.slotId.trim();
-      }
       return (
         w.startAt.getTime() === args.startAt.getTime() &&
         w.endAt.getTime() === args.endAt.getTime()
@@ -1013,12 +1118,43 @@ export class PublicBookingOrchestratorService {
 
     this.assertSchedulableForAvailability(booking);
 
+    const slotIdPresent = Boolean(dto.slotId?.trim());
     const decodedSlot = dto.slotId?.trim()
       ? decodePublicSlotId(dto.slotId)
       : null;
+    this.logLifecycle({
+      event: "hold_attempt",
+      bookingId: dto.bookingId,
+      slotIdPresent,
+      decodedSlotIdValid: slotIdPresent ? Boolean(decodedSlot) : undefined,
+      foId: decodedSlot?.foId ?? undefined,
+      startAt: decodedSlot?.startAt ?? undefined,
+    });
     if (dto.slotId?.trim() && !decodedSlot) {
+      const code = "PUBLIC_BOOKING_INVALID_SLOT_ID";
+      this.logLifecycle({
+        event: "hold_failed",
+        bookingId: dto.bookingId,
+        failureCode: code,
+        failureStage: "decode_slot_id",
+        slotIdPresent,
+        decodedSlotIdValid: false,
+      });
+      await this.recordLifecycleAnomaly({
+        bookingId: dto.bookingId,
+        kind: "public_booking_hold_failed",
+        message: "Public booking hold failed.",
+        details: {
+          bookingId: dto.bookingId,
+          code,
+          stage: "decode_slot_id",
+          slotIdPresent,
+          decodedSlotIdValid: false,
+          at: new Date().toISOString(),
+        },
+      });
       this.throwOrchestrator(
-        "PUBLIC_BOOKING_INVALID_SLOT_ID",
+        code,
         "Selected arrival time is no longer valid. Please choose another time.",
       );
     }
@@ -1079,38 +1215,78 @@ export class PublicBookingOrchestratorService {
       );
     }
 
-    await this.assertWindowMatchesAvailability({
-      bookingId: dto.bookingId,
-      foId: requestedFoId,
-      startAt,
-      endAt,
-      durationMinutes,
-      slotId: dto.slotId ?? null,
-    });
+    try {
+      await this.assertWindowMatchesAvailability({
+        bookingId: dto.bookingId,
+        foId: requestedFoId,
+        startAt,
+        endAt,
+        durationMinutes,
+        slotId: dto.slotId ?? null,
+      });
 
-    const hold = await this.slotHolds.createHold({
-      bookingId: dto.bookingId,
-      foId: requestedFoId,
-      startAt,
-      endAt,
-    });
+      const hold = await this.slotHolds.createHold({
+        bookingId: dto.bookingId,
+        foId: requestedFoId,
+        startAt,
+        endAt,
+      });
 
-    await this.prisma.booking.update({
-      where: { id: dto.bookingId },
-      data: { preferredFoId: requestedFoId },
-    });
+      await this.prisma.booking.update({
+        where: { id: dto.bookingId },
+        data: { preferredFoId: requestedFoId },
+      });
 
-    return {
-      kind: "public_booking_hold" as const,
-      bookingId: dto.bookingId,
-      holdId: hold.id,
-      expiresAt: hold.expiresAt.toISOString(),
-      window: {
-        foId: hold.foId,
-        startAt: hold.startAt.toISOString(),
-        endAt: hold.endAt.toISOString(),
-      },
-    };
+      this.logLifecycle({
+        event: "hold_succeeded",
+        bookingId: dto.bookingId,
+        holdId: hold.id,
+      });
+
+      return {
+        kind: "public_booking_hold" as const,
+        bookingId: dto.bookingId,
+        holdId: hold.id,
+        expiresAt: hold.expiresAt.toISOString(),
+        window: {
+          foId: hold.foId,
+          startAt: hold.startAt.toISOString(),
+          endAt: hold.endAt.toISOString(),
+        },
+      };
+    } catch (err) {
+      const code = this.codeFromError(err, "PUBLIC_BOOKING_HOLD_FAILED");
+      const failureStage =
+        code === "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE"
+          ? "availability_revalidation"
+          : code === "PUBLIC_BOOKING_SLOT_IN_PAST"
+            ? "create_hold"
+            : "create_hold";
+      this.logLifecycle({
+        event: "hold_failed",
+        bookingId: dto.bookingId,
+        failureCode: code,
+        failureStage,
+        slotIdPresent,
+        decodedSlotIdValid: slotIdPresent ? Boolean(decodedSlot) : undefined,
+      });
+      if (PUBLIC_BOOKING_HOLD_ANOMALY_CODES.has(code)) {
+        await this.recordLifecycleAnomaly({
+          bookingId: dto.bookingId,
+          kind: "public_booking_hold_failed",
+          message: "Public booking hold failed.",
+          details: {
+            bookingId: dto.bookingId,
+            code,
+            stage: failureStage,
+            slotIdPresent,
+            decodedSlotIdValid: slotIdPresent ? Boolean(decodedSlot) : undefined,
+            at: new Date().toISOString(),
+          },
+        });
+      }
+      throw err;
+    }
   }
 
   preparePublicDeposit(body: { bookingId: string; holdId?: string | null }) {
@@ -1128,6 +1304,11 @@ export class PublicBookingOrchestratorService {
     if (!booking) {
       throw new NotFoundException("PUBLIC_BOOKING_NOT_FOUND");
     }
+    this.logLifecycle({
+      event: "confirm_attempt",
+      bookingId: dto.bookingId,
+      holdIdPresent: Boolean(dto.holdId?.trim()),
+    });
 
     const hold = await this.prisma.bookingSlotHold.findUnique({
       where: { id: dto.holdId },
@@ -1150,7 +1331,7 @@ export class PublicBookingOrchestratorService {
         } catch {
           wallClockDurationMinutes = null;
         }
-        return {
+        const replayResult = {
           kind: "public_booking_confirmation" as const,
           bookingId: booking.id,
           scheduledStart: booking.scheduledStart.toISOString(),
@@ -1164,24 +1345,121 @@ export class PublicBookingOrchestratorService {
           status: booking.status,
           alreadyApplied: true,
         };
+        this.logLifecycle({
+          event: "confirm_succeeded",
+          bookingId: booking.id,
+          holdId: dto.holdId,
+          alreadyApplied: true,
+        });
+        return replayResult;
       }
-      throw new NotFoundException("PUBLIC_BOOKING_HOLD_NOT_FOUND");
+      const code = "PUBLIC_BOOKING_HOLD_NOT_FOUND";
+      this.logLifecycle({
+        event: "confirm_failed",
+        bookingId: dto.bookingId,
+        holdId: dto.holdId,
+        failureCode: code,
+        failureStage: "load_hold",
+      });
+      await this.recordLifecycleAnomaly({
+        bookingId: dto.bookingId,
+        kind: "public_booking_confirm_failed",
+        message: "Public booking confirmation failed.",
+        details: {
+          bookingId: dto.bookingId,
+          holdId: dto.holdId,
+          code,
+          stage: "load_hold",
+          at: new Date().toISOString(),
+        },
+      });
+      throw new NotFoundException({
+        code,
+        message: "The selected slot hold could not be found.",
+      });
     }
 
     const now = new Date();
     if (hold.expiresAt.getTime() <= now.getTime()) {
-      throw new ConflictException("BOOKING_SLOT_HOLD_EXPIRED");
+      const code = "PUBLIC_BOOKING_HOLD_EXPIRED";
+      this.logLifecycle({
+        event: "confirm_failed",
+        bookingId: dto.bookingId,
+        holdId: dto.holdId,
+        failureCode: code,
+        failureStage: "validate_hold",
+      });
+      await this.recordLifecycleAnomaly({
+        bookingId: dto.bookingId,
+        kind: "public_booking_confirm_failed",
+        message: "Public booking confirmation failed.",
+        details: {
+          bookingId: dto.bookingId,
+          holdId: dto.holdId,
+          code,
+          stage: "validate_hold",
+          at: new Date().toISOString(),
+        },
+      });
+      throw new ConflictException({
+        code,
+        message: "The selected slot hold expired before confirmation.",
+      });
     }
     if (hold.startAt.getTime() <= now.getTime()) {
+      this.logLifecycle({
+        event: "confirm_failed",
+        bookingId: dto.bookingId,
+        holdId: dto.holdId,
+        failureCode: "PUBLIC_BOOKING_SLOT_IN_PAST",
+        failureStage: "validate_hold",
+      });
+      await this.recordLifecycleAnomaly({
+        bookingId: dto.bookingId,
+        kind: "public_booking_confirm_failed",
+        message: "Public booking confirmation failed.",
+        details: {
+          bookingId: dto.bookingId,
+          holdId: dto.holdId,
+          code: "PUBLIC_BOOKING_SLOT_IN_PAST",
+          stage: "validate_hold",
+          at: new Date().toISOString(),
+        },
+      });
       this.throwPastPublicSlot();
     }
 
-    await this.publicBookingDeposit.ensurePublicDepositResolvedBeforeConfirm({
-      bookingId: dto.bookingId,
-      holdId: dto.holdId,
-      stripePaymentMethodId: dto.stripePaymentMethodId ?? null,
-      idempotencyKey: idempotencyKey?.trim() || null,
-    });
+    try {
+      await this.publicBookingDeposit.ensurePublicDepositResolvedBeforeConfirm({
+        bookingId: dto.bookingId,
+        holdId: dto.holdId,
+        stripePaymentMethodId: dto.stripePaymentMethodId ?? null,
+        idempotencyKey: idempotencyKey?.trim() || null,
+      });
+    } catch (err) {
+      const code = this.codeFromError(err, "PUBLIC_BOOKING_DEPOSIT_UNRESOLVED");
+      this.logLifecycle({
+        event: "confirm_failed",
+        bookingId: dto.bookingId,
+        holdId: dto.holdId,
+        failureCode: code,
+        failureStage: "deposit_gate",
+        depositRequired: code === "PUBLIC_BOOKING_DEPOSIT_REQUIRED",
+      });
+      await this.recordLifecycleAnomaly({
+        bookingId: dto.bookingId,
+        kind: "public_booking_confirm_failed",
+        message: "Public booking confirmation failed.",
+        details: {
+          bookingId: dto.bookingId,
+          holdId: dto.holdId,
+          code,
+          stage: "deposit_gate",
+          at: new Date().toISOString(),
+        },
+      });
+      throw err;
+    }
 
     let result;
     let responseHold: { startAt: Date; endAt: Date } = hold;
@@ -1195,6 +1473,29 @@ export class PublicBookingOrchestratorService {
       });
     } catch (err) {
       const reason = this.classifyFinalizationFailure(err);
+      const code = this.codeFromError(err, "PUBLIC_BOOKING_CONFIRM_FAILED");
+      this.logLifecycle({
+        event: "confirm_failed",
+        bookingId: dto.bookingId,
+        holdId: dto.holdId,
+        failureCode: code,
+        failureStage: "finalize_booking",
+      });
+      if (!reason && PUBLIC_BOOKING_CONFIRM_ANOMALY_CODES.has(code)) {
+        await this.recordLifecycleAnomaly({
+          bookingId: dto.bookingId,
+          kind: "public_booking_confirm_failed",
+          severity: "warning",
+          message: "Public booking confirmation failed.",
+          details: {
+            bookingId: dto.bookingId,
+            holdId: dto.holdId,
+            code,
+            stage: "finalize_booking",
+            at: new Date().toISOString(),
+          },
+        });
+      }
       if (reason) {
         const recovered = await this.attemptPostPaymentRecovery({
           booking,
@@ -1212,6 +1513,19 @@ export class PublicBookingOrchestratorService {
           result = recovered.result;
           responseHold = recovered.hold;
         } else {
+          await this.recordLifecycleAnomaly({
+            bookingId: dto.bookingId,
+            kind: "public_booking_confirm_failed",
+            severity: "critical",
+            message: "Public booking confirmation failed.",
+            details: {
+              bookingId: dto.bookingId,
+              holdId: dto.holdId,
+              code,
+              stage: "finalize_booking",
+              at: new Date().toISOString(),
+            },
+          });
           await this.recordPostPaymentRecoveryFailure({
             bookingId: dto.bookingId,
             holdId: dto.holdId,
@@ -1241,6 +1555,15 @@ export class PublicBookingOrchestratorService {
       holdEndAt: responseHold.endAt,
       holdStartAt: responseHold.startAt,
       estimatedHours: result.estimatedHours,
+    });
+
+    this.logLifecycle({
+      event: "confirm_succeeded",
+      bookingId: result.id,
+      holdId: dto.holdId,
+      alreadyApplied: Boolean(
+        (result as { alreadyApplied?: boolean }).alreadyApplied,
+      ),
     });
 
     return {
