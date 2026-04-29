@@ -9,6 +9,7 @@ import {
 import { ReliabilityAdminGuard } from "./reliability-admin.guard";
 import { OpsVisibilityService } from "./ops-visibility.service";
 import { FoService } from "../../modules/fo/fo.service";
+import { PaymentReliabilityService } from "../../modules/bookings/payment-reliability/payment-reliability.service";
 
 /** Drilldown `items` rows include eligibility fields from `dto/system-ops-drilldown.dto.ts`. */
 @Controller("api/v1/system/ops")
@@ -17,6 +18,7 @@ export class ReliabilityOpsController {
   constructor(
     private readonly opsVisibility: OpsVisibilityService,
     private readonly foService: FoService,
+    private readonly paymentReliability: PaymentReliabilityService,
   ) {}
 
   @SkipRateLimit()
@@ -31,6 +33,15 @@ export class ReliabilityOpsController {
       ...summary,
       summary,
     };
+  }
+
+  @SkipRateLimit()
+  @SkipRetry()
+  @SkipIdempotency()
+  @SkipTimeout()
+  @Get("public-booking-lifecycle")
+  async getPublicBookingLifecycleSummary() {
+    return this.paymentReliability.getPublicBookingLifecycleSummary();
   }
 
   @SkipRateLimit()

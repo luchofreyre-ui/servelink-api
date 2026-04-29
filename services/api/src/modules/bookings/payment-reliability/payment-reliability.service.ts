@@ -25,6 +25,62 @@ export type PaymentOpsSummary = {
   webhookReceiptsMissingBookingEventCount: number;
 };
 
+const PUBLIC_BOOKING_LIFECYCLE_ANOMALY_KINDS = [
+  "public_booking_hold_failed",
+  "public_booking_deposit_failed",
+  "public_booking_confirm_failed",
+] as const;
+
+const PUBLIC_BOOKING_LIFECYCLE_FAILURE_CODES = [
+  "PUBLIC_BOOKING_INVALID_SLOT_ID",
+  "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE",
+  "PUBLIC_BOOKING_SLOT_IN_PAST",
+  "PUBLIC_BOOKING_HOLD_EXPIRED",
+  "PUBLIC_BOOKING_HOLD_NOT_FOUND",
+  "PUBLIC_BOOKING_DEPOSIT_UNRESOLVED",
+  "UNKNOWN",
+] as const;
+
+type PublicBookingLifecycleFailureCode =
+  (typeof PUBLIC_BOOKING_LIFECYCLE_FAILURE_CODES)[number];
+
+type PublicBookingLifecycleAlert = {
+  code:
+    | "PUBLIC_BOOKING_HOLD_FAILURE_RATE_HIGH"
+    | "PUBLIC_BOOKING_CONFIRM_FAILURE_RATE_HIGH"
+    | "PUBLIC_BOOKING_UNKNOWN_FAILURE_PRESENT";
+  severity: "warning";
+  message: string;
+  value: number;
+  threshold: number;
+};
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+function stringValue(value: unknown): string | null {
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function normalizePublicBookingLifecycleCode(
+  raw: unknown,
+): PublicBookingLifecycleFailureCode {
+  const code = stringValue(raw);
+  if (
+    code &&
+    PUBLIC_BOOKING_LIFECYCLE_FAILURE_CODES.includes(
+      code as PublicBookingLifecycleFailureCode,
+    ) &&
+    code !== "UNKNOWN"
+  ) {
+    return code as PublicBookingLifecycleFailureCode;
+  }
+  return "UNKNOWN";
+}
+
 @Injectable()
 export class PaymentReliabilityService {
   constructor(private readonly prisma: PrismaService) {}
@@ -242,5 +298,113 @@ export class PaymentReliabilityService {
       message: `Duplicate Stripe event id received (${eventType}); processing skipped (idempotent).`,
       details: { eventType },
     });
+  }
+
+  async getPublicBookingLifecycleSummary() {
+    const now = new Date();
+    const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const failures = await this.prisma.paymentAnomaly.findMany({
+      where: {
+        kind: { in: [...PUBLIC_BOOKING_LIFECYCLE_ANOMALY_KINDS] },
+        detectedAt: { gte: since },
+      },
+      orderBy: { detectedAt: "desc" },
+      take: 200,
+    });
+
+    const failureBreakdown = Object.fromEntries(
+      PUBLIC_BOOKING_LIFECYCLE_FAILURE_CODES.map((code) => [code, 0]),
+    ) as Record<PublicBookingLifecycleFailureCode, number>;
+    let holdFailed = 0;
+    let depositFailed = 0;
+    let confirmFailed = 0;
+
+    const recentFailures = failures.slice(0, 25).map((failure) => {
+      const details = asRecord(failure.details);
+      const code = normalizePublicBookingLifecycleCode(details.code);
+      failureBreakdown[code] += 1;
+      if (failure.kind === "public_booking_hold_failed") holdFailed += 1;
+      if (failure.kind === "public_booking_deposit_failed") depositFailed += 1;
+      if (failure.kind === "public_booking_confirm_failed") confirmFailed += 1;
+      return {
+        kind: failure.kind,
+        bookingId: failure.bookingId ?? stringValue(details.bookingId),
+        holdId: stringValue(details.holdId),
+        code,
+        stage: stringValue(details.stage) ?? "unknown",
+        createdAt: failure.detectedAt.toISOString(),
+      };
+    });
+
+    for (const failure of failures.slice(25)) {
+      const details = asRecord(failure.details);
+      const code = normalizePublicBookingLifecycleCode(details.code);
+      failureBreakdown[code] += 1;
+      if (failure.kind === "public_booking_hold_failed") holdFailed += 1;
+      if (failure.kind === "public_booking_deposit_failed") depositFailed += 1;
+      if (failure.kind === "public_booking_confirm_failed") confirmFailed += 1;
+    }
+
+    const totals = {
+      availabilityResults: 0,
+      holdAttempts: holdFailed,
+      holdSucceeded: 0,
+      holdFailed,
+      depositPrepareResults: depositFailed,
+      confirmAttempts: confirmFailed,
+      confirmSucceeded: 0,
+      confirmFailed,
+    };
+    const holdFailureRate =
+      totals.holdAttempts > 0 ? totals.holdFailed / totals.holdAttempts : 0;
+    const confirmFailureRate =
+      totals.confirmAttempts > 0
+        ? totals.confirmFailed / totals.confirmAttempts
+        : 0;
+
+    const alerts: PublicBookingLifecycleAlert[] = [];
+    if (holdFailureRate > 0.15) {
+      alerts.push({
+        code: "PUBLIC_BOOKING_HOLD_FAILURE_RATE_HIGH",
+        severity: "warning",
+        message: "Public booking hold failure rate is above 15% over 24h.",
+        value: holdFailureRate,
+        threshold: 0.15,
+      });
+    }
+    if (confirmFailureRate > 0.05) {
+      alerts.push({
+        code: "PUBLIC_BOOKING_CONFIRM_FAILURE_RATE_HIGH",
+        severity: "warning",
+        message: "Public booking confirm failure rate is above 5% over 24h.",
+        value: confirmFailureRate,
+        threshold: 0.05,
+      });
+    }
+    if (failureBreakdown.UNKNOWN > 0) {
+      alerts.push({
+        code: "PUBLIC_BOOKING_UNKNOWN_FAILURE_PRESENT",
+        severity: "warning",
+        message: "Unknown public booking lifecycle failures were observed over 24h.",
+        value: failureBreakdown.UNKNOWN,
+        threshold: 0,
+      });
+    }
+
+    return {
+      window: "24h",
+      totals,
+      rates: {
+        holdFailureRate,
+        confirmFailureRate,
+      },
+      failureBreakdown,
+      recentFailures,
+      observabilityCoverage: {
+        successCountsPersisted: false,
+        failureCountsPersisted: true,
+      },
+      alerts,
+    };
   }
 }
