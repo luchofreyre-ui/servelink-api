@@ -60,6 +60,16 @@ export class SlotHoldsService {
     }
   }
 
+  private assertFutureStart(startAt: Date, now = new Date()) {
+    if (startAt.getTime() <= now.getTime()) {
+      throw new ConflictException({
+        code: "PUBLIC_BOOKING_SLOT_IN_PAST",
+        message:
+          "Selected arrival time is no longer available. Please choose a future time.",
+      });
+    }
+  }
+
   private windowsOverlap(
     aStart: Date,
     aEnd: Date,
@@ -159,6 +169,7 @@ export class SlotHoldsService {
     const endAt = this.toDate(args.endAt, "BOOKING_SLOT_END_INVALID");
 
     this.assertWindow(startAt, endAt);
+    this.assertFutureStart(startAt);
 
     const eligibility = await this.fo.getEligibility(args.foId);
 
@@ -230,6 +241,8 @@ export class SlotHoldsService {
     if (hold.expiresAt.getTime() <= Date.now()) {
       throw new ConflictException("BOOKING_SLOT_HOLD_EXPIRED");
     }
+
+    this.assertFutureStart(hold.startAt);
 
     return hold;
   }

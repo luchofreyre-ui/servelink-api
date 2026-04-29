@@ -45,6 +45,10 @@ function schedulableHoldBooking() {
 }
 
 describe("PublicBookingOrchestratorService — public hold + confirm", () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it("createHold: happy path delegates to slot holds and returns public hold shape", async () => {
     const start = new Date(START);
     const end = new Date(END);
@@ -195,6 +199,61 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
     expect(createHold).not.toHaveBeenCalled();
   });
 
+  it("createHold: does not persist preferredFoId when hold service rejects a past start", async () => {
+    const bookingUpdate = jest.fn();
+    const start = new Date(START);
+    const end = new Date(END);
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+        update: bookingUpdate,
+      },
+      franchiseOwner: {
+        findUnique: jest
+          .fn()
+          .mockResolvedValue(franchiseOwnerRowForPublicHoldTests()),
+      },
+    } as unknown as PrismaService;
+    const slotAvailability = {
+      listAvailableWindows: jest.fn().mockResolvedValue([{ startAt: start, endAt: end }]),
+    } as unknown as SlotAvailabilityService;
+    const createHold = jest.fn().mockRejectedValue(
+      new ConflictException({
+        code: "PUBLIC_BOOKING_SLOT_IN_PAST",
+        message:
+          "Selected arrival time is no longer available. Please choose a future time.",
+      }),
+    );
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      slotAvailability,
+      { createHold } as unknown as SlotHoldsService,
+      {} as BookingsService,
+      {
+        getEligibility: jest.fn().mockResolvedValue({ canAcceptBooking: true }),
+        matchFOs: jest.fn(),
+      } as unknown as FoService,
+      noopPublicDeposit,
+    );
+
+    await expect(
+      svc.createHold({
+        bookingId: "bk_hold",
+        foId: "fo_a",
+        startAt: START,
+        endAt: END,
+      }),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_SLOT_IN_PAST",
+      }),
+    });
+
+    expect(createHold).toHaveBeenCalled();
+    expect(bookingUpdate).not.toHaveBeenCalled();
+  });
+
   it("confirmHold: happy path delegates to BookingsService.confirmBookingFromHold", async () => {
     const scheduled = new Date("2030-06-01T14:00:00.000Z");
     const holdEnd = new Date(scheduled.getTime() + 184 * 60 * 1000);
@@ -263,6 +322,52 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
         scheduled.getTime() + 12.07 * 60 * 60 * 1000,
       ).toISOString(),
     );
+  });
+
+  it("confirmHold: rejects past hold before deposit mutation", async () => {
+    const now = new Date("2030-06-01T14:00:00.000Z");
+    jest.useFakeTimers().setSystemTime(now);
+    const pastStart = new Date("2030-06-01T14:00:00.000Z");
+    const pastEnd = new Date("2030-06-01T15:00:00.000Z");
+    const confirmBookingFromHold = jest.fn();
+    const deposit = {
+      ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
+    } as unknown as PublicBookingDepositService;
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "hold_1",
+          bookingId: "bk_hold",
+          foId: "fo_a",
+          startAt: pastStart,
+          endAt: pastEnd,
+          expiresAt: new Date("2030-06-01T16:00:00.000Z"),
+        }),
+      },
+    } as unknown as PrismaService;
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      {} as SlotAvailabilityService,
+      {} as SlotHoldsService,
+      { confirmBookingFromHold } as unknown as BookingsService,
+      {} as FoService,
+      deposit,
+    );
+
+    await expect(
+      svc.confirmHold({ bookingId: "bk_hold", holdId: "hold_1" }, "idem-key-1"),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_SLOT_IN_PAST",
+      }),
+    });
+
+    expect(deposit.ensurePublicDepositResolvedBeforeConfirm).not.toHaveBeenCalled();
+    expect(confirmBookingFromHold).not.toHaveBeenCalled();
   });
 
   it("confirmHold: missing hold returns structured not found", async () => {

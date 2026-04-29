@@ -34,6 +34,10 @@ describe("BookingsService.confirmBookingFromHold", () => {
     expiresAt: new Date("2030-06-02T00:00:00.000Z"),
   };
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it("rejects expired hold with BOOKING_SLOT_HOLD_EXPIRED (public elapsed model)", async () => {
     const hold = {
       ...crewAdjustedHold,
@@ -90,6 +94,48 @@ describe("BookingsService.confirmBookingFromHold", () => {
       };
       expect(body?.message).toBe("BOOKING_SLOT_HOLD_DURATION_MISMATCH");
     }
+  });
+
+  it("rejects past hold start before assignment writes", async () => {
+    const now = new Date("2030-06-01T12:00:00.000Z");
+    jest.useFakeTimers().setSystemTime(now);
+    const tx = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(baseBooking),
+        findMany: jest.fn(),
+        updateMany: jest.fn(),
+      },
+      bookingEvent: {
+        create: jest.fn(),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          ...crewAdjustedHold,
+          startAt: now,
+          endAt: new Date(now.getTime() + 60 * 60 * 1000),
+          expiresAt: new Date("2030-06-01T13:00:00.000Z"),
+        }),
+        delete: jest.fn(),
+      },
+    };
+    const svc = makeService(tx);
+
+    await expect(
+      svc.confirmBookingFromHold({
+        bookingId: "bk1",
+        holdId: "h1",
+        idempotencyKey: null,
+        useHoldElapsedDurationModel: true,
+      }),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_SLOT_IN_PAST",
+      }),
+    });
+
+    expect(tx.booking.updateMany).not.toHaveBeenCalled();
+    expect(tx.bookingEvent.create).not.toHaveBeenCalled();
+    expect(tx.bookingSlotHold.delete).not.toHaveBeenCalled();
   });
 
   it("public elapsed model does not throw duration mismatch for 125m hold vs 325m from estimatedHours", async () => {

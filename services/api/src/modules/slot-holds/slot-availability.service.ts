@@ -21,6 +21,10 @@ type TimeWindow = {
 export class SlotAvailabilityService {
   constructor(private readonly db: PrismaService) {}
 
+  private isStrictlyFuture(startAt: Date, now: Date): boolean {
+    return startAt.getTime() > now.getTime();
+  }
+
   private toDate(value: Date | string, code: string): Date {
     const date = value instanceof Date ? value : new Date(value);
 
@@ -51,11 +55,15 @@ export class SlotAvailabilityService {
   }
 
   async listAvailableWindows(args: ListAvailableWindowsArgs): Promise<TimeWindow[]> {
+    const now = new Date();
     const cacheKey = `${args.foId}:${args.rangeStart}:${args.rangeEnd}:${args.durationMinutes}`;
     const cached = SlotAvailabilityCache.get(cacheKey);
-    if (cached) return cached;
+    if (cached) {
+      return cached.filter((window: TimeWindow) =>
+        this.isStrictlyFuture(window.startAt, now),
+      );
+    }
 
-    const now = new Date();
     const rangeStart = this.toDate(
       args.rangeStart,
       "BOOKING_AVAILABILITY_RANGE_START_INVALID",
@@ -82,6 +90,12 @@ export class SlotAvailabilityService {
 
     if (!(rangeEnd.getTime() > rangeStart.getTime())) {
       throw new BadRequestException("BOOKING_AVAILABILITY_RANGE_INVALID");
+    }
+    const effectiveRangeStart =
+      rangeStart.getTime() <= now.getTime() ? now : rangeStart;
+    if (!(rangeEnd.getTime() > effectiveRangeStart.getTime())) {
+      SlotAvailabilityCache.set(cacheKey, []);
+      return [];
     }
 
     const [bookings, activeHolds] = await Promise.all([
@@ -113,7 +127,7 @@ export class SlotAvailabilityService {
           foId: args.foId,
           expiresAt: { gt: now },
           startAt: { lt: rangeEnd },
-          endAt: { gt: rangeStart },
+          endAt: { gt: effectiveRangeStart },
         },
         select: {
           id: true,
@@ -144,7 +158,7 @@ export class SlotAvailabilityService {
         }),
       );
 
-      if (endAt <= rangeStart || startAt >= rangeEnd) continue;
+      if (endAt <= effectiveRangeStart || startAt >= rangeEnd) continue;
 
       blocked.push({ startAt, endAt });
     }
@@ -159,7 +173,7 @@ export class SlotAvailabilityService {
     blocked.sort((a, b) => a.startAt.getTime() - b.startAt.getTime());
 
     const available: TimeWindow[] = [];
-    let cursor = new Date(rangeStart);
+    let cursor = new Date(effectiveRangeStart);
 
     while (true) {
       const candidateStart = new Date(cursor);
@@ -178,7 +192,7 @@ export class SlotAvailabilityService {
         ),
       );
 
-      if (!overlapsBlocked) {
+      if (this.isStrictlyFuture(candidateStart, now) && !overlapsBlocked) {
         available.push({
           startAt: candidateStart,
           endAt: candidateEnd,
