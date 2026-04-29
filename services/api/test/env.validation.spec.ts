@@ -44,6 +44,7 @@ describe("validateEnv", () => {
         ...base,
         NODE_ENV: "production",
         STRIPE_WEBHOOK_SECRET: "whsec_test",
+        PUBLIC_SLOT_ID_SECRET: "slot_secret_test",
       }),
     ).toThrow(/STRIPE_SECRET_KEY is required in production/);
   });
@@ -54,7 +55,19 @@ describe("validateEnv", () => {
         ...base,
         NODE_ENV: "production",
         STRIPE_SECRET_KEY: "sk_live_x",
+        PUBLIC_SLOT_ID_SECRET: "slot_secret_test",
       }),
     ).toThrow(/STRIPE_WEBHOOK_SECRET is required in production/);
+  });
+
+  it("fails in production when PUBLIC_SLOT_ID_SECRET missing", () => {
+    expect(() =>
+      validateEnv({
+        ...base,
+        NODE_ENV: "production",
+        STRIPE_SECRET_KEY: "sk_live_x",
+        STRIPE_WEBHOOK_SECRET: "whsec_test",
+      }),
+    ).toThrow(/PUBLIC_SLOT_ID_SECRET is required in production/);
   });
 });

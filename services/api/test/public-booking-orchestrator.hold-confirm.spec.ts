@@ -19,6 +19,27 @@ const noopPublicDeposit = {
 const START = "2030-06-01T14:00:00.000Z";
 const END = "2030-06-01T15:00:00.000Z";
 
+function decodeSlotEnvelope(slotId: string) {
+  return JSON.parse(Buffer.from(slotId, "base64url").toString("utf8")) as {
+    v?: number;
+    payload?: Record<string, unknown>;
+    sig?: string;
+  };
+}
+
+function encodeSlotEnvelope(envelope: Record<string, unknown>) {
+  return Buffer.from(JSON.stringify(envelope), "utf8").toString("base64url");
+}
+
+function unsignedLegacySlotId(input: {
+  foId: string;
+  startAt: string;
+  endAt: string;
+  durationMinutes: number;
+}) {
+  return Buffer.from(JSON.stringify(input), "utf8").toString("base64url");
+}
+
 /** FO row that yields 60m crew-adjusted slots for default parse labor (120m) + 1h hold window. */
 function franchiseOwnerRowForPublicHoldTests() {
   return {
@@ -178,6 +199,19 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       endAt: end.toISOString(),
       durationMinutes: 120,
     });
+    const envelope = decodeSlotEnvelope(res.windows[0].slotId);
+    expect(envelope).toEqual(
+      expect.objectContaining({
+        v: 1,
+        payload: expect.objectContaining({
+          foId: "fo_a",
+          startAt: START,
+          endAt: end.toISOString(),
+          durationMinutes: 120,
+        }),
+        sig: expect.any(String),
+      }),
+    );
   });
 
   it("createHold: accepts exact server slotId", async () => {
@@ -231,6 +265,79 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       startAt: start,
       endAt: end,
     });
+  });
+
+  it("createHold: rejects tampered signed slotId without creating hold", async () => {
+    const createHold = jest.fn();
+    const slotId = encodePublicSlotId({
+      foId: "fo_a",
+      startAt: START,
+      endAt: END,
+      durationMinutes: 60,
+    });
+    const envelope = decodeSlotEnvelope(slotId);
+    const tamperedSlotId = encodeSlotEnvelope({
+      ...envelope,
+      payload: {
+        ...envelope.payload,
+        foId: "fo_b",
+      },
+    });
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+      },
+    } as unknown as PrismaService;
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      {} as SlotAvailabilityService,
+      { createHold } as unknown as SlotHoldsService,
+      {} as BookingsService,
+      {} as FoService,
+      noopPublicDeposit,
+    );
+
+    await expect(
+      svc.createHold({ bookingId: "bk_hold", slotId: tamperedSlotId }),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_INVALID_SLOT_ID",
+      }),
+    });
+    expect(createHold).not.toHaveBeenCalled();
+  });
+
+  it("createHold: rejects unsigned legacy slotId without creating hold", async () => {
+    const createHold = jest.fn();
+    const slotId = unsignedLegacySlotId({
+      foId: "fo_a",
+      startAt: START,
+      endAt: END,
+      durationMinutes: 60,
+    });
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+      },
+    } as unknown as PrismaService;
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      {} as SlotAvailabilityService,
+      { createHold } as unknown as SlotHoldsService,
+      {} as BookingsService,
+      {} as FoService,
+      noopPublicDeposit,
+    );
+
+    await expect(
+      svc.createHold({ bookingId: "bk_hold", slotId }),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: "PUBLIC_BOOKING_INVALID_SLOT_ID",
+      }),
+    });
+    expect(decodePublicSlotId(slotId)).toBeNull();
+    expect(createHold).not.toHaveBeenCalled();
   });
 
   it("createHold: rejects invalid slotId without creating hold", async () => {
