@@ -85,10 +85,19 @@ function isDuplicateBookingEventIdempotencyError(error: unknown): boolean {
     return false;
   }
   if (Array.isArray(target)) {
-    return target.includes("bookingId") && target.includes("idempotencyKey");
+    const normalizedTarget = target.map((part) => String(part)).join("_");
+    return (
+      (target.includes("bookingId") && target.includes("idempotencyKey")) ||
+      normalizedTarget.includes("bookingId_idempotencyKey") ||
+      (normalizedTarget.includes("bookingId") &&
+        normalizedTarget.includes("idempotencyKey"))
+    );
   }
   if (typeof target === "string") {
-    return target.includes("bookingId") && target.includes("idempotencyKey");
+    return (
+      target.includes("bookingId_idempotencyKey") ||
+      (target.includes("bookingId") && target.includes("idempotencyKey"))
+    );
   }
   return false;
 }
@@ -978,15 +987,29 @@ export class PublicBookingDepositService {
       data: patch,
     });
 
-    // Idempotency guard:
-    // Deposit success may be processed multiple times (prepare + confirm paths).
-    // Duplicate BookingEvent for same (bookingId, idempotencyKey) is expected and safe.
+    const idempotencyKey = `public-deposit-sync:${args.paymentIntentId}`;
+    // Decision-layer idempotency:
+    // deposit success can be reached by prepare, confirm, webhook, or reconciliation.
+    // If the same logical BookingEvent already exists, success has already been recorded.
+    // The P2002 catch below remains only as a concurrency fallback.
+    const existingDepositSuccessEvent = await this.prisma.bookingEvent.findUnique({
+      where: {
+        bookingId_idempotencyKey: {
+          bookingId: args.bookingId,
+          idempotencyKey,
+        },
+      },
+    });
+    if (existingDepositSuccessEvent) {
+      return;
+    }
+
     try {
       await this.prisma.bookingEvent.create({
         data: {
           bookingId: args.bookingId,
           type: BookingEventType.NOTE,
-          idempotencyKey: `public-deposit-sync:${args.paymentIntentId}`,
+          idempotencyKey,
           note: "Public booking deposit captured",
           payload: {
             publicDeposit: true,
