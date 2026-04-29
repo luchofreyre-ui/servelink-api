@@ -11,6 +11,7 @@ export const envSchema = z.object({
   STRIPE_PUBLISHABLE_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
   STRIPE_CURRENCY: z.string().default("usd"),
+  PUBLIC_SLOT_ID_SECRET: z.string().optional(),
   PUBLIC_BOOKING_DEPOSIT_MODE: z
     .enum(["required", "bypass"])
     .default("required"),
@@ -64,6 +65,11 @@ export function validateEnv(raw: Record<string, string | undefined>) {
     if (!env.STRIPE_WEBHOOK_SECRET) {
       throw new Error(
         "Invalid environment: STRIPE_WEBHOOK_SECRET is required in production",
+      );
+    }
+    if (!env.PUBLIC_SLOT_ID_SECRET) {
+      throw new Error(
+        "Invalid environment: PUBLIC_SLOT_ID_SECRET is required in production",
       );
     }
   }
