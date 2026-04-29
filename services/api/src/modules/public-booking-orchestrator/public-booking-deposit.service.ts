@@ -141,6 +141,48 @@ export class PublicBookingDepositService {
     private readonly config: ConfigService = new ConfigService(),
   ) {}
 
+  private logLifecycle(event: Record<string, unknown>) {
+    this.log.log({
+      kind: "public_booking_lifecycle",
+      ...event,
+    });
+  }
+
+  private async recordDepositFailureAnomaly(args: {
+    bookingId: string;
+    code: string;
+    stage: string;
+    nextAction?: string;
+  }) {
+    if (!this.prisma.paymentAnomaly?.create) return;
+    try {
+      await this.prisma.paymentAnomaly.create({
+        data: {
+          bookingId: args.bookingId,
+          kind: "public_booking_deposit_failed",
+          severity: "warning",
+          status: "open",
+          message: "Public booking deposit preparation failed.",
+          details: {
+            bookingId: args.bookingId,
+            code: args.code,
+            stage: args.stage,
+            nextAction: args.nextAction ?? null,
+            at: new Date().toISOString(),
+          } as Prisma.InputJsonValue,
+        },
+      });
+    } catch (err) {
+      this.log.error({
+        kind: "public_booking_lifecycle",
+        event: "anomaly_record_failed",
+        anomalyKind: "public_booking_deposit_failed",
+        bookingId: args.bookingId,
+        message: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+
   private shouldBypassPublicDeposit(): boolean {
     const mode = this.config.get<"required" | "bypass">(
       "PUBLIC_BOOKING_DEPOSIT_MODE",
@@ -353,7 +395,7 @@ export class PublicBookingDepositService {
         kind: "public_booking_deposit_prepare",
         event: "existing_payment_intent_retrieve_failed",
         bookingId: args.bookingId,
-        paymentIntentId: args.paymentIntentId,
+        paymentIntentIdPresent: Boolean(args.paymentIntentId?.trim()),
         message: err instanceof Error ? err.message : String(err),
       });
       return {
@@ -728,8 +770,31 @@ export class PublicBookingDepositService {
       });
     }
 
+    const finish = async (
+      result: PublicBookingDepositPrepareResult,
+    ): Promise<PublicBookingDepositPrepareResult> => {
+      this.logLifecycle({
+        event: "deposit_prepare_result",
+        bookingId: result.bookingId,
+        nextAction: result.nextAction,
+        depositStatus: result.depositStatus,
+        alreadyExists: Boolean(result.alreadyExists),
+        alreadyCompleted: Boolean(result.alreadyCompleted),
+        paymentIntentIdPresent: Boolean(result.paymentIntentId?.trim()),
+      });
+      if (result.nextAction === "show_error") {
+        await this.recordDepositFailureAnomaly({
+          bookingId: result.bookingId,
+          code: result.errorCode ?? "PUBLIC_BOOKING_DEPOSIT_FAILED",
+          stage: result.classification,
+          nextAction: result.nextAction,
+        });
+      }
+      return result;
+    };
+
     if (this.shouldBypassPublicDeposit()) {
-      return {
+      return finish({
         kind: "public_booking_deposit_prepare",
         bookingId: id,
         depositStatus: "deposit_succeeded",
@@ -738,7 +803,7 @@ export class PublicBookingDepositService {
         publicDepositStatus: "deposit_succeeded",
         alreadyCompleted: true,
         nextAction: "finalize_booking",
-      };
+      });
     }
 
     const ctx = await this.loadPublicDepositContext({
@@ -750,7 +815,7 @@ export class PublicBookingDepositService {
     const holdExpired = ctx.hold ? ctx.hold.expiresAt.getTime() <= Date.now() : false;
 
     if (booking.status !== BookingStatus.pending_payment) {
-      return {
+      return finish({
         kind: "public_booking_deposit_prepare",
         bookingId: id,
         depositStatus: String(booking.publicDepositStatus ?? ""),
@@ -759,14 +824,14 @@ export class PublicBookingDepositService {
         publicDepositStatus: String(booking.publicDepositStatus ?? ""),
         alreadyCompleted: true,
         nextAction: "finalize_booking",
-      };
+      });
     }
 
     if (
       booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
       !booking.publicDepositPaymentIntentId?.trim()
     ) {
-      return {
+      return finish({
         kind: "public_booking_deposit_prepare",
         bookingId: id,
         depositStatus: BookingPublicDepositStatus.deposit_succeeded,
@@ -775,14 +840,14 @@ export class PublicBookingDepositService {
         publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
         alreadyCompleted: true,
         nextAction: "finalize_booking",
-      };
+      });
     }
 
     if (
       booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
       booking.publicDepositPaymentIntentId?.trim()
     ) {
-      return {
+      return finish({
         kind: "public_booking_deposit_prepare",
         bookingId: id,
         depositStatus: BookingPublicDepositStatus.deposit_succeeded,
@@ -792,7 +857,7 @@ export class PublicBookingDepositService {
         paymentIntentId: booking.publicDepositPaymentIntentId.trim(),
         alreadyCompleted: true,
         nextAction: "finalize_booking",
-      };
+      });
     }
 
     const stripeCustomerId = await this.ensureDepositStripeCustomer(ctx);
@@ -833,7 +898,7 @@ export class PublicBookingDepositService {
         paymentIntentId: activeDepositPiId,
       });
       if (!existingPi.ok) {
-        return {
+        return finish({
           kind: "public_booking_deposit_prepare",
           bookingId: booking.id,
           depositStatus: String(booking.publicDepositStatus ?? ""),
@@ -844,7 +909,7 @@ export class PublicBookingDepositService {
           nextAction: "show_error",
           errorCode: existingPi.code,
           errorMessage: existingPi.message,
-        };
+        });
       }
       const pi = existingPi.paymentIntent;
       const st = String(pi.status ?? "");
@@ -856,7 +921,7 @@ export class PublicBookingDepositService {
           estimatedTotalCentsSnapshot: estimatedTotal > 0 ? estimatedTotal : null,
           remainingBalanceAfterDepositCents: estimatedTotal > 0 ? remaining : null,
         });
-        return {
+        return finish({
           kind: "public_booking_deposit_prepare",
           bookingId: booking.id,
           depositStatus: BookingPublicDepositStatus.deposit_succeeded,
@@ -866,7 +931,7 @@ export class PublicBookingDepositService {
           paymentIntentId: activeDepositPiId,
           alreadyCompleted: true,
           nextAction: "finalize_booking",
-        };
+        });
       }
       if (holdExpired) {
         throw new ConflictException({
@@ -875,16 +940,16 @@ export class PublicBookingDepositService {
         });
       }
       if (st === "processing") {
-        return depositReturn(
+        return finish(depositReturn(
           st,
           typeof pi.client_secret === "string" ? pi.client_secret : null,
           pi.id,
           "processing",
           true,
-        );
+        ));
       }
       if (st === "canceled" || st === "failed") {
-        return {
+        return finish({
           kind: "public_booking_deposit_prepare",
           bookingId: booking.id,
           depositStatus: String(booking.publicDepositStatus ?? ""),
@@ -897,30 +962,30 @@ export class PublicBookingDepositService {
           nextAction: "show_error",
           errorCode: "PUBLIC_BOOKING_DEPOSIT_PAYMENT_INTENT_UNRECOVERABLE",
           errorMessage: "Existing deposit PaymentIntent can no longer be confirmed.",
-        };
+        });
       } else if (
         st === "requires_action" ||
         st === "requires_payment_method" ||
         st === "requires_confirmation"
       ) {
-        return depositReturn(
+        return finish(depositReturn(
           st,
           typeof pi.client_secret === "string" ? pi.client_secret : null,
           pi.id,
           "payment_required",
           true,
-        );
+        ));
       } else {
         this.log.warn(
           `preparePublicBookingDeposit: unexpected PI status booking=${booking.id} status=${st}`,
         );
-        return depositReturn(
+        return finish(depositReturn(
           st,
           typeof pi.client_secret === "string" ? pi.client_secret : null,
           pi.id,
           "payment_required",
           true,
-        );
+        ));
       }
     }
 
@@ -952,12 +1017,12 @@ export class PublicBookingDepositService {
       },
     });
 
-    return depositReturn(
+    return finish(depositReturn(
       String(pi.status ?? ""),
       typeof pi.client_secret === "string" ? pi.client_secret : null,
       pi.id,
       "payment_required",
-    );
+    ));
   }
 
   private async markDepositSucceededFromStripeState(args: {

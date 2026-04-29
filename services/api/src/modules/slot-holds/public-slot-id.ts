@@ -5,6 +5,8 @@ export type PublicSlotIdentity = {
   startAt: string;
   endAt: string;
   durationMinutes: number;
+  issuedAt: string;
+  expiresAt: string;
 };
 
 type PublicSlotEnvelope = {
@@ -14,6 +16,7 @@ type PublicSlotEnvelope = {
 };
 
 const LOCAL_PUBLIC_SLOT_ID_SECRET = "local-public-slot-id-secret-for-dev-and-test";
+export const DEFAULT_PUBLIC_SLOT_ID_TTL_MS = 5 * 60 * 1000;
 
 function base64UrlEncode(value: string): string {
   return Buffer.from(value, "utf8").toString("base64url");
@@ -43,6 +46,9 @@ function normalizePublicSlotIdentity(input: {
   startAt: Date | string;
   endAt: Date | string;
   durationMinutes?: number;
+  issuedAt?: Date | string;
+  expiresAt?: Date | string;
+  now?: Date;
 }): PublicSlotIdentity | null {
   const foId = input.foId.trim();
   if (!foId) return null;
@@ -60,7 +66,18 @@ function normalizePublicSlotIdentity(input: {
   if (durationMinutes !== Math.round((end.getTime() - start.getTime()) / (60 * 1000))) {
     return null;
   }
-  return { foId, startAt, endAt, durationMinutes };
+  const issuedAt = normalizePublicSlotInstant(input.issuedAt ?? new Date());
+  if (!issuedAt) return null;
+  const issued = new Date(issuedAt);
+  const expiresAt = normalizePublicSlotInstant(
+    input.expiresAt ?? new Date(issued.getTime() + DEFAULT_PUBLIC_SLOT_ID_TTL_MS),
+  );
+  if (!expiresAt) return null;
+  const expires = new Date(expiresAt);
+  if (expires.getTime() <= issued.getTime()) return null;
+  const now = input.now ?? new Date();
+  if (expires.getTime() <= now.getTime()) return null;
+  return { foId, startAt, endAt, durationMinutes, issuedAt, expiresAt };
 }
 
 function canonicalPublicSlotPayloadJson(identity: PublicSlotIdentity): string {
@@ -69,6 +86,8 @@ function canonicalPublicSlotPayloadJson(identity: PublicSlotIdentity): string {
     startAt: identity.startAt,
     endAt: identity.endAt,
     durationMinutes: identity.durationMinutes,
+    issuedAt: identity.issuedAt,
+    expiresAt: identity.expiresAt,
   });
 }
 
@@ -92,6 +111,8 @@ export function encodePublicSlotId(input: {
   startAt: Date | string;
   endAt: Date | string;
   durationMinutes?: number;
+  issuedAt?: Date | string;
+  expiresAt?: Date | string;
 }): string {
   const identity = normalizePublicSlotIdentity(input);
   if (!identity) {
@@ -123,6 +144,8 @@ export function decodePublicSlotId(slotId: string): PublicSlotIdentity | null {
         typeof payload.durationMinutes === "number"
           ? payload.durationMinutes
           : undefined,
+      issuedAt: typeof payload.issuedAt === "string" ? payload.issuedAt : "",
+      expiresAt: typeof payload.expiresAt === "string" ? payload.expiresAt : "",
     });
     if (!identity) return null;
     if (!signaturesMatch(parsed.sig, signPublicSlotIdentity(identity))) {
