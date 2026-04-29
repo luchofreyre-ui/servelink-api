@@ -86,7 +86,7 @@ type BookingStepScheduleProps = {
   scheduleCommitPhase: "none" | "hold_failed" | "confirm_failed";
   hasAlternateTeamToSwitchTo: boolean;
   onSelectTeam: (team: BookingAvailableTeamOption) => void;
-  onSelectSlot: (startAt: string, endAt: string) => void;
+  onSelectSlot: (slotId: string | undefined, startAt: string, endAt: string) => void;
   onConfirmArrival: () => void;
   onAdjustScheduleDetails: () => void;
   onContinueManualFollowUp: () => void;
@@ -309,7 +309,7 @@ export function BookingStepSchedule({
                     state.selectedSlotStart === w.startAt &&
                     state.selectedSlotEnd === w.endAt
                   }
-                  onClick={() => onSelectSlot(w.startAt, w.endAt)}
+                  onClick={() => onSelectSlot(w.slotId, w.startAt, w.endAt)}
                 />
               ))}
             </div>

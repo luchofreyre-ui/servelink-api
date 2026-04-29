@@ -217,9 +217,15 @@ export type BookingFlowState = {
   /** Ranked team options from `public_booking_team_options` (max 2). */
   availableTeams: BookingAvailableTeamOption[];
   /** Open slots for the selected team (from `public_booking_team_availability`). */
-  availableWindows: { startAt: string; endAt: string }[];
+  availableWindows: {
+    slotId?: string;
+    startAt: string;
+    endAt: string;
+    durationMinutes?: number;
+  }[];
   selectedTeamId: string;
   selectedTeamDisplayName: string;
+  selectedSlotId: string;
   selectedSlotStart: string;
   selectedSlotEnd: string;
   publicHoldId: string;

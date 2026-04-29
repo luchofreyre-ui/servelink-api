@@ -169,6 +169,12 @@ async function defaultPostPublicBookingAvailability(body: {
 }) {
   if (body.foId) {
     const isSouth = body.foId === "fo_second";
+    const startAt = isSouth
+      ? "2030-04-16T10:00:00.000Z"
+      : "2030-04-15T14:00:00.000Z";
+    const endAt = isSouth
+      ? "2030-04-16T12:00:00.000Z"
+      : "2030-04-15T16:00:00.000Z";
     return {
       kind: "public_booking_team_availability" as const,
       bookingId: body.bookingId,
@@ -178,14 +184,12 @@ async function defaultPostPublicBookingAvailability(body: {
       },
       windows: [
         {
+          slotId: `server-slot:${body.foId}:${startAt}`,
           foId: body.foId,
           foDisplayName: isSouth ? "South Team" : "North Team",
-          startAt: isSouth
-            ? "2030-04-16T10:00:00.000Z"
-            : "2030-04-15T14:00:00.000Z",
-          endAt: isSouth
-            ? "2030-04-16T12:00:00.000Z"
-            : "2030-04-15T16:00:00.000Z",
+          startAt,
+          endAt,
+          durationMinutes: 120,
         },
       ],
     };
@@ -579,6 +583,7 @@ describe("BookingFlowClient", () => {
       expect(postPublicBookingHoldMock).toHaveBeenCalledWith(
         expect.objectContaining({
           bookingId: "bk_test",
+          slotId: "server-slot:fo_test_pick:2030-04-15T14:00:00.000Z",
           foId: "fo_test_pick",
           startAt: "2030-04-15T14:00:00.000Z",
           endAt: "2030-04-15T16:00:00.000Z",

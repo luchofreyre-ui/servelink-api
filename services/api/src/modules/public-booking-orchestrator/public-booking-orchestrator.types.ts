@@ -1,8 +1,10 @@
 export type PublicBookingWindow = {
+  slotId: string;
   foId: string;
   foDisplayName: string | null;
   startAt: string;
   endAt: string;
+  durationMinutes: number;
 };
 
 export type PublicBookingCrewCapacityMeta = {

@@ -675,12 +675,15 @@ export function BookingFlowClient() {
           return;
         }
         const windows = (res.windows ?? []).map((w) => ({
+          slotId: w.slotId,
           startAt: w.startAt,
           endAt: w.endAt,
+          durationMinutes: w.durationMinutes,
         }));
         setState((prev) => ({
           ...prev,
           availableWindows: windows,
+          selectedSlotId: "",
           selectedSlotStart: "",
           selectedSlotEnd: "",
           schedulingConfirmed: false,
@@ -1441,6 +1444,7 @@ export function BookingFlowClient() {
         selectedTeamDisplayName: "",
         availableTeams: [],
         availableWindows: [],
+        selectedSlotId: "",
         selectedSlotStart: "",
         selectedSlotEnd: "",
         publicHoldId: "",
@@ -1750,6 +1754,7 @@ export function BookingFlowClient() {
             selectedTeamDisplayName: "",
             availableTeams: [],
             availableWindows: [],
+            selectedSlotId: "",
             selectedSlotStart: "",
             selectedSlotEnd: "",
             publicHoldId: "",
@@ -1876,6 +1881,7 @@ export function BookingFlowClient() {
     try {
       const hold = await postPublicBookingHold({
         bookingId: state.schedulingBookingId,
+        slotId: state.selectedSlotId.trim() || undefined,
         foId: state.selectedTeamId,
         startAt: state.selectedSlotStart,
         endAt: state.selectedSlotEnd,
@@ -2022,6 +2028,7 @@ export function BookingFlowClient() {
     setState((prev) =>
       clampBookingStepToStructuralMax({
         ...prev,
+        selectedSlotId: "",
         selectedSlotStart: "",
         selectedSlotEnd: "",
         publicHoldId: "",
@@ -2048,6 +2055,7 @@ export function BookingFlowClient() {
         selectedTeamDisplayName: "",
         availableTeams: [],
         availableWindows: [],
+        selectedSlotId: "",
         selectedSlotStart: "",
         selectedSlotEnd: "",
         publicHoldId: "",
@@ -2102,6 +2110,7 @@ export function BookingFlowClient() {
           selectedTeamDisplayName: "",
           availableTeams: [],
           availableWindows: [],
+          selectedSlotId: "",
           selectedSlotStart: "",
           selectedSlotEnd: "",
           publicHoldId: "",
@@ -2176,6 +2185,7 @@ export function BookingFlowClient() {
         ...prev,
         selectedTeamId: team.id,
         selectedTeamDisplayName: team.displayName,
+        selectedSlotId: "",
         selectedSlotStart: "",
         selectedSlotEnd: "",
         availableWindows: [],
@@ -2185,7 +2195,7 @@ export function BookingFlowClient() {
     );
   }
 
-  function handleSelectSlot(startAt: string, endAt: string) {
+  function handleSelectSlot(slotId: string | undefined, startAt: string, endAt: string) {
     clearDepositUi();
     setScheduleSurfaceError(null);
     setScheduleCommitError(null);
@@ -2200,6 +2210,7 @@ export function BookingFlowClient() {
     setState((prev) =>
       clampBookingStepToStructuralMax({
         ...prev,
+        selectedSlotId: slotId?.trim() ?? "",
         selectedSlotStart: startAt,
         selectedSlotEnd: endAt,
         schedulingConfirmed: false,
