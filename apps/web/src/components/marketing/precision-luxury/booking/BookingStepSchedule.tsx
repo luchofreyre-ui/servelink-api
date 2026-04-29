@@ -124,10 +124,20 @@ export function BookingStepSchedule({
   const displayTeams = state.availableTeams.slice(0, 2);
   const hasTeams = displayTeams.length > 0;
   const teamChosen = Boolean(state.selectedTeamId.trim());
+  const selectedSlotId = state.selectedSlotId.trim();
+  const selectedSlotIsCurrent =
+    Boolean(selectedSlotId) &&
+    state.availableWindows.some((w) => w.slotId?.trim() === selectedSlotId);
   const slotChosen =
+    selectedSlotIsCurrent &&
     Boolean(state.selectedSlotStart.trim()) &&
     Boolean(state.selectedSlotEnd.trim());
-  const canConfirm = teamChosen && slotChosen && scheduleCommitPhase !== "confirm_failed";
+  const canConfirm =
+    teamChosen &&
+    slotChosen &&
+    scheduleCommitPhase !== "confirm_failed" &&
+    !windowsLoading &&
+    !confirmLoading;
   const showTeamsFallback =
     !teamsLoading && teamsEmptyState !== "none" && !hasTeams;
 
@@ -306,8 +316,7 @@ export function BookingStepSchedule({
                   title={formatSlotLabel(w.startAt)}
                   body={BOOKING_SCHEDULE_SLOT_CARD_BODY}
                   selected={
-                    state.selectedSlotStart === w.startAt &&
-                    state.selectedSlotEnd === w.endAt
+                    selectedSlotId === w.slotId?.trim()
                   }
                   onClick={() => onSelectSlot(w.slotId, w.startAt, w.endAt)}
                 />

@@ -98,6 +98,7 @@ import {
   postPublicBookingAvailability,
   postPublicBookingConfirm,
   postPublicBookingHold,
+  PublicBookingApiError,
   PublicBookingDepositProcessingError,
   PublicBookingPaymentRequiredError,
   submitBookingDirectionIntake,
@@ -137,6 +138,11 @@ type ReviewPaymentPhase =
   | "finalizing_timeout";
 
 const DEPOSIT_LOCK_KEY = "booking_deposit_in_flight";
+const PUBLIC_BOOKING_STALE_SLOT_CODES = new Set([
+  "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE",
+  "PUBLIC_BOOKING_INVALID_SLOT_ID",
+  "PUBLIC_BOOKING_SLOT_IN_PAST",
+]);
 
 function getStepOrder(step: BookingStepId) {
   return bookingSteps.find((item) => item.id === step)?.order ?? 1;
@@ -547,6 +553,23 @@ export function BookingFlowClient() {
   const bookingUrlCommittedStepRef = useRef<BookingStepId | null>(null);
   const lastErrorScrollSignatureRef = useRef<string | null>(null);
 
+  function invalidateSelectedSlot(message = BOOKING_SCHEDULE_HOLD_FAILED) {
+    setScheduleCommitError(message);
+    setScheduleCommitPhase("hold_failed");
+    setState((prev) => ({
+      ...prev,
+      selectedSlotId: "",
+      selectedSlotStart: "",
+      selectedSlotEnd: "",
+      schedulingConfirmed: false,
+      publicHoldId: "",
+    }));
+  }
+
+  function isStaleSlotApiError(err: unknown): boolean {
+    return err instanceof PublicBookingApiError && PUBLIC_BOOKING_STALE_SLOT_CODES.has(err.code);
+  }
+
   useEffect(() => {
     if (state.step !== "schedule" || !state.schedulingBookingId.trim()) {
       setTeamsEmptyState("none");
@@ -680,15 +703,36 @@ export function BookingFlowClient() {
           endAt: w.endAt,
           durationMinutes: w.durationMinutes,
         }));
-        setState((prev) => ({
-          ...prev,
-          availableWindows: windows,
-          selectedSlotId: "",
-          selectedSlotStart: "",
-          selectedSlotEnd: "",
-          schedulingConfirmed: false,
-          publicHoldId: "",
-        }));
+        const currentSlotIds = new Set(
+          windows.map((w) => w.slotId?.trim()).filter(Boolean),
+        );
+        const currentState = stateRefForBookingUrl.current;
+        const selectedSlotId = currentState.selectedSlotId.trim();
+        const hasCurrentSelectedSlot =
+          Boolean(selectedSlotId) && currentSlotIds.has(selectedSlotId);
+        const hasRestoredSelection =
+          Boolean(selectedSlotId) ||
+          Boolean(currentState.selectedSlotStart.trim()) ||
+          Boolean(currentState.selectedSlotEnd.trim());
+        if (hasRestoredSelection && !hasCurrentSelectedSlot) {
+          setScheduleCommitError(BOOKING_SCHEDULE_HOLD_FAILED);
+          setScheduleCommitPhase("hold_failed");
+        }
+        setState((prev) => {
+          return {
+            ...prev,
+            availableWindows: windows,
+            ...(hasCurrentSelectedSlot
+              ? {}
+              : {
+                  selectedSlotId: "",
+                  selectedSlotStart: "",
+                  selectedSlotEnd: "",
+                  schedulingConfirmed: false,
+                  publicHoldId: "",
+                }),
+          };
+        });
         const count = windows.length;
         setSlotsEmptyForTeam(count === 0);
         emitBookingFunnelEvent("slots_loaded", {
@@ -1858,9 +1902,18 @@ export function BookingFlowClient() {
     if (
       !state.schedulingBookingId.trim() ||
       !state.selectedTeamId.trim() ||
+      !state.selectedSlotId.trim() ||
       !state.selectedSlotStart.trim() ||
       !state.selectedSlotEnd.trim()
     ) {
+      return;
+    }
+    const selectedSlotIsCurrent = state.availableWindows.some(
+      (w) => w.slotId?.trim() === state.selectedSlotId.trim(),
+    );
+    if (!selectedSlotIsCurrent) {
+      invalidateSelectedSlot();
+      setWindowsRefreshKey((k) => k + 1);
       return;
     }
     scheduleConfirmIdempotencyKeyRef.current =
@@ -1941,8 +1994,12 @@ export function BookingFlowClient() {
         startAt: state.selectedSlotStart,
         endAt: state.selectedSlotEnd,
       });
-      setScheduleCommitError(BOOKING_SCHEDULE_HOLD_FAILED);
-      setScheduleCommitPhase("hold_failed");
+      if (isStaleSlotApiError(holdErr)) {
+        invalidateSelectedSlot();
+      } else {
+        setScheduleCommitError(BOOKING_SCHEDULE_HOLD_FAILED);
+        setScheduleCommitPhase("hold_failed");
+      }
       setWindowsRefreshKey((k) => k + 1);
     } finally {
       setConfirmScheduleLoading(false);
