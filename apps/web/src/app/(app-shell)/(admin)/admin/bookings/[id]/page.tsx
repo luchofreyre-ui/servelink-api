@@ -701,10 +701,9 @@ export default function AdminBookingDetailPage() {
   const controlledCompletionMinutesInput =
     controlledCompletionActualMinutes.trim();
   const controlledCompletionMinutes = Number(controlledCompletionMinutesInput);
-  const controlledCompletionConfirmationInput =
-    controlledCompletionConfirmation.trim();
   const controlledCompletionConfirmed =
-    controlledCompletionConfirmationInput === CONTROLLED_COMPLETION_CONFIRMATION;
+    controlledCompletionConfirmation.trim().toUpperCase() ===
+    "COMPLETE CONTROLLED TEST";
   const controlledCompletionMinutesValid =
     controlledCompletionMinutesInput.length > 0 &&
     Number.isInteger(controlledCompletionMinutes) &&
@@ -1452,13 +1451,6 @@ export default function AdminBookingDetailPage() {
             ) : null}
           </section>
         ) : null}
-
-        <div style={{ marginTop: 12, fontSize: 12, opacity: 0.8 }}>
-          <div>snapshotReady: {controlledCompletionSnapshotReady ? 'YES' : 'NO'}</div>
-          <div>statusAllowed: {controlledCompletionStatusAllowed ? 'YES' : 'NO'}</div>
-          <div>confirmationValid: {controlledCompletionConfirmed ? 'YES' : 'NO'}</div>
-          <div>minutesValid: {controlledCompletionMinutesValid ? 'YES' : 'NO'}</div>
-        </div>
 
         <AdminBookingOperationalDetailCard bookingId={bookingId} />
 
