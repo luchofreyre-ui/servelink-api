@@ -691,19 +691,29 @@ export default function AdminBookingDetailPage() {
     () => buildSnapshotVisibility(booking.data),
     [booking.data],
   );
+  const controlledCompletionBookingStatus = String(booking.data?.status ?? "").trim();
+  const controlledCompletionSnapshotReady = snapshotVisibility.exists;
+  const controlledCompletionStatusAllowed =
+    controlledCompletionBookingStatus === "assigned" ||
+    controlledCompletionBookingStatus === "in_progress";
   const canRunControlledCompletion =
-    Boolean(booking.data?.estimateSnapshot) &&
-    booking.data?.status !== "completed" &&
-    (booking.data?.status === "assigned" || booking.data?.status === "in_progress");
-  const controlledCompletionMinutes = Number(controlledCompletionActualMinutes);
+    controlledCompletionSnapshotReady && controlledCompletionStatusAllowed;
+  const controlledCompletionMinutesInput =
+    controlledCompletionActualMinutes.trim();
+  const controlledCompletionMinutes = Number(controlledCompletionMinutesInput);
+  const controlledCompletionConfirmationInput =
+    controlledCompletionConfirmation.trim();
   const controlledCompletionConfirmed =
-    controlledCompletionConfirmation.trim() === CONTROLLED_COMPLETION_CONFIRMATION;
+    controlledCompletionConfirmationInput === CONTROLLED_COMPLETION_CONFIRMATION;
   const controlledCompletionMinutesValid =
+    controlledCompletionMinutesInput.length > 0 &&
     Number.isInteger(controlledCompletionMinutes) &&
-    controlledCompletionMinutes > 0 &&
+    controlledCompletionMinutes >= 1 &&
     controlledCompletionMinutes <= 24 * 60;
   const controlledCompletionDisabled =
     controlledCompletionBusy ||
+    !controlledCompletionSnapshotReady ||
+    !controlledCompletionStatusAllowed ||
     !controlledCompletionConfirmed ||
     !controlledCompletionMinutesValid;
 
@@ -1401,6 +1411,22 @@ export default function AdminBookingDetailPage() {
                 </button>
               </div>
             ) : null}
+
+            <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-amber-100/75">
+              {[
+                ["snapshotReady", controlledCompletionSnapshotReady],
+                ["statusAllowed", controlledCompletionStatusAllowed],
+                ["minutesValid", controlledCompletionMinutesValid],
+                ["confirmationValid", controlledCompletionConfirmed],
+              ].map(([label, ok]) => (
+                <span
+                  key={String(label)}
+                  className="rounded-full border border-white/10 bg-black/25 px-3 py-2"
+                >
+                  {label}: {ok ? "YES" : "NO"}
+                </span>
+              ))}
+            </div>
 
             {!controlledCompletionMinutesValid ? (
               <p className="mt-3 text-sm text-red-200">
