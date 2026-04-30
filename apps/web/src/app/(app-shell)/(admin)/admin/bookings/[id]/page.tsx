@@ -67,6 +67,24 @@ type Loadable<T> = {
   data: T | null;
 };
 
+type JsonRecord = Record<string, unknown>;
+
+type SnapshotVisibility = {
+  exists: boolean;
+  inputFacts: unknown;
+  outputJson: unknown;
+  outputJsonText: string;
+  estimatedPrice: string;
+  estimatedDurationMinutes: string;
+  confidenceScore: string;
+  conditionScore: string;
+  service: string;
+  address: string;
+  actualMinutes: number | null;
+  learningReady: boolean;
+  warnings: string[];
+};
+
 function workflowStateLabel(
   state: AdminBookingCommandCenterPayload["workflowState"],
 ): string {
@@ -148,6 +166,145 @@ function formatDateTime(value: string | null | undefined) {
   }
 
   return parsed.toLocaleString();
+}
+
+function formatNullable(value: unknown): string {
+  if (value === null || value === undefined || value === "") {
+    return "NULL";
+  }
+  return String(value);
+}
+
+function formatMoneyFromCents(value: unknown): string {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return "NULL";
+  }
+  return `$${(value / 100).toFixed(2)}`;
+}
+
+function asRecord(value: unknown): JsonRecord | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+  return value as JsonRecord;
+}
+
+function parseJsonText(value: string | null | undefined): unknown {
+  if (!value?.trim()) {
+    return null;
+  }
+  try {
+    return JSON.parse(value) as unknown;
+  } catch {
+    return { parseError: "INVALID_JSON", raw: value };
+  }
+}
+
+function numberFrom(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function nestedRecord(root: JsonRecord | null, key: string): JsonRecord | null {
+  return root ? asRecord(root[key]) : null;
+}
+
+function firstNumber(...values: unknown[]): number | null {
+  for (const value of values) {
+    const n = numberFrom(value);
+    if (n != null) return n;
+  }
+  return null;
+}
+
+function firstString(...values: unknown[]): string | null {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) {
+      return value;
+    }
+  }
+  return null;
+}
+
+function deriveActualMinutes(events: BookingEvent[] | undefined): number | null {
+  if (!events?.length) return null;
+  const learningEvents = events
+    .filter((event) => event.payload?.kind === "estimate_learning_result")
+    .sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  return numberFrom(learningEvents[0]?.payload?.actualMinutes);
+}
+
+function formatAddressFromFacts(facts: JsonRecord | null): string {
+  const serviceLocation = nestedRecord(facts, "serviceLocation");
+  const parts = [
+    firstString(serviceLocation?.street, facts?.street, facts?.address),
+    firstString(serviceLocation?.city, facts?.city),
+    firstString(serviceLocation?.state, facts?.state),
+    firstString(serviceLocation?.zip, facts?.zip, facts?.postalCode),
+  ].filter(Boolean);
+  return parts.length ? parts.join(", ") : "NULL";
+}
+
+function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibility {
+  const snapshot = booking?.estimateSnapshot ?? null;
+  const inputFacts = parseJsonText(snapshot?.inputJson);
+  const outputJson = parseJsonText(snapshot?.outputJson);
+  const output = asRecord(outputJson);
+  const estimateV2 = nestedRecord(output, "estimateV2");
+  const pricingFactors = nestedRecord(estimateV2, "pricingFactors");
+  const legacy = nestedRecord(output, "legacy");
+  const inputRecord = asRecord(inputFacts);
+  const rawNormalizedIntake = nestedRecord(output, "rawNormalizedIntake");
+  const facts = rawNormalizedIntake ?? inputRecord;
+  const actualMinutes = deriveActualMinutes(booking?.events);
+  const estimatedPriceCents = firstNumber(
+    output?.estimatedPriceCents,
+    legacy?.priceCents,
+    estimateV2?.customerVisible && asRecord(estimateV2.customerVisible)?.estimatedPrice,
+  );
+  const estimatedDurationMinutes = firstNumber(
+    output?.estimatedDurationMinutes,
+    output?.estimateMinutes,
+    legacy?.durationMinutes,
+    estimateV2?.expectedMinutes,
+  );
+  const confidenceScore = firstNumber(
+    output?.confidence,
+    snapshot?.confidence,
+    estimateV2?.confidenceScore,
+  );
+  const warnings: string[] = [];
+
+  if (!snapshot) warnings.push("missing snapshot");
+  if (snapshot && !snapshot.outputJson) warnings.push("missing outputJson");
+  if (estimatedDurationMinutes == null) warnings.push("missing estimated duration");
+  if (booking?.status === "completed" && actualMinutes == null) {
+    warnings.push("completed booking without actualMinutes");
+  }
+
+  return {
+    exists: Boolean(snapshot),
+    inputFacts,
+    outputJson,
+    outputJsonText:
+      outputJson == null ? "NULL" : JSON.stringify(outputJson, null, 2),
+    estimatedPrice:
+      estimatedPriceCents == null ? "NULL" : formatMoneyFromCents(estimatedPriceCents),
+    estimatedDurationMinutes:
+      estimatedDurationMinutes == null ? "NULL" : String(estimatedDurationMinutes),
+    confidenceScore:
+      confidenceScore == null ? "NULL" : String(confidenceScore),
+    conditionScore: formatNullable(pricingFactors?.conditionScore),
+    service: formatNullable(
+      firstString(facts?.service_type, facts?.serviceId, facts?.service),
+    ),
+    address: formatAddressFromFacts(facts),
+    actualMinutes,
+    learningReady:
+      Boolean(snapshot) && booking?.status === "completed" && actualMinutes != null,
+    warnings,
+  };
 }
 
 function readApiErrorMessage(payload: unknown, fallback: string) {
@@ -332,6 +489,11 @@ export default function AdminBookingDetailPage() {
       metadata: decision,
     }));
   }, [timeline.data]);
+
+  const snapshotVisibility = useMemo(
+    () => buildSnapshotVisibility(booking.data),
+    [booking.data],
+  );
 
   useEffect(() => {
     if (!token || !bookingId) {
@@ -1161,6 +1323,139 @@ export default function AdminBookingDetailPage() {
             ) : null}
           </section>
         </div>
+
+        <section className="rounded-[28px] border border-white/10 bg-white/5 p-6">
+          <div className="mb-5">
+            <h2 className="text-xl font-semibold">Estimate snapshot visibility</h2>
+            <p className="mt-1 text-sm text-white/60">
+              Booking-level estimator output, actuals, and learning readiness.
+            </p>
+          </div>
+
+          {booking.loading ? (
+            <div className="text-sm text-white/60">Loading estimate snapshot...</div>
+          ) : booking.error ? (
+            <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-4 text-sm text-red-200">
+              {booking.error}
+            </div>
+          ) : booking.data ? (
+            <div className="space-y-5">
+              <div
+                className={
+                  snapshotVisibility.exists
+                    ? "rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-100"
+                    : "rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100"
+                }
+              >
+                SNAPSHOT EXISTS: {snapshotVisibility.exists ? "YES" : "NO"}
+              </div>
+
+              {snapshotVisibility.warnings.length > 0 ? (
+                <div className="grid gap-2 md:grid-cols-2">
+                  {snapshotVisibility.warnings.map((warning) => (
+                    <div
+                      key={warning}
+                      className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100"
+                    >
+                      WARNING: {warning}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {[
+                  ["Booking id", booking.data.id],
+                  ["Status", booking.data.status],
+                  ["Customer id", booking.data.customerId],
+                  ["Customer email", booking.data.customer?.email],
+                  ["Customer phone", booking.data.customer?.phone],
+                  ["Service", snapshotVisibility.service],
+                  ["Address", snapshotVisibility.address],
+                  ["Created", formatDateTime(booking.data.createdAt)],
+                  [
+                    "Scheduled time",
+                    formatDateTime(
+                      typeof booking.data.scheduledStart === "string"
+                        ? booking.data.scheduledStart
+                        : null,
+                    ),
+                  ],
+                  [
+                    "FO assignment",
+                    booking.data.fo?.displayName || booking.data.foId || null,
+                  ],
+                  [
+                    "Estimated price",
+                    snapshotVisibility.estimatedPrice,
+                  ],
+                  [
+                    "Estimated duration minutes",
+                    snapshotVisibility.estimatedDurationMinutes,
+                  ],
+                  ["Confidence score", snapshotVisibility.confidenceScore],
+                  ["Condition score", snapshotVisibility.conditionScore],
+                  [
+                    "Completed at",
+                    formatDateTime(
+                      typeof booking.data.completedAt === "string"
+                        ? booking.data.completedAt
+                        : null,
+                    ),
+                  ],
+                  ["Actual minutes", snapshotVisibility.actualMinutes],
+                ].map(([label, value]) => (
+                  <div
+                    key={String(label)}
+                    className="rounded-2xl border border-white/10 bg-black/20 p-4"
+                  >
+                    <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                      {label}
+                    </div>
+                    <div className="mt-2 break-words text-sm font-semibold text-white">
+                      {typeof value === "string"
+                        ? value
+                        : formatNullable(value)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                className={
+                  snapshotVisibility.learningReady
+                    ? "rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-100"
+                    : "rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100"
+                }
+              >
+                LEARNING READY: {snapshotVisibility.learningReady ? "PASS" : "FAIL"}
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold text-white">
+                    Estimate factors / input facts
+                  </h3>
+                  <pre className="max-h-[420px] overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs text-white/75">
+                    {snapshotVisibility.inputFacts == null
+                      ? "NULL"
+                      : JSON.stringify(snapshotVisibility.inputFacts, null, 2)}
+                  </pre>
+                </div>
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold text-white">
+                    Raw outputJson
+                  </h3>
+                  <pre className="max-h-[420px] overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs text-white/75">
+                    {snapshotVisibility.outputJsonText}
+                  </pre>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-sm text-white/60">No booking found.</div>
+          )}
+        </section>
 
         <section
           role="region"
