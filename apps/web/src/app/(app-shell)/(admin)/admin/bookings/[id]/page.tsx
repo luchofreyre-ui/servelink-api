@@ -691,19 +691,29 @@ export default function AdminBookingDetailPage() {
     () => buildSnapshotVisibility(booking.data),
     [booking.data],
   );
+  const controlledCompletionBookingStatus = String(booking.data?.status ?? "").trim();
+  const controlledCompletionSnapshotReady = snapshotVisibility.exists;
+  const controlledCompletionStatusAllowed =
+    controlledCompletionBookingStatus === "assigned" ||
+    controlledCompletionBookingStatus === "in_progress";
   const canRunControlledCompletion =
-    Boolean(booking.data?.estimateSnapshot) &&
-    booking.data?.status !== "completed" &&
-    (booking.data?.status === "assigned" || booking.data?.status === "in_progress");
-  const controlledCompletionMinutes = Number(controlledCompletionActualMinutes);
+    controlledCompletionSnapshotReady && controlledCompletionStatusAllowed;
+  const controlledCompletionMinutesInput =
+    controlledCompletionActualMinutes.trim();
+  const controlledCompletionMinutes = Number(controlledCompletionMinutesInput);
+  const controlledCompletionConfirmationInput =
+    controlledCompletionConfirmation.trim();
   const controlledCompletionConfirmed =
-    controlledCompletionConfirmation.trim() === CONTROLLED_COMPLETION_CONFIRMATION;
+    controlledCompletionConfirmationInput === CONTROLLED_COMPLETION_CONFIRMATION;
   const controlledCompletionMinutesValid =
+    controlledCompletionMinutesInput.length > 0 &&
     Number.isInteger(controlledCompletionMinutes) &&
-    controlledCompletionMinutes > 0 &&
+    controlledCompletionMinutes >= 1 &&
     controlledCompletionMinutes <= 24 * 60;
   const controlledCompletionDisabled =
     controlledCompletionBusy ||
+    !controlledCompletionSnapshotReady ||
+    !controlledCompletionStatusAllowed ||
     !controlledCompletionConfirmed ||
     !controlledCompletionMinutesValid;
 
@@ -1442,6 +1452,13 @@ export default function AdminBookingDetailPage() {
             ) : null}
           </section>
         ) : null}
+
+        <div style={{ marginTop: 12, fontSize: 12, opacity: 0.8 }}>
+          <div>snapshotReady: {controlledCompletionSnapshotReady ? 'YES' : 'NO'}</div>
+          <div>statusAllowed: {controlledCompletionStatusAllowed ? 'YES' : 'NO'}</div>
+          <div>confirmationValid: {controlledCompletionConfirmed ? 'YES' : 'NO'}</div>
+          <div>minutesValid: {controlledCompletionMinutesValid ? 'YES' : 'NO'}</div>
+        </div>
 
         <AdminBookingOperationalDetailCard bookingId={bookingId} />
 
