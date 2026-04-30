@@ -329,6 +329,116 @@ export class BookingsService {
     });
   }
 
+  private readEstimatedDurationMinutesFromSnapshot(
+    snapshot: { outputJson?: string | null } | null | undefined,
+  ): number | null {
+    const text = snapshot?.outputJson?.trim();
+    if (!text) return null;
+    try {
+      const output = JSON.parse(text) as Record<string, unknown>;
+      const value = output.estimatedDurationMinutes;
+      return typeof value === "number" && Number.isFinite(value) && value > 0
+        ? Math.floor(value)
+        : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async completeBookingControlledByAdmin(args: {
+    bookingId: string;
+    actualMinutes: number;
+    confirmControlledCompletion: boolean;
+    note?: string | null;
+  }) {
+    const actualMinutes = Math.floor(args.actualMinutes);
+    if (!args.bookingId?.trim()) {
+      throw new BadRequestException("bookingId is required");
+    }
+    if (args.confirmControlledCompletion !== true) {
+      throw new BadRequestException("confirmControlledCompletion must be true");
+    }
+    if (
+      !Number.isFinite(actualMinutes) ||
+      actualMinutes <= 0 ||
+      actualMinutes > 24 * 60
+    ) {
+      throw new BadRequestException("actualMinutes must be between 1 and 1440");
+    }
+
+    const booking = await this.db.booking.findUnique({
+      where: { id: args.bookingId },
+      include: {
+        estimateSnapshot: { select: { outputJson: true } },
+      },
+    });
+    if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
+    if (booking.status === BookingStatus.completed) {
+      throw new ConflictException("BOOKING_ALREADY_COMPLETED");
+    }
+    if (!booking.estimateSnapshot?.outputJson?.trim()) {
+      throw new BadRequestException("BOOKING_ESTIMATE_SNAPSHOT_REQUIRED");
+    }
+    if (
+      booking.status !== BookingStatus.assigned &&
+      booking.status !== BookingStatus.in_progress
+    ) {
+      throw new ConflictException("BOOKING_CONTROLLED_COMPLETION_STATE_INVALID");
+    }
+
+    const beforeStatus = booking.status;
+    const estimatedDurationMinutes = this.readEstimatedDurationMinutesFromSnapshot(
+      booking.estimateSnapshot,
+    );
+    const learningIdempotencyKey = `estimate-learning-result:${booking.id}`;
+    const existingLearning = await this.db.bookingEvent.findFirst({
+      where: {
+        bookingId: booking.id,
+        idempotencyKey: learningIdempotencyKey,
+      },
+      select: { id: true },
+    });
+
+    const note = args.note?.trim() || "CONTROLLED_LEARNING_VALIDATION";
+    if (booking.status === BookingStatus.assigned) {
+      await this.transitionBooking({
+        id: booking.id,
+        transition: "start",
+        note,
+        idempotencyKey: `controlled-completion-start:${booking.id}`,
+      });
+    }
+
+    const completed = await this.transitionBooking({
+      id: booking.id,
+      transition: "complete",
+      note,
+      actualMinutes,
+      idempotencyKey: `controlled-completion-complete:${booking.id}`,
+    });
+
+    const learningEvent = await this.db.bookingEvent.findFirst({
+      where: {
+        bookingId: booking.id,
+        idempotencyKey: learningIdempotencyKey,
+      },
+      select: { id: true },
+    });
+
+    return {
+      bookingId: booking.id,
+      beforeStatus,
+      afterStatus: completed.status,
+      estimatedDurationMinutes,
+      actualMinutes,
+      learningReady:
+        completed.status === BookingStatus.completed &&
+        actualMinutes > 0 &&
+        Boolean(booking.estimateSnapshot?.outputJson?.trim()),
+      learningEventCreated: Boolean(learningEvent && !existingLearning),
+    };
+  }
+
   /**
    * Single transactional write for assignment-related booking rows + one audit event.
    * Idempotent via @@unique([bookingId, idempotencyKey]) on BookingEvent.
@@ -992,6 +1102,10 @@ export class BookingsService {
                     ? args.note.trim().slice(0, 2000)
                     : null,
                 }
+              : {}),
+            ...(to === BookingStatus.completed &&
+            expectedCurrentStatus !== BookingStatus.completed
+              ? { completedAt: new Date() }
               : {}),
           },
         });

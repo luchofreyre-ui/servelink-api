@@ -31,6 +31,7 @@ import { CompleteDeepCleanVisitDto } from "./dto/deep-clean-visit-execution.dto"
 import { BookingScreenService } from "./booking-screen.service";
 import { AdminBookingsService } from "../admin/bookings/admin-bookings.service";
 import { AssignmentService } from "./assignment/assignment.service";
+import { AdminControlledCompleteBookingDto } from "./dto/admin-controlled-complete-booking.dto";
 import { AssignBookingDto } from "./dto/assign-booking.dto";
 import { AvailabilityWindowsQueryDto } from "./dto/availability-windows-query.dto";
 import { BookingMainTransitionDto } from "./dto/booking-main-transition.dto";
@@ -153,6 +154,27 @@ export class BookingsController {
       ok: true,
       item: this.bookings.mapBookingWithEvents(row as Record<string, unknown>),
     };
+  }
+
+  @Post(":id/admin/complete-controlled")
+  @UseGuards(AdminGuard)
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  )
+  async completeControlledByAdmin(
+    @Param("id") id: string,
+    @Body() body: AdminControlledCompleteBookingDto,
+  ) {
+    return this.bookings.completeBookingControlledByAdmin({
+      bookingId: id,
+      actualMinutes: body.actualMinutes,
+      confirmControlledCompletion: body.confirmControlledCompletion,
+      note: body.note,
+    });
   }
 
   @UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
