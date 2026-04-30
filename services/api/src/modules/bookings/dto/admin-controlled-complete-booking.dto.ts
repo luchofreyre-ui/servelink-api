@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
+import { IsBoolean, IsInt, IsString, Max, Min } from "class-validator";
 
 export class AdminControlledCompleteBookingDto {
   @Type(() => Number)
@@ -11,7 +11,6 @@ export class AdminControlledCompleteBookingDto {
   @IsBoolean()
   confirmControlledCompletion!: boolean;
 
-  @IsOptional()
   @IsString()
-  note?: string;
+  note!: string;
 }

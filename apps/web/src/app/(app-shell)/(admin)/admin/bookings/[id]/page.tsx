@@ -89,6 +89,11 @@ type SnapshotVisibility = {
   learningEligibleForTraining: string;
   learningGovernanceReason: string;
   learningCreatedBy: string;
+  controlledAuditExists: boolean;
+  controlledAuditExecutedBy: string;
+  controlledAuditExecutedAt: string;
+  controlledAuditReason: string;
+  controlledAuditTrainingEligible: string;
   learningReady: boolean;
   warnings: string[];
 };
@@ -117,10 +122,12 @@ type ActionState = {
 };
 
 type ControlledCompletionResult = {
-  afterStatus: string;
-  actualMinutes: number;
-  learningReady: boolean;
-  learningEventCreated: boolean;
+  message: string;
+  afterStatus?: string;
+  actualMinutes?: number;
+  learningReady?: boolean;
+  learningEventCreated?: boolean;
+  auditEventCreated?: boolean;
 };
 
 function deriveAdminPaymentSourceLine(
@@ -250,6 +257,22 @@ function latestLearningEvent(events: BookingEvent[] | undefined): BookingEvent |
   return learningEvents[0] ?? null;
 }
 
+function latestControlledCompletionAudit(
+  events: BookingEvent[] | undefined,
+): BookingEvent | null {
+  if (!events?.length) return null;
+  const auditEvents = events
+    .filter(
+      (event) =>
+        event.type === "CONTROLLED_COMPLETION_AUDIT" ||
+        event.payload?.kind === "controlled_completion_audit",
+    )
+    .sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  return auditEvents[0] ?? null;
+}
+
 function deriveActualMinutes(events: BookingEvent[] | undefined): number | null {
   return numberFrom(latestLearningEvent(events)?.payload?.actualMinutes);
 }
@@ -277,6 +300,8 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
   const rawNormalizedIntake = nestedRecord(output, "rawNormalizedIntake");
   const facts = rawNormalizedIntake ?? inputRecord;
   const learningEvent = latestLearningEvent(booking?.events);
+  const controlledAudit = latestControlledCompletionAudit(booking?.events);
+  const controlledAuditPayload = controlledAudit?.payload ?? null;
   const actualMinutes = deriveActualMinutes(booking?.events);
   const estimatedPriceCents = firstNumber(
     output?.estimatedPriceCents,
@@ -332,6 +357,17 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
     learningEligibleForTraining: formatNullable(learningEvent?.eligibleForTraining),
     learningGovernanceReason: formatNullable(learningEvent?.governanceReason),
     learningCreatedBy: formatNullable(learningEvent?.createdBy),
+    controlledAuditExists: Boolean(controlledAudit),
+    controlledAuditExecutedBy: formatNullable(controlledAuditPayload?.executedBy),
+    controlledAuditExecutedAt: formatDateTime(
+      typeof controlledAuditPayload?.executedAt === "string"
+        ? controlledAuditPayload.executedAt
+        : null,
+    ),
+    controlledAuditReason: formatNullable(controlledAuditPayload?.reason),
+    controlledAuditTrainingEligible: formatNullable(
+      controlledAuditPayload?.eligibleForTraining,
+    ),
     learningReady:
       Boolean(snapshot) && booking?.status === "completed" && actualMinutes != null,
     warnings,
@@ -497,6 +533,17 @@ function EstimateSnapshotVisibilitySection({
                 snapshotVisibility.learningGovernanceReason,
               ],
               ["Learning created by", snapshotVisibility.learningCreatedBy],
+              [
+                "Controlled completion audit",
+                snapshotVisibility.controlledAuditExists ? "YES" : "NO",
+              ],
+              ["Audit executed by", snapshotVisibility.controlledAuditExecutedBy],
+              ["Audit executed at", snapshotVisibility.controlledAuditExecutedAt],
+              ["Audit reason", snapshotVisibility.controlledAuditReason],
+              [
+                "Training eligible",
+                snapshotVisibility.controlledAuditTrainingEligible,
+              ],
             ].map(([label, value]) => (
               <div
                 key={String(label)}
@@ -1238,14 +1285,40 @@ export default function AdminBookingDetailPage() {
     }
   }
 
-  async function runControlledCompletion() {
-    if (!token || !canRunControlledCompletion || controlledCompletionDisabled) {
+  async function handleControlledCompletion() {
+    if (!controlledCompletionSnapshotReady) {
+      setControlledCompletionResult({
+        message: "Snapshot is required before controlled completion can run.",
+      });
+      return;
+    }
+    if (!controlledCompletionStatusAllowed) {
+      setControlledCompletionResult({
+        message: "Booking must be assigned or in progress.",
+      });
+      return;
+    }
+    if (!controlledCompletionConfirmed) {
+      setControlledCompletionResult({
+        message: "Type the required confirmation phrase before running.",
+      });
+      return;
+    }
+    if (!controlledCompletionMinutesValid) {
+      setControlledCompletionResult({
+        message: "Actual minutes must be a whole number from 1 to 1440.",
+      });
+      return;
+    }
+    if (!token) {
       return;
     }
 
     setControlledCompletionBusy(true);
     setControlledCompletionError(null);
-    setControlledCompletionResult(null);
+    setControlledCompletionResult({
+      message: "Controlled completion request started.",
+    });
 
     try {
       const response = await fetch(
@@ -1282,11 +1355,13 @@ export default function AdminBookingDetailPage() {
 
       const result = responseJson as ControlledCompletionResult;
       setControlledCompletionResult({
+        message: "Controlled completion recorded.",
         afterStatus: String(result.afterStatus ?? "unknown"),
         actualMinutes:
-          typeof result.actualMinutes === "number" ? result.actualMinutes : 0,
+          typeof result.actualMinutes === "number" ? result.actualMinutes : undefined,
         learningReady: Boolean(result.learningReady),
         learningEventCreated: Boolean(result.learningEventCreated),
+        auditEventCreated: Boolean(result.auditEventCreated),
       });
       await reloadReadModels();
       dispatchAdminActivityRefresh();
@@ -1374,6 +1449,7 @@ export default function AdminBookingDetailPage() {
                   </span>
                   <input
                     type="number"
+                    name="controlledActualMinutes"
                     min={1}
                     max={24 * 60}
                     step={1}
@@ -1390,6 +1466,7 @@ export default function AdminBookingDetailPage() {
                   </span>
                   <input
                     type="text"
+                    name="controlledConfirmation"
                     value={controlledCompletionConfirmation}
                     onChange={(event) =>
                       setControlledCompletionConfirmation(event.target.value)
@@ -1400,7 +1477,7 @@ export default function AdminBookingDetailPage() {
                 </label>
                 <button
                   type="button"
-                  onClick={() => void runControlledCompletion()}
+                  onClick={handleControlledCompletion}
                   disabled={controlledCompletionDisabled}
                   className="rounded-2xl border border-amber-300/40 bg-amber-300 px-5 py-3 text-sm font-bold text-neutral-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-45"
                 >
@@ -1424,15 +1501,32 @@ export default function AdminBookingDetailPage() {
             {controlledCompletionResult ? (
               <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {[
+                  ["message", controlledCompletionResult.message],
                   ["afterStatus", controlledCompletionResult.afterStatus],
                   ["actualMinutes", controlledCompletionResult.actualMinutes],
                   [
                     "learningReady",
-                    controlledCompletionResult.learningReady ? "true" : "false",
+                    controlledCompletionResult.learningReady == null
+                      ? "NULL"
+                      : controlledCompletionResult.learningReady
+                        ? "true"
+                        : "false",
                   ],
                   [
                     "learningEventCreated",
-                    controlledCompletionResult.learningEventCreated ? "true" : "false",
+                    controlledCompletionResult.learningEventCreated == null
+                      ? "NULL"
+                      : controlledCompletionResult.learningEventCreated
+                        ? "true"
+                        : "false",
+                  ],
+                  [
+                    "auditEventCreated",
+                    controlledCompletionResult.auditEventCreated == null
+                      ? "NULL"
+                      : controlledCompletionResult.auditEventCreated
+                        ? "true"
+                        : "false",
                   ],
                 ].map(([label, value]) => (
                   <div

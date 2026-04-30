@@ -2282,6 +2282,7 @@ enum BookingEventType {
   OFFER_REJECTED
   OFFER_EXPIRED
   DISPATCH_EXHAUSTED
+  CONTROLLED_COMPLETION_AUDIT
 }
 
 enum BookingOfferStatus {

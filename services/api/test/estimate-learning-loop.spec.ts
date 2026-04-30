@@ -133,6 +133,16 @@ function makeCompletionHarness(args?: {
   return { service, db, tx, bookingEventCreate };
 }
 
+function makeSequentialFindFirst(
+  valuesByIdempotencyKey: Record<string, unknown[]>,
+): jest.Mock {
+  return jest.fn(({ where }: { where?: { idempotencyKey?: string } } = {}) => {
+    const key = where?.idempotencyKey ?? "";
+    const values = valuesByIdempotencyKey[key] ?? [];
+    return Promise.resolve(values.length ? values.shift() : null);
+  });
+}
+
 describe("EstimateLearningService", () => {
   const service = new EstimateLearningService();
 
@@ -345,7 +355,9 @@ describe("BookingsService admin controlled completion", () => {
     status?: BookingStatus;
     snapshot?: string | null;
     existingLearningEvent?: boolean;
+    existingAuditEvent?: boolean;
     learningEventAfterCompletion?: boolean;
+    auditEventAfterCompletion?: boolean;
   }) {
     const booking = {
       id: "booking_1",
@@ -362,16 +374,20 @@ describe("BookingsService admin controlled completion", () => {
         findUnique: jest.fn().mockResolvedValue(booking),
       },
       bookingEvent: {
-        findFirst: jest
-          .fn()
-          .mockResolvedValueOnce(
-            args?.existingLearningEvent ? { id: "evt_existing" } : null,
-          )
-          .mockResolvedValueOnce(
-            args?.learningEventAfterCompletion === false
-              ? null
-              : { id: "evt_learning" },
-          ),
+        findFirst: makeSequentialFindFirst({
+          "estimate-learning-result:booking_1": args?.existingLearningEvent
+            ? [{ id: "evt_existing" }]
+            : [
+                null,
+                args?.learningEventAfterCompletion === false
+                  ? null
+                  : { id: "evt_learning" },
+              ],
+          "controlled-completion-audit:booking_1": args?.existingAuditEvent
+            ? [{ id: "evt_existing_audit" }]
+            : [null],
+        }),
+        create: jest.fn().mockResolvedValue({ id: "evt_audit" }),
       },
     };
     const { service } = createBookingsServiceTestHarness({ db: db as never });
@@ -384,7 +400,7 @@ describe("BookingsService admin controlled completion", () => {
     return { service, db, transitionBooking };
   }
 
-  it("requires explicit confirmation and valid actual minutes", async () => {
+  it("requires explicit confirmation, note, and valid actual minutes", async () => {
     const { service } = makeControlledHarness();
     await expect(
       service.completeBookingControlledByAdmin({
@@ -398,16 +414,26 @@ describe("BookingsService admin controlled completion", () => {
         bookingId: "booking_1",
         actualMinutes: 105,
         confirmControlledCompletion: false,
+        note: "CONTROLLED_LEARNING_VALIDATION",
       }),
     ).rejects.toThrow("confirmControlledCompletion must be true");
+    await expect(
+      service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: true,
+        note: " ",
+      }),
+    ).rejects.toThrow("note must be present for controlled completion");
   });
 
-  it("refuses missing snapshot and already completed bookings", async () => {
+  it("refuses missing snapshot and unsupported booking statuses", async () => {
     await expect(
       makeControlledHarness({ snapshot: null }).service.completeBookingControlledByAdmin({
         bookingId: "booking_1",
         actualMinutes: 105,
         confirmControlledCompletion: true,
+        note: "CONTROLLED_LEARNING_VALIDATION",
       }),
     ).rejects.toThrow("BOOKING_ESTIMATE_SNAPSHOT_REQUIRED");
     await expect(
@@ -417,12 +443,57 @@ describe("BookingsService admin controlled completion", () => {
         bookingId: "booking_1",
         actualMinutes: 105,
         confirmControlledCompletion: true,
+        note: "CONTROLLED_LEARNING_VALIDATION",
       }),
     ).rejects.toThrow("BOOKING_ALREADY_COMPLETED");
+    await expect(
+      makeControlledHarness({
+        status: BookingStatus.pending_payment,
+      }).service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: true,
+        note: "CONTROLLED_LEARNING_VALIDATION",
+      }),
+    ).rejects.toThrow("BOOKING_CONTROLLED_COMPLETION_STATE_INVALID");
+    await expect(
+      makeControlledHarness({
+        status: BookingStatus.canceled,
+      }).service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: true,
+        note: "CONTROLLED_LEARNING_VALIDATION",
+      }),
+    ).rejects.toThrow("BOOKING_CONTROLLED_COMPLETION_STATE_INVALID");
   });
 
-  it("uses existing transitions and reports learning readiness", async () => {
-    const { service, transitionBooking } = makeControlledHarness({
+  it("refuses repeat execution when learning or audit events already exist", async () => {
+    await expect(
+      makeControlledHarness({
+        existingLearningEvent: true,
+      }).service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: true,
+        note: "CONTROLLED_LEARNING_VALIDATION",
+      }),
+    ).rejects.toThrow("BOOKING_LEARNING_EVENT_ALREADY_EXISTS");
+    await expect(
+      makeControlledHarness({
+        existingAuditEvent: true,
+        learningEventAfterCompletion: false,
+      }).service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: true,
+        note: "CONTROLLED_LEARNING_VALIDATION",
+      }),
+    ).rejects.toThrow("BOOKING_CONTROLLED_COMPLETION_AUDIT_ALREADY_EXISTS");
+  });
+
+  it("creates learning and audit events with synthetic governance", async () => {
+    const { service, db, transitionBooking } = makeControlledHarness({
       status: BookingStatus.assigned,
     });
     const result = await service.completeBookingControlledByAdmin({
@@ -430,6 +501,7 @@ describe("BookingsService admin controlled completion", () => {
       actualMinutes: 105,
       confirmControlledCompletion: true,
       note: "CONTROLLED_LEARNING_VALIDATION",
+      executedBy: "admin@example.test",
     });
 
     expect(transitionBooking).toHaveBeenCalledWith(
@@ -454,7 +526,33 @@ describe("BookingsService admin controlled completion", () => {
       actualMinutes: 105,
       learningReady: true,
       learningEventCreated: true,
+      auditEventCreated: true,
+      source: "SYNTHETIC",
+      environment: "SANDBOX",
+      eligibleForTraining: false,
+      governanceReason: "controlled_admin_validation",
     });
+    expect(db.bookingEvent.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          type: BookingEventType.CONTROLLED_COMPLETION_AUDIT,
+          idempotencyKey: "controlled-completion-audit:booking_1",
+          source: "SYNTHETIC",
+          environment: "SANDBOX",
+          eligibleForTraining: false,
+          governanceReason: "controlled_admin_validation",
+          createdBy: "admin",
+          payload: expect.objectContaining({
+            kind: "controlled_completion_audit",
+            actualMinutes: 105,
+            confirmationReceived: true,
+            executedBy: "admin@example.test",
+            eligibleForTraining: false,
+            reason: "controlled_admin_validation",
+          }),
+        }),
+      }),
+    );
   });
 });
 
