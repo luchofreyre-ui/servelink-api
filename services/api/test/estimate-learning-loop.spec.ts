@@ -264,6 +264,123 @@ describe("BookingsService estimate learning completion hook", () => {
   });
 });
 
+describe("BookingsService admin controlled completion", () => {
+  function makeControlledHarness(args?: {
+    status?: BookingStatus;
+    snapshot?: string | null;
+    existingLearningEvent?: boolean;
+    learningEventAfterCompletion?: boolean;
+  }) {
+    const booking = {
+      id: "booking_1",
+      status: args?.status ?? BookingStatus.in_progress,
+      estimateSnapshot: {
+        outputJson:
+          args?.snapshot === undefined
+            ? snapshotOutputJson({ estimatedDurationMinutes: 165 })
+            : args.snapshot,
+      },
+    };
+    const db = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(booking),
+      },
+      bookingEvent: {
+        findFirst: jest
+          .fn()
+          .mockResolvedValueOnce(
+            args?.existingLearningEvent ? { id: "evt_existing" } : null,
+          )
+          .mockResolvedValueOnce(
+            args?.learningEventAfterCompletion === false
+              ? null
+              : { id: "evt_learning" },
+          ),
+      },
+    };
+    const { service } = createBookingsServiceTestHarness({ db: db as never });
+    const transitionBooking = jest
+      .spyOn(service, "transitionBooking")
+      .mockResolvedValue({
+        id: "booking_1",
+        status: BookingStatus.completed,
+      } as never);
+    return { service, db, transitionBooking };
+  }
+
+  it("requires explicit confirmation and valid actual minutes", async () => {
+    const { service } = makeControlledHarness();
+    await expect(
+      service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 0,
+        confirmControlledCompletion: true,
+      }),
+    ).rejects.toThrow("actualMinutes must be between 1 and 1440");
+    await expect(
+      service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: false,
+      }),
+    ).rejects.toThrow("confirmControlledCompletion must be true");
+  });
+
+  it("refuses missing snapshot and already completed bookings", async () => {
+    await expect(
+      makeControlledHarness({ snapshot: null }).service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: true,
+      }),
+    ).rejects.toThrow("BOOKING_ESTIMATE_SNAPSHOT_REQUIRED");
+    await expect(
+      makeControlledHarness({
+        status: BookingStatus.completed,
+      }).service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: true,
+      }),
+    ).rejects.toThrow("BOOKING_ALREADY_COMPLETED");
+  });
+
+  it("uses existing transitions and reports learning readiness", async () => {
+    const { service, transitionBooking } = makeControlledHarness({
+      status: BookingStatus.assigned,
+    });
+    const result = await service.completeBookingControlledByAdmin({
+      bookingId: "booking_1",
+      actualMinutes: 105,
+      confirmControlledCompletion: true,
+      note: "CONTROLLED_LEARNING_VALIDATION",
+    });
+
+    expect(transitionBooking).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: "booking_1",
+        transition: "start",
+      }),
+    );
+    expect(transitionBooking).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: "booking_1",
+        transition: "complete",
+        actualMinutes: 105,
+      }),
+    );
+    expect(result).toEqual({
+      bookingId: "booking_1",
+      beforeStatus: BookingStatus.assigned,
+      afterStatus: BookingStatus.completed,
+      estimatedDurationMinutes: 165,
+      actualMinutes: 105,
+      learningReady: true,
+      learningEventCreated: true,
+    });
+  });
+});
+
 describe("PaymentReliabilityService estimate learning ops summary", () => {
   it("ops endpoint returns zeros with no events", async () => {
     const service = new PaymentReliabilityService({

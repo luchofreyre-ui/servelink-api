@@ -81,6 +81,7 @@ type SnapshotVisibility = {
   service: string;
   address: string;
   actualMinutes: number | null;
+  actualVsEstimateDeltaMinutes: string;
   learningReady: boolean;
   warnings: string[];
 };
@@ -301,6 +302,12 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
     ),
     address: formatAddressFromFacts(facts),
     actualMinutes,
+    actualVsEstimateDeltaMinutes:
+      actualMinutes == null || estimatedDurationMinutes == null
+        ? "NULL"
+        : `${actualMinutes - estimatedDurationMinutes >= 0 ? "+" : ""}${
+            actualMinutes - estimatedDurationMinutes
+          }`,
     learningReady:
       Boolean(snapshot) && booking?.status === "completed" && actualMinutes != null,
     warnings,
@@ -448,6 +455,10 @@ function EstimateSnapshotVisibilitySection({
                 ),
               ],
               ["Actual minutes", snapshotVisibility.actualMinutes],
+              [
+                "Actual vs estimate delta",
+                snapshotVisibility.actualVsEstimateDeltaMinutes,
+              ],
             ].map(([label, value]) => (
               <div
                 key={String(label)}
