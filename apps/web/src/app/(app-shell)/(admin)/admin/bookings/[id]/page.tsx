@@ -363,6 +363,144 @@ async function fetchJson<T>(url: string, token: string): Promise<T> {
   return payload as T;
 }
 
+function EstimateSnapshotVisibilitySection({
+  booking,
+  snapshotVisibility,
+}: {
+  booking: Loadable<BookingRecord>;
+  snapshotVisibility: SnapshotVisibility;
+}) {
+  return (
+    <section className="rounded-[28px] border border-white/10 bg-white/5 p-6">
+      <div className="mb-5">
+        <h2 className="text-xl font-semibold">Estimate snapshot visibility</h2>
+        <p className="mt-1 text-sm text-white/60">
+          Booking-level estimator output, actuals, and learning readiness.
+        </p>
+      </div>
+
+      {booking.loading ? (
+        <div className="text-sm text-white/60">Loading estimate snapshot...</div>
+      ) : booking.error ? (
+        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-4 text-sm text-red-200">
+          {booking.error}
+        </div>
+      ) : booking.data ? (
+        <div className="space-y-5">
+          <div
+            className={
+              snapshotVisibility.exists
+                ? "rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-100"
+                : "rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100"
+            }
+          >
+            SNAPSHOT EXISTS: {snapshotVisibility.exists ? "YES" : "NO"}
+          </div>
+
+          {snapshotVisibility.warnings.length > 0 ? (
+            <div className="grid gap-2 md:grid-cols-2">
+              {snapshotVisibility.warnings.map((warning) => (
+                <div
+                  key={warning}
+                  className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100"
+                >
+                  WARNING: {warning}
+                </div>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {[
+              ["Booking id", booking.data.id],
+              ["Status", booking.data.status],
+              ["Customer id", booking.data.customerId],
+              ["Customer email", booking.data.customer?.email],
+              ["Customer phone", booking.data.customer?.phone],
+              ["Service", snapshotVisibility.service],
+              ["Address", snapshotVisibility.address],
+              ["Created", formatDateTime(booking.data.createdAt)],
+              [
+                "Scheduled time",
+                formatDateTime(
+                  typeof booking.data.scheduledStart === "string"
+                    ? booking.data.scheduledStart
+                    : null,
+                ),
+              ],
+              [
+                "FO assignment",
+                booking.data.fo?.displayName || booking.data.foId || null,
+              ],
+              ["Estimated price", snapshotVisibility.estimatedPrice],
+              [
+                "Estimated duration minutes",
+                snapshotVisibility.estimatedDurationMinutes,
+              ],
+              ["Confidence score", snapshotVisibility.confidenceScore],
+              ["Condition score", snapshotVisibility.conditionScore],
+              [
+                "Completed at",
+                formatDateTime(
+                  typeof booking.data.completedAt === "string"
+                    ? booking.data.completedAt
+                    : null,
+                ),
+              ],
+              ["Actual minutes", snapshotVisibility.actualMinutes],
+            ].map(([label, value]) => (
+              <div
+                key={String(label)}
+                className="rounded-2xl border border-white/10 bg-black/20 p-4"
+              >
+                <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                  {label}
+                </div>
+                <div className="mt-2 break-words text-sm font-semibold text-white">
+                  {typeof value === "string" ? value : formatNullable(value)}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            className={
+              snapshotVisibility.learningReady
+                ? "rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-100"
+                : "rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100"
+            }
+          >
+            LEARNING READY: {snapshotVisibility.learningReady ? "PASS" : "FAIL"}
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div>
+              <h3 className="mb-2 text-sm font-semibold text-white">
+                Estimate factors / input facts
+              </h3>
+              <pre className="max-h-[420px] overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs text-white/75">
+                {snapshotVisibility.inputFacts == null
+                  ? "NULL"
+                  : JSON.stringify(snapshotVisibility.inputFacts, null, 2)}
+              </pre>
+            </div>
+            <div>
+              <h3 className="mb-2 text-sm font-semibold text-white">
+                Raw outputJson
+              </h3>
+              <pre className="max-h-[420px] overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs text-white/75">
+                {snapshotVisibility.outputJsonText}
+              </pre>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="text-sm text-white/60">No booking found.</div>
+      )}
+    </section>
+  );
+}
+
 export default function AdminBookingDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -1064,6 +1202,11 @@ export default function AdminBookingDetailPage() {
           ) : null}
         </div>
 
+        <EstimateSnapshotVisibilitySection
+          booking={booking}
+          snapshotVisibility={snapshotVisibility}
+        />
+
         <AdminBookingOperationalDetailCard bookingId={bookingId} />
 
         {bookingScreen.loading ? (
@@ -1323,139 +1466,6 @@ export default function AdminBookingDetailPage() {
             ) : null}
           </section>
         </div>
-
-        <section className="rounded-[28px] border border-white/10 bg-white/5 p-6">
-          <div className="mb-5">
-            <h2 className="text-xl font-semibold">Estimate snapshot visibility</h2>
-            <p className="mt-1 text-sm text-white/60">
-              Booking-level estimator output, actuals, and learning readiness.
-            </p>
-          </div>
-
-          {booking.loading ? (
-            <div className="text-sm text-white/60">Loading estimate snapshot...</div>
-          ) : booking.error ? (
-            <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-4 text-sm text-red-200">
-              {booking.error}
-            </div>
-          ) : booking.data ? (
-            <div className="space-y-5">
-              <div
-                className={
-                  snapshotVisibility.exists
-                    ? "rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-100"
-                    : "rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100"
-                }
-              >
-                SNAPSHOT EXISTS: {snapshotVisibility.exists ? "YES" : "NO"}
-              </div>
-
-              {snapshotVisibility.warnings.length > 0 ? (
-                <div className="grid gap-2 md:grid-cols-2">
-                  {snapshotVisibility.warnings.map((warning) => (
-                    <div
-                      key={warning}
-                      className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100"
-                    >
-                      WARNING: {warning}
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                {[
-                  ["Booking id", booking.data.id],
-                  ["Status", booking.data.status],
-                  ["Customer id", booking.data.customerId],
-                  ["Customer email", booking.data.customer?.email],
-                  ["Customer phone", booking.data.customer?.phone],
-                  ["Service", snapshotVisibility.service],
-                  ["Address", snapshotVisibility.address],
-                  ["Created", formatDateTime(booking.data.createdAt)],
-                  [
-                    "Scheduled time",
-                    formatDateTime(
-                      typeof booking.data.scheduledStart === "string"
-                        ? booking.data.scheduledStart
-                        : null,
-                    ),
-                  ],
-                  [
-                    "FO assignment",
-                    booking.data.fo?.displayName || booking.data.foId || null,
-                  ],
-                  [
-                    "Estimated price",
-                    snapshotVisibility.estimatedPrice,
-                  ],
-                  [
-                    "Estimated duration minutes",
-                    snapshotVisibility.estimatedDurationMinutes,
-                  ],
-                  ["Confidence score", snapshotVisibility.confidenceScore],
-                  ["Condition score", snapshotVisibility.conditionScore],
-                  [
-                    "Completed at",
-                    formatDateTime(
-                      typeof booking.data.completedAt === "string"
-                        ? booking.data.completedAt
-                        : null,
-                    ),
-                  ],
-                  ["Actual minutes", snapshotVisibility.actualMinutes],
-                ].map(([label, value]) => (
-                  <div
-                    key={String(label)}
-                    className="rounded-2xl border border-white/10 bg-black/20 p-4"
-                  >
-                    <div className="text-xs uppercase tracking-[0.18em] text-white/45">
-                      {label}
-                    </div>
-                    <div className="mt-2 break-words text-sm font-semibold text-white">
-                      {typeof value === "string"
-                        ? value
-                        : formatNullable(value)}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div
-                className={
-                  snapshotVisibility.learningReady
-                    ? "rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-100"
-                    : "rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100"
-                }
-              >
-                LEARNING READY: {snapshotVisibility.learningReady ? "PASS" : "FAIL"}
-              </div>
-
-              <div className="grid gap-4 lg:grid-cols-2">
-                <div>
-                  <h3 className="mb-2 text-sm font-semibold text-white">
-                    Estimate factors / input facts
-                  </h3>
-                  <pre className="max-h-[420px] overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs text-white/75">
-                    {snapshotVisibility.inputFacts == null
-                      ? "NULL"
-                      : JSON.stringify(snapshotVisibility.inputFacts, null, 2)}
-                  </pre>
-                </div>
-                <div>
-                  <h3 className="mb-2 text-sm font-semibold text-white">
-                    Raw outputJson
-                  </h3>
-                  <pre className="max-h-[420px] overflow-auto rounded-2xl border border-white/10 bg-black/40 p-4 text-xs text-white/75">
-                    {snapshotVisibility.outputJsonText}
-                  </pre>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-sm text-white/60">No booking found.</div>
-          )}
-        </section>
 
         <section
           role="region"
