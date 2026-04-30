@@ -48,6 +48,15 @@ export class ReliabilityOpsController {
   @SkipRetry()
   @SkipIdempotency()
   @SkipTimeout()
+  @Get("estimate-learning")
+  async getEstimateLearningSummary() {
+    return this.paymentReliability.getEstimateLearningSummary();
+  }
+
+  @SkipRateLimit()
+  @SkipRetry()
+  @SkipIdempotency()
+  @SkipTimeout()
   @Get("bookings/invalid-assignment-state")
   async getInvalidAssignmentStateBookings(
     @Query("limit") limit?: string,

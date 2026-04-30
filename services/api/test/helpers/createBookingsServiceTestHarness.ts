@@ -3,6 +3,7 @@ import type { BookingEventsService } from "../../src/modules/bookings/booking-ev
 import type { FoService } from "../../src/modules/fo/fo.service";
 import type { EstimatorService } from "../../src/modules/estimate/estimator.service";
 import { EstimateEngineV2Service } from "../../src/modules/estimate/estimate-engine-v2.service";
+import { EstimateLearningService } from "../../src/modules/estimate/estimate-learning.service";
 import type { LedgerService } from "../../src/modules/ledger/ledger.service";
 import type { DispatchService } from "../../src/modules/dispatch/dispatch.service";
 import type { ReputationService } from "../../src/modules/dispatch/reputation.service";
@@ -17,6 +18,7 @@ export type BookingsServiceTestHarnessMocks = {
   fo: FoService;
   estimator: EstimatorService;
   estimateEngineV2: EstimateEngineV2Service;
+  estimateLearning: EstimateLearningService;
   ledger: LedgerService;
   dispatch: DispatchService;
   reputationService: ReputationService;
@@ -38,6 +40,7 @@ export function createBookingsServiceTestHarness(
     fo: {} as FoService,
     estimator: {} as EstimatorService,
     estimateEngineV2: new EstimateEngineV2Service(),
+    estimateLearning: new EstimateLearningService(),
     ledger: {} as LedgerService,
     dispatch: {} as DispatchService,
     reputationService: {} as ReputationService,
@@ -54,6 +57,7 @@ export function createBookingsServiceTestHarness(
     mocks.fo,
     mocks.estimator,
     mocks.estimateEngineV2,
+    mocks.estimateLearning,
     mocks.ledger,
     mocks.dispatch,
     mocks.reputationService,

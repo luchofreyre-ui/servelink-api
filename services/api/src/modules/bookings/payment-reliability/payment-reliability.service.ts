@@ -55,6 +55,24 @@ type PublicBookingLifecycleAlert = {
   threshold: number;
 };
 
+type EstimateLearningWinner =
+  | "legacy_v1"
+  | "estimate_v2"
+  | "tie"
+  | "insufficient_data";
+
+type EstimateLearningEventPayload = {
+  bookingId: string | null;
+  actualMinutes: number | null;
+  winner: EstimateLearningWinner;
+  legacyV1VarianceMinutes: number | null;
+  estimateV2VarianceMinutes: number | null;
+  legacyV1AbsVarianceMinutes: number | null;
+  estimateV2AbsVarianceMinutes: number | null;
+  riskLevel: string | null;
+  computedAt: string | null;
+};
+
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -63,6 +81,53 @@ function asRecord(value: unknown): Record<string, unknown> {
 
 function stringValue(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function numberValue(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function normalizeEstimateLearningWinner(raw: unknown): EstimateLearningWinner {
+  const winner = stringValue(raw);
+  if (
+    winner === "legacy_v1" ||
+    winner === "estimate_v2" ||
+    winner === "tie" ||
+    winner === "insufficient_data"
+  ) {
+    return winner;
+  }
+  return "insufficient_data";
+}
+
+function parseEstimateLearningPayload(event: {
+  bookingId: string;
+  payload: Prisma.JsonValue;
+  createdAt: Date;
+}): EstimateLearningEventPayload | null {
+  const payload = asRecord(event.payload);
+  if (payload.kind !== "estimate_learning_result") return null;
+  const legacyV1 = asRecord(payload.legacyV1);
+  const estimateV2 = asRecord(payload.estimateV2);
+  const computedAt =
+    stringValue(payload.computedAt) ?? event.createdAt.toISOString();
+  return {
+    bookingId: stringValue(payload.bookingId) ?? event.bookingId,
+    actualMinutes: numberValue(payload.actualMinutes),
+    winner: normalizeEstimateLearningWinner(payload.winner),
+    legacyV1VarianceMinutes: numberValue(legacyV1.varianceMinutes),
+    estimateV2VarianceMinutes: numberValue(estimateV2.varianceMinutes),
+    legacyV1AbsVarianceMinutes:
+      numberValue(legacyV1.varianceMinutes) == null
+        ? null
+        : Math.abs(numberValue(legacyV1.varianceMinutes)!),
+    estimateV2AbsVarianceMinutes:
+      numberValue(estimateV2.varianceMinutes) == null
+        ? null
+        : Math.abs(numberValue(estimateV2.varianceMinutes)!),
+    riskLevel: stringValue(payload.riskLevel),
+    computedAt,
+  };
 }
 
 function normalizePublicBookingLifecycleCode(
@@ -405,6 +470,94 @@ export class PaymentReliabilityService {
         failureCountsPersisted: true,
       },
       alerts,
+    };
+  }
+
+  async getEstimateLearningSummary() {
+    const now = new Date();
+    const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const rows = await this.prisma.bookingEvent.findMany({
+      where: {
+        type: BookingEventType.NOTE,
+        idempotencyKey: { startsWith: "estimate-learning-result:" },
+        createdAt: { gte: since },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 500,
+      select: {
+        bookingId: true,
+        payload: true,
+        createdAt: true,
+      },
+    });
+    const results = rows
+      .map(parseEstimateLearningPayload)
+      .filter((r): r is EstimateLearningEventPayload => r != null);
+
+    const totals = {
+      completedWithActuals: results.filter((r) => r.actualMinutes != null).length,
+      legacyV1Wins: results.filter((r) => r.winner === "legacy_v1").length,
+      estimateV2Wins: results.filter((r) => r.winner === "estimate_v2").length,
+      ties: results.filter((r) => r.winner === "tie").length,
+      insufficientData: results.filter((r) => r.winner === "insufficient_data")
+        .length,
+    };
+
+    const average = (values: Array<number | null>): number => {
+      const xs = values.filter((v): v is number => v != null);
+      if (xs.length === 0) return 0;
+      return xs.reduce((sum, v) => sum + v, 0) / xs.length;
+    };
+
+    const riskGroups = new Map<string, EstimateLearningEventPayload[]>();
+    for (const result of results) {
+      const key = result.riskLevel ?? "unknown";
+      riskGroups.set(key, [...(riskGroups.get(key) ?? []), result]);
+    }
+
+    return {
+      window: "24h",
+      totals,
+      averages: {
+        legacyV1AbsVarianceMinutes: average(
+          results.map((r) => r.legacyV1AbsVarianceMinutes),
+        ),
+        estimateV2AbsVarianceMinutes: average(
+          results.map((r) => r.estimateV2AbsVarianceMinutes),
+        ),
+        legacyV1BiasMinutes: average(
+          results.map((r) => r.legacyV1VarianceMinutes),
+        ),
+        estimateV2BiasMinutes: average(
+          results.map((r) => r.estimateV2VarianceMinutes),
+        ),
+      },
+      byRiskLevel: [...riskGroups.entries()].map(([riskLevel, group]) => ({
+        riskLevel,
+        count: group.length,
+        legacyV1Wins: group.filter((r) => r.winner === "legacy_v1").length,
+        estimateV2Wins: group.filter((r) => r.winner === "estimate_v2").length,
+        legacyV1AbsVarianceMinutes: average(
+          group.map((r) => r.legacyV1AbsVarianceMinutes),
+        ),
+        estimateV2AbsVarianceMinutes: average(
+          group.map((r) => r.estimateV2AbsVarianceMinutes),
+        ),
+      })),
+      recentResults: results.slice(0, 25).map((r) => ({
+        bookingId: r.bookingId,
+        actualMinutes: r.actualMinutes,
+        winner: r.winner,
+        legacyV1VarianceMinutes: r.legacyV1VarianceMinutes,
+        estimateV2VarianceMinutes: r.estimateV2VarianceMinutes,
+        riskLevel: r.riskLevel,
+        computedAt: r.computedAt,
+      })),
+      observabilityCoverage: {
+        learningResultsPersisted: true,
+        requiresActualMinutes: true,
+        autoTuningEnabled: false,
+      },
     };
   }
 }

@@ -1,5 +1,6 @@
 import { BookingStatus } from "@prisma/client";
-import { IsEnum, IsISO8601, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsEnum, IsISO8601, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
 
 export class BookingMainTransitionDto {
   @IsEnum(BookingStatus)
@@ -24,4 +25,11 @@ export class BookingMainTransitionDto {
   @IsOptional()
   @IsString()
   actorRole?: string | null;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(24 * 60)
+  actualMinutes?: number;
 }

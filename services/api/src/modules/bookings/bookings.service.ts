@@ -26,6 +26,7 @@ import {
 } from "../estimate/estimator.service";
 import { EstimateEngineV2Service } from "../estimate/estimate-engine-v2.service";
 import type { EstimateV2Reconciliation } from "../estimate/estimate-engine-v2.types";
+import { EstimateLearningService } from "../estimate/estimate-learning.service";
 import { LedgerService } from "../ledger/ledger.service";
 import { DispatchService } from "../dispatch/dispatch.service";
 import { ReputationService } from "../dispatch/reputation.service";
@@ -62,6 +63,7 @@ export class BookingsService {
     private readonly fo: FoService,
     private readonly estimator: EstimatorService,
     private readonly estimateEngineV2: EstimateEngineV2Service,
+    private readonly estimateLearning: EstimateLearningService,
     private readonly ledger: LedgerService,
     @Inject(forwardRef(() => DispatchService))
     private readonly dispatch: DispatchService,
@@ -924,6 +926,7 @@ export class BookingsService {
     transition: Transition;
     note?: string;
     scheduledStart?: string;
+    actualMinutes?: number | null;
     idempotencyKey?: string | null;
   }) {
     const revRecEnabled = process.env.LEDGER_REVREC_ENABLED !== "0";
@@ -1127,6 +1130,11 @@ export class BookingsService {
         result.status === BookingStatus.completed &&
         prevStatus !== BookingStatus.completed
       ) {
+        await this.recordEstimateLearningResultForCompletion({
+          bookingId: result.id,
+          actualMinutes: args.actualMinutes,
+          foId: result.foId ?? null,
+        });
         void this.remainingBalanceCapture
           .captureRemainingBalanceForBooking(result.id)
           .catch((err) => {
@@ -1187,6 +1195,85 @@ export class BookingsService {
         if (refetched) return { ...refetched, alreadyApplied: true };
       }
       throw e;
+    }
+  }
+
+  private async recordEstimateLearningResultForCompletion(args: {
+    bookingId: string;
+    actualMinutes?: number | null;
+    foId?: string | null;
+  }): Promise<void> {
+    const actualMinutes =
+      typeof args.actualMinutes === "number" &&
+      Number.isFinite(args.actualMinutes) &&
+      args.actualMinutes > 0
+        ? Math.floor(args.actualMinutes)
+        : null;
+    if (actualMinutes == null) {
+      this.log.log({
+        kind: "estimate_learning",
+        event: "actual_minutes_missing",
+        bookingId: args.bookingId,
+      });
+      return;
+    }
+
+    try {
+      const row = await this.db.booking.findUnique({
+        where: { id: args.bookingId },
+        select: {
+          id: true,
+          foId: true,
+          estimateSnapshot: { select: { outputJson: true } },
+        },
+      });
+      if (!row?.estimateSnapshot?.outputJson) return;
+      const existing = await this.db.bookingEvent.findFirst({
+        where: {
+          bookingId: args.bookingId,
+          idempotencyKey: `estimate-learning-result:${args.bookingId}`,
+        },
+        select: { id: true },
+      });
+      if (existing) return;
+
+      const inputs = this.estimateLearning.extractLearningInputsFromSnapshot(
+        row.estimateSnapshot.outputJson,
+      );
+      const result = this.estimateLearning.calculateEstimateLearningResult({
+        bookingId: args.bookingId,
+        actualMinutes,
+        legacyV1Minutes: inputs.legacyV1Minutes,
+        estimateV2ExpectedMinutes: inputs.estimateV2ExpectedMinutes,
+        snapshotVersion: inputs.snapshotVersion,
+        serviceType: inputs.serviceType,
+        riskLevel: inputs.riskLevel,
+        foId: args.foId ?? row.foId ?? null,
+      });
+      const payload = JSON.parse(
+        JSON.stringify({
+          kind: "estimate_learning_result",
+          ...result,
+        }),
+      ) as Prisma.InputJsonValue;
+
+      await this.db.bookingEvent.create({
+        data: {
+          bookingId: args.bookingId,
+          type: BookingEventType.NOTE,
+          note: "Estimate learning result recorded.",
+          idempotencyKey: `estimate-learning-result:${args.bookingId}`,
+          actorRole: "system",
+          payload,
+        },
+      });
+    } catch (err: unknown) {
+      this.log.warn({
+        kind: "estimate_learning",
+        event: "learning_result_write_failed",
+        bookingId: args.bookingId,
+        message: err instanceof Error ? err.message : String(err ?? "unknown"),
+      });
     }
   }
 
@@ -1537,6 +1624,7 @@ export class BookingsService {
       transition: transitionName,
       note: dto.note,
       scheduledStart: dto.scheduledStart,
+      actualMinutes: dto.actualMinutes,
       idempotencyKey,
     });
   }

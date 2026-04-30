@@ -580,6 +580,7 @@ export class BookingsController {
       id,
       transition: "complete",
       note: dto.note,
+      actualMinutes: dto.actualMinutes,
       idempotencyKey: this.normalizeIdempotencyKey(idempotencyKey),
     });
   }
