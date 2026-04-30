@@ -20,7 +20,10 @@ import {
   EstimatorInputValidationError,
 } from "../estimate/errors/estimator.errors";
 import { EstimateEngineV2Service } from "../estimate/estimate-engine-v2.service";
-import type { EstimateV2Output } from "../estimate/estimate-engine-v2.types";
+import type {
+  EstimateV2Output,
+  EstimateV2Reconciliation,
+} from "../estimate/estimate-engine-v2.types";
 import { EstimatorService } from "../estimate/estimator.service";
 import { BookingDirectionIntakeService } from "./booking-direction-intake.service";
 import type { CreateBookingDirectionIntakeDto } from "./dto/create-booking-direction-intake.dto";
@@ -99,6 +102,7 @@ export type IntakeSubmitSuccess = {
   };
   estimateVersion: "estimate_engine_v2_core_v1";
   estimateV2: EstimateV2Output;
+  reconciliation: EstimateV2Reconciliation;
   /** Present when estimate included a deep clean program breakdown. */
   deepCleanProgram: DeepCleanProgramSubmitDisplay | null;
   bookingError: null;
@@ -125,6 +129,7 @@ export type IntakeEstimatePreviewResponse = {
   };
   estimateVersion: "estimate_engine_v2_core_v1";
   estimateV2: EstimateV2Output;
+  reconciliation: EstimateV2Reconciliation;
   deepCleanProgram: DeepCleanProgramSubmitDisplay | null;
 };
 
@@ -237,6 +242,13 @@ export class IntakeBookingBridgeService {
       ? mapDeepCleanProgramForSubmitResponse(result.deepCleanProgram)
       : null;
     const estimateV2 = this.estimateEngineV2.estimateV2(estimateInput);
+    const reconciliation = this.estimateEngineV2.calculateReconciliation({
+      v1Minutes: result.estimatedDurationMinutes,
+      v1PriceCents: result.estimatedPriceCents,
+      v2ExpectedMinutes: estimateV2.expectedMinutes,
+      v2PricedMinutes: estimateV2.pricedMinutes,
+      v2PriceCents: estimateV2.customerVisible.estimatedPrice ?? 0,
+    });
 
     return {
       kind: "booking_direction_estimate_preview",
@@ -250,6 +262,7 @@ export class IntakeBookingBridgeService {
       },
       estimateVersion: estimateV2.snapshotVersion,
       estimateV2,
+      reconciliation,
       deepCleanProgram,
     };
   }
@@ -425,6 +438,13 @@ export class IntakeBookingBridgeService {
         ? mapDeepCleanProgramForSubmitResponse(estimate.deepCleanProgram)
         : null;
       const estimateV2 = this.estimateEngineV2.estimateV2(estimateInput);
+      const reconciliation = this.estimateEngineV2.calculateReconciliation({
+        v1Minutes: estimate.estimatedDurationMinutes,
+        v1PriceCents: estimate.estimatedPriceCents,
+        v2ExpectedMinutes: estimateV2.expectedMinutes,
+        v2PricedMinutes: estimateV2.pricedMinutes,
+        v2PriceCents: estimateV2.customerVisible.estimatedPrice ?? 0,
+      });
 
       const schedulableRow = await this.prisma.booking.findUnique({
         where: { id: booking.id },
@@ -458,6 +478,7 @@ export class IntakeBookingBridgeService {
         },
         estimateVersion: estimateV2.snapshotVersion,
         estimateV2,
+        reconciliation,
         deepCleanProgram,
         bookingError: null,
       };

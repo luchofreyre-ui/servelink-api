@@ -30,10 +30,18 @@ export class EstimatePreviewController {
     try {
       const result = await this.estimator.estimate(body as EstimateInput);
       const estimateV2 = this.estimateEngineV2.estimateV2(body as EstimateInput);
+      const reconciliation = this.estimateEngineV2.calculateReconciliation({
+        v1Minutes: result.estimatedDurationMinutes,
+        v1PriceCents: result.estimatedPriceCents,
+        v2ExpectedMinutes: estimateV2.expectedMinutes,
+        v2PricedMinutes: estimateV2.pricedMinutes,
+        v2PriceCents: estimateV2.customerVisible.estimatedPrice ?? 0,
+      });
       return {
         kind: "estimate_preview" as const,
         estimateVersion: estimateV2.snapshotVersion,
         estimateV2,
+        reconciliation,
         estimatedPriceCents: result.estimatedPriceCents,
         estimatedDurationMinutes: result.estimatedDurationMinutes,
         confidence: result.confidence,

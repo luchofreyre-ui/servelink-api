@@ -1,4 +1,7 @@
-import type { EstimateV2Output } from "./estimate-engine-v2.types";
+import type {
+  EstimateV2Output,
+  EstimateV2Reconciliation,
+} from "./estimate-engine-v2.types";
 
 export type EstimateV2SnapshotCarrier = {
   outputJson?: string | null;
@@ -39,4 +42,36 @@ export function toFoVisibleEstimate(
     targetMinutes: estimateV2.expectedMinutes,
     riskFlags: [...estimateV2.riskFlags],
   };
+}
+
+export function extractEstimateV2ReconciliationFromSnapshot(
+  snapshot: EstimateV2SnapshotCarrier | null | undefined,
+): EstimateV2Reconciliation | null {
+  const raw = snapshot?.outputJson;
+  if (!raw?.trim()) return null;
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    const candidate = parsed.reconciliation;
+    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) {
+      return null;
+    }
+    const reconciliation = candidate as EstimateV2Reconciliation;
+    if (
+      reconciliation.authority?.pricingAuthority !== "legacy_v1" ||
+      reconciliation.authority?.durationAuthority !== "legacy_v1" ||
+      reconciliation.authority?.v2Mode !== "shadow"
+    ) {
+      return null;
+    }
+    if (
+      typeof reconciliation.v1Minutes !== "number" ||
+      typeof reconciliation.v2ExpectedMinutes !== "number" ||
+      typeof reconciliation.expectedDeltaPercent !== "number"
+    ) {
+      return null;
+    }
+    return reconciliation;
+  } catch {
+    return null;
+  }
 }
