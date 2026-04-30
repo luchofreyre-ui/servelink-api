@@ -28,6 +28,8 @@ import {
 } from "@/lib/bookings/bookingStore";
 
 const API_BASE_URL = WEB_ENV.apiBaseUrl;
+const CONTROLLED_COMPLETION_CONFIRMATION = "COMPLETE CONTROLLED TEST";
+const CONTROLLED_COMPLETION_NOTE = "CONTROLLED_LEARNING_VALIDATION_20260430";
 
 type TimelineDecision = {
   trigger?: string | null;
@@ -107,6 +109,13 @@ type ActionState = {
   loading: string | null;
   error: string | null;
   success: string | null;
+};
+
+type ControlledCompletionResult = {
+  afterStatus: string;
+  actualMinutes: number;
+  learningReady: boolean;
+  learningEventCreated: boolean;
 };
 
 function deriveAdminPaymentSourceLine(
@@ -582,6 +591,16 @@ export default function AdminBookingDetailPage() {
     null,
   );
   const [paymentAnomalies, setPaymentAnomalies] = useState<AdminPaymentAnomalyRow[]>([]);
+  const [controlledCompletionConfirmation, setControlledCompletionConfirmation] =
+    useState("");
+  const [controlledCompletionActualMinutes, setControlledCompletionActualMinutes] =
+    useState("105");
+  const [controlledCompletionBusy, setControlledCompletionBusy] = useState(false);
+  const [controlledCompletionError, setControlledCompletionError] = useState<
+    string | null
+  >(null);
+  const [controlledCompletionResult, setControlledCompletionResult] =
+    useState<ControlledCompletionResult | null>(null);
 
   const [bookingScreen, setBookingScreen] = useState<Loadable<unknown>>({
     loading: true,
@@ -643,6 +662,21 @@ export default function AdminBookingDetailPage() {
     () => buildSnapshotVisibility(booking.data),
     [booking.data],
   );
+  const canRunControlledCompletion =
+    Boolean(booking.data?.estimateSnapshot) &&
+    booking.data?.status !== "completed" &&
+    (booking.data?.status === "assigned" || booking.data?.status === "in_progress");
+  const controlledCompletionMinutes = Number(controlledCompletionActualMinutes);
+  const controlledCompletionConfirmed =
+    controlledCompletionConfirmation.trim() === CONTROLLED_COMPLETION_CONFIRMATION;
+  const controlledCompletionMinutesValid =
+    Number.isInteger(controlledCompletionMinutes) &&
+    controlledCompletionMinutes > 0 &&
+    controlledCompletionMinutes <= 24 * 60;
+  const controlledCompletionDisabled =
+    controlledCompletionBusy ||
+    !controlledCompletionConfirmed ||
+    !controlledCompletionMinutesValid;
 
   useEffect(() => {
     if (!token || !bookingId) {
@@ -1166,6 +1200,70 @@ export default function AdminBookingDetailPage() {
     }
   }
 
+  async function runControlledCompletion() {
+    if (!token || !canRunControlledCompletion || controlledCompletionDisabled) {
+      return;
+    }
+
+    setControlledCompletionBusy(true);
+    setControlledCompletionError(null);
+    setControlledCompletionResult(null);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/bookings/${bookingId}/admin/complete-controlled`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            actualMinutes: controlledCompletionMinutes,
+            confirmControlledCompletion: true,
+            note: CONTROLLED_COMPLETION_NOTE,
+          }),
+        },
+      );
+
+      let responseJson: unknown = null;
+      try {
+        responseJson = await response.json();
+      } catch {
+        responseJson = null;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          readApiErrorMessage(
+            responseJson,
+            `Controlled completion failed with status ${response.status}.`,
+          ),
+        );
+      }
+
+      const result = responseJson as ControlledCompletionResult;
+      setControlledCompletionResult({
+        afterStatus: String(result.afterStatus ?? "unknown"),
+        actualMinutes:
+          typeof result.actualMinutes === "number" ? result.actualMinutes : 0,
+        learningReady: Boolean(result.learningReady),
+        learningEventCreated: Boolean(result.learningEventCreated),
+      });
+      await reloadReadModels();
+      dispatchAdminActivityRefresh();
+      router.refresh();
+    } catch (error) {
+      setControlledCompletionError(
+        error instanceof Error
+          ? error.message
+          : "Controlled completion failed.",
+      );
+    } finally {
+      setControlledCompletionBusy(false);
+    }
+  }
+
   if (!token) {
     return (
       <main className="min-h-screen bg-neutral-950 px-6 py-12 text-white">
@@ -1217,6 +1315,104 @@ export default function AdminBookingDetailPage() {
           booking={booking}
           snapshotVisibility={snapshotVisibility}
         />
+
+        {canRunControlledCompletion || controlledCompletionResult ? (
+          <section className="rounded-[28px] border border-amber-500/30 bg-amber-500/10 p-6">
+            <div className="mb-5">
+              <h2 className="text-xl font-semibold text-amber-100">
+                Controlled learning validation
+              </h2>
+              <p className="mt-1 text-sm text-amber-100/75">
+                Admin-only completion action for validating the estimate learning loop.
+                This does not run until the confirmation phrase is typed.
+              </p>
+            </div>
+
+            {canRunControlledCompletion ? (
+              <div className="grid gap-4 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
+                <label className="block">
+                  <span className="text-xs uppercase tracking-[0.18em] text-amber-100/60">
+                    Actual minutes
+                  </span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={24 * 60}
+                    step={1}
+                    value={controlledCompletionActualMinutes}
+                    onChange={(event) =>
+                      setControlledCompletionActualMinutes(event.target.value)
+                    }
+                    className="mt-2 w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm font-semibold text-white outline-none focus:border-amber-300"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-xs uppercase tracking-[0.18em] text-amber-100/60">
+                    Type {CONTROLLED_COMPLETION_CONFIRMATION}
+                  </span>
+                  <input
+                    type="text"
+                    value={controlledCompletionConfirmation}
+                    onChange={(event) =>
+                      setControlledCompletionConfirmation(event.target.value)
+                    }
+                    placeholder={CONTROLLED_COMPLETION_CONFIRMATION}
+                    className="mt-2 w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm font-semibold text-white outline-none focus:border-amber-300"
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => void runControlledCompletion()}
+                  disabled={controlledCompletionDisabled}
+                  className="rounded-2xl border border-amber-300/40 bg-amber-300 px-5 py-3 text-sm font-bold text-neutral-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  {controlledCompletionBusy
+                    ? "Running..."
+                    : "Run controlled learning validation"}
+                </button>
+              </div>
+            ) : null}
+
+            {!controlledCompletionMinutesValid ? (
+              <p className="mt-3 text-sm text-red-200">
+                actualMinutes must be a whole number from 1 to 1440.
+              </p>
+            ) : null}
+            {controlledCompletionError ? (
+              <div className="mt-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+                {controlledCompletionError}
+              </div>
+            ) : null}
+            {controlledCompletionResult ? (
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  ["afterStatus", controlledCompletionResult.afterStatus],
+                  ["actualMinutes", controlledCompletionResult.actualMinutes],
+                  [
+                    "learningReady",
+                    controlledCompletionResult.learningReady ? "true" : "false",
+                  ],
+                  [
+                    "learningEventCreated",
+                    controlledCompletionResult.learningEventCreated ? "true" : "false",
+                  ],
+                ].map(([label, value]) => (
+                  <div
+                    key={String(label)}
+                    className="rounded-2xl border border-white/10 bg-black/25 p-4"
+                  >
+                    <div className="text-xs uppercase tracking-[0.18em] text-amber-100/55">
+                      {label}
+                    </div>
+                    <div className="mt-2 text-sm font-semibold text-white">
+                      {String(value)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </section>
+        ) : null}
 
         <AdminBookingOperationalDetailCard bookingId={bookingId} />
 
