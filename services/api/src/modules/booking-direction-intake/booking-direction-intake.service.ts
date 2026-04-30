@@ -74,8 +74,9 @@ export class BookingDirectionIntakeService {
 
     return {
       kind: "booking_direction_intake_list" as const,
-        items: items.map((row) => ({
+      items: items.map((row) => ({
         intakeId: row.id,
+        bookingId: row.bookingId,
         serviceId: row.serviceId,
         homeSize: row.homeSize,
         bedrooms: row.bedrooms,

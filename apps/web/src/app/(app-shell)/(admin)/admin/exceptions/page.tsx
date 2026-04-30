@@ -424,7 +424,12 @@ export default function DispatchExceptionActionsPage() {
                         {row.ownerName || row.ownerUserId || "—"}
                       </td>
                       <td className="px-4 py-3 align-top text-xs text-white/70">
-                        <div className="font-mono">{row.bookingId}</div>
+                        <Link
+                          href={`/admin/bookings/${encodeURIComponent(row.bookingId)}`}
+                          className="font-mono text-sky-300 underline-offset-2 hover:underline"
+                        >
+                          {row.bookingId}
+                        </Link>
                         {row.foId ?
                           <div className="mt-0.5 font-mono text-white/50">
                             FO {row.foId}

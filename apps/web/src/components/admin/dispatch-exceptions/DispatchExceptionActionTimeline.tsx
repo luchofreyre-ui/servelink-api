@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo } from "react";
 import type {
   DispatchExceptionActionEvent,
@@ -79,13 +80,8 @@ function formatMetadataSummary(
       return id ? `Note id: ${String(id)}` : "";
     }
     case "exception_seen": {
-      const bookingId = r("bookingId");
       const exId = r("lastSeenExceptionId");
-      const parts = [
-        typeof bookingId === "string" ? `Booking: ${bookingId}` : "",
-        exId != null ? `Exception ref: ${String(exId)}` : "",
-      ].filter(Boolean);
-      return parts.join(" · ");
+      return exId != null ? `Exception ref: ${String(exId)}` : "";
     }
     case "sla_due_soon":
     case "sla_overdue": {
@@ -162,6 +158,10 @@ export function DispatchExceptionActionTimeline({ events }: Props) {
             ? (ev.metadataJson as Record<string, unknown>)
             : null;
         const summary = formatMetadataSummary(ev.type, meta);
+        const eventBookingId =
+          ev.type === "exception_seen" && typeof meta?.bookingId === "string" ?
+            meta.bookingId
+          : null;
         return (
           <li
             key={ev.id}
@@ -172,6 +172,17 @@ export function DispatchExceptionActionTimeline({ events }: Props) {
               {ev.actorName || ev.actorUserId || "System"} ·{" "}
               {new Date(ev.createdAt).toLocaleString()}
             </div>
+            {eventBookingId ?
+              <div className="mt-1 font-mono text-[11px] text-white/55">
+                Booking:{" "}
+                <Link
+                  href={`/admin/bookings/${encodeURIComponent(eventBookingId)}`}
+                  className="text-sky-300 underline-offset-2 hover:underline"
+                >
+                  {eventBookingId}
+                </Link>
+              </div>
+            : null}
             {summary ?
               <div className="mt-1 font-mono text-[11px] text-white/55">
                 {summary}

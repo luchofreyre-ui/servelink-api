@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   acknowledgeAdminPrismaOpsAnomaly,
@@ -116,7 +117,18 @@ export function AdminOpsAnomaliesPanel() {
                     {item.detail ?? "No detail provided"}
                   </p>
                   <p className="mt-2 text-xs text-white/45">
-                    Booking: {item.booking?.id ?? "—"} · FO:{" "}
+                    Booking:{" "}
+                    {item.booking?.id ? (
+                      <Link
+                        href={`/admin/bookings/${encodeURIComponent(item.booking.id)}`}
+                        className="font-mono text-sky-300 underline-offset-2 hover:underline"
+                      >
+                        {item.booking.id}
+                      </Link>
+                    ) : (
+                      "—"
+                    )}{" "}
+                    · FO:{" "}
                     {item.fo?.displayName ?? "—"}
                   </p>
                 </div>
