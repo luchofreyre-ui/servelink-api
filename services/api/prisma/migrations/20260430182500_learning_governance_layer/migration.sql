@@ -1,0 +1,6 @@
+ALTER TABLE "BookingEvent"
+  ADD COLUMN "source" TEXT NOT NULL DEFAULT 'REAL',
+  ADD COLUMN "environment" TEXT NOT NULL DEFAULT 'PRODUCTION',
+  ADD COLUMN "eligibleForTraining" BOOLEAN NOT NULL DEFAULT true,
+  ADD COLUMN "governanceReason" TEXT,
+  ADD COLUMN "createdBy" TEXT;

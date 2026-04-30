@@ -84,6 +84,11 @@ type SnapshotVisibility = {
   address: string;
   actualMinutes: number | null;
   actualVsEstimateDeltaMinutes: string;
+  learningGovernanceSource: string;
+  learningGovernanceEnvironment: string;
+  learningEligibleForTraining: string;
+  learningGovernanceReason: string;
+  learningCreatedBy: string;
   learningReady: boolean;
   warnings: string[];
 };
@@ -235,14 +240,18 @@ function firstString(...values: unknown[]): string | null {
   return null;
 }
 
-function deriveActualMinutes(events: BookingEvent[] | undefined): number | null {
+function latestLearningEvent(events: BookingEvent[] | undefined): BookingEvent | null {
   if (!events?.length) return null;
   const learningEvents = events
     .filter((event) => event.payload?.kind === "estimate_learning_result")
     .sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-  return numberFrom(learningEvents[0]?.payload?.actualMinutes);
+  return learningEvents[0] ?? null;
+}
+
+function deriveActualMinutes(events: BookingEvent[] | undefined): number | null {
+  return numberFrom(latestLearningEvent(events)?.payload?.actualMinutes);
 }
 
 function formatAddressFromFacts(facts: JsonRecord | null): string {
@@ -267,6 +276,7 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
   const inputRecord = asRecord(inputFacts);
   const rawNormalizedIntake = nestedRecord(output, "rawNormalizedIntake");
   const facts = rawNormalizedIntake ?? inputRecord;
+  const learningEvent = latestLearningEvent(booking?.events);
   const actualMinutes = deriveActualMinutes(booking?.events);
   const estimatedPriceCents = firstNumber(
     output?.estimatedPriceCents,
@@ -317,6 +327,11 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
         : `${actualMinutes - estimatedDurationMinutes >= 0 ? "+" : ""}${
             actualMinutes - estimatedDurationMinutes
           }`,
+    learningGovernanceSource: formatNullable(learningEvent?.source),
+    learningGovernanceEnvironment: formatNullable(learningEvent?.environment),
+    learningEligibleForTraining: formatNullable(learningEvent?.eligibleForTraining),
+    learningGovernanceReason: formatNullable(learningEvent?.governanceReason),
+    learningCreatedBy: formatNullable(learningEvent?.createdBy),
     learningReady:
       Boolean(snapshot) && booking?.status === "completed" && actualMinutes != null,
     warnings,
@@ -468,6 +483,20 @@ function EstimateSnapshotVisibilitySection({
                 "Actual vs estimate delta",
                 snapshotVisibility.actualVsEstimateDeltaMinutes,
               ],
+              ["Learning source", snapshotVisibility.learningGovernanceSource],
+              [
+                "Learning environment",
+                snapshotVisibility.learningGovernanceEnvironment,
+              ],
+              [
+                "Eligible for training",
+                snapshotVisibility.learningEligibleForTraining,
+              ],
+              [
+                "Governance reason",
+                snapshotVisibility.learningGovernanceReason,
+              ],
+              ["Learning created by", snapshotVisibility.learningCreatedBy],
             ].map(([label, value]) => (
               <div
                 key={String(label)}

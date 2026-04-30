@@ -49,6 +49,11 @@ export type BookingEvent = {
   idempotencyKey?: string | null;
   actorUserId?: string | null;
   actorRole?: string | null;
+  source?: string | null;
+  environment?: string | null;
+  eligibleForTraining?: boolean | null;
+  governanceReason?: string | null;
+  createdBy?: string | null;
   payload?: Record<string, unknown> | null;
 };
 
