@@ -1412,22 +1412,6 @@ export default function AdminBookingDetailPage() {
               </div>
             ) : null}
 
-            <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-amber-100/75">
-              {[
-                ["snapshotReady", controlledCompletionSnapshotReady],
-                ["statusAllowed", controlledCompletionStatusAllowed],
-                ["minutesValid", controlledCompletionMinutesValid],
-                ["confirmationValid", controlledCompletionConfirmed],
-              ].map(([label, ok]) => (
-                <span
-                  key={String(label)}
-                  className="rounded-full border border-white/10 bg-black/25 px-3 py-2"
-                >
-                  {label}: {ok ? "YES" : "NO"}
-                </span>
-              ))}
-            </div>
-
             {!controlledCompletionMinutesValid ? (
               <p className="mt-3 text-sm text-red-200">
                 actualMinutes must be a whole number from 1 to 1440.
@@ -1468,6 +1452,13 @@ export default function AdminBookingDetailPage() {
             ) : null}
           </section>
         ) : null}
+
+        <div style={{ marginTop: 12, fontSize: 12, opacity: 0.8 }}>
+          <div>snapshotReady: {controlledCompletionSnapshotReady ? 'YES' : 'NO'}</div>
+          <div>statusAllowed: {controlledCompletionStatusAllowed ? 'YES' : 'NO'}</div>
+          <div>confirmationValid: {controlledCompletionConfirmed ? 'YES' : 'NO'}</div>
+          <div>minutesValid: {controlledCompletionMinutesValid ? 'YES' : 'NO'}</div>
+        </div>
 
         <AdminBookingOperationalDetailCard bookingId={bookingId} />
 
