@@ -2,6 +2,7 @@ import type { PrismaService } from "../../src/prisma";
 import type { BookingEventsService } from "../../src/modules/bookings/booking-events.service";
 import type { FoService } from "../../src/modules/fo/fo.service";
 import type { EstimatorService } from "../../src/modules/estimate/estimator.service";
+import { EstimateEngineV2Service } from "../../src/modules/estimate/estimate-engine-v2.service";
 import type { LedgerService } from "../../src/modules/ledger/ledger.service";
 import type { DispatchService } from "../../src/modules/dispatch/dispatch.service";
 import type { ReputationService } from "../../src/modules/dispatch/reputation.service";
@@ -15,6 +16,7 @@ export type BookingsServiceTestHarnessMocks = {
   events: BookingEventsService;
   fo: FoService;
   estimator: EstimatorService;
+  estimateEngineV2: EstimateEngineV2Service;
   ledger: LedgerService;
   dispatch: DispatchService;
   reputationService: ReputationService;
@@ -35,6 +37,7 @@ export function createBookingsServiceTestHarness(
     events: {} as BookingEventsService,
     fo: {} as FoService,
     estimator: {} as EstimatorService,
+    estimateEngineV2: new EstimateEngineV2Service(),
     ledger: {} as LedgerService,
     dispatch: {} as DispatchService,
     reputationService: {} as ReputationService,
@@ -50,6 +53,7 @@ export function createBookingsServiceTestHarness(
     mocks.events,
     mocks.fo,
     mocks.estimator,
+    mocks.estimateEngineV2,
     mocks.ledger,
     mocks.dispatch,
     mocks.reputationService,

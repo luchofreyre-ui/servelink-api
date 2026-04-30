@@ -24,6 +24,7 @@ import {
   EstimateInput,
   EstimateResult,
 } from "../estimate/estimator.service";
+import { EstimateEngineV2Service } from "../estimate/estimate-engine-v2.service";
 import { LedgerService } from "../ledger/ledger.service";
 import { DispatchService } from "../dispatch/dispatch.service";
 import { ReputationService } from "../dispatch/reputation.service";
@@ -59,6 +60,7 @@ export class BookingsService {
     private readonly events: BookingEventsService,
     private readonly fo: FoService,
     private readonly estimator: EstimatorService,
+    private readonly estimateEngineV2: EstimateEngineV2Service,
     private readonly ledger: LedgerService,
     @Inject(forwardRef(() => DispatchService))
     private readonly dispatch: DispatchService,
@@ -148,6 +150,13 @@ export class BookingsService {
         est = await this.estimator.estimate(input.estimateInput, {
           bookingMatchMode: input.bookingMatchMode,
         });
+        const estimateV2 = this.estimateEngineV2.estimateV2(input.estimateInput);
+        const outputJson = JSON.stringify({
+          ...est,
+          estimateVersion: estimateV2.snapshotVersion,
+          estimateV2,
+          rawNormalizedIntake: input.estimateInput,
+        });
 
         await tx.bookingEstimateSnapshot.create({
           data: {
@@ -159,7 +168,7 @@ export class BookingsService {
             riskPercentCappedForRange: est.riskPercentCappedForRange,
             riskCapped: est.riskCapped,
             inputJson: JSON.stringify(input.estimateInput),
-            outputJson: JSON.stringify(est),
+            outputJson,
             deepCleanEstimatorConfigId: est.deepCleanEstimatorConfigId ?? null,
             deepCleanEstimatorConfigVersion: est.deepCleanEstimatorConfigVersion ?? null,
             deepCleanEstimatorConfigLabel: est.deepCleanEstimatorConfigLabel ?? null,
