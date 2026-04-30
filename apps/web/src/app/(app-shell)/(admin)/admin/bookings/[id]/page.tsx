@@ -117,10 +117,14 @@ type ActionState = {
 };
 
 type ControlledCompletionResult = {
-  afterStatus: string;
-  actualMinutes: number;
-  learningReady: boolean;
-  learningEventCreated: boolean;
+  ok: boolean;
+  message: string;
+  statusCode?: number;
+  responseJson?: unknown;
+  afterStatus?: string;
+  actualMinutes?: number;
+  learningReady?: boolean;
+  learningEventCreated?: boolean;
 };
 
 function deriveAdminPaymentSourceLine(
@@ -1238,14 +1242,50 @@ export default function AdminBookingDetailPage() {
     }
   }
 
-  async function runControlledCompletion() {
-    if (!token || !canRunControlledCompletion || controlledCompletionDisabled) {
+  async function handleControlledCompletion() {
+    setControlledCompletionResult({
+      ok: false,
+      message: "CLICK_RECEIVED",
+    });
+
+    if (!controlledCompletionSnapshotReady) {
+      setControlledCompletionResult({
+        ok: false,
+        message: "BLOCKED_SNAPSHOT_NOT_READY",
+      });
+      return;
+    }
+    if (!controlledCompletionStatusAllowed) {
+      setControlledCompletionResult({
+        ok: false,
+        message: "BLOCKED_STATUS_NOT_ALLOWED",
+      });
+      return;
+    }
+    if (!controlledCompletionConfirmed) {
+      setControlledCompletionResult({
+        ok: false,
+        message: "BLOCKED_CONFIRMATION_INVALID",
+      });
+      return;
+    }
+    if (!controlledCompletionMinutesValid) {
+      setControlledCompletionResult({
+        ok: false,
+        message: "BLOCKED_MINUTES_INVALID",
+      });
+      return;
+    }
+    if (!token) {
       return;
     }
 
     setControlledCompletionBusy(true);
     setControlledCompletionError(null);
-    setControlledCompletionResult(null);
+    setControlledCompletionResult({
+      ok: false,
+      message: "REQUEST_STARTED",
+    });
 
     try {
       const response = await fetch(
@@ -1271,6 +1311,33 @@ export default function AdminBookingDetailPage() {
         responseJson = null;
       }
 
+      setControlledCompletionResult({
+        ok: response.ok,
+        message: response.ok ? "REQUEST_SUCCEEDED" : "REQUEST_FAILED",
+        statusCode: response.status,
+        responseJson,
+        afterStatus:
+          responseJson && typeof responseJson === "object"
+            ? String(
+                (responseJson as ControlledCompletionResult).afterStatus ?? "unknown",
+              )
+            : undefined,
+        actualMinutes:
+          responseJson &&
+          typeof responseJson === "object" &&
+          typeof (responseJson as ControlledCompletionResult).actualMinutes === "number"
+            ? (responseJson as ControlledCompletionResult).actualMinutes
+            : undefined,
+        learningReady:
+          responseJson && typeof responseJson === "object"
+            ? Boolean((responseJson as ControlledCompletionResult).learningReady)
+            : undefined,
+        learningEventCreated:
+          responseJson && typeof responseJson === "object"
+            ? Boolean((responseJson as ControlledCompletionResult).learningEventCreated)
+            : undefined,
+      });
+
       if (!response.ok) {
         throw new Error(
           readApiErrorMessage(
@@ -1280,14 +1347,6 @@ export default function AdminBookingDetailPage() {
         );
       }
 
-      const result = responseJson as ControlledCompletionResult;
-      setControlledCompletionResult({
-        afterStatus: String(result.afterStatus ?? "unknown"),
-        actualMinutes:
-          typeof result.actualMinutes === "number" ? result.actualMinutes : 0,
-        learningReady: Boolean(result.learningReady),
-        learningEventCreated: Boolean(result.learningEventCreated),
-      });
       await reloadReadModels();
       dispatchAdminActivityRefresh();
       router.refresh();
@@ -1374,6 +1433,7 @@ export default function AdminBookingDetailPage() {
                   </span>
                   <input
                     type="number"
+                    name="controlledActualMinutes"
                     min={1}
                     max={24 * 60}
                     step={1}
@@ -1390,6 +1450,7 @@ export default function AdminBookingDetailPage() {
                   </span>
                   <input
                     type="text"
+                    name="controlledConfirmation"
                     value={controlledCompletionConfirmation}
                     onChange={(event) =>
                       setControlledCompletionConfirmation(event.target.value)
@@ -1400,7 +1461,7 @@ export default function AdminBookingDetailPage() {
                 </label>
                 <button
                   type="button"
-                  onClick={() => void runControlledCompletion()}
+                  onClick={handleControlledCompletion}
                   disabled={controlledCompletionDisabled}
                   className="rounded-2xl border border-amber-300/40 bg-amber-300 px-5 py-3 text-sm font-bold text-neutral-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-45"
                 >
@@ -1410,6 +1471,13 @@ export default function AdminBookingDetailPage() {
                 </button>
               </div>
             ) : null}
+
+            <div style={{ marginTop: 12, fontSize: 12, opacity: 0.8 }}>
+              <div>snapshotReady: {controlledCompletionSnapshotReady ? 'YES' : 'NO'}</div>
+              <div>statusAllowed: {controlledCompletionStatusAllowed ? 'YES' : 'NO'}</div>
+              <div>confirmationValid: {controlledCompletionConfirmed ? 'YES' : 'NO'}</div>
+              <div>minutesValid: {controlledCompletionMinutesValid ? 'YES' : 'NO'}</div>
+            </div>
 
             {!controlledCompletionMinutesValid ? (
               <p className="mt-3 text-sm text-red-200">
@@ -1424,15 +1492,26 @@ export default function AdminBookingDetailPage() {
             {controlledCompletionResult ? (
               <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {[
+                  ["message", controlledCompletionResult.message],
+                  ["ok", controlledCompletionResult.ok ? "true" : "false"],
+                  ["statusCode", controlledCompletionResult.statusCode ?? "NULL"],
                   ["afterStatus", controlledCompletionResult.afterStatus],
                   ["actualMinutes", controlledCompletionResult.actualMinutes],
                   [
                     "learningReady",
-                    controlledCompletionResult.learningReady ? "true" : "false",
+                    controlledCompletionResult.learningReady == null
+                      ? "NULL"
+                      : controlledCompletionResult.learningReady
+                        ? "true"
+                        : "false",
                   ],
                   [
                     "learningEventCreated",
-                    controlledCompletionResult.learningEventCreated ? "true" : "false",
+                    controlledCompletionResult.learningEventCreated == null
+                      ? "NULL"
+                      : controlledCompletionResult.learningEventCreated
+                        ? "true"
+                        : "false",
                   ],
                 ].map(([label, value]) => (
                   <div
@@ -1447,6 +1526,20 @@ export default function AdminBookingDetailPage() {
                     </div>
                   </div>
                 ))}
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-4 sm:col-span-2 lg:col-span-4">
+                  <div className="text-xs uppercase tracking-[0.18em] text-amber-100/55">
+                    responseJson
+                  </div>
+                  <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap text-xs text-white/75">
+                    {controlledCompletionResult.responseJson == null
+                      ? "NULL"
+                      : JSON.stringify(
+                          controlledCompletionResult.responseJson,
+                          null,
+                          2,
+                        )}
+                  </pre>
+                </div>
               </div>
             ) : null}
           </section>
