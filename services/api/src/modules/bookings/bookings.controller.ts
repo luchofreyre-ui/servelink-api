@@ -394,10 +394,19 @@ export class BookingsController {
     @Param("id") id: string,
     @Query("includeEvents") includeEvents?: string,
   ) {
+    const detailInclude = {
+      customer: { select: { id: true, email: true, phone: true, role: true } },
+      fo: { select: { id: true, userId: true, displayName: true } },
+      estimateSnapshot: true,
+    } as const;
+
     if (includeEvents === "true") {
       const row = await this.prisma.booking.findUnique({
         where: { id },
-        include: { BookingEvent: { orderBy: { createdAt: "asc" } } },
+        include: {
+          ...detailInclude,
+          BookingEvent: { orderBy: { createdAt: "asc" } },
+        },
       });
       if (!row) {
         throw new NotFoundException("BOOKING_NOT_FOUND");
@@ -407,7 +416,13 @@ export class BookingsController {
         item: this.bookings.mapBookingWithEvents(row as Record<string, unknown>),
       };
     }
-    const booking = await this.bookings.getBooking(id);
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+      include: detailInclude,
+    });
+    if (!booking) {
+      throw new NotFoundException("BOOKING_NOT_FOUND");
+    }
     return {
       ok: true,
       item: this.bookings.mapBookingWithEvents({

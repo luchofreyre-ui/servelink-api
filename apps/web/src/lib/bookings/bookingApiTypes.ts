@@ -52,6 +52,34 @@ export type BookingEvent = {
   payload?: Record<string, unknown> | null;
 };
 
+export type BookingEstimateSnapshotRecord = {
+  id: string;
+  bookingId: string;
+  estimatorVersion: string | null;
+  mode: string | null;
+  confidence: number | null;
+  riskPercentUncapped: number | null;
+  riskPercentCappedForRange: number | null;
+  riskCapped: boolean | null;
+  inputJson: string | null;
+  outputJson: string | null;
+  createdAt: string;
+  updatedAt?: string | null;
+};
+
+export type BookingCustomerRecord = {
+  id: string;
+  email: string | null;
+  phone: string | null;
+  role?: string | null;
+};
+
+export type BookingFoRecord = {
+  id: string;
+  userId?: string | null;
+  displayName?: string | null;
+};
+
 /** Core booking row returned by GET /api/v1/bookings/:id */
 export interface BookingRecord {
   id: string;
@@ -99,6 +127,10 @@ export interface BookingRecord {
   enRouteAt?: string | null;
   /** Present when the list/detail response included booking events. */
   events?: BookingEvent[];
+  /** Present on detail responses. */
+  estimateSnapshot?: BookingEstimateSnapshotRecord | null;
+  customer?: BookingCustomerRecord | null;
+  fo?: BookingFoRecord | null;
 }
 
 export type CreateBookingInput = {
