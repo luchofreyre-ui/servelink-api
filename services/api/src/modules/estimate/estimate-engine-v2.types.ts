@@ -2,6 +2,11 @@ export type EstimateRiskLevel = "low" | "medium" | "high";
 
 export type EstimateV2SnapshotVersion = "estimate_engine_v2_core_v1";
 
+export type EstimateReconciliationClassification =
+  | "aligned"
+  | "v2_higher"
+  | "v2_lower";
+
 export interface EstimateV2VarianceRange {
   lowMinutes: number;
   highMinutes: number;
@@ -58,4 +63,30 @@ export interface EstimateV2Output {
     estimatedPrice?: number;
     explanation: string;
   };
+}
+
+export interface EstimateV2Reconciliation {
+  v1Minutes: number;
+  v1PriceCents: number;
+
+  v2ExpectedMinutes: number;
+  v2PricedMinutes: number;
+  v2PriceCents: number;
+
+  expectedDeltaMinutes: number;
+  pricedDeltaMinutes: number;
+  expectedDeltaPercent: number;
+  pricedDeltaPercent: number;
+  priceDeltaCents: number;
+  priceDeltaPercent: number;
+
+  classification: EstimateReconciliationClassification;
+
+  authority: {
+    pricingAuthority: "legacy_v1";
+    durationAuthority: "legacy_v1";
+    v2Mode: "shadow";
+  };
+
+  flags: string[];
 }

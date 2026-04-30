@@ -4,11 +4,13 @@ import {
   estimateV2,
 } from "../src/modules/estimate/estimate-engine-v2.service";
 import {
+  extractEstimateV2ReconciliationFromSnapshot,
   extractEstimateV2FromSnapshot,
   toFoVisibleEstimate,
 } from "../src/modules/estimate/estimate-v2-snapshot";
 import { calculateEstimateVariance } from "../src/modules/estimate/estimate-variance.types";
 import type { EstimateInput, EstimateResult } from "../src/modules/estimate/estimator.service";
+import { createBookingsServiceTestHarness } from "./helpers/createBookingsServiceTestHarness";
 
 function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
   return {
@@ -210,5 +212,192 @@ describe("Estimate Engine v2 core", () => {
     });
     expect(foVisible).not.toHaveProperty("bufferMinutes");
     expect(foVisible).not.toHaveProperty("pricedMinutes");
+  });
+
+  it("calculateReconciliation returns aligned within twenty percent", () => {
+    const service = new EstimateEngineV2Service();
+    const result = service.calculateReconciliation({
+      v1Minutes: 100,
+      v1PriceCents: 10000,
+      v2ExpectedMinutes: 115,
+      v2PricedMinutes: 120,
+      v2PriceCents: 11200,
+    });
+    expect(result.classification).toBe("aligned");
+    expect(result.expectedDeltaPercent).toBeCloseTo(0.15);
+    expect(result.authority).toEqual({
+      pricingAuthority: "legacy_v1",
+      durationAuthority: "legacy_v1",
+      v2Mode: "shadow",
+    });
+  });
+
+  it("calculateReconciliation returns v2_higher above twenty percent", () => {
+    const result = new EstimateEngineV2Service().calculateReconciliation({
+      v1Minutes: 100,
+      v1PriceCents: 10000,
+      v2ExpectedMinutes: 125,
+      v2PricedMinutes: 140,
+      v2PriceCents: 13000,
+    });
+    expect(result.classification).toBe("v2_higher");
+    expect(result.flags).toContain("ESTIMATE_V2_PRICE_HIGHER_THAN_V1");
+  });
+
+  it("calculateReconciliation returns v2_lower below negative twenty percent", () => {
+    const result = new EstimateEngineV2Service().calculateReconciliation({
+      v1Minutes: 100,
+      v1PriceCents: 10000,
+      v2ExpectedMinutes: 75,
+      v2PricedMinutes: 80,
+      v2PriceCents: 7000,
+    });
+    expect(result.classification).toBe("v2_lower");
+    expect(result.flags).toContain("ESTIMATE_V2_PRICE_LOWER_THAN_V1");
+  });
+
+  it("calculateReconciliation flags large minute and price deltas", () => {
+    const result = new EstimateEngineV2Service().calculateReconciliation({
+      v1Minutes: 100,
+      v1PriceCents: 10000,
+      v2ExpectedMinutes: 150,
+      v2PricedMinutes: 170,
+      v2PriceCents: 14000,
+    });
+    expect(result.flags).toEqual(
+      expect.arrayContaining([
+        "ESTIMATE_V2_LARGE_MINUTE_DELTA",
+        "ESTIMATE_V2_LARGE_PRICE_DELTA",
+      ]),
+    );
+  });
+
+  it("preview-estimate response includes reconciliation and keeps legacy estimate unchanged", async () => {
+    const estimator = {
+      estimate: jest.fn().mockResolvedValue(
+        legacyEstimate({
+          estimatedDurationMinutes: 165,
+          estimatedPriceCents: 44634,
+        }),
+      ),
+    };
+    const controller = new EstimatePreviewController(
+      estimator as never,
+      new EstimateEngineV2Service(),
+    );
+    const response = await controller.preview(
+      baseInput({
+        overall_labor_condition: "major_reset",
+        kitchen_intensity: "heavy_use",
+        clutter_access: "heavy_clutter",
+      }),
+    );
+    expect(response.estimatedDurationMinutes).toBe(165);
+    expect(response.estimatedPriceCents).toBe(44634);
+    expect(response.reconciliation.v1Minutes).toBe(165);
+    expect(response.reconciliation.classification).toBe("v2_higher");
+    expect(response.reconciliation.authority.pricingAuthority).toBe("legacy_v1");
+    expect(response.reconciliation.authority.durationAuthority).toBe("legacy_v1");
+    expect(response.reconciliation.authority.v2Mode).toBe("shadow");
+  });
+
+  it("booking estimate snapshot stores and extracts reconciliation", () => {
+    const estimate = estimateV2(baseInput());
+    const reconciliation = new EstimateEngineV2Service().calculateReconciliation({
+      v1Minutes: 70,
+      v1PriceCents: 14000,
+      v2ExpectedMinutes: estimate.expectedMinutes,
+      v2PricedMinutes: estimate.pricedMinutes,
+      v2PriceCents: estimate.customerVisible.estimatedPrice ?? 0,
+    });
+    const snapshot = {
+      outputJson: JSON.stringify({
+        ...legacyEstimate(),
+        estimateVersion: estimate.snapshotVersion,
+        estimateV2: estimate,
+        reconciliation,
+        legacy: {
+          durationMinutes: 70,
+          priceCents: 14000,
+          confidence: 0.9,
+        },
+        rawNormalizedIntake: baseInput(),
+      }),
+    };
+    const parsed = JSON.parse(snapshot.outputJson);
+    expect(parsed.reconciliation.classification).toBe(reconciliation.classification);
+    expect(parsed.legacy).toEqual({
+      durationMinutes: 70,
+      priceCents: 14000,
+      confidence: 0.9,
+    });
+    expect(extractEstimateV2ReconciliationFromSnapshot(snapshot)).toEqual(
+      reconciliation,
+    );
+  });
+
+  it("large delta anomaly failure does not block booking creation", async () => {
+    const tx = {
+      booking: {
+        create: jest.fn().mockResolvedValue({
+          id: "booking_1",
+          status: "pending_payment",
+        }),
+        update: jest.fn().mockResolvedValue({}),
+      },
+      bookingEvent: { create: jest.fn().mockResolvedValue({}) },
+      bookingEstimateSnapshot: { create: jest.fn().mockResolvedValue({}) },
+      bookingDeepCleanProgram: { create: jest.fn().mockResolvedValue({}) },
+    };
+    const paymentAnomalyCreate = jest
+      .fn()
+      .mockRejectedValue(new Error("anomaly db unavailable"));
+    const db = {
+      $transaction: jest.fn(async (fn: (inner: typeof tx) => unknown) => fn(tx)),
+      booking: {
+        update: jest.fn().mockResolvedValue({}),
+        findUnique: jest.fn().mockResolvedValue({ id: "booking_1" }),
+      },
+      paymentAnomaly: { create: paymentAnomalyCreate },
+    };
+    const estimator = {
+      estimate: jest.fn().mockResolvedValue(
+        legacyEstimate({
+          estimatedDurationMinutes: 60,
+          estimatedPriceCents: 6000,
+          estimateMinutes: 60,
+        }),
+      ),
+    };
+    const { service } = createBookingsServiceTestHarness({
+      db: db as never,
+      estimator: estimator as never,
+    });
+    await expect(
+      service.createBooking({
+        customerId: "customer_1",
+        tenantId: "tenant_1",
+        estimateInput: baseInput({
+          overall_labor_condition: "major_reset",
+          kitchen_intensity: "heavy_use",
+          clutter_access: "heavy_clutter",
+        }),
+      }),
+    ).resolves.toEqual({
+      booking: { id: "booking_1" },
+      estimate: expect.objectContaining({ estimatedDurationMinutes: 60 }),
+    });
+    expect(paymentAnomalyCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          kind: "estimate_v2_large_delta",
+          bookingId: "booking_1",
+          details: expect.objectContaining({
+            bookingId: "booking_1",
+            classification: "v2_higher",
+          }),
+        }),
+      }),
+    );
   });
 });

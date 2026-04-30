@@ -2,8 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { CLEANING_PRICING_POLICY_V1 } from "../pricing/pricing-policy";
 import type { EstimateInput } from "./estimator.service";
 import type {
+  EstimateReconciliationClassification,
   EstimateRiskLevel,
   EstimateV2Output,
+  EstimateV2Reconciliation,
 } from "./estimate-engine-v2.types";
 
 const SNAPSHOT_VERSION = "estimate_engine_v2_core_v1" as const;
@@ -16,6 +18,14 @@ function roundUpToFive(value: number): number {
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
+}
+
+function finiteNonNegativeNumber(value: number): number {
+  return Number.isFinite(value) && value >= 0 ? value : 0;
+}
+
+function finiteNonNegativeInteger(value: number): number {
+  return Number.isFinite(value) && value >= 0 ? Math.round(value) : 0;
 }
 
 function stringField(input: Record<string, unknown>, key: string): string | null {
@@ -348,9 +358,87 @@ export function estimateV2(input: EstimateInput | Record<string, unknown>): Esti
   };
 }
 
+export function calculateEstimateV2Reconciliation(params: {
+  v1Minutes: number;
+  v1PriceCents: number;
+  v2ExpectedMinutes: number;
+  v2PricedMinutes: number;
+  v2PriceCents: number;
+}): EstimateV2Reconciliation {
+  const flags: string[] = [];
+  const legacyInputMissing =
+    !Number.isFinite(params.v1Minutes) ||
+    params.v1Minutes < 0 ||
+    !Number.isFinite(params.v1PriceCents) ||
+    params.v1PriceCents < 0;
+  const v1Minutes = finiteNonNegativeNumber(params.v1Minutes);
+  const v1PriceCents = finiteNonNegativeInteger(params.v1PriceCents);
+  const v2ExpectedMinutes = finiteNonNegativeNumber(params.v2ExpectedMinutes);
+  const v2PricedMinutes = finiteNonNegativeNumber(params.v2PricedMinutes);
+  const v2PriceCents = finiteNonNegativeInteger(params.v2PriceCents);
+
+  const expectedDeltaMinutes = v2ExpectedMinutes - v1Minutes;
+  const pricedDeltaMinutes = v2PricedMinutes - v1Minutes;
+  const expectedDeltaPercent =
+    v1Minutes > 0 ? expectedDeltaMinutes / v1Minutes : 0;
+  const pricedDeltaPercent =
+    v1Minutes > 0 ? pricedDeltaMinutes / v1Minutes : 0;
+  const priceDeltaCents = v2PriceCents - v1PriceCents;
+  const priceDeltaPercent =
+    v1PriceCents > 0 ? priceDeltaCents / v1PriceCents : 0;
+
+  const classification: EstimateReconciliationClassification =
+    Math.abs(expectedDeltaPercent) <= 0.2
+      ? "aligned"
+      : expectedDeltaPercent > 0.2
+        ? "v2_higher"
+        : "v2_lower";
+
+  if (legacyInputMissing) flags.push("ESTIMATE_RECONCILIATION_LEGACY_INPUT_MISSING");
+  if (Math.abs(expectedDeltaPercent) > 0.4) {
+    flags.push("ESTIMATE_V2_LARGE_MINUTE_DELTA");
+  }
+  if (Math.abs(priceDeltaPercent) > 0.25) {
+    flags.push("ESTIMATE_V2_LARGE_PRICE_DELTA");
+  }
+  if (priceDeltaCents > 0) flags.push("ESTIMATE_V2_PRICE_HIGHER_THAN_V1");
+  if (priceDeltaCents < 0) flags.push("ESTIMATE_V2_PRICE_LOWER_THAN_V1");
+
+  return {
+    v1Minutes,
+    v1PriceCents,
+    v2ExpectedMinutes,
+    v2PricedMinutes,
+    v2PriceCents,
+    expectedDeltaMinutes,
+    pricedDeltaMinutes,
+    expectedDeltaPercent,
+    pricedDeltaPercent,
+    priceDeltaCents,
+    priceDeltaPercent,
+    classification,
+    authority: {
+      pricingAuthority: "legacy_v1",
+      durationAuthority: "legacy_v1",
+      v2Mode: "shadow",
+    },
+    flags,
+  };
+}
+
 @Injectable()
 export class EstimateEngineV2Service {
   estimateV2(input: EstimateInput | Record<string, unknown>): EstimateV2Output {
     return estimateV2(input);
+  }
+
+  calculateReconciliation(params: {
+    v1Minutes: number;
+    v1PriceCents: number;
+    v2ExpectedMinutes: number;
+    v2PricedMinutes: number;
+    v2PriceCents: number;
+  }): EstimateV2Reconciliation {
+    return calculateEstimateV2Reconciliation(params);
   }
 }

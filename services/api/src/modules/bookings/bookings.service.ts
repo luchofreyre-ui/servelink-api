@@ -25,6 +25,7 @@ import {
   EstimateResult,
 } from "../estimate/estimator.service";
 import { EstimateEngineV2Service } from "../estimate/estimate-engine-v2.service";
+import type { EstimateV2Reconciliation } from "../estimate/estimate-engine-v2.types";
 import { LedgerService } from "../ledger/ledger.service";
 import { DispatchService } from "../dispatch/dispatch.service";
 import { ReputationService } from "../dispatch/reputation.service";
@@ -100,7 +101,7 @@ export class BookingsService {
   }> {
     const tenantId = requireTenantId(input.tenantId, "BookingsService.createBooking");
 
-    const { bookingId, estimate } = await this.db.$transaction(async (tx: any) => {
+    const { bookingId, estimate, reconciliation } = await this.db.$transaction(async (tx: any) => {
       const siteLat =
         typeof input.estimateInput?.siteLat === "number" &&
         Number.isFinite(input.estimateInput.siteLat)
@@ -145,16 +146,30 @@ export class BookingsService {
       });
 
       let est: EstimateResult | undefined;
+      let reconciliation: EstimateV2Reconciliation | undefined;
 
       if (input.estimateInput) {
         est = await this.estimator.estimate(input.estimateInput, {
           bookingMatchMode: input.bookingMatchMode,
         });
         const estimateV2 = this.estimateEngineV2.estimateV2(input.estimateInput);
+        reconciliation = this.estimateEngineV2.calculateReconciliation({
+          v1Minutes: est.estimatedDurationMinutes,
+          v1PriceCents: est.estimatedPriceCents,
+          v2ExpectedMinutes: estimateV2.expectedMinutes,
+          v2PricedMinutes: estimateV2.pricedMinutes,
+          v2PriceCents: estimateV2.customerVisible.estimatedPrice ?? 0,
+        });
         const outputJson = JSON.stringify({
           ...est,
           estimateVersion: estimateV2.snapshotVersion,
           estimateV2,
+          reconciliation,
+          legacy: {
+            durationMinutes: est.estimatedDurationMinutes,
+            priceCents: est.estimatedPriceCents,
+            confidence: est.confidence,
+          },
           rawNormalizedIntake: input.estimateInput,
         });
 
@@ -197,7 +212,11 @@ export class BookingsService {
         });
       }
 
-      return { bookingId: booking.id, estimate: est };
+      return {
+        bookingId: booking.id,
+        estimate: est,
+        reconciliation,
+      };
     });
 
     if (input.estimateInput && estimate) {
@@ -224,11 +243,68 @@ export class BookingsService {
       });
     }
 
+    await this.recordEstimateV2LargeDeltaAnomalyIfNeeded(
+      bookingId,
+      reconciliation,
+    );
+
     const refreshed = await this.db.booking.findUnique({
       where: { id: bookingId },
     });
 
     return { booking: refreshed, estimate };
+  }
+
+  private async recordEstimateV2LargeDeltaAnomalyIfNeeded(
+    bookingId: string,
+    reconciliation: EstimateV2Reconciliation | undefined,
+  ): Promise<void> {
+    if (!reconciliation) return;
+    if (
+      Math.abs(reconciliation.expectedDeltaPercent) <= 0.4 &&
+      Math.abs(reconciliation.priceDeltaPercent) <= 0.25
+    ) {
+      return;
+    }
+    const paymentAnomaly = (this.db as unknown as {
+      paymentAnomaly?: {
+        create?: (args: unknown) => Promise<unknown>;
+      };
+    }).paymentAnomaly;
+    if (!paymentAnomaly?.create) return;
+    try {
+      await paymentAnomaly.create({
+        data: {
+          bookingId,
+          kind: "estimate_v2_large_delta",
+          severity: "warning",
+          status: "open",
+          message: "Estimate Engine v2 shadow output diverged from legacy estimate.",
+          details: {
+            bookingId,
+            v1Minutes: reconciliation.v1Minutes,
+            v1PriceCents: reconciliation.v1PriceCents,
+            v2ExpectedMinutes: reconciliation.v2ExpectedMinutes,
+            v2PricedMinutes: reconciliation.v2PricedMinutes,
+            v2PriceCents: reconciliation.v2PriceCents,
+            expectedDeltaMinutes: reconciliation.expectedDeltaMinutes,
+            expectedDeltaPercent: reconciliation.expectedDeltaPercent,
+            priceDeltaCents: reconciliation.priceDeltaCents,
+            priceDeltaPercent: reconciliation.priceDeltaPercent,
+            classification: reconciliation.classification,
+            flags: reconciliation.flags,
+            at: new Date().toISOString(),
+          } satisfies Prisma.InputJsonObject,
+        },
+      });
+    } catch (err: unknown) {
+      this.log.warn({
+        kind: "estimate_v2_large_delta",
+        event: "anomaly_record_failed",
+        bookingId,
+        message: err instanceof Error ? err.message : String(err ?? "unknown"),
+      });
+    }
   }
 
   async getBooking(id: string) {
