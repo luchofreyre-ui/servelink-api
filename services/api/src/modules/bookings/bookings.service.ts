@@ -356,8 +356,8 @@ export class BookingsService {
     actualMinutes: number;
     confirmControlledCompletion: boolean;
     note?: string | null;
+    executedBy?: string | null;
   }) {
-    const actualMinutes = Math.floor(args.actualMinutes);
     if (!args.bookingId?.trim()) {
       throw new BadRequestException("bookingId is required");
     }
@@ -365,11 +365,17 @@ export class BookingsService {
       throw new BadRequestException("confirmControlledCompletion must be true");
     }
     if (
-      !Number.isFinite(actualMinutes) ||
-      actualMinutes <= 0 ||
-      actualMinutes > 24 * 60
+      !Number.isFinite(args.actualMinutes) ||
+      !Number.isInteger(args.actualMinutes) ||
+      args.actualMinutes <= 0 ||
+      args.actualMinutes > 24 * 60
     ) {
       throw new BadRequestException("actualMinutes must be between 1 and 1440");
+    }
+    const actualMinutes = Math.floor(args.actualMinutes);
+    const note = args.note?.trim();
+    if (!note) {
+      throw new BadRequestException("note must be present for controlled completion");
     }
 
     const booking = await this.db.booking.findUnique({
@@ -380,7 +386,7 @@ export class BookingsService {
     });
     if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
     if (booking.status === BookingStatus.completed) {
-      throw new ConflictException("BOOKING_ALREADY_COMPLETED");
+      throw new BadRequestException("BOOKING_ALREADY_COMPLETED");
     }
     if (!booking.estimateSnapshot?.outputJson?.trim()) {
       throw new BadRequestException("BOOKING_ESTIMATE_SNAPSHOT_REQUIRED");
@@ -389,7 +395,7 @@ export class BookingsService {
       booking.status !== BookingStatus.assigned &&
       booking.status !== BookingStatus.in_progress
     ) {
-      throw new ConflictException("BOOKING_CONTROLLED_COMPLETION_STATE_INVALID");
+      throw new BadRequestException("BOOKING_CONTROLLED_COMPLETION_STATE_INVALID");
     }
 
     const beforeStatus = booking.status;
@@ -404,8 +410,21 @@ export class BookingsService {
       },
       select: { id: true },
     });
+    if (existingLearning) {
+      throw new BadRequestException("BOOKING_LEARNING_EVENT_ALREADY_EXISTS");
+    }
+    const auditIdempotencyKey = `controlled-completion-audit:${booking.id}`;
+    const existingAudit = await this.db.bookingEvent.findFirst({
+      where: {
+        bookingId: booking.id,
+        idempotencyKey: auditIdempotencyKey,
+      },
+      select: { id: true },
+    });
+    if (existingAudit) {
+      throw new BadRequestException("BOOKING_CONTROLLED_COMPLETION_AUDIT_ALREADY_EXISTS");
+    }
 
-    const note = args.note?.trim() || "CONTROLLED_LEARNING_VALIDATION";
     if (booking.status === BookingStatus.assigned) {
       await this.transitionBooking({
         id: booking.id,
@@ -431,6 +450,42 @@ export class BookingsService {
       },
       select: { id: true },
     });
+    const executedAt = new Date();
+    const auditPayload = JSON.parse(
+      JSON.stringify({
+        kind: "controlled_completion_audit",
+        bookingId: booking.id,
+        actualMinutes,
+        note,
+        previousStatus: beforeStatus,
+        nextStatus: completed.status,
+        source: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.source,
+        environment: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.environment,
+        eligibleForTraining:
+          CONTROLLED_ADMIN_LEARNING_GOVERNANCE.eligibleForTraining,
+        reason: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.governanceReason,
+        confirmationReceived: true,
+        executedBy: args.executedBy?.trim() || "admin",
+        executedAt: executedAt.toISOString(),
+      }),
+    ) as Prisma.InputJsonValue;
+    const auditEvent = await this.db.bookingEvent.create({
+      data: {
+        bookingId: booking.id,
+        type: BookingEventType.CONTROLLED_COMPLETION_AUDIT,
+        note: "Controlled completion audit recorded.",
+        idempotencyKey: auditIdempotencyKey,
+        actorRole: "admin",
+        source: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.source,
+        environment: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.environment,
+        eligibleForTraining:
+          CONTROLLED_ADMIN_LEARNING_GOVERNANCE.eligibleForTraining,
+        governanceReason: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.governanceReason,
+        createdBy: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.createdBy,
+        payload: auditPayload,
+      },
+      select: { id: true },
+    });
 
     return {
       bookingId: booking.id,
@@ -443,6 +498,12 @@ export class BookingsService {
         actualMinutes > 0 &&
         Boolean(booking.estimateSnapshot?.outputJson?.trim()),
       learningEventCreated: Boolean(learningEvent && !existingLearning),
+      auditEventCreated: Boolean(auditEvent?.id),
+      source: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.source,
+      environment: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.environment,
+      eligibleForTraining:
+        CONTROLLED_ADMIN_LEARNING_GOVERNANCE.eligibleForTraining,
+      governanceReason: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.governanceReason,
     };
   }
 

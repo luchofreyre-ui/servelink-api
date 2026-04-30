@@ -89,6 +89,11 @@ type SnapshotVisibility = {
   learningEligibleForTraining: string;
   learningGovernanceReason: string;
   learningCreatedBy: string;
+  controlledAuditExists: boolean;
+  controlledAuditExecutedBy: string;
+  controlledAuditExecutedAt: string;
+  controlledAuditReason: string;
+  controlledAuditTrainingEligible: string;
   learningReady: boolean;
   warnings: string[];
 };
@@ -117,14 +122,12 @@ type ActionState = {
 };
 
 type ControlledCompletionResult = {
-  ok: boolean;
   message: string;
-  statusCode?: number;
-  responseJson?: unknown;
   afterStatus?: string;
   actualMinutes?: number;
   learningReady?: boolean;
   learningEventCreated?: boolean;
+  auditEventCreated?: boolean;
 };
 
 function deriveAdminPaymentSourceLine(
@@ -254,6 +257,22 @@ function latestLearningEvent(events: BookingEvent[] | undefined): BookingEvent |
   return learningEvents[0] ?? null;
 }
 
+function latestControlledCompletionAudit(
+  events: BookingEvent[] | undefined,
+): BookingEvent | null {
+  if (!events?.length) return null;
+  const auditEvents = events
+    .filter(
+      (event) =>
+        event.type === "CONTROLLED_COMPLETION_AUDIT" ||
+        event.payload?.kind === "controlled_completion_audit",
+    )
+    .sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  return auditEvents[0] ?? null;
+}
+
 function deriveActualMinutes(events: BookingEvent[] | undefined): number | null {
   return numberFrom(latestLearningEvent(events)?.payload?.actualMinutes);
 }
@@ -281,6 +300,8 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
   const rawNormalizedIntake = nestedRecord(output, "rawNormalizedIntake");
   const facts = rawNormalizedIntake ?? inputRecord;
   const learningEvent = latestLearningEvent(booking?.events);
+  const controlledAudit = latestControlledCompletionAudit(booking?.events);
+  const controlledAuditPayload = controlledAudit?.payload ?? null;
   const actualMinutes = deriveActualMinutes(booking?.events);
   const estimatedPriceCents = firstNumber(
     output?.estimatedPriceCents,
@@ -336,6 +357,17 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
     learningEligibleForTraining: formatNullable(learningEvent?.eligibleForTraining),
     learningGovernanceReason: formatNullable(learningEvent?.governanceReason),
     learningCreatedBy: formatNullable(learningEvent?.createdBy),
+    controlledAuditExists: Boolean(controlledAudit),
+    controlledAuditExecutedBy: formatNullable(controlledAuditPayload?.executedBy),
+    controlledAuditExecutedAt: formatDateTime(
+      typeof controlledAuditPayload?.executedAt === "string"
+        ? controlledAuditPayload.executedAt
+        : null,
+    ),
+    controlledAuditReason: formatNullable(controlledAuditPayload?.reason),
+    controlledAuditTrainingEligible: formatNullable(
+      controlledAuditPayload?.eligibleForTraining,
+    ),
     learningReady:
       Boolean(snapshot) && booking?.status === "completed" && actualMinutes != null,
     warnings,
@@ -501,6 +533,17 @@ function EstimateSnapshotVisibilitySection({
                 snapshotVisibility.learningGovernanceReason,
               ],
               ["Learning created by", snapshotVisibility.learningCreatedBy],
+              [
+                "Controlled completion audit",
+                snapshotVisibility.controlledAuditExists ? "YES" : "NO",
+              ],
+              ["Audit executed by", snapshotVisibility.controlledAuditExecutedBy],
+              ["Audit executed at", snapshotVisibility.controlledAuditExecutedAt],
+              ["Audit reason", snapshotVisibility.controlledAuditReason],
+              [
+                "Training eligible",
+                snapshotVisibility.controlledAuditTrainingEligible,
+              ],
             ].map(([label, value]) => (
               <div
                 key={String(label)}
@@ -1243,36 +1286,27 @@ export default function AdminBookingDetailPage() {
   }
 
   async function handleControlledCompletion() {
-    setControlledCompletionResult({
-      ok: false,
-      message: "CLICK_RECEIVED",
-    });
-
     if (!controlledCompletionSnapshotReady) {
       setControlledCompletionResult({
-        ok: false,
-        message: "BLOCKED_SNAPSHOT_NOT_READY",
+        message: "Snapshot is required before controlled completion can run.",
       });
       return;
     }
     if (!controlledCompletionStatusAllowed) {
       setControlledCompletionResult({
-        ok: false,
-        message: "BLOCKED_STATUS_NOT_ALLOWED",
+        message: "Booking must be assigned or in progress.",
       });
       return;
     }
     if (!controlledCompletionConfirmed) {
       setControlledCompletionResult({
-        ok: false,
-        message: "BLOCKED_CONFIRMATION_INVALID",
+        message: "Type the required confirmation phrase before running.",
       });
       return;
     }
     if (!controlledCompletionMinutesValid) {
       setControlledCompletionResult({
-        ok: false,
-        message: "BLOCKED_MINUTES_INVALID",
+        message: "Actual minutes must be a whole number from 1 to 1440.",
       });
       return;
     }
@@ -1283,8 +1317,7 @@ export default function AdminBookingDetailPage() {
     setControlledCompletionBusy(true);
     setControlledCompletionError(null);
     setControlledCompletionResult({
-      ok: false,
-      message: "REQUEST_STARTED",
+      message: "Controlled completion request started.",
     });
 
     try {
@@ -1311,33 +1344,6 @@ export default function AdminBookingDetailPage() {
         responseJson = null;
       }
 
-      setControlledCompletionResult({
-        ok: response.ok,
-        message: response.ok ? "REQUEST_SUCCEEDED" : "REQUEST_FAILED",
-        statusCode: response.status,
-        responseJson,
-        afterStatus:
-          responseJson && typeof responseJson === "object"
-            ? String(
-                (responseJson as ControlledCompletionResult).afterStatus ?? "unknown",
-              )
-            : undefined,
-        actualMinutes:
-          responseJson &&
-          typeof responseJson === "object" &&
-          typeof (responseJson as ControlledCompletionResult).actualMinutes === "number"
-            ? (responseJson as ControlledCompletionResult).actualMinutes
-            : undefined,
-        learningReady:
-          responseJson && typeof responseJson === "object"
-            ? Boolean((responseJson as ControlledCompletionResult).learningReady)
-            : undefined,
-        learningEventCreated:
-          responseJson && typeof responseJson === "object"
-            ? Boolean((responseJson as ControlledCompletionResult).learningEventCreated)
-            : undefined,
-      });
-
       if (!response.ok) {
         throw new Error(
           readApiErrorMessage(
@@ -1347,6 +1353,16 @@ export default function AdminBookingDetailPage() {
         );
       }
 
+      const result = responseJson as ControlledCompletionResult;
+      setControlledCompletionResult({
+        message: "Controlled completion recorded.",
+        afterStatus: String(result.afterStatus ?? "unknown"),
+        actualMinutes:
+          typeof result.actualMinutes === "number" ? result.actualMinutes : undefined,
+        learningReady: Boolean(result.learningReady),
+        learningEventCreated: Boolean(result.learningEventCreated),
+        auditEventCreated: Boolean(result.auditEventCreated),
+      });
       await reloadReadModels();
       dispatchAdminActivityRefresh();
       router.refresh();
@@ -1472,13 +1488,6 @@ export default function AdminBookingDetailPage() {
               </div>
             ) : null}
 
-            <div style={{ marginTop: 12, fontSize: 12, opacity: 0.8 }}>
-              <div>snapshotReady: {controlledCompletionSnapshotReady ? 'YES' : 'NO'}</div>
-              <div>statusAllowed: {controlledCompletionStatusAllowed ? 'YES' : 'NO'}</div>
-              <div>confirmationValid: {controlledCompletionConfirmed ? 'YES' : 'NO'}</div>
-              <div>minutesValid: {controlledCompletionMinutesValid ? 'YES' : 'NO'}</div>
-            </div>
-
             {!controlledCompletionMinutesValid ? (
               <p className="mt-3 text-sm text-red-200">
                 actualMinutes must be a whole number from 1 to 1440.
@@ -1493,8 +1502,6 @@ export default function AdminBookingDetailPage() {
               <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {[
                   ["message", controlledCompletionResult.message],
-                  ["ok", controlledCompletionResult.ok ? "true" : "false"],
-                  ["statusCode", controlledCompletionResult.statusCode ?? "NULL"],
                   ["afterStatus", controlledCompletionResult.afterStatus],
                   ["actualMinutes", controlledCompletionResult.actualMinutes],
                   [
@@ -1513,6 +1520,14 @@ export default function AdminBookingDetailPage() {
                         ? "true"
                         : "false",
                   ],
+                  [
+                    "auditEventCreated",
+                    controlledCompletionResult.auditEventCreated == null
+                      ? "NULL"
+                      : controlledCompletionResult.auditEventCreated
+                        ? "true"
+                        : "false",
+                  ],
                 ].map(([label, value]) => (
                   <div
                     key={String(label)}
@@ -1526,20 +1541,6 @@ export default function AdminBookingDetailPage() {
                     </div>
                   </div>
                 ))}
-                <div className="rounded-2xl border border-white/10 bg-black/25 p-4 sm:col-span-2 lg:col-span-4">
-                  <div className="text-xs uppercase tracking-[0.18em] text-amber-100/55">
-                    responseJson
-                  </div>
-                  <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap text-xs text-white/75">
-                    {controlledCompletionResult.responseJson == null
-                      ? "NULL"
-                      : JSON.stringify(
-                          controlledCompletionResult.responseJson,
-                          null,
-                          2,
-                        )}
-                  </pre>
-                </div>
               </div>
             ) : null}
           </section>

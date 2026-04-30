@@ -166,6 +166,7 @@ export class BookingsController {
     }),
   )
   async completeControlledByAdmin(
+    @Req() req: any,
     @Param("id") id: string,
     @Body() body: AdminControlledCompleteBookingDto,
   ) {
@@ -174,6 +175,10 @@ export class BookingsController {
       actualMinutes: body.actualMinutes,
       confirmControlledCompletion: body.confirmControlledCompletion,
       note: body.note,
+      executedBy:
+        String(req.user?.email ?? "").trim() ||
+        String(req.user?.userId ?? "").trim() ||
+        "admin",
     });
   }
 
