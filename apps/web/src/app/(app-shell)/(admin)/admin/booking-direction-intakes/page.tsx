@@ -7,6 +7,7 @@ import { WEB_ENV } from "@/lib/env";
 
 type IntakeRow = {
   intakeId: string;
+  bookingId?: string | null;
   serviceId: string;
   homeSize: string;
   bedrooms: string;
@@ -140,6 +141,7 @@ export default function AdminBookingDirectionIntakesPage() {
                 <thead className="bg-white/[0.04] text-xs uppercase tracking-wide text-slate-400">
                   <tr>
                     <th className="px-4 py-3 font-medium">Received</th>
+                    <th className="px-4 py-3 font-medium">Booking</th>
                     <th className="px-4 py-3 font-medium">Service</th>
                     <th className="px-4 py-3 font-medium">Deep clean</th>
                     <th className="px-4 py-3 font-medium">Home</th>
@@ -152,7 +154,7 @@ export default function AdminBookingDirectionIntakesPage() {
                   {items.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={7}
+                        colSpan={8}
                         className="px-4 py-8 text-center text-slate-500"
                       >
                         No booking direction intakes yet.
@@ -166,6 +168,18 @@ export default function AdminBookingDirectionIntakesPage() {
                       >
                         <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-400">
                           {new Date(row.createdAt).toLocaleString()}
+                        </td>
+                        <td className="px-4 py-3 font-mono text-xs text-slate-300">
+                          {row.bookingId ? (
+                            <Link
+                              href={`/admin/bookings/${encodeURIComponent(row.bookingId)}`}
+                              className="text-sky-300 underline-offset-2 hover:underline"
+                            >
+                              {row.bookingId}
+                            </Link>
+                          ) : (
+                            <span className="text-slate-600">—</span>
+                          )}
                         </td>
                         <td className="px-4 py-3 font-mono text-xs text-teal-200/90">
                           {row.serviceId}

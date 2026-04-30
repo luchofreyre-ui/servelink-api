@@ -925,15 +925,20 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
           ) : exceptions.length ? (
             <div className="space-y-3">
               {exceptions.map((item) => (
-                <Link
+                <div
                   key={`${item.bookingId}-${item.createdAt}`}
-                  href={`/admin/exceptions/actions/${encodeURIComponent(buildDispatchExceptionKeyFromBookingId(item.bookingId))}`}
-                  className="block rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:bg-white/[0.05]"
+                  className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
                 >
                   <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
                     <div>
                       <p className="text-sm font-semibold text-slate-100">
-                        Booking {item.bookingId}
+                        Booking{" "}
+                        <Link
+                          href={`/admin/bookings/${encodeURIComponent(item.bookingId)}`}
+                          className="font-mono text-sky-300 underline-offset-2 hover:underline"
+                        >
+                          {item.bookingId}
+                        </Link>
                       </p>
                       <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-500">
                         {item.status}
@@ -941,12 +946,18 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
                       <p className="mt-2 text-sm text-slate-300">
                         {formatReasons(item.reasons)}
                       </p>
+                      <Link
+                        href={`/admin/exceptions/actions/${encodeURIComponent(buildDispatchExceptionKeyFromBookingId(item.bookingId))}`}
+                        className="mt-2 inline-flex text-xs font-medium text-slate-300 underline-offset-2 hover:text-white hover:underline"
+                      >
+                        Open exception action
+                      </Link>
                     </div>
                     <p className="text-xs text-slate-500">
                       {formatDateTime(item.createdAt)}
                     </p>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           ) : (
@@ -984,7 +995,17 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
                         {item.type}
                       </p>
                       <p className="mt-1 text-xs text-slate-500">
-                        Booking: {item.bookingId ?? "—"}
+                        Booking:{" "}
+                        {item.bookingId ? (
+                          <Link
+                            href={`/admin/bookings/${encodeURIComponent(item.bookingId)}`}
+                            className="font-mono text-sky-300 underline-offset-2 hover:underline"
+                          >
+                            {item.bookingId}
+                          </Link>
+                        ) : (
+                          "—"
+                        )}
                       </p>
                       <p className="mt-1 text-xs text-slate-500">
                         Actor: {item.actorUserId ?? "—"}
