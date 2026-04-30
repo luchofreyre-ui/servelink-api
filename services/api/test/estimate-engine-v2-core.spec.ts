@@ -62,6 +62,15 @@ function legacyEstimate(overrides: Partial<EstimateResult> = {}): EstimateResult
   };
 }
 
+function validationInput(
+  overrides: Partial<EstimateInput> = {},
+): EstimateInput {
+  return {
+    ...baseInput(),
+    ...overrides,
+  };
+}
+
 describe("Estimate Engine v2 core", () => {
   it("separates expected, buffer, and priced minutes", () => {
     const result = estimateV2(baseInput());
@@ -133,6 +142,176 @@ describe("Estimate Engine v2 core", () => {
         "LONG_TIME_SINCE_LAST_CLEAN",
       ]),
     );
+  });
+
+  it("regresses correlated high-risk deep clean without compounding condition signals", () => {
+    const result = estimateV2(
+      validationInput({
+        sqft_band: "2000_2499",
+        bedrooms: "4",
+        bathrooms: "3",
+        service_type: "deep_clean",
+        overall_labor_condition: "major_reset",
+        kitchen_intensity: "heavy_use",
+        clutter_access: "moderate_clutter",
+        pet_impact: "heavy",
+        last_pro_clean_recency: "unknown_or_not_recently",
+        primary_cleaning_intent: "reset_level",
+      }),
+    );
+    expect(result.expectedMinutes).toBe(700);
+    expect(result.expectedMinutes).not.toBe(1175);
+    expect(result.riskLevel).toBe("high");
+    expect(result.bufferPercent).toBe(22);
+    expect(result.bufferMinutes).toBe(155);
+    expect(result.pricedMinutes).toBe(855);
+    expect(result.pricingFactors.conditionScore).toBeCloseTo(9.2);
+    expect(result.pricingFactors.conditionMultiplier).toBe(1.4);
+  });
+
+  it("keeps normal deep clean validation profile near current target", () => {
+    const result = estimateV2(
+      validationInput({
+        sqft_band: "1600_1999",
+        bedrooms: "3",
+        bathrooms: "2",
+        service_type: "deep_clean",
+        overall_labor_condition: "normal_lived_in",
+        kitchen_intensity: "average_use",
+        clutter_access: "mostly_clear",
+        pet_impact: "none",
+        last_pro_clean_recency: "days_30_90",
+        primary_cleaning_intent: "reset_level",
+      }),
+    );
+    expect(result.expectedMinutes).toBe(420);
+  });
+
+  it("matches move-out validation profile with additive service labor", () => {
+    const result = estimateV2(
+      validationInput({
+        sqft_band: "1200_1599",
+        bedrooms: "3",
+        bathrooms: "2_5",
+        service_type: "move_out",
+        overall_labor_condition: "normal_lived_in",
+        kitchen_intensity: "average_use",
+        clutter_access: "mostly_clear",
+        pet_impact: "light",
+        last_pro_clean_recency: "days_90_plus",
+        primary_cleaning_intent: "detailed_standard",
+      }),
+    );
+    expect(result.expectedMinutes).toBe(450);
+  });
+
+  it("matches maintenance validation profile", () => {
+    const result = estimateV2(
+      validationInput({
+        sqft_band: "800_1199",
+        bedrooms: "2",
+        bathrooms: "2",
+        service_type: "maintenance",
+        overall_labor_condition: "recently_maintained",
+        kitchen_intensity: "light_use",
+        clutter_access: "mostly_clear",
+        pet_impact: "none",
+        last_pro_clean_recency: "within_30_days",
+        primary_cleaning_intent: "maintenance_clean",
+      }),
+    );
+    expect(result.expectedMinutes).toBe(175);
+  });
+
+  it("matches maintenance validation profile with light pet impact", () => {
+    const result = estimateV2(
+      validationInput({
+        sqft_band: "1600_1999",
+        bedrooms: "3",
+        bathrooms: "2",
+        service_type: "maintenance",
+        overall_labor_condition: "normal_lived_in",
+        kitchen_intensity: "average_use",
+        clutter_access: "mostly_clear",
+        pet_impact: "light",
+        last_pro_clean_recency: "within_30_days",
+        primary_cleaning_intent: "maintenance_clean",
+      }),
+    );
+    expect(result.expectedMinutes).toBe(255);
+  });
+
+  it("does not let reset-level expectation change expected minutes", () => {
+    const reset = estimateV2(
+      validationInput({
+        service_type: "deep_clean",
+        primary_cleaning_intent: "reset_level",
+      }),
+    );
+    const maintenance = estimateV2(
+      validationInput({
+        service_type: "deep_clean",
+        primary_cleaning_intent: "maintenance_clean",
+      }),
+    );
+    expect(reset.expectedMinutes).toBe(maintenance.expectedMinutes);
+    expect(reset.riskFlags).toContain("RESET_EXPECTATION");
+  });
+
+  it("collapses condition signals into one weighted condition score", () => {
+    const result = estimateV2(
+      validationInput({
+        overall_labor_condition: "major_reset",
+        clutter_access: "heavy_clutter",
+        kitchen_intensity: "heavy_use",
+        pet_impact: "heavy",
+        last_pro_clean_recency: "days_90_plus",
+      }),
+    );
+    expect(result.pricingFactors.conditionScore).toBe(10);
+    expect(result.pricingFactors.conditionMultiplier).toBe(1.2);
+    expect(result.pricingFactors).not.toHaveProperty("laborConditionMultiplier");
+    expect(result.pricingFactors).not.toHaveProperty("clutterAccessMultiplier");
+    expect(result.pricingFactors).not.toHaveProperty("kitchenIntensityMultiplier");
+    expect(result.pricingFactors).not.toHaveProperty("petMultiplier");
+    expect(result.pricingFactors).not.toHaveProperty("recencyMultiplier");
+  });
+
+  it("caps expected minutes by service absolute max, sqft band max, and service multiplier", () => {
+    const maintenance = estimateV2(
+      validationInput({
+        sqft_band: "3500_plus",
+        bedrooms: "5_plus",
+        bathrooms: "4_plus",
+        service_type: "maintenance",
+        overall_labor_condition: "major_reset",
+        kitchen_intensity: "heavy_use",
+        clutter_access: "heavy_clutter",
+        pet_impact: "heavy",
+        last_pro_clean_recency: "days_90_plus",
+      }),
+    );
+    expect(maintenance.expectedMinutes).toBe(330);
+    expect(maintenance.pricingFactors.conditionMultiplier).toBe(1.2);
+
+    const moveOut = estimateV2(
+      validationInput({
+        sqft_band: "1200_1599",
+        bedrooms: "5_plus",
+        bathrooms: "4_plus",
+        service_type: "move_out",
+        overall_labor_condition: "major_reset",
+        kitchen_intensity: "heavy_use",
+        clutter_access: "heavy_clutter",
+        pet_impact: "heavy",
+        last_pro_clean_recency: "days_90_plus",
+      }),
+    );
+    expect(moveOut.expectedMinutes).toBe(450);
+    expect(moveOut.expectedMinutes).toBe(
+      Math.ceil(moveOut.pricingFactors.sqftBandMaxMinutesCap / 5) * 5,
+    );
+    expect(moveOut.pricingFactors.conditionMultiplier).toBe(1.35);
   });
 
   it("rounds output minutes to nearest five", () => {
