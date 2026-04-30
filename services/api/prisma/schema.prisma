@@ -1686,6 +1686,11 @@ model BookingEvent {
   actorUserId    String?
   actorRole      String?
   payload        Json?
+  source         String           @default("REAL")
+  environment    String           @default("PRODUCTION")
+  eligibleForTraining Boolean     @default(true)
+  governanceReason String?
+  createdBy      String?
   createdAt      DateTime         @default(now())
   Booking        Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   dispatchDecisions DispatchDecision[]

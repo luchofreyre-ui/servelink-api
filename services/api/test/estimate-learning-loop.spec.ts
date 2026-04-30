@@ -3,6 +3,10 @@ import { ReliabilityOpsController } from "../src/common/reliability/reliability-
 import { PaymentReliabilityService } from "../src/modules/bookings/payment-reliability/payment-reliability.service";
 import { EstimateLearningService } from "../src/modules/estimate/estimate-learning.service";
 import { createBookingsServiceTestHarness } from "./helpers/createBookingsServiceTestHarness";
+import {
+  assertValidLearningGovernance,
+  CONTROLLED_ADMIN_LEARNING_GOVERNANCE,
+} from "../src/modules/bookings/learning-governance";
 
 function snapshotOutputJson(overrides: Record<string, unknown> = {}) {
   return JSON.stringify({
@@ -220,12 +224,84 @@ describe("BookingsService estimate learning completion hook", () => {
         data: expect.objectContaining({
           type: BookingEventType.NOTE,
           idempotencyKey: "estimate-learning-result:booking_1",
+          source: "REAL",
+          environment: "PRODUCTION",
+          eligibleForTraining: true,
+          governanceReason: "real_completion_learning_event",
+          createdBy: "system",
           payload: expect.objectContaining({
             kind: "estimate_learning_result",
             bookingId: "booking_1",
             actualMinutes: 470,
             winner: "estimate_v2",
+            legacyV1: expect.objectContaining({
+              predictedMinutes: 165,
+              actualMinutes: 470,
+              varianceMinutes: 305,
+            }),
+            estimateV2: expect.objectContaining({
+              predictedMinutes: 480,
+              actualMinutes: 470,
+              varianceMinutes: -10,
+            }),
           }),
+        }),
+      }),
+    );
+  });
+
+  it("governance blocks synthetic training-eligible learning events", async () => {
+    expect(() =>
+      assertValidLearningGovernance({
+        source: "SYNTHETIC",
+        environment: "PRODUCTION",
+        eligibleForTraining: true,
+        governanceReason: "invalid_test",
+        createdBy: "admin",
+      }),
+    ).toThrow("INVALID_LEARNING_GOVERNANCE:SYNTHETIC:PRODUCTION:true");
+
+    const { service, bookingEventCreate } = makeCompletionHarness();
+    await expect(
+      service.transitionBooking({
+        id: "booking_1",
+        transition: "complete",
+        actualMinutes: 470,
+        learningGovernance: {
+          source: "SYNTHETIC",
+          environment: "SANDBOX",
+          eligibleForTraining: true,
+          governanceReason: "invalid_test",
+          createdBy: "admin",
+        },
+      }),
+    ).rejects.toThrow("INVALID_LEARNING_GOVERNANCE:SYNTHETIC:SANDBOX:true");
+    expect(bookingEventCreate).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          idempotencyKey: "estimate-learning-result:booking_1",
+        }),
+      }),
+    );
+  });
+
+  it("controlled admin governance writes synthetic sandbox non-training metadata", async () => {
+    const { service, bookingEventCreate } = makeCompletionHarness();
+    await service.transitionBooking({
+      id: "booking_1",
+      transition: "complete",
+      actualMinutes: 470,
+      learningGovernance: CONTROLLED_ADMIN_LEARNING_GOVERNANCE,
+    });
+    expect(bookingEventCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          idempotencyKey: "estimate-learning-result:booking_1",
+          source: "SYNTHETIC",
+          environment: "SANDBOX",
+          eligibleForTraining: false,
+          governanceReason: "controlled_admin_validation",
+          createdBy: "admin",
         }),
       }),
     );
@@ -367,6 +443,7 @@ describe("BookingsService admin controlled completion", () => {
         id: "booking_1",
         transition: "complete",
         actualMinutes: 105,
+        learningGovernance: CONTROLLED_ADMIN_LEARNING_GOVERNANCE,
       }),
     );
     expect(result).toEqual({

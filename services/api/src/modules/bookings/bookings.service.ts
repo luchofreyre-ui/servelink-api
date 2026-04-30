@@ -52,6 +52,12 @@ import { resolveBookingCalendarEndMs } from "./booking-scheduling-calendar-end";
 import { BookingCancellationPaymentInvariantService } from "./payment-lifecycle/booking-cancellation-payment-invariant.service";
 import { RemainingBalanceCaptureService } from "./payment-lifecycle/remaining-balance-capture.service";
 import { requireReadTenantId, requireTenantId } from "../tenant/tenant.enforcement";
+import {
+  assertValidLearningGovernance,
+  CONTROLLED_ADMIN_LEARNING_GOVERNANCE,
+  REAL_COMPLETION_LEARNING_GOVERNANCE,
+} from "./learning-governance";
+import type { LearningGovernanceMetadata } from "./learning-governance";
 
 @Injectable()
 export class BookingsService {
@@ -415,6 +421,7 @@ export class BookingsService {
       note,
       actualMinutes,
       idempotencyKey: `controlled-completion-complete:${booking.id}`,
+      learningGovernance: CONTROLLED_ADMIN_LEARNING_GOVERNANCE,
     });
 
     const learningEvent = await this.db.bookingEvent.findFirst({
@@ -1038,6 +1045,7 @@ export class BookingsService {
     scheduledStart?: string;
     actualMinutes?: number | null;
     idempotencyKey?: string | null;
+    learningGovernance?: LearningGovernanceMetadata;
   }) {
     const revRecEnabled = process.env.LEDGER_REVREC_ENABLED !== "0";
 
@@ -1248,6 +1256,8 @@ export class BookingsService {
           bookingId: result.id,
           actualMinutes: args.actualMinutes,
           foId: result.foId ?? null,
+          governance:
+            args.learningGovernance ?? REAL_COMPLETION_LEARNING_GOVERNANCE,
         });
         void this.remainingBalanceCapture
           .captureRemainingBalanceForBooking(result.id)
@@ -1316,6 +1326,7 @@ export class BookingsService {
     bookingId: string;
     actualMinutes?: number | null;
     foId?: string | null;
+    governance?: LearningGovernanceMetadata;
   }): Promise<void> {
     const actualMinutes =
       typeof args.actualMinutes === "number" &&
@@ -1331,6 +1342,10 @@ export class BookingsService {
       });
       return;
     }
+
+    const governance = assertValidLearningGovernance(
+      args.governance ?? REAL_COMPLETION_LEARNING_GOVERNANCE,
+    );
 
     try {
       const row = await this.db.booking.findUnique({
@@ -1378,6 +1393,11 @@ export class BookingsService {
           note: "Estimate learning result recorded.",
           idempotencyKey: `estimate-learning-result:${args.bookingId}`,
           actorRole: "system",
+          source: governance.source,
+          environment: governance.environment,
+          eligibleForTraining: governance.eligibleForTraining,
+          governanceReason: governance.governanceReason,
+          createdBy: governance.createdBy,
           payload,
         },
       });
