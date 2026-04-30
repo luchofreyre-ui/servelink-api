@@ -17,13 +17,13 @@ export interface EstimateV2PricingFactors {
   squareFootageMinutes: number;
   bedroomMinutes: number;
   bathroomMinutes: number;
-  serviceTypeMultiplier: number;
-  laborConditionMultiplier: number;
-  clutterAccessMultiplier: number;
-  kitchenIntensityMultiplier: number;
-  petMultiplier: number;
-  recencyMultiplier: number;
-  expectationMultiplier: number;
+  serviceAddMinutes: number;
+  conditionScore: number;
+  conditionMultiplier: number;
+  serviceMaxConditionMultiplier: number;
+  serviceAbsoluteMaxMinutes: number;
+  sqftBandMaxMinutesCap: number;
+  appliedExpectedMinutesCap: number;
   confidencePenaltyMultiplier: number;
 }
 

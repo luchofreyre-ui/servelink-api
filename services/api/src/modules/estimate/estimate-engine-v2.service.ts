@@ -62,142 +62,87 @@ function squareFootageFromBand(value: unknown): number | null {
   return map[value] ?? null;
 }
 
-function serviceTypeMultiplier(serviceType: string | null): {
-  value: number;
-  unknown: boolean;
-} {
-  if (serviceType === "maintenance" || serviceType === "standard") {
-    return { value: 1.0, unknown: false };
-  }
-  if (serviceType === "deep_clean") return { value: 1.35, unknown: false };
-  if (serviceType === "move_in" || serviceType === "move_out") {
-    return { value: 1.5, unknown: false };
-  }
-  return { value: 1.15, unknown: true };
+function squareFootageMaxFromBand(value: unknown): number | null {
+  if (typeof value !== "string" || !value.trim()) return null;
+  const map: Record<string, number> = {
+    "0_799": 799,
+    "800_1199": 1199,
+    "1200_1599": 1599,
+    "1600_1999": 1999,
+    "2000_2499": 2499,
+    "2500_2999": 2999,
+    "3000_3499": 3499,
+    // Open-ended band uses the current estimator's existing 4000 sqft convention.
+    "3500_plus": 4000,
+  };
+  return map[value] ?? null;
 }
 
-function laborConditionMultiplier(value: string | null): {
-  value: number;
-  unknown: boolean;
-  heavy: boolean;
-  severe: boolean;
-} {
-  if (value === "recently_maintained" || value === "light") {
-    return { value: 0.9, unknown: false, heavy: false, severe: false };
-  }
-  if (value === "normal_lived_in" || value === "normal" || value === "moderate") {
-    return { value: 1.0, unknown: false, heavy: false, severe: false };
-  }
-  if (value === "behind_weeks" || value === "heavy") {
-    return { value: 1.25, unknown: false, heavy: true, severe: false };
-  }
-  if (value === "major_reset" || value === "severe") {
-    return { value: 1.45, unknown: false, heavy: true, severe: true };
-  }
-  return { value: 1.1, unknown: true, heavy: false, severe: false };
-}
+type SupportedServiceType = "maintenance" | "deep_clean" | "move_in" | "move_out";
 
-function clutterMultiplier(value: string | null): {
-  value: number;
-  unknown: boolean;
-  heavy: boolean;
-  severe: boolean;
-} {
-  if (value === "mostly_clear" || value === "minimal" || value === "low") {
-    return { value: 0.95, unknown: false, heavy: false, severe: false };
-  }
-  if (value === "moderate_clutter" || value === "moderate") {
-    return { value: 1.1, unknown: false, heavy: false, severe: false };
-  }
-  if (value === "heavy_clutter" || value === "high") {
-    return { value: 1.25, unknown: false, heavy: true, severe: false };
-  }
-  if (value === "severe") {
-    return { value: 1.4, unknown: false, heavy: true, severe: true };
-  }
-  return { value: 1.1, unknown: true, heavy: false, severe: false };
-}
-
-function kitchenMultiplier(value: string | null): {
-  value: number;
-  unknown: boolean;
-  heavy: boolean;
-  severe: boolean;
-} {
-  if (value === "light_use" || value === "light") {
-    return { value: 0.95, unknown: false, heavy: false, severe: false };
-  }
-  if (value === "average_use" || value === "normal" || value === "moderate") {
-    return { value: 1.0, unknown: false, heavy: false, severe: false };
-  }
-  if (value === "heavy_use" || value === "heavy") {
-    return { value: 1.2, unknown: false, heavy: true, severe: false };
-  }
-  if (value === "severe") {
-    return { value: 1.35, unknown: false, heavy: true, severe: true };
-  }
-  return { value: 1.05, unknown: true, heavy: false, severe: false };
-}
-
-function petMultiplier(input: Record<string, unknown>): {
-  value: number;
-  unknown: boolean;
-  complex: boolean;
-} {
-  const impact = stringField(input, "pet_impact");
-  const presence = stringField(input, "pet_presence");
-  if (impact === "heavy" || presence === "multiple") {
-    return { value: 1.15, unknown: false, complex: true };
-  }
-  if (impact === "light" || presence === "one" || presence === "yes") {
-    return { value: 1.08, unknown: false, complex: true };
-  }
-  if (impact === "none" || presence === "none") {
-    return { value: 1.0, unknown: false, complex: false };
-  }
-  return { value: 1.03, unknown: true, complex: false };
-}
-
-function recencyMultiplier(value: string | null): {
-  value: number;
-  unknown: boolean;
-  longTime: boolean;
-} {
-  if (value === "within_30_days" || value === "under_2_weeks") {
-    return { value: 0.95, unknown: false, longTime: false };
-  }
-  if (value === "2_4_weeks") return { value: 1.0, unknown: false, longTime: false };
-  if (value === "days_30_90" || value === "1_3_months") {
-    return { value: 1.12, unknown: false, longTime: false };
-  }
+function supportedServiceType(value: string | null): SupportedServiceType | null {
   if (
-    value === "days_90_plus" ||
-    value === "3_6_months" ||
-    value === "6_plus_months"
+    value === "maintenance" ||
+    value === "deep_clean" ||
+    value === "move_in" ||
+    value === "move_out"
   ) {
-    return { value: 1.25, unknown: false, longTime: true };
+    return value;
   }
-  return { value: 1.08, unknown: true, longTime: false };
+  return null;
 }
 
-function expectationMultiplier(value: string | null, serviceType: string | null): {
-  value: number;
-  unknown: boolean;
-} {
+function serviceRate(serviceType: SupportedServiceType | null): number {
+  if (serviceType === "deep_clean") return 0.09;
+  if (serviceType === "move_in" || serviceType === "move_out") return 0.12;
+  return 0;
+}
+
+function serviceMaxConditionMultiplier(serviceType: SupportedServiceType | null): number {
+  if (serviceType === "deep_clean") return 1.4;
+  if (serviceType === "move_in" || serviceType === "move_out") return 1.35;
+  return 1.2;
+}
+
+function serviceAbsoluteMax(serviceType: SupportedServiceType | null): number {
+  if (serviceType === "deep_clean") return 780;
+  if (serviceType === "move_in" || serviceType === "move_out") return 720;
+  return 330;
+}
+
+function scoreFromMap(
+  value: string | null,
+  map: Record<string, number>,
+): { score: number; unknown: boolean } {
+  if (value != null && Object.prototype.hasOwnProperty.call(map, value)) {
+    return { score: map[value], unknown: false };
+  }
+  return { score: 0, unknown: true };
+}
+
+function conditionMultiplier(conditionScore: number): number {
+  if (conditionScore <= -3) return 0.9;
+  if (conditionScore <= 1) return 1.0;
+  if (conditionScore <= 3) return 1.1;
+  if (conditionScore <= 5) return 1.22;
+  if (conditionScore <= 7) return 1.32;
+  return 1.4;
+}
+
+function expectationRisk(value: string | null): { known: boolean; riskFlag: string | null } {
   if (value === "maintenance_clean" || value === "basic") {
-    return { value: 1.0, unknown: false };
+    return { known: true, riskFlag: null };
   }
   if (value === "reset_level" || value === "deep_reset") {
-    return { value: 1.15, unknown: false };
+    return { known: true, riskFlag: "RESET_EXPECTATION" };
   }
   if (value === "presentation_ready" || value === "guest_ready") {
-    return { value: 1.18, unknown: false };
+    return { known: true, riskFlag: "PRESENTATION_EXPECTATION" };
   }
-  if (serviceType === "move_in" || serviceType === "move_out" || value === "move_ready") {
-    return { value: 1.25, unknown: false };
+  if (value === "move_ready" || value === "detailed_standard") {
+    return { known: true, riskFlag: null };
   }
-  if (value === "detailed_standard") return { value: 1.05, unknown: false };
-  return { value: 1.05, unknown: true };
+  return { known: false, riskFlag: "UNKNOWN_EXPECTATION" };
 }
 
 function bufferPercentForRisk(riskLevel: EstimateRiskLevel): number {
@@ -228,24 +173,48 @@ function varianceRangeForRisk(expectedMinutes: number, riskLevel: EstimateRiskLe
 export function estimateV2(input: EstimateInput | Record<string, unknown>): EstimateV2Output {
   const source = input as Record<string, unknown>;
   const squareFootage = squareFootageFromBand(source.sqft_band);
+  const squareFootageMax = squareFootageMaxFromBand(source.sqft_band);
   const bedrooms = numberFromBedrooms(source.bedrooms);
   const bathrooms = numberFromBathrooms(source.bathrooms);
   const serviceType = stringField(source, "service_type");
-  const laborCondition = laborConditionMultiplier(
+  const supportedService = supportedServiceType(serviceType);
+  const laborCondition = scoreFromMap(
     stringField(source, "overall_labor_condition"),
+    {
+      recently_maintained: -2,
+      normal_lived_in: 0,
+      behind_weeks: 2,
+      major_reset: 4,
+    },
   );
-  const clutter = clutterMultiplier(stringField(source, "clutter_access"));
-  const kitchen = kitchenMultiplier(stringField(source, "kitchen_intensity"));
-  const pet = petMultiplier(source);
-  const recency = recencyMultiplier(
+  const clutter = scoreFromMap(stringField(source, "clutter_access"), {
+    mostly_clear: -1,
+    minimal: -1,
+    moderate_clutter: 1,
+    heavy_clutter: 3,
+  });
+  const kitchen = scoreFromMap(stringField(source, "kitchen_intensity"), {
+    light_use: -1,
+    average_use: 0,
+    heavy_use: 3,
+  });
+  const pet = scoreFromMap(stringField(source, "pet_impact"), {
+    none: 0,
+    light: 1,
+    heavy: 2,
+  });
+  const recency = scoreFromMap(
     stringField(source, "last_pro_clean_recency") ??
       stringField(source, "last_professional_clean"),
+    {
+      within_30_days: -1,
+      "2_4_weeks": 0,
+      days_30_90: 1,
+      days_90_plus: 2,
+      unknown_or_not_recently: 1,
+    },
   );
-  const service = serviceTypeMultiplier(serviceType);
-  const expectation = expectationMultiplier(
-    stringField(source, "primary_cleaning_intent"),
-    serviceType,
-  );
+  const expectation = expectationRisk(stringField(source, "primary_cleaning_intent"));
 
   const riskFlags: string[] = [];
   let confidence = 1.0;
@@ -255,25 +224,23 @@ export function estimateV2(input: EstimateInput | Record<string, unknown>): Esti
   }
   if (bedrooms == null) confidence -= 0.1;
   if (bathrooms == null) confidence -= 0.1;
-  if (service.unknown) {
+  if (supportedService == null) {
     confidence -= 0.1;
     riskFlags.push("UNKNOWN_SERVICE_TYPE");
   }
+  if (squareFootageMax == null) confidence -= 0.05;
   if (laborCondition.unknown) confidence -= 0.1;
   if (clutter.unknown) confidence -= 0.08;
   if (kitchen.unknown) confidence -= 0.06;
+  if (pet.unknown) confidence -= 0.03;
   if (recency.unknown) confidence -= 0.06;
-  if (laborCondition.heavy) riskFlags.push("HEAVY_LABOR_CONDITION");
-  if (clutter.heavy) riskFlags.push("HIGH_CLUTTER_ACCESS");
-  if (kitchen.heavy) riskFlags.push("HEAVY_KITCHEN_INTENSITY");
-  if (pet.complex) riskFlags.push("PET_COMPLEXITY");
-  if (recency.longTime) riskFlags.push("LONG_TIME_SINCE_LAST_CLEAN");
-  if (serviceType === "move_out" && (service.unknown || recency.unknown || clutter.unknown)) {
-    riskFlags.push("MOVE_OUT_HIGH_VARIANCE");
-  }
-  const severeFlags = [laborCondition.severe, clutter.severe, kitchen.severe].filter(Boolean)
-    .length;
-  confidence -= severeFlags * 0.05;
+  if (!expectation.known) confidence -= 0.03;
+  if (laborCondition.score >= 4) riskFlags.push("HEAVY_LABOR_CONDITION");
+  if (clutter.score >= 3) riskFlags.push("HIGH_CLUTTER_ACCESS");
+  if (kitchen.score >= 3) riskFlags.push("HEAVY_KITCHEN_INTENSITY");
+  if (pet.score > 0) riskFlags.push("PET_COMPLEXITY");
+  if (recency.score >= 2) riskFlags.push("LONG_TIME_SINCE_LAST_CLEAN");
+  if (expectation.riskFlag) riskFlags.push(expectation.riskFlag);
   const confidenceScore = clamp(confidence, 0.35, 0.95);
   if (confidenceScore < 0.65) riskFlags.push("LOW_CONFIDENCE_ESTIMATE");
 
@@ -281,26 +248,55 @@ export function estimateV2(input: EstimateInput | Record<string, unknown>): Esti
   const squareFootageMinutes = (squareFootage ?? 1400) * 0.06;
   const bedroomMinutes = (bedrooms ?? 2) * 12;
   const bathroomMinutes = (bathrooms ?? 2) * 25;
-  const rawExpected =
-    (baseMinutes + squareFootageMinutes + bedroomMinutes + bathroomMinutes) *
-    service.value *
-    laborCondition.value *
-    clutter.value *
-    kitchen.value *
-    pet.value *
-    recency.value *
-    expectation.value;
-  const expectedMinutes = roundUpToFive(rawExpected);
-  const anyHeavy =
-    laborCondition.heavy || clutter.heavy || kitchen.heavy || pet.value > 1.1;
+  const serviceAddMinutes = (squareFootage ?? 1400) * serviceRate(supportedService);
+  const conditionScore = clamp(
+    laborCondition.score * 1.0 +
+      clutter.score * 0.75 +
+      kitchen.score * 0.9 +
+      pet.score * 0.55 +
+      recency.score * 0.65,
+    -5,
+    10,
+  );
+  const rawConditionMultiplier = conditionMultiplier(conditionScore);
+  const maxConditionMultiplier = serviceMaxConditionMultiplier(supportedService);
+  const appliedConditionMultiplier = Math.min(
+    rawConditionMultiplier,
+    maxConditionMultiplier,
+  );
+  const uncappedExpected =
+    (baseMinutes +
+      squareFootageMinutes +
+      bedroomMinutes +
+      bathroomMinutes +
+      serviceAddMinutes) *
+    appliedConditionMultiplier;
+  const absoluteMaxMinutes = serviceAbsoluteMax(supportedService);
+  const sqftBandMaxMinutesCap = (squareFootageMax ?? 4000) * 0.28;
+  const cappedExpected = Math.min(
+    uncappedExpected,
+    absoluteMaxMinutes,
+    sqftBandMaxMinutesCap,
+  );
+  const expectedMinutes = roundUpToFive(cappedExpected);
+  const unknownCriticalFields =
+    squareFootage == null ||
+    squareFootageMax == null ||
+    bedrooms == null ||
+    bathrooms == null ||
+    supportedService == null ||
+    laborCondition.unknown ||
+    clutter.unknown ||
+    kitchen.unknown ||
+    pet.unknown ||
+    recency.unknown;
+  const reachedHardCap =
+    expectedMinutes >= roundUpToFive(absoluteMaxMinutes) ||
+    expectedMinutes >= roundUpToFive(sqftBandMaxMinutesCap);
   const riskLevel: EstimateRiskLevel =
-    confidenceScore < 0.65 ||
-    laborCondition.severe ||
-    clutter.severe ||
-    kitchen.severe ||
-    riskFlags.includes("MOVE_OUT_HIGH_VARIANCE")
+    conditionScore > 7 || reachedHardCap || unknownCriticalFields
       ? "high"
-      : confidenceScore < 0.8 || anyHeavy
+      : confidenceScore < 0.8 || conditionScore > 3
         ? "medium"
         : "low";
   const bufferPercent = bufferPercentForRisk(riskLevel);
@@ -328,13 +324,13 @@ export function estimateV2(input: EstimateInput | Record<string, unknown>): Esti
       squareFootageMinutes: Math.round(squareFootageMinutes),
       bedroomMinutes,
       bathroomMinutes,
-      serviceTypeMultiplier: service.value,
-      laborConditionMultiplier: laborCondition.value,
-      clutterAccessMultiplier: clutter.value,
-      kitchenIntensityMultiplier: kitchen.value,
-      petMultiplier: pet.value,
-      recencyMultiplier: recency.value,
-      expectationMultiplier: expectation.value,
+      serviceAddMinutes: Math.round(serviceAddMinutes),
+      conditionScore,
+      conditionMultiplier: appliedConditionMultiplier,
+      serviceMaxConditionMultiplier: maxConditionMultiplier,
+      serviceAbsoluteMaxMinutes: absoluteMaxMinutes,
+      sqftBandMaxMinutesCap,
+      appliedExpectedMinutesCap: cappedExpected,
       confidencePenaltyMultiplier: confidenceScore,
     },
     riskFlags,
