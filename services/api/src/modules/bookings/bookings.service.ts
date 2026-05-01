@@ -4,6 +4,7 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
 } from "@nestjs/common";
@@ -378,133 +379,192 @@ export class BookingsService {
       throw new BadRequestException("note must be present for controlled completion");
     }
 
-    const booking = await this.db.booking.findUnique({
-      where: { id: args.bookingId },
-      include: {
-        estimateSnapshot: { select: { outputJson: true } },
-      },
-    });
-    if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
-    if (booking.status === BookingStatus.completed) {
-      throw new BadRequestException("BOOKING_ALREADY_COMPLETED");
-    }
-    if (!booking.estimateSnapshot?.outputJson?.trim()) {
-      throw new BadRequestException("BOOKING_ESTIMATE_SNAPSHOT_REQUIRED");
-    }
-    if (
-      booking.status !== BookingStatus.assigned &&
-      booking.status !== BookingStatus.in_progress
-    ) {
-      throw new BadRequestException("BOOKING_CONTROLLED_COMPLETION_STATE_INVALID");
-    }
-
-    const beforeStatus = booking.status;
-    const estimatedDurationMinutes = this.readEstimatedDurationMinutesFromSnapshot(
-      booking.estimateSnapshot,
-    );
-    const learningIdempotencyKey = `estimate-learning-result:${booking.id}`;
-    const existingLearning = await this.db.bookingEvent.findFirst({
-      where: {
-        bookingId: booking.id,
-        idempotencyKey: learningIdempotencyKey,
-      },
-      select: { id: true },
-    });
-    if (existingLearning) {
-      throw new BadRequestException("BOOKING_LEARNING_EVENT_ALREADY_EXISTS");
-    }
-    const auditIdempotencyKey = `controlled-completion-audit:${booking.id}`;
-    const existingAudit = await this.db.bookingEvent.findFirst({
-      where: {
-        bookingId: booking.id,
-        idempotencyKey: auditIdempotencyKey,
-      },
-      select: { id: true },
-    });
-    if (existingAudit) {
-      throw new BadRequestException("BOOKING_CONTROLLED_COMPLETION_AUDIT_ALREADY_EXISTS");
-    }
-
-    if (booking.status === BookingStatus.assigned) {
-      await this.transitionBooking({
-        id: booking.id,
-        transition: "start",
-        note,
-        idempotencyKey: `controlled-completion-start:${booking.id}`,
+    return this.db.$transaction(async (tx) => {
+      const booking = await tx.booking.findUnique({
+        where: { id: args.bookingId },
+        include: {
+          estimateSnapshot: { select: { outputJson: true } },
+        },
       });
-    }
+      if (!booking) throw new NotFoundException("BOOKING_NOT_FOUND");
+      if (booking.status === BookingStatus.completed) {
+        throw new BadRequestException("BOOKING_ALREADY_COMPLETED");
+      }
+      if (!booking.estimateSnapshot?.outputJson?.trim()) {
+        throw new BadRequestException("BOOKING_ESTIMATE_SNAPSHOT_REQUIRED");
+      }
+      if (
+        booking.status !== BookingStatus.assigned &&
+        booking.status !== BookingStatus.in_progress
+      ) {
+        throw new BadRequestException("BOOKING_CONTROLLED_COMPLETION_STATE_INVALID");
+      }
 
-    const completed = await this.transitionBooking({
-      id: booking.id,
-      transition: "complete",
-      note,
-      actualMinutes,
-      idempotencyKey: `controlled-completion-complete:${booking.id}`,
-      learningGovernance: CONTROLLED_ADMIN_LEARNING_GOVERNANCE,
-    });
+      const beforeStatus = booking.status;
+      const estimatedDurationMinutes = this.readEstimatedDurationMinutesFromSnapshot(
+        booking.estimateSnapshot,
+      );
+      const learningIdempotencyKey = `estimate-learning-result:${booking.id}`;
+      const existingLearning = await tx.bookingEvent.findFirst({
+        where: {
+          bookingId: booking.id,
+          idempotencyKey: learningIdempotencyKey,
+        },
+        select: { id: true },
+      });
+      if (existingLearning) {
+        throw new BadRequestException("BOOKING_LEARNING_EVENT_ALREADY_EXISTS");
+      }
+      const auditIdempotencyKey = `controlled-completion-audit:${booking.id}`;
+      const existingAudit = await tx.bookingEvent.findFirst({
+        where: {
+          bookingId: booking.id,
+          idempotencyKey: auditIdempotencyKey,
+        },
+        select: { id: true },
+      });
+      if (existingAudit) {
+        throw new BadRequestException("BOOKING_CONTROLLED_COMPLETION_AUDIT_ALREADY_EXISTS");
+      }
 
-    const learningEvent = await this.db.bookingEvent.findFirst({
-      where: {
+      let currentStatus: BookingStatus = booking.status;
+      if (currentStatus === BookingStatus.assigned) {
+        const startTo = getTransition("start", currentStatus).to;
+        await this.applyControlledStatusTransition(tx, {
+          bookingId: booking.id,
+          fromStatus: currentStatus,
+          toStatus: startTo,
+          note,
+          idempotencyKey: `controlled-completion-start:${booking.id}`,
+        });
+        currentStatus = startTo;
+      }
+
+      const completeTo = getTransition("complete", currentStatus).to;
+      const completed = await this.applyControlledStatusTransition(tx, {
         bookingId: booking.id,
-        idempotencyKey: learningIdempotencyKey,
-      },
-      select: { id: true },
-    });
-    const executedAt = new Date();
-    const auditPayload = JSON.parse(
-      JSON.stringify({
-        kind: "controlled_completion_audit",
-        bookingId: booking.id,
-        actualMinutes,
+        fromStatus: currentStatus,
+        toStatus: completeTo,
         note,
-        previousStatus: beforeStatus,
-        nextStatus: completed.status,
-        source: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.source,
-        environment: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.environment,
-        eligibleForTraining:
-          CONTROLLED_ADMIN_LEARNING_GOVERNANCE.eligibleForTraining,
-        reason: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.governanceReason,
-        confirmationReceived: true,
-        executedBy: args.executedBy?.trim() || "admin",
-        executedAt: executedAt.toISOString(),
-      }),
-    ) as Prisma.InputJsonValue;
-    const auditEvent = await this.db.bookingEvent.create({
-      data: {
+        idempotencyKey: `controlled-completion-complete:${booking.id}`,
+        completedAt: new Date(),
+      });
+
+      const learningEvent = await this.createEstimateLearningResultForCompletion(
+        {
+          bookingId: booking.id,
+          actualMinutes,
+          foId: completed.foId ?? null,
+          governance: CONTROLLED_ADMIN_LEARNING_GOVERNANCE,
+        },
+        tx,
+      );
+      if (!learningEvent) {
+        throw new InternalServerErrorException(
+          "BOOKING_CONTROLLED_COMPLETION_LEARNING_EVENT_NOT_CREATED",
+        );
+      }
+
+      const executedAt = new Date();
+      const auditPayload = JSON.parse(
+        JSON.stringify({
+          kind: "controlled_completion_audit",
+          bookingId: booking.id,
+          actualMinutes,
+          note,
+          previousStatus: beforeStatus,
+          nextStatus: completed.status,
+          source: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.source,
+          environment: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.environment,
+          eligibleForTraining:
+            CONTROLLED_ADMIN_LEARNING_GOVERNANCE.eligibleForTraining,
+          reason: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.governanceReason,
+          confirmationReceived: true,
+          executedBy: args.executedBy?.trim() || "admin",
+          executedAt: executedAt.toISOString(),
+        }),
+      ) as Prisma.InputJsonValue;
+      await tx.bookingEvent.create({
+        data: {
+          bookingId: booking.id,
+          type: BookingEventType.CONTROLLED_COMPLETION_AUDIT,
+          note: "Controlled completion audit recorded.",
+          idempotencyKey: auditIdempotencyKey,
+          actorRole: "admin",
+          source: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.source,
+          environment: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.environment,
+          eligibleForTraining:
+            CONTROLLED_ADMIN_LEARNING_GOVERNANCE.eligibleForTraining,
+          governanceReason: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.governanceReason,
+          createdBy: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.createdBy,
+          payload: auditPayload,
+        },
+        select: { id: true },
+      });
+
+      return {
         bookingId: booking.id,
-        type: BookingEventType.CONTROLLED_COMPLETION_AUDIT,
-        note: "Controlled completion audit recorded.",
-        idempotencyKey: auditIdempotencyKey,
-        actorRole: "admin",
+        beforeStatus,
+        afterStatus: completed.status,
+        estimatedDurationMinutes,
+        actualMinutes,
+        learningReady:
+          completed.status === BookingStatus.completed &&
+          actualMinutes > 0 &&
+          Boolean(booking.estimateSnapshot?.outputJson?.trim()),
+        learningEventCreated: true,
+        auditEventCreated: true,
         source: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.source,
         environment: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.environment,
         eligibleForTraining:
           CONTROLLED_ADMIN_LEARNING_GOVERNANCE.eligibleForTraining,
         governanceReason: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.governanceReason,
-        createdBy: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.createdBy,
-        payload: auditPayload,
+      };
+    });
+  }
+
+  private async applyControlledStatusTransition(
+    tx: Prisma.TransactionClient,
+    args: {
+      bookingId: string;
+      fromStatus: BookingStatus;
+      toStatus: BookingStatus;
+      note: string;
+      idempotencyKey: string;
+      completedAt?: Date;
+    },
+  ) {
+    const { count } = await tx.booking.updateMany({
+      where: { id: args.bookingId, status: args.fromStatus },
+      data: {
+        status: args.toStatus,
+        ...(args.completedAt ? { completedAt: args.completedAt } : {}),
       },
-      select: { id: true },
     });
 
-    return {
-      bookingId: booking.id,
-      beforeStatus,
-      afterStatus: completed.status,
-      estimatedDurationMinutes,
-      actualMinutes,
-      learningReady:
-        completed.status === BookingStatus.completed &&
-        actualMinutes > 0 &&
-        Boolean(booking.estimateSnapshot?.outputJson?.trim()),
-      learningEventCreated: Boolean(learningEvent && !existingLearning),
-      auditEventCreated: Boolean(auditEvent?.id),
-      source: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.source,
-      environment: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.environment,
-      eligibleForTraining:
-        CONTROLLED_ADMIN_LEARNING_GOVERNANCE.eligibleForTraining,
-      governanceReason: CONTROLLED_ADMIN_LEARNING_GOVERNANCE.governanceReason,
-    };
+    if (count !== 1) {
+      throw new ConflictException({
+        code: "CONFLICT",
+        message: "Booking was modified by another request",
+      });
+    }
+
+    await tx.bookingEvent.create({
+      data: {
+        bookingId: args.bookingId,
+        type: BookingEventType.STATUS_CHANGED,
+        fromStatus: args.fromStatus,
+        toStatus: args.toStatus,
+        note: args.note,
+        idempotencyKey: args.idempotencyKey,
+      },
+    });
+
+    const updated = await tx.booking.findUnique({
+      where: { id: args.bookingId },
+    });
+    if (!updated) throw new NotFoundException("BOOKING_NOT_FOUND");
+    return updated;
   }
 
   /**
@@ -1389,6 +1449,21 @@ export class BookingsService {
     foId?: string | null;
     governance?: LearningGovernanceMetadata;
   }): Promise<void> {
+    await this.createEstimateLearningResultForCompletion(args, this.db, {
+      swallowErrors: true,
+    });
+  }
+
+  private async createEstimateLearningResultForCompletion(
+    args: {
+      bookingId: string;
+      actualMinutes?: number | null;
+      foId?: string | null;
+      governance?: LearningGovernanceMetadata;
+    },
+    db: Pick<PrismaService, "booking" | "bookingEvent"> | Prisma.TransactionClient,
+    options: { swallowErrors?: boolean } = {},
+  ): Promise<{ id?: string } | null> {
     const actualMinutes =
       typeof args.actualMinutes === "number" &&
       Number.isFinite(args.actualMinutes) &&
@@ -1401,7 +1476,7 @@ export class BookingsService {
         event: "actual_minutes_missing",
         bookingId: args.bookingId,
       });
-      return;
+      return null;
     }
 
     const governance = assertValidLearningGovernance(
@@ -1409,7 +1484,7 @@ export class BookingsService {
     );
 
     try {
-      const row = await this.db.booking.findUnique({
+      const row = await db.booking.findUnique({
         where: { id: args.bookingId },
         select: {
           id: true,
@@ -1417,15 +1492,15 @@ export class BookingsService {
           estimateSnapshot: { select: { outputJson: true } },
         },
       });
-      if (!row?.estimateSnapshot?.outputJson) return;
-      const existing = await this.db.bookingEvent.findFirst({
+      if (!row?.estimateSnapshot?.outputJson) return null;
+      const existing = await db.bookingEvent.findFirst({
         where: {
           bookingId: args.bookingId,
           idempotencyKey: `estimate-learning-result:${args.bookingId}`,
         },
         select: { id: true },
       });
-      if (existing) return;
+      if (existing) return null;
 
       const inputs = this.estimateLearning.extractLearningInputsFromSnapshot(
         row.estimateSnapshot.outputJson,
@@ -1447,7 +1522,7 @@ export class BookingsService {
         }),
       ) as Prisma.InputJsonValue;
 
-      await this.db.bookingEvent.create({
+      return await db.bookingEvent.create({
         data: {
           bookingId: args.bookingId,
           type: BookingEventType.NOTE,
@@ -1461,14 +1536,19 @@ export class BookingsService {
           createdBy: governance.createdBy,
           payload,
         },
+        select: { id: true },
       });
     } catch (err: unknown) {
+      if (!options.swallowErrors) {
+        throw err;
+      }
       this.log.warn({
         kind: "estimate_learning",
         event: "learning_result_write_failed",
         bookingId: args.bookingId,
         message: err instanceof Error ? err.message : String(err ?? "unknown"),
       });
+      return null;
     }
   }
 

@@ -92,9 +92,7 @@ function makeCompletionHarness(args?: {
   };
   const bookingEventCreate = jest.fn().mockResolvedValue({});
   if (args?.learningCreateRejects) {
-    bookingEventCreate
-      .mockResolvedValueOnce({})
-      .mockRejectedValueOnce(new Error("learning write failed"));
+    bookingEventCreate.mockRejectedValueOnce(new Error("learning write failed"));
   }
   const db = {
     $transaction: jest.fn(async (fn: (inner: typeof tx) => unknown) => fn(tx)),
@@ -356,12 +354,20 @@ describe("BookingsService admin controlled completion", () => {
     snapshot?: string | null;
     existingLearningEvent?: boolean;
     existingAuditEvent?: boolean;
-    learningEventAfterCompletion?: boolean;
-    auditEventAfterCompletion?: boolean;
+    learningCreateRejects?: boolean;
+    auditCreateRejects?: boolean;
   }) {
+    let committedStatus = args?.status ?? BookingStatus.in_progress;
+    let txStatus = committedStatus;
+    let committedCompletedAt: Date | null = null;
+    let txCompletedAt: Date | null = committedCompletedAt;
     const booking = {
       id: "booking_1",
-      status: args?.status ?? BookingStatus.in_progress,
+      status: committedStatus,
+      currency: "usd",
+      foId: "fo_1",
+      paymentStatus: "paid",
+      estimatedHours: 2,
       estimateSnapshot: {
         outputJson:
           args?.snapshot === undefined
@@ -370,34 +376,66 @@ describe("BookingsService admin controlled completion", () => {
       },
     };
     const db = {
+      $transaction: jest.fn(async (fn: (inner: typeof db) => unknown) => {
+        txStatus = committedStatus;
+        txCompletedAt = committedCompletedAt;
+        try {
+          const result = await fn(db);
+          committedStatus = txStatus;
+          committedCompletedAt = txCompletedAt;
+          return result;
+        } catch (err) {
+          txStatus = committedStatus;
+          txCompletedAt = committedCompletedAt;
+          throw err;
+        }
+      }),
       booking: {
-        findUnique: jest.fn().mockResolvedValue(booking),
+        findUnique: jest.fn().mockImplementation(async () => ({
+          ...booking,
+          status: txStatus,
+          completedAt: txCompletedAt,
+        })),
+        updateMany: jest.fn().mockImplementation(async ({ where, data }) => {
+          if (where.status !== txStatus) return { count: 0 };
+          txStatus = data.status;
+          txCompletedAt = data.completedAt ?? txCompletedAt;
+          return { count: 1 };
+        }),
       },
       bookingEvent: {
         findFirst: makeSequentialFindFirst({
           "estimate-learning-result:booking_1": args?.existingLearningEvent
             ? [{ id: "evt_existing" }]
-            : [
-                null,
-                args?.learningEventAfterCompletion === false
-                  ? null
-                  : { id: "evt_learning" },
-              ],
+            : [null, null],
           "controlled-completion-audit:booking_1": args?.existingAuditEvent
             ? [{ id: "evt_existing_audit" }]
             : [null],
         }),
-        create: jest.fn().mockResolvedValue({ id: "evt_audit" }),
+        create: jest.fn().mockImplementation(async ({ data }) => {
+          if (
+            args?.learningCreateRejects &&
+            data.idempotencyKey === "estimate-learning-result:booking_1"
+          ) {
+            throw new Error("learning write failed");
+          }
+          if (
+            args?.auditCreateRejects &&
+            data.idempotencyKey === "controlled-completion-audit:booking_1"
+          ) {
+            throw new Error("audit write failed");
+          }
+          return { id: data.idempotencyKey ?? "evt" };
+        }),
       },
     };
     const { service } = createBookingsServiceTestHarness({ db: db as never });
-    const transitionBooking = jest
-      .spyOn(service, "transitionBooking")
-      .mockResolvedValue({
-        id: "booking_1",
-        status: BookingStatus.completed,
-      } as never);
-    return { service, db, transitionBooking };
+    return {
+      service,
+      db,
+      getCommittedStatus: () => committedStatus,
+      getCommittedCompletedAt: () => committedCompletedAt,
+    };
   }
 
   it("requires explicit confirmation, note, and valid actual minutes", async () => {
@@ -482,7 +520,6 @@ describe("BookingsService admin controlled completion", () => {
     await expect(
       makeControlledHarness({
         existingAuditEvent: true,
-        learningEventAfterCompletion: false,
       }).service.completeBookingControlledByAdmin({
         bookingId: "booking_1",
         actualMinutes: 105,
@@ -493,7 +530,8 @@ describe("BookingsService admin controlled completion", () => {
   });
 
   it("creates learning and audit events with synthetic governance", async () => {
-    const { service, db, transitionBooking } = makeControlledHarness({
+    const { service, db, getCommittedStatus, getCommittedCompletedAt } =
+      makeControlledHarness({
       status: BookingStatus.assigned,
     });
     const result = await service.completeBookingControlledByAdmin({
@@ -504,18 +542,21 @@ describe("BookingsService admin controlled completion", () => {
       executedBy: "admin@example.test",
     });
 
-    expect(transitionBooking).toHaveBeenCalledWith(
+    expect(db.booking.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        id: "booking_1",
-        transition: "start",
+        where: { id: "booking_1", status: BookingStatus.assigned },
+        data: expect.objectContaining({
+          status: BookingStatus.in_progress,
+        }),
       }),
     );
-    expect(transitionBooking).toHaveBeenCalledWith(
+    expect(db.booking.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        id: "booking_1",
-        transition: "complete",
-        actualMinutes: 105,
-        learningGovernance: CONTROLLED_ADMIN_LEARNING_GOVERNANCE,
+        where: { id: "booking_1", status: BookingStatus.in_progress },
+        data: expect.objectContaining({
+          status: BookingStatus.completed,
+          completedAt: expect.any(Date),
+        }),
       }),
     );
     expect(result).toEqual({
@@ -532,6 +573,26 @@ describe("BookingsService admin controlled completion", () => {
       eligibleForTraining: false,
       governanceReason: "controlled_admin_validation",
     });
+    expect(getCommittedStatus()).toBe(BookingStatus.completed);
+    expect(getCommittedCompletedAt()).toEqual(expect.any(Date));
+    expect(db.bookingEvent.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          type: BookingEventType.NOTE,
+          idempotencyKey: "estimate-learning-result:booking_1",
+          source: "SYNTHETIC",
+          environment: "SANDBOX",
+          eligibleForTraining: false,
+          governanceReason: "controlled_admin_validation",
+          createdBy: "admin",
+          payload: expect.objectContaining({
+            kind: "estimate_learning_result",
+            actualMinutes: 105,
+          }),
+        }),
+        select: { id: true },
+      }),
+    );
     expect(db.bookingEvent.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
@@ -553,6 +614,68 @@ describe("BookingsService admin controlled completion", () => {
         }),
       }),
     );
+  });
+
+  it("rolls back booking completion when learning event creation fails", async () => {
+    const { service, db, getCommittedStatus, getCommittedCompletedAt } =
+      makeControlledHarness({
+        learningCreateRejects: true,
+      });
+
+    await expect(
+      service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: true,
+        note: "CONTROLLED_LEARNING_VALIDATION",
+      }),
+    ).rejects.toThrow("learning write failed");
+
+    expect(db.booking.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ status: BookingStatus.completed }),
+      }),
+    );
+    expect(getCommittedStatus()).toBe(BookingStatus.in_progress);
+    expect(getCommittedCompletedAt()).toBeNull();
+    expect(db.bookingEvent.create).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          type: BookingEventType.CONTROLLED_COMPLETION_AUDIT,
+        }),
+      }),
+    );
+  });
+
+  it("rolls back booking completion when audit event creation fails", async () => {
+    const { service, db, getCommittedStatus, getCommittedCompletedAt } =
+      makeControlledHarness({
+        auditCreateRejects: true,
+      });
+
+    await expect(
+      service.completeBookingControlledByAdmin({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        confirmControlledCompletion: true,
+        note: "CONTROLLED_LEARNING_VALIDATION",
+      }),
+    ).rejects.toThrow("audit write failed");
+
+    expect(db.booking.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ status: BookingStatus.completed }),
+      }),
+    );
+    expect(db.bookingEvent.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          idempotencyKey: "estimate-learning-result:booking_1",
+        }),
+      }),
+    );
+    expect(getCommittedStatus()).toBe(BookingStatus.in_progress);
+    expect(getCommittedCompletedAt()).toBeNull();
   });
 });
 
