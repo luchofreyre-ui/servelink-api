@@ -556,6 +556,96 @@ describe("BookingsService admin controlled completion", () => {
   });
 });
 
+describe("BookingsService controlled completion audit read model", () => {
+  it("returns controlledCompletionAudit from the latest audit event payload", () => {
+    const { service } = createBookingsServiceTestHarness();
+
+    const result = service.mapBookingWithEvents({
+      id: "booking_1",
+      status: BookingStatus.completed,
+      BookingEvent: [
+        {
+          id: "evt_old",
+          bookingId: "booking_1",
+          type: BookingEventType.CONTROLLED_COMPLETION_AUDIT,
+          createdAt: new Date("2030-06-01T10:00:00.000Z"),
+          payload: {
+            executedBy: "old-admin@example.com",
+            executedAt: "2030-06-01T10:00:00.000Z",
+            reason: "controlled_admin_validation",
+            note: "old note",
+            actualMinutes: 90,
+            previousStatus: "assigned",
+            nextStatus: "completed",
+            source: "SYNTHETIC",
+            environment: "SANDBOX",
+            eligibleForTraining: false,
+            confirmationReceived: true,
+          },
+        },
+        {
+          id: "evt_new",
+          bookingId: "booking_1",
+          type: BookingEventType.CONTROLLED_COMPLETION_AUDIT,
+          createdAt: new Date("2030-06-01T12:00:00.000Z"),
+          payload: {
+            executedBy: "admin@example.com",
+            executedAt: "2030-06-01T12:00:00.000Z",
+            reason: "controlled_admin_validation",
+            note: "CONTROLLED_LEARNING_VALIDATION_20260430",
+            actualMinutes: 105,
+            previousStatus: "in_progress",
+            nextStatus: "completed",
+            source: "SYNTHETIC",
+            environment: "SANDBOX",
+            eligibleForTraining: false,
+            confirmationReceived: true,
+          },
+        },
+      ],
+    });
+
+    expect(result.controlledCompletionAudit).toEqual({
+      exists: true,
+      executedBy: "admin@example.com",
+      executedAt: "2030-06-01T12:00:00.000Z",
+      reason: "controlled_admin_validation",
+      note: "CONTROLLED_LEARNING_VALIDATION_20260430",
+      actualMinutes: 105,
+      previousStatus: "in_progress",
+      nextStatus: "completed",
+      source: "SYNTHETIC",
+      environment: "SANDBOX",
+      eligibleForTraining: false,
+      confirmationReceived: true,
+    });
+  });
+
+  it("returns null without a controlled completion audit event and preserves learning events", () => {
+    const { service } = createBookingsServiceTestHarness();
+    const learningEvent = {
+      id: "evt_learning",
+      bookingId: "booking_1",
+      type: BookingEventType.STATUS_CHANGED,
+      createdAt: new Date("2030-06-01T12:00:00.000Z"),
+      payload: learningPayload({
+        bookingId: "booking_1",
+        actualMinutes: 105,
+        winner: "estimate_v2",
+      }),
+    };
+
+    const result = service.mapBookingWithEvents({
+      id: "booking_1",
+      status: BookingStatus.completed,
+      BookingEvent: [learningEvent],
+    });
+
+    expect(result.controlledCompletionAudit).toBeNull();
+    expect(result.events).toEqual([learningEvent]);
+  });
+});
+
 describe("PaymentReliabilityService estimate learning ops summary", () => {
   it("ops endpoint returns zeros with no events", async () => {
     const service = new PaymentReliabilityService({

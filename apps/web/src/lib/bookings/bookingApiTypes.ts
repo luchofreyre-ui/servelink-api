@@ -57,6 +57,21 @@ export type BookingEvent = {
   payload?: Record<string, unknown> | null;
 };
 
+export type ControlledCompletionAudit = {
+  exists: boolean;
+  executedBy: string | null;
+  executedAt: string | null;
+  reason: string | null;
+  note: string | null;
+  actualMinutes: number | null;
+  previousStatus: string | null;
+  nextStatus: string | null;
+  source: "SYNTHETIC" | null;
+  environment: "SANDBOX" | null;
+  eligibleForTraining: false | null;
+  confirmationReceived: boolean | null;
+};
+
 export type BookingEstimateSnapshotRecord = {
   id: string;
   bookingId: string;
@@ -132,6 +147,8 @@ export interface BookingRecord {
   enRouteAt?: string | null;
   /** Present when the list/detail response included booking events. */
   events?: BookingEvent[];
+  /** Derived from the latest CONTROLLED_COMPLETION_AUDIT booking event. */
+  controlledCompletionAudit?: ControlledCompletionAudit | null;
   /** Present on detail responses. */
   estimateSnapshot?: BookingEstimateSnapshotRecord | null;
   customer?: BookingCustomerRecord | null;

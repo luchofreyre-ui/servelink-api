@@ -257,22 +257,6 @@ function latestLearningEvent(events: BookingEvent[] | undefined): BookingEvent |
   return learningEvents[0] ?? null;
 }
 
-function latestControlledCompletionAudit(
-  events: BookingEvent[] | undefined,
-): BookingEvent | null {
-  if (!events?.length) return null;
-  const auditEvents = events
-    .filter(
-      (event) =>
-        event.type === "CONTROLLED_COMPLETION_AUDIT" ||
-        event.payload?.kind === "controlled_completion_audit",
-    )
-    .sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-  return auditEvents[0] ?? null;
-}
-
 function deriveActualMinutes(events: BookingEvent[] | undefined): number | null {
   return numberFrom(latestLearningEvent(events)?.payload?.actualMinutes);
 }
@@ -300,8 +284,7 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
   const rawNormalizedIntake = nestedRecord(output, "rawNormalizedIntake");
   const facts = rawNormalizedIntake ?? inputRecord;
   const learningEvent = latestLearningEvent(booking?.events);
-  const controlledAudit = latestControlledCompletionAudit(booking?.events);
-  const controlledAuditPayload = controlledAudit?.payload ?? null;
+  const controlledAudit = booking?.controlledCompletionAudit ?? null;
   const actualMinutes = deriveActualMinutes(booking?.events);
   const estimatedPriceCents = firstNumber(
     output?.estimatedPriceCents,
@@ -326,6 +309,15 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
   if (estimatedDurationMinutes == null) warnings.push("missing estimated duration");
   if (booking?.status === "completed" && actualMinutes == null) {
     warnings.push("completed booking without actualMinutes");
+  }
+  if (
+    Boolean(snapshot) &&
+    booking?.status === "completed" &&
+    actualMinutes != null &&
+    learningEvent?.governanceReason === "controlled_admin_validation" &&
+    !controlledAudit
+  ) {
+    warnings.push("CONTROLLED COMPLETION AUDIT EVENT MISSING");
   }
 
   return {
@@ -357,16 +349,12 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
     learningEligibleForTraining: formatNullable(learningEvent?.eligibleForTraining),
     learningGovernanceReason: formatNullable(learningEvent?.governanceReason),
     learningCreatedBy: formatNullable(learningEvent?.createdBy),
-    controlledAuditExists: Boolean(controlledAudit),
-    controlledAuditExecutedBy: formatNullable(controlledAuditPayload?.executedBy),
-    controlledAuditExecutedAt: formatDateTime(
-      typeof controlledAuditPayload?.executedAt === "string"
-        ? controlledAuditPayload.executedAt
-        : null,
-    ),
-    controlledAuditReason: formatNullable(controlledAuditPayload?.reason),
+    controlledAuditExists: controlledAudit != null,
+    controlledAuditExecutedBy: formatNullable(controlledAudit?.executedBy),
+    controlledAuditExecutedAt: formatDateTime(controlledAudit?.executedAt ?? null),
+    controlledAuditReason: formatNullable(controlledAudit?.reason),
     controlledAuditTrainingEligible: formatNullable(
-      controlledAuditPayload?.eligibleForTraining,
+      controlledAudit?.eligibleForTraining,
     ),
     learningReady:
       Boolean(snapshot) && booking?.status === "completed" && actualMinutes != null,

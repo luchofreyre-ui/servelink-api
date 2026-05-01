@@ -1759,9 +1759,59 @@ export class BookingsService {
     },
   ) {
     const { BookingEvent, ...rest } = booking;
+    const events = BookingEvent ?? [];
     return {
       ...rest,
-      events: BookingEvent ?? [],
+      events,
+      controlledCompletionAudit:
+        this.deriveControlledCompletionAuditFromEvents(events),
+    };
+  }
+
+  private deriveControlledCompletionAuditFromEvents(
+    events: Array<Record<string, unknown>>,
+  ) {
+    const auditEvent = [...events]
+      .filter(
+        (event) =>
+          event.type === BookingEventType.CONTROLLED_COMPLETION_AUDIT,
+      )
+      .sort(
+        (a, b) =>
+          new Date(String(b.createdAt ?? 0)).getTime() -
+          new Date(String(a.createdAt ?? 0)).getTime(),
+      )[0];
+
+    if (!auditEvent) return null;
+    const payload =
+      auditEvent.payload &&
+      typeof auditEvent.payload === "object" &&
+      !Array.isArray(auditEvent.payload)
+        ? (auditEvent.payload as Record<string, unknown>)
+        : {};
+    const text = (value: unknown): string | null =>
+      typeof value === "string" && value.trim() ? value.trim() : null;
+    const minutes = payload.actualMinutes;
+    const eligible = payload.eligibleForTraining;
+    const confirmed = payload.confirmationReceived;
+
+    return {
+      exists: true,
+      executedBy: text(payload.executedBy),
+      executedAt: text(payload.executedAt),
+      reason: text(payload.reason),
+      note: text(payload.note),
+      actualMinutes:
+        typeof minutes === "number" && Number.isFinite(minutes)
+          ? Math.floor(minutes)
+          : null,
+      previousStatus: text(payload.previousStatus),
+      nextStatus: text(payload.nextStatus),
+      source: payload.source === "SYNTHETIC" ? "SYNTHETIC" : null,
+      environment: payload.environment === "SANDBOX" ? "SANDBOX" : null,
+      eligibleForTraining: eligible === false ? false : null,
+      confirmationReceived:
+        typeof confirmed === "boolean" ? confirmed : null,
     };
   }
 
