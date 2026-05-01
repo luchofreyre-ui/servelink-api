@@ -11,6 +11,7 @@ import { ConfigService } from "@nestjs/config";
 import { createHash } from "node:crypto";
 import {
   BookingEventType,
+  BookingPaymentStatus,
   BookingPublicDepositStatus,
   BookingStatus,
   Prisma,
@@ -108,6 +109,7 @@ type PublicDepositContext = {
     tenantId: string;
     status: BookingStatus;
     customerId: string;
+    paymentStatus: BookingPaymentStatus;
     publicDepositStatus: BookingPublicDepositStatus;
     publicDepositAmountCents: number;
     publicDepositPaymentIntentId: string | null;
@@ -215,6 +217,7 @@ export class PublicBookingDepositService {
           tenantId: true,
           status: true,
           customerId: true,
+          paymentStatus: true,
           publicDepositStatus: true,
           publicDepositAmountCents: true,
           publicDepositPaymentIntentId: true,
@@ -307,9 +310,9 @@ export class PublicBookingDepositService {
 
   private async recordMissingDepositPaymentIntentVisibility(args: {
     bookingId: string;
-    holdId: string;
+    holdId: string | null;
     publicDepositStatus: BookingPublicDepositStatus;
-    source: "public_booking_confirm";
+    source: "public_booking_confirm" | "public_booking_prepare";
   }) {
     const idempotencyKey = `public-deposit-missing-pi:${args.bookingId}`;
     const payload = {
@@ -442,6 +445,10 @@ export class PublicBookingDepositService {
       booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
       !booking.publicDepositPaymentIntentId?.trim()
     ) {
+      await this.alignDepositSucceededPaymentStatus({
+        bookingId: booking.id,
+        currentPaymentStatus: booking.paymentStatus,
+      });
       await this.recordMissingDepositPaymentIntentVisibility({
         bookingId: booking.id,
         holdId: ctx.hold.id,
@@ -831,6 +838,16 @@ export class PublicBookingDepositService {
       booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
       !booking.publicDepositPaymentIntentId?.trim()
     ) {
+      await this.alignDepositSucceededPaymentStatus({
+        bookingId: booking.id,
+        currentPaymentStatus: booking.paymentStatus,
+      });
+      await this.recordMissingDepositPaymentIntentVisibility({
+        bookingId: booking.id,
+        holdId: hold || null,
+        publicDepositStatus: booking.publicDepositStatus,
+        source: "public_booking_prepare",
+      });
       return finish({
         kind: "public_booking_deposit_prepare",
         bookingId: id,
@@ -847,6 +864,10 @@ export class PublicBookingDepositService {
       booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
       booking.publicDepositPaymentIntentId?.trim()
     ) {
+      await this.alignDepositSucceededPaymentStatus({
+        bookingId: booking.id,
+        currentPaymentStatus: booking.paymentStatus,
+      });
       return finish({
         kind: "public_booking_deposit_prepare",
         bookingId: id,
@@ -1031,11 +1052,14 @@ export class PublicBookingDepositService {
     estimatedTotalCentsSnapshot: number | null;
     remainingBalanceAfterDepositCents: number | null;
   }): Promise<void> {
+    const now = new Date();
     const patch: Prisma.BookingUpdateInput = {
       publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
-      publicDepositPaidAt: new Date(),
+      publicDepositPaidAt: now,
       publicDepositPaymentIntentId: args.paymentIntentId,
       publicDepositAmountCents: PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
+      paymentStatus: BookingPaymentStatus.authorized,
+      paymentAuthorizedAt: now,
     };
     if (args.estimatedTotalCentsSnapshot != null) {
       patch.estimatedTotalCentsSnapshot = args.estimatedTotalCentsSnapshot;
@@ -1088,5 +1112,25 @@ export class PublicBookingDepositService {
       }
       throw err;
     }
+  }
+
+  private async alignDepositSucceededPaymentStatus(args: {
+    bookingId: string;
+    currentPaymentStatus?: BookingPaymentStatus | null;
+  }) {
+    if (
+      args.currentPaymentStatus === BookingPaymentStatus.authorized ||
+      args.currentPaymentStatus === BookingPaymentStatus.paid ||
+      args.currentPaymentStatus === BookingPaymentStatus.waived
+    ) {
+      return;
+    }
+    await this.prisma.booking.update({
+      where: { id: args.bookingId },
+      data: {
+        paymentStatus: BookingPaymentStatus.authorized,
+        paymentAuthorizedAt: new Date(),
+      },
+    });
   }
 }

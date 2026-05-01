@@ -10,6 +10,10 @@ import { ReliabilityMetricsService } from "./reliability-metrics.service";
 
 type DrilldownLimit = number | undefined;
 
+const PAYMENT_OPS_ANOMALY_TYPES = ["payment_missing", "payment_mismatch"] as const;
+const PAYMENT_ANOMALY_RESOLVED_STATUSES = ["resolved", "closed"] as const;
+const OPS_ANOMALY_RESOLVED_STATUSES = ["resolved"] as const;
+
 @Injectable()
 export class OpsVisibilityService {
   constructor(
@@ -38,6 +42,7 @@ export class OpsVisibilityService {
       openSystemTestIncidents,
       activeSystemTestAutomationJobs,
       slotHoldIntegrity,
+      paymentSummary,
     ] = await Promise.all([
       this.safeCount("booking"),
       this.safeCount("booking", {
@@ -103,6 +108,7 @@ export class OpsVisibilityService {
         },
       }),
       this.slotHolds.getSlotHoldIntegritySummary(),
+      this.buildPaymentSummary(now),
     ]);
 
     const hotspots: string[] = [];
@@ -152,6 +158,7 @@ export class OpsVisibilityService {
         openIncidents: openSystemTestIncidents,
         activeAutomationJobs: activeSystemTestAutomationJobs,
       },
+      payment: paymentSummary,
       cron: {
         reconciliation:
           this.paymentLifecycleReconciliationCron.getHealthSnapshot(now),
@@ -161,6 +168,238 @@ export class OpsVisibilityService {
       slotHolds: slotHoldIntegrity,
       hotspots,
     };
+  }
+
+  private async buildPaymentSummary(now = new Date()) {
+    const [bookingStates, anomalies, staleBuckets] = await Promise.all([
+      this.buildPaymentBookingStates(),
+      this.buildPaymentAnomalySummary(now),
+      this.buildStalePendingPaymentBuckets(now),
+    ]);
+
+    const flags = {
+      hasRecentPaymentFailures:
+        anomalies.available === true
+          ? anomalies.recentPaymentAnomaliesLast24h > 0
+          : false,
+      hasStalePendingPayments:
+        staleBuckets.available === true ? staleBuckets[">30d"] > 0 : false,
+      hasDepositStateMismatch:
+        bookingStates.available === true
+          ? bookingStates.depositStateMismatch > 0
+          : false,
+    };
+
+    return {
+      bookingStates,
+      anomalies,
+      staleBuckets,
+      flags,
+    };
+  }
+
+  private async buildPaymentBookingStates() {
+    const delegate = this.getDelegate("booking");
+    if (!delegate || typeof delegate.count !== "function") {
+      return { available: false as const };
+    }
+
+    try {
+      const [
+        pendingPayment,
+        authorized,
+        depositSucceeded,
+        completedMissingPaymentAlignment,
+        depositStateMismatch,
+      ] = await Promise.all([
+        delegate.count({ where: { status: "pending_payment" } }),
+        delegate.count({ where: { paymentStatus: "authorized" } }),
+        delegate.count({
+          where: { publicDepositStatus: "deposit_succeeded" },
+        }),
+        delegate.count({
+          where: {
+            status: "completed",
+            paymentStatus: { notIn: ["paid", "authorized", "waived"] },
+          },
+        }),
+        delegate.count({
+          where: {
+            publicDepositStatus: "deposit_succeeded",
+            publicDepositPaymentIntentId: null,
+          },
+        }),
+      ]);
+
+      return {
+        available: true as const,
+        pendingPayment,
+        authorized,
+        depositSucceeded,
+        completedMissingPaymentAlignment,
+        depositStateMismatch,
+      };
+    } catch {
+      return { available: false as const };
+    }
+  }
+
+  private async buildPaymentAnomalySummary(now: Date) {
+    const paymentAnomaly = this.getDelegate("paymentAnomaly");
+    const opsAnomaly = this.getDelegate("opsAnomaly");
+    const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    const [payment, ops] = await Promise.all([
+      this.countGroupedAnomalies(paymentAnomaly, "kind", {
+        status: { notIn: [...PAYMENT_ANOMALY_RESOLVED_STATUSES] },
+      }),
+      this.countGroupedAnomalies(opsAnomaly, "type", {
+        type: { in: [...PAYMENT_OPS_ANOMALY_TYPES] },
+        status: { notIn: [...OPS_ANOMALY_RESOLVED_STATUSES] },
+      }),
+    ]);
+
+    if (!payment.available && !ops.available) {
+      return { available: false as const };
+    }
+
+    const recentPaymentAnomaliesLast24h =
+      (await this.safeDelegateCount(paymentAnomaly, {
+        where: {
+          status: { notIn: [...PAYMENT_ANOMALY_RESOLVED_STATUSES] },
+          detectedAt: { gte: since },
+        },
+      })) +
+      (await this.safeDelegateCount(opsAnomaly, {
+        where: {
+          type: { in: [...PAYMENT_OPS_ANOMALY_TYPES] },
+          status: { notIn: [...OPS_ANOMALY_RESOLVED_STATUSES] },
+          createdAt: { gte: since },
+        },
+      }));
+
+    return {
+      available: true as const,
+      total:
+        (payment.available ? payment.total : 0) +
+        (ops.available ? ops.total : 0),
+      paymentAnomaly: payment,
+      opsAnomaly: ops,
+      recentPaymentAnomaliesLast24h,
+    };
+  }
+
+  private async buildStalePendingPaymentBuckets(now: Date) {
+    const delegate = this.getDelegate("booking");
+    if (!delegate || typeof delegate.count !== "function") {
+      return { available: false as const };
+    }
+
+    const m30 = new Date(now.getTime() - 30 * 60 * 1000);
+    const h2 = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+    const h24 = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const d7 = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const d30 = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    try {
+      const [
+        zeroToThirtyMinutes,
+        thirtyMinutesToTwoHours,
+        twoToTwentyFourHours,
+        oneToSevenDays,
+        sevenToThirtyDays,
+        overThirtyDays,
+      ] = await Promise.all([
+        delegate.count({
+          where: { status: "pending_payment", createdAt: { gte: m30 } },
+        }),
+        delegate.count({
+          where: {
+            status: "pending_payment",
+            createdAt: { gte: h2, lt: m30 },
+          },
+        }),
+        delegate.count({
+          where: {
+            status: "pending_payment",
+            createdAt: { gte: h24, lt: h2 },
+          },
+        }),
+        delegate.count({
+          where: {
+            status: "pending_payment",
+            createdAt: { gte: d7, lt: h24 },
+          },
+        }),
+        delegate.count({
+          where: {
+            status: "pending_payment",
+            createdAt: { gte: d30, lt: d7 },
+          },
+        }),
+        delegate.count({
+          where: { status: "pending_payment", createdAt: { lt: d30 } },
+        }),
+      ]);
+
+      return {
+        available: true as const,
+        "0-30m": zeroToThirtyMinutes,
+        "30m-2h": thirtyMinutesToTwoHours,
+        "2h-24h": twoToTwentyFourHours,
+        "1-7d": oneToSevenDays,
+        "7-30d": sevenToThirtyDays,
+        ">30d": overThirtyDays,
+      };
+    } catch {
+      return { available: false as const };
+    }
+  }
+
+  private async countGroupedAnomalies(
+    delegate: unknown,
+    field: "kind" | "type",
+    where: Record<string, unknown>,
+  ) {
+    if (
+      !delegate ||
+      typeof (delegate as { count?: unknown }).count !== "function" ||
+      typeof (delegate as { groupBy?: unknown }).groupBy !== "function"
+    ) {
+      return { available: false as const };
+    }
+
+    try {
+      const [total, grouped] = await Promise.all([
+        (delegate as { count: (args: unknown) => Promise<number> }).count({
+          where,
+        }),
+        (
+          delegate as {
+            groupBy: (args: unknown) => Promise<
+              Array<Record<string, unknown> & { _count?: { _all?: number } }>
+            >;
+          }
+        ).groupBy({
+          by: [field],
+          where,
+          _count: { _all: true },
+        }),
+      ]);
+
+      return {
+        available: true as const,
+        total,
+        byType: Object.fromEntries(
+          grouped.map((row) => [
+            String(row[field] ?? "unknown"),
+            Number(row._count?._all ?? 0),
+          ]),
+        ),
+      };
+    } catch {
+      return { available: false as const };
+    }
   }
 
   async getInvalidAssignmentStateBookings(limit?: DrilldownLimit) {
@@ -424,13 +663,33 @@ export class OpsVisibilityService {
   }
 
   private async safeCount(modelName: string, args?: Record<string, unknown>) {
-    const delegate = (this.prisma as any)[modelName];
+    const delegate = this.getDelegate(modelName);
     if (!delegate || typeof delegate.count !== "function") {
       return 0;
     }
 
     try {
       return await delegate.count(args ?? {});
+    } catch {
+      return 0;
+    }
+  }
+
+  private getDelegate(modelName: string) {
+    return (this.prisma as unknown as Record<string, unknown>)[modelName] as
+      | { count?: (args?: unknown) => Promise<number>; groupBy?: unknown }
+      | undefined;
+  }
+
+  private async safeDelegateCount(delegate: unknown, args: unknown) {
+    if (!delegate || typeof (delegate as { count?: unknown }).count !== "function") {
+      return 0;
+    }
+
+    try {
+      return await (delegate as { count: (args: unknown) => Promise<number> }).count(
+        args,
+      );
     } catch {
       return 0;
     }

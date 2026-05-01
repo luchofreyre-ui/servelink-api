@@ -147,6 +147,55 @@ describe("StripePaymentService", () => {
     await prisma.user.delete({ where: { id: customer.id } });
   });
 
+  it("applyBookingStripeEvent aligns payment status for public deposit success", async () => {
+    const customer = await prisma.user.create({
+      data: {
+        email: `stripe_deposit_${Date.now()}@servelink.local`,
+        passwordHash: "x",
+        role: "customer",
+      },
+    });
+
+    const booking = await prisma.booking.create({
+      data: {
+        customerId: customer.id,
+        hourlyRateCents: 1000,
+        estimatedHours: 1,
+        currency: "usd",
+        status: "pending_payment",
+        paymentStatus: BookingPaymentStatus.payment_pending,
+        publicDepositStatus: BookingPublicDepositStatus.deposit_required,
+      },
+    });
+
+    await service.applyBookingStripeEvent({
+      id: "evt_public_deposit_success_1",
+      type: "payment_intent.succeeded",
+      livemode: false,
+      data: {
+        object: {
+          id: "pi_public_deposit_success",
+          status: "succeeded",
+          metadata: {
+            bookingId: booking.id,
+            servelinkPurpose: "public_deposit",
+          },
+        },
+      },
+    } as any);
+
+    const row = await prisma.booking.findUnique({ where: { id: booking.id } });
+    expect(row?.publicDepositStatus).toBe(
+      BookingPublicDepositStatus.deposit_succeeded,
+    );
+    expect(row?.publicDepositPaymentIntentId).toBe("pi_public_deposit_success");
+    expect(row?.paymentStatus).toBe(BookingPaymentStatus.authorized);
+    expect(row?.paymentAuthorizedAt).toBeTruthy();
+
+    await prisma.booking.delete({ where: { id: booking.id } });
+    await prisma.user.delete({ where: { id: customer.id } });
+  });
+
   it("applyBookingStripeEvent amount_capturable_updated marks remaining balance authorized", async () => {
     const customer = await prisma.user.create({
       data: {
