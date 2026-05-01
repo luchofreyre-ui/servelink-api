@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
 import { BookingEventType, BookingOfferStatus, BookingStatus } from "@prisma/client";
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { PrismaService } from "../../prisma";
 import { dispatchOffersExpired } from "../../metrics/dispatch.metrics";
 import { DispatchService } from "./dispatch.service";
@@ -15,26 +16,51 @@ export class DispatchWorker {
     private readonly db: PrismaService,
     private readonly dispatch: DispatchService,
     private readonly reputationService: ReputationService,
+    private readonly cronRunLedger?: CronRunLedgerService,
   ) {}
 
   @Cron("*/1 * * * *")
   async runOfferExpirySweep() {
-    if (process.env.ENABLE_DISPATCH_CRON !== "true") return;
+    const jobName = "dispatch_offer_expiry_sweep";
+    if (process.env.ENABLE_DISPATCH_CRON !== "true") {
+      await this.cronRunLedger?.recordSkipped(jobName, "disabled_by_env", {
+        envFlag: "ENABLE_DISPATCH_CRON",
+      });
+      return;
+    }
 
+    const ledgerId = await this.cronRunLedger?.recordStarted(jobName, {
+      schedule: "*/1 * * * *",
+      envFlag: "ENABLE_DISPATCH_CRON",
+    });
     try {
-      await this.expireOffersAndRedispatch();
-    } catch {
+      const result = await this.expireOffersAndRedispatch();
+      await this.cronRunLedger?.recordSucceeded(ledgerId, result);
+    } catch (error) {
+      await this.cronRunLedger?.recordFailed(ledgerId, error);
       // swallow: cron is a safety net and must never crash the process
     }
   }
 
   @Cron("*/1 * * * *")
   async runAssignedStartSlaSweep() {
-    if (process.env.ENABLE_DISPATCH_CRON !== "true") return;
+    const jobName = "dispatch_assigned_start_sla_sweep";
+    if (process.env.ENABLE_DISPATCH_CRON !== "true") {
+      await this.cronRunLedger?.recordSkipped(jobName, "disabled_by_env", {
+        envFlag: "ENABLE_DISPATCH_CRON",
+      });
+      return;
+    }
 
+    const ledgerId = await this.cronRunLedger?.recordStarted(jobName, {
+      schedule: "*/1 * * * *",
+      envFlag: "ENABLE_DISPATCH_CRON",
+    });
     try {
-      await this.requeueAssignedBookingsMissingStart();
-    } catch {
+      const result = await this.requeueAssignedBookingsMissingStart();
+      await this.cronRunLedger?.recordSucceeded(ledgerId, result);
+    } catch (error) {
+      await this.cronRunLedger?.recordFailed(ledgerId, error);
       // swallow: cron is a safety net and must never crash the process
     }
   }

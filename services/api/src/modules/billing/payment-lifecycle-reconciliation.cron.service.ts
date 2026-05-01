@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { isCronDisabledByExplicitFalse } from "./payment-lifecycle-cron-env";
 import { PaymentLifecycleReconciliationService } from "./payment-lifecycle-reconciliation.service";
 
@@ -19,7 +20,10 @@ export class PaymentLifecycleReconciliationCronService {
   private lastSuccessAt: Date | null = null;
   private lastFailureAt: Date | null = null;
 
-  constructor(private readonly reconciliation: PaymentLifecycleReconciliationService) {}
+  constructor(
+    private readonly reconciliation: PaymentLifecycleReconciliationService,
+    private readonly cronRunLedger?: CronRunLedgerService,
+  ) {}
 
   getHealthSnapshot(now = new Date()): CronHealthSnapshot {
     return {
@@ -35,16 +39,24 @@ export class PaymentLifecycleReconciliationCronService {
   @Cron("*/15 * * * *")
   async run(): Promise<void> {
     this.lastRunAt = new Date();
-    try {
-      if (isCronDisabledByExplicitFalse(process.env.ENABLE_PAYMENT_LIFECYCLE_RECONCILIATION_CRON)) {
-        this.log.log({
-          kind: "payment_lifecycle_reconcile_cron",
-          event: "disabled_by_env",
-          env: "ENABLE_PAYMENT_LIFECYCLE_RECONCILIATION_CRON=false",
-        });
-        return;
-      }
+    const jobName = "payment_lifecycle_reconciliation";
+    if (isCronDisabledByExplicitFalse(process.env.ENABLE_PAYMENT_LIFECYCLE_RECONCILIATION_CRON)) {
+      this.log.log({
+        kind: "payment_lifecycle_reconcile_cron",
+        event: "disabled_by_env",
+        env: "ENABLE_PAYMENT_LIFECYCLE_RECONCILIATION_CRON=false",
+      });
+      await this.cronRunLedger?.recordSkipped(jobName, "disabled_by_env", {
+        envFlag: "ENABLE_PAYMENT_LIFECYCLE_RECONCILIATION_CRON",
+      });
+      return;
+    }
 
+    const ledgerId = await this.cronRunLedger?.recordStarted(jobName, {
+      schedule: "*/15 * * * *",
+      envFlag: "ENABLE_PAYMENT_LIFECYCLE_RECONCILIATION_CRON",
+    });
+    try {
       const batch =
         Number(process.env.PAYMENT_LIFECYCLE_RECONCILIATION_CRON_BATCH ?? 25) || 25;
       const ids = await this.reconciliation.findBookingsForLifecycleReconciliation({
@@ -84,6 +96,11 @@ export class PaymentLifecycleReconciliationCronService {
         mutations: touched,
         failures: failed,
       });
+      await this.cronRunLedger?.recordSucceeded(ledgerId, {
+        processed: ids.length,
+        mutations: touched,
+        failures: failed,
+      });
     } catch (e) {
       this.lastFailureAt = new Date();
       this.log.error({
@@ -91,6 +108,7 @@ export class PaymentLifecycleReconciliationCronService {
         event: "batch_failed",
         message: e instanceof Error ? e.message : String(e),
       });
+      await this.cronRunLedger?.recordFailed(ledgerId, e);
       throw e;
     }
   }

@@ -5,6 +5,7 @@ import { BillingModule } from "../../modules/billing/billing.module";
 import { PaymentReliabilityModule } from "../../modules/bookings/payment-reliability/payment-reliability.module";
 import { FoModule } from "../../modules/fo/fo.module";
 import { SlotHoldsModule } from "../../modules/slot-holds/slot-holds.module";
+import { CronRunLedgerService } from "./cron-run-ledger.service";
 import { OpsVisibilityService } from "./ops-visibility.service";
 import { HealthController } from "./health.controller";
 import { HealthService } from "./health.service";
@@ -35,6 +36,7 @@ import { TimeoutInterceptor } from "./timeout.interceptor";
     ReliabilityOpsController,
   ],
   providers: [
+    CronRunLedgerService,
     OpsVisibilityService,
     HealthService,
     ReliabilityMetricsService,
@@ -66,6 +68,7 @@ import { TimeoutInterceptor } from "./timeout.interceptor";
     },
   ],
   exports: [
+    CronRunLedgerService,
     OpsVisibilityService,
     HealthService,
     ReliabilityMetricsService,
