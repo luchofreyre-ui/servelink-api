@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import {
+  BookingPaymentStatus,
   BookingPublicDepositStatus,
   BookingRemainingBalancePaymentStatus,
   BookingStatus,
@@ -77,6 +78,7 @@ describe("PublicBookingDepositService gate", () => {
 
     const outputJson = JSON.stringify({ estimatedPriceCents: 27_100 });
     const bookingUpdate = jest.fn().mockResolvedValue({});
+    const bookingEventCreate = jest.fn().mockResolvedValue({});
     const prisma = {
       booking: {
         findUnique: jest.fn().mockResolvedValue({
@@ -91,6 +93,10 @@ describe("PublicBookingDepositService gate", () => {
           estimateSnapshot: { outputJson },
         }),
         update: bookingUpdate,
+      },
+      bookingEvent: {
+        findUnique: jest.fn().mockResolvedValue(null),
+        create: bookingEventCreate,
       },
       bookingSlotHold: {
         findUnique: jest.fn().mockResolvedValue({
@@ -141,6 +147,7 @@ describe("PublicBookingDepositService gate", () => {
         data: expect.objectContaining({
           remainingBalanceStatus:
             BookingRemainingBalancePaymentStatus.balance_pending_authorization,
+          paymentStatus: BookingPaymentStatus.authorized,
         }),
       }),
     );
@@ -161,6 +168,7 @@ describe("PublicBookingDepositService gate", () => {
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce({ id: "anom_existing" });
     const anomalyCreate = jest.fn().mockResolvedValue({});
+    const bookingUpdate = jest.fn().mockResolvedValue({});
     const prisma = {
       booking: {
         findUnique: jest.fn().mockResolvedValue({
@@ -168,12 +176,14 @@ describe("PublicBookingDepositService gate", () => {
           tenantId: "tenant_1",
           status: BookingStatus.pending_payment,
           customerId: "u1",
+          paymentStatus: BookingPaymentStatus.payment_pending,
           publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
           publicDepositAmountCents: 10_000,
           publicDepositPaymentIntentId: null,
           customer: { id: "u1", email: "a@b.c", stripeCustomerId: null },
           estimateSnapshot: { outputJson },
         }),
+        update: bookingUpdate,
       },
       bookingEvent: {
         create: bookingEventCreate,
@@ -213,6 +223,13 @@ describe("PublicBookingDepositService gate", () => {
       idempotencyKey: "k1",
     });
 
+    expect(bookingUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          paymentStatus: BookingPaymentStatus.authorized,
+        }),
+      }),
+    );
     expect(bookingEventCreate).toHaveBeenCalledTimes(2);
     expect(bookingEventCreate).toHaveBeenCalledWith(
       expect.objectContaining({

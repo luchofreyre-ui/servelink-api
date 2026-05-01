@@ -977,13 +977,16 @@ export class StripePaymentService {
         ? Math.max(0, estimatedTotal - PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS)
         : null;
 
+    const now = new Date();
     await this.prisma.booking.update({
       where: { id: args.bookingId },
       data: {
         publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
-        publicDepositPaidAt: new Date(),
+        publicDepositPaidAt: now,
         publicDepositPaymentIntentId: args.paymentIntentId,
         publicDepositAmountCents: PUBLIC_BOOKING_DEPOSIT_AMOUNT_CENTS,
+        paymentStatus: BookingPaymentStatus.authorized,
+        paymentAuthorizedAt: now,
         ...(estimatedTotal > 0
           ? {
               estimatedTotalCentsSnapshot: estimatedTotal,
