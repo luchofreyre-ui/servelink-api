@@ -5,6 +5,7 @@ import { RemainingBalanceAuthorizationCronService } from "../../modules/billing/
 import { buildSystemOpsDrilldownEligibility } from "../../modules/dispatch/dispatch-ops-eligibility";
 import { SlotHoldsService } from "../../modules/slot-holds/slot-holds.service";
 import { PrismaService } from "../../prisma";
+import { CronRunLedgerService } from "./cron-run-ledger.service";
 import { HealthService } from "./health.service";
 import { ReliabilityMetricsService } from "./reliability-metrics.service";
 
@@ -20,6 +21,7 @@ export class OpsVisibilityService {
     private readonly prisma: PrismaService,
     private readonly health: HealthService,
     private readonly reliabilityMetrics: ReliabilityMetricsService,
+    private readonly cronRunLedger: CronRunLedgerService,
     private readonly paymentLifecycleReconciliationCron: PaymentLifecycleReconciliationCronService,
     private readonly remainingBalanceAuthorizationCron: RemainingBalanceAuthorizationCronService,
     private readonly slotHolds: SlotHoldsService,
@@ -43,6 +45,7 @@ export class OpsVisibilityService {
       activeSystemTestAutomationJobs,
       slotHoldIntegrity,
       paymentSummary,
+      cronLedger,
     ] = await Promise.all([
       this.safeCount("booking"),
       this.safeCount("booking", {
@@ -109,6 +112,7 @@ export class OpsVisibilityService {
       }),
       this.slotHolds.getSlotHoldIntegritySummary(),
       this.buildPaymentSummary(now),
+      this.cronRunLedger.getSummary(now),
     ]);
 
     const hotspots: string[] = [];
@@ -165,6 +169,7 @@ export class OpsVisibilityService {
         remainingBalanceAuth:
           this.remainingBalanceAuthorizationCron.getHealthSnapshot(now),
       },
+      cronLedger,
       slotHolds: slotHoldIntegrity,
       hotspots,
     };

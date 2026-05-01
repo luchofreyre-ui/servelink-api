@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { BullModule } from "@nestjs/bullmq";
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { PrismaService } from "../../prisma";
 import { LedgerModule } from "../ledger/ledger.module";
 import { BillingService } from "./billing.service";
@@ -45,6 +46,7 @@ const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
   ],
   providers: [
     PrismaService,
+    CronRunLedgerService,
     BillingService,
     StripeService,
     StripeWebhookHandlerService,

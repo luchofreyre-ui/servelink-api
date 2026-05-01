@@ -1,5 +1,6 @@
 import { forwardRef, Module } from "@nestjs/common";
 
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { PrismaModule } from "../../prisma.module";
 import { SystemTestsModule } from "../system-tests/system-tests.module";
 import { SystemTestsPipelineModule } from "../system-tests-pipeline/system-tests-pipeline.module";
@@ -17,6 +18,7 @@ import { SystemTestsReportJobsService } from "./system-tests-report-jobs.service
   ],
   controllers: [SystemTestsAutomationController],
   providers: [
+    CronRunLedgerService,
     SystemTestsAutomationService,
     SystemTestsReportJobsService,
     SystemTestsDeliveryService,

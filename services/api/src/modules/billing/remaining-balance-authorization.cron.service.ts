@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { RemainingBalanceAuthorizationService } from "../bookings/payment-lifecycle/remaining-balance-authorization.service";
 import { isCronDisabledByExplicitFalse } from "./payment-lifecycle-cron-env";
 import type { CronHealthSnapshot } from "./payment-lifecycle-reconciliation.cron.service";
@@ -13,7 +14,10 @@ export class RemainingBalanceAuthorizationCronService {
   private lastSuccessAt: Date | null = null;
   private lastFailureAt: Date | null = null;
 
-  constructor(private readonly authz: RemainingBalanceAuthorizationService) {}
+  constructor(
+    private readonly authz: RemainingBalanceAuthorizationService,
+    private readonly cronRunLedger?: CronRunLedgerService,
+  ) {}
 
   getHealthSnapshot(now = new Date()): CronHealthSnapshot {
     return {
@@ -29,16 +33,24 @@ export class RemainingBalanceAuthorizationCronService {
   @Cron("*/15 * * * *")
   async run(): Promise<void> {
     this.lastRunAt = new Date();
-    try {
-      if (isCronDisabledByExplicitFalse(process.env.ENABLE_REMAINING_BALANCE_AUTH_CRON)) {
-        this.log.log({
-          kind: "remaining_balance_auth_cron",
-          event: "disabled_by_env",
-          env: "ENABLE_REMAINING_BALANCE_AUTH_CRON=false",
-        });
-        return;
-      }
+    const jobName = "remaining_balance_authorization";
+    if (isCronDisabledByExplicitFalse(process.env.ENABLE_REMAINING_BALANCE_AUTH_CRON)) {
+      this.log.log({
+        kind: "remaining_balance_auth_cron",
+        event: "disabled_by_env",
+        env: "ENABLE_REMAINING_BALANCE_AUTH_CRON=false",
+      });
+      await this.cronRunLedger?.recordSkipped(jobName, "disabled_by_env", {
+        envFlag: "ENABLE_REMAINING_BALANCE_AUTH_CRON",
+      });
+      return;
+    }
 
+    const ledgerId = await this.cronRunLedger?.recordStarted(jobName, {
+      schedule: "*/15 * * * *",
+      envFlag: "ENABLE_REMAINING_BALANCE_AUTH_CRON",
+    });
+    try {
       const batch =
         Number(process.env.REMAINING_BALANCE_AUTH_CRON_BATCH ?? 25) || 25;
       const now = new Date();
@@ -60,6 +72,11 @@ export class RemainingBalanceAuthorizationCronService {
         this.log.log({
           kind: "remaining_balance_auth_cron",
           event: "batch_end",
+          processed: 0,
+          ok: 0,
+          failedOrSkipped: 0,
+        });
+        await this.cronRunLedger?.recordSucceeded(ledgerId, {
           processed: 0,
           ok: 0,
           failedOrSkipped: 0,
@@ -104,6 +121,11 @@ export class RemainingBalanceAuthorizationCronService {
         ok,
         failedOrSkipped,
       });
+      await this.cronRunLedger?.recordSucceeded(ledgerId, {
+        processed: ids.length,
+        ok,
+        failedOrSkipped,
+      });
     } catch (e) {
       this.lastFailureAt = new Date();
       this.log.error({
@@ -111,6 +133,7 @@ export class RemainingBalanceAuthorizationCronService {
         event: "batch_failed",
         message: e instanceof Error ? e.message : String(e),
       });
+      await this.cronRunLedger?.recordFailed(ledgerId, e);
       throw e;
     }
   }

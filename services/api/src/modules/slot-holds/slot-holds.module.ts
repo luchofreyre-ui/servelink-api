@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { FoModule } from "../fo/fo.module";
 import { SlotAvailabilityService } from "./slot-availability.service";
 import { SlotHoldCleanupWorker } from "./slot-hold-cleanup.worker";
@@ -8,7 +9,12 @@ import { SlotHoldsMetricsController } from "./slot-holds.metrics.controller";
 @Module({
   imports: [FoModule],
   controllers: [SlotHoldsMetricsController],
-  providers: [SlotHoldsService, SlotAvailabilityService, SlotHoldCleanupWorker],
+  providers: [
+    CronRunLedgerService,
+    SlotHoldsService,
+    SlotAvailabilityService,
+    SlotHoldCleanupWorker,
+  ],
   exports: [SlotHoldsService, SlotAvailabilityService],
 })
 export class SlotHoldsModule {}

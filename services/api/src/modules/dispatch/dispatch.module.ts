@@ -1,6 +1,7 @@
 import { Module, forwardRef } from "@nestjs/common";
 import { BookingsModule } from "../bookings/bookings.module";
 import { AdminPermissionsGuard } from "../../common/admin/admin-permissions.guard";
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { FoModule } from "../fo/fo.module";
 import { DispatchAdminController } from "./dispatch.admin.controller";
 import { DispatchExceptionActionsAdminController } from "./dispatch-exception-actions.admin.controller";
@@ -40,6 +41,7 @@ import { TrustModule } from "../trust/trust.module";
   ],
   providers: [
     AdminPermissionsGuard,
+    CronRunLedgerService,
     DispatchExceptionAutomationService,
     DispatchExceptionActionsService,
     DispatchExceptionLifecycleService,

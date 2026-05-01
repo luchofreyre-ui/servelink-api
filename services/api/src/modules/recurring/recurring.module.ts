@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { PrismaModule } from "../../prisma.module";
 import { AuthModule } from "../../auth/auth.module";
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { BookingsModule } from "../bookings/bookings.module";
 import { RolesGuard } from "../../auth/roles.guard";
 import { RecurringController } from "./recurring.controller";
@@ -11,7 +12,7 @@ import { RecurringWorker } from "./recurring.worker";
 @Module({
   imports: [PrismaModule, AuthModule, BookingsModule],
   controllers: [RecurringController, RecurringOpsController],
-  providers: [RecurringService, RecurringWorker, RolesGuard],
+  providers: [CronRunLedgerService, RecurringService, RecurringWorker, RolesGuard],
   exports: [RecurringService],
 })
 export class RecurringModule {}

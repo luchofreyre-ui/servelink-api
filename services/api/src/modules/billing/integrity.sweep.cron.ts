@@ -2,11 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
 import { createHash } from "crypto";
 import { BookingEventType, OpsAlertSeverity, OpsAnomalyType } from "@prisma/client";
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { PrismaService } from "../../prisma";
 
 @Injectable()
 export class IntegritySweepCron {
-  constructor(private readonly db: PrismaService) {}
+  constructor(
+    private readonly db: PrismaService,
+    private readonly cronRunLedger?: CronRunLedgerService,
+  ) {}
 
   private fingerprintFor(params: {
     anomalyType: OpsAnomalyType;
@@ -203,7 +207,29 @@ export class IntegritySweepCron {
 
   @Cron("*/10 * * * *") // every 10 minutes
   async run() {
-    if (process.env.ENABLE_INTEGRITY_SWEEP !== "true") return;
+    const jobName = "integrity_sweep";
+    if (process.env.ENABLE_INTEGRITY_SWEEP !== "true") {
+      await this.cronRunLedger?.recordSkipped(jobName, "disabled_by_env", {
+        envFlag: "ENABLE_INTEGRITY_SWEEP",
+      });
+      return;
+    }
+
+    const ledgerId = await this.cronRunLedger?.recordStarted(jobName, {
+      schedule: "*/10 * * * *",
+      envFlag: "ENABLE_INTEGRITY_SWEEP",
+    });
+
+    try {
+      await this.runSweep();
+      await this.cronRunLedger?.recordSucceeded(ledgerId);
+    } catch (error) {
+      await this.cronRunLedger?.recordFailed(ledgerId, error);
+      throw error;
+    }
+  }
+
+  private async runSweep() {
 
     const now = Date.now();
 
