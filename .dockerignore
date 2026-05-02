@@ -4,6 +4,7 @@
 apps
 tools
 *.md
+!services/api/SYSTEM_TRUTH_V6.md
 .git
 .env
 .env.*
