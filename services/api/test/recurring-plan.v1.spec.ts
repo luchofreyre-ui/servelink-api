@@ -36,6 +36,15 @@ function createService({
         updatedAt: new Date("2030-01-01T00:00:00.000Z"),
       })),
     },
+    recurringPlanOutcome: {
+      upsert: jest.fn(async ({ create }) => ({
+        id: "rpo_1",
+        ...create,
+        recordedAt: new Date("2030-01-01T00:00:00.000Z"),
+        createdAt: new Date("2030-01-01T00:00:00.000Z"),
+        updatedAt: new Date("2030-01-01T00:00:00.000Z"),
+      })),
+    },
   };
 
   return {

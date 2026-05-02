@@ -8,6 +8,7 @@ import type {
 import { DeferredDispatchTable } from "./DeferredDispatchTable";
 import { DispatchLockedTable } from "./DispatchLockedTable";
 import { FoSupplyReadinessSection } from "./FoSupplyReadinessSection";
+import { RecurringPlanOutcomesSection } from "./RecurringPlanOutcomesSection";
 import { RecurringPlansSection } from "./RecurringPlansSection";
 import { ReviewRequiredTable } from "./ReviewRequiredTable";
 
@@ -100,6 +101,18 @@ export default function OpsSystemBacklog(props: OpsSystemBacklogProps) {
         }
       >
         <RecurringPlansSection />
+      </Section>
+
+      <Section
+        id="recurring-plan-outcomes"
+        title="Recurring Plan Outcomes"
+        actions={
+          <ActionLink href="/admin/ops#recurring-plan-outcomes">
+            Refresh section
+          </ActionLink>
+        }
+      >
+        <RecurringPlanOutcomesSection />
       </Section>
 
       <Section

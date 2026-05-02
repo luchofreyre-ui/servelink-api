@@ -26,4 +26,18 @@ export class RecurringPlanController {
   ) {
     return this.service.listForAdmin({ status, cadence });
   }
+
+  @UseGuards(JwtAuthGuard, ReliabilityAdminGuard)
+  @Post('/admin/mark-not-converted')
+  async markNotConverted(@Body() body: { bookingId: string }) {
+    return this.service.markNotConverted(body.bookingId);
+  }
+
+  @UseGuards(JwtAuthGuard, ReliabilityAdminGuard)
+  @Get('/admin/outcomes')
+  async listOutcomes(@Query('converted') converted?: 'true' | 'false') {
+    return this.service.listOutcomesForAdmin({
+      converted: converted === undefined ? undefined : converted === 'true',
+    });
+  }
 }

@@ -226,6 +226,26 @@ export type AdminRecurringPlan = {
   } | null;
 };
 
+export type AdminRecurringPlanOutcome = {
+  id: string;
+  bookingId: string;
+  converted: boolean;
+  cadence?: "weekly" | "biweekly" | "monthly" | null;
+  recordedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  booking?: {
+    id: string;
+    status: string;
+    createdAt: string;
+    customer?: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+    } | null;
+  } | null;
+};
+
 export async function getOpsSummary() {
   return readOpsEndpointJson<OpsSummaryResponse>("/system/ops/summary");
 }
@@ -273,6 +293,22 @@ export async function fetchAdminRecurringPlans(params?: {
   const path = `/recurring-plans/admin${query ? `?${query}` : ""}`;
 
   return readApiJson<AdminRecurringPlan[]>(await apiFetch(path, OPS_FETCH_INIT));
+}
+
+export async function fetchRecurringPlanOutcomes(params?: {
+  converted?: boolean;
+}): Promise<AdminRecurringPlanOutcome[]> {
+  const search = new URLSearchParams();
+  if (params?.converted !== undefined) {
+    search.set("converted", String(params.converted));
+  }
+
+  const query = search.toString();
+  const path = `/recurring-plans/admin/outcomes${query ? `?${query}` : ""}`;
+
+  return readApiJson<AdminRecurringPlanOutcome[]>(
+    await apiFetch(path, OPS_FETCH_INIT),
+  );
 }
 
 export async function getRecurringOpsSummary() {

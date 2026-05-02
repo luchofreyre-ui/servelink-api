@@ -46,6 +46,59 @@ export class RecurringPlanService {
     });
   }
 
+  async recordOutcome(params: {
+    bookingId: string;
+    converted: boolean;
+    cadence?: 'weekly' | 'biweekly' | 'monthly';
+  }) {
+    return this.prisma.recurringPlanOutcome.upsert({
+      where: { bookingId: params.bookingId },
+      update: {
+        converted: params.converted,
+        cadence: params.cadence ?? null,
+        recordedAt: new Date(),
+      },
+      create: {
+        bookingId: params.bookingId,
+        converted: params.converted,
+        cadence: params.cadence ?? null,
+      },
+    });
+  }
+
+  async markNotConverted(bookingId: string) {
+    return this.recordOutcome({
+      bookingId,
+      converted: false,
+    });
+  }
+
+  async listOutcomesForAdmin(params?: { converted?: boolean }) {
+    return this.prisma.recurringPlanOutcome.findMany({
+      where: {
+        ...(params?.converted !== undefined
+          ? { converted: params.converted }
+          : {}),
+      },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        booking: {
+          select: {
+            id: true,
+            status: true,
+            createdAt: true,
+            customer: {
+              select: {
+                id: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   async createFromBooking(params: {
     bookingId: string;
     cadence: 'weekly' | 'biweekly' | 'monthly';
@@ -94,7 +147,7 @@ export class RecurringPlanService {
         this.cadenceDaysMap[params.cadence] * 24 * 60 * 60 * 1000,
     );
 
-    return this.prisma.recurringPlan.create({
+    const plan = await this.prisma.recurringPlan.create({
       data: {
         bookingId: booking.id,
         customerId: booking.customerId,
@@ -108,5 +161,13 @@ export class RecurringPlanService {
         nextRunAt,
       },
     });
+
+    await this.recordOutcome({
+      bookingId: booking.id,
+      converted: true,
+      cadence: params.cadence,
+    });
+
+    return plan;
   }
 }

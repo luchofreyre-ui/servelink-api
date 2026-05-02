@@ -216,6 +216,7 @@ model Booking {
   payments                       Payment[]
   opsAnomalies                   OpsAnomaly[]
   recurringPlans                 RecurringPlan[]
+  recurringPlanOutcome           RecurringPlanOutcome?
   knowledgeFeedback              KnowledgeFeedback[]
   bookingAuthorityResult         BookingAuthorityResult?
   bookingAuthorityMismatches     BookingAuthorityMismatch[]
@@ -2701,6 +2702,22 @@ model RecurringPlan {
   @@index([customerId, status])
   @@index([nextAnchorAt, status])
   @@index([tenantId])
+}
+
+model RecurringPlanOutcome {
+  id         String             @id @default(cuid())
+  bookingId  String             @unique
+  booking    Booking            @relation(fields: [bookingId], references: [id])
+
+  converted  Boolean
+  cadence    RecurringCadence?
+  recordedAt DateTime           @default(now())
+
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  @@index([bookingId])
+  @@index([converted])
 }
 
 model RecurringOccurrence {
