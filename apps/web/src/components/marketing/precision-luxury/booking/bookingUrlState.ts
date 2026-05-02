@@ -14,8 +14,10 @@ import type {
   BookingSurfaceComplexity,
   BookingSurfaceDetailToken,
   BookingTimeOption,
+  CustomerIntent,
   BookingTransitionState,
 } from "./bookingFlowTypes";
+import { CustomerIntent as CustomerIntentEnum } from "./bookingFlowTypes";
 import { defaultBookingFlowState } from "./bookingFlowData";
 import {
   isBookingMoveTransitionServiceId,
@@ -38,9 +40,11 @@ import {
   PUBLIC_BOOK_INTERNAL_RECURRING,
   isPublicAnonymousBookingServiceId,
 } from "./publicBookingTaxonomy";
+import { normalizeBookingUpsellIds } from "./bookingUpsells";
 
 const validSteps: BookingStepId[] = [
   "service",
+  "intent",
   "home",
   "location",
   "review",
@@ -61,10 +65,11 @@ const validTimes: BookingTimeOption[] = [
 
 const STEP_RANK: Record<BookingStepId, number> = {
   service: 0,
-  home: 1,
-  location: 2,
-  review: 3,
-  schedule: 4,
+  intent: 1,
+  home: 2,
+  location: 3,
+  review: 4,
+  schedule: 5,
 };
 
 /** Serialized when the customer is on the recurring auth gate (never `service=recurring`). */
@@ -76,6 +81,7 @@ export const BOOKING_URL_SERVICE_LOC_STREET = "locStreet";
 export const BOOKING_URL_SERVICE_LOC_CITY = "locCity";
 export const BOOKING_URL_SERVICE_LOC_STATE = "locState";
 export const BOOKING_URL_SERVICE_LOC_UNIT = "locUnit";
+export const BOOKING_URL_CUSTOMER_INTENT = "intent";
 
 function isValidStep(value: string | null): value is BookingStepId {
   return !!value && validSteps.includes(value as BookingStepId);
@@ -87,6 +93,19 @@ function isValidFrequency(value: string | null): value is BookingFrequencyOption
 
 function isValidTime(value: string | null): value is BookingTimeOption {
   return !!value && validTimes.includes(value as BookingTimeOption);
+}
+
+function isValidCustomerIntent(value: string | null): value is CustomerIntent {
+  return (
+    value === CustomerIntentEnum.RESET ||
+    value === CustomerIntentEnum.MAINTAIN ||
+    value === CustomerIntentEnum.TOP_UP ||
+    value === CustomerIntentEnum.TRANSACTIONAL
+  );
+}
+
+function parseCustomerIntentParam(value: string | null): CustomerIntent | undefined {
+  return isValidCustomerIntent(value) ? value : undefined;
 }
 
 function getParamValue(searchParams: URLSearchParams, key: string) {
@@ -168,6 +187,8 @@ export const BOOKING_URL_HOME_SURFACE = "homeSurface";
 export const BOOKING_URL_HOME_SCOPE = "homeScope";
 /** Sorted known add-on tokens, comma-separated. */
 export const BOOKING_URL_HOME_ADDONS = "homeAddOns";
+/** Client-only selected enhancement ids, comma-separated; never sent to submit payload in V1. */
+export const BOOKING_URL_UPSELLS = "upsells";
 /** Deep-clean focus; only when service is deep clean and value is non-default. */
 export const BOOKING_URL_DEEP_CLEAN_FOCUS = "dcFocus";
 /** Move transition occupancy; only when service is move-in/move-out and non-default. */
@@ -233,6 +254,16 @@ export function parseBookingAddOnsParam(
     }
   }
   return [...out].sort();
+}
+
+export function parseBookingUpsellIdsParam(
+  raw: string | null | undefined,
+  intent: CustomerIntent | undefined,
+): string[] {
+  const s = String(raw ?? "").trim();
+  if (!s) return [];
+  const parts = s.split(",").map((p) => p.trim()).filter(Boolean);
+  return normalizeBookingUpsellIds(parts, intent);
 }
 
 /** Dedupe, filter unknown tokens, sort — stable for preview/submit request keys. */
@@ -428,6 +459,7 @@ export function isPublicScheduleSelectionComplete(
 export function computeMaxReadyStep(s: BookingFlowState): BookingStepId {
   if (s.bookingPublicPath === "recurring_auth_gate") return "service";
   if (!isPublicAnonymousBookingServiceId(s.serviceId)) return "service";
+  if (!s.intent) return "intent";
   if (!isHomeDetailsComplete(s)) {
     return "home";
   }
@@ -503,6 +535,8 @@ export function applyServiceChangeToBookingFlowState(
     serviceLocationState: "",
     serviceLocationUnit: "",
     serviceLocationAddressLine: "",
+    intent: undefined,
+    selectedUpsellIds: [],
     firstTimePostEstimateVisitChoice: "",
     schedulingBookingId: "",
     schedulingIntakeId: "",
@@ -675,6 +709,7 @@ export function applyHomeDetailsFieldChangeToBookingFlowState(
       | "surfaceComplexity"
       | "scopeIntensity"
       | "selectedAddOns"
+      | "selectedUpsellIds"
       | "deepCleanFocus"
       | "transitionState"
       | "appliancePresence"
@@ -718,6 +753,14 @@ export function applyHomeDetailsFieldChangeToBookingFlowState(
     ...(patch.selectedAddOns !== undefined
       ? {
           selectedAddOns: normalizeBookingAddOnsForPayload(patch.selectedAddOns),
+        }
+      : {}),
+    ...(patch.selectedUpsellIds !== undefined
+      ? {
+          selectedUpsellIds: normalizeBookingUpsellIds(
+            patch.selectedUpsellIds,
+            prev.intent,
+          ),
         }
       : {}),
     ...(patch.deepCleanFocus !== undefined
@@ -817,6 +860,7 @@ export function hasUrlBookingShapeBeyondColdStart(
     BOOKING_URL_HOME_SURFACE,
     BOOKING_URL_HOME_SCOPE,
     BOOKING_URL_HOME_ADDONS,
+    BOOKING_URL_UPSELLS,
     BOOKING_URL_DEEP_CLEAN_FOCUS,
     BOOKING_URL_TRANSITION_STATE,
     BOOKING_URL_APPLIANCE_PRESENCE,
@@ -830,6 +874,7 @@ export function hasUrlBookingShapeBeyondColdStart(
     BOOKING_URL_SERVICE_LOC_STATE,
     BOOKING_URL_SERVICE_LOC_UNIT,
     BOOKING_URL_PUBLIC_PATH,
+    BOOKING_URL_CUSTOMER_INTENT,
   ];
   for (const k of shapeKeys) {
     if (getParamValue(searchParams, k).trim()) return true;
@@ -870,6 +915,7 @@ export function buildBookingSearchParams(state: BookingFlowState) {
 
   params.set("step", state.step);
   params.set("service", state.serviceId.trim());
+  if (state.intent) params.set(BOOKING_URL_CUSTOMER_INTENT, state.intent);
   if (state.bookingPublicPath === "recurring_auth_gate") {
     params.set(BOOKING_URL_PUBLIC_PATH, BOOKING_URL_PUBLIC_PATH_RECURRING_GATE);
   } else if (
@@ -938,6 +984,13 @@ export function buildBookingSearchParams(state: BookingFlowState) {
   if (addOnsForUrl.length > 0) {
     params.set(BOOKING_URL_HOME_ADDONS, addOnsForUrl.join(","));
   }
+  const upsellsForUrl = normalizeBookingUpsellIds(
+    state.selectedUpsellIds,
+    state.intent,
+  );
+  if (upsellsForUrl.length > 0) {
+    params.set(BOOKING_URL_UPSELLS, upsellsForUrl.join(","));
+  }
   if (
     isDeepCleaningBookingServiceId(state.serviceId) &&
     state.deepCleanFocus !== defaultBookingFlowState.deepCleanFocus
@@ -974,6 +1027,7 @@ export function buildBookingSearchParams(state: BookingFlowState) {
 export type ParsedBookingIntakeFields = Pick<
   BookingFlowState,
   | "serviceId"
+  | "intent"
   | "homeSize"
   | "bedrooms"
   | "bathrooms"
@@ -983,6 +1037,7 @@ export type ParsedBookingIntakeFields = Pick<
   | "surfaceComplexity"
   | "scopeIntensity"
   | "selectedAddOns"
+  | "selectedUpsellIds"
   | "deepCleanFocus"
   | "transitionState"
   | "appliancePresence"
@@ -1011,8 +1066,13 @@ export function parseIntakeFieldsFromSearchParams(
     deepCleanProgram = "";
   }
 
+  const intent = parseCustomerIntentParam(
+    searchParams.get(BOOKING_URL_CUSTOMER_INTENT),
+  );
+
   return {
     serviceId: resolvedServiceId,
+    intent,
     homeSize: normalizeBookingHomeSizeParam(
       getParamValue(searchParams, "homeSize"),
     ),
@@ -1037,6 +1097,10 @@ export function parseIntakeFieldsFromSearchParams(
     ),
     selectedAddOns: parseBookingAddOnsParam(
       getParamValue(searchParams, BOOKING_URL_HOME_ADDONS),
+    ),
+    selectedUpsellIds: parseBookingUpsellIdsParam(
+      getParamValue(searchParams, BOOKING_URL_UPSELLS),
+      intent,
     ),
     deepCleanFocus: isDeepCleaningBookingServiceId(resolvedServiceId)
       ? parseBookingDeepCleanFocusParam(
@@ -1169,6 +1233,7 @@ export function appendPublicIntakeContextToSearchParams(
   state: Pick<
     BookingFlowState,
     | "serviceId"
+    | "intent"
     | "homeSize"
     | "bedrooms"
     | "bathrooms"
@@ -1178,6 +1243,7 @@ export function appendPublicIntakeContextToSearchParams(
     | "surfaceComplexity"
     | "scopeIntensity"
     | "selectedAddOns"
+    | "selectedUpsellIds"
     | "deepCleanFocus"
     | "transitionState"
     | "appliancePresence"
@@ -1196,6 +1262,7 @@ export function appendPublicIntakeContextToSearchParams(
 ): void {
   const maxLen = opts?.maxHomeSizeChars ?? 180;
   const home = normalizeBookingHomeSizeParam(state.homeSize);
+  if (state.intent) q.set(BOOKING_URL_CUSTOMER_INTENT, state.intent);
   if (home) q.set("homeSize", home.slice(0, maxLen));
   if (state.bedrooms.trim()) q.set("bedrooms", state.bedrooms.trim());
   if (state.bathrooms.trim()) q.set("bathrooms", state.bathrooms.trim());
@@ -1258,6 +1325,13 @@ export function appendPublicIntakeContextToSearchParams(
   const addOnsEcho = normalizeBookingAddOnsForPayload(state.selectedAddOns);
   if (addOnsEcho.length > 0) {
     q.set(BOOKING_URL_HOME_ADDONS, addOnsEcho.join(","));
+  }
+  const upsellsEcho = normalizeBookingUpsellIds(
+    state.selectedUpsellIds,
+    state.intent,
+  );
+  if (upsellsEcho.length > 0) {
+    q.set(BOOKING_URL_UPSELLS, upsellsEcho.join(","));
   }
   if (
     isDeepCleaningBookingServiceId(state.serviceId) &&
