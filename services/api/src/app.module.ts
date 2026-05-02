@@ -36,6 +36,7 @@ import { SystemTestsPipelineModule } from "./modules/system-tests-pipeline/syste
 import { SystemTestsModule } from "./modules/system-tests/system-tests.module";
 import { EncyclopediaModule } from "./modules/encyclopedia/encyclopedia.module";
 import { RecurringModule } from "./modules/recurring/recurring.module";
+import { RecurringPlanModule } from './modules/recurring-plan/recurring-plan.module';
 
 const enableQueue = Boolean(process.env.REDIS_HOST || process.env.REDIS_URL);
 
@@ -81,6 +82,7 @@ const enableDevScenarioApi =
     AuthorityModule,
     EncyclopediaModule,
     RecurringModule,
+    RecurringPlanModule,
     SystemTestsModule,
     SystemTestsPipelineModule,
     SystemTestsAutomationModule,

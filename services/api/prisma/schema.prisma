@@ -215,6 +215,7 @@ model Booking {
   trustEvents                    TrustEvent[]
   payments                       Payment[]
   opsAnomalies                   OpsAnomaly[]
+  recurringPlans                 RecurringPlan[]
   knowledgeFeedback              KnowledgeFeedback[]
   bookingAuthorityResult         BookingAuthorityResult?
   bookingAuthorityMismatches     BookingAuthorityMismatch[]
@@ -2641,6 +2642,7 @@ enum RecurringPlanStatus {
   active
   paused
   canceled
+  cancelled
 }
 
 enum RecurringCadence {
@@ -2662,20 +2664,27 @@ enum RecurringOccurrenceStatus {
 /// Customer recurring maintenance plan (snapshot-based; orchestrates occurrences).
 model RecurringPlan {
   id                   String                 @id @default(cuid())
+  bookingId            String?
   customerId           String
   status               RecurringPlanStatus    @default(active)
   cadence              RecurringCadence
-  serviceType          String
+  franchiseOwnerId     String?
+  pricePerVisitCents   Int                    @default(0)
+  estimatedMinutes     Int                    @default(120)
+  discountPercent      Int                    @default(0)
+  startAt              DateTime               @default(now())
+  nextRunAt            DateTime               @default(now())
+  serviceType          String                 @default("cleaning")
   preferredTimeWindow  String?
   preferredFoId        String?
   bookingNotes         String?
-  estimateSnapshot     Json
-  pricingSnapshot      Json
-  intakeSnapshot       Json
-  defaultAddonIds      Json
-  addressSnapshot      Json
+  estimateSnapshot     Json                   @default("{}")
+  pricingSnapshot      Json                   @default("{}")
+  intakeSnapshot       Json                   @default("{}")
+  defaultAddonIds      Json                   @default("[]")
+  addressSnapshot      Json                   @default("{}")
   createdFromBookingId String?
-  nextAnchorAt         DateTime
+  nextAnchorAt         DateTime               @default(now())
   lastGeneratedAt      DateTime?
   canceledAt           DateTime?
   pausedAt             DateTime?
@@ -2683,9 +2692,12 @@ model RecurringPlan {
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
 
+  booking     Booking?                @relation(fields: [bookingId], references: [id])
   customer    User                    @relation(fields: [customerId], references: [id], onDelete: Cascade)
   occurrences RecurringOccurrence[]
 
+  @@index([bookingId])
+  @@index([customerId])
   @@index([customerId, status])
   @@index([nextAnchorAt, status])
   @@index([tenantId])

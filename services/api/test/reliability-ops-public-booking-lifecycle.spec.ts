@@ -145,10 +145,16 @@ describe("PaymentReliabilityService.getPublicBookingLifecycleSummary", () => {
     const paymentReliability = {
       getPublicBookingLifecycleSummary: jest.fn().mockResolvedValue(item),
     };
+    const recurringFollowUpTasks = {
+      syncRecurringFollowUpTasks: jest.fn(),
+      completeTask: jest.fn(),
+      dismissTask: jest.fn(),
+    };
     const controller = new ReliabilityOpsController(
       {} as never,
       {} as never,
       paymentReliability as never,
+      recurringFollowUpTasks as never,
     );
 
     await expect(controller.getPublicBookingLifecycleSummary()).resolves.toBe(item);

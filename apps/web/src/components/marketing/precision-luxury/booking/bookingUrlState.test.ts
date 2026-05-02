@@ -178,7 +178,7 @@ describe("bookingUrlState", () => {
     expect(next.customerEmail).toBe("rae@example.com");
   });
 
-  it("applyHomeDetailsFieldChangeToBookingFlowState with empty homeSize plus clamp demotes review to home", () => {
+  it("applyHomeDetailsFieldChangeToBookingFlowState with empty homeSize plus clamp demotes review to intent", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -199,7 +199,7 @@ describe("bookingUrlState", () => {
       homeSize: "",
     });
     const clamped = clampBookingStepToStructuralMax(patched);
-    expect(clamped.step).toBe("home");
+    expect(clamped.step).toBe("intent");
     expect(clamped.frequency).toBe("Weekly");
     expect(clamped.preferredTime).toBe("Friday");
   });
@@ -387,7 +387,7 @@ describe("bookingUrlState", () => {
     expect(next.pets).toBe("Cat");
   });
 
-  it("applyContactFieldChangeToBookingFlowState plus clamp keeps review when home and schedule stay complete", () => {
+  it("applyContactFieldChangeToBookingFlowState plus clamp returns to intent in locked flow", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -414,7 +414,7 @@ describe("bookingUrlState", () => {
       customerEmail: "",
     });
     const clamped = clampBookingStepToStructuralMax(patched);
-    expect(clamped.step).toBe("review");
+    expect(clamped.step).toBe("intent");
     expect(clamped.frequency).toBe("Weekly");
     expect(clamped.homeSize).toBe("2000");
   });
@@ -445,7 +445,7 @@ describe("bookingUrlState", () => {
     expect(next.customerEmail).toBe("sam@example.com");
   });
 
-  it("clearing preferredTime no longer demotes review when location is complete", () => {
+  it("clearing preferredTime returns to intent in locked flow", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -471,12 +471,12 @@ describe("bookingUrlState", () => {
       preferredTime: "",
     });
     const clamped = clampBookingStepToStructuralMax(patched);
-    expect(clamped.step).toBe("review");
+    expect(clamped.step).toBe("intent");
     expect(clamped.homeSize).toBe("2000");
     expect(clamped.frequency).toBe("One-Time");
   });
 
-  it("clamp after applyServiceChange demotes to location because service changes clear ZIP", () => {
+  it("clamp after applyServiceChange demotes to intent because intent follows service", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -501,7 +501,7 @@ describe("bookingUrlState", () => {
     const next = clampBookingStepToStructuralMax(
       applyServiceChangeToBookingFlowState(prev, shallowId),
     );
-    expect(next.step).toBe("location");
+    expect(next.step).toBe("intent");
   });
 
   it("parseBookingSearchParams does not read confirmation session snapshot", () => {
@@ -524,29 +524,29 @@ describe("bookingUrlState", () => {
     expect(s.customerEmail).toBe("");
   });
 
-  it("clamps an over-advanced step when prerequisites are missing", () => {
+  it("clamps an over-advanced step to intent when prerequisites are missing", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams("step=review&frequency=Weekly&preferredTime=Friday"),
     );
-    expect(s.step).toBe("home");
+    expect(s.step).toBe("intent");
   });
 
-  it("shaped URL without step lands on the deepest structurally valid step", () => {
+  it("shaped URL without step lands on intent in the locked flow", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
         "homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA",
       ),
     );
-    expect(s.step).toBe("review");
+    expect(s.step).toBe("intent");
   });
 
-  it("parse/build round-trips bookingId and intakeId so review→schedule URL sync does not drop scheduling context", () => {
+  it("parse/build round-trips bookingId and intakeId while locked flow clamps to intent", () => {
     const { shallowId } = catalogDeepAndShallow();
     const sp = new URLSearchParams(
       `step=schedule&service=${encodeURIComponent(shallowId)}&homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA&bookingId=bk_xyz&intakeId=in_abc`,
     );
     const parsed = parseBookingSearchParams(sp);
-    expect(parsed.step).toBe("schedule");
+    expect(parsed.step).toBe("intent");
     expect(parsed.schedulingBookingId).toBe("bk_xyz");
     expect(parsed.schedulingIntakeId).toBe("in_abc");
     const out = buildBookingSearchParams(parsed);
@@ -563,7 +563,7 @@ describe("bookingUrlState", () => {
     );
   });
 
-  it("clampBookingStepToStructuralMax demotes review when street address is missing", () => {
+  it("clampBookingStepToStructuralMax demotes review to intent when street address is missing", () => {
     const s: BookingFlowState = {
       ...defaultBookingFlowState,
       step: "review",
@@ -579,10 +579,10 @@ describe("bookingUrlState", () => {
       serviceLocationUnit: "",
       serviceLocationAddressLine: "",
     };
-    expect(clampBookingStepToStructuralMax(s).step).toBe("location");
+    expect(clampBookingStepToStructuralMax(s).step).toBe("intent");
   });
 
-  it("clampBookingStepToStructuralMax demotes review when home is incomplete", () => {
+  it("clampBookingStepToStructuralMax demotes review to intent when home is incomplete", () => {
     const s: BookingFlowState = {
       ...defaultBookingFlowState,
       step: "review",
@@ -598,10 +598,10 @@ describe("bookingUrlState", () => {
       serviceLocationUnit: "",
       serviceLocationAddressLine: "",
     };
-    expect(clampBookingStepToStructuralMax(s).step).toBe("home");
+    expect(clampBookingStepToStructuralMax(s).step).toBe("intent");
   });
 
-  it("clampBookingStepToStructuralMax demotes review to location when ZIP is missing", () => {
+  it("clampBookingStepToStructuralMax demotes review to intent when ZIP is missing", () => {
     const s: BookingFlowState = {
       ...defaultBookingFlowState,
       step: "review",
@@ -617,7 +617,7 @@ describe("bookingUrlState", () => {
       serviceLocationUnit: "",
       serviceLocationAddressLine: "",
     };
-    expect(clampBookingStepToStructuralMax(s).step).toBe("location");
+    expect(clampBookingStepToStructuralMax(s).step).toBe("intent");
   });
 
   it("mergeConfirmationParamsFromSessionIfUrlEmpty keeps URL when it has keys", () => {
