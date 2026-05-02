@@ -1,4 +1,6 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { ReliabilityAdminGuard } from '../../common/reliability/reliability-admin.guard';
 import { RecurringPlanService } from './recurring-plan.service';
 
 @Controller('/api/v1/recurring-plans')
@@ -14,5 +16,14 @@ export class RecurringPlanController {
     },
   ) {
     return this.service.createFromBooking(body);
+  }
+
+  @UseGuards(JwtAuthGuard, ReliabilityAdminGuard)
+  @Get('/admin')
+  async listForAdmin(
+    @Query('status') status?: 'active' | 'paused' | 'cancelled',
+    @Query('cadence') cadence?: 'weekly' | 'biweekly' | 'monthly',
+  ) {
+    return this.service.listForAdmin({ status, cadence });
   }
 }

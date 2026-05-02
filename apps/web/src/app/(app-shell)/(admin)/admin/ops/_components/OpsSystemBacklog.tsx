@@ -8,6 +8,7 @@ import type {
 import { DeferredDispatchTable } from "./DeferredDispatchTable";
 import { DispatchLockedTable } from "./DispatchLockedTable";
 import { FoSupplyReadinessSection } from "./FoSupplyReadinessSection";
+import { RecurringPlansSection } from "./RecurringPlansSection";
 import { ReviewRequiredTable } from "./ReviewRequiredTable";
 
 export type OpsSystemBacklogProps = {
@@ -88,6 +89,18 @@ export default function OpsSystemBacklog(props: OpsSystemBacklogProps) {
       <PaymentHealthSection payment={payment} />
       <CronLedgerHealthSection cronLedger={cronLedger} />
       <LearningCompletionHealthSection />
+
+      <Section
+        id="recurring-plans"
+        title="Recurring Plans"
+        actions={
+          <ActionLink href="/admin/ops#recurring-plans">
+            Refresh section
+          </ActionLink>
+        }
+      >
+        <RecurringPlansSection />
+      </Section>
 
       <Section
         id="fo-supply-readiness"

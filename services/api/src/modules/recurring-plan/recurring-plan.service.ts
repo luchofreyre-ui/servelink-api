@@ -17,6 +17,35 @@ export class RecurringPlanService {
     monthly: 5,
   } as const;
 
+  async listForAdmin(params?: {
+    status?: 'active' | 'paused' | 'cancelled';
+    cadence?: 'weekly' | 'biweekly' | 'monthly';
+  }) {
+    return this.prisma.recurringPlan.findMany({
+      where: {
+        ...(params?.status ? { status: params.status } : {}),
+        ...(params?.cadence ? { cadence: params.cadence } : {}),
+      },
+      orderBy: [{ createdAt: 'desc' }],
+      include: {
+        booking: {
+          select: {
+            id: true,
+            status: true,
+            createdAt: true,
+            customer: {
+              select: {
+                id: true,
+                email: true,
+                phone: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   async createFromBooking(params: {
     bookingId: string;
     cadence: 'weekly' | 'biweekly' | 'monthly';
