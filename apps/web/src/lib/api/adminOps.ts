@@ -28,6 +28,8 @@ export type OpsSummaryResponse = {
     reconciliation?: OpsCronHealthSnapshot;
     remainingBalanceAuth?: OpsCronHealthSnapshot;
   };
+  cronLedger?: OpsCronLedgerSummary;
+  payment?: OpsPaymentSummary;
   slotHolds?: {
     active?: number;
     expired?: number;
@@ -39,6 +41,8 @@ export type OpsSummaryResponse = {
       reconciliation?: OpsCronHealthSnapshot;
       remainingBalanceAuth?: OpsCronHealthSnapshot;
     };
+    cronLedger?: OpsCronLedgerSummary;
+    payment?: OpsPaymentSummary;
     slotHolds?: {
       active?: number;
       expired?: number;
@@ -53,6 +57,56 @@ export type OpsSummaryResponse = {
       deferredDecisions?: number;
     };
   };
+};
+
+export type OpsPaymentSummary = {
+  bookingStates?: {
+    available?: boolean;
+    pendingPayment?: number;
+    authorized?: number;
+    depositSucceeded?: number;
+    completedMissingPaymentAlignment?: number;
+    depositStateMismatch?: number;
+  };
+  anomalies?: {
+    available?: boolean;
+    openPaymentAnomalies?: number;
+    openOpsPaymentAnomalies?: number;
+    recentPaymentAnomaliesLast24h?: number;
+    recentPaymentAnomaliesLast7d?: number;
+    [key: string]: unknown;
+  };
+  staleBuckets?: {
+    available?: boolean;
+    "0-30m"?: number;
+    "30m-2h"?: number;
+    "2h-24h"?: number;
+    "1-7d"?: number;
+    "7-30d"?: number;
+    ">30d"?: number;
+  };
+  flags?: {
+    hasRecentPaymentFailures?: boolean;
+    hasStalePendingPayments?: boolean;
+    hasDepositStateMismatch?: boolean;
+  };
+};
+
+export type OpsCronLedgerSummary = {
+  available?: boolean;
+  reason?: string;
+  jobs?: Record<
+    string,
+    {
+      lastStatus?: string | null;
+      lastStartedAt?: string | null;
+      lastFinishedAt?: string | null;
+      lastDurationMs?: number | null;
+      lastErrorMessage?: string | null;
+      recentFailures24h?: number;
+      recentRuns24h?: number;
+    }
+  >;
 };
 
 export type OpsCronHealthSnapshot = {

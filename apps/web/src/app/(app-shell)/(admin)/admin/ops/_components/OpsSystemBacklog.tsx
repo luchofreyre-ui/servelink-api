@@ -24,6 +24,8 @@ export default function OpsSystemBacklog(props: OpsSystemBacklogProps) {
   const { summary, invalid, locked, reviewRequired, deferred, manual, foSupply } =
     props;
   const s = summary?.summary;
+  const payment = s?.payment ?? summary?.payment;
+  const cronLedger = s?.cronLedger ?? summary?.cronLedger;
 
   return (
     <div
@@ -81,6 +83,11 @@ export default function OpsSystemBacklog(props: OpsSystemBacklogProps) {
           )}
         </div>
       </Section>
+
+      <OpsStatusSummary payment={payment} cronLedger={cronLedger} />
+      <PaymentHealthSection payment={payment} />
+      <CronLedgerHealthSection cronLedger={cronLedger} />
+      <LearningCompletionHealthSection />
 
       <Section
         id="fo-supply-readiness"
@@ -182,6 +189,302 @@ function MetricCard({
       <div className="text-2xl font-semibold">{value}</div>
     </Link>
   );
+}
+
+function OpsStatusSummary({
+  payment,
+  cronLedger,
+}: {
+  payment: NonNullable<OpsSummaryResponse["summary"]["payment"]> | undefined;
+  cronLedger: NonNullable<OpsSummaryResponse["summary"]["cronLedger"]> | undefined;
+}) {
+  const paymentAttention = Boolean(
+    payment?.flags?.hasDepositStateMismatch ||
+      payment?.flags?.hasRecentPaymentFailures ||
+      payment?.flags?.hasStalePendingPayments,
+  );
+  const cronJobs = Object.values(cronLedger?.jobs ?? {});
+  const cronStatus =
+    cronLedger?.available === false
+      ? "Not available"
+      : cronJobs.length === 0
+        ? "No Runs Yet"
+        : cronJobs.some((job) => (job.recentFailures24h ?? 0) > 0)
+          ? "Attention Required"
+          : "Healthy";
+  const learningVisible = "Visible";
+  const opsAttention = paymentAttention || cronStatus === "Attention Required";
+
+  return (
+    <Section title="System Status Summary">
+      <div className="grid gap-3 bg-white p-3 md:grid-cols-4">
+        <StatusPill
+          label="Payment"
+          value={payment ? (paymentAttention ? "Attention Required" : "Healthy") : "Not available"}
+          warning={paymentAttention}
+          unavailable={!payment}
+        />
+        <StatusPill
+          label="Cron"
+          value={cronStatus}
+          warning={cronStatus === "Attention Required"}
+          unavailable={cronStatus === "Not available" || cronStatus === "No Runs Yet"}
+        />
+        <StatusPill label="Learning" value={learningVisible} />
+        <StatusPill
+          label="Ops"
+          value={opsAttention ? "Attention Required" : "Healthy"}
+          warning={opsAttention}
+        />
+      </div>
+    </Section>
+  );
+}
+
+function StatusPill({
+  label,
+  value,
+  warning = false,
+  unavailable = false,
+}: {
+  label: string;
+  value: string;
+  warning?: boolean;
+  unavailable?: boolean;
+}) {
+  const className = unavailable
+    ? "border-gray-200 bg-gray-50 text-gray-600"
+    : warning
+      ? "border-amber-200 bg-amber-50 text-amber-800"
+      : "border-emerald-200 bg-emerald-50 text-emerald-800";
+  return (
+    <div className={`rounded border p-3 ${className}`}>
+      <div className="text-xs uppercase tracking-wide opacity-70">{label}</div>
+      <div className="mt-1 font-semibold">{value}</div>
+    </div>
+  );
+}
+
+function PaymentHealthSection({
+  payment,
+}: {
+  payment: NonNullable<OpsSummaryResponse["summary"]["payment"]> | undefined;
+}) {
+  if (!payment) {
+    return (
+      <Section title="Payment Health">
+        <EmptyState label="Payment health is not available in ops summary." />
+      </Section>
+    );
+  }
+
+  const bookingStates = payment.bookingStates ?? {};
+  const anomalies = payment.anomalies ?? {};
+  const staleBuckets = payment.staleBuckets ?? {};
+  const flags = payment.flags ?? {};
+  const totalPaymentAnomalies =
+    Number(anomalies.openPaymentAnomalies ?? 0) +
+    Number(anomalies.openOpsPaymentAnomalies ?? 0);
+
+  return (
+    <Section title="Payment Health">
+      <div className="space-y-4 bg-white p-4">
+        <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-5">
+          <MiniMetric label="Pending payment" value={bookingStates.pendingPayment} />
+          <MiniMetric label="Authorized" value={bookingStates.authorized} />
+          <MiniMetric label="Deposit succeeded" value={bookingStates.depositSucceeded} />
+          <MiniMetric
+            label="Completed missing alignment"
+            value={bookingStates.completedMissingPaymentAlignment}
+          />
+          <MiniMetric
+            label="Deposit state mismatch"
+            value={bookingStates.depositStateMismatch}
+            warning={Boolean(bookingStates.depositStateMismatch)}
+          />
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="rounded border bg-gray-50 p-3">
+            <h4 className="font-medium">Anomalies</h4>
+            <dl className="mt-2 grid grid-cols-2 gap-2 text-sm">
+              <KeyValue label="Total payment anomalies" value={totalPaymentAnomalies} />
+              <KeyValue
+                label="Recent last 24h"
+                value={anomalies.recentPaymentAnomaliesLast24h}
+              />
+            </dl>
+          </div>
+          <div className="rounded border bg-gray-50 p-3">
+            <h4 className="font-medium">Flags</h4>
+            <div className="mt-2 flex flex-wrap gap-2 text-xs">
+              <FlagChip
+                label="Recent payment failures"
+                active={flags.hasRecentPaymentFailures}
+              />
+              <FlagChip
+                label="Stale pending payments"
+                active={flags.hasStalePendingPayments}
+              />
+              <FlagChip
+                label="Deposit state mismatch"
+                active={flags.hasDepositStateMismatch}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded border bg-gray-50 p-3">
+          <h4 className="font-medium">Stale pending buckets</h4>
+          <div className="mt-2 grid gap-2 text-sm md:grid-cols-3 xl:grid-cols-6">
+            {["0-30m", "30m-2h", "2h-24h", "1-7d", "7-30d", ">30d"].map(
+              (bucket) => (
+                <KeyValue
+                  key={bucket}
+                  label={bucket}
+                  value={staleBuckets[bucket as keyof typeof staleBuckets]}
+                />
+              ),
+            )}
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function CronLedgerHealthSection({
+  cronLedger,
+}: {
+  cronLedger: NonNullable<OpsSummaryResponse["summary"]["cronLedger"]> | undefined;
+}) {
+  const jobs = Object.entries(cronLedger?.jobs ?? {}).sort(([a], [b]) =>
+    a.localeCompare(b),
+  );
+
+  return (
+    <Section title="Cron Ledger Health">
+      {cronLedger?.available === false ? (
+        <EmptyState
+          label={`Cron ledger is not available${cronLedger.reason ? `: ${cronLedger.reason}` : "."}`}
+        />
+      ) : jobs.length === 0 ? (
+        <EmptyState label="No cron ledger runs have been recorded yet." />
+      ) : (
+        <div className="overflow-x-auto bg-white">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <thead className="bg-gray-100 text-left text-xs uppercase tracking-wide text-gray-600">
+              <tr>
+                <th className="px-3 py-2">Job</th>
+                <th className="px-3 py-2">Last status</th>
+                <th className="px-3 py-2">Last started</th>
+                <th className="px-3 py-2">Last finished</th>
+                <th className="px-3 py-2">Duration</th>
+                <th className="px-3 py-2">Runs 24h</th>
+                <th className="px-3 py-2">Failures 24h</th>
+                <th className="px-3 py-2">Last error</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {jobs.map(([jobName, job]) => (
+                <tr key={jobName}>
+                  <td className="px-3 py-2 font-mono text-xs">{jobName}</td>
+                  <td className="px-3 py-2">{job.lastStatus ?? "Not available"}</td>
+                  <td className="px-3 py-2">{formatOpsDate(job.lastStartedAt)}</td>
+                  <td className="px-3 py-2">{formatOpsDate(job.lastFinishedAt)}</td>
+                  <td className="px-3 py-2">{formatDuration(job.lastDurationMs)}</td>
+                  <td className="px-3 py-2">{job.recentRuns24h ?? "Not available"}</td>
+                  <td className="px-3 py-2">{job.recentFailures24h ?? "Not available"}</td>
+                  <td className="px-3 py-2">{job.lastErrorMessage ?? "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Section>
+  );
+}
+
+function LearningCompletionHealthSection() {
+  return (
+    <Section title="Learning / Completion Health">
+      <div className="space-y-2 bg-white p-4 text-sm text-gray-700">
+        <p>
+          Learning and controlled completion visibility is available from the
+          existing estimate-learning ops endpoint.
+        </p>
+        <p className="text-gray-500">
+          This ops summary payload does not currently include learning counts, so
+          no health label is inferred here.
+        </p>
+      </div>
+    </Section>
+  );
+}
+
+function MiniMetric({
+  label,
+  value,
+  warning = false,
+}: {
+  label: string;
+  value: number | undefined;
+  warning?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded border p-3 ${warning ? "border-amber-200 bg-amber-50" : "bg-gray-50"}`}
+    >
+      <div className="text-xs uppercase tracking-wide text-gray-500">{label}</div>
+      <div className="mt-1 text-xl font-semibold">
+        {value ?? "Not available"}
+      </div>
+    </div>
+  );
+}
+
+function KeyValue({
+  label,
+  value,
+}: {
+  label: string;
+  value: number | string | boolean | null | undefined;
+}) {
+  return (
+    <div>
+      <dt className="text-gray-500">{label}</dt>
+      <dd className="font-medium">{value ?? "Not available"}</dd>
+    </div>
+  );
+}
+
+function FlagChip({
+  label,
+  active,
+}: {
+  label: string;
+  active: boolean | undefined;
+}) {
+  return (
+    <span
+      className={`rounded px-2 py-1 ${active ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"}`}
+    >
+      {label}: {active ? "Attention Required" : "Healthy"}
+    </span>
+  );
+}
+
+function formatOpsDate(value: string | null | undefined) {
+  if (!value) return "Not available";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString();
+}
+
+function formatDuration(value: number | null | undefined) {
+  if (typeof value !== "number") return "Not available";
+  return `${value}ms`;
 }
 
 function Section({
