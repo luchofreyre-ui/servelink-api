@@ -84,6 +84,7 @@ import {
   BookingStepService,
   type PublicBookingServiceCardSelection,
 } from "./BookingStepService";
+import { BookingStepIntent } from "./BookingStepIntent";
 import { BookingStepHomeDetails } from "./BookingStepHomeDetails";
 import { BookingStepServiceLocation } from "./BookingStepServiceLocation";
 import {
@@ -93,6 +94,7 @@ import {
 import { BookingStepReview } from "./BookingStepReview";
 import { BookingSummaryCard } from "./BookingSummaryCard";
 import { BookingServiceHandoffCard } from "./BookingServiceHandoffCard";
+import { normalizeBookingUpsellIds } from "./bookingUpsells";
 import {
   buildBookingAttributionFromSearchParams,
   postPublicBookingAvailability,
@@ -176,6 +178,10 @@ function getStepError(state: BookingFlowState): string | null {
     if (!state.serviceId) {
       return "Please choose a service before continuing.";
     }
+  }
+
+  if (state.step === "intent" && !state.intent) {
+    return "Choose what brings you in today before continuing.";
   }
 
   if (state.step === "home" && !isHomeDetailsComplete(state)) {
@@ -844,6 +850,7 @@ export function BookingFlowClient() {
   const isBookingReady =
     isAnonymousBookingPublicPath(state.bookingPublicPath) &&
     !!state.serviceId &&
+    !!state.intent &&
     isHomeComplete &&
     isLocationComplete;
   const isContactReady = isBookingContactValid(
@@ -877,6 +884,40 @@ export function BookingFlowClient() {
         ",",
       ),
     [state.appliancePresence],
+  );
+
+  const requestedEnhancementIds = useMemo(
+    () => normalizeBookingUpsellIds(state.selectedUpsellIds, state.intent),
+    [state.selectedUpsellIds, state.intent],
+  );
+
+  const requestedEnhancementIdsPayloadKey = useMemo(
+    () => requestedEnhancementIds.join(","),
+    [requestedEnhancementIds],
+  );
+
+  const recurringInterestPayload = useMemo(() => {
+    if (state.recurringInterest?.interested !== true) return undefined;
+    return {
+      interested: true,
+      ...(state.recurringInterest.cadence
+        ? { cadence: state.recurringInterest.cadence }
+        : {}),
+      ...(state.recurringInterest.note?.trim()
+        ? { note: state.recurringInterest.note.trim() }
+        : {}),
+      ...(state.intent ? { sourceIntent: state.intent } : {}),
+    };
+  }, [
+    state.recurringInterest?.interested,
+    state.recurringInterest?.cadence,
+    state.recurringInterest?.note,
+    state.intent,
+  ]);
+
+  const recurringInterestPayloadKey = useMemo(
+    () => JSON.stringify(recurringInterestPayload ?? null),
+    [recurringInterestPayload],
   );
 
   const isHeavyCondition = useMemo(
@@ -1033,6 +1074,10 @@ export function BookingFlowClient() {
       serviceLocation,
       frequency: "One-Time",
       preferredTime: BOOKING_INTAKE_PREFERRED_TIME_DEFERRED,
+      requestedEnhancementIds,
+      ...(recurringInterestPayload
+        ? { recurringInterest: recurringInterestPayload }
+        : {}),
       ...normalizedAttribution,
     };
 
@@ -1079,6 +1124,8 @@ export function BookingFlowClient() {
     state.deepCleanFocus,
     state.transitionState,
     appliancePresencePayloadKey,
+    requestedEnhancementIdsPayloadKey,
+    recurringInterestPayloadKey,
     state.deepCleanProgram,
     state.firstTimePostEstimateVisitChoice,
     normalizedAttribution,
@@ -1152,7 +1199,7 @@ export function BookingFlowClient() {
     if (submitRecoverableFailure) {
       return BOOKING_REVIEW_SUBMIT_TRY_AGAIN;
     }
-    return BOOKING_REVIEW_SEE_AVAILABLE_TEAMS_CTA;
+    return "Confirm Booking";
   }, [
     state.step,
     isSubmitting,
@@ -1354,7 +1401,8 @@ export function BookingFlowClient() {
 
     setAttemptedNext(false);
 
-    if (state.step === "service") return goToStep("home");
+    if (state.step === "service") return goToStep("intent");
+    if (state.step === "intent") return goToStep("home");
     if (state.step === "home") return goToStep("location");
     if (state.step === "location") return goToStep("review");
   }
@@ -1373,12 +1421,19 @@ export function BookingFlowClient() {
         await new Promise((r) => setTimeout(r, 2000));
       }
       try {
+        const s = stateRefForBookingUrl.current;
         await postPublicBookingConfirm(
-          { bookingId, holdId },
+          {
+            bookingId,
+            holdId,
+            requestedEnhancementIds: normalizeBookingUpsellIds(
+              s.selectedUpsellIds,
+              s.intent,
+            ),
+          },
           idemKey,
         );
         clearDepositLock();
-        const s = stateRefForBookingUrl.current;
         emitBookingFunnelEvent("booking_confirmed", {
           bookingId,
           teamId: s.selectedTeamId,
@@ -1944,6 +1999,7 @@ export function BookingFlowClient() {
           {
             bookingId: state.schedulingBookingId,
             holdId: hold.holdId,
+            requestedEnhancementIds,
           },
           scheduleConfirmIdempotencyKeyRef.current,
         );
@@ -2030,6 +2086,7 @@ export function BookingFlowClient() {
         {
           bookingId: state.schedulingBookingId,
           holdId: pendingConfirmHoldId.trim(),
+          requestedEnhancementIds,
         },
         scheduleConfirmIdempotencyKeyRef.current,
       );
@@ -2177,7 +2234,8 @@ export function BookingFlowClient() {
       return;
     }
     if (state.step === "location") return goToStep("home");
-    if (state.step === "home") return goToStep("service");
+    if (state.step === "home") return goToStep("intent");
+    if (state.step === "intent") return goToStep("service");
     return;
   }
 
@@ -2185,9 +2243,17 @@ export function BookingFlowClient() {
     setAttemptedNext(false);
     setAttemptedConfirm(false);
     setSubmitRecoverableFailure(false);
-    setState((prev) =>
-      clampBookingStepToStructuralMax({ ...prev, ...patch }),
-    );
+    setState((prev) => {
+      const nextIntent = patch.intent !== undefined ? patch.intent : prev.intent;
+      return clampBookingStepToStructuralMax({
+        ...prev,
+        ...patch,
+        selectedUpsellIds: normalizeBookingUpsellIds(
+          patch.selectedUpsellIds ?? prev.selectedUpsellIds,
+          nextIntent,
+        ),
+      });
+    });
   }
 
   function patchHomeStepState(patch: Partial<BookingFlowState>) {
@@ -2394,6 +2460,13 @@ export function BookingFlowClient() {
                 />
               ) : null}
 
+              {state.step === "intent" ? (
+                <BookingStepIntent
+                  intent={state.intent}
+                  onChange={(intent) => patchState({ intent })}
+                />
+              ) : null}
+
               {state.step === "home" ? (
                 <BookingStepHomeDetails
                   state={state}
@@ -2465,6 +2538,14 @@ export function BookingFlowClient() {
                       ),
                     );
                   }}
+                  onRecurringInterestChange={(recurringInterest) => {
+                    setState((prev) =>
+                      clampBookingStepToStructuralMax({
+                        ...prev,
+                        recurringInterest,
+                      }),
+                    );
+                  }}
                 />
               ) : null}
 
@@ -2481,7 +2562,7 @@ export function BookingFlowClient() {
                 reviewPaymentPhase === "satisfied") ? (
                 <div className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-8 shadow-sm ring-1 ring-[#C9B27C]/10">
                   <h2 className="font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.02em] text-[#0F172A]">
-                    Secure your booking
+                    Secure your booking with a deposit
                   </h2>
                   {reviewDepositGateMessage ? (
                     <p

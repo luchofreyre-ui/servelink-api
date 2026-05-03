@@ -335,6 +335,15 @@ export type SubmitBookingDirectionIntakePayload = {
   preferredTime: string;
   /** Only persisted when service is deep clean. */
   deepCleanProgram?: "single_visit" | "phased_3_visit";
+  /** Intent-aware enhancement requests; capture only, no pricing/estimate effect. */
+  requestedEnhancementIds?: string[];
+  /** Recurring interest capture only; does not create schedules, contracts, or billing. */
+  recurringInterest?: {
+    interested: boolean;
+    cadence?: "weekly" | "biweekly" | "monthly" | "not_sure";
+    note?: string;
+    sourceIntent?: "RESET" | "MAINTAIN" | "TOP_UP" | "TRANSACTIONAL";
+  };
   /**
    * Optional for legacy callers; the public `/book` funnel sends both once
    * Phase 3 contact validation passes.
@@ -563,6 +572,7 @@ export async function postPublicBookingConfirm(
     bookingId: string;
     holdId: string;
     note?: string;
+    requestedEnhancementIds?: string[];
     stripePaymentMethodId?: string;
   },
   idempotencyKey?: string | null,

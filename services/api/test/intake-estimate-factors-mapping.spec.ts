@@ -30,9 +30,9 @@ describe("mapIntakeFieldsToEstimateInput + estimateFactors", () => {
       deepCleanProgram: null,
       estimateFactors: {
         ...DEFAULT_PUBLIC_FUNNEL_ESTIMATE_FACTORS,
-        kitchenCondition: "heavy_grease",
-        bathroomCondition: "heavy_scale",
-        clutterLevel: "heavy",
+        kitchenIntensity: "heavy_use",
+        bathroomComplexity: "heavy_detailing",
+        clutterAccess: "heavy_clutter",
       },
     });
     expect(out.kitchen_condition).toBe("heavy_grease");

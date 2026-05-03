@@ -133,6 +133,9 @@ type BookingStepReviewProps = {
   onFirstTimePostEstimateVisitChoiceChange: (
     choice: BookingFirstTimePostEstimateVisitChoice,
   ) => void;
+  onRecurringInterestChange?: (
+    value: BookingFlowState["recurringInterest"],
+  ) => void;
 };
 
 function isBookingReady(state: BookingFlowState) {

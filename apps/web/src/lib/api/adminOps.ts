@@ -199,6 +199,53 @@ export type RecurringOpsPageData = {
   unavailableReason: string | null;
 };
 
+export type AdminRecurringPlan = {
+  id: string;
+  bookingId: string;
+  customerId: string;
+  franchiseOwnerId: string | null;
+  cadence: "weekly" | "biweekly" | "monthly";
+  status: "active" | "paused" | "cancelled";
+  pricePerVisitCents: number;
+  estimatedMinutes: number;
+  discountPercent: number;
+  startAt: string;
+  nextRunAt: string;
+  createdAt: string;
+  updatedAt: string;
+  booking?: {
+    id: string;
+    status: string;
+    createdAt: string;
+    customer?: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      phone?: string | null;
+    } | null;
+  } | null;
+};
+
+export type AdminRecurringPlanOutcome = {
+  id: string;
+  bookingId: string;
+  converted: boolean;
+  cadence?: "weekly" | "biweekly" | "monthly" | null;
+  recordedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  booking?: {
+    id: string;
+    status: string;
+    createdAt: string;
+    customer?: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+    } | null;
+  } | null;
+};
+
 export async function getOpsSummary() {
   return readOpsEndpointJson<OpsSummaryResponse>("/system/ops/summary");
 }
@@ -231,6 +278,37 @@ export async function getManualDispatch(limit = 50) {
 export async function getFoSupplyReadiness() {
   const path = `/system/ops/supply/franchise-owners`;
   return readOpsEndpointJson<FoSupplyReadinessResponse>(path);
+}
+
+export async function fetchAdminRecurringPlans(params?: {
+  status?: "active" | "paused" | "cancelled";
+  cadence?: "weekly" | "biweekly" | "monthly";
+}): Promise<AdminRecurringPlan[]> {
+  const search = new URLSearchParams();
+
+  if (params?.status) search.set("status", params.status);
+  if (params?.cadence) search.set("cadence", params.cadence);
+
+  const query = search.toString();
+  const path = `/recurring-plans/admin${query ? `?${query}` : ""}`;
+
+  return readApiJson<AdminRecurringPlan[]>(await apiFetch(path, OPS_FETCH_INIT));
+}
+
+export async function fetchRecurringPlanOutcomes(params?: {
+  converted?: boolean;
+}): Promise<AdminRecurringPlanOutcome[]> {
+  const search = new URLSearchParams();
+  if (params?.converted !== undefined) {
+    search.set("converted", String(params.converted));
+  }
+
+  const query = search.toString();
+  const path = `/recurring-plans/admin/outcomes${query ? `?${query}` : ""}`;
+
+  return readApiJson<AdminRecurringPlanOutcome[]>(
+    await apiFetch(path, OPS_FETCH_INIT),
+  );
 }
 
 export async function getRecurringOpsSummary() {
