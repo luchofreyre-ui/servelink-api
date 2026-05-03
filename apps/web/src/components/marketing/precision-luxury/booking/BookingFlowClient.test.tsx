@@ -93,6 +93,7 @@ import {
 
 const TEST_REVIEW_LOC_QUERY =
   "&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA";
+const TEST_INTENT_QUERY = "&intent=RESET";
 
 function fillReviewContactFast() {
   fireEvent.change(screen.getByLabelText(/full name/i), {
@@ -319,7 +320,7 @@ vi.mock("../layout/PublicSiteFooter", () => ({
 function buildReviewSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}${TEST_INTENT_QUERY}&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -327,7 +328,7 @@ function buildReviewSearchString(): string {
 function buildIncompleteHomeStepSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=home&homeSize=&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&service=${encodeURIComponent(
+  return `step=home&homeSize=&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -336,7 +337,7 @@ function buildIncompleteHomeStepSearchString(): string {
 function buildIncompleteCadenceHomeSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=home&homeSize=&bedrooms=2&bathrooms=2&pets=&service=${encodeURIComponent(
+  return `step=home&homeSize=&bedrooms=2&bathrooms=2&pets=${TEST_INTENT_QUERY}&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -345,7 +346,7 @@ function buildReviewSearchStringForService(serviceId: string): string {
   const dc = isDeepCleaningBookingServiceId(serviceId)
     ? "&dcProgram=single_visit"
     : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}${TEST_INTENT_QUERY}&service=${encodeURIComponent(
     serviceId,
   )}${dc}`;
 }
@@ -370,6 +371,19 @@ async function submitFromReviewToSchedule() {
   await waitFor(() =>
     expect(screen.getByTestId("booking-schedule-team-section")).toBeInTheDocument(),
   );
+}
+
+async function chooseResetIntentAndContinue() {
+  await waitFor(() =>
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "What brings you in today?",
+      }),
+    ).toBeInTheDocument(),
+  );
+  fireEvent.click(screen.getByText("My place needs a real clean"));
+  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
 }
 
 async function selectNorthTeamAndFirstSlot() {
@@ -1116,6 +1130,7 @@ describe("BookingFlowClient", () => {
       const options = screen.getByTestId("booking-public-service-options");
       fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_ONE_TIME_TITLE));
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await chooseResetIntentAndContinue();
       await waitFor(() =>
         expect(
           screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
@@ -1131,6 +1146,7 @@ describe("BookingFlowClient", () => {
         within(options).getByText(BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE),
       );
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await chooseResetIntentAndContinue();
       await waitFor(() =>
         expect(
           screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
@@ -1144,6 +1160,7 @@ describe("BookingFlowClient", () => {
       const options = screen.getByTestId("booking-public-service-options");
       fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE));
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await chooseResetIntentAndContinue();
       await waitFor(() =>
         expect(
           screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
@@ -1153,7 +1170,7 @@ describe("BookingFlowClient", () => {
 
     it("advances home → service location before review (ZIP gate)", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(
-        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&service=${encodeURIComponent(
+        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
           getBookingDefaultServiceId(),
         )}&dcProgram=single_visit`,
       );
@@ -1170,7 +1187,7 @@ describe("BookingFlowClient", () => {
       const svc = getBookingDefaultServiceId();
       const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
       bookingFlowTestSearch.sp = new URLSearchParams(
-        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&service=${encodeURIComponent(svc)}${dc}`,
+        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=${TEST_INTENT_QUERY}&service=${encodeURIComponent(svc)}${dc}`,
       );
       render(<BookingFlowClient />);
       expect(screen.queryByTestId("booking-home-cadence-section")).not.toBeInTheDocument();
@@ -1180,7 +1197,7 @@ describe("BookingFlowClient", () => {
       const svc = getBookingDefaultServiceId();
       const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
       bookingFlowTestSearch.sp = new URLSearchParams(
-        `step=location&homeSize=2000&bedrooms=2&bathrooms=2&pets=&service=${encodeURIComponent(svc)}${dc}&locZip=94103`,
+        `step=location&homeSize=2000&bedrooms=2&bathrooms=2&pets=${TEST_INTENT_QUERY}&service=${encodeURIComponent(svc)}${dc}&locZip=94103`,
       );
       render(<BookingFlowClient />);
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
@@ -1235,9 +1252,9 @@ describe("BookingFlowClient", () => {
       const serviceSection = serviceHeading.closest("section")!;
       fireEvent.click(within(serviceSection).getByText("Move-In / Move-Out Cleaning"));
 
-      const continueBtn = screen.getByRole("button", { name: /^continue$/i });
-      fireEvent.click(continueBtn);
-      fireEvent.click(continueBtn);
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await chooseResetIntentAndContinue();
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
       fireEvent.change(screen.getByLabelText(/^street address$/i), {
         target: { value: "200 Main St" },
       });
@@ -1250,7 +1267,7 @@ describe("BookingFlowClient", () => {
       fireEvent.change(screen.getByLabelText(/^ZIP code$/i), {
         target: { value: "94103" },
       });
-      fireEvent.click(continueBtn);
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
 
       await waitFor(() =>
         expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
@@ -1385,7 +1402,7 @@ describe("BookingFlowClient", () => {
     function buildHomeStepSearchString(): string {
       const svc = getBookingDefaultServiceId();
       const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-      return `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&service=${encodeURIComponent(
+      return `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
         svc,
       )}${dc}`;
     }
@@ -1884,7 +1901,7 @@ describe("BookingFlowClient", () => {
       expect(
         screen.getByRole("heading", {
           level: 2,
-          name: "Choose your service",
+          name: "What brings you in today?",
         }),
       ).toBeInTheDocument();
     });
@@ -2543,6 +2560,7 @@ describe("BookingFlowClient", () => {
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
 
       await waitFor(() =>
         expect(
@@ -2556,6 +2574,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(screen.getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE));
 
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await chooseResetIntentAndContinue();
       await continueThroughLocationGateToReview();
 
       await fillReviewContactAndOptionalFirstTimePlan(5000);
