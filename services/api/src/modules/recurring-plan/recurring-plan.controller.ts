@@ -18,6 +18,11 @@ export class RecurringPlanController {
     return this.service.createFromBooking(body);
   }
 
+  @Get('/offer-quote')
+  async getOfferQuote(@Query('bookingId') bookingId: string) {
+    return this.service.getOfferQuoteForBooking(bookingId);
+  }
+
   @UseGuards(JwtAuthGuard, ReliabilityAdminGuard)
   @Get('/admin')
   async listForAdmin(
