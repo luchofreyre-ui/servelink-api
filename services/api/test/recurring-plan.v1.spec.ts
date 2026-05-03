@@ -21,6 +21,22 @@ function completedBooking(overrides: Record<string, unknown> = {}) {
   };
 }
 
+function quoteReadyBooking(overrides: Record<string, unknown> = {}) {
+  return assignedDepositConfirmedBooking({
+    estimatedTotalCentsSnapshot: 33042,
+    estimateSnapshot: {
+      outputJson: {
+        estimatedDurationMinutes: 122,
+        kitchenIntensity: "average_use",
+        bathroomComplexity: "standard",
+        clutterAccess: "mostly_clear",
+        hasPets: false,
+      },
+    },
+    ...overrides,
+  });
+}
+
 function assignedDepositConfirmedBooking(overrides: Record<string, unknown> = {}) {
   return completedBooking({
     id: "bk_assigned",
@@ -37,7 +53,7 @@ function createService({
 }: {
   booking?: unknown;
   existingPlan?: unknown;
-}) {
+} = {}) {
   const prisma = {
     booking: {
       findUnique: jest.fn().mockResolvedValue(booking ?? null),
@@ -183,19 +199,17 @@ describe("RecurringPlanService V1", () => {
 
     const data = prisma.recurringPlan.create.mock.calls[0][0].data;
     expect(data.cadence).toBe("biweekly");
-    expect(data.discountPercent).toBe(10);
-    expect(data.estimatedMinutes).toBe(180);
+    expect(data.discountPercent).toBe(0);
+    expect(data.estimatedMinutes).toBe(126);
     expect(data.pricePerVisitCents).toBe(0);
     expect(data.startAt).toBeInstanceOf(Date);
     expect(data.nextRunAt).toBeInstanceOf(Date);
     expect(data.nextRunAt.getTime()).toBeGreaterThan(data.startAt.getTime());
   });
 
-  it("stores weekly discounted pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
+  it("stores weekly minutes-based pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
     const { service, prisma } = createService({
-      booking: assignedDepositConfirmedBooking({
-        estimatedTotalCentsSnapshot: 33042,
-      }),
+      booking: quoteReadyBooking(),
     });
 
     await service.createFromBooking({
@@ -205,17 +219,16 @@ describe("RecurringPlanService V1", () => {
 
     expect(prisma.recurringPlan.create.mock.calls[0][0].data).toEqual(
       expect.objectContaining({
-        pricePerVisitCents: 28086,
-        discountPercent: 15,
+        estimatedMinutes: 73,
+        pricePerVisitCents: 19771,
+        discountPercent: 40,
       }),
     );
   });
 
-  it("stores biweekly discounted pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
+  it("stores biweekly minutes-based pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
     const { service, prisma } = createService({
-      booking: assignedDepositConfirmedBooking({
-        estimatedTotalCentsSnapshot: 33042,
-      }),
+      booking: quoteReadyBooking(),
     });
 
     await service.createFromBooking({
@@ -225,17 +238,16 @@ describe("RecurringPlanService V1", () => {
 
     expect(prisma.recurringPlan.create.mock.calls[0][0].data).toEqual(
       expect.objectContaining({
-        pricePerVisitCents: 29738,
-        discountPercent: 10,
+        estimatedMinutes: 85,
+        pricePerVisitCents: 23021,
+        discountPercent: 30,
       }),
     );
   });
 
-  it("stores monthly discounted pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
+  it("stores monthly minutes-based pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
     const { service, prisma } = createService({
-      booking: assignedDepositConfirmedBooking({
-        estimatedTotalCentsSnapshot: 33042,
-      }),
+      booking: quoteReadyBooking(),
     });
 
     await service.createFromBooking({
@@ -245,10 +257,104 @@ describe("RecurringPlanService V1", () => {
 
     expect(prisma.recurringPlan.create.mock.calls[0][0].data).toEqual(
       expect.objectContaining({
-        pricePerVisitCents: 31390,
-        discountPercent: 5,
+        estimatedMinutes: 98,
+        pricePerVisitCents: 26542,
+        discountPercent: 20,
       }),
     );
+  });
+
+  it("weekly produces significantly lower price than previous discount pricing", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking(),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "weekly",
+    });
+
+    const data = prisma.recurringPlan.create.mock.calls[0][0].data;
+    expect(data.pricePerVisitCents).toBeLessThan(28086);
+  });
+
+  it("higher load multiplier increases recurring price", () => {
+    const { service } = createService();
+
+    const [baselineWeekly] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 33042,
+      estimatedMinutes: 122,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 122,
+          kitchenIntensity: "average_use",
+          bathroomComplexity: "standard",
+          clutterAccess: "mostly_clear",
+          hasPets: false,
+        },
+      },
+    });
+
+    const [higherLoadWeekly] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 33042,
+      estimatedMinutes: 122,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 122,
+          kitchenIntensity: "heavy_use",
+          bathroomComplexity: "heavy_detailing",
+          clutterAccess: "heavy_clutter",
+          hasPets: true,
+        },
+      },
+    });
+
+    expect(higherLoadWeekly.recurringPriceCents).toBeGreaterThan(
+      baselineWeekly.recurringPriceCents,
+    );
+  });
+
+  it("monthly pricing is greater than biweekly and weekly pricing", () => {
+    const { service } = createService();
+
+    const [weekly, biweekly, monthly] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 33042,
+      estimatedMinutes: 122,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 122,
+          kitchenIntensity: "average_use",
+          bathroomComplexity: "standard",
+          clutterAccess: "mostly_clear",
+          hasPets: false,
+        },
+      },
+    });
+
+    expect(monthly.recurringPriceCents).toBeGreaterThan(
+      biweekly.recurringPriceCents,
+    );
+    expect(biweekly.recurringPriceCents).toBeGreaterThan(
+      weekly.recurringPriceCents,
+    );
+  });
+
+  it("recurring pricing is derived from minutes rather than static discount map", () => {
+    const { service } = createService();
+
+    const [weekly] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 33042,
+      estimatedMinutes: 122,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 122,
+        },
+      },
+    });
+
+    expect(weekly.estimatedMinutes).toBe(73);
+    expect(weekly.recurringPriceCents).toBe(19771);
+    expect(weekly.discountPercent).toBe(40);
   });
 
   it("records converted outcome after creation", async () => {

@@ -54,7 +54,7 @@ describe("RecurringPlan offer quote V1", () => {
     ]);
   });
 
-  it("uses weekly discount of 15", () => {
+  it("uses weekly maintenance pricing", () => {
     const { service } = createService();
 
     const [weekly] = service.getRecurringOfferQuote({
@@ -64,14 +64,15 @@ describe("RecurringPlan offer quote V1", () => {
 
     expect(weekly).toEqual(
       expect.objectContaining({
-        discountPercent: 15,
-        recurringPriceCents: 17000,
-        savingsCents: 3000,
+        discountPercent: 40,
+        estimatedMinutes: 108,
+        recurringPriceCents: 12000,
+        savingsCents: 8000,
       }),
     );
   });
 
-  it("uses biweekly discount of 10", () => {
+  it("uses biweekly maintenance pricing", () => {
     const { service } = createService();
 
     const [, biweekly] = service.getRecurringOfferQuote({
@@ -81,14 +82,15 @@ describe("RecurringPlan offer quote V1", () => {
 
     expect(biweekly).toEqual(
       expect.objectContaining({
-        discountPercent: 10,
-        recurringPriceCents: 18000,
-        savingsCents: 2000,
+        discountPercent: 30,
+        estimatedMinutes: 126,
+        recurringPriceCents: 14000,
+        savingsCents: 6000,
       }),
     );
   });
 
-  it("uses monthly discount of 5", () => {
+  it("uses monthly maintenance pricing", () => {
     const { service } = createService();
 
     const [, , monthly] = service.getRecurringOfferQuote({
@@ -98,9 +100,10 @@ describe("RecurringPlan offer quote V1", () => {
 
     expect(monthly).toEqual(
       expect.objectContaining({
-        discountPercent: 5,
-        recurringPriceCents: 19000,
-        savingsCents: 1000,
+        discountPercent: 20,
+        estimatedMinutes: 144,
+        recurringPriceCents: 16000,
+        savingsCents: 4000,
       }),
     );
   });
@@ -132,7 +135,7 @@ describe("RecurringPlan offer quote V1", () => {
       expect.objectContaining({
         cadence: "weekly",
         firstCleanPriceCents: 20000,
-        estimatedMinutes: 180,
+        estimatedMinutes: 108,
       }),
     );
   });

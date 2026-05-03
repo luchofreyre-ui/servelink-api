@@ -17,9 +17,11 @@ function isEligibleForRecurringPlan(booking: {
 }
 
 function readEstimatedMinutes(outputJson: unknown) {
-  if (outputJson && typeof outputJson === 'object') {
+  const parsedOutputJson = parseEstimateOutputJson(outputJson);
+
+  if (parsedOutputJson) {
     const estimatedDurationMinutes = (
-      outputJson as { estimatedDurationMinutes?: unknown }
+      parsedOutputJson as { estimatedDurationMinutes?: unknown }
     ).estimatedDurationMinutes;
 
     if (typeof estimatedDurationMinutes === 'number') {
@@ -28,6 +30,30 @@ function readEstimatedMinutes(outputJson: unknown) {
   }
 
   return 120;
+}
+
+function parseEstimateOutputJson(outputJson: unknown) {
+  if (typeof outputJson === 'string') {
+    try {
+      const parsed = JSON.parse(outputJson) as unknown;
+      return parsed && typeof parsed === 'object' ? parsed : null;
+    } catch {
+      return null;
+    }
+  }
+
+  return outputJson && typeof outputJson === 'object' ? outputJson : null;
+}
+
+function readFactor(source: Record<string, unknown>, ...keys: string[]) {
+  for (const key of keys) {
+    const value = source[key];
+    if (value !== undefined && value !== null) {
+      return value;
+    }
+  }
+
+  return undefined;
 }
 
 @Injectable()
@@ -40,10 +66,10 @@ export class RecurringPlanService {
     monthly: 30,
   } as const;
 
-  private discountMap = {
-    weekly: 15,
-    biweekly: 10,
-    monthly: 5,
+  private cadenceMultiplierMap = {
+    weekly: 0.6,
+    biweekly: 0.7,
+    monthly: 0.8,
   } as const;
 
   private getFirstCleanPriceCentsFromBooking(booking: {
@@ -70,14 +96,31 @@ export class RecurringPlanService {
   getRecurringOfferQuote(params: {
     firstCleanPriceCents: number;
     estimatedMinutes: number;
+    estimateSnapshot?: unknown;
   }) {
     const cadences = ['weekly', 'biweekly', 'monthly'] as const;
 
     return cadences.map((cadence) => {
-      const discountPercent = this.discountMap[cadence];
+      const recurringMinutes = this.getRecurringMinutes({
+        estimatedMinutes: params.estimatedMinutes,
+        cadence,
+        estimateSnapshot: params.estimateSnapshot,
+      });
       const recurringPriceCents = Math.round(
-        params.firstCleanPriceCents * (1 - discountPercent / 100),
+        params.estimatedMinutes > 0
+          ? (recurringMinutes / params.estimatedMinutes) *
+              params.firstCleanPriceCents
+          : 0,
       );
+      const discountPercent =
+        params.firstCleanPriceCents > 0
+          ? Math.max(
+              0,
+              Math.round(
+                (1 - recurringPriceCents / params.firstCleanPriceCents) * 100,
+              ),
+            )
+          : 0;
 
       return {
         cadence,
@@ -88,9 +131,73 @@ export class RecurringPlanService {
           params.firstCleanPriceCents - recurringPriceCents,
         ),
         discountPercent,
-        estimatedMinutes: params.estimatedMinutes,
+        estimatedMinutes: recurringMinutes,
       };
     });
+  }
+
+  private getMaintenanceLoadMultiplier(estimateSnapshot: unknown) {
+    const outputJson =
+      estimateSnapshot &&
+      typeof estimateSnapshot === 'object' &&
+      'outputJson' in estimateSnapshot
+        ? (estimateSnapshot as { outputJson?: unknown }).outputJson
+        : estimateSnapshot;
+
+    const factors = parseEstimateOutputJson(outputJson) as
+      | Record<string, unknown>
+      | null;
+
+    if (!factors) return 1;
+
+    const rawNormalizedIntake =
+      factors.rawNormalizedIntake &&
+      typeof factors.rawNormalizedIntake === 'object'
+        ? (factors.rawNormalizedIntake as Record<string, unknown>)
+        : {};
+
+    let score = 1;
+
+    const kitchenIntensity = readFactor(
+      factors,
+      'kitchenIntensity',
+      'kitchen_intensity',
+    ) ?? readFactor(rawNormalizedIntake, 'kitchenIntensity', 'kitchen_intensity');
+    if (kitchenIntensity === 'heavy_use') score += 0.15;
+    if (kitchenIntensity === 'moderate_use') score += 0.08;
+
+    const bathroomComplexity =
+      readFactor(factors, 'bathroomComplexity', 'bathroom_complexity') ??
+      readFactor(rawNormalizedIntake, 'bathroomComplexity', 'bathroom_complexity');
+    if (bathroomComplexity === 'heavy_detailing') score += 0.12;
+
+    const clutterAccess =
+      readFactor(factors, 'clutterAccess', 'clutter_access') ??
+      readFactor(rawNormalizedIntake, 'clutterAccess', 'clutter_access');
+    if (clutterAccess === 'heavy_clutter') score += 0.15;
+    if (clutterAccess === 'moderate_clutter') score += 0.08;
+
+    const hasPets =
+      readFactor(factors, 'hasPets') ??
+      readFactor(rawNormalizedIntake, 'hasPets');
+    if (hasPets === true) score += 0.12;
+
+    return Math.min(score, 1.4);
+  }
+
+  private getRecurringMinutes(params: {
+    estimatedMinutes: number;
+    cadence: 'weekly' | 'biweekly' | 'monthly';
+    estimateSnapshot: unknown;
+  }) {
+    const cadenceMultiplier = this.cadenceMultiplierMap[params.cadence] ?? 1;
+    const loadMultiplier = this.getMaintenanceLoadMultiplier(
+      params.estimateSnapshot,
+    );
+
+    return Math.round(
+      params.estimatedMinutes * cadenceMultiplier * loadMultiplier,
+    );
   }
 
   async getOfferQuoteForBooking(bookingId: string) {
@@ -110,6 +217,7 @@ export class RecurringPlanService {
     return this.getRecurringOfferQuote({
       firstCleanPriceCents: this.getFirstCleanPriceCentsFromBooking(booking),
       estimatedMinutes,
+      estimateSnapshot: booking.estimateSnapshot,
     });
   }
 
@@ -229,11 +337,19 @@ export class RecurringPlanService {
 
     const basePrice = this.getFirstCleanPriceCentsFromBooking(booking);
 
-    const discountPercent = this.discountMap[params.cadence];
+    const recurringMinutes = this.getRecurringMinutes({
+      estimatedMinutes,
+      cadence: params.cadence,
+      estimateSnapshot: booking.estimateSnapshot,
+    });
 
     const pricePerVisitCents = Math.round(
-      basePrice * (1 - discountPercent / 100),
+      estimatedMinutes > 0 ? (recurringMinutes / estimatedMinutes) * basePrice : 0,
     );
+    const discountPercent =
+      basePrice > 0
+        ? Math.max(0, Math.round((1 - pricePerVisitCents / basePrice) * 100))
+        : 0;
 
     const now = new Date();
 
@@ -250,7 +366,7 @@ export class RecurringPlanService {
         cadence: params.cadence,
         status: 'active',
         pricePerVisitCents,
-        estimatedMinutes,
+        estimatedMinutes: recurringMinutes,
         discountPercent,
         startAt: now,
         nextRunAt,
