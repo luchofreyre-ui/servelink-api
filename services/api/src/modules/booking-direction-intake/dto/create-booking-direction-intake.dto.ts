@@ -1,5 +1,6 @@
 import { Transform, Type } from "class-transformer";
 import {
+  IsArray,
   IsIn,
   IsOptional,
   IsString,
@@ -143,6 +144,11 @@ export class CreateBookingDirectionIntakeDto {
   @IsString()
   @MaxLength(128)
   preferredFoId?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  requestedEnhancementIds?: string[];
 
   /** Only stored when service is deep clean; otherwise ignored. */
   @IsOptional()
