@@ -33,6 +33,7 @@ function bookingUrl(opts: {
   const q = new URLSearchParams();
   q.set("service", opts.service);
   q.set("pubPath", opts.pubPath);
+  q.set("intent", "RESET");
   q.set("homeSize", "1500");
   q.set("bedrooms", "2");
   q.set("bathrooms", "2");
