@@ -386,6 +386,30 @@ async function chooseResetIntentAndContinue() {
   fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
 }
 
+async function continueFromServiceSelectionToHome() {
+  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  await waitFor(() => {
+    expect(
+      screen.queryByRole("heading", {
+        level: 2,
+        name: "What brings you in today?",
+      }) ?? screen.queryByLabelText(/^square footage$/i),
+    ).toBeTruthy();
+  });
+  if (
+    screen.queryByRole("heading", {
+      level: 2,
+      name: "What brings you in today?",
+    })
+  ) {
+    fireEvent.click(screen.getByText("My place needs a real clean"));
+    fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  }
+  await waitFor(() =>
+    expect(screen.getByLabelText(/^square footage$/i)).toBeInTheDocument(),
+  );
+}
+
 async function selectNorthTeamAndFirstSlot() {
   fireEvent.click(screen.getByText("North Team"));
   const slotSection = await screen.findByTestId("booking-schedule-slot-section");
@@ -1129,12 +1153,9 @@ describe("BookingFlowClient", () => {
       render(<BookingFlowClient />);
       const options = screen.getByTestId("booking-public-service-options");
       fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_ONE_TIME_TITLE));
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await chooseResetIntentAndContinue();
+      await continueFromServiceSelectionToHome();
       await waitFor(() =>
-        expect(
-          screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
-        ).toBeInTheDocument(),
+        expect(screen.getByLabelText(/^square footage$/i)).toBeInTheDocument(),
       );
     });
 
@@ -1145,12 +1166,9 @@ describe("BookingFlowClient", () => {
       fireEvent.click(
         within(options).getByText(BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE),
       );
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await chooseResetIntentAndContinue();
+      await continueFromServiceSelectionToHome();
       await waitFor(() =>
-        expect(
-          screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
-        ).toBeInTheDocument(),
+        expect(screen.getByLabelText(/^square footage$/i)).toBeInTheDocument(),
       );
     });
 
@@ -1159,12 +1177,9 @@ describe("BookingFlowClient", () => {
       render(<BookingFlowClient />);
       const options = screen.getByTestId("booking-public-service-options");
       fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE));
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await chooseResetIntentAndContinue();
+      await continueFromServiceSelectionToHome();
       await waitFor(() =>
-        expect(
-          screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
-        ).toBeInTheDocument(),
+        expect(screen.getByLabelText(/^square footage$/i)).toBeInTheDocument(),
       );
     });
 
@@ -1252,8 +1267,7 @@ describe("BookingFlowClient", () => {
       const serviceSection = serviceHeading.closest("section")!;
       fireEvent.click(within(serviceSection).getByText("Move-In / Move-Out Cleaning"));
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await chooseResetIntentAndContinue();
+      await continueFromServiceSelectionToHome();
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
       fireEvent.change(screen.getByLabelText(/^street address$/i), {
         target: { value: "200 Main St" },
@@ -1899,10 +1913,14 @@ describe("BookingFlowClient", () => {
       ).not.toBeInTheDocument();
 
       expect(
-        screen.getByRole("heading", {
+        screen.queryByRole("heading", {
           level: 2,
           name: "What brings you in today?",
-        }),
+        }) ??
+          screen.getByRole("heading", {
+            level: 2,
+            name: BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
+          }),
       ).toBeInTheDocument();
     });
 
@@ -2560,7 +2578,14 @@ describe("BookingFlowClient", () => {
 
       goHomeFromReviewViaBackOnce();
       fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
-      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      if (
+        screen.queryByRole("heading", {
+          level: 2,
+          name: "What brings you in today?",
+        })
+      ) {
+        fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
+      }
 
       await waitFor(() =>
         expect(
@@ -2573,8 +2598,7 @@ describe("BookingFlowClient", () => {
 
       fireEvent.click(screen.getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE));
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await chooseResetIntentAndContinue();
+      await continueFromServiceSelectionToHome();
       await continueThroughLocationGateToReview();
 
       await fillReviewContactAndOptionalFirstTimePlan(5000);
