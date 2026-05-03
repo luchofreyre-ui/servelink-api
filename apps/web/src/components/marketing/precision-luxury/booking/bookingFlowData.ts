@@ -10,10 +10,11 @@ import {
 
 export const bookingSteps: BookingStepDefinition[] = [
   { id: "service", order: 1, label: "Service" },
-  { id: "home", order: 2, label: "Home Details" },
-  { id: "location", order: 3, label: "Service location" },
-  { id: "review", order: 4, label: "Review" },
-  { id: "schedule", order: 5, label: "Choose a time" },
+  { id: "intent", order: 2, label: "Intent" },
+  { id: "home", order: 3, label: "Home Details" },
+  { id: "location", order: 4, label: "Service location" },
+  { id: "review", order: 5, label: "Review" },
+  { id: "schedule", order: 6, label: "Choose a time" },
 ];
 
 export const bookingServiceOptions = bookingServiceCatalog.map((service) => ({
@@ -26,6 +27,7 @@ export const bookingServiceOptions = bookingServiceCatalog.map((service) => ({
 export const defaultBookingFlowState: BookingFlowState = {
   step: "service",
   serviceId: getBookingDefaultServiceId(),
+  intent: undefined,
   bookingPublicPath: "one_time_cleaning",
   homeSize: "",
   bedrooms: "",
@@ -53,6 +55,8 @@ export const defaultBookingFlowState: BookingFlowState = {
   surfaceComplexity: "average_furnishings",
   scopeIntensity: "full_home_refresh",
   selectedAddOns: [],
+  selectedUpsellIds: [],
+  recurringInterest: undefined,
   frequency: "One-Time",
   preferredTime: "",
   deepCleanProgram: "single_visit",

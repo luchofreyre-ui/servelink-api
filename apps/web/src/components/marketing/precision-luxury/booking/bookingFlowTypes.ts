@@ -1,4 +1,17 @@
-export type BookingStepId = "service" | "home" | "location" | "schedule" | "review";
+export type BookingStepId =
+  | "service"
+  | "intent"
+  | "home"
+  | "location"
+  | "schedule"
+  | "review";
+
+export enum CustomerIntent {
+  RESET = "RESET",
+  MAINTAIN = "MAINTAIN",
+  TOP_UP = "TOP_UP",
+  TRANSACTIONAL = "TRANSACTIONAL",
+}
 
 /** Anonymous /book surface only — recurring is a gated auth handoff, not an intake path. */
 export type BookingPublicPath =
@@ -136,6 +149,18 @@ export type BookingRecurringCadenceIntent =
   | "monthly"
   | "none";
 
+export type BookingRecurringInterestCadence =
+  | "weekly"
+  | "biweekly"
+  | "monthly"
+  | "not_sure";
+
+export type BookingRecurringInterest = {
+  interested: boolean;
+  cadence?: BookingRecurringInterestCadence;
+  note?: string;
+};
+
 export type BookingAvailableTeamOption = {
   id: string;
   displayName: string;
@@ -145,6 +170,8 @@ export type BookingAvailableTeamOption = {
 export type BookingFlowState = {
   step: BookingStepId;
   serviceId: string;
+  /** Client-only booking intent signal; not persisted to backend yet. */
+  intent?: CustomerIntent;
   /** Drives public step-1 cards, recurring gate, and copy — not sent as its own API field. */
   bookingPublicPath: BookingPublicPath;
   homeSize: string;
@@ -161,6 +188,10 @@ export type BookingFlowState = {
   scopeIntensity: BookingScopeIntensity;
   /** Controlled add-ons only; normalized when patched or parsed. */
   selectedAddOns: BookingAddOnToken[];
+  /** Intent-aware enhancement selections submitted as safe capture data. */
+  selectedUpsellIds: string[];
+  /** Optional recurring service interest; capture only, not a recurring contract. */
+  recurringInterest?: BookingRecurringInterest;
   /**
    * Public anonymous funnel always stores one-time; recurring cadence belongs in
    * `/customer` after login. Kept for payload compatibility with direction intake.
