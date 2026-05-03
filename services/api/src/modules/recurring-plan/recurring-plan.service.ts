@@ -30,30 +30,6 @@ function readEstimatedMinutes(outputJson: unknown) {
   return 120;
 }
 
-function readFirstCleanPriceCents(booking: {
-  estimatedTotalCentsSnapshot?: number | null;
-  quotedTotal?: unknown;
-  priceTotal?: number | null;
-}) {
-  if (
-    typeof booking.estimatedTotalCentsSnapshot === 'number' &&
-    booking.estimatedTotalCentsSnapshot > 0
-  ) {
-    return booking.estimatedTotalCentsSnapshot;
-  }
-
-  const quotedTotal = Number(booking.quotedTotal);
-  if (Number.isFinite(quotedTotal) && quotedTotal > 0) {
-    return Math.round(quotedTotal * 100);
-  }
-
-  if (typeof booking.priceTotal === 'number' && booking.priceTotal > 0) {
-    return Math.round(booking.priceTotal * 100);
-  }
-
-  return 0;
-}
-
 @Injectable()
 export class RecurringPlanService {
   constructor(private prisma: PrismaService) {}
@@ -69,6 +45,27 @@ export class RecurringPlanService {
     biweekly: 10,
     monthly: 5,
   } as const;
+
+  private getFirstCleanPriceCentsFromBooking(booking: {
+    estimatedTotalCentsSnapshot?: number | null;
+    quotedTotal?: unknown;
+    priceTotal?: number | null;
+  }) {
+    if (typeof booking.estimatedTotalCentsSnapshot === 'number') {
+      return booking.estimatedTotalCentsSnapshot;
+    }
+
+    const quotedTotal = Number(booking.quotedTotal);
+    if (Number.isFinite(quotedTotal)) {
+      return Math.round(quotedTotal * 100);
+    }
+
+    if (typeof booking.priceTotal === 'number') {
+      return Math.round(booking.priceTotal * 100);
+    }
+
+    return 0;
+  }
 
   getRecurringOfferQuote(params: {
     firstCleanPriceCents: number;
@@ -111,7 +108,7 @@ export class RecurringPlanService {
     );
 
     return this.getRecurringOfferQuote({
-      firstCleanPriceCents: readFirstCleanPriceCents(booking),
+      firstCleanPriceCents: this.getFirstCleanPriceCentsFromBooking(booking),
       estimatedMinutes,
     });
   }
@@ -230,7 +227,7 @@ export class RecurringPlanService {
       booking.estimateSnapshot?.outputJson,
     );
 
-    const basePrice = 0;
+    const basePrice = this.getFirstCleanPriceCentsFromBooking(booking);
 
     const discountPercent = this.discountMap[params.cadence];
 

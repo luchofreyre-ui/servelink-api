@@ -8,6 +8,9 @@ function completedBooking(overrides: Record<string, unknown> = {}) {
     status: "completed",
     publicDepositStatus: "deposit_required",
     scheduledStart: null,
+    estimatedTotalCentsSnapshot: null,
+    quotedTotal: null,
+    priceTotal: null,
     estimateSnapshot: {
       outputJson: {
         estimatedDurationMinutes: 180,
@@ -186,6 +189,66 @@ describe("RecurringPlanService V1", () => {
     expect(data.startAt).toBeInstanceOf(Date);
     expect(data.nextRunAt).toBeInstanceOf(Date);
     expect(data.nextRunAt.getTime()).toBeGreaterThan(data.startAt.getTime());
+  });
+
+  it("stores weekly discounted pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
+    const { service, prisma } = createService({
+      booking: assignedDepositConfirmedBooking({
+        estimatedTotalCentsSnapshot: 33042,
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "weekly",
+    });
+
+    expect(prisma.recurringPlan.create.mock.calls[0][0].data).toEqual(
+      expect.objectContaining({
+        pricePerVisitCents: 28086,
+        discountPercent: 15,
+      }),
+    );
+  });
+
+  it("stores biweekly discounted pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
+    const { service, prisma } = createService({
+      booking: assignedDepositConfirmedBooking({
+        estimatedTotalCentsSnapshot: 33042,
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "biweekly",
+    });
+
+    expect(prisma.recurringPlan.create.mock.calls[0][0].data).toEqual(
+      expect.objectContaining({
+        pricePerVisitCents: 29738,
+        discountPercent: 10,
+      }),
+    );
+  });
+
+  it("stores monthly discounted pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
+    const { service, prisma } = createService({
+      booking: assignedDepositConfirmedBooking({
+        estimatedTotalCentsSnapshot: 33042,
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "monthly",
+    });
+
+    expect(prisma.recurringPlan.create.mock.calls[0][0].data).toEqual(
+      expect.objectContaining({
+        pricePerVisitCents: 31390,
+        discountPercent: 5,
+      }),
+    );
   });
 
   it("records converted outcome after creation", async () => {
