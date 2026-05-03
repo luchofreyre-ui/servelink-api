@@ -1,6 +1,21 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
+function isEligibleForRecurringPlan(booking: {
+  status: string;
+  publicDepositStatus?: string | null;
+  scheduledStart?: Date | string | null;
+}) {
+  const isCompleted = booking.status === 'completed';
+
+  const isConfirmedPublicBooking =
+    booking.status === 'assigned' &&
+    booking.publicDepositStatus === 'deposit_succeeded' &&
+    Boolean(booking.scheduledStart);
+
+  return isCompleted || isConfirmedPublicBooking;
+}
+
 @Injectable()
 export class RecurringPlanService {
   constructor(private prisma: PrismaService) {}
@@ -115,8 +130,8 @@ export class RecurringPlanService {
       throw new BadRequestException('BOOKING_NOT_FOUND');
     }
 
-    if (booking.status !== 'completed') {
-      throw new BadRequestException('BOOKING_NOT_COMPLETED');
+    if (!isEligibleForRecurringPlan(booking)) {
+      throw new BadRequestException('BOOKING_NOT_RECURRING_ELIGIBLE');
     }
 
     const existing = await this.prisma.recurringPlan.findFirst({
