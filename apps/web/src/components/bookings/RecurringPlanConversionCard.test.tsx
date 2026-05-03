@@ -3,6 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { RecurringPlanConversionCard } from "./RecurringPlanConversionCard";
 
+vi.mock("@/lib/env", () => ({
+  WEB_ENV: {
+    apiBaseUrl: "https://api.example.test/api/v1",
+  },
+}));
+
 const quoteResponse = [
   {
     cadence: "weekly",
@@ -59,6 +65,18 @@ describe("RecurringPlanConversionCard", () => {
     expect(screen.getAllByText("180 minutes")).toHaveLength(3);
   });
 
+  it("fetches offer quote from configured API base", async () => {
+    mockFetch(async () => Response.json(quoteResponse));
+
+    render(<RecurringPlanConversionCard bookingId="bk_1" />);
+
+    await screen.findByText("Weekly");
+
+    expect(fetch).toHaveBeenCalledWith(
+      "https://api.example.test/api/v1/recurring-plans/offer-quote?bookingId=bk_1",
+    );
+  });
+
   it("shows first clean price", async () => {
     mockFetch(async () => Response.json(quoteResponse));
 
@@ -87,6 +105,35 @@ describe("RecurringPlanConversionCard", () => {
     expect(screen.getByText("$10 / 5%")).toBeInTheDocument();
   });
 
+  it("uses configured API base when creating plan", async () => {
+    const user = userEvent.setup();
+
+    mockFetch(async (input) => {
+      const url = String(input);
+      if (url.includes("/offer-quote")) {
+        return Response.json(quoteResponse);
+      }
+
+      return Response.json({ id: "rp_1" });
+    });
+
+    render(<RecurringPlanConversionCard bookingId="bk_1" />);
+
+    await user.click(
+      await screen.findByRole("button", { name: /start weekly plan/i }),
+    );
+
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(
+        "https://api.example.test/api/v1/recurring-plans/create-from-booking",
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify({ bookingId: "bk_1", cadence: "weekly" }),
+        }),
+      );
+    });
+  });
+
   it("still allows cadence click if quote fetch fails", async () => {
     const user = userEvent.setup();
 
@@ -96,7 +143,7 @@ describe("RecurringPlanConversionCard", () => {
         return new Response(null, { status: 500 });
       }
 
-      return new Promise<Response>(() => {});
+      return Response.json({ id: "rp_1" });
     });
 
     render(<RecurringPlanConversionCard bookingId="bk_1" />);
@@ -111,12 +158,61 @@ describe("RecurringPlanConversionCard", () => {
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        "/api/v1/recurring-plans/create-from-booking",
+        "https://api.example.test/api/v1/recurring-plans/create-from-booking",
         expect.objectContaining({
           method: "POST",
           body: JSON.stringify({ bookingId: "bk_1", cadence: "weekly" }),
         }),
       );
     });
+  });
+
+  it("failed create response does not show success", async () => {
+    const user = userEvent.setup();
+
+    mockFetch(async (input) => {
+      const url = String(input);
+      if (url.includes("/offer-quote")) {
+        return Response.json(quoteResponse);
+      }
+
+      return new Response(null, { status: 500 });
+    });
+
+    render(<RecurringPlanConversionCard bookingId="bk_1" />);
+
+    await user.click(
+      await screen.findByRole("button", { name: /start weekly plan/i }),
+    );
+
+    expect(
+      await screen.findByText("Unable to start recurring plan. Please try again."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Your weekly recurring plan has been started."),
+    ).not.toBeInTheDocument();
+  });
+
+  it("successful create response shows success", async () => {
+    const user = userEvent.setup();
+
+    mockFetch(async (input) => {
+      const url = String(input);
+      if (url.includes("/offer-quote")) {
+        return Response.json(quoteResponse);
+      }
+
+      return Response.json({ id: "rp_1" });
+    });
+
+    render(<RecurringPlanConversionCard bookingId="bk_1" />);
+
+    await user.click(
+      await screen.findByRole("button", { name: /start weekly plan/i }),
+    );
+
+    expect(
+      await screen.findByText("Your weekly recurring plan has been started."),
+    ).toBeInTheDocument();
   });
 });
