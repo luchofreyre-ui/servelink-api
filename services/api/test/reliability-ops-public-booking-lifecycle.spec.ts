@@ -1,5 +1,8 @@
+import { plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
 import { PaymentReliabilityService } from "../src/modules/bookings/payment-reliability/payment-reliability.service";
 import { ReliabilityOpsController } from "../src/common/reliability/reliability-ops.controller";
+import { PublicSlotConfirmDto } from "../src/modules/public-booking-orchestrator/dto/public-slot-confirm.dto";
 
 function anomaly(input: {
   kind: string;
@@ -145,16 +148,10 @@ describe("PaymentReliabilityService.getPublicBookingLifecycleSummary", () => {
     const paymentReliability = {
       getPublicBookingLifecycleSummary: jest.fn().mockResolvedValue(item),
     };
-    const recurringFollowUpTasks = {
-      syncRecurringFollowUpTasks: jest.fn(),
-      completeTask: jest.fn(),
-      dismissTask: jest.fn(),
-    };
     const controller = new ReliabilityOpsController(
       {} as never,
       {} as never,
       paymentReliability as never,
-      recurringFollowUpTasks as never,
     );
 
     await expect(controller.getPublicBookingLifecycleSummary()).resolves.toBe(item);
@@ -254,5 +251,22 @@ describe("PaymentReliabilityService.getPublicBookingLifecycleSummary", () => {
     });
     expect(summary.recentFailures).toEqual([]);
     expect(summary.alerts).toEqual([]);
+  });
+});
+
+describe("PublicSlotConfirmDto", () => {
+  it("accepts requestedEnhancementIds on public confirm payloads", async () => {
+    const dto = plainToInstance(PublicSlotConfirmDto, {
+      bookingId: "bk_hold",
+      holdId: "hold_1",
+      requestedEnhancementIds: ["inside_fridge", "inside_oven"],
+    });
+
+    const errors = await validate(dto, {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    });
+
+    expect(errors).toEqual([]);
   });
 });

@@ -33,6 +33,7 @@ function bookingUrl(opts: {
   const q = new URLSearchParams();
   q.set("service", opts.service);
   q.set("pubPath", opts.pubPath);
+  q.set("intent", "RESET");
   q.set("homeSize", "1500");
   q.set("bedrooms", "2");
   q.set("bathrooms", "2");
@@ -107,7 +108,7 @@ async function submitReviewAndWaitForSchedule(
       r.status() === 201,
     { timeout: 120_000 },
   );
-  await page.getByRole("button", { name: /see available teams/i }).click();
+  await page.getByRole("button", { name: /confirm booking/i }).click();
   const response = await submit201;
   const submitJson = (await response.json()) as {
     bookingId?: string | null;
