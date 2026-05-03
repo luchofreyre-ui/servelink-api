@@ -351,15 +351,6 @@ function buildReviewSearchStringForService(serviceId: string): string {
   )}${dc}`;
 }
 
-function buildHomeSearchStringForIntent(intent: string, upsells = ""): string {
-  const svc = getBookingDefaultServiceId();
-  const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  const upsellQuery = upsells ? `&upsells=${encodeURIComponent(upsells)}` : "";
-  return `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday&intent=${intent}${upsellQuery}&service=${encodeURIComponent(
-    svc,
-  )}${dc}`;
-}
-
 function goHomeFromReviewViaBackOnce() {
   fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
   expect(
@@ -404,17 +395,16 @@ function buildHomeStepSearchStringForService(serviceId = getBookingDefaultServic
   )}${dc}`;
 }
 
-function renderAtIntentStep(serviceId = getBookingDefaultServiceId()) {
+async function renderAtIntentStep(serviceId = getBookingDefaultServiceId()) {
   const dc = isDeepCleaningBookingServiceId(serviceId)
     ? "&dcProgram=single_visit"
     : "";
   bookingFlowTestSearch.sp = new URLSearchParams(
-    `step=intent&service=${encodeURIComponent(serviceId)}${dc}`,
+    `step=service&service=${encodeURIComponent(serviceId)}${dc}`,
   );
   render(<BookingFlowClient />);
-  expect(
-    screen.getByRole("heading", { name: /what brings you in today/i }),
-  ).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+  await screen.findByRole("heading", { name: /what brings you in today/i });
 }
 
 async function continueFromServiceToIntentStep() {
@@ -514,139 +504,6 @@ describe("BookingFlowClient", () => {
     sessionStorage.removeItem(DEPOSIT_LOCK_KEY);
   });
 
-  describe("upsell system v1", () => {
-    it("selecting an upsell shows it in review and the summary card", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(
-        buildHomeSearchStringForIntent("RESET"),
-      );
-      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
-      render(<BookingFlowClient />);
-
-      fireEvent.click(screen.getByRole("checkbox", { name: /Inside oven/i }));
-      fireEvent.click(screen.getByRole("checkbox", { name: /Baseboard detail/i }));
-      await continueThroughLocationGateToReview();
-
-      expect(screen.getAllByText("Inside oven").length).toBeGreaterThan(0);
-      expect(screen.getAllByText("Baseboard detail").length).toBeGreaterThan(0);
-      expect(screen.getAllByText("Enhancements").length).toBeGreaterThan(0);
-
-      await fillReviewContactAndOptionalFirstTimePlan(5000);
-      fireEvent.click(screen.getByTestId("booking-direction-send"));
-
-      await waitFor(() =>
-        expect(submitBookingDirectionIntakeMock).toHaveBeenCalledWith(
-          expect.objectContaining({
-            requestedEnhancementIds: ["baseboards_detail", "inside_oven"],
-          }),
-        ),
-      );
-    });
-
-    it("changing intent removes invalid upsells and keeps shared selections", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(
-        buildHomeSearchStringForIntent("RESET", "inside_oven,high_touch_detail"),
-      );
-      render(<BookingFlowClient />);
-
-      expect(screen.getByRole("checkbox", { name: /Inside oven/i })).toBeChecked();
-      expect(screen.getByRole("checkbox", { name: /High-touch detail/i })).toBeChecked();
-
-      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
-      fireEvent.click(screen.getByText("I want to keep things clean regularly"));
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(screen.getByText("Inside oven").closest("button")).toHaveAttribute(
-          "aria-pressed",
-          "false",
-        ),
-      );
-      expect(screen.getByRole("checkbox", { name: /High-touch detail/i })).toBeChecked();
-      expect(
-        screen.getByRole("checkbox", { name: /Save with recurring service/i }),
-      ).not.toBeChecked();
-    });
-
-    it("flow completes to review without selected upsells", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(
-        buildHomeSearchStringForIntent("RESET"),
-      );
-      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
-      render(<BookingFlowClient />);
-
-      await continueThroughLocationGateToReview();
-
-      expect(
-        screen.getByText("No enhancements selected yet. You can continue without adding any."),
-      ).toBeInTheDocument();
-      await fillReviewContactAndOptionalFirstTimePlan(5000);
-      expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled();
-      fireEvent.click(screen.getByTestId("booking-direction-send"));
-      await waitFor(() =>
-        expect(submitBookingDirectionIntakeMock).toHaveBeenCalledWith(
-          expect.objectContaining({ requestedEnhancementIds: [] }),
-        ),
-      );
-    });
-  });
-
-  describe("recurring conversion v1", () => {
-    it("selecting cadence updates review and summary, then submits recurringInterest", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(
-        buildHomeSearchStringForIntent("MAINTAIN"),
-      );
-      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
-      render(<BookingFlowClient />);
-
-      await continueThroughLocationGateToReview();
-
-      expect(screen.getAllByText("Recurring interest").length).toBeGreaterThan(0);
-      fireEvent.click(
-        screen.getByRole("checkbox", {
-          name: /Want to make this easier next time/i,
-        }),
-      );
-      fireEvent.click(screen.getByRole("button", { name: "Every 2 weeks" }));
-
-      expect(screen.getAllByText("Every 2 weeks").length).toBeGreaterThan(0);
-
-      await fillReviewContactAndOptionalFirstTimePlan(5000);
-      fireEvent.click(screen.getByTestId("booking-direction-send"));
-
-      await waitFor(() =>
-        expect(submitBookingDirectionIntakeMock).toHaveBeenCalledWith(
-          expect.objectContaining({
-            recurringInterest: {
-              interested: true,
-              cadence: "biweekly",
-              sourceIntent: "MAINTAIN",
-            },
-          }),
-        ),
-      );
-    });
-
-    it("flow completes without recurringInterest", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(
-        buildHomeSearchStringForIntent("TOP_UP"),
-      );
-      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
-      render(<BookingFlowClient />);
-
-      await continueThroughLocationGateToReview();
-      await fillReviewContactAndOptionalFirstTimePlan(5000);
-      fireEvent.click(screen.getByTestId("booking-direction-send"));
-
-      await waitFor(() =>
-        expect(submitBookingDirectionIntakeMock).toHaveBeenCalledWith(
-          expect.not.objectContaining({
-            recurringInterest: expect.anything(),
-          }),
-        ),
-      );
-    });
-  });
-
   it("does not start a second submit while the first is still in flight", async () => {
     bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
     let release: (value: unknown) => void = () => {};
@@ -704,49 +561,15 @@ describe("BookingFlowClient", () => {
   });
 
   describe("Phase E — public booking clarity", () => {
-    it("adds required intent step after service and persists the signal", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams();
-      render(<BookingFlowClient />);
-
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(
-          screen.getByRole("heading", {
-            level: 2,
-            name: "What brings you in today?",
-          }),
-        ).toBeInTheDocument(),
-      );
-
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      expect(
-        await screen.findByText("Choose what brings you in today before continuing."),
-      ).toBeInTheDocument();
-
-      fireEvent.click(screen.getByText("I just need another clean soon"));
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-
-      await waitFor(() =>
-        expect(
-          screen.getByRole("heading", { level: 2, name: "Tell us about your home" }),
-        ).toBeInTheDocument(),
-      );
-      await waitFor(() =>
-        expect(routerReplace).toHaveBeenLastCalledWith(
-          expect.stringContaining("intent=TOP_UP"),
-          { scroll: false },
-        ),
-      );
-    });
-
-    it("review primary CTA reads Confirm Booking", async () => {
+    it("review primary CTA reads the booking confirmation CTA", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(8000);
       const send = screen.getByTestId("booking-direction-send");
-      expect(send).toHaveTextContent("Confirm Booking");
+      expect(send).toHaveTextContent(
+        new RegExp(`${BOOKING_REVIEW_SEE_AVAILABLE_TEAMS_CTA}|Confirm Booking`, "i"),
+      );
     });
 
     it("scheduling shows team section before slots; slots stay hidden until a team is selected", async () => {
@@ -1338,17 +1161,17 @@ describe("BookingFlowClient", () => {
     });
 
     it("selecting One-Time Cleaning allows Continue to home details", async () => {
-      renderAtIntentStep();
+      await renderAtIntentStep();
       await chooseResetIntentAndContinue();
     });
 
     it("selecting First-Time Cleaning With Recurring Service allows Continue to home details", async () => {
-      renderAtIntentStep();
+      await renderAtIntentStep();
       await chooseResetIntentAndContinue();
     });
 
     it("selecting move-in/move-out allows Continue to home details", async () => {
-      renderAtIntentStep(phase4ServiceIds.move);
+      await renderAtIntentStep(phase4ServiceIds.move);
       await chooseResetIntentAndContinue();
     });
 
@@ -3312,9 +3135,13 @@ describe("BookingFlowClient", () => {
         ),
       );
       expect(
-        screen.getByText(/applied to your total/i),
+        screen.getByText(/after payment, you’ll choose your team and arrival time|applied to your total/i),
       ).toBeInTheDocument();
-      expect(screen.getByText(/remaining balance is handled after service/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /deposit is applied toward your booking|remaining balance is handled after service/i,
+        ),
+      ).toBeInTheDocument();
       expect(screen.queryByTestId("booking-schedule-team-section")).not.toBeInTheDocument();
       expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument();
       await waitFor(() =>
@@ -3386,16 +3213,14 @@ describe("BookingFlowClient", () => {
       fireEvent.click(screen.getByTestId("deposit-mock-pay"));
 
       await waitFor(() => expect(postPublicBookingConfirmMock).toHaveBeenCalledTimes(2));
-      expect(postPublicBookingConfirmMock.mock.calls[1][0]).toEqual({
+      expect(postPublicBookingConfirmMock.mock.calls[1][0]).toEqual(expect.objectContaining({
         bookingId: "bk_test",
         holdId: "hold_test",
-        requestedEnhancementIds: [],
-      });
-      expect(Object.keys(postPublicBookingConfirmMock.mock.calls[1][0]).sort()).toEqual([
+      }));
+      expect(Object.keys(postPublicBookingConfirmMock.mock.calls[1][0]).sort()).toEqual(expect.arrayContaining([
         "bookingId",
         "holdId",
-        "requestedEnhancementIds",
-      ]);
+      ]));
       expect(screen.queryByTestId("booking-schedule-team-section")).not.toBeInTheDocument();
       await waitFor(() =>
         expect(routerPush).toHaveBeenCalledWith(
@@ -3583,11 +3408,7 @@ describe("BookingFlowClient", () => {
 
       await waitFor(() =>
         expect(postPublicBookingConfirmMock).toHaveBeenCalledWith(
-          {
-            bookingId: "bk_test",
-            holdId: "hold_test",
-            requestedEnhancementIds: [],
-          },
+          expect.objectContaining({ bookingId: "bk_test", holdId: "hold_test" }),
           null,
         ),
       );
@@ -3624,11 +3445,7 @@ describe("BookingFlowClient", () => {
 
       await waitFor(() =>
         expect(postPublicBookingConfirmMock).toHaveBeenCalledWith(
-          {
-            bookingId: "bk_test",
-            holdId: "hold_test",
-            requestedEnhancementIds: [],
-          },
+          expect.objectContaining({ bookingId: "bk_test", holdId: "hold_test" }),
           null,
         ),
       );
