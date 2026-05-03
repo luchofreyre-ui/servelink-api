@@ -108,7 +108,7 @@ async function submitReviewAndWaitForSchedule(
       r.status() === 201,
     { timeout: 120_000 },
   );
-  await page.getByRole("button", { name: /see available teams/i }).click();
+  await page.getByRole("button", { name: /confirm booking/i }).click();
   const response = await submit201;
   const submitJson = (await response.json()) as {
     bookingId?: string | null;
