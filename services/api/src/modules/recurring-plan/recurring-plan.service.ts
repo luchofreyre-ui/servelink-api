@@ -16,6 +16,44 @@ function isEligibleForRecurringPlan(booking: {
   return isCompleted || isConfirmedPublicBooking;
 }
 
+function readEstimatedMinutes(outputJson: unknown) {
+  if (outputJson && typeof outputJson === 'object') {
+    const estimatedDurationMinutes = (
+      outputJson as { estimatedDurationMinutes?: unknown }
+    ).estimatedDurationMinutes;
+
+    if (typeof estimatedDurationMinutes === 'number') {
+      return estimatedDurationMinutes;
+    }
+  }
+
+  return 120;
+}
+
+function readFirstCleanPriceCents(booking: {
+  estimatedTotalCentsSnapshot?: number | null;
+  quotedTotal?: unknown;
+  priceTotal?: number | null;
+}) {
+  if (
+    typeof booking.estimatedTotalCentsSnapshot === 'number' &&
+    booking.estimatedTotalCentsSnapshot > 0
+  ) {
+    return booking.estimatedTotalCentsSnapshot;
+  }
+
+  const quotedTotal = Number(booking.quotedTotal);
+  if (Number.isFinite(quotedTotal) && quotedTotal > 0) {
+    return Math.round(quotedTotal * 100);
+  }
+
+  if (typeof booking.priceTotal === 'number' && booking.priceTotal > 0) {
+    return Math.round(booking.priceTotal * 100);
+  }
+
+  return 0;
+}
+
 @Injectable()
 export class RecurringPlanService {
   constructor(private prisma: PrismaService) {}
@@ -31,6 +69,52 @@ export class RecurringPlanService {
     biweekly: 10,
     monthly: 5,
   } as const;
+
+  getRecurringOfferQuote(params: {
+    firstCleanPriceCents: number;
+    estimatedMinutes: number;
+  }) {
+    const cadences = ['weekly', 'biweekly', 'monthly'] as const;
+
+    return cadences.map((cadence) => {
+      const discountPercent = this.discountMap[cadence];
+      const recurringPriceCents = Math.round(
+        params.firstCleanPriceCents * (1 - discountPercent / 100),
+      );
+
+      return {
+        cadence,
+        firstCleanPriceCents: params.firstCleanPriceCents,
+        recurringPriceCents,
+        savingsCents: Math.max(
+          0,
+          params.firstCleanPriceCents - recurringPriceCents,
+        ),
+        discountPercent,
+        estimatedMinutes: params.estimatedMinutes,
+      };
+    });
+  }
+
+  async getOfferQuoteForBooking(bookingId: string) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { estimateSnapshot: true },
+    });
+
+    if (!booking) {
+      throw new BadRequestException('BOOKING_NOT_FOUND');
+    }
+
+    const estimatedMinutes = readEstimatedMinutes(
+      booking.estimateSnapshot?.outputJson,
+    );
+
+    return this.getRecurringOfferQuote({
+      firstCleanPriceCents: readFirstCleanPriceCents(booking),
+      estimatedMinutes,
+    });
+  }
 
   async listForAdmin(params?: {
     status?: 'active' | 'paused' | 'cancelled';
@@ -142,10 +226,9 @@ export class RecurringPlanService {
       throw new BadRequestException('RECURRING_PLAN_ALREADY_EXISTS');
     }
 
-    const outputJson = booking.estimateSnapshot?.outputJson as
-      | { estimatedDurationMinutes?: number }
-      | undefined;
-    const estimatedMinutes = outputJson?.estimatedDurationMinutes ?? 120;
+    const estimatedMinutes = readEstimatedMinutes(
+      booking.estimateSnapshot?.outputJson,
+    );
 
     const basePrice = 0;
 
