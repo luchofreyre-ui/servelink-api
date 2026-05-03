@@ -17,7 +17,6 @@ import type {
   CustomerIntent,
   BookingTransitionState,
 } from "./bookingFlowTypes";
-import { CustomerIntent as CustomerIntentEnum } from "./bookingFlowTypes";
 import { defaultBookingFlowState } from "./bookingFlowData";
 import {
   isBookingMoveTransitionServiceId,
@@ -97,10 +96,10 @@ function isValidTime(value: string | null): value is BookingTimeOption {
 
 function isValidCustomerIntent(value: string | null): value is CustomerIntent {
   return (
-    value === CustomerIntentEnum.RESET ||
-    value === CustomerIntentEnum.MAINTAIN ||
-    value === CustomerIntentEnum.TOP_UP ||
-    value === CustomerIntentEnum.TRANSACTIONAL
+    value === "RESET" ||
+    value === "MAINTAIN" ||
+    value === "TOP_UP" ||
+    value === "TRANSACTIONAL"
   );
 }
 
