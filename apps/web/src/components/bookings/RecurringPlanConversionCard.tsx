@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { WEB_ENV } from '@/lib/env';
 
 type RecurringCadence = 'weekly' | 'biweekly' | 'monthly';
 
@@ -63,6 +64,10 @@ export function RecurringPlanConversionCard({
     useState<RecurringCadence | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(true);
   const [quoteError, setQuoteError] = useState(false);
+  const [createError, setCreateError] = useState(false);
+  const [successCadence, setSuccessCadence] = useState<RecurringCadence | null>(
+    null,
+  );
   const [quotes, setQuotes] = useState<RecurringOfferQuote[] | null>(null);
 
   useEffect(() => {
@@ -74,7 +79,7 @@ export function RecurringPlanConversionCard({
 
       try {
         const response = await fetch(
-          `/api/v1/recurring-plans/offer-quote?bookingId=${encodeURIComponent(
+          `${WEB_ENV.apiBaseUrl}/recurring-plans/offer-quote?bookingId=${encodeURIComponent(
             bookingId,
           )}`,
         );
@@ -113,15 +118,29 @@ export function RecurringPlanConversionCard({
 
   async function createPlan(cadence: RecurringCadence) {
     setSubmittingCadence(cadence);
+    setCreateError(false);
+    setSuccessCadence(null);
 
-    await fetch('/api/v1/recurring-plans/create-from-booking', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bookingId, cadence }),
-    });
+    try {
+      const response = await fetch(
+        `${WEB_ENV.apiBaseUrl}/recurring-plans/create-from-booking`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bookingId, cadence }),
+        },
+      );
 
-    setSubmittingCadence(null);
-    window.location.reload();
+      if (!response.ok) {
+        throw new Error('Unable to start recurring plan.');
+      }
+
+      setSuccessCadence(cadence);
+    } catch {
+      setCreateError(true);
+    } finally {
+      setSubmittingCadence(null);
+    }
   }
 
   return (
@@ -152,6 +171,18 @@ export function RecurringPlanConversionCard({
       {shouldShowReviewPriceNote ? (
         <p className="text-sm text-gray-600">
           Recurring price will be confirmed by the team after booking review.
+        </p>
+      ) : null}
+
+      {createError ? (
+        <p className="text-sm text-red-600">
+          Unable to start recurring plan. Please try again.
+        </p>
+      ) : null}
+
+      {successCadence ? (
+        <p className="text-sm text-green-700">
+          Your {successCadence} recurring plan has been started.
         </p>
       ) : null}
 
