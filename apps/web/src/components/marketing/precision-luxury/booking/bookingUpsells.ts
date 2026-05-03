@@ -1,4 +1,9 @@
-import { CustomerIntent } from "./bookingFlowTypes";
+import type { CustomerIntent } from "./bookingFlowTypes";
+
+const CUSTOMER_INTENT_RESET = "RESET" as CustomerIntent;
+const CUSTOMER_INTENT_MAINTAIN = "MAINTAIN" as CustomerIntent;
+const CUSTOMER_INTENT_TOP_UP = "TOP_UP" as CustomerIntent;
+const CUSTOMER_INTENT_TRANSACTIONAL = "TRANSACTIONAL" as CustomerIntent;
 
 export type BookingUpsellOption = {
   id: string;
@@ -11,10 +16,10 @@ export type BookingUpsellOption = {
 };
 
 const ALL_INTENTS = [
-  CustomerIntent.RESET,
-  CustomerIntent.MAINTAIN,
-  CustomerIntent.TOP_UP,
-  CustomerIntent.TRANSACTIONAL,
+  CUSTOMER_INTENT_RESET,
+  CUSTOMER_INTENT_MAINTAIN,
+  CUSTOMER_INTENT_TOP_UP,
+  CUSTOMER_INTENT_TRANSACTIONAL,
 ];
 
 export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
@@ -22,7 +27,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "inside_oven",
     label: "Inside oven",
     description: "Good for built-up grease, spills, and reset-level kitchens.",
-    intent: [CustomerIntent.RESET],
+    intent: [CUSTOMER_INTENT_RESET],
     category: "deep_area",
     pricingLabel: "Quoted after review",
   },
@@ -30,7 +35,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "inside_fridge",
     label: "Inside fridge",
     description: "Helpful when the kitchen needs a true reset.",
-    intent: [CustomerIntent.RESET],
+    intent: [CUSTOMER_INTENT_RESET],
     category: "deep_area",
     pricingLabel: "Quoted after review",
   },
@@ -38,7 +43,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "baseboards_detail",
     label: "Baseboard detail",
     description: "Adds extra attention to dust lines and edge buildup.",
-    intent: [CustomerIntent.RESET],
+    intent: [CUSTOMER_INTENT_RESET],
     category: "deep_area",
     pricingLabel: "Available as an add-on",
   },
@@ -46,7 +51,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "cabinet_exteriors",
     label: "Cabinet exterior detail",
     description: "Wipes down visible cabinet fronts and high-touch surfaces.",
-    intent: [CustomerIntent.RESET],
+    intent: [CUSTOMER_INTENT_RESET],
     category: "deep_area",
     pricingLabel: "Ask us to include this",
   },
@@ -54,7 +59,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "recurring_plan_prompt",
     label: "Save with recurring service",
     description: "Ask us about weekly, biweekly, or monthly upkeep.",
-    intent: [CustomerIntent.MAINTAIN],
+    intent: [CUSTOMER_INTENT_MAINTAIN],
     category: "recurring",
     pricingLabel: "Ask us to include this",
     trustNote: "No recurring plan is created until you approve it.",
@@ -64,7 +69,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     label: "Rotate one deep area",
     description:
       "Add one focus area each visit without turning every clean into a deep clean.",
-    intent: [CustomerIntent.MAINTAIN],
+    intent: [CUSTOMER_INTENT_MAINTAIN],
     category: "recurring",
     pricingLabel: "Quoted after review",
   },
@@ -73,7 +78,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     label: "Pet hair focus",
     description:
       "Extra attention for fur-prone floors, furniture edges, and corners.",
-    intent: [CustomerIntent.MAINTAIN],
+    intent: [CUSTOMER_INTENT_MAINTAIN],
     category: "comfort",
     pricingLabel: "Ask us to include this",
   },
@@ -81,7 +86,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "quick_refresh_focus",
     label: "Quick refresh focus",
     description: "Prioritize visible areas so the home feels clean again fast.",
-    intent: [CustomerIntent.TOP_UP],
+    intent: [CUSTOMER_INTENT_TOP_UP],
     category: "priority",
     pricingLabel: "Ask us to include this",
   },
@@ -89,7 +94,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "same_priorities_as_last_time",
     label: "Match my last clean",
     description: "Keep the same priorities from your most recent visit.",
-    intent: [CustomerIntent.TOP_UP],
+    intent: [CUSTOMER_INTENT_TOP_UP],
     category: "priority",
     pricingLabel: "Ask us to include this",
     trustNote: "We’ll confirm details if we need more context.",
@@ -98,7 +103,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "priority_return_window",
     label: "Priority return window",
     description: "Let us know you prefer the soonest reasonable return slot.",
-    intent: [CustomerIntent.TOP_UP],
+    intent: [CUSTOMER_INTENT_TOP_UP],
     category: "priority",
     pricingLabel: "Ask us to include this",
   },
@@ -106,7 +111,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "move_ready_checklist",
     label: "Move-ready checklist",
     description: "Focus on the surfaces that matter most before handoff.",
-    intent: [CustomerIntent.TRANSACTIONAL],
+    intent: [CUSTOMER_INTENT_TRANSACTIONAL],
     category: "move_ready",
     pricingLabel: "Ask us to include this",
   },
@@ -114,7 +119,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "inside_cabinets",
     label: "Inside empty cabinets",
     description: "Best when cabinets are empty before move-in or move-out.",
-    intent: [CustomerIntent.TRANSACTIONAL],
+    intent: [CUSTOMER_INTENT_TRANSACTIONAL],
     category: "move_ready",
     pricingLabel: "Quoted after review",
   },
@@ -122,7 +127,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
     id: "appliance_exteriors",
     label: "Appliance exterior detail",
     description: "Extra attention to visible appliance faces and handles.",
-    intent: [CustomerIntent.TRANSACTIONAL],
+    intent: [CUSTOMER_INTENT_TRANSACTIONAL],
     category: "move_ready",
     pricingLabel: "Available as an add-on",
   },
