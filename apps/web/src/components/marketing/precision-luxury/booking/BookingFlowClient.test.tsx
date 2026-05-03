@@ -400,11 +400,10 @@ async function renderAtIntentStep(serviceId = getBookingDefaultServiceId()) {
     ? "&dcProgram=single_visit"
     : "";
   bookingFlowTestSearch.sp = new URLSearchParams(
-    `step=service&service=${encodeURIComponent(serviceId)}${dc}`,
+    `step=intent&service=${encodeURIComponent(serviceId)}${dc}`,
   );
   render(<BookingFlowClient />);
-  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-  await screen.findByRole("heading", { name: /what brings you in today/i });
+  screen.getByRole("heading", { name: /what brings you in today/i });
 }
 
 async function continueFromServiceToIntentStep() {
