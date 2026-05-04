@@ -10,11 +10,10 @@ import {
 
 export const bookingSteps: BookingStepDefinition[] = [
   { id: "service", order: 1, label: "Service" },
-  { id: "intent", order: 2, label: "Intent" },
-  { id: "home", order: 3, label: "Home Details" },
-  { id: "location", order: 4, label: "Service location" },
-  { id: "review", order: 5, label: "Review" },
-  { id: "schedule", order: 6, label: "Choose a time" },
+  { id: "home", order: 2, label: "Home Details" },
+  { id: "location", order: 3, label: "Service location" },
+  { id: "review", order: 4, label: "Review" },
+  { id: "schedule", order: 5, label: "Choose a time" },
 ];
 
 export const bookingServiceOptions = bookingServiceCatalog.map((service) => ({

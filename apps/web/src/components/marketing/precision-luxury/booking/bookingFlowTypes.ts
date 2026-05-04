@@ -1,6 +1,5 @@
 export type BookingStepId =
   | "service"
-  | "intent"
   | "home"
   | "location"
   | "schedule"
@@ -24,9 +23,7 @@ export type BookingPublicPath =
 export type BookingFirstTimePostEstimateVisitChoice =
   | ""
   | "one_visit"
-  | "two_visits"
-  | "three_visits"
-  | "convert_recurring";
+  | "three_visit_reset";
 
 /** Client-only preview planning band (no scores or backend certainty). */
 export type BookingPreviewConfidenceBand =
@@ -213,7 +210,7 @@ export type BookingFlowState = {
   serviceLocationUnit: string;
   /** Legacy single line; migrated from URL `locAddr` when structured fields are empty. */
   serviceLocationAddressLine: string;
-  /** First-time cleaning — chosen only after estimate is ready on review. */
+  /** Opening clean structure — chosen only after estimate is ready on review. */
   firstTimePostEstimateVisitChoice: BookingFirstTimePostEstimateVisitChoice;
   halfBathrooms: BookingHalfBathroomsKey;
   intakeFloors: BookingIntakeFloors;

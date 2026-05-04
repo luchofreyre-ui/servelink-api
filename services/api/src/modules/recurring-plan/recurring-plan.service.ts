@@ -66,6 +66,8 @@ export type RecurringCadenceValue =
   | 'biweekly'
   | 'monthly';
 
+export type RecurringVisitStructure = 'one_visit' | 'three_visit_reset';
+
 @Injectable()
 export class RecurringPlanService {
   private readonly logger = new Logger(RecurringPlanService.name);
@@ -107,6 +109,23 @@ export class RecurringPlanService {
       | Record<string, unknown>
       | null;
     return this.normalizeCadence(input?.recurring_cadence_intent);
+  }
+
+  private getSelectedVisitStructureFromEstimateSnapshot(
+    estimateSnapshot: unknown,
+  ): RecurringVisitStructure {
+    const inputJson =
+      estimateSnapshot &&
+      typeof estimateSnapshot === 'object' &&
+      'inputJson' in estimateSnapshot
+        ? (estimateSnapshot as { inputJson?: unknown }).inputJson
+        : null;
+    const input = parseEstimateInputJson(inputJson) as
+      | Record<string, unknown>
+      | null;
+    return input?.first_time_visit_program === 'three_visit'
+      ? 'three_visit_reset'
+      : 'one_visit';
   }
 
   private getFirstCleanPriceCentsFromBooking(booking: {
@@ -455,6 +474,9 @@ export class RecurringPlanService {
       ? this.getNextRunAt({
           scheduledStart: new Date(booking.scheduledStart),
           cadence,
+          visitStructure: this.getSelectedVisitStructureFromEstimateSnapshot(
+            booking.estimateSnapshot,
+          ),
         })
       : new Date(now.getTime() + this.cadenceDayMap[cadence] * 24 * 60 * 60 * 1000);
 
@@ -485,9 +507,18 @@ export class RecurringPlanService {
   private getNextRunAt(params: {
     scheduledStart: Date;
     cadence: RecurringCadenceValue;
+    visitStructure?: RecurringVisitStructure;
   }) {
-    const next = new Date(params.scheduledStart);
-    next.setDate(next.getDate() + this.cadenceDayMap[params.cadence]);
+    return this.addDays(
+      params.scheduledStart,
+      (params.visitStructure === 'three_visit_reset' ? 28 : 0) +
+        this.cadenceDayMap[params.cadence],
+    );
+  }
+
+  private addDays(date: Date, days: number) {
+    const next = new Date(date);
+    next.setDate(next.getDate() + days);
     return next;
   }
 
@@ -510,10 +541,14 @@ export class RecurringPlanService {
     const cadence = this.getSelectedCadenceFromEstimateSnapshot(
       booking.estimateSnapshot,
     );
+    const visitStructure = this.getSelectedVisitStructureFromEstimateSnapshot(
+      booking.estimateSnapshot,
+    );
     if (!cadence) {
       this.logAutoCreate({
         bookingId,
         cadence: null,
+        visitStructure,
         result: 'skipped',
         reason: 'cadence_missing',
       });
@@ -522,19 +557,25 @@ export class RecurringPlanService {
 
     try {
       const plan = await this.createFromBooking({ bookingId, cadence });
-      this.logAutoCreate({ bookingId, cadence, result: 'created' });
+      this.logAutoCreate({ bookingId, cadence, visitStructure, result: 'created' });
       return { result: 'created' as const, plan };
     } catch (error) {
       const message =
         error instanceof Error ? error.message : String(error ?? 'unknown');
       if (message.includes('RECURRING_PLAN_ALREADY_EXISTS')) {
-        this.logAutoCreate({ bookingId, cadence, result: 'already_exists' });
+        this.logAutoCreate({
+          bookingId,
+          cadence,
+          visitStructure,
+          result: 'already_exists',
+        });
         return { result: 'already_exists' as const };
       }
       if (message.includes('BOOKING_NOT_RECURRING_ELIGIBLE')) {
         this.logAutoCreate({
           bookingId,
           cadence,
+          visitStructure,
           result: 'skipped',
           reason: 'booking_not_eligible',
         });
@@ -544,6 +585,7 @@ export class RecurringPlanService {
       this.logAutoCreate({
         bookingId,
         cadence,
+        visitStructure,
         result: 'failed',
         reason: message,
       });
@@ -554,6 +596,7 @@ export class RecurringPlanService {
   private logAutoCreate(args: {
     bookingId: string;
     cadence: RecurringCadenceValue | null;
+    visitStructure?: RecurringVisitStructure;
     result: 'created' | 'already_exists' | 'skipped' | 'failed';
     reason?: string;
   }) {
@@ -562,6 +605,7 @@ export class RecurringPlanService {
         event: 'recurring_plan_auto_create_after_deposit',
         bookingId: args.bookingId,
         cadence: args.cadence,
+        visitStructure: args.visitStructure ?? 'one_visit',
         result: args.result,
         ...(args.reason ? { reason: args.reason } : {}),
       }),

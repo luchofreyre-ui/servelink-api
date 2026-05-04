@@ -43,7 +43,6 @@ import { normalizeBookingUpsellIds } from "./bookingUpsells";
 
 const validSteps: BookingStepId[] = [
   "service",
-  "intent",
   "home",
   "location",
   "review",
@@ -64,11 +63,10 @@ const validTimes: BookingTimeOption[] = [
 
 const STEP_RANK: Record<BookingStepId, number> = {
   service: 0,
-  intent: 1,
-  home: 2,
-  location: 3,
-  review: 4,
-  schedule: 5,
+  home: 1,
+  location: 2,
+  review: 3,
+  schedule: 4,
 };
 
 /** Serialized when the customer is on the recurring auth gate (never `service=recurring`). */
@@ -458,7 +456,6 @@ export function isPublicScheduleSelectionComplete(
 export function computeMaxReadyStep(s: BookingFlowState): BookingStepId {
   if (s.bookingPublicPath === "recurring_auth_gate") return "service";
   if (!isPublicAnonymousBookingServiceId(s.serviceId)) return "service";
-  if (!s.intent) return "intent";
   if (!isHomeDetailsComplete(s)) {
     return "home";
   }
@@ -626,12 +623,13 @@ export function applyServiceLocationFieldChangeToBookingFlowState(
 
 const BOOKING_FIRST_TIME_POST_ESTIMATE_VALUES = new Set<
   BookingFirstTimePostEstimateVisitChoice
->(["", "one_visit", "two_visits", "three_visits", "convert_recurring"]);
+>(["", "one_visit", "three_visit_reset"]);
 
 export function parseBookingFirstTimePostEstimateVisitChoiceParam(
   raw: string | null | undefined,
 ): BookingFirstTimePostEstimateVisitChoice {
   const v = String(raw ?? "").trim();
+  if (v === "three_visits") return "three_visit_reset";
   if (BOOKING_FIRST_TIME_POST_ESTIMATE_VALUES.has(v as BookingFirstTimePostEstimateVisitChoice)) {
     return v as BookingFirstTimePostEstimateVisitChoice;
   }
@@ -643,14 +641,14 @@ export function applyFirstTimePostEstimateVisitChoiceToBookingFlowState(
   choice: BookingFirstTimePostEstimateVisitChoice,
 ): BookingFlowState {
   const normalized = parseBookingFirstTimePostEstimateVisitChoiceParam(choice);
+  const firstTimeVisitProgram =
+    normalized === "three_visit_reset" ? "three_visit" : "one_visit";
   const deepCleanProgram: BookingDeepCleanProgramChoice | "" =
     isDeepCleaningBookingServiceId(prev.serviceId)
-      ? normalized === "three_visits"
+      ? normalized === "three_visit_reset"
         ? "phased_3_visit"
         : normalized === "" ||
-            normalized === "one_visit" ||
-            normalized === "two_visits" ||
-            normalized === "convert_recurring"
+            normalized === "one_visit"
           ? "single_visit"
           : prev.deepCleanProgram
       : "";
@@ -658,6 +656,7 @@ export function applyFirstTimePostEstimateVisitChoiceToBookingFlowState(
   return {
     ...prev,
     firstTimePostEstimateVisitChoice: normalized,
+    firstTimeVisitProgram,
     ...(isDeepCleaningBookingServiceId(prev.serviceId)
       ? { deepCleanProgram }
       : {}),
@@ -898,6 +897,10 @@ export function resolveBookingStepFromUrl(
   const maxStep = computeMaxReadyStep(partial);
   const rawStep = searchParams.get("step");
   const shaped = hasUrlBookingShapeBeyondColdStart(searchParams);
+
+  if (rawStep === "intent") {
+    return STEP_RANK.home > STEP_RANK[maxStep] ? maxStep : "home";
+  }
 
   if (!isValidStep(rawStep)) {
     return shaped ? maxStep : defaultBookingFlowState.step;

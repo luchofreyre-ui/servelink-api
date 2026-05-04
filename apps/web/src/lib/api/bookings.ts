@@ -81,6 +81,7 @@ export type PublicBookingConfirmationResponse = {
     estimatedDurationMinutes: number;
     confidence: number;
     serviceType: string | null;
+    visitStructure?: "one_visit" | "three_visit_reset";
   } | null;
   selectedRecurringCadence?:
     | "weekly"
@@ -95,6 +96,13 @@ export type PublicBookingConfirmationResponse = {
     pricePerVisitCents: number;
     nextRunAt: string | null;
   } | null;
+  visitStructure?: "one_visit" | "three_visit_reset";
+  resetSchedule?: {
+    visit1At: string;
+    visit2At: string;
+    visit3At: string;
+  } | null;
+  recurringBeginsAt?: string | null;
   deepCleanProgram: BookingScreenDeepCleanProgramApi | null;
 };
 

@@ -527,6 +527,66 @@ describe("RecurringPlanService V1", () => {
     ).toBe("2030-01-12T14:00:00.000Z");
   });
 
+  it("biweekly nextRunAt is scheduledStart plus 14 days", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking({
+        scheduledStart: new Date("2030-01-02T14:00:00.000Z"),
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "biweekly",
+    });
+
+    expect(
+      prisma.recurringPlan.create.mock.calls[0][0].data.nextRunAt.toISOString(),
+    ).toBe("2030-01-16T14:00:00.000Z");
+  });
+
+  it("monthly nextRunAt is scheduledStart plus 30 days", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking({
+        scheduledStart: new Date("2030-01-02T14:00:00.000Z"),
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "monthly",
+    });
+
+    expect(
+      prisma.recurringPlan.create.mock.calls[0][0].data.nextRunAt.toISOString(),
+    ).toBe("2030-02-01T14:00:00.000Z");
+  });
+
+  it("three_visit_reset nextRunAt is scheduledStart plus 28 days and cadence days", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking({
+        scheduledStart: new Date("2030-01-02T14:00:00.000Z"),
+        estimateSnapshot: {
+          outputJson: {
+            estimatedDurationMinutes: 122,
+          },
+          inputJson: {
+            recurring_cadence_intent: "weekly",
+            first_time_visit_program: "three_visit",
+          },
+        },
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "weekly",
+    });
+
+    expect(
+      prisma.recurringPlan.create.mock.calls[0][0].data.nextRunAt.toISOString(),
+    ).toBe("2030-02-06T14:00:00.000Z");
+  });
+
   it("duplicate auto-create is idempotent", async () => {
     const { service, prisma } = createService({
       booking: quoteReadyBooking(),

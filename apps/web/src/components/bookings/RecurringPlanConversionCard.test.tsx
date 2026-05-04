@@ -90,11 +90,11 @@ describe("RecurringPlanConversionCard", () => {
 
     expect(
       await screen.findByRole("heading", {
-        name: "Your weekly recurring service is set",
+        name: "Your recurring service is set",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Weekly")).toBeInTheDocument();
-    expect(screen.queryByText("Start weekly plan")).not.toBeInTheDocument();
+    expect(screen.getByText("Cadence: Weekly")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /start/i })).not.toBeInTheDocument();
     expect(screen.queryByText("Biweekly")).not.toBeInTheDocument();
     expect(screen.queryByText("Monthly")).not.toBeInTheDocument();
     expect(
@@ -116,6 +116,9 @@ describe("RecurringPlanConversionCard", () => {
           pricePerVisitCents: 12000,
           nextRunAt: "2030-01-09T14:00:00.000Z",
         }}
+        scheduledStart="2030-01-02T14:00:00.000Z"
+        visitStructure="one_visit"
+        recurringBeginsAt="2030-01-09T14:00:00.000Z"
       />,
     );
 
@@ -123,7 +126,9 @@ describe("RecurringPlanConversionCard", () => {
     expect(
       screen.queryByRole("button", { name: /start/i }),
     ).not.toBeInTheDocument();
-    expect(screen.getByText(/Jan 9, 2030/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Jan 9, 2030/).length).toBeGreaterThan(0);
+    expect(screen.getByText("First visit date:")).toBeInTheDocument();
+    expect(screen.getByText("Recurring begins:")).toBeInTheDocument();
   });
 
   it("every_10_days label renders correctly when locked", async () => {
@@ -138,11 +143,41 @@ describe("RecurringPlanConversionCard", () => {
 
     expect(
       await screen.findByRole("heading", {
-        name: "Your every 10 days recurring service is set",
+        name: "Your recurring service is set",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Every 10 days")).toBeInTheDocument();
+    expect(screen.getByText("Cadence: Every 10 days")).toBeInTheDocument();
     expect(screen.getByText("10-day cadence")).toBeInTheDocument();
+  });
+
+  it("three_visit_reset schedule renders when locked", async () => {
+    mockFetch(async () => Response.json([quoteResponse[0]]));
+
+    render(
+      <RecurringPlanConversionCard
+        bookingId="bk_1"
+        selectedCadence="weekly"
+        recurringPlan={{
+          id: "rp_1",
+          cadence: "weekly",
+          status: "active",
+          pricePerVisitCents: 12000,
+          nextRunAt: "2030-02-06T14:00:00.000Z",
+        }}
+        visitStructure="three_visit_reset"
+        resetSchedule={{
+          visit1At: "2030-01-02T14:00:00.000Z",
+          visit2At: "2030-01-16T14:00:00.000Z",
+          visit3At: "2030-01-30T14:00:00.000Z",
+        }}
+        recurringBeginsAt="2030-02-06T14:00:00.000Z"
+      />,
+    );
+
+    expect(await screen.findByText("Visit 1 date:")).toBeInTheDocument();
+    expect(screen.getByText("Visit 2 date:")).toBeInTheDocument();
+    expect(screen.getByText("Visit 3 date:")).toBeInTheDocument();
+    expect(screen.getAllByText(/Feb 6, 2030/).length).toBeGreaterThan(0);
   });
 
   it("selectedCadence biweekly renders only biweekly card", async () => {
@@ -155,7 +190,7 @@ describe("RecurringPlanConversionCard", () => {
       />,
     );
 
-    expect(await screen.findByText("Biweekly")).toBeInTheDocument();
+    expect(await screen.findByText("Cadence: Biweekly")).toBeInTheDocument();
     expect(screen.queryByText("Weekly")).not.toBeInTheDocument();
     expect(screen.queryByText("Monthly")).not.toBeInTheDocument();
   });
@@ -190,7 +225,7 @@ describe("RecurringPlanConversionCard", () => {
       <RecurringPlanConversionCard bookingId="bk_1" selectedCadence="weekly" />,
     );
 
-    await screen.findByText("Weekly");
+    await screen.findByText("Cadence: Weekly");
 
     expect(fetch).toHaveBeenCalledWith(
       "https://api.example.test/api/v1/recurring-plans/offer-quote?bookingId=bk_1&cadence=weekly",
@@ -254,7 +289,7 @@ describe("RecurringPlanConversionCard", () => {
     render(<RecurringPlanConversionCard bookingId="bk_1" />);
 
     await user.click(
-      await screen.findByRole("button", { name: /start weekly plan/i }),
+      await screen.findByRole("button", { name: /choose weekly recurring/i }),
     );
 
     await waitFor(() => {
@@ -288,7 +323,9 @@ describe("RecurringPlanConversionCard", () => {
       ),
     ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /start weekly plan/i }));
+    await user.click(
+      screen.getByRole("button", { name: /choose weekly recurring/i }),
+    );
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
@@ -316,14 +353,16 @@ describe("RecurringPlanConversionCard", () => {
     render(<RecurringPlanConversionCard bookingId="bk_1" />);
 
     await user.click(
-      await screen.findByRole("button", { name: /start weekly plan/i }),
+      await screen.findByRole("button", { name: /choose weekly recurring/i }),
     );
 
     expect(
-      await screen.findByText("Unable to start recurring plan. Please try again."),
+      await screen.findByText(
+        "Unable to choose recurring cadence. Please try again.",
+      ),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText("Your weekly recurring plan has been started."),
+      screen.queryByText("Your weekly recurring cadence is selected."),
     ).not.toBeInTheDocument();
   });
 
@@ -342,11 +381,11 @@ describe("RecurringPlanConversionCard", () => {
     render(<RecurringPlanConversionCard bookingId="bk_1" />);
 
     await user.click(
-      await screen.findByRole("button", { name: /start weekly plan/i }),
+      await screen.findByRole("button", { name: /choose weekly recurring/i }),
     );
 
     expect(
-      await screen.findByText("Your weekly recurring plan has been started."),
+      await screen.findByText("Your weekly recurring cadence is selected."),
     ).toBeInTheDocument();
   });
 });

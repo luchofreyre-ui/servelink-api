@@ -24,6 +24,12 @@ type RecurringPlanSummary = {
   nextRunAt: string | null;
 };
 
+type ResetScheduleSummary = {
+  visit1At: string;
+  visit2At: string;
+  visit3At: string;
+};
+
 const cadenceLabels: Record<RecurringCadence, string> = {
   weekly: 'Weekly',
   every_10_days: 'Every 10 days',
@@ -100,10 +106,18 @@ export function RecurringPlanConversionCard({
   bookingId,
   selectedCadence,
   recurringPlan,
+  scheduledStart,
+  visitStructure,
+  resetSchedule,
+  recurringBeginsAt,
 }: {
   bookingId: string;
   selectedCadence?: SelectedRecurringCadence | null;
   recurringPlan?: RecurringPlanSummary | null;
+  scheduledStart?: string | null;
+  visitStructure?: 'one_visit' | 'three_visit_reset' | null;
+  resetSchedule?: ResetScheduleSummary | null;
+  recurringBeginsAt?: string | null;
 }) {
   const lockedCadence = normalizeLockedCadence(selectedCadence);
   const [submittingCadence, setSubmittingCadence] =
@@ -169,8 +183,8 @@ export function RecurringPlanConversionCard({
     (quote) => quote.firstCleanPriceCents === 0,
   );
   const heading = lockedCadence
-    ? `Your ${cadenceSentenceLabels[lockedCadence]} recurring service is set`
-    : 'Keep your home on a recurring plan';
+    ? 'Your recurring service is set'
+    : 'Add recurring maintenance';
   const lockedQuote = lockedCadence ? displayQuotes[0] : null;
   const planActive = Boolean(recurringPlan && recurringPlan.status === 'active');
   const statusText = lockedCadence
@@ -190,8 +204,28 @@ export function RecurringPlanConversionCard({
         })}`;
       }
     }
+    if (recurringBeginsAt) {
+      const next = new Date(recurringBeginsAt);
+      if (Number.isFinite(next.getTime())) {
+        return `Next recurring visit: ${next.toLocaleDateString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })}`;
+      }
+    }
     return `Next recurring visit: ${lockedQuote.cadenceDays} days after your first visit`;
   })();
+  const formatDate = (iso: string | null | undefined) => {
+    if (!iso) return null;
+    const date = new Date(iso);
+    if (!Number.isFinite(date.getTime())) return iso;
+    return date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
 
   async function createPlan(cadence: RecurringCadence) {
     setSubmittingCadence(cadence);
@@ -209,7 +243,7 @@ export function RecurringPlanConversionCard({
       );
 
       if (!response.ok) {
-        throw new Error('Unable to start recurring plan.');
+        throw new Error('Unable to choose recurring cadence.');
       }
 
       setSuccessCadence(cadence);
@@ -226,7 +260,7 @@ export function RecurringPlanConversionCard({
 
       <p className="text-sm text-gray-600">
         {lockedCadence
-          ? 'Your first visit is booked. Your recurring maintenance visits are scheduled from this plan.'
+          ? 'Your deposit-confirmed booking locked the recurring service details below.'
           : 'Your first clean gets your home reset. Recurring visits are priced as follow-up maintenance so you can keep the home consistent.'}
       </p>
 
@@ -266,13 +300,13 @@ export function RecurringPlanConversionCard({
 
       {createError && !lockedCadence ? (
         <p className="text-sm text-red-600">
-          Unable to start recurring plan. Please try again.
+          Unable to choose recurring cadence. Please try again.
         </p>
       ) : null}
 
       {successCadence && !lockedCadence ? (
         <p className="text-sm text-green-700">
-          Your {successCadence} recurring plan has been started.
+          Your {successCadence} recurring cadence is selected.
         </p>
       ) : null}
 
@@ -283,7 +317,11 @@ export function RecurringPlanConversionCard({
             className="rounded-xl border border-gray-200 p-3 space-y-3"
           >
             <div>
-              <h4 className="font-semibold">{cadenceLabels[quote.cadence]}</h4>
+              <h4 className="font-semibold">
+                {lockedCadence
+                  ? `Cadence: ${cadenceLabels[quote.cadence]}`
+                  : cadenceLabels[quote.cadence]}
+              </h4>
               <p className="text-sm text-gray-600">
                 {quote.cadenceDays}-day cadence
               </p>
@@ -315,6 +353,34 @@ export function RecurringPlanConversionCard({
                   <dd>{nextRunLabel.replace('Next recurring visit: ', '')}</dd>
                 </div>
               ) : null}
+              {lockedCadence && visitStructure === 'three_visit_reset' && resetSchedule ? (
+                <>
+                  <div className="flex justify-between gap-3">
+                    <dt>Visit 1 date:</dt>
+                    <dd>{formatDate(resetSchedule.visit1At)}</dd>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <dt>Visit 2 date:</dt>
+                    <dd>{formatDate(resetSchedule.visit2At)}</dd>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <dt>Visit 3 date:</dt>
+                    <dd>{formatDate(resetSchedule.visit3At)}</dd>
+                  </div>
+                </>
+              ) : null}
+              {lockedCadence && visitStructure !== 'three_visit_reset' && scheduledStart ? (
+                <div className="flex justify-between gap-3">
+                  <dt>First visit date:</dt>
+                  <dd>{formatDate(scheduledStart)}</dd>
+                </div>
+              ) : null}
+              {lockedCadence && recurringBeginsAt ? (
+                <div className="flex justify-between gap-3">
+                  <dt>Recurring begins:</dt>
+                  <dd>{formatDate(recurringBeginsAt)}</dd>
+                </div>
+              ) : null}
             </dl>
 
             {!lockedCadence ? (
@@ -323,7 +389,7 @@ export function RecurringPlanConversionCard({
                 disabled={submittingCadence !== null}
                 className="btn-primary w-full"
               >
-                Start {cadenceSentenceLabels[quote.cadence]} plan
+                Choose {cadenceSentenceLabels[quote.cadence]} recurring
               </button>
             ) : null}
           </div>

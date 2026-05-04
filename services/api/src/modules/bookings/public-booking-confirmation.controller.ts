@@ -12,6 +12,7 @@ function parsePublicEstimateSnapshot(
   estimatedDurationMinutes: number;
   confidence: number;
   serviceType: string | null;
+  visitStructure: "one_visit" | "three_visit_reset";
   selectedRecurringCadence:
     | "weekly"
     | "every_10_days"
@@ -48,17 +49,36 @@ function parsePublicEstimateSnapshot(
       inp.recurring_cadence_intent === "monthly"
         ? inp.recurring_cadence_intent
         : null;
+    const visitStructure =
+      inp.first_time_visit_program === "three_visit"
+        ? "three_visit_reset"
+        : "one_visit";
     return {
       estimatedPriceCents,
       estimatedDurationMinutes,
       confidence,
       serviceType,
+      visitStructure,
       selectedRecurringCadence: recurringCadence,
     };
   } catch {
     return null;
   }
 }
+
+function addDays(date: Date, days: number) {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  return next;
+}
+
+const cadenceDays: Record<"weekly" | "every_10_days" | "biweekly" | "monthly", number> =
+  {
+    weekly: 7,
+    every_10_days: 10,
+    biweekly: 14,
+    monthly: 30,
+  };
 
 /**
  * Unauthenticated read for marketing confirmation + cold deep-links.
@@ -113,6 +133,25 @@ export class PublicBookingConfirmationController {
         estimatedHours: booking.estimatedHours,
       },
     );
+    const visitStructure = snap?.visitStructure ?? "one_visit";
+    const resetSchedule =
+      visitStructure === "three_visit_reset" && booking.scheduledStart
+        ? {
+            visit1At: booking.scheduledStart.toISOString(),
+            visit2At: addDays(booking.scheduledStart, 14).toISOString(),
+            visit3At: addDays(booking.scheduledStart, 28).toISOString(),
+          }
+        : null;
+    const selectedRecurringCadence = snap?.selectedRecurringCadence ?? null;
+    const recurringBeginsAt =
+      booking.recurringPlans[0]?.nextRunAt?.toISOString() ??
+      (booking.scheduledStart && selectedRecurringCadence
+        ? addDays(
+            booking.scheduledStart,
+            (visitStructure === "three_visit_reset" ? 28 : 0) +
+              cadenceDays[selectedRecurringCadence],
+          ).toISOString()
+        : null);
 
     return {
       kind: "public_booking_confirmation" as const,
@@ -124,7 +163,8 @@ export class PublicBookingConfirmationController {
       publicDepositPaid:
         booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded,
       estimateSnapshot: snap,
-      selectedRecurringCadence: snap?.selectedRecurringCadence ?? null,
+      selectedRecurringCadence,
+      visitStructure,
       recurringPlan: booking.recurringPlans[0]
         ? {
             id: booking.recurringPlans[0].id,
@@ -134,6 +174,8 @@ export class PublicBookingConfirmationController {
             nextRunAt: booking.recurringPlans[0].nextRunAt.toISOString(),
           }
         : null,
+      resetSchedule,
+      recurringBeginsAt,
       deepCleanProgram: serializeDeepCleanProgramForScreen({
         bookingDeepCleanProgram: booking.deepCleanProgram,
       }),

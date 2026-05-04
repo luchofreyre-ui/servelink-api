@@ -32,13 +32,18 @@ vi.mock("@/components/bookings/RecurringPlanConversionCard", () => ({
       bookingId,
       selectedCadence,
       recurringPlan,
+      visitStructure,
+      resetSchedule,
     }: {
       bookingId: string;
       selectedCadence?: string | null;
       recurringPlan?: { id: string } | null;
+      visitStructure?: string | null;
+      resetSchedule?: { visit1At: string } | null;
     }) => (
       <div data-testid="recurring-plan-card">
-        {bookingId}:{selectedCadence ?? "none"}:{recurringPlan?.id ?? "no-plan"}
+        {bookingId}:{selectedCadence ?? "none"}:{recurringPlan?.id ?? "no-plan"}:
+        {visitStructure ?? "no-structure"}:{resetSchedule?.visit1At ?? "no-reset"}
       </div>
     ),
   ),
@@ -160,6 +165,13 @@ describe("BookingConfirmationClient", () => {
       assignedTeamDisplayName: "Test Team",
       publicDepositPaid: true,
       selectedRecurringCadence: "weekly",
+      visitStructure: "three_visit_reset",
+      resetSchedule: {
+        visit1At: "2026-05-01T14:00:00.000Z",
+        visit2At: "2026-05-15T14:00:00.000Z",
+        visit3At: "2026-05-29T14:00:00.000Z",
+      },
+      recurringBeginsAt: "2026-06-05T14:00:00.000Z",
       recurringPlan: {
         id: "rp_1",
         cadence: "weekly",
@@ -196,6 +208,11 @@ describe("BookingConfirmationClient", () => {
           bookingId: "bk_assigned",
           selectedCadence: "weekly",
           recurringPlan: expect.objectContaining({ id: "rp_1" }),
+          visitStructure: "three_visit_reset",
+          resetSchedule: expect.objectContaining({
+            visit1At: "2026-05-01T14:00:00.000Z",
+          }),
+          recurringBeginsAt: "2026-06-05T14:00:00.000Z",
         }),
         {},
       );

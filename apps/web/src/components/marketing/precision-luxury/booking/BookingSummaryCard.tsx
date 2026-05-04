@@ -51,12 +51,8 @@ export function BookingSummaryCard({
       state.firstTimePostEstimateVisitChoice
     ) {
       switch (state.firstTimePostEstimateVisitChoice) {
-        case "two_visits":
-          return "2 visits";
-        case "three_visits":
+        case "three_visit_reset":
           return "3 visits";
-        case "convert_recurring":
-          return "Recurring (after sign-in)";
         case "one_visit":
         default:
           return "1 visit";

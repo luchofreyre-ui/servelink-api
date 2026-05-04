@@ -88,15 +88,11 @@ import {
   BOOKING_REVIEW_STEP_TITLE,
   BOOKING_REVIEW_SELECTED_ARRIVAL_LABEL,
   BOOKING_REVIEW_SELECTED_TEAM_LABEL,
-  BOOKING_FIRST_TIME_WITH_RECURRING_REVIEW_INTENT,
   BOOKING_TRANSITION_STATE_LABELS,
-  BOOKING_POST_ESTIMATE_CONVERT_RECURRING,
-  BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER,
   BOOKING_POST_ESTIMATE_FIRST_TIME_BODY,
   BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE,
   BOOKING_POST_ESTIMATE_VISIT_ONE,
   BOOKING_POST_ESTIMATE_VISIT_THREE,
-  BOOKING_POST_ESTIMATE_VISIT_TWO,
   BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
   BOOKING_REVIEW_VISIT_STRUCTURE_LABEL,
 } from "./bookingPublicSurfaceCopy";
@@ -192,12 +188,8 @@ function deepProgramFallbackLabel(state: BookingFlowState) {
     state.firstTimePostEstimateVisitChoice
   ) {
     switch (state.firstTimePostEstimateVisitChoice) {
-      case "two_visits":
-        return "Spread across 2 visits";
-      case "three_visits":
+      case "three_visit_reset":
         return "3-visit program";
-      case "convert_recurring":
-        return "Recurring after sign-in";
       case "one_visit":
       default:
         return "One visit";
@@ -436,6 +428,25 @@ export function BookingStepReview({
           };
         })()
       : null;
+  const selectedVisitStructure =
+    state.firstTimePostEstimateVisitChoice === "three_visit_reset" ||
+    state.firstTimeVisitProgram === "three_visit"
+      ? "three_visit_reset"
+      : "one_visit";
+  const threeVisitBreakdown = previewEstimate
+    ? (() => {
+        const visit1 = Math.round(previewEstimate.priceCents * 0.45);
+        const visit2 = Math.round(previewEstimate.priceCents * 0.35);
+        const visit3 = Math.max(0, previewEstimate.priceCents - visit1 - visit2);
+        return { visit1, visit2, visit3 };
+      })()
+    : null;
+  const recurringTimingText =
+    reviewRecurringCadence && selectedVisitStructure === "three_visit_reset"
+      ? `Reset visits are spaced 14 days apart. ${recurringCadenceDisplay[reviewRecurringCadence]} recurring service begins ${recurringCadenceDays[reviewRecurringCadence]} days after Visit 3.`
+      : reviewRecurringCadence
+        ? `Recurring service begins ${recurringCadenceDays[reviewRecurringCadence]} days after your first visit.`
+        : null;
 
   useEffect(() => {
     if (!isRecurringContract) return;
@@ -445,6 +456,16 @@ export function BookingStepReview({
     isRecurringContract,
     onRecurringCadenceIntentChange,
     state.recurringCadenceIntent,
+  ]);
+
+  useEffect(() => {
+    if (!isRecurringContract) return;
+    if (state.firstTimePostEstimateVisitChoice) return;
+    onFirstTimePostEstimateVisitChoiceChange("one_visit");
+  }, [
+    isRecurringContract,
+    onFirstTimePostEstimateVisitChoiceChange,
+    state.firstTimePostEstimateVisitChoice,
   ]);
 
   function changeRecurringCadence(
@@ -658,6 +679,51 @@ export function BookingStepReview({
               Your first clean resets the home. Your recurring visits keep it
               maintained.
             </p>
+            <div className="mt-4">
+              <p className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]">
+                Opening clean structure
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {(
+                  [
+                    {
+                      value: "one_visit",
+                      label: "One visit",
+                      body: "One visit completes the opening reset. Recurring begins after the first visit.",
+                    },
+                    {
+                      value: "three_visit_reset",
+                      label: "Three-visit reset program",
+                      body: "Three visits spread the reset over time. Visit 1: Deep reset. Visit 2: Continuation. Visit 3: Finalization. 14 days between reset visits.",
+                    },
+                  ] as const
+                ).map((option) => {
+                  const selected = selectedVisitStructure === option.value;
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      data-testid={`booking-post-estimate-${option.value}`}
+                      onClick={() =>
+                        onFirstTimePostEstimateVisitChoiceChange(option.value)
+                      }
+                      className={`rounded-2xl border px-4 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
+                        selected
+                          ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
+                          : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
+                      }`}
+                    >
+                      <span className="block font-semibold text-[#0F172A]">
+                        {option.label}
+                      </span>
+                      <span className="mt-2 block text-xs leading-5 text-[#64748B]">
+                        {option.body}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-4">
               {(["weekly", "every_10_days", "biweekly", "monthly"] as const).map(
                 (cadence) => {
@@ -686,7 +752,12 @@ export function BookingStepReview({
                 <div>
                   <dt className="text-[#64748B]">First visit price</dt>
                   <dd className="font-semibold">
-                    {formatEstimateUsdFromCents(previewEstimate.priceCents)}
+                    {formatEstimateUsdFromCents(
+                      selectedVisitStructure === "three_visit_reset" &&
+                        threeVisitBreakdown
+                        ? threeVisitBreakdown.visit1
+                        : previewEstimate.priceCents,
+                    )}
                   </dd>
                 </div>
                 <div>
@@ -708,17 +779,62 @@ export function BookingStepReview({
                 <div>
                   <dt className="text-[#64748B]">Next recurring visit</dt>
                   <dd className="font-semibold">
-                    {recurringCadenceDays[reviewRecurringCadence]} days after
-                    your first visit
+                    {recurringTimingText}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[#64748B]">Savings</dt>
+                  <dd className="font-semibold">
+                    {formatEstimateUsdFromCents(recurringQuote.savingsCents)} /{" "}
+                    {recurringQuote.discountPercent}%
                   </dd>
                 </div>
               </dl>
+            ) : previewError ? (
+              <p className="mt-3 font-[var(--font-manrope)] text-sm font-semibold leading-6 text-[#B45309]">
+                Recurring pricing could not be loaded. Please refresh before
+                continuing.
+              </p>
             ) : (
               <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-                Your recurring maintenance price will be shown after booking is
-                deposit-confirmed.
+                Loading recurring pricing…
               </p>
             )}
+            {selectedVisitStructure === "three_visit_reset" &&
+            threeVisitBreakdown &&
+            previewEstimate ? (
+              <div className="mt-4 rounded-2xl border border-[#C9B27C]/18 bg-white px-4 py-4">
+                <p className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]">
+                  Three-visit reset breakdown
+                </p>
+                <dl className="mt-3 grid gap-3 font-[var(--font-manrope)] text-sm text-[#0F172A] sm:grid-cols-4">
+                  <div>
+                    <dt className="text-[#64748B]">Visit 1: Deep reset</dt>
+                    <dd className="font-semibold">
+                      {formatEstimateUsdFromCents(threeVisitBreakdown.visit1)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[#64748B]">Visit 2: Continuation</dt>
+                    <dd className="font-semibold">
+                      {formatEstimateUsdFromCents(threeVisitBreakdown.visit2)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[#64748B]">Visit 3: Finalization</dt>
+                    <dd className="font-semibold">
+                      {formatEstimateUsdFromCents(threeVisitBreakdown.visit3)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[#64748B]">Program total</dt>
+                    <dd className="font-semibold">
+                      {formatEstimateUsdFromCents(previewEstimate.priceCents)}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            ) : null}
           </ReviewSection>
         ) : null}
 
@@ -813,24 +929,14 @@ export function BookingStepReview({
                   : "Figures are approximate; continuing lets us return a firm quote after you save."}
               </p>
               {isDeepCleaningBookingServiceId(state.serviceId) &&
-              (state.bookingPublicPath === "one_time_cleaning" ||
-                state.bookingPublicPath === "first_time_with_recurring") &&
+              state.bookingPublicPath === "one_time_cleaning" &&
               estimatePreviewReady ? (
                 <div
                   className="mt-6 rounded-2xl border border-[#C9B27C]/18 bg-[#FFF9F3] px-4 py-4 ring-1 ring-[#C9B27C]/10"
                   data-testid="booking-first-time-post-estimate-options"
                 >
-                  {state.bookingPublicPath === "first_time_with_recurring" ? (
-                    <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A]">
-                      {BOOKING_FIRST_TIME_WITH_RECURRING_REVIEW_INTENT}
-                    </p>
-                  ) : null}
                   <p
-                    className={`font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A] ${
-                      state.bookingPublicPath === "first_time_with_recurring"
-                        ? "mt-4"
-                        : ""
-                    }`}
+                    className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]"
                   >
                     {BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE}
                   </p>
@@ -841,16 +947,7 @@ export function BookingStepReview({
                     {(
                       [
                         ["one_visit", BOOKING_POST_ESTIMATE_VISIT_ONE],
-                        ["two_visits", BOOKING_POST_ESTIMATE_VISIT_TWO],
-                        ["three_visits", BOOKING_POST_ESTIMATE_VISIT_THREE],
-                        ...(state.bookingPublicPath === "first_time_with_recurring"
-                          ? []
-                          : ([
-                              [
-                                "convert_recurring",
-                                BOOKING_POST_ESTIMATE_CONVERT_RECURRING,
-                              ],
-                            ] as const)),
+                        ["three_visit_reset", BOOKING_POST_ESTIMATE_VISIT_THREE],
                       ] satisfies ReadonlyArray<
                         readonly [BookingFirstTimePostEstimateVisitChoice, string]
                       >
@@ -869,11 +966,6 @@ export function BookingStepReview({
                           }`}
                         >
                           <span className="font-semibold text-[#0F172A]">{label}</span>
-                          {value === "convert_recurring" ? (
-                            <span className="mt-2 block text-xs leading-5 text-[#64748B]">
-                              {BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER}
-                            </span>
-                          ) : null}
                         </button>
                       );
                     })}

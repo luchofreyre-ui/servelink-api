@@ -604,6 +604,10 @@ export function BookingConfirmationClient() {
                 bookingId={bookingId}
                 selectedCadence={selectedRecurringCadence}
                 recurringPlan={remote?.recurringPlan ?? null}
+                scheduledStart={remote?.scheduledStart ?? null}
+                visitStructure={remote?.visitStructure ?? null}
+                resetSchedule={remote?.resetSchedule ?? null}
+                recurringBeginsAt={remote?.recurringBeginsAt ?? null}
               />
             </div>
           ) : null}

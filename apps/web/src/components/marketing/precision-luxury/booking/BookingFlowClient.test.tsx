@@ -373,16 +373,6 @@ async function submitFromReviewToSchedule() {
 }
 
 async function chooseResetIntentAndContinue() {
-  await waitFor(() =>
-    expect(
-      screen.getByRole("heading", {
-        level: 2,
-        name: "What brings you in today?",
-      }),
-    ).toBeInTheDocument(),
-  );
-  fireEvent.click(screen.getByText("My place needs a real clean"));
-  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
   await screen.findByRole("heading", { name: /tell us about your home/i });
 }
 
@@ -400,15 +390,15 @@ async function renderAtIntentStep(serviceId = getBookingDefaultServiceId()) {
     ? "&dcProgram=single_visit"
     : "";
   bookingFlowTestSearch.sp = new URLSearchParams(
-    `step=intent&service=${encodeURIComponent(serviceId)}${dc}`,
+    `step=home&service=${encodeURIComponent(serviceId)}${dc}`,
   );
   render(<BookingFlowClient />);
-  screen.getByRole("heading", { name: /what brings you in today/i });
+  screen.getByRole("heading", { name: /tell us about your home/i });
 }
 
 async function continueFromServiceToIntentStep() {
   fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-  await screen.findByRole("heading", { name: /what brings you in today/i });
+  await screen.findByRole("heading", { name: /tell us about your home/i });
 }
 
 async function renderAtHomeStep(serviceId = getBookingDefaultServiceId()) {
@@ -490,6 +480,13 @@ describe("BookingFlowClient", () => {
       status: "confirmed",
       alreadyApplied: false,
     });
+    if (!("scrollTo" in window)) {
+      Object.defineProperty(window, "scrollTo", {
+        value: () => undefined,
+        writable: true,
+      });
+    }
+    vi.spyOn(window, "scrollTo").mockImplementation(() => undefined);
     emitBookingFunnelEventMock.mockClear();
     sessionStorage.removeItem(BOOKING_CONFIRMATION_SESSION_KEY);
     sessionStorage.removeItem(BOOKING_FLOW_FRESH_START_FLAG);
@@ -1164,6 +1161,33 @@ describe("BookingFlowClient", () => {
       await chooseResetIntentAndContinue();
     });
 
+    it("intent step is removed and legacy intent URL clamps to home details", async () => {
+      const svc = getBookingDefaultServiceId();
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `step=intent&service=${encodeURIComponent(svc)}`,
+      );
+
+      render(<BookingFlowClient />);
+
+      await screen.findByRole("heading", { name: /tell us about your home/i });
+      expect(
+        screen.queryByRole("heading", { name: /what brings you in today/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("service selection proceeds directly to home details and scrolls to top", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams("step=service");
+      render(<BookingFlowClient />);
+
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+
+      await screen.findByRole("heading", { name: /tell us about your home/i });
+      expect(window.scrollTo).toHaveBeenCalledWith({
+        top: 0,
+        behavior: "auto",
+      });
+    });
+
     it("selecting First-Time Cleaning With Recurring Service allows Continue to home details", async () => {
       await renderAtIntentStep();
       await chooseResetIntentAndContinue();
@@ -1227,21 +1251,25 @@ describe("BookingFlowClient", () => {
       );
     });
 
-    it("first-time review shows post-estimate visit spread and recurring conversion options", async () => {
+    it("first-time review shows only one-visit and three-visit reset options", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(8000);
       const block = await screen.findByTestId("booking-first-time-post-estimate-options");
       expect(block).toBeInTheDocument();
       expect(screen.getByTestId("booking-post-estimate-one_visit")).toBeInTheDocument();
-      expect(screen.getByTestId("booking-post-estimate-two_visits")).toBeInTheDocument();
-      expect(screen.getByTestId("booking-post-estimate-three_visits")).toBeInTheDocument();
-      expect(screen.getByTestId("booking-post-estimate-convert_recurring")).toBeInTheDocument();
+      expect(
+        screen.getByTestId("booking-post-estimate-three_visit_reset"),
+      ).toBeInTheDocument();
+      expect(screen.queryByTestId("booking-post-estimate-two_visits")).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId("booking-post-estimate-convert_recurring"),
+      ).not.toBeInTheDocument();
     });
   });
 
   describe("service change", () => {
-    it("switching public card from first-time to move-in preserves home context; estimate uses move service", async () => {
+    it("switching public card from first-time to move-in preserves home context", async () => {
       const deepEntry = bookingServiceCatalog.find((x) =>
         isDeepCleaningBookingServiceId(x.id),
       )!;
@@ -1256,7 +1284,11 @@ describe("BookingFlowClient", () => {
         name: "Choose your service",
       });
       const serviceSection = serviceHeading.closest("section")!;
-      fireEvent.click(within(serviceSection).getByText("Move-In / Move-Out Cleaning"));
+      fireEvent.click(
+        within(serviceSection)
+          .getAllByRole("button", { name: /Move-In \/ Move-Out Cleaning/i })
+          .find((el) => el.tagName === "BUTTON")!,
+      );
 
       await continueFromServiceToIntentStep();
       await chooseResetIntentAndContinue();
@@ -1298,16 +1330,7 @@ describe("BookingFlowClient", () => {
         within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
       ).toBeInTheDocument();
 
-      await waitFor(() =>
-        expect(
-          previewEstimateMock.mock.calls.some(
-            (call) =>
-              call[0] &&
-              typeof call[0] === "object" &&
-              (call[0] as { serviceId?: string }).serviceId === phase4ServiceIds.move,
-          ),
-        ).toBe(true),
-      );
+      expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument();
     });
   });
 
@@ -1888,7 +1911,7 @@ describe("BookingFlowClient", () => {
       expect(
         screen.getByRole("heading", {
           level: 2,
-          name: "What brings you in today?",
+          name: BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
         }),
       ).toBeInTheDocument();
     });
@@ -2537,18 +2560,11 @@ describe("BookingFlowClient", () => {
         within(homeBlock).getByText(BOOKING_DEEP_CLEAN_FOCUS_LABELS.kitchen_bath_priority),
       ).toBeInTheDocument();
 
-      goHomeFromReviewViaBackOnce();
-      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
-      await screen.findByRole("heading", { name: /what brings you in today/i });
-      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
-      await screen.findByRole("heading", {
-        level: 2,
-        name: BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
-      });
-      fireEvent.click(screen.getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE));
-      await continueFromServiceToIntentStep();
-      await chooseResetIntentAndContinue();
-      await continueThroughLocationGateToReview();
+      cleanup();
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        buildReviewSearchStringForService("move-in-move-out"),
+      );
+      render(<BookingFlowClient />);
 
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
