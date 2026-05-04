@@ -7,10 +7,20 @@ export type RecurringCadenceValue =
   | 'every_10_days'
   | 'biweekly'
   | 'monthly';
-type RecurringCadenceV2 = RecurringCadenceValue;
+export type RecurringCadenceV2 = RecurringCadenceValue;
 type RecurringVisitStructure = 'one_visit' | 'three_visit_reset';
 
 type JsonRecord = Record<string, unknown>;
+
+export type RecurringQuoteOption = {
+  cadence: RecurringCadenceV2;
+  cadenceDays: number;
+  firstCleanPriceCents: number;
+  recurringPriceCents: number;
+  savingsCents: number;
+  discountPercent: number;
+  estimatedMinutes: number;
+};
 
 @Injectable()
 export class RecurringPlanService {
@@ -212,7 +222,7 @@ export class RecurringPlanService {
     estimatedMinutes: number;
     estimateSnapshot?: unknown;
     cadence?: RecurringCadenceV2;
-  }) {
+  }): RecurringQuoteOption[] {
     const cadences = params.cadence
       ? [params.cadence]
       : [...this.supportedCadences];
@@ -249,6 +259,20 @@ export class RecurringPlanService {
         discountPercent,
         estimatedMinutes: recurringMinutes,
       };
+    });
+  }
+
+  getRecurringQuoteOptionsFromEstimate(params: {
+    firstCleanPriceCents: number;
+    firstCleanEstimatedMinutes: number;
+    estimateSnapshotLikeInput?: unknown;
+    cadence?: RecurringCadenceV2;
+  }): RecurringQuoteOption[] {
+    return this.getRecurringOfferQuote({
+      firstCleanPriceCents: params.firstCleanPriceCents,
+      estimatedMinutes: params.firstCleanEstimatedMinutes,
+      estimateSnapshot: params.estimateSnapshotLikeInput,
+      cadence: params.cadence,
     });
   }
 
@@ -429,6 +453,9 @@ export class RecurringPlanService {
       if (occupants >= 5) score += 0.1;
       else if (occupants >= 3) score += 0.05;
     }
+    const occupancyLevel = factors.occupancyLevel ?? factors.occupancy_level;
+    if (occupancyLevel === 'ppl_5_plus') score += 0.1;
+    if (occupancyLevel === 'ppl_3_4') score += 0.05;
 
     return Math.min(score, 1.25);
   }

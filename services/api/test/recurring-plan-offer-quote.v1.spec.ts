@@ -55,6 +55,28 @@ describe("RecurringPlanService offer quote V1", () => {
     );
   });
 
+  it("uses the same quote helper for estimate preview inputs", () => {
+    const service = createService();
+
+    const quotes = service.getRecurringQuoteOptionsFromEstimate({
+      firstCleanPriceCents: 50000,
+      firstCleanEstimatedMinutes: 180,
+      estimateSnapshotLikeInput: {
+        inputJson: {
+          kitchenIntensity: "heavy_use",
+        },
+      },
+    });
+
+    expect(quotes.map((quote) => quote.cadence)).toEqual([
+      "weekly",
+      "every_10_days",
+      "biweekly",
+      "monthly",
+    ]);
+    expect(quotes[0].recurringPriceCents).toBe(33056);
+  });
+
   it("prices weekly below every_10_days below biweekly below monthly", () => {
     const service = createService();
 

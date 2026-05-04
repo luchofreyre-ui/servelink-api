@@ -4,6 +4,7 @@ import {
   BadRequestException,
   Injectable,
   Logger,
+  Optional,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import {
@@ -45,6 +46,11 @@ import {
   GeocodingNotFoundError,
   GeocodingService,
 } from "../geocoding/geocoding.service";
+import {
+  RecurringPlanService,
+  type RecurringCadenceV2,
+  type RecurringQuoteOption,
+} from "../recurring-plan/recurring-plan.service";
 
 export type DeepCleanProgramVisitSubmitDisplay = {
   visitIndex: number;
@@ -131,6 +137,7 @@ export type IntakeEstimatePreviewResponse = {
   estimateV2: EstimateV2Output;
   reconciliation: EstimateV2Reconciliation;
   deepCleanProgram: DeepCleanProgramSubmitDisplay | null;
+  recurringQuoteOptions?: RecurringQuoteOption[];
 };
 
 @Injectable()
@@ -146,6 +153,8 @@ export class IntakeBookingBridgeService {
     private readonly estimateEngineV2: EstimateEngineV2Service,
     private readonly auth: AuthService,
     private readonly geocoding: GeocodingService,
+    @Optional()
+    private readonly recurringPlans?: RecurringPlanService,
   ) {}
 
   /**
@@ -162,6 +171,47 @@ export class IntakeBookingBridgeService {
       });
     }
     return this.geocoding.geocodeServiceLocation(dto.serviceLocation);
+  }
+
+  private isSupportedRecurringCadence(
+    cadence: unknown,
+  ): cadence is RecurringCadenceV2 {
+    return (
+      cadence === "weekly" ||
+      cadence === "every_10_days" ||
+      cadence === "biweekly" ||
+      cadence === "monthly"
+    );
+  }
+
+  private shouldReturnRecurringQuoteOptions(
+    dto: CreateBookingDirectionIntakeDto,
+  ): boolean {
+    if (dto.recurringInterest?.interested === true) return true;
+    return this.isSupportedRecurringCadence(
+      dto.estimateFactors?.recurringCadenceIntent,
+    );
+  }
+
+  private buildRecurringQuoteOptions(params: {
+    dto: CreateBookingDirectionIntakeDto;
+    firstCleanPriceCents: number;
+    firstCleanEstimatedMinutes: number;
+  }): RecurringQuoteOption[] | undefined {
+    if (!this.shouldReturnRecurringQuoteOptions(params.dto)) return undefined;
+    if (!this.recurringPlans) return undefined;
+
+    return this.recurringPlans.getRecurringQuoteOptionsFromEstimate({
+      firstCleanPriceCents: params.firstCleanPriceCents,
+      firstCleanEstimatedMinutes: params.firstCleanEstimatedMinutes,
+      estimateSnapshotLikeInput: {
+        inputJson: params.dto.estimateFactors ?? {},
+        outputJson: {
+          estimatedPriceCents: params.firstCleanPriceCents,
+          estimatedDurationMinutes: params.firstCleanEstimatedMinutes,
+        },
+      },
+    });
   }
 
   /**
@@ -249,21 +299,32 @@ export class IntakeBookingBridgeService {
       v2PricedMinutes: estimateV2.pricedMinutes,
       v2PriceCents: estimateV2.customerVisible.estimatedPrice ?? 0,
     });
+    const firstCleanPriceCents = Math.max(
+      0,
+      Math.floor(result.estimatedPriceCents),
+    );
+    const firstCleanEstimatedMinutes = Math.max(
+      0,
+      Math.floor(result.estimatedDurationMinutes),
+    );
+    const recurringQuoteOptions = this.buildRecurringQuoteOptions({
+      dto,
+      firstCleanPriceCents,
+      firstCleanEstimatedMinutes,
+    });
 
     return {
       kind: "booking_direction_estimate_preview",
       estimate: {
-        priceCents: Math.max(0, Math.floor(result.estimatedPriceCents)),
-        durationMinutes: Math.max(
-          0,
-          Math.floor(result.estimatedDurationMinutes),
-        ),
+        priceCents: firstCleanPriceCents,
+        durationMinutes: firstCleanEstimatedMinutes,
         confidence: result.confidence,
       },
       estimateVersion: estimateV2.snapshotVersion,
       estimateV2,
       reconciliation,
       deepCleanProgram,
+      ...(recurringQuoteOptions ? { recurringQuoteOptions } : {}),
     };
   }
 

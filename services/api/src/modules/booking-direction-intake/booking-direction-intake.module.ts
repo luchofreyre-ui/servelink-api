@@ -6,6 +6,7 @@ import { BookingsModule } from "../bookings/bookings.module";
 import { EstimateModule } from "../estimate/estimate.module";
 import { GeocodingModule } from "../geocoding/geocoding.module";
 import { TenantModule } from "../tenant/tenant.module";
+import { RecurringPlanService } from "../recurring-plan/recurring-plan.service";
 import { BookingDirectionIntakeService } from "./booking-direction-intake.service";
 import { BookingDirectionIntakePublicController } from "./booking-direction-intake.public.controller";
 import { BookingDirectionIntakeSubmitController } from "./booking-direction-intake-submit.controller";
@@ -29,6 +30,7 @@ import { IntakeBookingBridgeService } from "./intake-booking-bridge.service";
   providers: [
     BookingDirectionIntakeService,
     IntakeBookingBridgeService,
+    RecurringPlanService,
     AdminPermissionsGuard,
   ],
   exports: [BookingDirectionIntakeService, IntakeBookingBridgeService],

@@ -1217,15 +1217,6 @@ export function BookingFlowClient() {
       reviewPaymentPhase === "finalizing" ||
       reviewPaymentPhase === "finalizing_timeout");
 
-  const disableNext =
-    state.step === "review" &&
-    (isSubmitting ||
-      !canConfirmDirection ||
-      estimate.status === "loading" ||
-      estimate.status === "error" ||
-      !estimatePreviewReady ||
-      reviewAwaitingDepositPayment);
-
   useEffect(() => {
     if (state.step !== "schedule") return;
     if (!isDepositPaymentLocked()) return;
@@ -1250,6 +1241,7 @@ export function BookingFlowClient() {
       durationMinutes: estimate.data.estimate.durationMinutes,
       confidence: estimate.data.estimate.confidence,
       source: "server",
+      recurringQuoteOptions: estimate.data.recurringQuoteOptions,
     };
   }, [estimate.status, estimate.data, estimate.requestKey, estimateInput]);
 
@@ -1272,6 +1264,21 @@ export function BookingFlowClient() {
     estimate.status === "error" ? estimate.errorMessage ?? null : null;
   const previewFetchCompleted =
     estimate.status === "success" || estimate.status === "error";
+  const recurringContractSelected =
+    state.bookingPublicPath === "first_time_with_recurring" ||
+    state.recurringInterest?.interested === true;
+  const recurringQuoteOptionsReady =
+    !recurringContractSelected ||
+    Boolean(previewEstimate?.recurringQuoteOptions?.length);
+  const disableNext =
+    state.step === "review" &&
+    (isSubmitting ||
+      !canConfirmDirection ||
+      estimate.status === "loading" ||
+      estimate.status === "error" ||
+      !estimatePreviewReady ||
+      !recurringQuoteOptionsReady ||
+      reviewAwaitingDepositPayment);
 
   useEffect(() => {
     const signature = [
