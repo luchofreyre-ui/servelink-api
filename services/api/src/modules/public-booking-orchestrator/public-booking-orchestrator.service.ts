@@ -164,7 +164,7 @@ export class PublicBookingOrchestratorService {
   private async autoCreateRecurringPlanAfterDeposit(bookingId: string) {
     if (!this.recurringPlans) return;
     try {
-      await this.recurringPlans.autoCreateFromBookingAfterDeposit(bookingId);
+      await this.recurringPlans.autoCreateFromBookingAfterDeposit({ bookingId });
     } catch (error) {
       this.log.warn({
         event: "recurring_plan_auto_create_after_deposit",

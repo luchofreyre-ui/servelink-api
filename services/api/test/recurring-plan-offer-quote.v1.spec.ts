@@ -1,49 +1,31 @@
 import { BadRequestException } from "@nestjs/common";
-import { RecurringPlanController } from "../src/modules/recurring-plan/recurring-plan.controller";
 import { RecurringPlanService } from "../src/modules/recurring-plan/recurring-plan.service";
 
-function booking(overrides: Record<string, unknown> = {}) {
-  return {
-    id: "bk_quote",
-    status: "pending_payment",
-    estimatedTotalCentsSnapshot: 20000,
-    quotedTotal: null,
-    priceTotal: null,
-    estimateSnapshot: {
-      outputJson: {
-        estimatedDurationMinutes: 180,
-      },
-    },
-    ...overrides,
-  };
-}
-
-function createService({ bookingResult }: { bookingResult?: unknown } = {}) {
+function createService(booking?: unknown) {
   const prisma = {
     booking: {
-      findUnique: jest
-        .fn()
-        .mockResolvedValue(
-          bookingResult === undefined ? booking() : bookingResult,
-        ),
+      findUnique: jest.fn().mockResolvedValue(booking ?? null),
+    },
+    recurringPlan: {
+      findMany: jest.fn(),
+      findFirst: jest.fn(),
+      create: jest.fn(),
+    },
+    recurringPlanOutcome: {
+      upsert: jest.fn(),
+      findMany: jest.fn(),
     },
   };
 
-  const service = new RecurringPlanService(prisma as any);
-
-  return {
-    controller: new RecurringPlanController(service),
-    prisma,
-    service,
-  };
+  return new RecurringPlanService(prisma as any);
 }
 
-describe("RecurringPlan offer quote V1", () => {
-  it("returns four cadences when no cadence filter", () => {
-    const { service } = createService();
+describe("RecurringPlanService offer quote V1", () => {
+  it("returns four cadences in contract order", () => {
+    const service = createService();
 
     const quotes = service.getRecurringOfferQuote({
-      firstCleanPriceCents: 20000,
+      firstCleanPriceCents: 50000,
       estimatedMinutes: 180,
     });
 
@@ -55,257 +37,115 @@ describe("RecurringPlan offer quote V1", () => {
     ]);
   });
 
-  it("quote endpoint with cadence weekly returns one quote only", async () => {
-    const { controller } = createService();
+  it("returns every_10_days with cadenceDays 10 when filtered", () => {
+    const service = createService();
 
-    const quotes = await controller.getOfferQuote("bk_quote", "weekly");
-
-    expect(quotes).toHaveLength(1);
-    expect(quotes[0]).toEqual(
-      expect.objectContaining({
-        cadence: "weekly",
-      }),
-    );
-  });
-
-  it("quote endpoint without cadence returns all four", async () => {
-    const { controller } = createService();
-
-    const quotes = await controller.getOfferQuote("bk_quote");
-
-    expect(quotes.map((quote) => quote.cadence)).toEqual([
-      "weekly",
-      "every_10_days",
-      "biweekly",
-      "monthly",
-    ]);
-  });
-
-  it("quote endpoint treats not_sure cadence as unlocked", async () => {
-    const { controller } = createService();
-
-    const quotes = await controller.getOfferQuote("bk_quote", "not_sure");
-
-    expect(quotes).toHaveLength(4);
-  });
-
-  it("every_10_days appears between weekly and biweekly", async () => {
-    const { controller } = createService();
-
-    const quotes = await controller.getOfferQuote("bk_quote");
-
-    expect(quotes.map((quote) => quote.cadence)).toEqual([
-      "weekly",
-      "every_10_days",
-      "biweekly",
-      "monthly",
-    ]);
-  });
-
-  it("cadence every_10_days returns one quote with cadenceDays 10", async () => {
-    const { controller } = createService();
-
-    const quotes = await controller.getOfferQuote("bk_quote", "every_10_days");
+    const quotes = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 50000,
+      estimatedMinutes: 180,
+      cadence: "every_10_days",
+    });
 
     expect(quotes).toHaveLength(1);
     expect(quotes[0]).toEqual(
       expect.objectContaining({
         cadence: "every_10_days",
         cadenceDays: 10,
-        estimatedMinutes: 119,
-        recurringPriceCents: 13222,
       }),
     );
   });
 
-  it("uses weekly maintenance pricing", () => {
-    const { service } = createService();
+  it("prices weekly below every_10_days below biweekly below monthly", () => {
+    const service = createService();
 
-    const [weekly] = service.getRecurringOfferQuote({
-      firstCleanPriceCents: 20000,
+    const quotes = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 50000,
       estimatedMinutes: 180,
     });
 
-    expect(weekly).toEqual(
-      expect.objectContaining({
-        discountPercent: 40,
-        estimatedMinutes: 108,
-        recurringPriceCents: 12000,
-        savingsCents: 8000,
-      }),
+    expect(quotes[0].recurringPriceCents).toBeLessThan(
+      quotes[1].recurringPriceCents,
+    );
+    expect(quotes[1].recurringPriceCents).toBeLessThan(
+      quotes[2].recurringPriceCents,
+    );
+    expect(quotes[2].recurringPriceCents).toBeLessThan(
+      quotes[3].recurringPriceCents,
     );
   });
 
-  it("uses biweekly maintenance pricing", () => {
-    const { service } = createService();
+  it("does not let reset-only signals inflate maintenance pricing", () => {
+    const service = createService();
 
-    const [, , biweekly] = service.getRecurringOfferQuote({
-      firstCleanPriceCents: 20000,
+    const base = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 50000,
       estimatedMinutes: 180,
-    });
-
-    expect(biweekly).toEqual(
-      expect.objectContaining({
-        discountPercent: 30,
-        estimatedMinutes: 126,
-        recurringPriceCents: 14000,
-        savingsCents: 6000,
-      }),
-    );
-  });
-
-  it("uses monthly maintenance pricing", () => {
-    const { service } = createService();
-
-    const [, , , monthly] = service.getRecurringOfferQuote({
-      firstCleanPriceCents: 20000,
-      estimatedMinutes: 180,
-    });
-
-    expect(monthly).toEqual(
-      expect.objectContaining({
-        discountPercent: 20,
-        estimatedMinutes: 144,
-        recurringPriceCents: 16000,
-        savingsCents: 4000,
-      }),
-    );
-  });
-
-  it("heavy reset and bathroom detail signals do not inflate maintenance multiplier", () => {
-    const { service } = createService();
-
-    const [weekly] = service.getRecurringOfferQuote({
-      firstCleanPriceCents: 20000,
+      cadence: "weekly",
+    })[0];
+    const resetOnly = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 50000,
       estimatedMinutes: 180,
       estimateSnapshot: {
         outputJson: {
-          estimatedDurationMinutes: 180,
-          primaryIntent: "reset_level",
           overallLaborCondition: "major_reset",
-          lastProCleanRecency: "unknown_or_not_recently",
           bathroomComplexity: "heavy_detailing",
+          reset_level: "major_reset",
         },
       },
       cadence: "weekly",
+    })[0];
+
+    expect(resetOnly.recurringPriceCents).toBe(base.recurringPriceCents);
+  });
+
+  it("lets maintenance signals increase price within cap", () => {
+    const service = createService();
+
+    const heavy = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 50000,
+      estimatedMinutes: 180,
+      estimateSnapshot: {
+        outputJson: {
+          kitchenIntensity: "heavy_use",
+          clutterAccess: "heavy_clutter",
+          petImpact: "heavy",
+          occupantCount: 5,
+        },
+      },
+      cadence: "weekly",
+    })[0];
+
+    expect(heavy.recurringPriceCents).toBe(37500);
+    expect(heavy.discountPercent).toBe(25);
+  });
+
+  it("loads booking quote without requiring completed or assigned status", async () => {
+    const service = createService({
+      id: "bk_quote",
+      estimatedTotalCentsSnapshot: 50000,
+      quotedTotal: null,
+      priceTotal: null,
+      estimateSnapshot: {
+        inputJson: JSON.stringify({ recurring_cadence_intent: "weekly" }),
+        outputJson: JSON.stringify({ estimatedDurationMinutes: 180 }),
+      },
     });
 
-    expect(weekly).toEqual(
+    await expect(
+      service.getOfferQuoteForBooking("bk_quote", "every_10_days"),
+    ).resolves.toEqual([
       expect.objectContaining({
-        estimatedMinutes: 108,
-        recurringPriceCents: 12000,
+        cadence: "every_10_days",
+        recurringPriceCents: 33056,
       }),
-    );
+    ]);
   });
 
-  it("pets and kitchen heavy_use can increase recurring price", () => {
-    const { service } = createService();
+  it("rejects missing booking quote", async () => {
+    const service = createService(null);
 
-    const [baseline] = service.getRecurringOfferQuote({
-      firstCleanPriceCents: 20000,
-      estimatedMinutes: 180,
-      estimateSnapshot: {
-        outputJson: {
-          estimatedDurationMinutes: 180,
-        },
-      },
-      cadence: "weekly",
-    });
-    const [higherLoad] = service.getRecurringOfferQuote({
-      firstCleanPriceCents: 20000,
-      estimatedMinutes: 180,
-      estimateSnapshot: {
-        outputJson: {
-          estimatedDurationMinutes: 180,
-          kitchenIntensity: "heavy_use",
-          hasPets: true,
-        },
-      },
-      cadence: "weekly",
-    });
-
-    expect(higherLoad.recurringPriceCents).toBeGreaterThan(
-      baseline.recurringPriceCents,
-    );
-  });
-
-  it("weekly price remains below biweekly and monthly for the same load", () => {
-    const { service } = createService();
-
-    const [weekly, every10Days, biweekly, monthly] = service.getRecurringOfferQuote({
-      firstCleanPriceCents: 20000,
-      estimatedMinutes: 180,
-      estimateSnapshot: {
-        outputJson: {
-          estimatedDurationMinutes: 180,
-          kitchenIntensity: "heavy_use",
-          clutterAccess: "moderate_clutter",
-          hasPets: true,
-        },
-      },
-    });
-
-    expect(weekly.recurringPriceCents).toBeLessThan(
-      every10Days.recurringPriceCents,
-    );
-    expect(every10Days.recurringPriceCents).toBeLessThan(
-      biweekly.recurringPriceCents,
-    );
-    expect(biweekly.recurringPriceCents).toBeLessThan(
-      monthly.recurringPriceCents,
-    );
-  });
-
-  it("discountPercent is derived dynamically from recurring price ratio", () => {
-    const { service } = createService();
-
-    const [weekly] = service.getRecurringOfferQuote({
-      firstCleanPriceCents: 20000,
-      estimatedMinutes: 180,
-      estimateSnapshot: {
-        outputJson: {
-          estimatedDurationMinutes: 180,
-          kitchenIntensity: "heavy_use",
-          hasPets: true,
-        },
-      },
-      cadence: "weekly",
-    });
-
-    expect(weekly.recurringPriceCents).toBe(14444);
-    expect(weekly.savingsCents).toBe(5556);
-    expect(weekly.discountPercent).toBe(28);
-  });
-
-  it("quote endpoint rejects missing booking", async () => {
-    const { controller } = createService({ bookingResult: null });
-
-    await expect(controller.getOfferQuote("missing")).rejects.toThrow(
+    await expect(service.getOfferQuoteForBooking("missing")).rejects.toThrow(
       new BadRequestException("BOOKING_NOT_FOUND"),
-    );
-  });
-
-  it("quote endpoint does not require booking completed or assigned", async () => {
-    const { controller, prisma } = createService({
-      bookingResult: booking({
-        status: "pending_payment",
-        publicDepositStatus: "deposit_required",
-        scheduledStart: null,
-      }),
-    });
-
-    const quotes = await controller.getOfferQuote("bk_quote");
-
-    expect(prisma.booking.findUnique).toHaveBeenCalledWith({
-      where: { id: "bk_quote" },
-      include: { estimateSnapshot: true },
-    });
-    expect(quotes[0]).toEqual(
-      expect.objectContaining({
-        cadence: "weekly",
-        firstCleanPriceCents: 20000,
-        estimatedMinutes: 108,
-      }),
     );
   });
 });

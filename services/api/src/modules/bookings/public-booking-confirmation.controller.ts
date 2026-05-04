@@ -4,6 +4,31 @@ import { PrismaService } from "../../prisma";
 import { serializeDeepCleanProgramForScreen } from "./serializers/deep-clean-program-screen.serializer";
 import { computePublicBookingConfirmationScheduledEndIso } from "./public-booking-confirmation-scheduled-end";
 
+type PublicRecurringCadence = "weekly" | "every_10_days" | "biweekly" | "monthly";
+type PublicVisitStructure = "one_visit" | "three_visit_reset";
+
+const cadenceDays: Record<PublicRecurringCadence, number> = {
+  weekly: 7,
+  every_10_days: 10,
+  biweekly: 14,
+  monthly: 30,
+};
+
+function isPublicRecurringCadence(
+  value: unknown,
+): value is PublicRecurringCadence {
+  return (
+    value === "weekly" ||
+    value === "every_10_days" ||
+    value === "biweekly" ||
+    value === "monthly"
+  );
+}
+
+function addDays(date: Date, days: number): Date {
+  return new Date(date.getTime() + days * 24 * 60 * 60 * 1000);
+}
+
 function parsePublicEstimateSnapshot(
   outputJson: string | null | undefined,
   inputJson: string | null | undefined,
@@ -12,13 +37,8 @@ function parsePublicEstimateSnapshot(
   estimatedDurationMinutes: number;
   confidence: number;
   serviceType: string | null;
-  visitStructure: "one_visit" | "three_visit_reset";
-  selectedRecurringCadence:
-    | "weekly"
-    | "every_10_days"
-    | "biweekly"
-    | "monthly"
-    | null;
+  selectedRecurringCadence: PublicRecurringCadence | null;
+  visitStructure: PublicVisitStructure | null;
 } | null {
   if (!outputJson?.trim()) return null;
   try {
@@ -42,43 +62,32 @@ function parsePublicEstimateSnapshot(
         : 0;
     const serviceType =
       typeof inp.service_type === "string" ? inp.service_type : null;
-    const recurringCadence =
-      inp.recurring_cadence_intent === "weekly" ||
-      inp.recurring_cadence_intent === "every_10_days" ||
-      inp.recurring_cadence_intent === "biweekly" ||
-      inp.recurring_cadence_intent === "monthly"
-        ? inp.recurring_cadence_intent
-        : null;
+    const cadence =
+      inp.recurring_cadence_intent ?? inp.recurringCadenceIntent ?? null;
+    const selectedRecurringCadence = isPublicRecurringCadence(cadence)
+      ? cadence
+      : null;
+    const firstTimeVisitProgram =
+      inp.first_time_visit_program ?? inp.firstTimeVisitProgram ?? null;
     const visitStructure =
-      inp.first_time_visit_program === "three_visit"
+      firstTimeVisitProgram === "three_visit_reset" ||
+      firstTimeVisitProgram === "three_visit"
         ? "three_visit_reset"
-        : "one_visit";
+        : firstTimeVisitProgram === "one_visit"
+          ? "one_visit"
+          : null;
     return {
       estimatedPriceCents,
       estimatedDurationMinutes,
       confidence,
       serviceType,
+      selectedRecurringCadence,
       visitStructure,
-      selectedRecurringCadence: recurringCadence,
     };
   } catch {
     return null;
   }
 }
-
-function addDays(date: Date, days: number) {
-  const next = new Date(date);
-  next.setDate(next.getDate() + days);
-  return next;
-}
-
-const cadenceDays: Record<"weekly" | "every_10_days" | "biweekly" | "monthly", number> =
-  {
-    weekly: 7,
-    every_10_days: 10,
-    biweekly: 14,
-    monthly: 30,
-  };
 
 /**
  * Unauthenticated read for marketing confirmation + cold deep-links.
@@ -99,6 +108,7 @@ export class PublicBookingConfirmationController {
         estimatedHours: true,
         publicDepositStatus: true,
         estimateSnapshot: { select: { outputJson: true, inputJson: true } },
+        deepCleanProgram: true,
         recurringPlans: {
           orderBy: { createdAt: "desc" },
           take: 1,
@@ -110,7 +120,6 @@ export class PublicBookingConfirmationController {
             nextRunAt: true,
           },
         },
-        deepCleanProgram: true,
         fo: { select: { displayName: true } },
       },
     });
@@ -133,7 +142,22 @@ export class PublicBookingConfirmationController {
         estimatedHours: booking.estimatedHours,
       },
     );
-    const visitStructure = snap?.visitStructure ?? "one_visit";
+    const latestRecurringPlan = booking.recurringPlans[0] ?? null;
+    const planCadence = isPublicRecurringCadence(latestRecurringPlan?.cadence)
+      ? latestRecurringPlan.cadence
+      : null;
+    const selectedRecurringCadence =
+      snap?.selectedRecurringCadence ?? planCadence ?? null;
+    const visitStructure = snap?.visitStructure ?? null;
+    const recurringBeginsAt =
+      latestRecurringPlan?.nextRunAt?.toISOString() ??
+      (booking.scheduledStart && selectedRecurringCadence
+        ? addDays(
+            booking.scheduledStart,
+            (visitStructure === "three_visit_reset" ? 28 : 0) +
+              cadenceDays[selectedRecurringCadence],
+          ).toISOString()
+        : null);
     const resetSchedule =
       visitStructure === "three_visit_reset" && booking.scheduledStart
         ? {
@@ -142,16 +166,6 @@ export class PublicBookingConfirmationController {
             visit3At: addDays(booking.scheduledStart, 28).toISOString(),
           }
         : null;
-    const selectedRecurringCadence = snap?.selectedRecurringCadence ?? null;
-    const recurringBeginsAt =
-      booking.recurringPlans[0]?.nextRunAt?.toISOString() ??
-      (booking.scheduledStart && selectedRecurringCadence
-        ? addDays(
-            booking.scheduledStart,
-            (visitStructure === "three_visit_reset" ? 28 : 0) +
-              cadenceDays[selectedRecurringCadence],
-          ).toISOString()
-        : null);
 
     return {
       kind: "public_booking_confirmation" as const,
@@ -163,22 +177,22 @@ export class PublicBookingConfirmationController {
       publicDepositPaid:
         booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded,
       estimateSnapshot: snap,
+      deepCleanProgram: serializeDeepCleanProgramForScreen({
+        bookingDeepCleanProgram: booking.deepCleanProgram,
+      }),
       selectedRecurringCadence,
       visitStructure,
-      recurringPlan: booking.recurringPlans[0]
+      recurringPlan: latestRecurringPlan
         ? {
-            id: booking.recurringPlans[0].id,
-            cadence: booking.recurringPlans[0].cadence,
-            status: booking.recurringPlans[0].status,
-            pricePerVisitCents: booking.recurringPlans[0].pricePerVisitCents,
-            nextRunAt: booking.recurringPlans[0].nextRunAt.toISOString(),
+            id: latestRecurringPlan.id,
+            cadence: latestRecurringPlan.cadence,
+            status: latestRecurringPlan.status,
+            pricePerVisitCents: latestRecurringPlan.pricePerVisitCents,
+            nextRunAt: latestRecurringPlan.nextRunAt.toISOString(),
           }
         : null,
       resetSchedule,
       recurringBeginsAt,
-      deepCleanProgram: serializeDeepCleanProgramForScreen({
-        bookingDeepCleanProgram: booking.deepCleanProgram,
-      }),
     };
   }
 }

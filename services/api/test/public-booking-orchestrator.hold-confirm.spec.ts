@@ -749,7 +749,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
     );
     expect(
       recurringPlans.autoCreateFromBookingAfterDeposit,
-    ).toHaveBeenCalledWith("bk_hold");
+    ).toHaveBeenCalledWith({ bookingId: "bk_hold" });
     expect(logSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         kind: "public_booking_lifecycle",
@@ -810,7 +810,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
 
     expect(res.kind).toBe("public_booking_confirmation");
     expect(recurringPlans.autoCreateFromBookingAfterDeposit).toHaveBeenCalledWith(
-      "bk_hold",
+      { bookingId: "bk_hold" },
     );
   });
 

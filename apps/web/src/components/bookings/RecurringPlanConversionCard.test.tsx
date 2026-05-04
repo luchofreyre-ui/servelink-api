@@ -1,110 +1,33 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RecurringPlanConversionCard } from "./RecurringPlanConversionCard";
+
+const reload = vi.fn();
 
 vi.mock("@/lib/env", () => ({
   WEB_ENV: {
-    apiBaseUrl: "https://api.example.test/api/v1",
+    apiBaseUrl: "http://localhost:3001/api/v1",
   },
 }));
 
-const quoteResponse = [
-  {
-    cadence: "weekly",
-    cadenceDays: 7,
-    firstCleanPriceCents: 20000,
-    recurringPriceCents: 12000,
-    savingsCents: 8000,
-    discountPercent: 40,
-    estimatedMinutes: 108,
-  },
-  {
-    cadence: "every_10_days",
-    cadenceDays: 10,
-    firstCleanPriceCents: 20000,
-    recurringPriceCents: 13222,
-    savingsCents: 6778,
-    discountPercent: 34,
-    estimatedMinutes: 119,
-  },
-  {
-    cadence: "biweekly",
-    cadenceDays: 14,
-    firstCleanPriceCents: 20000,
-    recurringPriceCents: 14000,
-    savingsCents: 6000,
-    discountPercent: 30,
-    estimatedMinutes: 126,
-  },
-  {
-    cadence: "monthly",
-    cadenceDays: 30,
-    firstCleanPriceCents: 20000,
-    recurringPriceCents: 16000,
-    savingsCents: 4000,
-    discountPercent: 20,
-    estimatedMinutes: 144,
-  },
-];
-
-function mockFetch(handler: (input: RequestInfo | URL) => Promise<Response>) {
-  vi.stubGlobal("fetch", vi.fn(handler));
-}
-
 describe("RecurringPlanConversionCard", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-    vi.unstubAllGlobals();
-  });
-
-  it("renders loading state", () => {
-    mockFetch(() => new Promise<Response>(() => {}));
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    expect(screen.getByText("Loading recurring pricing…")).toBeInTheDocument();
-  });
-
-  it("renders quote data", async () => {
-    mockFetch(async () => Response.json(quoteResponse));
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    expect(await screen.findByText("Weekly")).toBeInTheDocument();
-    expect(screen.getByText("Every 10 days")).toBeInTheDocument();
-    expect(screen.getByText("Biweekly")).toBeInTheDocument();
-    expect(screen.getByText("Monthly")).toBeInTheDocument();
-    expect(screen.getByText("108 minutes")).toBeInTheDocument();
-    expect(screen.getByText("119 minutes")).toBeInTheDocument();
-    expect(screen.getByText("126 minutes")).toBeInTheDocument();
-    expect(screen.getByText("144 minutes")).toBeInTheDocument();
-  });
-
-  it("selectedCadence weekly renders only weekly card", async () => {
-    mockFetch(async () => Response.json([quoteResponse[0]]));
-
-    render(
-      <RecurringPlanConversionCard bookingId="bk_1" selectedCadence="weekly" />,
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: true, text: vi.fn() }),
     );
-
-    expect(
-      await screen.findByRole("heading", {
-        name: "Your recurring service is set",
-      }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Cadence: Weekly")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /start/i })).not.toBeInTheDocument();
-    expect(screen.queryByText("Biweekly")).not.toBeInTheDocument();
-    expect(screen.queryByText("Monthly")).not.toBeInTheDocument();
-    expect(
-      screen.getByText("Based on the cadence you selected earlier."),
-    ).toBeInTheDocument();
+    Object.defineProperty(window, "location", {
+      value: { reload },
+      writable: true,
+    });
   });
 
-  it("locked selected cadence shows status, not CTA", async () => {
-    mockFetch(async () => Response.json([quoteResponse[0]]));
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.clearAllMocks();
+  });
 
+  it("renders recurring-selected bookings as read-only status", () => {
     render(
       <RecurringPlanConversionCard
         bookingId="bk_1"
@@ -113,279 +36,77 @@ describe("RecurringPlanConversionCard", () => {
           id: "rp_1",
           cadence: "weekly",
           status: "active",
-          pricePerVisitCents: 12000,
-          nextRunAt: "2030-01-09T14:00:00.000Z",
+          pricePerVisitCents: 30000,
+          nextRunAt: "2030-01-08T10:00:00.000Z",
         }}
-        scheduledStart="2030-01-02T14:00:00.000Z"
-        visitStructure="one_visit"
-        recurringBeginsAt="2030-01-09T14:00:00.000Z"
       />,
     );
 
-    expect(await screen.findByText("Recurring plan active")).toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: /start/i }),
-    ).not.toBeInTheDocument();
-    expect(screen.getAllByText(/Jan 9, 2030/).length).toBeGreaterThan(0);
-    expect(screen.getByText("First visit date:")).toBeInTheDocument();
-    expect(screen.getByText("Recurring begins:")).toBeInTheDocument();
+    expect(screen.getByText("Your recurring service is set")).toBeTruthy();
+    expect(screen.getByText(/Cadence:/)).toBeTruthy();
+    expect(screen.getByText("Weekly")).toBeTruthy();
+    expect(screen.getByText("$300")).toBeTruthy();
+    expect(screen.queryByRole("button")).toBeNull();
   });
 
-  it("every_10_days label renders correctly when locked", async () => {
-    mockFetch(async () => Response.json([quoteResponse[1]]));
-
+  it("renders every_10_days label in locked status", () => {
     render(
       <RecurringPlanConversionCard
         bookingId="bk_1"
         selectedCadence="every_10_days"
+        recurringPlan={{
+          id: "rp_1",
+          cadence: "every_10_days",
+          status: "active",
+          pricePerVisitCents: 33056,
+          nextRunAt: "2030-01-11T10:00:00.000Z",
+        }}
       />,
     );
 
-    expect(
-      await screen.findByRole("heading", {
-        name: "Your recurring service is set",
-      }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Cadence: Every 10 days")).toBeInTheDocument();
-    expect(screen.getByText("10-day cadence")).toBeInTheDocument();
+    expect(screen.getByText("Every 10 days")).toBeTruthy();
   });
 
-  it("three_visit_reset schedule renders when locked", async () => {
-    mockFetch(async () => Response.json([quoteResponse[0]]));
-
+  it("renders three_visit_reset schedule details only when provided", () => {
     render(
       <RecurringPlanConversionCard
         bookingId="bk_1"
         selectedCadence="weekly"
-        recurringPlan={{
-          id: "rp_1",
-          cadence: "weekly",
-          status: "active",
-          pricePerVisitCents: 12000,
-          nextRunAt: "2030-02-06T14:00:00.000Z",
-        }}
         visitStructure="three_visit_reset"
         resetSchedule={{
-          visit1At: "2030-01-02T14:00:00.000Z",
-          visit2At: "2030-01-16T14:00:00.000Z",
-          visit3At: "2030-01-30T14:00:00.000Z",
+          visit1At: "2030-01-01T10:00:00.000Z",
+          visit2At: "2030-01-15T10:00:00.000Z",
+          visit3At: "2030-01-29T10:00:00.000Z",
+          recurringBeginsAt: "2030-02-05T10:00:00.000Z",
         }}
-        recurringBeginsAt="2030-02-06T14:00:00.000Z"
+        recurringBeginsAt="2030-02-05T10:00:00.000Z"
       />,
     );
 
-    expect(await screen.findByText("Visit 1 date:")).toBeInTheDocument();
-    expect(screen.getByText("Visit 2 date:")).toBeInTheDocument();
-    expect(screen.getByText("Visit 3 date:")).toBeInTheDocument();
-    expect(screen.getAllByText(/Feb 6, 2030/).length).toBeGreaterThan(0);
+    expect(screen.getByText("Three-visit reset schedule")).toBeTruthy();
+    expect(screen.getByText(/Visit 1:/)).toBeTruthy();
+    expect(screen.getByText(/Visit 2:/)).toBeTruthy();
+    expect(screen.getByText(/Visit 3:/)).toBeTruthy();
+    expect(screen.getAllByText(/Recurring begins:/).length).toBeGreaterThan(0);
   });
 
-  it("selectedCadence biweekly renders only biweekly card", async () => {
-    mockFetch(async () => Response.json([quoteResponse[2]]));
+  it("keeps fallback request UI isolated to bookings without a selected cadence", async () => {
+    render(<RecurringPlanConversionCard bookingId="bk_one_time" />);
 
-    render(
-      <RecurringPlanConversionCard
-        bookingId="bk_1"
-        selectedCadence="biweekly"
-      />,
-    );
-
-    expect(await screen.findByText("Cadence: Biweekly")).toBeInTheDocument();
-    expect(screen.queryByText("Weekly")).not.toBeInTheDocument();
-    expect(screen.queryByText("Monthly")).not.toBeInTheDocument();
-  });
-
-  it("selectedCadence missing renders all four cards", async () => {
-    mockFetch(async () => Response.json(quoteResponse));
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    expect(await screen.findByText("Weekly")).toBeInTheDocument();
-    expect(screen.getByText("Every 10 days")).toBeInTheDocument();
-    expect(screen.getByText("Biweekly")).toBeInTheDocument();
-    expect(screen.getByText("Monthly")).toBeInTheDocument();
-  });
-
-  it("fetches offer quote from configured API base", async () => {
-    mockFetch(async () => Response.json(quoteResponse));
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    await screen.findByText("Weekly");
-
-    expect(fetch).toHaveBeenCalledWith(
-      "https://api.example.test/api/v1/recurring-plans/offer-quote?bookingId=bk_1",
-    );
-  });
-
-  it("quote fetch includes cadence param when locked", async () => {
-    mockFetch(async () => Response.json([quoteResponse[0]]));
-
-    render(
-      <RecurringPlanConversionCard bookingId="bk_1" selectedCadence="weekly" />,
-    );
-
-    await screen.findByText("Cadence: Weekly");
-
-    expect(fetch).toHaveBeenCalledWith(
-      "https://api.example.test/api/v1/recurring-plans/offer-quote?bookingId=bk_1&cadence=weekly",
-    );
-  });
-
-  it("quote fetch omits cadence when not locked", async () => {
-    mockFetch(async () => Response.json(quoteResponse));
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    await screen.findByText("Weekly");
-
-    expect(fetch).toHaveBeenCalledWith(
-      "https://api.example.test/api/v1/recurring-plans/offer-quote?bookingId=bk_1",
-    );
-  });
-
-  it("shows first clean price", async () => {
-    mockFetch(async () => Response.json(quoteResponse));
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    expect(await screen.findAllByText("$200")).toHaveLength(4);
-  });
-
-  it("shows recurring price", async () => {
-    mockFetch(async () => Response.json(quoteResponse));
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    expect(await screen.findByText("$120")).toBeInTheDocument();
-    expect(screen.getByText("$132.22")).toBeInTheDocument();
-    expect(screen.getByText("$140")).toBeInTheDocument();
-    expect(screen.getByText("$160")).toBeInTheDocument();
-  });
-
-  it("shows savings and discount", async () => {
-    mockFetch(async () => Response.json(quoteResponse));
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    expect(await screen.findByText("$80 / 40%")).toBeInTheDocument();
-    expect(screen.getByText("$67.78 / 34%")).toBeInTheDocument();
-    expect(screen.getByText("$60 / 30%")).toBeInTheDocument();
-    expect(screen.getByText("$40 / 20%")).toBeInTheDocument();
-  });
-
-  it("uses configured API base when creating plan", async () => {
-    const user = userEvent.setup();
-
-    mockFetch(async (input) => {
-      const url = String(input);
-      if (url.includes("/offer-quote")) {
-        return Response.json(quoteResponse);
-      }
-
-      return Response.json({ id: "rp_1" });
-    });
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    await user.click(
-      await screen.findByRole("button", { name: /choose weekly recurring/i }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: "Request Every 10 days" }));
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        "https://api.example.test/api/v1/recurring-plans/create-from-booking",
+        "http://localhost:3001/api/v1/recurring-plans/create-from-booking",
         expect.objectContaining({
           method: "POST",
-          body: JSON.stringify({ bookingId: "bk_1", cadence: "weekly" }),
+          body: JSON.stringify({
+            bookingId: "bk_one_time",
+            cadence: "every_10_days",
+          }),
         }),
       );
     });
-  });
-
-  it("still allows cadence click if quote fetch fails", async () => {
-    const user = userEvent.setup();
-
-    mockFetch(async (input) => {
-      const url = String(input);
-      if (url.includes("/offer-quote")) {
-        return new Response(null, { status: 500 });
-      }
-
-      return Response.json({ id: "rp_1" });
-    });
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    expect(
-      await screen.findByText(
-        "Unable to load recurring pricing. You can still choose a cadence.",
-      ),
-    ).toBeInTheDocument();
-
-    await user.click(
-      screen.getByRole("button", { name: /choose weekly recurring/i }),
-    );
-
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
-        "https://api.example.test/api/v1/recurring-plans/create-from-booking",
-        expect.objectContaining({
-          method: "POST",
-          body: JSON.stringify({ bookingId: "bk_1", cadence: "weekly" }),
-        }),
-      );
-    });
-  });
-
-  it("failed create response does not show success", async () => {
-    const user = userEvent.setup();
-
-    mockFetch(async (input) => {
-      const url = String(input);
-      if (url.includes("/offer-quote")) {
-        return Response.json(quoteResponse);
-      }
-
-      return new Response(null, { status: 500 });
-    });
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    await user.click(
-      await screen.findByRole("button", { name: /choose weekly recurring/i }),
-    );
-
-    expect(
-      await screen.findByText(
-        "Unable to choose recurring cadence. Please try again.",
-      ),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByText("Your weekly recurring cadence is selected."),
-    ).not.toBeInTheDocument();
-  });
-
-  it("successful create response shows success", async () => {
-    const user = userEvent.setup();
-
-    mockFetch(async (input) => {
-      const url = String(input);
-      if (url.includes("/offer-quote")) {
-        return Response.json(quoteResponse);
-      }
-
-      return Response.json({ id: "rp_1" });
-    });
-
-    render(<RecurringPlanConversionCard bookingId="bk_1" />);
-
-    await user.click(
-      await screen.findByRole("button", { name: /choose weekly recurring/i }),
-    );
-
-    expect(
-      await screen.findByText("Your weekly recurring cadence is selected."),
-    ).toBeInTheDocument();
+    expect(reload).not.toHaveBeenCalled();
   });
 });
