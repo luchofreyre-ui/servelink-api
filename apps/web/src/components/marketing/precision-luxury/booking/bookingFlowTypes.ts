@@ -145,12 +145,14 @@ export type BookingLastProCleanRecency =
 export type BookingFirstTimeVisitProgram = "one_visit" | "two_visit" | "three_visit";
 export type BookingRecurringCadenceIntent =
   | "weekly"
+  | "every_10_days"
   | "biweekly"
   | "monthly"
   | "none";
 
 export type BookingRecurringInterestCadence =
   | "weekly"
+  | "every_10_days"
   | "biweekly"
   | "monthly"
   | "not_sure";

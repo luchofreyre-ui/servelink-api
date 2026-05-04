@@ -3,11 +3,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { WEB_ENV } from '@/lib/env';
 
-type RecurringCadence = 'weekly' | 'biweekly' | 'monthly';
+type RecurringCadence = 'weekly' | 'every_10_days' | 'biweekly' | 'monthly';
 type SelectedRecurringCadence = RecurringCadence | 'not_sure';
 
 type RecurringOfferQuote = {
   cadence: RecurringCadence;
+  cadenceDays: number;
   firstCleanPriceCents: number;
   recurringPriceCents: number;
   savingsCents: number;
@@ -15,15 +16,32 @@ type RecurringOfferQuote = {
   estimatedMinutes: number;
 };
 
+type RecurringPlanSummary = {
+  id: string;
+  cadence: RecurringCadence;
+  status: string;
+  pricePerVisitCents: number;
+  nextRunAt: string | null;
+};
+
 const cadenceLabels: Record<RecurringCadence, string> = {
   weekly: 'Weekly',
+  every_10_days: 'Every 10 days',
   biweekly: 'Biweekly',
   monthly: 'Monthly',
+};
+
+const cadenceSentenceLabels: Record<RecurringCadence, string> = {
+  weekly: 'weekly',
+  every_10_days: 'every 10 days',
+  biweekly: 'biweekly',
+  monthly: 'monthly',
 };
 
 const fallbackQuotes: RecurringOfferQuote[] = [
   {
     cadence: 'weekly',
+    cadenceDays: 7,
     firstCleanPriceCents: 0,
     recurringPriceCents: 0,
     savingsCents: 0,
@@ -31,7 +49,17 @@ const fallbackQuotes: RecurringOfferQuote[] = [
     estimatedMinutes: 120,
   },
   {
+    cadence: 'every_10_days',
+    cadenceDays: 10,
+    firstCleanPriceCents: 0,
+    recurringPriceCents: 0,
+    savingsCents: 0,
+    discountPercent: 34,
+    estimatedMinutes: 120,
+  },
+  {
     cadence: 'biweekly',
+    cadenceDays: 14,
     firstCleanPriceCents: 0,
     recurringPriceCents: 0,
     savingsCents: 0,
@@ -40,6 +68,7 @@ const fallbackQuotes: RecurringOfferQuote[] = [
   },
   {
     cadence: 'monthly',
+    cadenceDays: 30,
     firstCleanPriceCents: 0,
     recurringPriceCents: 0,
     savingsCents: 0,
@@ -52,6 +81,7 @@ function normalizeLockedCadence(
   selectedCadence?: SelectedRecurringCadence | null,
 ): RecurringCadence | null {
   return selectedCadence === 'weekly' ||
+    selectedCadence === 'every_10_days' ||
     selectedCadence === 'biweekly' ||
     selectedCadence === 'monthly'
     ? selectedCadence
@@ -69,9 +99,11 @@ function formatCurrency(cents: number) {
 export function RecurringPlanConversionCard({
   bookingId,
   selectedCadence,
+  recurringPlan,
 }: {
   bookingId: string;
   selectedCadence?: SelectedRecurringCadence | null;
+  recurringPlan?: RecurringPlanSummary | null;
 }) {
   const lockedCadence = normalizeLockedCadence(selectedCadence);
   const [submittingCadence, setSubmittingCadence] =
@@ -137,8 +169,29 @@ export function RecurringPlanConversionCard({
     (quote) => quote.firstCleanPriceCents === 0,
   );
   const heading = lockedCadence
-    ? `Your ${lockedCadence} recurring plan`
+    ? `Your ${cadenceSentenceLabels[lockedCadence]} recurring service is set`
     : 'Keep your home on a recurring plan';
+  const lockedQuote = lockedCadence ? displayQuotes[0] : null;
+  const planActive = Boolean(recurringPlan && recurringPlan.status === 'active');
+  const statusText = lockedCadence
+    ? planActive
+      ? 'Recurring plan active'
+      : 'Recurring plan will be created after deposit confirmation'
+    : null;
+  const nextRunLabel = (() => {
+    if (!lockedCadence || !lockedQuote) return null;
+    if (recurringPlan?.nextRunAt) {
+      const next = new Date(recurringPlan.nextRunAt);
+      if (Number.isFinite(next.getTime())) {
+        return `Next recurring visit: ${next.toLocaleDateString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })}`;
+      }
+    }
+    return `Next recurring visit: ${lockedQuote.cadenceDays} days after your first visit`;
+  })();
 
   async function createPlan(cadence: RecurringCadence) {
     setSubmittingCadence(cadence);
@@ -172,15 +225,22 @@ export function RecurringPlanConversionCard({
       <h3 className="font-semibold text-lg">{heading}</h3>
 
       <p className="text-sm text-gray-600">
-        Your first clean gets your home reset. Recurring visits are priced as
-        follow-up maintenance so you can keep the home consistent.
+        {lockedCadence
+          ? 'Your first visit is booked. Your recurring maintenance visits are scheduled from this plan.'
+          : 'Your first clean gets your home reset. Recurring visits are priced as follow-up maintenance so you can keep the home consistent.'}
       </p>
 
-      <p className="text-sm text-gray-600">
-        Your recurring plan is created after your booking is deposit-confirmed.
-      </p>
+      {!lockedCadence ? (
+        <p className="text-sm text-gray-600">
+          Your recurring plan is created after your booking is deposit-confirmed.
+        </p>
+      ) : null}
 
-      {lockedCadence ? (
+      {statusText ? (
+        <p className="text-sm font-medium text-green-700">{statusText}</p>
+      ) : null}
+
+      {lockedCadence && !planActive ? (
         <p className="text-sm text-gray-600">
           Based on the cadence you selected earlier.
         </p>
@@ -192,7 +252,9 @@ export function RecurringPlanConversionCard({
 
       {quoteError ? (
         <p className="text-sm text-red-600">
-          Unable to load recurring pricing. You can still choose a cadence.
+          {lockedCadence
+            ? 'Unable to load recurring pricing. Your selected cadence is still saved.'
+            : 'Unable to load recurring pricing. You can still choose a cadence.'}
         </p>
       ) : null}
 
@@ -202,19 +264,19 @@ export function RecurringPlanConversionCard({
         </p>
       ) : null}
 
-      {createError ? (
+      {createError && !lockedCadence ? (
         <p className="text-sm text-red-600">
           Unable to start recurring plan. Please try again.
         </p>
       ) : null}
 
-      {successCadence ? (
+      {successCadence && !lockedCadence ? (
         <p className="text-sm text-green-700">
           Your {successCadence} recurring plan has been started.
         </p>
       ) : null}
 
-      <div className={`grid gap-3 ${lockedCadence ? '' : 'md:grid-cols-3'}`}>
+      <div className={`grid gap-3 ${lockedCadence ? '' : 'md:grid-cols-4'}`}>
         {displayQuotes.map((quote) => (
           <div
             key={quote.cadence}
@@ -223,13 +285,13 @@ export function RecurringPlanConversionCard({
             <div>
               <h4 className="font-semibold">{cadenceLabels[quote.cadence]}</h4>
               <p className="text-sm text-gray-600">
-                {quote.discountPercent}% recurring discount
+                {quote.cadenceDays}-day cadence
               </p>
             </div>
 
             <dl className="space-y-1 text-sm text-gray-700">
               <div className="flex justify-between gap-3">
-                <dt>First clean:</dt>
+                <dt>First visit:</dt>
                 <dd>{formatCurrency(quote.firstCleanPriceCents)}</dd>
               </div>
               <div className="flex justify-between gap-3">
@@ -247,15 +309,23 @@ export function RecurringPlanConversionCard({
                 <dt>Estimated time:</dt>
                 <dd>{quote.estimatedMinutes} minutes</dd>
               </div>
+              {nextRunLabel && lockedCadence ? (
+                <div className="flex justify-between gap-3">
+                  <dt>Next visit:</dt>
+                  <dd>{nextRunLabel.replace('Next recurring visit: ', '')}</dd>
+                </div>
+              ) : null}
             </dl>
 
-            <button
-              onClick={() => createPlan(quote.cadence)}
-              disabled={submittingCadence !== null}
-              className="btn-primary w-full"
-            >
-              Start {quote.cadence} plan
-            </button>
+            {!lockedCadence ? (
+              <button
+                onClick={() => createPlan(quote.cadence)}
+                disabled={submittingCadence !== null}
+                className="btn-primary w-full"
+              >
+                Start {cadenceSentenceLabels[quote.cadence]} plan
+              </button>
+            ) : null}
           </div>
         ))}
       </div>

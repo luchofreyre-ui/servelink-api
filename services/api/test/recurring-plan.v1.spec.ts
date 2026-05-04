@@ -32,6 +32,9 @@ function quoteReadyBooking(overrides: Record<string, unknown> = {}) {
         clutterAccess: "mostly_clear",
         hasPets: false,
       },
+      inputJson: {
+        recurring_cadence_intent: "weekly",
+      },
     },
     ...overrides,
   });
@@ -245,6 +248,26 @@ describe("RecurringPlanService V1", () => {
     );
   });
 
+  it("createFromBooking supports every_10_days", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking(),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "every_10_days",
+    });
+
+    expect(prisma.recurringPlan.create.mock.calls[0][0].data).toEqual(
+      expect.objectContaining({
+        cadence: "every_10_days",
+        estimatedMinutes: 81,
+        pricePerVisitCents: 21938,
+        discountPercent: 34,
+      }),
+    );
+  });
+
   it("stores monthly minutes-based pricePerVisitCents from estimatedTotalCentsSnapshot", async () => {
     const { service, prisma } = createService({
       booking: quoteReadyBooking(),
@@ -317,7 +340,7 @@ describe("RecurringPlanService V1", () => {
   it("monthly pricing is greater than biweekly and weekly pricing", () => {
     const { service } = createService();
 
-    const [weekly, biweekly, monthly] = service.getRecurringOfferQuote({
+    const [weekly, every10Days, biweekly, monthly] = service.getRecurringOfferQuote({
       firstCleanPriceCents: 33042,
       estimatedMinutes: 122,
       estimateSnapshot: {
@@ -335,7 +358,31 @@ describe("RecurringPlanService V1", () => {
       biweekly.recurringPriceCents,
     );
     expect(biweekly.recurringPriceCents).toBeGreaterThan(
+      every10Days.recurringPriceCents,
+    );
+    expect(every10Days.recurringPriceCents).toBeGreaterThan(
       weekly.recurringPriceCents,
+    );
+  });
+
+  it("every_10_days price sits between weekly and biweekly", () => {
+    const { service } = createService();
+
+    const [weekly, every10Days, biweekly] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 33042,
+      estimatedMinutes: 122,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 122,
+        },
+      },
+    });
+
+    expect(weekly.recurringPriceCents).toBeLessThan(
+      every10Days.recurringPriceCents,
+    );
+    expect(every10Days.recurringPriceCents).toBeLessThan(
+      biweekly.recurringPriceCents,
     );
   });
 
@@ -444,6 +491,72 @@ describe("RecurringPlanService V1", () => {
     const data = prisma.recurringPlan.create.mock.calls[0][0].data;
     expect(data.pricePerVisitCents).toBeLessThan(22000);
     expect(data.discountPercent).toBe(40);
+  });
+
+  it("weekly nextRunAt is scheduledStart plus 7 days", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking({
+        scheduledStart: new Date("2030-01-02T14:00:00.000Z"),
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "weekly",
+    });
+
+    expect(
+      prisma.recurringPlan.create.mock.calls[0][0].data.nextRunAt.toISOString(),
+    ).toBe("2030-01-09T14:00:00.000Z");
+  });
+
+  it("every_10_days nextRunAt is scheduledStart plus 10 days", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking({
+        scheduledStart: new Date("2030-01-02T14:00:00.000Z"),
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "every_10_days",
+    });
+
+    expect(
+      prisma.recurringPlan.create.mock.calls[0][0].data.nextRunAt.toISOString(),
+    ).toBe("2030-01-12T14:00:00.000Z");
+  });
+
+  it("duplicate auto-create is idempotent", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking(),
+      existingPlan: { id: "rp_existing" },
+    });
+
+    const result = await service.autoCreateFromBookingAfterDeposit("bk_assigned");
+
+    expect(result.result).toBe("already_exists");
+    expect(prisma.recurringPlan.create).not.toHaveBeenCalled();
+  });
+
+  it("auto-create skips when no selected cadence exists", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking({
+        estimateSnapshot: {
+          outputJson: {
+            estimatedDurationMinutes: 122,
+          },
+          inputJson: {
+            recurring_cadence_intent: "none",
+          },
+        },
+      }),
+    });
+
+    const result = await service.autoCreateFromBookingAfterDeposit("bk_assigned");
+
+    expect(result.result).toBe("skipped");
+    expect(prisma.recurringPlan.create).not.toHaveBeenCalled();
   });
 
   it("records converted outcome after creation", async () => {

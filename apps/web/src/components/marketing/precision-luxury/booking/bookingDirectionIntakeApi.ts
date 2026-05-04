@@ -340,7 +340,12 @@ export type SubmitBookingDirectionIntakePayload = {
   /** Recurring interest capture only; does not create schedules, contracts, or billing. */
   recurringInterest?: {
     interested: boolean;
-    cadence?: "weekly" | "biweekly" | "monthly" | "not_sure";
+    cadence?:
+      | "weekly"
+      | "every_10_days"
+      | "biweekly"
+      | "monthly"
+      | "not_sure";
     note?: string;
     sourceIntent?: "RESET" | "MAINTAIN" | "TOP_UP" | "TRANSACTIONAL";
   };

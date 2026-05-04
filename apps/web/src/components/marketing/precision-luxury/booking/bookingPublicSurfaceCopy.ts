@@ -233,7 +233,7 @@ export const BOOKING_POST_ESTIMATE_VISIT_TWO = "Spread across 2 visits";
 export const BOOKING_POST_ESTIMATE_VISIT_THREE = "Spread across 3 visits";
 
 export const BOOKING_POST_ESTIMATE_CONVERT_RECURRING =
-  "Convert to recurring after this estimate";
+  "Choose recurring service";
 
 export const BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER =
   "We’ll keep this request as a one-time booking until you sign in—then recurring cadence and account tools take over in the customer portal.";

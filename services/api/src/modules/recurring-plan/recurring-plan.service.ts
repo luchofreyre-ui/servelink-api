@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
 function isEligibleForRecurringPlan(booking: {
@@ -45,6 +45,10 @@ function parseEstimateOutputJson(outputJson: unknown) {
   return outputJson && typeof outputJson === 'object' ? outputJson : null;
 }
 
+function parseEstimateInputJson(inputJson: unknown) {
+  return parseEstimateOutputJson(inputJson);
+}
+
 function readFactor(source: Record<string, unknown>, ...keys: string[]) {
   for (const key of keys) {
     const value = source[key];
@@ -56,23 +60,54 @@ function readFactor(source: Record<string, unknown>, ...keys: string[]) {
   return undefined;
 }
 
-type RecurringCadence = 'weekly' | 'biweekly' | 'monthly';
+export type RecurringCadenceValue =
+  | 'weekly'
+  | 'every_10_days'
+  | 'biweekly'
+  | 'monthly';
 
 @Injectable()
 export class RecurringPlanService {
+  private readonly logger = new Logger(RecurringPlanService.name);
+
   constructor(private prisma: PrismaService) {}
 
-  private cadenceDaysMap = {
+  private readonly cadenceDayMap: Record<RecurringCadenceValue, number> = {
     weekly: 7,
+    every_10_days: 10,
     biweekly: 14,
     monthly: 30,
-  } as const;
+  };
 
-  private cadenceMultiplierMap = {
+  private readonly cadenceMultiplierMap: Record<RecurringCadenceValue, number> = {
     weekly: 0.6,
+    every_10_days: 0.66,
     biweekly: 0.7,
     monthly: 0.8,
-  } as const;
+  };
+
+  normalizeCadence(value: unknown): RecurringCadenceValue | null {
+    if (value === 'weekly') return 'weekly';
+    if (value === 'every_10_days') return 'every_10_days';
+    if (value === 'biweekly') return 'biweekly';
+    if (value === 'monthly') return 'monthly';
+    return null;
+  }
+
+  private getSelectedCadenceFromEstimateSnapshot(
+    estimateSnapshot: unknown,
+  ): RecurringCadenceValue | null {
+    const inputJson =
+      estimateSnapshot &&
+      typeof estimateSnapshot === 'object' &&
+      'inputJson' in estimateSnapshot
+        ? (estimateSnapshot as { inputJson?: unknown }).inputJson
+        : null;
+    const input = parseEstimateInputJson(inputJson) as
+      | Record<string, unknown>
+      | null;
+    return this.normalizeCadence(input?.recurring_cadence_intent);
+  }
 
   private getFirstCleanPriceCentsFromBooking(booking: {
     estimatedTotalCentsSnapshot?: number | null;
@@ -99,11 +134,11 @@ export class RecurringPlanService {
     firstCleanPriceCents: number;
     estimatedMinutes: number;
     estimateSnapshot?: unknown;
-    cadence?: RecurringCadence;
+    cadence?: RecurringCadenceValue;
   }) {
     const cadences = params.cadence
       ? ([params.cadence] as const)
-      : (['weekly', 'biweekly', 'monthly'] as const);
+      : (['weekly', 'every_10_days', 'biweekly', 'monthly'] as const);
 
     return cadences.map((cadence) => {
       const recurringMinutes = this.getRecurringMinutes({
@@ -128,6 +163,7 @@ export class RecurringPlanService {
 
       return {
         cadence,
+        cadenceDays: this.cadenceDayMap[cadence],
         firstCleanPriceCents: params.firstCleanPriceCents,
         recurringPriceCents,
         savingsCents,
@@ -240,7 +276,7 @@ export class RecurringPlanService {
 
   private getRecurringMinutes(params: {
     estimatedMinutes: number;
-    cadence: RecurringCadence;
+    cadence: RecurringCadenceValue;
     estimateSnapshot: unknown;
   }) {
     const cadenceMultiplier = this.cadenceMultiplierMap[params.cadence] ?? 1;
@@ -253,7 +289,10 @@ export class RecurringPlanService {
     );
   }
 
-  async getOfferQuoteForBooking(bookingId: string, cadence?: RecurringCadence) {
+  async getOfferQuoteForBooking(
+    bookingId: string,
+    cadence?: RecurringCadenceValue,
+  ) {
     const booking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
       include: { estimateSnapshot: true },
@@ -277,7 +316,7 @@ export class RecurringPlanService {
 
   async listForAdmin(params?: {
     status?: 'active' | 'paused' | 'cancelled';
-    cadence?: 'weekly' | 'biweekly' | 'monthly';
+    cadence?: RecurringCadenceValue;
   }) {
     return this.prisma.recurringPlan.findMany({
       where: {
@@ -307,7 +346,7 @@ export class RecurringPlanService {
   async recordOutcome(params: {
     bookingId: string;
     converted: boolean;
-    cadence?: 'weekly' | 'biweekly' | 'monthly';
+    cadence?: RecurringCadenceValue;
   }) {
     return this.prisma.recurringPlanOutcome.upsert({
       where: { bookingId: params.bookingId },
@@ -359,8 +398,13 @@ export class RecurringPlanService {
 
   async createFromBooking(params: {
     bookingId: string;
-    cadence: RecurringCadence;
+    cadence: RecurringCadenceValue;
   }) {
+    const cadence = this.normalizeCadence(params.cadence);
+    if (!cadence) {
+      throw new BadRequestException('RECURRING_CADENCE_INVALID');
+    }
+
     const booking = await this.prisma.booking.findUnique({
       where: { id: params.bookingId },
       include: {
@@ -393,7 +437,7 @@ export class RecurringPlanService {
 
     const recurringMinutes = this.getRecurringMinutes({
       estimatedMinutes,
-      cadence: params.cadence,
+      cadence,
       estimateSnapshot: booking.estimateSnapshot,
     });
 
@@ -407,17 +451,19 @@ export class RecurringPlanService {
 
     const now = new Date();
 
-    const nextRunAt = new Date(
-      now.getTime() +
-        this.cadenceDaysMap[params.cadence] * 24 * 60 * 60 * 1000,
-    );
+    const nextRunAt = booking.scheduledStart
+      ? this.getNextRunAt({
+          scheduledStart: new Date(booking.scheduledStart),
+          cadence,
+        })
+      : new Date(now.getTime() + this.cadenceDayMap[cadence] * 24 * 60 * 60 * 1000);
 
     const plan = await this.prisma.recurringPlan.create({
       data: {
         bookingId: booking.id,
         customerId: booking.customerId,
         franchiseOwnerId: null,
-        cadence: params.cadence,
+        cadence,
         status: 'active',
         pricePerVisitCents,
         estimatedMinutes: recurringMinutes,
@@ -430,9 +476,95 @@ export class RecurringPlanService {
     await this.recordOutcome({
       bookingId: booking.id,
       converted: true,
-      cadence: params.cadence,
+      cadence,
     });
 
     return plan;
+  }
+
+  private getNextRunAt(params: {
+    scheduledStart: Date;
+    cadence: RecurringCadenceValue;
+  }) {
+    const next = new Date(params.scheduledStart);
+    next.setDate(next.getDate() + this.cadenceDayMap[params.cadence]);
+    return next;
+  }
+
+  async autoCreateFromBookingAfterDeposit(bookingId: string) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { estimateSnapshot: true },
+    });
+
+    if (!booking) {
+      this.logAutoCreate({
+        bookingId,
+        cadence: null,
+        result: 'skipped',
+        reason: 'booking_not_found',
+      });
+      return { result: 'skipped' as const };
+    }
+
+    const cadence = this.getSelectedCadenceFromEstimateSnapshot(
+      booking.estimateSnapshot,
+    );
+    if (!cadence) {
+      this.logAutoCreate({
+        bookingId,
+        cadence: null,
+        result: 'skipped',
+        reason: 'cadence_missing',
+      });
+      return { result: 'skipped' as const };
+    }
+
+    try {
+      const plan = await this.createFromBooking({ bookingId, cadence });
+      this.logAutoCreate({ bookingId, cadence, result: 'created' });
+      return { result: 'created' as const, plan };
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : String(error ?? 'unknown');
+      if (message.includes('RECURRING_PLAN_ALREADY_EXISTS')) {
+        this.logAutoCreate({ bookingId, cadence, result: 'already_exists' });
+        return { result: 'already_exists' as const };
+      }
+      if (message.includes('BOOKING_NOT_RECURRING_ELIGIBLE')) {
+        this.logAutoCreate({
+          bookingId,
+          cadence,
+          result: 'skipped',
+          reason: 'booking_not_eligible',
+        });
+        return { result: 'skipped' as const };
+      }
+
+      this.logAutoCreate({
+        bookingId,
+        cadence,
+        result: 'failed',
+        reason: message,
+      });
+      return { result: 'failed' as const };
+    }
+  }
+
+  private logAutoCreate(args: {
+    bookingId: string;
+    cadence: RecurringCadenceValue | null;
+    result: 'created' | 'already_exists' | 'skipped' | 'failed';
+    reason?: string;
+  }) {
+    this.logger.log(
+      JSON.stringify({
+        event: 'recurring_plan_auto_create_after_deposit',
+        bookingId: args.bookingId,
+        cadence: args.cadence,
+        result: args.result,
+        ...(args.reason ? { reason: args.reason } : {}),
+      }),
+    );
   }
 }

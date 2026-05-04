@@ -603,6 +603,7 @@ export function BookingConfirmationClient() {
               <RecurringPlanConversionCard
                 bookingId={bookingId}
                 selectedCadence={selectedRecurringCadence}
+                recurringPlan={remote?.recurringPlan ?? null}
               />
             </div>
           ) : null}

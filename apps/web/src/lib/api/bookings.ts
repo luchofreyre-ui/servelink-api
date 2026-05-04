@@ -82,7 +82,19 @@ export type PublicBookingConfirmationResponse = {
     confidence: number;
     serviceType: string | null;
   } | null;
-  selectedRecurringCadence?: "weekly" | "biweekly" | "monthly" | null;
+  selectedRecurringCadence?:
+    | "weekly"
+    | "every_10_days"
+    | "biweekly"
+    | "monthly"
+    | null;
+  recurringPlan: {
+    id: string;
+    cadence: "weekly" | "every_10_days" | "biweekly" | "monthly";
+    status: string;
+    pricePerVisitCents: number;
+    nextRunAt: string | null;
+  } | null;
   deepCleanProgram: BookingScreenDeepCleanProgramApi | null;
 };
 

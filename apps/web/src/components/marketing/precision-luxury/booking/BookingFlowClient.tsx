@@ -2546,6 +2546,14 @@ export function BookingFlowClient() {
                       }),
                     );
                   }}
+                  onRecurringCadenceIntentChange={(recurringCadenceIntent) => {
+                    setState((prev) =>
+                      clampBookingStepToStructuralMax({
+                        ...prev,
+                        recurringCadenceIntent,
+                      }),
+                    );
+                  }}
                 />
               ) : null}
 

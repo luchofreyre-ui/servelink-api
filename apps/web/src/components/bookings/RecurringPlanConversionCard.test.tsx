@@ -12,6 +12,7 @@ vi.mock("@/lib/env", () => ({
 const quoteResponse = [
   {
     cadence: "weekly",
+    cadenceDays: 7,
     firstCleanPriceCents: 20000,
     recurringPriceCents: 12000,
     savingsCents: 8000,
@@ -19,7 +20,17 @@ const quoteResponse = [
     estimatedMinutes: 108,
   },
   {
+    cadence: "every_10_days",
+    cadenceDays: 10,
+    firstCleanPriceCents: 20000,
+    recurringPriceCents: 13222,
+    savingsCents: 6778,
+    discountPercent: 34,
+    estimatedMinutes: 119,
+  },
+  {
     cadence: "biweekly",
+    cadenceDays: 14,
     firstCleanPriceCents: 20000,
     recurringPriceCents: 14000,
     savingsCents: 6000,
@@ -28,6 +39,7 @@ const quoteResponse = [
   },
   {
     cadence: "monthly",
+    cadenceDays: 30,
     firstCleanPriceCents: 20000,
     recurringPriceCents: 16000,
     savingsCents: 4000,
@@ -60,9 +72,11 @@ describe("RecurringPlanConversionCard", () => {
     render(<RecurringPlanConversionCard bookingId="bk_1" />);
 
     expect(await screen.findByText("Weekly")).toBeInTheDocument();
+    expect(screen.getByText("Every 10 days")).toBeInTheDocument();
     expect(screen.getByText("Biweekly")).toBeInTheDocument();
     expect(screen.getByText("Monthly")).toBeInTheDocument();
     expect(screen.getByText("108 minutes")).toBeInTheDocument();
+    expect(screen.getByText("119 minutes")).toBeInTheDocument();
     expect(screen.getByText("126 minutes")).toBeInTheDocument();
     expect(screen.getByText("144 minutes")).toBeInTheDocument();
   });
@@ -76,10 +90,11 @@ describe("RecurringPlanConversionCard", () => {
 
     expect(
       await screen.findByRole("heading", {
-        name: "Your weekly recurring plan",
+        name: "Your weekly recurring service is set",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Weekly")).toBeInTheDocument();
+    expect(screen.queryByText("Start weekly plan")).not.toBeInTheDocument();
     expect(screen.queryByText("Biweekly")).not.toBeInTheDocument();
     expect(screen.queryByText("Monthly")).not.toBeInTheDocument();
     expect(
@@ -87,8 +102,51 @@ describe("RecurringPlanConversionCard", () => {
     ).toBeInTheDocument();
   });
 
-  it("selectedCadence biweekly renders only biweekly card", async () => {
+  it("locked selected cadence shows status, not CTA", async () => {
+    mockFetch(async () => Response.json([quoteResponse[0]]));
+
+    render(
+      <RecurringPlanConversionCard
+        bookingId="bk_1"
+        selectedCadence="weekly"
+        recurringPlan={{
+          id: "rp_1",
+          cadence: "weekly",
+          status: "active",
+          pricePerVisitCents: 12000,
+          nextRunAt: "2030-01-09T14:00:00.000Z",
+        }}
+      />,
+    );
+
+    expect(await screen.findByText("Recurring plan active")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /start/i }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText(/Jan 9, 2030/)).toBeInTheDocument();
+  });
+
+  it("every_10_days label renders correctly when locked", async () => {
     mockFetch(async () => Response.json([quoteResponse[1]]));
+
+    render(
+      <RecurringPlanConversionCard
+        bookingId="bk_1"
+        selectedCadence="every_10_days"
+      />,
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "Your every 10 days recurring service is set",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Every 10 days")).toBeInTheDocument();
+    expect(screen.getByText("10-day cadence")).toBeInTheDocument();
+  });
+
+  it("selectedCadence biweekly renders only biweekly card", async () => {
+    mockFetch(async () => Response.json([quoteResponse[2]]));
 
     render(
       <RecurringPlanConversionCard
@@ -102,12 +160,13 @@ describe("RecurringPlanConversionCard", () => {
     expect(screen.queryByText("Monthly")).not.toBeInTheDocument();
   });
 
-  it("selectedCadence missing renders all three cards", async () => {
+  it("selectedCadence missing renders all four cards", async () => {
     mockFetch(async () => Response.json(quoteResponse));
 
     render(<RecurringPlanConversionCard bookingId="bk_1" />);
 
     expect(await screen.findByText("Weekly")).toBeInTheDocument();
+    expect(screen.getByText("Every 10 days")).toBeInTheDocument();
     expect(screen.getByText("Biweekly")).toBeInTheDocument();
     expect(screen.getByText("Monthly")).toBeInTheDocument();
   });
@@ -155,7 +214,7 @@ describe("RecurringPlanConversionCard", () => {
 
     render(<RecurringPlanConversionCard bookingId="bk_1" />);
 
-    expect(await screen.findAllByText("$200")).toHaveLength(3);
+    expect(await screen.findAllByText("$200")).toHaveLength(4);
   });
 
   it("shows recurring price", async () => {
@@ -164,6 +223,7 @@ describe("RecurringPlanConversionCard", () => {
     render(<RecurringPlanConversionCard bookingId="bk_1" />);
 
     expect(await screen.findByText("$120")).toBeInTheDocument();
+    expect(screen.getByText("$132.22")).toBeInTheDocument();
     expect(screen.getByText("$140")).toBeInTheDocument();
     expect(screen.getByText("$160")).toBeInTheDocument();
   });
@@ -174,6 +234,7 @@ describe("RecurringPlanConversionCard", () => {
     render(<RecurringPlanConversionCard bookingId="bk_1" />);
 
     expect(await screen.findByText("$80 / 40%")).toBeInTheDocument();
+    expect(screen.getByText("$67.78 / 34%")).toBeInTheDocument();
     expect(screen.getByText("$60 / 30%")).toBeInTheDocument();
     expect(screen.getByText("$40 / 20%")).toBeInTheDocument();
   });

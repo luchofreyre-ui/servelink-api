@@ -12,7 +12,12 @@ function parsePublicEstimateSnapshot(
   estimatedDurationMinutes: number;
   confidence: number;
   serviceType: string | null;
-  selectedRecurringCadence: "weekly" | "biweekly" | "monthly" | null;
+  selectedRecurringCadence:
+    | "weekly"
+    | "every_10_days"
+    | "biweekly"
+    | "monthly"
+    | null;
 } | null {
   if (!outputJson?.trim()) return null;
   try {
@@ -38,6 +43,7 @@ function parsePublicEstimateSnapshot(
       typeof inp.service_type === "string" ? inp.service_type : null;
     const recurringCadence =
       inp.recurring_cadence_intent === "weekly" ||
+      inp.recurring_cadence_intent === "every_10_days" ||
       inp.recurring_cadence_intent === "biweekly" ||
       inp.recurring_cadence_intent === "monthly"
         ? inp.recurring_cadence_intent
@@ -73,6 +79,17 @@ export class PublicBookingConfirmationController {
         estimatedHours: true,
         publicDepositStatus: true,
         estimateSnapshot: { select: { outputJson: true, inputJson: true } },
+        recurringPlans: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: {
+            id: true,
+            cadence: true,
+            status: true,
+            pricePerVisitCents: true,
+            nextRunAt: true,
+          },
+        },
         deepCleanProgram: true,
         fo: { select: { displayName: true } },
       },
@@ -108,6 +125,15 @@ export class PublicBookingConfirmationController {
         booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded,
       estimateSnapshot: snap,
       selectedRecurringCadence: snap?.selectedRecurringCadence ?? null,
+      recurringPlan: booking.recurringPlans[0]
+        ? {
+            id: booking.recurringPlans[0].id,
+            cadence: booking.recurringPlans[0].cadence,
+            status: booking.recurringPlans[0].status,
+            pricePerVisitCents: booking.recurringPlans[0].pricePerVisitCents,
+            nextRunAt: booking.recurringPlans[0].nextRunAt.toISOString(),
+          }
+        : null,
       deepCleanProgram: serializeDeepCleanProgramForScreen({
         bookingDeepCleanProgram: booking.deepCleanProgram,
       }),

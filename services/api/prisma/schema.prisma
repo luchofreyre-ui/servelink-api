@@ -2648,6 +2648,7 @@ enum RecurringPlanStatus {
 
 enum RecurringCadence {
   weekly
+  every_10_days
   biweekly
   monthly
 }

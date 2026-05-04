@@ -39,7 +39,7 @@ function createService({ bookingResult }: { bookingResult?: unknown } = {}) {
 }
 
 describe("RecurringPlan offer quote V1", () => {
-  it("returns quotes for weekly, biweekly, and monthly", () => {
+  it("returns four cadences when no cadence filter", () => {
     const { service } = createService();
 
     const quotes = service.getRecurringOfferQuote({
@@ -49,6 +49,7 @@ describe("RecurringPlan offer quote V1", () => {
 
     expect(quotes.map((quote) => quote.cadence)).toEqual([
       "weekly",
+      "every_10_days",
       "biweekly",
       "monthly",
     ]);
@@ -67,13 +68,14 @@ describe("RecurringPlan offer quote V1", () => {
     );
   });
 
-  it("quote endpoint without cadence returns all three", async () => {
+  it("quote endpoint without cadence returns all four", async () => {
     const { controller } = createService();
 
     const quotes = await controller.getOfferQuote("bk_quote");
 
     expect(quotes.map((quote) => quote.cadence)).toEqual([
       "weekly",
+      "every_10_days",
       "biweekly",
       "monthly",
     ]);
@@ -84,7 +86,36 @@ describe("RecurringPlan offer quote V1", () => {
 
     const quotes = await controller.getOfferQuote("bk_quote", "not_sure");
 
-    expect(quotes).toHaveLength(3);
+    expect(quotes).toHaveLength(4);
+  });
+
+  it("every_10_days appears between weekly and biweekly", async () => {
+    const { controller } = createService();
+
+    const quotes = await controller.getOfferQuote("bk_quote");
+
+    expect(quotes.map((quote) => quote.cadence)).toEqual([
+      "weekly",
+      "every_10_days",
+      "biweekly",
+      "monthly",
+    ]);
+  });
+
+  it("cadence every_10_days returns one quote with cadenceDays 10", async () => {
+    const { controller } = createService();
+
+    const quotes = await controller.getOfferQuote("bk_quote", "every_10_days");
+
+    expect(quotes).toHaveLength(1);
+    expect(quotes[0]).toEqual(
+      expect.objectContaining({
+        cadence: "every_10_days",
+        cadenceDays: 10,
+        estimatedMinutes: 119,
+        recurringPriceCents: 13222,
+      }),
+    );
   });
 
   it("uses weekly maintenance pricing", () => {
@@ -108,7 +139,7 @@ describe("RecurringPlan offer quote V1", () => {
   it("uses biweekly maintenance pricing", () => {
     const { service } = createService();
 
-    const [, biweekly] = service.getRecurringOfferQuote({
+    const [, , biweekly] = service.getRecurringOfferQuote({
       firstCleanPriceCents: 20000,
       estimatedMinutes: 180,
     });
@@ -126,7 +157,7 @@ describe("RecurringPlan offer quote V1", () => {
   it("uses monthly maintenance pricing", () => {
     const { service } = createService();
 
-    const [, , monthly] = service.getRecurringOfferQuote({
+    const [, , , monthly] = service.getRecurringOfferQuote({
       firstCleanPriceCents: 20000,
       estimatedMinutes: 180,
     });
@@ -201,7 +232,7 @@ describe("RecurringPlan offer quote V1", () => {
   it("weekly price remains below biweekly and monthly for the same load", () => {
     const { service } = createService();
 
-    const [weekly, biweekly, monthly] = service.getRecurringOfferQuote({
+    const [weekly, every10Days, biweekly, monthly] = service.getRecurringOfferQuote({
       firstCleanPriceCents: 20000,
       estimatedMinutes: 180,
       estimateSnapshot: {
@@ -215,6 +246,9 @@ describe("RecurringPlan offer quote V1", () => {
     });
 
     expect(weekly.recurringPriceCents).toBeLessThan(
+      every10Days.recurringPriceCents,
+    );
+    expect(every10Days.recurringPriceCents).toBeLessThan(
       biweekly.recurringPriceCents,
     );
     expect(biweekly.recurringPriceCents).toBeLessThan(

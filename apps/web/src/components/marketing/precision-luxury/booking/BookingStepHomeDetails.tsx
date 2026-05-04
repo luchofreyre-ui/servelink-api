@@ -201,9 +201,10 @@ export function BookingStepHomeDetails({
     value: BookingRecurringCadenceIntent;
     label: string;
   }[] = [
-    { value: "weekly", label: "Weekly intent" },
-    { value: "biweekly", label: "Biweekly intent" },
-    { value: "monthly", label: "Monthly intent" },
+    { value: "weekly", label: "Weekly" },
+    { value: "every_10_days", label: "Every 10 days" },
+    { value: "biweekly", label: "Biweekly" },
+    { value: "monthly", label: "Monthly" },
     { value: "none", label: "No recurring intent" },
   ];
 

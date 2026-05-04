@@ -136,6 +136,9 @@ type BookingStepReviewProps = {
   onRecurringInterestChange?: (
     value: BookingFlowState["recurringInterest"],
   ) => void;
+  onRecurringCadenceIntentChange?: (
+    value: BookingFlowState["recurringCadenceIntent"],
+  ) => void;
 };
 
 function isBookingReady(state: BookingFlowState) {
@@ -259,6 +262,8 @@ export function BookingStepReview({
   prepGuidanceItems,
   recommendedAttentionItems,
   onFirstTimePostEstimateVisitChoiceChange,
+  onRecurringInterestChange,
+  onRecurringCadenceIntentChange,
 }: BookingStepReviewProps) {
   const reviewFunnelOnceRef = useRef(false);
   useEffect(() => {
@@ -353,8 +358,21 @@ export function BookingStepReview({
   };
   const recurringCadenceDisplay: Record<string, string> = {
     weekly: "Weekly",
+    every_10_days: "Every 10 days",
     biweekly: "Biweekly",
     monthly: "Monthly",
+  };
+  const recurringCadenceDays: Record<string, number> = {
+    weekly: 7,
+    every_10_days: 10,
+    biweekly: 14,
+    monthly: 30,
+  };
+  const recurringCadenceMultiplier: Record<string, number> = {
+    weekly: 0.6,
+    every_10_days: 0.66,
+    biweekly: 0.7,
+    monthly: 0.8,
   };
   const selectedRecurringCadence =
     state.recurringInterest?.interested === true &&
@@ -364,6 +382,81 @@ export function BookingStepReview({
       : state.recurringCadenceIntent !== "none"
         ? state.recurringCadenceIntent
         : null;
+  const isRecurringContract =
+    state.bookingPublicPath === "first_time_with_recurring" ||
+    state.recurringInterest?.interested === true;
+  const reviewRecurringCadence =
+    selectedRecurringCadence ?? (isRecurringContract ? "weekly" : null);
+  const maintenanceLoadMultiplier = Math.min(
+    1.25,
+    1 +
+      (state.kitchenIntensity === "heavy_use" ? 0.1 : 0) +
+      (state.clutterAccess === "heavy_clutter"
+        ? 0.08
+        : state.clutterAccess === "moderate_clutter"
+          ? 0.04
+          : 0) +
+      (state.petImpactLevel === "light" || state.petImpactLevel === "heavy"
+        ? 0.1
+        : 0) +
+      (state.petImpactLevel === "heavy" ? 0.1 : 0) +
+      (state.occupancyLevel === "ppl_5_plus"
+        ? 0.1
+        : state.occupancyLevel === "ppl_3_4"
+          ? 0.05
+          : 0),
+  );
+  const recurringQuote =
+    reviewRecurringCadence && previewEstimate
+      ? (() => {
+          const recurringMinutes = Math.round(
+            previewEstimate.durationMinutes *
+              recurringCadenceMultiplier[reviewRecurringCadence] *
+              maintenanceLoadMultiplier,
+          );
+          const recurringPriceCents = Math.round(
+            previewEstimate.durationMinutes > 0
+              ? (recurringMinutes / previewEstimate.durationMinutes) *
+                  previewEstimate.priceCents
+              : 0,
+          );
+          const savingsCents = Math.max(
+            0,
+            previewEstimate.priceCents - recurringPriceCents,
+          );
+          const discountPercent =
+            previewEstimate.priceCents > 0
+              ? Math.round((savingsCents / previewEstimate.priceCents) * 100)
+              : 0;
+          return {
+            recurringMinutes,
+            recurringPriceCents,
+            savingsCents,
+            discountPercent,
+          };
+        })()
+      : null;
+
+  useEffect(() => {
+    if (!isRecurringContract) return;
+    if (state.recurringCadenceIntent !== "none") return;
+    onRecurringCadenceIntentChange?.("weekly");
+  }, [
+    isRecurringContract,
+    onRecurringCadenceIntentChange,
+    state.recurringCadenceIntent,
+  ]);
+
+  function changeRecurringCadence(
+    cadence: Exclude<BookingFlowState["recurringCadenceIntent"], "none">,
+  ) {
+    onRecurringCadenceIntentChange?.(cadence);
+    onRecurringInterestChange?.({
+      interested: true,
+      cadence,
+      note: state.recurringInterest?.note,
+    });
+  }
 
   const addOnsNormalized = normalizeBookingAddOnsForPayload(state.selectedAddOns);
   const addOnsDisplay =
@@ -555,16 +648,77 @@ export function BookingStepReview({
           ) : null}
         </ReviewSection>
 
-        {selectedRecurringCadence ? (
+        {reviewRecurringCadence ? (
           <ReviewSection title="Recurring plan">
             <p className="font-medium">
               Your selected cadence:{" "}
-              {recurringCadenceDisplay[selectedRecurringCadence]}.
+              {recurringCadenceDisplay[reviewRecurringCadence]}.
             </p>
             <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-              Your recurring maintenance price will be shown after booking is
-              deposit-confirmed.
+              Your first clean resets the home. Your recurring visits keep it
+              maintained.
             </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-4">
+              {(["weekly", "every_10_days", "biweekly", "monthly"] as const).map(
+                (cadence) => {
+                  const selected = reviewRecurringCadence === cadence;
+                  return (
+                    <button
+                      key={cadence}
+                      type="button"
+                      onClick={() => changeRecurringCadence(cadence)}
+                      className={`rounded-2xl border px-3 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
+                        selected
+                          ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
+                          : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
+                      }`}
+                    >
+                      <span className="font-semibold text-[#0F172A]">
+                        {recurringCadenceDisplay[cadence]}
+                      </span>
+                    </button>
+                  );
+                },
+              )}
+            </div>
+            {recurringQuote && previewEstimate ? (
+              <dl className="mt-4 grid gap-3 font-[var(--font-manrope)] text-sm text-[#0F172A] sm:grid-cols-2">
+                <div>
+                  <dt className="text-[#64748B]">First visit price</dt>
+                  <dd className="font-semibold">
+                    {formatEstimateUsdFromCents(previewEstimate.priceCents)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[#64748B]">Recurring visit price</dt>
+                  <dd className="font-semibold">
+                    {formatEstimateUsdFromCents(recurringQuote.recurringPriceCents)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[#64748B]">
+                    Estimated recurring duration
+                  </dt>
+                  <dd className="font-semibold">
+                    {formatEstimateDurationMinutes(
+                      recurringQuote.recurringMinutes,
+                    )}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[#64748B]">Next recurring visit</dt>
+                  <dd className="font-semibold">
+                    {recurringCadenceDays[reviewRecurringCadence]} days after
+                    your first visit
+                  </dd>
+                </div>
+              </dl>
+            ) : (
+              <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                Your recurring maintenance price will be shown after booking is
+                deposit-confirmed.
+              </p>
+            )}
           </ReviewSection>
         ) : null}
 
@@ -689,8 +843,17 @@ export function BookingStepReview({
                         ["one_visit", BOOKING_POST_ESTIMATE_VISIT_ONE],
                         ["two_visits", BOOKING_POST_ESTIMATE_VISIT_TWO],
                         ["three_visits", BOOKING_POST_ESTIMATE_VISIT_THREE],
-                        ["convert_recurring", BOOKING_POST_ESTIMATE_CONVERT_RECURRING],
-                      ] as const
+                        ...(state.bookingPublicPath === "first_time_with_recurring"
+                          ? []
+                          : ([
+                              [
+                                "convert_recurring",
+                                BOOKING_POST_ESTIMATE_CONVERT_RECURRING,
+                              ],
+                            ] as const)),
+                      ] satisfies ReadonlyArray<
+                        readonly [BookingFirstTimePostEstimateVisitChoice, string]
+                      >
                     ).map(([value, label]) => {
                       const selected = state.firstTimePostEstimateVisitChoice === value;
                       return (

@@ -31,12 +31,14 @@ vi.mock("@/components/bookings/RecurringPlanConversionCard", () => ({
     ({
       bookingId,
       selectedCadence,
+      recurringPlan,
     }: {
       bookingId: string;
       selectedCadence?: string | null;
+      recurringPlan?: { id: string } | null;
     }) => (
       <div data-testid="recurring-plan-card">
-        {bookingId}:{selectedCadence ?? "none"}
+        {bookingId}:{selectedCadence ?? "none"}:{recurringPlan?.id ?? "no-plan"}
       </div>
     ),
   ),
@@ -72,6 +74,7 @@ describe("BookingConfirmationClient", () => {
     vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockResolvedValue({
       kind: "public_booking_confirmation",
       bookingId: "bk_1",
+      recurringPlan: null,
       estimateSnapshot: {
         estimatedPriceCents: 50000,
         estimatedDurationMinutes: 180,
@@ -157,6 +160,13 @@ describe("BookingConfirmationClient", () => {
       assignedTeamDisplayName: "Test Team",
       publicDepositPaid: true,
       selectedRecurringCadence: "weekly",
+      recurringPlan: {
+        id: "rp_1",
+        cadence: "weekly",
+        status: "active",
+        pricePerVisitCents: 12000,
+        nextRunAt: "2026-05-08T14:00:00.000Z",
+      },
       estimateSnapshot: {
         estimatedPriceCents: 27100,
         estimatedDurationMinutes: 180,
@@ -185,6 +195,7 @@ describe("BookingConfirmationClient", () => {
         expect.objectContaining({
           bookingId: "bk_assigned",
           selectedCadence: "weekly",
+          recurringPlan: expect.objectContaining({ id: "rp_1" }),
         }),
         {},
       );
@@ -295,6 +306,7 @@ describe("BookingConfirmationClient", () => {
     vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockResolvedValue({
       kind: "public_booking_confirmation",
       bookingId: "bk_snap",
+      recurringPlan: null,
       estimateSnapshot: {
         estimatedPriceCents: 50000,
         estimatedDurationMinutes: 180,
@@ -334,6 +346,7 @@ describe("BookingConfirmationClient", () => {
     vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockResolvedValue({
       kind: "public_booking_confirmation",
       bookingId: "bk_1",
+      recurringPlan: null,
       estimateSnapshot: {
         estimatedPriceCents: 100,
         estimatedDurationMinutes: 60,

@@ -7,9 +7,17 @@ import { SlotHoldsModule } from "../slot-holds/slot-holds.module";
 import { PublicBookingDepositService } from "./public-booking-deposit.service";
 import { PublicBookingOrchestratorController } from "./public-booking-orchestrator.controller";
 import { PublicBookingOrchestratorService } from "./public-booking-orchestrator.service";
+import { RecurringPlanModule } from "../recurring-plan/recurring-plan.module";
 
 @Module({
-  imports: [PrismaModule, SlotHoldsModule, BookingsModule, FoModule, StripeBookingPaymentModule],
+  imports: [
+    PrismaModule,
+    SlotHoldsModule,
+    BookingsModule,
+    FoModule,
+    StripeBookingPaymentModule,
+    RecurringPlanModule,
+  ],
   controllers: [PublicBookingOrchestratorController],
   providers: [PublicBookingOrchestratorService, PublicBookingDepositService],
   exports: [PublicBookingOrchestratorService],
