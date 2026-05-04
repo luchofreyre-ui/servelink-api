@@ -351,6 +351,19 @@ export function BookingStepReview({
     light: "Light pet impact",
     heavy: "Heavy pet impact",
   };
+  const recurringCadenceDisplay: Record<string, string> = {
+    weekly: "Weekly",
+    biweekly: "Biweekly",
+    monthly: "Monthly",
+  };
+  const selectedRecurringCadence =
+    state.recurringInterest?.interested === true &&
+    state.recurringInterest.cadence &&
+    state.recurringInterest.cadence !== "not_sure"
+      ? state.recurringInterest.cadence
+      : state.recurringCadenceIntent !== "none"
+        ? state.recurringCadenceIntent
+        : null;
 
   const addOnsNormalized = normalizeBookingAddOnsForPayload(state.selectedAddOns);
   const addOnsDisplay =
@@ -541,6 +554,19 @@ export function BookingStepReview({
             </div>
           ) : null}
         </ReviewSection>
+
+        {selectedRecurringCadence ? (
+          <ReviewSection title="Recurring plan">
+            <p className="font-medium">
+              Your selected cadence:{" "}
+              {recurringCadenceDisplay[selectedRecurringCadence]}.
+            </p>
+            <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+              Your recurring maintenance price will be shown after booking is
+              deposit-confirmed.
+            </p>
+          </ReviewSection>
+        ) : null}
 
         <ReviewSection title="Estimate preview">
           {previewLoading && ready && contactOk ? (

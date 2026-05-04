@@ -3,6 +3,16 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { ReliabilityAdminGuard } from '../../common/reliability/reliability-admin.guard';
 import { RecurringPlanService } from './recurring-plan.service';
 
+type RecurringCadence = 'weekly' | 'biweekly' | 'monthly';
+
+function parseQuoteCadence(value?: string): RecurringCadence | undefined {
+  if (value === 'weekly' || value === 'biweekly' || value === 'monthly') {
+    return value;
+  }
+
+  return undefined;
+}
+
 @Controller('/api/v1/recurring-plans')
 export class RecurringPlanController {
   constructor(private service: RecurringPlanService) {}
@@ -19,8 +29,14 @@ export class RecurringPlanController {
   }
 
   @Get('/offer-quote')
-  async getOfferQuote(@Query('bookingId') bookingId: string) {
-    return this.service.getOfferQuoteForBooking(bookingId);
+  async getOfferQuote(
+    @Query('bookingId') bookingId: string,
+    @Query('cadence') cadence?: string,
+  ) {
+    return this.service.getOfferQuoteForBooking(
+      bookingId,
+      parseQuoteCadence(cadence),
+    );
   }
 
   @UseGuards(JwtAuthGuard, ReliabilityAdminGuard)

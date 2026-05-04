@@ -357,6 +357,95 @@ describe("RecurringPlanService V1", () => {
     expect(weekly.discountPercent).toBe(40);
   });
 
+  it("createFromBooking uses cleaned maintenance multiplier", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking({
+        estimateSnapshot: {
+          outputJson: {
+            estimatedDurationMinutes: 122,
+            primaryIntent: "reset_level",
+            overallLaborCondition: "major_reset",
+            bathroomComplexity: "heavy_detailing",
+            kitchenIntensity: "average_use",
+            clutterAccess: "mostly_clear",
+            hasPets: false,
+          },
+        },
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "weekly",
+    });
+
+    expect(prisma.recurringPlan.create.mock.calls[0][0].data).toEqual(
+      expect.objectContaining({
+        estimatedMinutes: 73,
+        pricePerVisitCents: 19771,
+        discountPercent: 40,
+      }),
+    );
+  });
+
+  it("pricePerVisitCents matches quote for the same booking and cadence", async () => {
+    const booking = quoteReadyBooking({
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 122,
+          kitchenIntensity: "heavy_use",
+          clutterAccess: "moderate_clutter",
+          hasPets: true,
+        },
+      },
+    });
+    const { service, prisma } = createService({ booking });
+    const [quote] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 33042,
+      estimatedMinutes: 122,
+      estimateSnapshot: (booking as any).estimateSnapshot,
+      cadence: "weekly",
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "weekly",
+    });
+
+    expect(prisma.recurringPlan.create.mock.calls[0][0].data).toEqual(
+      expect.objectContaining({
+        estimatedMinutes: quote.estimatedMinutes,
+        pricePerVisitCents: quote.recurringPriceCents,
+        discountPercent: quote.discountPercent,
+      }),
+    );
+  });
+
+  it("heavy reset alone does not push weekly maintenance near first-clean price", async () => {
+    const { service, prisma } = createService({
+      booking: quoteReadyBooking({
+        estimateSnapshot: {
+          outputJson: {
+            estimatedDurationMinutes: 122,
+            primaryIntent: "reset_level",
+            overallLaborCondition: "major_reset",
+            lastProCleanRecency: "unknown_or_not_recently",
+            bathroomComplexity: "heavy_detailing",
+          },
+        },
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_assigned",
+      cadence: "weekly",
+    });
+
+    const data = prisma.recurringPlan.create.mock.calls[0][0].data;
+    expect(data.pricePerVisitCents).toBeLessThan(22000);
+    expect(data.discountPercent).toBe(40);
+  });
+
   it("records converted outcome after creation", async () => {
     const { service, prisma } = createService({
       booking: assignedDepositConfirmedBooking(),

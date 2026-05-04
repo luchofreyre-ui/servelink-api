@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BookingConfirmationClient } from "./BookingConfirmationClient";
+import { RecurringPlanConversionCard } from "@/components/bookings/RecurringPlanConversionCard";
 import * as bookingsApi from "@/lib/api/bookings";
 import {
   BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE,
@@ -25,6 +26,22 @@ vi.mock("@/lib/api/bookings", () => ({
   fetchPublicBookingConfirmation: vi.fn(),
 }));
 
+vi.mock("@/components/bookings/RecurringPlanConversionCard", () => ({
+  RecurringPlanConversionCard: vi.fn(
+    ({
+      bookingId,
+      selectedCadence,
+    }: {
+      bookingId: string;
+      selectedCadence?: string | null;
+    }) => (
+      <div data-testid="recurring-plan-card">
+        {bookingId}:{selectedCadence ?? "none"}
+      </div>
+    ),
+  ),
+}));
+
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(mockConfirmationSearch.value),
 }));
@@ -39,6 +56,7 @@ vi.mock("../layout/PublicSiteFooter", () => ({
 describe("BookingConfirmationClient", () => {
   beforeEach(() => {
     vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockReset();
+    vi.mocked(RecurringPlanConversionCard).mockClear();
     sessionStorage.removeItem(BOOKING_CONFIRMATION_SESSION_KEY);
     sessionStorage.removeItem(BOOKING_FLOW_FRESH_START_FLAG);
     mockConfirmationSearch.value =
@@ -138,6 +156,7 @@ describe("BookingConfirmationClient", () => {
       scheduledEnd: "2026-05-01T18:00:00.000Z",
       assignedTeamDisplayName: "Test Team",
       publicDepositPaid: true,
+      selectedRecurringCadence: "weekly",
       estimateSnapshot: {
         estimatedPriceCents: 27100,
         estimatedDurationMinutes: 180,
@@ -161,6 +180,15 @@ describe("BookingConfirmationClient", () => {
     expect(screen.getByText(BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE)).toBeTruthy();
     expect(screen.queryByText(/pay .*deposit/i)).toBeNull();
     expect(screen.queryByText(/secure payment/i)).toBeNull();
+    await waitFor(() => {
+      expect(RecurringPlanConversionCard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bookingId: "bk_assigned",
+          selectedCadence: "weekly",
+        }),
+        {},
+      );
+    });
     await waitFor(() => {
       const snap = JSON.parse(
         sessionStorage.getItem(BOOKING_CONFIRMATION_SESSION_KEY) ?? "{}",

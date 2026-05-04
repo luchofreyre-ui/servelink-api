@@ -12,6 +12,7 @@ function parsePublicEstimateSnapshot(
   estimatedDurationMinutes: number;
   confidence: number;
   serviceType: string | null;
+  selectedRecurringCadence: "weekly" | "biweekly" | "monthly" | null;
 } | null {
   if (!outputJson?.trim()) return null;
   try {
@@ -35,11 +36,18 @@ function parsePublicEstimateSnapshot(
         : 0;
     const serviceType =
       typeof inp.service_type === "string" ? inp.service_type : null;
+    const recurringCadence =
+      inp.recurring_cadence_intent === "weekly" ||
+      inp.recurring_cadence_intent === "biweekly" ||
+      inp.recurring_cadence_intent === "monthly"
+        ? inp.recurring_cadence_intent
+        : null;
     return {
       estimatedPriceCents,
       estimatedDurationMinutes,
       confidence,
       serviceType,
+      selectedRecurringCadence: recurringCadence,
     };
   } catch {
     return null;
@@ -99,6 +107,7 @@ export class PublicBookingConfirmationController {
       publicDepositPaid:
         booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded,
       estimateSnapshot: snap,
+      selectedRecurringCadence: snap?.selectedRecurringCadence ?? null,
       deepCleanProgram: serializeDeepCleanProgramForScreen({
         bookingDeepCleanProgram: booking.deepCleanProgram,
       }),
