@@ -447,6 +447,16 @@ export type BookingDirectionIntakeSubmitResponse = {
   bookingError: { code: string; message: string } | null;
 };
 
+export type BookingRecurringQuoteOption = {
+  cadence: "weekly" | "every_10_days" | "biweekly" | "monthly";
+  cadenceDays: number;
+  firstCleanPriceCents: number;
+  recurringPriceCents: number;
+  savingsCents: number;
+  discountPercent: number;
+  estimatedMinutes: number;
+};
+
 /** Stateless pre-submit estimate (same shape as submit, without booking fields). */
 export type BookingDirectionEstimatePreviewResponse = {
   kind: "booking_direction_estimate_preview";
@@ -456,6 +466,7 @@ export type BookingDirectionEstimatePreviewResponse = {
     confidence: number;
   };
   deepCleanProgram: DeepCleanProgramDisplay | null;
+  recurringQuoteOptions?: BookingRecurringQuoteOption[];
 };
 
 /** Reads `source` + standard UTM query params from the booking URL. */

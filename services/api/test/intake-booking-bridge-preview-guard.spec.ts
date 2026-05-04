@@ -22,6 +22,7 @@ import { BookingDirectionIntakeService } from "../src/modules/booking-direction-
 import { BookingsService } from "../src/modules/bookings/bookings.service";
 import { AuthService } from "../src/auth/auth.service";
 import type { GeocodingService } from "../src/modules/geocoding/geocoding.service";
+import { RecurringPlanService } from "../src/modules/recurring-plan/recurring-plan.service";
 
 const testServiceLocation = {
   street: "100 Market St",
@@ -37,6 +38,32 @@ const geocodingMock = {
 } as unknown as GeocodingService;
 
 const estimateEngineV2Mock = {} as EstimateEngineV2Service;
+
+function estimateEngineV2SuccessMock() {
+  return {
+    estimateV2: jest.fn().mockReturnValue({
+      snapshotVersion: "estimate_engine_v2_core_v1",
+      expectedMinutes: 180,
+      pricedMinutes: 190,
+      customerVisible: { estimatedPrice: 50000 },
+    }),
+    calculateReconciliation: jest.fn().mockReturnValue({
+      classification: "aligned",
+      flags: [],
+    }),
+  } as unknown as EstimateEngineV2Service;
+}
+
+function successfulEstimator() {
+  return {
+    estimate: jest.fn().mockResolvedValue({
+      estimatedPriceCents: 50000,
+      estimatedDurationMinutes: 180,
+      confidence: 0.85,
+      deepCleanProgram: null,
+    }),
+  } as unknown as EstimatorService;
+}
 
 describe("BookingDirectionIntakeSubmitController preview validation", () => {
   let app: INestApplication;
@@ -129,6 +156,92 @@ describe("BookingDirectionIntakeSubmitController preview validation", () => {
 });
 
 describe("IntakeBookingBridgeService preview estimator guard", () => {
+  it("returns recurringQuoteOptions when recurringInterest is selected", async () => {
+    const estimator = successfulEstimator();
+    const bridge = new IntakeBookingBridgeService(
+      {} as PrismaService,
+      {} as BookingDirectionIntakeService,
+      {} as BookingsService,
+      { get: jest.fn() } as unknown as ConfigService,
+      estimator,
+      estimateEngineV2SuccessMock(),
+      {} as AuthService,
+      geocodingMock,
+      new RecurringPlanService({} as any),
+    );
+
+    const dto = {
+      serviceId: "deep-cleaning",
+      homeSize: "2200 sq ft",
+      bedrooms: "2",
+      bathrooms: "2",
+      frequency: "One-Time",
+      preferredTime: "Deferred to team scheduling after estimate",
+      serviceLocation: testServiceLocation,
+      recurringInterest: {
+        interested: true,
+        cadence: "weekly",
+      },
+      estimateFactors: {
+        recurringCadenceIntent: "weekly",
+        kitchenIntensity: "average_use",
+        clutterAccess: "mostly_clear",
+        petImpact: "none",
+        occupancyLevel: "ppl_1_2",
+      },
+    } as CreateBookingDirectionIntakeDto;
+
+    const result = await bridge.previewEstimateFromDto(dto);
+
+    expect(result.recurringQuoteOptions?.map((quote) => quote.cadence)).toEqual([
+      "weekly",
+      "every_10_days",
+      "biweekly",
+      "monthly",
+    ]);
+    expect(result.recurringQuoteOptions?.[1]).toEqual(
+      expect.objectContaining({
+        cadence: "every_10_days",
+        cadenceDays: 10,
+      }),
+    );
+    expect(result.recurringQuoteOptions?.[0]?.recurringPriceCents).toBeLessThan(
+      result.recurringQuoteOptions?.[0]?.firstCleanPriceCents ?? 0,
+    );
+  });
+
+  it("omits recurringQuoteOptions when recurring is not selected", async () => {
+    const estimator = successfulEstimator();
+    const bridge = new IntakeBookingBridgeService(
+      {} as PrismaService,
+      {} as BookingDirectionIntakeService,
+      {} as BookingsService,
+      { get: jest.fn() } as unknown as ConfigService,
+      estimator,
+      estimateEngineV2SuccessMock(),
+      {} as AuthService,
+      geocodingMock,
+      new RecurringPlanService({} as any),
+    );
+
+    const dto = {
+      serviceId: "deep-cleaning",
+      homeSize: "2200 sq ft",
+      bedrooms: "2",
+      bathrooms: "2",
+      frequency: "One-Time",
+      preferredTime: "Deferred to team scheduling after estimate",
+      serviceLocation: testServiceLocation,
+      estimateFactors: {
+        recurringCadenceIntent: "none",
+      },
+    } as CreateBookingDirectionIntakeDto;
+
+    const result = await bridge.previewEstimateFromDto(dto);
+
+    expect(result.recurringQuoteOptions).toBeUndefined();
+  });
+
   it("maps EstimatorExecutionError to BadRequestException with ESTIMATE_EXECUTION_FAILED", async () => {
     const root = new Error("internal boom");
     const estimator = {

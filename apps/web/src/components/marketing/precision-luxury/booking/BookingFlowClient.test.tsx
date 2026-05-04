@@ -94,6 +94,44 @@ import {
 const TEST_REVIEW_LOC_QUERY =
   "&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA";
 const TEST_INTENT_QUERY = "&intent=RESET";
+const recurringQuoteOptions = [
+  {
+    cadence: "weekly" as const,
+    cadenceDays: 7,
+    firstCleanPriceCents: 50000,
+    recurringPriceCents: 31000,
+    savingsCents: 19000,
+    discountPercent: 38,
+    estimatedMinutes: 111,
+  },
+  {
+    cadence: "every_10_days" as const,
+    cadenceDays: 10,
+    firstCleanPriceCents: 50000,
+    recurringPriceCents: 33300,
+    savingsCents: 16700,
+    discountPercent: 33,
+    estimatedMinutes: 120,
+  },
+  {
+    cadence: "biweekly" as const,
+    cadenceDays: 14,
+    firstCleanPriceCents: 50000,
+    recurringPriceCents: 35000,
+    savingsCents: 15000,
+    discountPercent: 30,
+    estimatedMinutes: 126,
+  },
+  {
+    cadence: "monthly" as const,
+    cadenceDays: 30,
+    firstCleanPriceCents: 50000,
+    recurringPriceCents: 40000,
+    savingsCents: 10000,
+    discountPercent: 20,
+    estimatedMinutes: 144,
+  },
+];
 
 function fillReviewContactFast() {
   fireEvent.change(screen.getByLabelText(/full name/i), {
@@ -325,6 +363,10 @@ function buildReviewSearchString(): string {
   )}${dc}`;
 }
 
+function buildRecurringReviewSearchString(): string {
+  return `${buildReviewSearchString()}&pubPath=first_time_recurring`;
+}
+
 function buildIncompleteHomeStepSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
@@ -456,6 +498,7 @@ describe("BookingFlowClient", () => {
         durationMinutes: 180,
         confidence: 0.85,
       },
+      recurringQuoteOptions,
       deepCleanProgram: null,
     });
     submitBookingDirectionIntakeMock.mockReset();
@@ -537,6 +580,47 @@ describe("BookingFlowClient", () => {
       expect.objectContaining({ bookingId: "bk_test" }),
     );
     expect(screen.getByText("North Team")).toBeInTheDocument();
+  });
+
+  it("renders recurring price from preview response and switches cadence by backend quote", async () => {
+    bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
+    render(<BookingFlowClient />);
+
+    await waitFor(() => {
+      expect(document.body.textContent).toContain("$310");
+      expect(document.body.textContent).toContain("$190 / 38%");
+    }, { timeout: 8000 });
+
+    fireEvent.click(screen.getByRole("button", { name: /Every 10 days/i }));
+
+    await waitFor(() => {
+      expect(document.body.textContent).toContain("$333");
+      expect(document.body.textContent).toContain("$167 / 33%");
+    }, { timeout: 8000 });
+  });
+
+  it("blocks recurring review when preview response omits recurring quotes", async () => {
+    previewEstimateMock.mockResolvedValue({
+      kind: "booking_direction_estimate_preview",
+      estimate: {
+        priceCents: 50000,
+        durationMinutes: 180,
+        confidence: 0.85,
+      },
+      deepCleanProgram: null,
+    });
+    bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
+    render(<BookingFlowClient />);
+
+    await waitFor(() => {
+      expect(document.body.textContent).toContain(
+        "Recurring pricing could not be loaded. Please refresh before continuing.",
+      );
+    }, { timeout: 8000 });
+    fillReviewContactFast();
+    await waitFor(() =>
+      expect(screen.getByTestId("booking-direction-send")).toBeDisabled(),
+    );
   });
 
   it("selecting a team requests team-specific availability", async () => {

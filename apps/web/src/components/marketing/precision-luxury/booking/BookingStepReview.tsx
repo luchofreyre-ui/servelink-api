@@ -357,18 +357,6 @@ export function BookingStepReview({
     biweekly: "Biweekly",
     monthly: "Monthly",
   };
-  const recurringCadenceDays: Record<ReviewRecurringCadence, number> = {
-    weekly: 7,
-    every_10_days: 10,
-    biweekly: 14,
-    monthly: 30,
-  };
-  const recurringCadenceMultiplier: Record<ReviewRecurringCadence, number> = {
-    weekly: 0.6,
-    every_10_days: 0.66,
-    biweekly: 0.7,
-    monthly: 0.8,
-  };
   const selectedRecurringCadence =
     state.recurringInterest?.interested === true &&
     (state.recurringInterest.cadence === "weekly" ||
@@ -387,60 +375,19 @@ export function BookingStepReview({
     state.recurringInterest?.interested === true;
   const reviewRecurringCadence =
     selectedRecurringCadence ?? (isRecurringContract ? "weekly" : null);
+  const recurringQuoteOptions = previewEstimate?.recurringQuoteOptions ?? [];
+  const recurringQuote =
+    reviewRecurringCadence && recurringQuoteOptions.length > 0
+      ? (recurringQuoteOptions.find(
+          (quote) => quote.cadence === reviewRecurringCadence,
+        ) ?? null)
+      : null;
+  const hasRecurringQuoteOptions = recurringQuoteOptions.length > 0;
   const selectedVisitStructure: ReviewVisitStructure =
     state.firstTimePostEstimateVisitChoice === "three_visit_reset" ||
     state.firstTimeVisitProgram === "three_visit"
       ? "three_visit_reset"
       : "one_visit";
-  const maintenanceLoadMultiplier = Math.min(
-    1.25,
-    1 +
-      (state.kitchenIntensity === "heavy_use" ? 0.1 : 0) +
-      (state.clutterAccess === "heavy_clutter"
-        ? 0.08
-        : state.clutterAccess === "moderate_clutter"
-          ? 0.04
-          : 0) +
-      (state.petImpactLevel === "light" || state.petImpactLevel === "heavy"
-        ? 0.1
-        : 0) +
-      (state.petImpactLevel === "heavy" ? 0.1 : 0) +
-      (state.occupancyLevel === "ppl_5_plus"
-        ? 0.1
-        : state.occupancyLevel === "ppl_3_4"
-          ? 0.05
-          : 0),
-  );
-  const recurringQuote =
-    reviewRecurringCadence && previewEstimate
-      ? (() => {
-          const recurringMinutes = Math.round(
-            previewEstimate.durationMinutes *
-              recurringCadenceMultiplier[reviewRecurringCadence] *
-              maintenanceLoadMultiplier,
-          );
-          const recurringPriceCents = Math.round(
-            previewEstimate.durationMinutes > 0
-              ? (recurringMinutes / previewEstimate.durationMinutes) *
-                  previewEstimate.priceCents
-              : 0,
-          );
-          const savingsCents = Math.max(
-            0,
-            previewEstimate.priceCents - recurringPriceCents,
-          );
-          const discountPercent =
-            previewEstimate.priceCents > 0
-              ? Math.round((savingsCents / previewEstimate.priceCents) * 100)
-              : 0;
-          return {
-            recurringMinutes,
-            recurringPriceCents,
-            savingsCents,
-            discountPercent,
-          };
-        })()
-      : null;
   const threeVisitBreakdown = previewEstimate
     ? (() => {
         const visit1 = Math.round(previewEstimate.priceCents * 0.45);
@@ -451,9 +398,9 @@ export function BookingStepReview({
     : null;
   const recurringTimingText =
     reviewRecurringCadence && selectedVisitStructure === "three_visit_reset"
-      ? `Reset visits are spaced 14 days apart. ${recurringCadenceDisplay[reviewRecurringCadence]} recurring service begins ${recurringCadenceDays[reviewRecurringCadence]} days after Visit 3.`
+      ? `Reset visits are spaced 14 days apart. ${recurringCadenceDisplay[reviewRecurringCadence]} recurring service begins ${recurringQuote?.cadenceDays ?? "the selected cadence"} days after Visit 3.`
       : reviewRecurringCadence
-        ? `Recurring service begins ${recurringCadenceDays[reviewRecurringCadence]} days after your first visit.`
+        ? `Recurring service begins ${recurringQuote?.cadenceDays ?? "the selected cadence"} days after your first visit.`
         : null;
 
   useEffect(() => {
@@ -909,7 +856,7 @@ export function BookingStepReview({
                   <p className="font-medium">
                     <span className="text-[#64748B]">Estimated recurring duration:</span>{" "}
                     {recurringQuote
-                      ? formatEstimateDurationMinutes(recurringQuote.recurringMinutes)
+                      ? formatEstimateDurationMinutes(recurringQuote.estimatedMinutes)
                       : "Unavailable"}
                   </p>
                   <p className="font-medium">
@@ -924,6 +871,11 @@ export function BookingStepReview({
                   Recurring pricing could not be loaded. Please refresh before continuing.
                 </p>
               )}
+              {previewEstimate && !hasRecurringQuoteOptions ? (
+                <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
+                  Recurring pricing could not be loaded. Please refresh before continuing.
+                </p>
+              ) : null}
 
               <div>
                 <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
