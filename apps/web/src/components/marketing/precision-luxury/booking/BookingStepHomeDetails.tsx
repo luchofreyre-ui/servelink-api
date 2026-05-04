@@ -21,7 +21,6 @@ import type {
   BookingChildrenInHome,
   BookingClutterAccess,
   BookingDeepCleanFocus,
-  BookingFirstTimeVisitProgram,
   BookingFloorMix,
   BookingFlowState,
   BookingKitchenIntensity,
@@ -31,7 +30,6 @@ import type {
   BookingOverallLaborCondition,
   BookingPetImpactLevel,
   BookingPrimaryIntent,
-  BookingRecurringCadenceIntent,
   BookingSurfaceDetailToken,
   BookingTransitionState,
 } from "./bookingFlowTypes";
@@ -187,25 +185,6 @@ export function BookingStepHomeDetails({
       { value: "days_90_plus", label: "90+ days" },
       { value: "unknown_or_not_recently", label: "Unknown / not recently" },
     ];
-
-  const firstTimeProgramOptions: {
-    value: BookingFirstTimeVisitProgram;
-    label: string;
-  }[] = [
-    { value: "one_visit", label: "One visit" },
-    { value: "two_visit", label: "Two-visit program" },
-    { value: "three_visit", label: "Three-visit program" },
-  ];
-
-  const recurringIntentOptions: {
-    value: BookingRecurringCadenceIntent;
-    label: string;
-  }[] = [
-    { value: "weekly", label: "Weekly intent" },
-    { value: "biweekly", label: "Biweekly intent" },
-    { value: "monthly", label: "Monthly intent" },
-    { value: "none", label: "No recurring intent" },
-  ];
 
   const addOnOptions: BookingAddOnToken[] = [
     "inside_fridge",
@@ -782,8 +761,8 @@ export function BookingStepHomeDetails({
               What “done” should feel like
             </p>
             <p className="mt-1 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-              Cadence intent is not your schedule—it informs how aggressive the reset
-              should be relative to ongoing maintenance.
+              Tell us the reset level and home context here. You will choose the
+              opening visit structure and cadence on Review.
             </p>
           </div>
           <p
@@ -837,80 +816,6 @@ export function BookingStepHomeDetails({
                   role="radio"
                   aria-checked={selected}
                   onClick={() => onChange({ lastProCleanRecency: value })}
-                  className={`rounded-2xl border px-4 py-4 text-left font-[var(--font-manrope)] text-sm transition ${
-                    selected
-                      ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
-                      : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
-                  }`}
-                >
-                  <span className="block font-semibold text-[#0F172A]">{label}</span>
-                </button>
-              );
-            })}
-          </div>
-          <p
-            id="booking-first-time-program-legend"
-            className="mt-8 font-[var(--font-poppins)] text-sm font-semibold tracking-[-0.02em] text-[#0F172A]"
-          >
-            First-time cleaning program
-          </p>
-          <div
-            className="mt-3 grid gap-3 sm:grid-cols-3"
-            role="radiogroup"
-            aria-labelledby="booking-first-time-program-legend"
-          >
-            {firstTimeProgramOptions.map(({ value, label }) => {
-              const selected = state.firstTimeVisitProgram === value;
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  role="radio"
-                  aria-checked={selected}
-                  onClick={() =>
-                    onChange({
-                      firstTimeVisitProgram: value,
-                      ...(isDeepCleaningBookingServiceId(state.serviceId)
-                        ? {
-                            deepCleanProgram:
-                              value === "three_visit"
-                                ? "phased_3_visit"
-                                : "single_visit",
-                          }
-                        : {}),
-                    })
-                  }
-                  className={`rounded-2xl border px-4 py-4 text-left font-[var(--font-manrope)] text-sm transition ${
-                    selected
-                      ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
-                      : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
-                  }`}
-                >
-                  <span className="block font-semibold text-[#0F172A]">{label}</span>
-                </button>
-              );
-            })}
-          </div>
-          <p
-            id="booking-recurring-intent-legend"
-            className="mt-8 font-[var(--font-poppins)] text-sm font-semibold tracking-[-0.02em] text-[#0F172A]"
-          >
-            Recurring cadence intent (not your schedule)
-          </p>
-          <div
-            className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
-            role="radiogroup"
-            aria-labelledby="booking-recurring-intent-legend"
-          >
-            {recurringIntentOptions.map(({ value, label }) => {
-              const selected = state.recurringCadenceIntent === value;
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  role="radio"
-                  aria-checked={selected}
-                  onClick={() => onChange({ recurringCadenceIntent: value })}
                   className={`rounded-2xl border px-4 py-4 text-left font-[var(--font-manrope)] text-sm transition ${
                     selected
                       ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"

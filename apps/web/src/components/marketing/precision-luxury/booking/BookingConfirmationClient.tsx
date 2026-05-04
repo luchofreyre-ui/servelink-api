@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { DeepCleanProgramCard } from "@/components/booking/deep-clean/DeepCleanProgramCard";
-import { RecurringPlanConversionCard } from "@/components/bookings/RecurringPlanConversionCard";
 import { fetchPublicBookingConfirmation } from "@/lib/api/bookings";
 import { mapBookingScreenProgramToDisplay } from "@/mappers/deepCleanProgramMappers";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
@@ -95,6 +94,51 @@ type ConfirmationOutcomeMode =
   | "request_received"
   | "neutral_reentry";
 
+type LockedRecurringCadence = "weekly" | "every_10_days" | "biweekly" | "monthly";
+
+type LockedRecurringPlan = {
+  id?: string | null;
+  cadence?: LockedRecurringCadence | null;
+  status?: string | null;
+  pricePerVisitCents?: number | null;
+  nextRunAt?: string | null;
+};
+
+type LockedResetSchedule = {
+  visit1At?: string | null;
+  visit2At?: string | null;
+  visit3At?: string | null;
+  recurringBeginsAt?: string | null;
+};
+
+type ConfirmationWithRecurringContract = Awaited<
+  ReturnType<typeof fetchPublicBookingConfirmation>
+> & {
+  selectedRecurringCadence?: LockedRecurringCadence | null;
+  visitStructure?: "one_visit" | "three_visit_reset" | null;
+  recurringPlan?: LockedRecurringPlan | null;
+  resetSchedule?: LockedResetSchedule | null;
+  recurringBeginsAt?: string | null;
+};
+
+const recurringCadenceLabel: Record<LockedRecurringCadence, string> = {
+  weekly: "Weekly",
+  every_10_days: "Every 10 days",
+  biweekly: "Biweekly",
+  monthly: "Monthly",
+};
+
+function isLockedRecurringCadence(
+  value: string | null | undefined,
+): value is LockedRecurringCadence {
+  return (
+    value === "weekly" ||
+    value === "every_10_days" ||
+    value === "biweekly" ||
+    value === "monthly"
+  );
+}
+
 function classifyConfirmationOutcome(
   sp: URLSearchParams,
 ): ConfirmationOutcomeMode {
@@ -174,7 +218,7 @@ export function BookingConfirmationClient() {
     : NaN;
   const urlConfidence = confidenceRaw ? Number(confidenceRaw) : NaN;
 
-  const [remoteLoading, setRemoteLoading] = useState(() => Boolean(bookingId));
+  const [remoteLoading, setRemoteLoading] = useState(false);
   const [remoteError, setRemoteError] = useState<string | null>(null);
   const [remote, setRemote] = useState<Awaited<
     ReturnType<typeof fetchPublicBookingConfirmation>
@@ -226,12 +270,33 @@ export function BookingConfirmationClient() {
     return urlConfidence;
   }, [remote, urlConfidence]);
 
-  const selectedRecurringCadence = remote?.selectedRecurringCadence ?? null;
-
   const visitConfirmedFromRemote = useMemo(() => {
     if (!remote) return false;
     if (remote.bookingStatus !== "assigned") return false;
     return Boolean(remote.scheduledStart && remote.scheduledStart.trim().length > 0);
+  }, [remote]);
+
+  const recurringContract = useMemo(() => {
+    if (!remote) return null;
+    const contract = remote as ConfirmationWithRecurringContract;
+    const cadenceCandidate =
+      contract.selectedRecurringCadence ?? contract.recurringPlan?.cadence ?? null;
+    const cadence = isLockedRecurringCadence(cadenceCandidate)
+      ? cadenceCandidate
+      : null;
+    if (!cadence) return null;
+    const recurringBeginsAt =
+      contract.recurringBeginsAt ??
+      contract.resetSchedule?.recurringBeginsAt ??
+      contract.recurringPlan?.nextRunAt ??
+      null;
+    return {
+      cadence,
+      visitStructure: contract.visitStructure ?? null,
+      plan: contract.recurringPlan ?? null,
+      resetSchedule: contract.resetSchedule ?? null,
+      recurringBeginsAt,
+    };
   }, [remote]);
 
   useEffect(() => {
@@ -598,12 +663,104 @@ export function BookingConfirmationClient() {
             </div>
           </div>
 
-          {bookingId && (!remoteLoading || remote || remoteError) ? (
-            <div className="mt-10">
-              <RecurringPlanConversionCard
-                bookingId={bookingId}
-                selectedCadence={selectedRecurringCadence}
-              />
+          {recurringContract ? (
+            <div className="mt-10 rounded-[28px] border border-[#0D9488]/18 bg-[rgba(13,148,136,0.06)] p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
+              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#0F766E]">
+                Recurring service
+              </p>
+              <h2 className="mt-3 font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.03em] text-[#0F172A]">
+                Your recurring service is set
+              </h2>
+              <div className="mt-5 grid gap-4 font-[var(--font-manrope)] text-sm leading-6 text-[#334155] sm:grid-cols-2">
+                <p>
+                  <span className="font-semibold text-[#0F172A]">Cadence: </span>
+                  {recurringCadenceLabel[recurringContract.cadence]}
+                </p>
+                {typeof recurringContract.plan?.pricePerVisitCents === "number" ? (
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      Recurring visit price:{" "}
+                    </span>
+                    {formatUsdFromCents(recurringContract.plan.pricePerVisitCents)}
+                  </p>
+                ) : null}
+                {recurringContract.plan?.nextRunAt ? (
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      Next visit:{" "}
+                    </span>
+                    {formatVisitDateTime(recurringContract.plan.nextRunAt)}
+                  </p>
+                ) : null}
+                {recurringContract.recurringBeginsAt ? (
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      Recurring begins:{" "}
+                    </span>
+                    {formatVisitDateTime(recurringContract.recurringBeginsAt)}
+                  </p>
+                ) : null}
+              </div>
+
+              {recurringContract.visitStructure === "three_visit_reset" &&
+              recurringContract.resetSchedule ? (
+                <div className="mt-6 rounded-2xl border border-[#0D9488]/18 bg-white px-5 py-4">
+                  <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
+                    Three-visit reset schedule
+                  </p>
+                  <div className="mt-3 grid gap-3 font-[var(--font-manrope)] text-sm leading-6 text-[#334155] sm:grid-cols-2">
+                    {recurringContract.resetSchedule.visit1At ? (
+                      <p>
+                        <span className="font-semibold text-[#0F172A]">
+                          Visit 1:{" "}
+                        </span>
+                        {formatVisitDateTime(recurringContract.resetSchedule.visit1At)}
+                      </p>
+                    ) : null}
+                    {recurringContract.resetSchedule.visit2At ? (
+                      <p>
+                        <span className="font-semibold text-[#0F172A]">
+                          Visit 2:{" "}
+                        </span>
+                        {formatVisitDateTime(recurringContract.resetSchedule.visit2At)}
+                      </p>
+                    ) : null}
+                    {recurringContract.resetSchedule.visit3At ? (
+                      <p>
+                        <span className="font-semibold text-[#0F172A]">
+                          Visit 3:{" "}
+                        </span>
+                        {formatVisitDateTime(recurringContract.resetSchedule.visit3At)}
+                      </p>
+                    ) : null}
+                    {recurringContract.recurringBeginsAt ? (
+                      <p>
+                        <span className="font-semibold text-[#0F172A]">
+                          Recurring begins:{" "}
+                        </span>
+                        {formatVisitDateTime(recurringContract.recurringBeginsAt)}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              ) : remote?.scheduledStart ? (
+                <div className="mt-6 rounded-2xl border border-[#0D9488]/18 bg-white px-5 py-4 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
+                  <p>
+                    <span className="font-semibold text-[#0F172A]">
+                      First visit:{" "}
+                    </span>
+                    {formatVisitDateTime(remote.scheduledStart)}
+                  </p>
+                  {recurringContract.recurringBeginsAt ? (
+                    <p className="mt-2">
+                      <span className="font-semibold text-[#0F172A]">
+                        Recurring begins:{" "}
+                      </span>
+                      {formatVisitDateTime(recurringContract.recurringBeginsAt)}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           ) : null}
 

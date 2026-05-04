@@ -188,7 +188,7 @@ export function mapIntakeFieldsToEstimateInput(
     primary_cleaning_intent: f.primaryIntent,
     last_pro_clean_recency: f.lastProCleanRecency,
     first_time_visit_program: f.firstTimeVisitProgram,
-    recurring_cadence_intent: f.recurringCadenceIntent,
+    recurring_cadence_intent: f.recurringCadenceIntent as EstimateInput["recurring_cadence_intent"],
   };
 
   const lat = intake.siteLat;

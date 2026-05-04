@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BookingConfirmationClient } from "./BookingConfirmationClient";
-import { RecurringPlanConversionCard } from "@/components/bookings/RecurringPlanConversionCard";
 import * as bookingsApi from "@/lib/api/bookings";
 import {
   BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE,
@@ -26,22 +25,6 @@ vi.mock("@/lib/api/bookings", () => ({
   fetchPublicBookingConfirmation: vi.fn(),
 }));
 
-vi.mock("@/components/bookings/RecurringPlanConversionCard", () => ({
-  RecurringPlanConversionCard: vi.fn(
-    ({
-      bookingId,
-      selectedCadence,
-    }: {
-      bookingId: string;
-      selectedCadence?: string | null;
-    }) => (
-      <div data-testid="recurring-plan-card">
-        {bookingId}:{selectedCadence ?? "none"}
-      </div>
-    ),
-  ),
-}));
-
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(mockConfirmationSearch.value),
 }));
@@ -56,7 +39,6 @@ vi.mock("../layout/PublicSiteFooter", () => ({
 describe("BookingConfirmationClient", () => {
   beforeEach(() => {
     vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockReset();
-    vi.mocked(RecurringPlanConversionCard).mockClear();
     sessionStorage.removeItem(BOOKING_CONFIRMATION_SESSION_KEY);
     sessionStorage.removeItem(BOOKING_FLOW_FRESH_START_FLAG);
     mockConfirmationSearch.value =
@@ -156,7 +138,6 @@ describe("BookingConfirmationClient", () => {
       scheduledEnd: "2026-05-01T18:00:00.000Z",
       assignedTeamDisplayName: "Test Team",
       publicDepositPaid: true,
-      selectedRecurringCadence: "weekly",
       estimateSnapshot: {
         estimatedPriceCents: 27100,
         estimatedDurationMinutes: 180,
@@ -181,15 +162,6 @@ describe("BookingConfirmationClient", () => {
     expect(screen.queryByText(/pay .*deposit/i)).toBeNull();
     expect(screen.queryByText(/secure payment/i)).toBeNull();
     await waitFor(() => {
-      expect(RecurringPlanConversionCard).toHaveBeenCalledWith(
-        expect.objectContaining({
-          bookingId: "bk_assigned",
-          selectedCadence: "weekly",
-        }),
-        {},
-      );
-    });
-    await waitFor(() => {
       const snap = JSON.parse(
         sessionStorage.getItem(BOOKING_CONFIRMATION_SESSION_KEY) ?? "{}",
       ) as {
@@ -204,6 +176,56 @@ describe("BookingConfirmationClient", () => {
       expect(snap.paymentSessionKey).toBeUndefined();
       expect(sessionStorage.getItem("booking_deposit_in_flight")).toBeNull();
     });
+  });
+
+  it("renders selected recurring cadence and recurring plan as read-only status", async () => {
+    mockConfirmationSearch.value = "intakeId=in_c&bookingId=bk_recurring";
+    vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockResolvedValue({
+      kind: "public_booking_confirmation",
+      bookingId: "bk_recurring",
+      bookingStatus: "assigned",
+      scheduledStart: "2030-01-01T10:00:00.000Z",
+      scheduledEnd: "2030-01-01T13:00:00.000Z",
+      assignedTeamDisplayName: "Test Team",
+      publicDepositPaid: true,
+      estimateSnapshot: {
+        estimatedPriceCents: 50000,
+        estimatedDurationMinutes: 180,
+        confidence: 0.8,
+        serviceType: "first_time",
+      },
+      deepCleanProgram: null,
+      selectedRecurringCadence: "every_10_days",
+      visitStructure: "three_visit_reset",
+      recurringPlan: {
+        id: "rp_1",
+        cadence: "every_10_days",
+        status: "active",
+        pricePerVisitCents: 33056,
+        nextRunAt: "2030-02-08T10:00:00.000Z",
+      },
+      resetSchedule: {
+        visit1At: "2030-01-01T10:00:00.000Z",
+        visit2At: "2030-01-15T10:00:00.000Z",
+        visit3At: "2030-01-29T10:00:00.000Z",
+      },
+      recurringBeginsAt: "2030-02-08T10:00:00.000Z",
+    });
+
+    render(<BookingConfirmationClient />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Your recurring service is set")).toBeTruthy();
+    });
+    expect(screen.getByText("Every 10 days")).toBeTruthy();
+    expect(screen.getByText("$331")).toBeTruthy();
+    expect(screen.getByText("Three-visit reset schedule")).toBeTruthy();
+    expect(screen.getByText(/Visit 1:/)).toBeTruthy();
+    expect(screen.getByText(/Visit 2:/)).toBeTruthy();
+    expect(screen.getByText(/Visit 3:/)).toBeTruthy();
+    expect(screen.queryByText(/Start weekly plan/i)).toBeNull();
+    expect(screen.queryByText(/Convert to recurring/i)).toBeNull();
+    expect(screen.queryByText(/Keep your home on a recurring plan/i)).toBeNull();
   });
 
   it("shows request-received headline when live booking estimate bundle is absent", () => {

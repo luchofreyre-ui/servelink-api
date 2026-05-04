@@ -185,6 +185,7 @@ export const ESTIMATE_FIRST_TIME_VISIT_PROGRAM = [
 /** Cadence intent (not schedule). */
 export const ESTIMATE_RECURRING_CADENCE_INTENT = [
   "weekly",
+  "every_10_days",
   "biweekly",
   "monthly",
   "none",

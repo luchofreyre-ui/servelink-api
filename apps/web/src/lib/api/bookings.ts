@@ -66,6 +66,26 @@ function appendDeepCleanEstimatorImpactQuery(
   if (params.trendBucket) qs.set("trendBucket", params.trendBucket);
 }
 
+export type PublicRecurringCadenceApi =
+  | "weekly"
+  | "every_10_days"
+  | "biweekly"
+  | "monthly";
+
+export type PublicBookingConfirmationRecurringPlanApi = {
+  id: string;
+  cadence: PublicRecurringCadenceApi;
+  status: string;
+  pricePerVisitCents: number;
+  nextRunAt: string;
+};
+
+export type PublicBookingConfirmationResetScheduleApi = {
+  visit1At: string;
+  visit2At: string;
+  visit3At: string;
+};
+
 export type PublicBookingConfirmationResponse = {
   kind: "public_booking_confirmation";
   bookingId: string;
@@ -82,8 +102,12 @@ export type PublicBookingConfirmationResponse = {
     confidence: number;
     serviceType: string | null;
   } | null;
-  selectedRecurringCadence?: "weekly" | "biweekly" | "monthly" | null;
   deepCleanProgram: BookingScreenDeepCleanProgramApi | null;
+  selectedRecurringCadence?: PublicRecurringCadenceApi | null;
+  visitStructure?: "one_visit" | "three_visit_reset" | null;
+  recurringPlan?: PublicBookingConfirmationRecurringPlanApi | null;
+  resetSchedule?: PublicBookingConfirmationResetScheduleApi | null;
+  recurringBeginsAt?: string | null;
 };
 
 /**

@@ -43,6 +43,7 @@ import {
   decodePublicSlotId,
   encodePublicSlotId,
 } from "../slot-holds/public-slot-id";
+import { RecurringPlanService } from "../recurring-plan/recurring-plan.service";
 
 const MAX_FO_CANDIDATES = 8;
 const MAX_WINDOWS_TOTAL = 60;
@@ -138,6 +139,7 @@ export class PublicBookingOrchestratorService {
     private readonly bookings: BookingsService,
     private readonly fo: FoService,
     private readonly publicBookingDeposit: PublicBookingDepositService,
+    private readonly recurringPlans?: RecurringPlanService,
   ) {}
 
   private throwOrchestrator(code: string, message: string): never {
@@ -157,6 +159,20 @@ export class PublicBookingOrchestratorService {
       kind: "public_booking_lifecycle",
       ...event,
     });
+  }
+
+  private async autoCreateRecurringPlanAfterDeposit(bookingId: string) {
+    if (!this.recurringPlans) return;
+    try {
+      await this.recurringPlans.autoCreateFromBookingAfterDeposit({ bookingId });
+    } catch (error) {
+      this.log.warn({
+        event: "recurring_plan_auto_create_after_deposit",
+        bookingId,
+        result: "failed",
+        reason: error instanceof Error ? error.message : String(error ?? "unknown"),
+      });
+    }
   }
 
   private codeFromError(err: unknown, fallback: string): string {
@@ -1351,6 +1367,7 @@ export class PublicBookingOrchestratorService {
           holdId: dto.holdId,
           alreadyApplied: true,
         });
+        await this.autoCreateRecurringPlanAfterDeposit(booking.id);
         return replayResult;
       }
       const code = "PUBLIC_BOOKING_HOLD_NOT_FOUND";
@@ -1565,6 +1582,8 @@ export class PublicBookingOrchestratorService {
         (result as { alreadyApplied?: boolean }).alreadyApplied,
       ),
     });
+
+    await this.autoCreateRecurringPlanAfterDeposit(result.id);
 
     return {
       kind: "public_booking_confirmation" as const,

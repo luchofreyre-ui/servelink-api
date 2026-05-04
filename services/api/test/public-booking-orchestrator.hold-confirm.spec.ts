@@ -7,6 +7,7 @@ import { SlotAvailabilityService } from "../src/modules/slot-holds/slot-availabi
 import { SlotHoldsService } from "../src/modules/slot-holds/slot-holds.service";
 import { PublicBookingOrchestratorService } from "../src/modules/public-booking-orchestrator/public-booking-orchestrator.service";
 import type { PublicBookingDepositService } from "../src/modules/public-booking-orchestrator/public-booking-deposit.service";
+import type { RecurringPlanService } from "../src/modules/recurring-plan/recurring-plan.service";
 import {
   decodePublicSlotId,
   encodePublicSlotId,
@@ -685,6 +686,11 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
     const deposit = {
       ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
     } as unknown as PublicBookingDepositService;
+    const recurringPlans = {
+      autoCreateFromBookingAfterDeposit: jest.fn().mockResolvedValue({
+        result: "created",
+      }),
+    } as unknown as RecurringPlanService;
 
     const prisma = {
       booking: {
@@ -709,6 +715,7 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
       { confirmBookingFromHold } as unknown as BookingsService,
       {} as FoService,
       deposit,
+      recurringPlans,
     );
 
     const res = await svc.confirmHold(
@@ -740,6 +747,9 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
         scheduled.getTime() + 12.07 * 60 * 60 * 1000,
       ).toISOString(),
     );
+    expect(
+      recurringPlans.autoCreateFromBookingAfterDeposit,
+    ).toHaveBeenCalledWith({ bookingId: "bk_hold" });
     expect(logSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         kind: "public_booking_lifecycle",
@@ -747,6 +757,60 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
         bookingId: "bk_hold",
         holdId: "hold_1",
       }),
+    );
+  });
+
+  it("confirmHold: recurring auto-create failure does not fail confirmation", async () => {
+    const scheduled = new Date("2030-06-01T14:00:00.000Z");
+    const holdEnd = new Date(scheduled.getTime() + 60 * 60 * 1000);
+    const confirmBookingFromHold = jest.fn().mockResolvedValue({
+      id: "bk_hold",
+      scheduledStart: scheduled,
+      estimatedHours: 1,
+      status: BookingStatus.assigned,
+    });
+    const deposit = {
+      ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
+    } as unknown as PublicBookingDepositService;
+    const recurringPlans = {
+      autoCreateFromBookingAfterDeposit: jest
+        .fn()
+        .mockRejectedValue(new Error("RECURRING_PLAN_ALREADY_EXISTS")),
+    } as unknown as RecurringPlanService;
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue(schedulableHoldBooking()),
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "hold_1",
+          bookingId: "bk_hold",
+          foId: "fo_a",
+          startAt: scheduled,
+          endAt: holdEnd,
+          expiresAt: new Date("2030-06-01T20:00:00.000Z"),
+        }),
+      },
+    } as unknown as PrismaService;
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      {} as SlotAvailabilityService,
+      {} as SlotHoldsService,
+      { confirmBookingFromHold } as unknown as BookingsService,
+      {} as FoService,
+      deposit,
+      recurringPlans,
+    );
+
+    const res = await svc.confirmHold(
+      { bookingId: "bk_hold", holdId: "hold_1" },
+      "idem-key-1",
+    );
+
+    expect(res.kind).toBe("public_booking_confirmation");
+    expect(recurringPlans.autoCreateFromBookingAfterDeposit).toHaveBeenCalledWith(
+      { bookingId: "bk_hold" },
     );
   });
 

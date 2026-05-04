@@ -1,264 +1,240 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { WEB_ENV } from '@/lib/env';
+import { useState } from "react";
+import { WEB_ENV } from "@/lib/env";
 
-type RecurringCadence = 'weekly' | 'biweekly' | 'monthly';
-type SelectedRecurringCadence = RecurringCadence | 'not_sure';
+type RecurringCadence = "weekly" | "every_10_days" | "biweekly" | "monthly";
 
-type RecurringOfferQuote = {
-  cadence: RecurringCadence;
-  firstCleanPriceCents: number;
-  recurringPriceCents: number;
-  savingsCents: number;
-  discountPercent: number;
-  estimatedMinutes: number;
+type RecurringPlanSummary = {
+  id?: string | null;
+  cadence?: RecurringCadence | null;
+  status?: string | null;
+  pricePerVisitCents?: number | null;
+  nextRunAt?: string | null;
+};
+
+type ResetScheduleSummary = {
+  visit1At?: string | null;
+  visit2At?: string | null;
+  visit3At?: string | null;
+  recurringBeginsAt?: string | null;
+};
+
+type RecurringPlanConversionCardProps = {
+  bookingId: string;
+  selectedCadence?: RecurringCadence | "not_sure" | null;
+  scheduledStart?: string | null;
+  visitStructure?: "one_visit" | "three_visit_reset" | null;
+  recurringPlan?: RecurringPlanSummary | null;
+  resetSchedule?: ResetScheduleSummary | null;
+  recurringBeginsAt?: string | null;
 };
 
 const cadenceLabels: Record<RecurringCadence, string> = {
-  weekly: 'Weekly',
-  biweekly: 'Biweekly',
-  monthly: 'Monthly',
+  weekly: "Weekly",
+  every_10_days: "Every 10 days",
+  biweekly: "Biweekly",
+  monthly: "Monthly",
 };
 
-const fallbackQuotes: RecurringOfferQuote[] = [
-  {
-    cadence: 'weekly',
-    firstCleanPriceCents: 0,
-    recurringPriceCents: 0,
-    savingsCents: 0,
-    discountPercent: 40,
-    estimatedMinutes: 120,
-  },
-  {
-    cadence: 'biweekly',
-    firstCleanPriceCents: 0,
-    recurringPriceCents: 0,
-    savingsCents: 0,
-    discountPercent: 30,
-    estimatedMinutes: 120,
-  },
-  {
-    cadence: 'monthly',
-    firstCleanPriceCents: 0,
-    recurringPriceCents: 0,
-    savingsCents: 0,
-    discountPercent: 20,
-    estimatedMinutes: 120,
-  },
-];
-
-function normalizeLockedCadence(
-  selectedCadence?: SelectedRecurringCadence | null,
-): RecurringCadence | null {
-  return selectedCadence === 'weekly' ||
-    selectedCadence === 'biweekly' ||
-    selectedCadence === 'monthly'
-    ? selectedCadence
-    : null;
+function isRecurringCadence(value: string | null | undefined): value is RecurringCadence {
+  return (
+    value === "weekly" ||
+    value === "every_10_days" ||
+    value === "biweekly" ||
+    value === "monthly"
+  );
 }
 
-function formatCurrency(cents: number) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
-  }).format(cents / 100);
+function formatUsdFromCents(cents: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(Number.isFinite(cents) ? cents / 100 : 0);
+}
+
+function formatVisitDateTime(iso: string): string {
+  const d = new Date(iso);
+  if (!Number.isFinite(d.getTime())) return iso;
+  return d.toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 export function RecurringPlanConversionCard({
   bookingId,
-  selectedCadence,
-}: {
-  bookingId: string;
-  selectedCadence?: SelectedRecurringCadence | null;
-}) {
-  const lockedCadence = normalizeLockedCadence(selectedCadence);
-  const [submittingCadence, setSubmittingCadence] =
-    useState<RecurringCadence | null>(null);
-  const [quoteLoading, setQuoteLoading] = useState(true);
-  const [quoteError, setQuoteError] = useState(false);
-  const [createError, setCreateError] = useState(false);
-  const [successCadence, setSuccessCadence] = useState<RecurringCadence | null>(
-    null,
-  );
-  const [quotes, setQuotes] = useState<RecurringOfferQuote[] | null>(null);
+  selectedCadence = null,
+  scheduledStart = null,
+  visitStructure = null,
+  recurringPlan = null,
+  resetSchedule = null,
+  recurringBeginsAt = null,
+}: RecurringPlanConversionCardProps) {
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const lockedCadence = isRecurringCadence(selectedCadence)
+    ? selectedCadence
+    : isRecurringCadence(recurringPlan?.cadence)
+      ? recurringPlan.cadence
+      : null;
+  const nextVisitAt = recurringPlan?.nextRunAt ?? recurringBeginsAt ?? null;
+  const beginsAt =
+    recurringBeginsAt ?? resetSchedule?.recurringBeginsAt ?? recurringPlan?.nextRunAt ?? null;
 
-  useEffect(() => {
-    let cancelled = false;
+  async function requestRecurring(cadence: RecurringCadence) {
+    setLoading(true);
+    setMessage(null);
 
-    async function loadQuote() {
-      setQuoteLoading(true);
-      setQuoteError(false);
+    const response = await fetch(`${WEB_ENV.apiBaseUrl}/recurring-plans/create-from-booking`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bookingId, cadence }),
+    });
 
-      try {
-        const search = new URLSearchParams({ bookingId });
-        if (lockedCadence) {
-          search.set('cadence', lockedCadence);
-        }
-        const response = await fetch(
-          `${WEB_ENV.apiBaseUrl}/recurring-plans/offer-quote?${search.toString()}`,
-        );
-
-        if (!response.ok) {
-          throw new Error('Unable to load recurring pricing.');
-        }
-
-        const nextQuotes = (await response.json()) as RecurringOfferQuote[];
-        if (!cancelled) {
-          setQuotes(nextQuotes);
-        }
-      } catch {
-        if (!cancelled) {
-          setQuoteError(true);
-          setQuotes(null);
-        }
-      } finally {
-        if (!cancelled) {
-          setQuoteLoading(false);
-        }
-      }
+    setLoading(false);
+    if (!response.ok) {
+      setMessage("Recurring service could not be requested from this page.");
+      return;
     }
+    setMessage("Recurring service request received.");
+  }
 
-    loadQuote();
+  if (lockedCadence) {
+    return (
+      <div className="space-y-5 rounded-[28px] border border-[#0D9488]/18 bg-[rgba(13,148,136,0.06)] p-6">
+        <div>
+          <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#0F766E]">
+            Recurring service
+          </p>
+          <h3 className="mt-2 font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.03em] text-[#0F172A]">
+            Your recurring service is set
+          </h3>
+        </div>
 
-    return () => {
-      cancelled = true;
-    };
-  }, [bookingId, lockedCadence]);
+        <div className="grid gap-3 font-[var(--font-manrope)] text-sm leading-6 text-[#334155] sm:grid-cols-2">
+          <p>
+            <span className="font-semibold text-[#0F172A]">Cadence: </span>
+            {cadenceLabels[lockedCadence]}
+          </p>
+          {typeof recurringPlan?.pricePerVisitCents === "number" ? (
+            <p>
+              <span className="font-semibold text-[#0F172A]">
+                Recurring visit price:{" "}
+              </span>
+              {formatUsdFromCents(recurringPlan.pricePerVisitCents)}
+            </p>
+          ) : null}
+          {nextVisitAt ? (
+            <p>
+              <span className="font-semibold text-[#0F172A]">Next visit: </span>
+              {formatVisitDateTime(nextVisitAt)}
+            </p>
+          ) : null}
+          {beginsAt ? (
+            <p>
+              <span className="font-semibold text-[#0F172A]">
+                Recurring begins:{" "}
+              </span>
+              {formatVisitDateTime(beginsAt)}
+            </p>
+          ) : null}
+        </div>
 
-  const displayQuotes = useMemo(() => {
-    const source = quotes ?? fallbackQuotes;
-    return lockedCadence
-      ? source.filter((quote) => quote.cadence === lockedCadence)
-      : source;
-  }, [lockedCadence, quotes]);
-  const shouldShowReviewPriceNote = displayQuotes.some(
-    (quote) => quote.firstCleanPriceCents === 0,
-  );
-  const heading = lockedCadence
-    ? `Your ${lockedCadence} recurring plan`
-    : 'Keep your home on a recurring plan';
-
-  async function createPlan(cadence: RecurringCadence) {
-    setSubmittingCadence(cadence);
-    setCreateError(false);
-    setSuccessCadence(null);
-
-    try {
-      const response = await fetch(
-        `${WEB_ENV.apiBaseUrl}/recurring-plans/create-from-booking`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ bookingId, cadence }),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Unable to start recurring plan.');
-      }
-
-      setSuccessCadence(cadence);
-    } catch {
-      setCreateError(true);
-    } finally {
-      setSubmittingCadence(null);
-    }
+        {visitStructure === "three_visit_reset" && resetSchedule ? (
+          <div className="rounded-2xl border border-[#0D9488]/18 bg-white px-5 py-4">
+            <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
+              Three-visit reset schedule
+            </p>
+            <div className="mt-3 grid gap-3 font-[var(--font-manrope)] text-sm leading-6 text-[#334155] sm:grid-cols-2">
+              {resetSchedule.visit1At ? (
+                <p>
+                  <span className="font-semibold text-[#0F172A]">Visit 1: </span>
+                  {formatVisitDateTime(resetSchedule.visit1At)}
+                </p>
+              ) : null}
+              {resetSchedule.visit2At ? (
+                <p>
+                  <span className="font-semibold text-[#0F172A]">Visit 2: </span>
+                  {formatVisitDateTime(resetSchedule.visit2At)}
+                </p>
+              ) : null}
+              {resetSchedule.visit3At ? (
+                <p>
+                  <span className="font-semibold text-[#0F172A]">Visit 3: </span>
+                  {formatVisitDateTime(resetSchedule.visit3At)}
+                </p>
+              ) : null}
+              {beginsAt ? (
+                <p>
+                  <span className="font-semibold text-[#0F172A]">
+                    Recurring begins:{" "}
+                  </span>
+                  {formatVisitDateTime(beginsAt)}
+                </p>
+              ) : null}
+            </div>
+          </div>
+        ) : scheduledStart ? (
+          <div className="rounded-2xl border border-[#0D9488]/18 bg-white px-5 py-4 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
+            <p>
+              <span className="font-semibold text-[#0F172A]">First visit: </span>
+              {formatVisitDateTime(scheduledStart)}
+            </p>
+            {beginsAt ? (
+              <p className="mt-2">
+                <span className="font-semibold text-[#0F172A]">
+                  Recurring begins:{" "}
+                </span>
+                {formatVisitDateTime(beginsAt)}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    );
   }
 
   return (
-    <div className="border p-4 rounded-xl space-y-4">
-      <h3 className="font-semibold text-lg">{heading}</h3>
-
-      <p className="text-sm text-gray-600">
-        Your first clean gets your home reset. Recurring visits are priced as
-        follow-up maintenance so you can keep the home consistent.
-      </p>
-
-      <p className="text-sm text-gray-600">
-        Your recurring plan is created after your booking is deposit-confirmed.
-      </p>
-
-      {lockedCadence ? (
-        <p className="text-sm text-gray-600">
-          Based on the cadence you selected earlier.
+    <div className="space-y-4 rounded-[28px] border border-[#C9B27C]/18 bg-white p-6">
+      <div>
+        <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+          Optional recurring service
         </p>
-      ) : null}
-
-      {quoteLoading ? (
-        <p className="text-sm text-gray-600">Loading recurring pricing…</p>
-      ) : null}
-
-      {quoteError ? (
-        <p className="text-sm text-red-600">
-          Unable to load recurring pricing. You can still choose a cadence.
-        </p>
-      ) : null}
-
-      {shouldShowReviewPriceNote ? (
-        <p className="text-sm text-gray-600">
-          Recurring price will be confirmed by the team after booking review.
-        </p>
-      ) : null}
-
-      {createError ? (
-        <p className="text-sm text-red-600">
-          Unable to start recurring plan. Please try again.
-        </p>
-      ) : null}
-
-      {successCadence ? (
-        <p className="text-sm text-green-700">
-          Your {successCadence} recurring plan has been started.
-        </p>
-      ) : null}
-
-      <div className={`grid gap-3 ${lockedCadence ? '' : 'md:grid-cols-3'}`}>
-        {displayQuotes.map((quote) => (
-          <div
-            key={quote.cadence}
-            className="rounded-xl border border-gray-200 p-3 space-y-3"
-          >
-            <div>
-              <h4 className="font-semibold">{cadenceLabels[quote.cadence]}</h4>
-              <p className="text-sm text-gray-600">
-                {quote.discountPercent}% recurring discount
-              </p>
-            </div>
-
-            <dl className="space-y-1 text-sm text-gray-700">
-              <div className="flex justify-between gap-3">
-                <dt>First clean:</dt>
-                <dd>{formatCurrency(quote.firstCleanPriceCents)}</dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt>Recurring visit:</dt>
-                <dd>{formatCurrency(quote.recurringPriceCents)}</dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt>Save:</dt>
-                <dd>
-                  {formatCurrency(quote.savingsCents)} /{' '}
-                  {quote.discountPercent}%
-                </dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt>Estimated time:</dt>
-                <dd>{quote.estimatedMinutes} minutes</dd>
-              </div>
-            </dl>
-
-            <button
-              onClick={() => createPlan(quote.cadence)}
-              disabled={submittingCadence !== null}
-              className="btn-primary w-full"
-            >
-              Start {quote.cadence} plan
-            </button>
-          </div>
-        ))}
+        <h3 className="mt-2 font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.03em] text-[#0F172A]">
+          Recurring service can be requested for future visits
+        </h3>
       </div>
+
+      <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+        This section is shown only when the booking did not lock a recurring
+        cadence during review.
+      </p>
+
+      <div className="flex flex-wrap gap-2">
+        {(["weekly", "every_10_days", "biweekly", "monthly"] as const).map(
+          (cadence) => (
+            <button
+              key={cadence}
+              onClick={() => requestRecurring(cadence)}
+              disabled={loading}
+              className="rounded-full bg-[#0D9488] px-4 py-2 font-[var(--font-manrope)] text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+              type="button"
+            >
+              Request {cadenceLabels[cadence]}
+            </button>
+          ),
+        )}
+      </div>
+      {message ? (
+        <p className="font-[var(--font-manrope)] text-sm text-[#475569]">
+          {message}
+        </p>
+      ) : null}
     </div>
   );
 }
