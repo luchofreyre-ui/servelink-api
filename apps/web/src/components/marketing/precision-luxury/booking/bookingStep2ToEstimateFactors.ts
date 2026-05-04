@@ -109,7 +109,12 @@ export type BookingIntakeEstimateFactors = {
     | "days_90_plus"
     | "unknown_or_not_recently";
   firstTimeVisitProgram: "one_visit" | "two_visit" | "three_visit";
-  recurringCadenceIntent: "weekly" | "biweekly" | "monthly" | "none";
+  recurringCadenceIntent:
+    | "weekly"
+    | "every_10_days"
+    | "biweekly"
+    | "monthly"
+    | "none";
 };
 
 const FLOOR_RANK: Record<BookingIntakeEstimateFactors["floorVisibility"], number> = {

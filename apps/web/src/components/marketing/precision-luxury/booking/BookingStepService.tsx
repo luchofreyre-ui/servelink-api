@@ -178,7 +178,7 @@ export function BookingStepService({
         </p>
         <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
           {recurringGate
-            ? "Use the actions above to sign in or create an account—this public form will not continue as a recurring booking."
+            ? "Choose First-Time Cleaning With Recurring Service above to price the opening reset and recurring cadence before deposit."
             : "You can change the service above before you continue."}
         </p>
       </div>

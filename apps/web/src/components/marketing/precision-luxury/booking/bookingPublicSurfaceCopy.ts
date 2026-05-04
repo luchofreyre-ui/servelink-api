@@ -143,7 +143,7 @@ export function bookingConfirmationDeepPlanEchoLabel(
 export const BOOKING_PUBLIC_SERVICE_SECTION_TITLE = "Choose your service";
 
 export const BOOKING_PUBLIC_SERVICE_SECTION_BODY =
-  "One-time, first-time-with-recurring, and move-related visits are planned anonymously on this page. Recurring service continues in your Servelink account after you sign in.";
+  "Choose one visit, a first-time clean with recurring service, or a move-related clean. You will review pricing and scheduling before deposit.";
 
 export const BOOKING_PUBLIC_CARD_ONE_TIME_TITLE = "One-Time Cleaning";
 
@@ -154,7 +154,7 @@ export const BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE =
   "First-Time Cleaning With Recurring Service";
 
 export const BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_BODY =
-  "You want a strong opening reset and already intend recurring visits afterward—same anonymous intake and estimate as one-time, with recurring continuation framed after pricing.";
+  "Plan a strong opening reset and recurring maintenance visits in one booking path.";
 
 export const BOOKING_PUBLIC_CARD_MOVE_TITLE = "Move-In / Move-Out Cleaning";
 
@@ -164,13 +164,13 @@ export const BOOKING_PUBLIC_CARD_MOVE_BODY =
 export const BOOKING_PUBLIC_CARD_RECURRING_TITLE = "Recurring Service";
 
 export const BOOKING_PUBLIC_CARD_RECURRING_BODY =
-  "Ongoing cadence is set up and managed in your Servelink account—not through this anonymous booking form.";
+  "Choose First-Time Cleaning With Recurring Service to set up a new recurring service path.";
 
 export const BOOKING_RECURRING_GATE_HEADLINE =
-  "Recurring service is managed through your Servelink account";
+  "Start with a first-time recurring service";
 
 export const BOOKING_RECURRING_GATE_BODY =
-  "Log in to manage cadence and saved home details. New here? Create an account—this public path does not continue as a recurring booking.";
+  "Choose First-Time Cleaning With Recurring Service above to price the opening reset and recurring cadence before deposit.";
 
 export const BOOKING_RECURRING_GATE_LOGIN_CTA = "Log in";
 
@@ -199,7 +199,7 @@ export const BOOKING_LOCATION_ZIP_HELPER =
   "Use the ZIP where the cleaning will take place (at least five characters).";
 
 export const BOOKING_FIRST_TIME_WITH_RECURRING_REVIEW_INTENT =
-  "You selected First-Time Cleaning With Recurring Service—after this opening visit, recurring care is already your intended path (set up in your account after we connect).";
+  "You selected First-Time Cleaning With Recurring Service. Choose the opening visit structure and recurring cadence below.";
 
 export const BOOKING_REVIEW_VISIT_STRUCTURE_LABEL = "First visit structure:";
 
@@ -228,18 +228,18 @@ export const BOOKING_POST_ESTIMATE_FIRST_TIME_BODY =
 
 export const BOOKING_POST_ESTIMATE_VISIT_ONE = "Book as one visit";
 
-export const BOOKING_POST_ESTIMATE_VISIT_TWO = "Spread across 2 visits";
+export const BOOKING_POST_ESTIMATE_VISIT_TWO = "Legacy phased option";
 
 export const BOOKING_POST_ESTIMATE_VISIT_THREE = "Spread across 3 visits";
 
 export const BOOKING_POST_ESTIMATE_CONVERT_RECURRING =
-  "Convert to recurring after this estimate";
+  "Recurring service";
 
 export const BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER =
-  "We’ll keep this request as a one-time booking until you sign in—then recurring cadence and account tools take over in the customer portal.";
+  "Recurring cadence is selected on Review before deposit.";
 
 export const BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED =
-  "Recurring Service is not available on the anonymous booking path. Choose One-Time Cleaning, First-Time Cleaning With Recurring Service, or Move-In / Move-Out Cleaning above—or use Log in / Create account.";
+  "Choose First-Time Cleaning With Recurring Service to price the opening reset and recurring cadence before deposit.";
 
 /** Step 4 — scheduling: team, arrival window, final confirm (web shell). */
 export const BOOKING_SCHEDULE_PAGE_TITLE = "Schedule your visit";

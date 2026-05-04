@@ -85,7 +85,6 @@ import {
   BookingStepService,
   type PublicBookingServiceCardSelection,
 } from "./BookingStepService";
-import { BookingStepIntent } from "./BookingStepIntent";
 import { BookingStepHomeDetails } from "./BookingStepHomeDetails";
 import { BookingStepServiceLocation } from "./BookingStepServiceLocation";
 import {
@@ -179,10 +178,6 @@ function getStepError(state: BookingFlowState): string | null {
     if (!state.serviceId) {
       return "Please choose a service before continuing.";
     }
-  }
-
-  if (state.step === "intent" && !state.intent) {
-    return "Choose what brings you in today before continuing.";
   }
 
   if (state.step === "home" && !isHomeDetailsComplete(state)) {
@@ -1223,25 +1218,12 @@ export function BookingFlowClient() {
       reviewPaymentPhase === "finalizing" ||
       reviewPaymentPhase === "finalizing_timeout");
 
-  const disableNext =
-    state.step === "review" &&
-    (isSubmitting ||
-      !canConfirmDirection ||
-      !canRenderReview ||
-      estimate.status === "loading" ||
-      estimate.status === "error" ||
-      !estimatePreviewReady ||
-      reviewAwaitingDepositPayment);
-
   useEffect(() => {
-    const currentStep: BookingStepId = state.step;
-    const reviewStep: BookingStepId = "review";
-    const noClampSteps: BookingStepId[] = [reviewStep, currentStep];
-    if (currentStep !== "review" || estimateInput != null) return;
+    if (state.step !== "review" || estimateInput != null) return;
 
     const maxStep = computeMaxReadyStep(state);
 
-    if (noClampSteps.includes(maxStep)) return;
+    if (maxStep === state.step) return;
 
     setAttemptedConfirm(false);
     setState((prev) =>
@@ -1276,6 +1258,7 @@ export function BookingFlowClient() {
       durationMinutes: estimate.data.estimate.durationMinutes,
       confidence: estimate.data.estimate.confidence,
       source: "server",
+      recurringQuoteOptions: estimate.data.recurringQuoteOptions,
     };
   }, [estimate.status, estimate.data, estimate.requestKey, estimateInput]);
 
@@ -1298,6 +1281,22 @@ export function BookingFlowClient() {
     estimate.status === "error" ? estimate.errorMessage ?? null : null;
   const previewFetchCompleted =
     estimate.status === "success" || estimate.status === "error";
+  const recurringContractSelected =
+    state.bookingPublicPath === "first_time_with_recurring" ||
+    state.recurringInterest?.interested === true;
+  const recurringQuoteOptionsReady =
+    !recurringContractSelected ||
+    Boolean(previewEstimate?.recurringQuoteOptions?.length);
+  const disableNext =
+    state.step === "review" &&
+    (isSubmitting ||
+      !canConfirmDirection ||
+      !canRenderReview ||
+      estimate.status === "loading" ||
+      estimate.status === "error" ||
+      !estimatePreviewReady ||
+      !recurringQuoteOptionsReady ||
+      reviewAwaitingDepositPayment);
 
   useEffect(() => {
     const signature = [
@@ -1402,6 +1401,10 @@ export function BookingFlowClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.step, pathname, router]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [state.step]);
+
   function goToStep(step: BookingStepId) {
     if (step === "schedule" && isDepositPaymentLocked()) {
       console.warn("BLOCKED: schedule step during deposit payment");
@@ -1423,7 +1426,6 @@ export function BookingFlowClient() {
     setAttemptedNext(false);
 
     if (state.step === "service") return goToStep("home");
-    if (state.step === "intent") return goToStep("home");
     if (state.step === "home") return goToStep("location");
     if (state.step === "location") return goToStep("review");
   }
@@ -2255,8 +2257,7 @@ export function BookingFlowClient() {
       return;
     }
     if (state.step === "location") return goToStep("home");
-    if (state.step === "home") return goToStep("intent");
-    if (state.step === "intent") return goToStep("service");
+    if (state.step === "home") return goToStep("service");
     return;
   }
 
@@ -2481,13 +2482,6 @@ export function BookingFlowClient() {
                 />
               ) : null}
 
-              {state.step === "intent" ? (
-                <BookingStepIntent
-                  intent={state.intent}
-                  onChange={(intent) => patchState({ intent })}
-                />
-              ) : null}
-
               {state.step === "home" ? (
                 <BookingStepHomeDetails
                   state={state}
@@ -2564,6 +2558,14 @@ export function BookingFlowClient() {
                       clampBookingStepToStructuralMax({
                         ...prev,
                         recurringInterest,
+                      }),
+                    );
+                  }}
+                  onRecurringCadenceIntentChange={(recurringCadenceIntent) => {
+                    setState((prev) =>
+                      clampBookingStepToStructuralMax({
+                        ...prev,
+                        recurringCadenceIntent,
                       }),
                     );
                   }}

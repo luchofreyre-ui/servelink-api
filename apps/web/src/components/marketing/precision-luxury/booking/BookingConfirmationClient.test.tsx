@@ -178,6 +178,56 @@ describe("BookingConfirmationClient", () => {
     });
   });
 
+  it("renders selected recurring cadence and recurring plan as read-only status", async () => {
+    mockConfirmationSearch.value = "intakeId=in_c&bookingId=bk_recurring";
+    vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockResolvedValue({
+      kind: "public_booking_confirmation",
+      bookingId: "bk_recurring",
+      bookingStatus: "assigned",
+      scheduledStart: "2030-01-01T10:00:00.000Z",
+      scheduledEnd: "2030-01-01T13:00:00.000Z",
+      assignedTeamDisplayName: "Test Team",
+      publicDepositPaid: true,
+      estimateSnapshot: {
+        estimatedPriceCents: 50000,
+        estimatedDurationMinutes: 180,
+        confidence: 0.8,
+        serviceType: "first_time",
+      },
+      deepCleanProgram: null,
+      selectedRecurringCadence: "every_10_days",
+      visitStructure: "three_visit_reset",
+      recurringPlan: {
+        id: "rp_1",
+        cadence: "every_10_days",
+        status: "active",
+        pricePerVisitCents: 33056,
+        nextRunAt: "2030-02-08T10:00:00.000Z",
+      },
+      resetSchedule: {
+        visit1At: "2030-01-01T10:00:00.000Z",
+        visit2At: "2030-01-15T10:00:00.000Z",
+        visit3At: "2030-01-29T10:00:00.000Z",
+      },
+      recurringBeginsAt: "2030-02-08T10:00:00.000Z",
+    });
+
+    render(<BookingConfirmationClient />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Your recurring service is set")).toBeTruthy();
+    });
+    expect(screen.getByText("Every 10 days")).toBeTruthy();
+    expect(screen.getByText("$331")).toBeTruthy();
+    expect(screen.getByText("Three-visit reset schedule")).toBeTruthy();
+    expect(screen.getByText(/Visit 1:/)).toBeTruthy();
+    expect(screen.getByText(/Visit 2:/)).toBeTruthy();
+    expect(screen.getByText(/Visit 3:/)).toBeTruthy();
+    expect(screen.queryByText(/Start weekly plan/i)).toBeNull();
+    expect(screen.queryByText(/Convert to recurring/i)).toBeNull();
+    expect(screen.queryByText(/Keep your home on a recurring plan/i)).toBeNull();
+  });
+
   it("shows request-received headline when live booking estimate bundle is absent", () => {
     mockConfirmationSearch.value =
       "intakeId=in_test_1&bookingError=BOOKING_CREATE_FAILED&homeSize=2000&service=deep-cleaning";

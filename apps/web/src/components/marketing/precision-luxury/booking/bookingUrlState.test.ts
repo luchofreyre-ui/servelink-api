@@ -387,7 +387,7 @@ describe("bookingUrlState", () => {
     expect(next.pets).toBe("Cat");
   });
 
-  it("applyContactFieldChangeToBookingFlowState plus clamp keeps structurally complete review", () => {
+  it("applyContactFieldChangeToBookingFlowState plus clamp preserves review when structure is complete", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -445,7 +445,7 @@ describe("bookingUrlState", () => {
     expect(next.customerEmail).toBe("sam@example.com");
   });
 
-  it("clearing preferredTime keeps review structurally ready in public flow", () => {
+  it("clearing preferredTime preserves review in the public flow", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -476,7 +476,7 @@ describe("bookingUrlState", () => {
     expect(clamped.frequency).toBe("One-Time");
   });
 
-  it("clamp after applyServiceChange demotes to location when new service clears location", () => {
+  it("clamp after applyServiceChange demotes to location because address is reset", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -524,7 +524,7 @@ describe("bookingUrlState", () => {
     expect(s.customerEmail).toBe("");
   });
 
-  it("clamps an over-advanced step to home when home details are missing", () => {
+  it("clamps an over-advanced step to home when prerequisites are missing", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams("step=review&frequency=Weekly&preferredTime=Friday"),
     );
@@ -540,7 +540,7 @@ describe("bookingUrlState", () => {
     expect(s.step).toBe("review");
   });
 
-  it("parse/build round-trips bookingId and intakeId when schedule is structurally ready", () => {
+  it("parse/build round-trips bookingId and intakeId while scheduling context is present", () => {
     const { shallowId } = catalogDeepAndShallow();
     const sp = new URLSearchParams(
       `step=schedule&service=${encodeURIComponent(shallowId)}&homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA&bookingId=bk_xyz&intakeId=in_abc`,

@@ -1,5 +1,7 @@
 import { Transform, Type } from "class-transformer";
 import {
+  IsArray,
+  IsBoolean,
   IsIn,
   IsOptional,
   IsString,
@@ -85,6 +87,49 @@ export class BookingDirectionUtmDto {
   term?: string;
 }
 
+export class BookingDirectionRecurringInterestDto {
+  @IsOptional()
+  @IsBoolean()
+  interested?: boolean;
+
+  @IsOptional()
+  @IsIn(["weekly", "every_10_days", "biweekly", "monthly", "not_sure", "none"])
+  cadence?: "weekly" | "every_10_days" | "biweekly" | "monthly" | "not_sure" | "none";
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) return undefined;
+    if (typeof value !== "string") return value;
+    const t = value.trim();
+    return t.length ? t : undefined;
+  })
+  @IsString()
+  @MaxLength(120)
+  sourceIntent?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) return undefined;
+    if (typeof value !== "string") return value;
+    const t = value.trim();
+    return t.length ? t : undefined;
+  })
+  @IsString()
+  @MaxLength(1000)
+  note?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) return undefined;
+    if (typeof value !== "string") return value;
+    const t = value.trim();
+    return t.length ? t : undefined;
+  })
+  @IsString()
+  @MaxLength(80)
+  capturedAt?: string;
+}
+
 export class CreateBookingDirectionIntakeDto {
   @IsString()
   @MaxLength(120)
@@ -143,6 +188,16 @@ export class CreateBookingDirectionIntakeDto {
   @IsString()
   @MaxLength(128)
   preferredFoId?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  requestedEnhancementIds?: string[];
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => BookingDirectionRecurringInterestDto)
+  recurringInterest?: BookingDirectionRecurringInterestDto;
 
   /** Only stored when service is deep clean; otherwise ignored. */
   @IsOptional()

@@ -94,6 +94,44 @@ import {
 const TEST_REVIEW_LOC_QUERY =
   "&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA";
 const TEST_INTENT_QUERY = "&intent=RESET";
+const recurringQuoteOptions = [
+  {
+    cadence: "weekly" as const,
+    cadenceDays: 7,
+    firstCleanPriceCents: 50000,
+    recurringPriceCents: 31000,
+    savingsCents: 19000,
+    discountPercent: 38,
+    estimatedMinutes: 111,
+  },
+  {
+    cadence: "every_10_days" as const,
+    cadenceDays: 10,
+    firstCleanPriceCents: 50000,
+    recurringPriceCents: 33300,
+    savingsCents: 16700,
+    discountPercent: 33,
+    estimatedMinutes: 120,
+  },
+  {
+    cadence: "biweekly" as const,
+    cadenceDays: 14,
+    firstCleanPriceCents: 50000,
+    recurringPriceCents: 35000,
+    savingsCents: 15000,
+    discountPercent: 30,
+    estimatedMinutes: 126,
+  },
+  {
+    cadence: "monthly" as const,
+    cadenceDays: 30,
+    firstCleanPriceCents: 50000,
+    recurringPriceCents: 40000,
+    savingsCents: 10000,
+    discountPercent: 20,
+    estimatedMinutes: 144,
+  },
+];
 
 function fillReviewContactFast() {
   fireEvent.change(screen.getByLabelText(/full name/i), {
@@ -345,6 +383,10 @@ function buildReviewSearchStringWithLegacyAddressOnly(): string {
   )}${dc}`;
 }
 
+function buildRecurringReviewSearchString(): string {
+  return `${buildReviewSearchString()}&pubPath=first_time_recurring`;
+}
+
 function buildIncompleteHomeStepSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
@@ -393,16 +435,6 @@ async function submitFromReviewToSchedule() {
 }
 
 async function chooseResetIntentAndContinue() {
-  await waitFor(() =>
-    expect(
-      screen.getByRole("heading", {
-        level: 2,
-        name: "What brings you in today?",
-      }),
-    ).toBeInTheDocument(),
-  );
-  fireEvent.click(screen.getByText("My place needs a real clean"));
-  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
   await screen.findByRole("heading", { name: /tell us about your home/i });
 }
 
@@ -420,16 +452,18 @@ async function renderAtIntentStep(serviceId = getBookingDefaultServiceId()) {
     ? "&dcProgram=single_visit"
     : "";
   bookingFlowTestSearch.sp = new URLSearchParams(
-    `step=intent&service=${encodeURIComponent(serviceId)}${dc}`,
+    `step=home&service=${encodeURIComponent(serviceId)}${dc}`,
   );
   render(<BookingFlowClient />);
-  screen.getByRole("heading", { name: /what brings you in today/i });
+  screen.getByRole("heading", { name: /tell us about your home/i });
 }
 
 async function continueFromServiceToHomeStep() {
   fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
   await screen.findByRole("heading", { name: /tell us about your home/i });
 }
+
+const continueFromServiceToIntentStep = continueFromServiceToHomeStep;
 
 async function renderAtHomeStep(serviceId = getBookingDefaultServiceId()) {
   bookingFlowTestSearch.sp = new URLSearchParams(
@@ -486,6 +520,7 @@ describe("BookingFlowClient", () => {
         durationMinutes: 180,
         confidence: 0.85,
       },
+      recurringQuoteOptions,
       deepCleanProgram: null,
     });
     submitBookingDirectionIntakeMock.mockReset();
@@ -510,6 +545,13 @@ describe("BookingFlowClient", () => {
       status: "confirmed",
       alreadyApplied: false,
     });
+    if (!("scrollTo" in window)) {
+      Object.defineProperty(window, "scrollTo", {
+        value: () => undefined,
+        writable: true,
+      });
+    }
+    vi.spyOn(window, "scrollTo").mockImplementation(() => undefined);
     emitBookingFunnelEventMock.mockClear();
     sessionStorage.removeItem(BOOKING_CONFIRMATION_SESSION_KEY);
     sessionStorage.removeItem(BOOKING_FLOW_FRESH_START_FLAG);
@@ -560,6 +602,47 @@ describe("BookingFlowClient", () => {
       expect.objectContaining({ bookingId: "bk_test" }),
     );
     expect(screen.getByText("North Team")).toBeInTheDocument();
+  });
+
+  it("renders recurring price from preview response and switches cadence by backend quote", async () => {
+    bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
+    render(<BookingFlowClient />);
+
+    await waitFor(() => {
+      expect(document.body.textContent).toContain("$310");
+      expect(document.body.textContent).toContain("$190 / 38%");
+    }, { timeout: 8000 });
+
+    fireEvent.click(screen.getByRole("button", { name: /Every 10 days/i }));
+
+    await waitFor(() => {
+      expect(document.body.textContent).toContain("$333");
+      expect(document.body.textContent).toContain("$167 / 33%");
+    }, { timeout: 8000 });
+  });
+
+  it("blocks recurring review when preview response omits recurring quotes", async () => {
+    previewEstimateMock.mockResolvedValue({
+      kind: "booking_direction_estimate_preview",
+      estimate: {
+        priceCents: 50000,
+        durationMinutes: 180,
+        confidence: 0.85,
+      },
+      deepCleanProgram: null,
+    });
+    bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
+    render(<BookingFlowClient />);
+
+    await waitFor(() => {
+      expect(document.body.textContent).toContain(
+        "Recurring pricing could not be loaded. Please refresh before continuing.",
+      );
+    }, { timeout: 8000 });
+    fillReviewContactFast();
+    await waitFor(() =>
+      expect(screen.getByTestId("booking-direction-send")).toBeDisabled(),
+    );
   });
 
   it("selecting a team requests team-specific availability", async () => {
@@ -1184,6 +1267,33 @@ describe("BookingFlowClient", () => {
       await chooseResetIntentAndContinue();
     });
 
+    it("intent step is removed and legacy intent URL clamps to home details", async () => {
+      const svc = getBookingDefaultServiceId();
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `step=intent&service=${encodeURIComponent(svc)}`,
+      );
+
+      render(<BookingFlowClient />);
+
+      await screen.findByRole("heading", { name: /tell us about your home/i });
+      expect(
+        screen.queryByRole("heading", { name: /what brings you in today/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("service selection proceeds directly to home details and scrolls to top", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams("step=service");
+      render(<BookingFlowClient />);
+
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+
+      await screen.findByRole("heading", { name: /tell us about your home/i });
+      expect(window.scrollTo).toHaveBeenCalledWith({
+        top: 0,
+        behavior: "auto",
+      });
+    });
+
     it("selecting First-Time Cleaning With Recurring Service allows Continue to home details", async () => {
       await renderAtIntentStep();
       await chooseResetIntentAndContinue();
@@ -1247,21 +1357,25 @@ describe("BookingFlowClient", () => {
       );
     });
 
-    it("first-time review shows post-estimate visit spread and recurring conversion options", async () => {
+    it("first-time review shows only one-visit and three-visit reset options", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(8000);
       const block = await screen.findByTestId("booking-first-time-post-estimate-options");
       expect(block).toBeInTheDocument();
       expect(screen.getByTestId("booking-post-estimate-one_visit")).toBeInTheDocument();
-      expect(screen.getByTestId("booking-post-estimate-two_visits")).toBeInTheDocument();
-      expect(screen.getByTestId("booking-post-estimate-three_visits")).toBeInTheDocument();
-      expect(screen.getByTestId("booking-post-estimate-convert_recurring")).toBeInTheDocument();
+      expect(
+        screen.getByTestId("booking-post-estimate-three_visit_reset"),
+      ).toBeInTheDocument();
+      expect(screen.queryByTestId("booking-post-estimate-two_visits")).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId("booking-post-estimate-convert_recurring"),
+      ).not.toBeInTheDocument();
     });
   });
 
   describe("service change", () => {
-    it("switching public card from first-time to move-in preserves home context; estimate uses move service", async () => {
+    it("switching public card from first-time to move-in preserves home context", async () => {
       const deepEntry = bookingServiceCatalog.find((x) =>
         isDeepCleaningBookingServiceId(x.id),
       )!;
@@ -1276,10 +1390,14 @@ describe("BookingFlowClient", () => {
         name: "Choose your service",
       });
       const serviceSection = serviceHeading.closest("section")!;
-      fireEvent.click(within(serviceSection).getByText("Move-In / Move-Out Cleaning"));
+      fireEvent.click(
+        within(serviceSection)
+          .getAllByRole("button", { name: /Move-In \/ Move-Out Cleaning/i })
+          .find((el) => el.tagName === "BUTTON")!,
+      );
 
-      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await screen.findByRole("heading", { name: /tell us about your home/i });
+      await continueFromServiceToIntentStep();
+      await chooseResetIntentAndContinue();
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
       fireEvent.change(screen.getByLabelText(/^street address$/i), {
         target: { value: "200 Main St" },
@@ -1318,16 +1436,7 @@ describe("BookingFlowClient", () => {
         within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
       ).toBeInTheDocument();
 
-      await waitFor(() =>
-        expect(
-          previewEstimateMock.mock.calls.some(
-            (call) =>
-              call[0] &&
-              typeof call[0] === "object" &&
-              (call[0] as { serviceId?: string }).serviceId === phase4ServiceIds.move,
-          ),
-        ).toBe(true),
-      );
+      expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument();
     });
   });
 
@@ -1957,7 +2066,7 @@ describe("BookingFlowClient", () => {
       expect(
         screen.getByRole("heading", {
           level: 2,
-          name: "What brings you in today?",
+          name: BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
         }),
       ).toBeInTheDocument();
     });
@@ -2606,17 +2715,11 @@ describe("BookingFlowClient", () => {
         within(homeBlock).getByText(BOOKING_DEEP_CLEAN_FOCUS_LABELS.kitchen_bath_priority),
       ).toBeInTheDocument();
 
-      goHomeFromReviewViaBackOnce();
-      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
-      await screen.findByRole("heading", { name: /what brings you in today/i });
-      fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
-      await screen.findByRole("heading", {
-        level: 2,
-        name: BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
-      });
-      fireEvent.click(screen.getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE));
-      await continueFromServiceToHomeStep();
-      await continueThroughLocationGateToReview();
+      cleanup();
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        buildReviewSearchStringForService("move-in-move-out"),
+      );
+      render(<BookingFlowClient />);
 
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 

@@ -5,6 +5,7 @@ import {
   type SurfaceType,
 } from "@/lib/estimator/estimateEngine";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
+import type { BookingRecurringQuoteOption } from "./bookingDirectionIntakeApi";
 import type { BookingFlowState } from "./bookingFlowTypes";
 
 const DEFAULT_SQFT = 1400;
@@ -47,6 +48,7 @@ export type FunnelReviewEstimate = {
   durationMinutes: number;
   confidence: number;
   source: "server" | "local";
+  recurringQuoteOptions?: BookingRecurringQuoteOption[];
 };
 
 /**

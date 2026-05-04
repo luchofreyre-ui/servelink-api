@@ -88,18 +88,15 @@ import {
   BOOKING_REVIEW_STEP_TITLE,
   BOOKING_REVIEW_SELECTED_ARRIVAL_LABEL,
   BOOKING_REVIEW_SELECTED_TEAM_LABEL,
-  BOOKING_FIRST_TIME_WITH_RECURRING_REVIEW_INTENT,
   BOOKING_TRANSITION_STATE_LABELS,
-  BOOKING_POST_ESTIMATE_CONVERT_RECURRING,
-  BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER,
   BOOKING_POST_ESTIMATE_FIRST_TIME_BODY,
   BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE,
   BOOKING_POST_ESTIMATE_VISIT_ONE,
   BOOKING_POST_ESTIMATE_VISIT_THREE,
-  BOOKING_POST_ESTIMATE_VISIT_TWO,
   BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
   BOOKING_REVIEW_VISIT_STRUCTURE_LABEL,
 } from "./bookingPublicSurfaceCopy";
+import { getBookingUpsellOptionsByIds } from "./bookingUpsells";
 import { getPublicBookingMarketingTitle } from "./publicBookingTaxonomy";
 
 type BookingStepReviewProps = {
@@ -133,8 +130,11 @@ type BookingStepReviewProps = {
   onFirstTimePostEstimateVisitChoiceChange: (
     choice: BookingFirstTimePostEstimateVisitChoice,
   ) => void;
-  onRecurringInterestChange?: (
+  onRecurringInterestChange: (
     value: BookingFlowState["recurringInterest"],
+  ) => void;
+  onRecurringCadenceIntentChange: (
+    value: BookingFlowState["recurringCadenceIntent"],
   ) => void;
 };
 
@@ -189,12 +189,8 @@ function deepProgramFallbackLabel(state: BookingFlowState) {
     state.firstTimePostEstimateVisitChoice
   ) {
     switch (state.firstTimePostEstimateVisitChoice) {
-      case "two_visits":
-        return "Spread across 2 visits";
-      case "three_visits":
+      case "three_visit_reset":
         return "3-visit program";
-      case "convert_recurring":
-        return "Recurring after sign-in";
       case "one_visit":
       default:
         return "One visit";
@@ -259,6 +255,8 @@ export function BookingStepReview({
   prepGuidanceItems,
   recommendedAttentionItems,
   onFirstTimePostEstimateVisitChoiceChange,
+  onRecurringInterestChange,
+  onRecurringCadenceIntentChange,
 }: BookingStepReviewProps) {
   const reviewFunnelOnceRef = useRef(false);
   useEffect(() => {
@@ -351,12 +349,106 @@ export function BookingStepReview({
     light: "Light pet impact",
     heavy: "Heavy pet impact",
   };
+  type ReviewRecurringCadence = "weekly" | "every_10_days" | "biweekly" | "monthly";
+  type ReviewVisitStructure = "one_visit" | "three_visit_reset";
+  const recurringCadenceDisplay: Record<ReviewRecurringCadence, string> = {
+    weekly: "Weekly",
+    every_10_days: "Every 10 days",
+    biweekly: "Biweekly",
+    monthly: "Monthly",
+  };
+  const selectedRecurringCadence =
+    state.recurringInterest?.interested === true &&
+    (state.recurringInterest.cadence === "weekly" ||
+      state.recurringInterest.cadence === "every_10_days" ||
+      state.recurringInterest.cadence === "biweekly" ||
+      state.recurringInterest.cadence === "monthly")
+      ? (state.recurringInterest.cadence as ReviewRecurringCadence)
+      : state.recurringCadenceIntent === "weekly" ||
+          state.recurringCadenceIntent === "every_10_days" ||
+          state.recurringCadenceIntent === "biweekly" ||
+          state.recurringCadenceIntent === "monthly"
+        ? (state.recurringCadenceIntent as ReviewRecurringCadence)
+        : null;
+  const isRecurringContract =
+    state.bookingPublicPath === "first_time_with_recurring" ||
+    state.recurringInterest?.interested === true;
+  const reviewRecurringCadence =
+    selectedRecurringCadence ?? (isRecurringContract ? "weekly" : null);
+  const recurringQuoteOptions = previewEstimate?.recurringQuoteOptions ?? [];
+  const recurringQuote =
+    reviewRecurringCadence && recurringQuoteOptions.length > 0
+      ? (recurringQuoteOptions.find(
+          (quote) => quote.cadence === reviewRecurringCadence,
+        ) ?? null)
+      : null;
+  const hasRecurringQuoteOptions = recurringQuoteOptions.length > 0;
+  const selectedVisitStructure: ReviewVisitStructure =
+    state.firstTimePostEstimateVisitChoice === "three_visit_reset" ||
+    state.firstTimeVisitProgram === "three_visit"
+      ? "three_visit_reset"
+      : "one_visit";
+  const threeVisitBreakdown = previewEstimate
+    ? (() => {
+        const visit1 = Math.round(previewEstimate.priceCents * 0.45);
+        const visit2 = Math.round(previewEstimate.priceCents * 0.35);
+        const visit3 = Math.max(0, previewEstimate.priceCents - visit1 - visit2);
+        return { visit1, visit2, visit3 };
+      })()
+    : null;
+  const recurringTimingText =
+    reviewRecurringCadence && selectedVisitStructure === "three_visit_reset"
+      ? `Reset visits are spaced 14 days apart. ${recurringCadenceDisplay[reviewRecurringCadence]} recurring service begins ${recurringQuote?.cadenceDays ?? "the selected cadence"} days after Visit 3.`
+      : reviewRecurringCadence
+        ? `Recurring service begins ${recurringQuote?.cadenceDays ?? "the selected cadence"} days after your first visit.`
+        : null;
+
+  useEffect(() => {
+    if (!isRecurringContract) return;
+    if (selectedRecurringCadence) return;
+    onRecurringInterestChange({
+      interested: true,
+      cadence: "weekly",
+      note: state.recurringInterest?.note,
+    });
+    onRecurringCadenceIntentChange("weekly");
+  }, [
+    isRecurringContract,
+    onRecurringCadenceIntentChange,
+    onRecurringInterestChange,
+    selectedRecurringCadence,
+    state.recurringInterest?.note,
+  ]);
+
+  useEffect(() => {
+    if (!isRecurringContract) return;
+    if (state.firstTimePostEstimateVisitChoice) return;
+    onFirstTimePostEstimateVisitChoiceChange("one_visit");
+  }, [
+    isRecurringContract,
+    onFirstTimePostEstimateVisitChoiceChange,
+    state.firstTimePostEstimateVisitChoice,
+  ]);
+
+  function changeRecurringCadence(cadence: ReviewRecurringCadence) {
+    onRecurringInterestChange({
+      interested: true,
+      cadence,
+      note: state.recurringInterest?.note,
+    } as BookingFlowState["recurringInterest"]);
+    onRecurringCadenceIntentChange(cadence);
+  }
+
+  function changeVisitStructure(visitStructure: ReviewVisitStructure) {
+    onFirstTimePostEstimateVisitChoiceChange(visitStructure);
+  }
 
   const addOnsNormalized = normalizeBookingAddOnsForPayload(state.selectedAddOns);
   const addOnsDisplay =
     addOnsNormalized.length > 0
       ? addOnsNormalized.map((t) => BOOKING_ADD_ON_LABELS[t]).join(", ")
       : "Not specified";
+  const selectedUpsells = getBookingUpsellOptionsByIds(state.selectedUpsellIds);
 
   const appliancesNormalized = normalizeBookingAppliancePresenceForPayload(
     state.appliancePresence,
@@ -480,10 +572,24 @@ export function BookingStepReview({
 
   return (
     <BookingSectionCard
-      eyebrow="Step 4"
+      eyebrow="Step 5"
       title={BOOKING_REVIEW_STEP_TITLE}
       body={BOOKING_REVIEW_STEP_BODY}
     >
+      <div className="mb-8 rounded-2xl border border-[#0D9488]/18 bg-[rgba(13,148,136,0.06)] px-5 py-4">
+        <p className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]">
+          You’re almost done
+        </p>
+        <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+          Review service, home details, location readiness, and estimate timing
+          before we show available teams.
+        </p>
+        <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+          Why we need this: confirming the details here helps us avoid surprises
+          before schedule and deposit.
+        </p>
+      </div>
+
       <div
         className={`mb-8 rounded-2xl border px-5 py-4 ${
           bannerFullyReady
@@ -539,7 +645,11 @@ export function BookingStepReview({
           ) : null}
         </ReviewSection>
 
-        <ReviewSection title="Estimate preview">
+        <ReviewSection title="Estimated cleaning time & cost">
+          <p className="mb-4 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+            Based on your home details and selected preferences. Final scope is
+            confirmed before service.
+          </p>
           {previewLoading && ready && contactOk ? (
             <div className="mb-4 rounded-2xl border border-[#C9B27C]/18 bg-white px-4 py-3 shadow-sm">
               <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
@@ -621,8 +731,8 @@ export function BookingStepReview({
               </p>
               <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
                 {previewEstimate.source === "server"
-                  ? "Final numbers may adjust slightly once we confirm details with you."
-                  : "Figures are approximate; continuing lets us return a firm quote after you save."}
+                  ? "We’ll confirm final scope before we begin — no surprises."
+                  : "Final details confirmed before service."}
               </p>
               {isDeepCleaningBookingServiceId(state.serviceId) &&
               (state.bookingPublicPath === "one_time_cleaning" ||
@@ -632,17 +742,8 @@ export function BookingStepReview({
                   className="mt-6 rounded-2xl border border-[#C9B27C]/18 bg-[#FFF9F3] px-4 py-4 ring-1 ring-[#C9B27C]/10"
                   data-testid="booking-first-time-post-estimate-options"
                 >
-                  {state.bookingPublicPath === "first_time_with_recurring" ? (
-                    <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A]">
-                      {BOOKING_FIRST_TIME_WITH_RECURRING_REVIEW_INTENT}
-                    </p>
-                  ) : null}
                   <p
-                    className={`font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A] ${
-                      state.bookingPublicPath === "first_time_with_recurring"
-                        ? "mt-4"
-                        : ""
-                    }`}
+                    className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]"
                   >
                     {BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE}
                   </p>
@@ -653,18 +754,16 @@ export function BookingStepReview({
                     {(
                       [
                         ["one_visit", BOOKING_POST_ESTIMATE_VISIT_ONE],
-                        ["two_visits", BOOKING_POST_ESTIMATE_VISIT_TWO],
-                        ["three_visits", BOOKING_POST_ESTIMATE_VISIT_THREE],
-                        ["convert_recurring", BOOKING_POST_ESTIMATE_CONVERT_RECURRING],
+                        ["three_visit_reset", BOOKING_POST_ESTIMATE_VISIT_THREE],
                       ] as const
                     ).map(([value, label]) => {
-                      const selected = state.firstTimePostEstimateVisitChoice === value;
+                      const selected = selectedVisitStructure === value;
                       return (
                         <button
                           key={value}
                           type="button"
                           data-testid={`booking-post-estimate-${value}`}
-                          onClick={() => onFirstTimePostEstimateVisitChoiceChange(value)}
+                          onClick={() => changeVisitStructure(value)}
                           className={`rounded-2xl border px-4 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
                             selected
                               ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
@@ -672,15 +771,51 @@ export function BookingStepReview({
                           }`}
                         >
                           <span className="font-semibold text-[#0F172A]">{label}</span>
-                          {value === "convert_recurring" ? (
+                          {value === "one_visit" ? (
                             <span className="mt-2 block text-xs leading-5 text-[#64748B]">
-                              {BOOKING_POST_ESTIMATE_CONVERT_RECURRING_HELPER}
+                              One visit completes the opening reset. Recurring begins after your first visit.
                             </span>
-                          ) : null}
+                          ) : (
+                            <span className="mt-2 block text-xs leading-5 text-[#64748B]">
+                              Three visits spread the reset over time. Visit 1 is a deep reset, Visit 2 is a continuation, and Visit 3 is finalization.
+                            </span>
+                          )}
                         </button>
                       );
                     })}
                   </div>
+                  {selectedVisitStructure === "three_visit_reset" &&
+                  threeVisitBreakdown ? (
+                    <div
+                      className="mt-4 rounded-2xl border border-[#C9B27C]/18 bg-white px-4 py-3"
+                      data-testid="booking-three-visit-breakdown"
+                    >
+                      <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
+                        Three-visit reset breakdown
+                      </p>
+                      <div className="mt-3 grid gap-2 font-[var(--font-manrope)] text-sm text-[#0F172A] sm:grid-cols-2">
+                        <p>
+                          <span className="text-[#64748B]">Visit 1 price:</span>{" "}
+                          {formatEstimateUsdFromCents(threeVisitBreakdown.visit1)}
+                        </p>
+                        <p>
+                          <span className="text-[#64748B]">Visit 2 price:</span>{" "}
+                          {formatEstimateUsdFromCents(threeVisitBreakdown.visit2)}
+                        </p>
+                        <p>
+                          <span className="text-[#64748B]">Visit 3 price:</span>{" "}
+                          {formatEstimateUsdFromCents(threeVisitBreakdown.visit3)}
+                        </p>
+                        <p>
+                          <span className="text-[#64748B]">Program total:</span>{" "}
+                          {formatEstimateUsdFromCents(previewEstimate.priceCents)}
+                        </p>
+                      </div>
+                      <p className="mt-3 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                        Reset visits are spaced 14 days apart. Recurring service begins after Visit 3.
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
             </div>
@@ -689,6 +824,113 @@ export function BookingStepReview({
               No estimate to show for these selections yet.
             </p>
           ) : null}
+        </ReviewSection>
+
+        {isRecurringContract ? (
+          <ReviewSection title="Recurring plan">
+            <div className="space-y-4">
+              <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                Review and lock your recurring service cadence before choosing a
+                team and paying the deposit.
+              </p>
+              {previewEstimate ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <p className="font-medium">
+                    <span className="text-[#64748B]">First visit price:</span>{" "}
+                    {formatEstimateUsdFromCents(previewEstimate.priceCents)}
+                  </p>
+                  <p className="font-medium">
+                    <span className="text-[#64748B]">Recurring visit price:</span>{" "}
+                    {recurringQuote
+                      ? formatEstimateUsdFromCents(recurringQuote.recurringPriceCents)
+                      : "Unavailable"}
+                  </p>
+                  <p className="font-medium">
+                    <span className="text-[#64748B]">Estimated recurring duration:</span>{" "}
+                    {recurringQuote
+                      ? formatEstimateDurationMinutes(recurringQuote.estimatedMinutes)
+                      : "Unavailable"}
+                  </p>
+                  <p className="font-medium">
+                    <span className="text-[#64748B]">Savings:</span>{" "}
+                    {recurringQuote
+                      ? `${formatEstimateUsdFromCents(recurringQuote.savingsCents)} / ${recurringQuote.discountPercent}%`
+                      : "Unavailable"}
+                  </p>
+                </div>
+              ) : (
+                <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
+                  Recurring pricing could not be loaded. Please refresh before continuing.
+                </p>
+              )}
+              {previewEstimate && !hasRecurringQuoteOptions ? (
+                <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
+                  Recurring pricing could not be loaded. Please refresh before continuing.
+                </p>
+              ) : null}
+
+              <div>
+                <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                  Cadence
+                </p>
+                <div className="mt-3 grid gap-3 sm:grid-cols-4">
+                  {(
+                    ["weekly", "every_10_days", "biweekly", "monthly"] as const
+                  ).map((cadence) => {
+                    const selected = reviewRecurringCadence === cadence;
+                    return (
+                      <button
+                        key={cadence}
+                        type="button"
+                        onClick={() => changeRecurringCadence(cadence)}
+                        className={`rounded-2xl border px-4 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
+                          selected
+                            ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
+                            : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
+                        }`}
+                      >
+                        <span className="font-semibold text-[#0F172A]">
+                          {recurringCadenceDisplay[cadence]}
+                        </span>
+                        {cadence === "every_10_days" ? (
+                          <span className="mt-1 block text-xs text-[#64748B]">
+                            Roughly 3 visits per month
+                          </span>
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {recurringTimingText ? (
+                <p className="rounded-2xl border border-[#0D9488]/18 bg-[rgba(13,148,136,0.06)] px-4 py-3 font-[var(--font-manrope)] text-sm leading-6 text-[#0F766E]">
+                  {recurringTimingText}
+                </p>
+              ) : null}
+            </div>
+          </ReviewSection>
+        ) : null}
+
+        <ReviewSection title="Your clean includes">
+          <ul className="list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A] marker:text-[#94A3B8]">
+            <li>{getPublicBookingMarketingTitle(state.bookingPublicPath)}</li>
+            {selectedUpsells.length > 0 ? (
+              <li>
+                Requested enhancements:{" "}
+                {selectedUpsells.map((option) => option.label).join(", ")}
+              </li>
+            ) : null}
+          </ul>
+          <div className="mt-4 rounded-2xl border border-[#C9B27C]/18 bg-[#FFF9F3] px-4 py-3">
+            <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
+              Want more done in the same visit?
+            </p>
+            <p className="mt-1 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+              Add optional enhancements above when they fit your goals. We’ll
+              confirm scope before service.
+            </p>
+          </div>
         </ReviewSection>
 
         {showEstimateDriverBlock ? (
@@ -726,6 +968,20 @@ export function BookingStepReview({
             </ReviewSection>
           </div>
         ) : null}
+
+        <ReviewSection title="Enhancements">
+          {selectedUpsells.length > 0 ? (
+            <ul className="list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A] marker:text-[#94A3B8]">
+              {selectedUpsells.map((option) => (
+                <li key={option.id}>{option.label}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+              No enhancements selected yet. You can continue without adding any.
+            </p>
+          )}
+        </ReviewSection>
 
         <ReviewSection title="Home details">
           {homeOk ? (

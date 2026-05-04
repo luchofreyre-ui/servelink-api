@@ -6,9 +6,21 @@ function completedBooking(overrides: Record<string, unknown> = {}) {
     id: "bk_completed",
     customerId: "cus_1",
     status: "completed",
+    foId: null,
+    tenantId: "nustandard",
+    scheduledStart: new Date("2030-01-01T10:00:00.000Z"),
+    estimatedTotalCentsSnapshot: 50000,
+    quotedTotal: null,
+    priceTotal: null,
+    publicDepositStatus: "deposit_required",
     estimateSnapshot: {
+      inputJson: {
+        first_time_visit_program: "one_visit",
+        recurring_cadence_intent: "weekly",
+      },
       outputJson: {
         estimatedDurationMinutes: 180,
+        estimatedPriceCents: 50000,
       },
     },
     customer: { id: "cus_1" },
@@ -62,27 +74,28 @@ describe("RecurringPlanService V1", () => {
     ).rejects.toThrow(new BadRequestException("BOOKING_NOT_FOUND"));
   });
 
-  it("rejects non-completed booking", async () => {
+  it("rejects booking that is not recurring eligible", async () => {
     const { service } = createService({
       booking: completedBooking({ status: "pending_payment" }),
     });
 
     await expect(
       service.createFromBooking({ bookingId: "bk_pending", cadence: "weekly" }),
-    ).rejects.toThrow(new BadRequestException("BOOKING_NOT_COMPLETED"));
+    ).rejects.toThrow(
+      new BadRequestException("BOOKING_NOT_RECURRING_ELIGIBLE"),
+    );
   });
 
-  it("rejects duplicate plan for same booking", async () => {
+  it("returns existing plan for duplicate creation", async () => {
+    const existingPlan = { id: "rp_existing", bookingId: "bk_completed" };
     const { service } = createService({
       booking: completedBooking(),
-      existingPlan: { id: "rp_existing" },
+      existingPlan,
     });
 
     await expect(
       service.createFromBooking({ bookingId: "bk_completed", cadence: "weekly" }),
-    ).rejects.toThrow(
-      new BadRequestException("RECURRING_PLAN_ALREADY_EXISTS"),
-    );
+    ).resolves.toBe(existingPlan);
   });
 
   it("creates active recurring plan from completed booking", async () => {
@@ -107,7 +120,7 @@ describe("RecurringPlanService V1", () => {
     );
   });
 
-  it("stores cadence, discountPercent, estimatedMinutes, pricePerVisitCents, startAt, nextRunAt", async () => {
+  it("stores maintenance-priced cadence, estimatedMinutes, pricePerVisitCents, startAt, and nextRunAt", async () => {
     const { service, prisma } = createService({
       booking: completedBooking(),
     });
@@ -119,11 +132,100 @@ describe("RecurringPlanService V1", () => {
 
     const data = prisma.recurringPlan.create.mock.calls[0][0].data;
     expect(data.cadence).toBe("biweekly");
-    expect(data.discountPercent).toBe(10);
-    expect(data.estimatedMinutes).toBe(180);
-    expect(data.pricePerVisitCents).toBe(0);
+    expect(data.discountPercent).toBe(30);
+    expect(data.estimatedMinutes).toBe(126);
+    expect(data.pricePerVisitCents).toBe(35000);
     expect(data.startAt).toBeInstanceOf(Date);
     expect(data.nextRunAt).toBeInstanceOf(Date);
-    expect(data.nextRunAt.getTime()).toBeGreaterThan(data.startAt.getTime());
+    expect(data.nextRunAt.toISOString()).toBe("2030-01-15T10:00:00.000Z");
+  });
+
+  it("creates plan for assigned deposit-confirmed booking with scheduledStart", async () => {
+    const { service, prisma } = createService({
+      booking: completedBooking({
+        status: "assigned",
+        publicDepositStatus: "deposit_succeeded",
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_completed",
+      cadence: "weekly",
+    });
+
+    expect(prisma.recurringPlan.create).toHaveBeenCalledTimes(1);
+  });
+
+  it("supports every_10_days nextRunAt and maintenance quote pricing", async () => {
+    const { service, prisma } = createService({
+      booking: completedBooking(),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_completed",
+      cadence: "every_10_days",
+    });
+
+    const data = prisma.recurringPlan.create.mock.calls[0][0].data;
+    expect(data.cadence).toBe("every_10_days");
+    expect(data.estimatedMinutes).toBe(119);
+    expect(data.pricePerVisitCents).toBe(33056);
+    expect(data.nextRunAt.toISOString()).toBe("2030-01-11T10:00:00.000Z");
+  });
+
+  it("adds reset spacing before cadence for three_visit_reset nextRunAt", async () => {
+    const { service, prisma } = createService({
+      booking: completedBooking({
+        estimateSnapshot: {
+          inputJson: {
+            first_time_visit_program: "three_visit_reset",
+            recurring_cadence_intent: "weekly",
+          },
+          outputJson: {
+            estimatedDurationMinutes: 180,
+            estimatedPriceCents: 50000,
+          },
+        },
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_completed",
+      cadence: "weekly",
+    });
+
+    const data = prisma.recurringPlan.create.mock.calls[0][0].data;
+    expect(data.nextRunAt.toISOString()).toBe("2030-02-05T10:00:00.000Z");
+  });
+
+  it("keeps reset-only signals out of maintenance pricing", async () => {
+    const { service } = createService({ booking: completedBooking() });
+
+    const cleanQuote = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 50000,
+      estimatedMinutes: 180,
+      estimateSnapshot: {
+        outputJson: { overallLaborCondition: "major_reset" },
+      },
+      cadence: "weekly",
+    })[0];
+
+    const maintenanceQuote = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 50000,
+      estimatedMinutes: 180,
+      estimateSnapshot: {
+        outputJson: {
+          kitchenIntensity: "heavy_use",
+          clutterAccess: "heavy_clutter",
+          petImpact: "heavy",
+        },
+      },
+      cadence: "weekly",
+    })[0];
+
+    expect(cleanQuote.recurringPriceCents).toBe(30000);
+    expect(maintenanceQuote.recurringPriceCents).toBeGreaterThan(
+      cleanQuote.recurringPriceCents,
+    );
   });
 });
