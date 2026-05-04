@@ -671,4 +671,32 @@ describe("bookingUrlState", () => {
       zip: "94103",
     });
   });
+
+  it("allows review without legacy intent when home and structured service location are complete", () => {
+    const s = parseBookingSearchParams(
+      new URLSearchParams(
+        "step=review&homeSize=2000&bedrooms=2&bathrooms=2&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA",
+      ),
+    );
+    expect(s.intent).toBeUndefined();
+    expect(s.step).toBe("review");
+  });
+
+  it("clamps stale review URLs with incomplete structured location back to location", () => {
+    const s = parseBookingSearchParams(
+      new URLSearchParams(
+        "step=review&homeSize=2000&bedrooms=2&bathrooms=2&locZip=94103&locStreet=100%20Market%20St",
+      ),
+    );
+    expect(s.step).toBe("location");
+  });
+
+  it("does not treat legacy locAddr alone as enough for review readiness", () => {
+    const s = parseBookingSearchParams(
+      new URLSearchParams(
+        "step=review&homeSize=2000&bedrooms=2&bathrooms=2&locZip=94103&locAddr=100%20Market%20St",
+      ),
+    );
+    expect(s.step).toBe("location");
+  });
 });

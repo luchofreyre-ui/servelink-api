@@ -561,16 +561,13 @@ export function BookingStepReview({
     if (previewError) {
       return `${BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD} ${BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_HINT}`;
     }
-    if (!previewLoading && !previewError && !previewFetchCompleted) {
-      return "Almost ready…";
-    }
     if (previewFetchCompleted && !estimatePreviewReady) {
       return BOOKING_REVIEW_ESTIMATE_NONE_AFTER_FETCH;
     }
     if (estimatePreviewReady) {
       return BOOKING_REVIEW_BANNER_READY_NEXT_STEP;
     }
-    return "Almost ready…";
+    return BOOKING_REVIEW_ESTIMATE_REFRESHING_BODY;
   })();
 
   return (
@@ -679,11 +676,6 @@ export function BookingStepReview({
               Approximate range from your home size and service type. We
               couldn’t reach the live preview; send your request and we’ll return
               a firm quote.
-            </p>
-          ) : null}
-          {!previewLoading && !previewError && !previewEstimate && !previewFetchCompleted ? (
-            <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
-              Almost ready…
             </p>
           ) : null}
           {previewError ? (

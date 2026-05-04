@@ -363,6 +363,26 @@ function buildReviewSearchString(): string {
   )}${dc}`;
 }
 
+function buildReviewSearchStringWithoutIntent(): string {
+  return buildReviewSearchString().replace(TEST_INTENT_QUERY, "");
+}
+
+function buildReviewSearchStringWithIncompleteLocation(): string {
+  const svc = getBookingDefaultServiceId();
+  const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&locZip=94103&locStreet=100%20Market%20St&service=${encodeURIComponent(
+    svc,
+  )}${dc}`;
+}
+
+function buildReviewSearchStringWithLegacyAddressOnly(): string {
+  const svc = getBookingDefaultServiceId();
+  const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&locZip=94103&locAddr=100%20Market%20St&service=${encodeURIComponent(
+    svc,
+  )}${dc}`;
+}
+
 function buildRecurringReviewSearchString(): string {
   return `${buildReviewSearchString()}&pubPath=first_time_recurring`;
 }
@@ -438,10 +458,12 @@ async function renderAtIntentStep(serviceId = getBookingDefaultServiceId()) {
   screen.getByRole("heading", { name: /tell us about your home/i });
 }
 
-async function continueFromServiceToIntentStep() {
+async function continueFromServiceToHomeStep() {
   fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
   await screen.findByRole("heading", { name: /tell us about your home/i });
 }
+
+const continueFromServiceToIntentStep = continueFromServiceToHomeStep;
 
 async function renderAtHomeStep(serviceId = getBookingDefaultServiceId()) {
   bookingFlowTestSearch.sp = new URLSearchParams(
@@ -1853,6 +1875,55 @@ describe("BookingFlowClient", () => {
   });
 
   describe("continue and advance truth", () => {
+    it("service Continue skips intent and goes directly to home", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams();
+      render(<BookingFlowClient />);
+
+      await continueFromServiceToHomeStep();
+      expect(
+        screen.queryByRole("heading", { name: /what brings you in today/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("direct review URL without intent renders Review and fires preview once when home and location are valid", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        buildReviewSearchStringWithoutIntent(),
+      );
+      render(<BookingFlowClient />);
+
+      await screen.findByText(BOOKING_REVIEW_STEP_TITLE);
+      await waitFor(() => expect(previewEstimateMock).toHaveBeenCalledTimes(1));
+      expect(screen.getByTestId("booking-direction-send")).toBeInTheDocument();
+    });
+
+    it("direct review URL without intent and incomplete location clamps to location", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        buildReviewSearchStringWithIncompleteLocation(),
+      );
+      render(<BookingFlowClient />);
+
+      await screen.findByRole("heading", { level: 2, name: "Service location" });
+      expect(
+        screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument();
+      expect(previewEstimateMock).not.toHaveBeenCalled();
+    });
+
+    it("legacy locAddr without city/state does not render Review or CTA", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        buildReviewSearchStringWithLegacyAddressOnly(),
+      );
+      render(<BookingFlowClient />);
+
+      await screen.findByRole("heading", { level: 2, name: "Service location" });
+      expect(
+        screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument();
+      expect(previewEstimateMock).not.toHaveBeenCalled();
+    });
+
     it("invalid Continue from home does not advance and surfaces only the home-step error", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildIncompleteHomeStepSearchString());
       render(<BookingFlowClient />);

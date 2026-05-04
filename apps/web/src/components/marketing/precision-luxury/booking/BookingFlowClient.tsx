@@ -55,6 +55,7 @@ import {
   applyServiceLocationFieldChangeToBookingFlowState,
   buildBookingSearchParams,
   clampBookingStepToStructuralMax,
+  computeMaxReadyStep,
   clearBookingConfirmationPaymentSessionState,
   clearBookingConfirmationSessionSnapshot,
   consumeBookingFlowFreshStartRequested,
@@ -845,7 +846,6 @@ export function BookingFlowClient() {
   const isBookingReady =
     isAnonymousBookingPublicPath(state.bookingPublicPath) &&
     !!state.serviceId &&
-    !!state.intent &&
     isHomeComplete &&
     isLocationComplete;
   const isContactReady = isBookingContactValid(
@@ -1146,6 +1146,7 @@ export function BookingFlowClient() {
   ]);
 
   const estimate = useBookingEstimate(estimateInput);
+  const canRenderReview = state.step === "review" && estimateInput != null;
 
   function isEstimateValidForReview() {
     if (estimateInput == null) return false;
@@ -1218,6 +1219,22 @@ export function BookingFlowClient() {
       reviewPaymentPhase === "finalizing_timeout");
 
   useEffect(() => {
+    if (state.step !== "review" || estimateInput != null) return;
+
+    const maxStep = computeMaxReadyStep(state);
+
+    if (maxStep === state.step) return;
+
+    setAttemptedConfirm(false);
+    setState((prev) =>
+      clampBookingStepToStructuralMax({
+        ...prev,
+        step: maxStep,
+      }),
+    );
+  }, [state, estimateInput]);
+
+  useEffect(() => {
     if (state.step !== "schedule") return;
     if (!isDepositPaymentLocked()) return;
     console.warn("BLOCKED: schedule step during deposit payment");
@@ -1274,6 +1291,7 @@ export function BookingFlowClient() {
     state.step === "review" &&
     (isSubmitting ||
       !canConfirmDirection ||
+      !canRenderReview ||
       estimate.status === "loading" ||
       estimate.status === "error" ||
       !estimatePreviewReady ||
@@ -2491,7 +2509,7 @@ export function BookingFlowClient() {
                 />
               ) : null}
 
-              {state.step === "review" ? (
+              {canRenderReview ? (
                 <BookingStepReview
                   state={state}
                   condition={state.condition}
@@ -2735,7 +2753,7 @@ export function BookingFlowClient() {
                   >
                     Continue
                   </button>
-                ) : state.step === "review" && !reviewAwaitingDepositPayment ? (
+                ) : canRenderReview && !reviewAwaitingDepositPayment ? (
                   <button
                     type="button"
                     data-testid="booking-direction-send"

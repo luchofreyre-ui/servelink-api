@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { DeepCleanProgramCard } from "@/components/booking/deep-clean/DeepCleanProgramCard";
+import { RecurringPlanConversionCard } from "@/components/bookings/RecurringPlanConversionCard";
 import { fetchPublicBookingConfirmation } from "@/lib/api/bookings";
 import { mapBookingScreenProgramToDisplay } from "@/mappers/deepCleanProgramMappers";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
@@ -761,6 +762,10 @@ export function BookingConfirmationClient() {
                   ) : null}
                 </div>
               ) : null}
+            </div>
+          ) : bookingId ? (
+            <div className="mt-10">
+              <RecurringPlanConversionCard bookingId={bookingId} />
             </div>
           ) : null}
 
