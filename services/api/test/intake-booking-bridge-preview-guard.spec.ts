@@ -92,6 +92,40 @@ describe("BookingDirectionIntakeSubmitController preview validation", () => {
       }),
     );
   });
+
+  it("accepts recurringInterest on preview-estimate", async () => {
+    const response = await request(app.getHttpServer())
+      .post("/api/v1/booking-direction-intake/preview-estimate")
+      .send({
+        serviceId: "deep-cleaning",
+        homeSize: "2200 sq ft",
+        bedrooms: "2",
+        bathrooms: "2",
+        frequency: "Weekly",
+        preferredTime: "Weekday Morning",
+        serviceLocation: testServiceLocation,
+        recurringInterest: {
+          interested: true,
+          cadence: "every_10_days",
+          sourceIntent: "review",
+          note: "Prefers mornings",
+          capturedAt: "2026-05-04T16:00:00.000Z",
+        },
+      });
+
+    expect(response.status).toBe(200);
+    expect(bridge.previewEstimateFromDto).toHaveBeenCalledWith(
+      expect.objectContaining({
+        recurringInterest: {
+          interested: true,
+          cadence: "every_10_days",
+          sourceIntent: "review",
+          note: "Prefers mornings",
+          capturedAt: "2026-05-04T16:00:00.000Z",
+        },
+      }),
+    );
+  });
 });
 
 describe("IntakeBookingBridgeService preview estimator guard", () => {
