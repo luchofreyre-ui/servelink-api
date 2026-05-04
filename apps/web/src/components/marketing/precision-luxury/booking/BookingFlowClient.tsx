@@ -55,6 +55,7 @@ import {
   applyServiceLocationFieldChangeToBookingFlowState,
   buildBookingSearchParams,
   clampBookingStepToStructuralMax,
+  computeMaxReadyStep,
   clearBookingConfirmationPaymentSessionState,
   clearBookingConfirmationSessionSnapshot,
   consumeBookingFlowFreshStartRequested,
@@ -850,7 +851,6 @@ export function BookingFlowClient() {
   const isBookingReady =
     isAnonymousBookingPublicPath(state.bookingPublicPath) &&
     !!state.serviceId &&
-    !!state.intent &&
     isHomeComplete &&
     isLocationComplete;
   const isContactReady = isBookingContactValid(
@@ -1151,6 +1151,7 @@ export function BookingFlowClient() {
   ]);
 
   const estimate = useBookingEstimate(estimateInput);
+  const canRenderReview = state.step === "review" && estimateInput != null;
 
   function isEstimateValidForReview() {
     if (estimateInput == null) return false;
@@ -1226,10 +1227,30 @@ export function BookingFlowClient() {
     state.step === "review" &&
     (isSubmitting ||
       !canConfirmDirection ||
+      !canRenderReview ||
       estimate.status === "loading" ||
       estimate.status === "error" ||
       !estimatePreviewReady ||
       reviewAwaitingDepositPayment);
+
+  useEffect(() => {
+    const currentStep: BookingStepId = state.step;
+    const reviewStep: BookingStepId = "review";
+    const noClampSteps: BookingStepId[] = [reviewStep, currentStep];
+    if (currentStep !== "review" || estimateInput != null) return;
+
+    const maxStep = computeMaxReadyStep(state);
+
+    if (noClampSteps.includes(maxStep)) return;
+
+    setAttemptedConfirm(false);
+    setState((prev) =>
+      clampBookingStepToStructuralMax({
+        ...prev,
+        step: maxStep,
+      }),
+    );
+  }, [state, estimateInput]);
 
   useEffect(() => {
     if (state.step !== "schedule") return;
@@ -1401,7 +1422,7 @@ export function BookingFlowClient() {
 
     setAttemptedNext(false);
 
-    if (state.step === "service") return goToStep("intent");
+    if (state.step === "service") return goToStep("home");
     if (state.step === "intent") return goToStep("home");
     if (state.step === "home") return goToStep("location");
     if (state.step === "location") return goToStep("review");
@@ -2494,7 +2515,7 @@ export function BookingFlowClient() {
                 />
               ) : null}
 
-              {state.step === "review" ? (
+              {canRenderReview ? (
                 <BookingStepReview
                   state={state}
                   condition={state.condition}
@@ -2730,7 +2751,7 @@ export function BookingFlowClient() {
                   >
                     Continue
                   </button>
-                ) : state.step === "review" && !reviewAwaitingDepositPayment ? (
+                ) : canRenderReview && !reviewAwaitingDepositPayment ? (
                   <button
                     type="button"
                     data-testid="booking-direction-send"

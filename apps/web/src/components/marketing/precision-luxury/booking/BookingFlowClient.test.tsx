@@ -325,6 +325,26 @@ function buildReviewSearchString(): string {
   )}${dc}`;
 }
 
+function buildReviewSearchStringWithoutIntent(): string {
+  return buildReviewSearchString().replace(TEST_INTENT_QUERY, "");
+}
+
+function buildReviewSearchStringWithIncompleteLocation(): string {
+  const svc = getBookingDefaultServiceId();
+  const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&locZip=94103&locStreet=100%20Market%20St&service=${encodeURIComponent(
+    svc,
+  )}${dc}`;
+}
+
+function buildReviewSearchStringWithLegacyAddressOnly(): string {
+  const svc = getBookingDefaultServiceId();
+  const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&locZip=94103&locAddr=100%20Market%20St&service=${encodeURIComponent(
+    svc,
+  )}${dc}`;
+}
+
 function buildIncompleteHomeStepSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
@@ -406,9 +426,9 @@ async function renderAtIntentStep(serviceId = getBookingDefaultServiceId()) {
   screen.getByRole("heading", { name: /what brings you in today/i });
 }
 
-async function continueFromServiceToIntentStep() {
+async function continueFromServiceToHomeStep() {
   fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-  await screen.findByRole("heading", { name: /what brings you in today/i });
+  await screen.findByRole("heading", { name: /tell us about your home/i });
 }
 
 async function renderAtHomeStep(serviceId = getBookingDefaultServiceId()) {
@@ -1258,8 +1278,8 @@ describe("BookingFlowClient", () => {
       const serviceSection = serviceHeading.closest("section")!;
       fireEvent.click(within(serviceSection).getByText("Move-In / Move-Out Cleaning"));
 
-      await continueFromServiceToIntentStep();
-      await chooseResetIntentAndContinue();
+      fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
+      await screen.findByRole("heading", { name: /tell us about your home/i });
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
       fireEvent.change(screen.getByLabelText(/^street address$/i), {
         target: { value: "200 Main St" },
@@ -1746,6 +1766,55 @@ describe("BookingFlowClient", () => {
   });
 
   describe("continue and advance truth", () => {
+    it("service Continue skips intent and goes directly to home", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams();
+      render(<BookingFlowClient />);
+
+      await continueFromServiceToHomeStep();
+      expect(
+        screen.queryByRole("heading", { name: /what brings you in today/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("direct review URL without intent renders Review and fires preview once when home and location are valid", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        buildReviewSearchStringWithoutIntent(),
+      );
+      render(<BookingFlowClient />);
+
+      await screen.findByText(BOOKING_REVIEW_STEP_TITLE);
+      await waitFor(() => expect(previewEstimateMock).toHaveBeenCalledTimes(1));
+      expect(screen.getByTestId("booking-direction-send")).toBeInTheDocument();
+    });
+
+    it("direct review URL without intent and incomplete location clamps to location", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        buildReviewSearchStringWithIncompleteLocation(),
+      );
+      render(<BookingFlowClient />);
+
+      await screen.findByRole("heading", { level: 2, name: "Service location" });
+      expect(
+        screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument();
+      expect(previewEstimateMock).not.toHaveBeenCalled();
+    });
+
+    it("legacy locAddr without city/state does not render Review or CTA", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        buildReviewSearchStringWithLegacyAddressOnly(),
+      );
+      render(<BookingFlowClient />);
+
+      await screen.findByRole("heading", { level: 2, name: "Service location" });
+      expect(
+        screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument();
+      expect(previewEstimateMock).not.toHaveBeenCalled();
+    });
+
     it("invalid Continue from home does not advance and surfaces only the home-step error", () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildIncompleteHomeStepSearchString());
       render(<BookingFlowClient />);
@@ -2546,8 +2615,7 @@ describe("BookingFlowClient", () => {
         name: BOOKING_PUBLIC_SERVICE_SECTION_TITLE,
       });
       fireEvent.click(screen.getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE));
-      await continueFromServiceToIntentStep();
-      await chooseResetIntentAndContinue();
+      await continueFromServiceToHomeStep();
       await continueThroughLocationGateToReview();
 
       await fillReviewContactAndOptionalFirstTimePlan(5000);

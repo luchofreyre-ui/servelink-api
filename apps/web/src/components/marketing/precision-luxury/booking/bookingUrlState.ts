@@ -458,7 +458,6 @@ export function isPublicScheduleSelectionComplete(
 export function computeMaxReadyStep(s: BookingFlowState): BookingStepId {
   if (s.bookingPublicPath === "recurring_auth_gate") return "service";
   if (!isPublicAnonymousBookingServiceId(s.serviceId)) return "service";
-  if (!s.intent) return "intent";
   if (!isHomeDetailsComplete(s)) {
     return "home";
   }
