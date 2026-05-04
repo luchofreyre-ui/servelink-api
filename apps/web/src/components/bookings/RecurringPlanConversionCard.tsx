@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { WEB_ENV } from '@/lib/env';
 
 type RecurringCadence = 'weekly' | 'biweekly' | 'monthly';
+type SelectedRecurringCadence = RecurringCadence | 'not_sure';
 
 type RecurringOfferQuote = {
   cadence: RecurringCadence;
@@ -26,7 +27,7 @@ const fallbackQuotes: RecurringOfferQuote[] = [
     firstCleanPriceCents: 0,
     recurringPriceCents: 0,
     savingsCents: 0,
-    discountPercent: 15,
+    discountPercent: 40,
     estimatedMinutes: 120,
   },
   {
@@ -34,7 +35,7 @@ const fallbackQuotes: RecurringOfferQuote[] = [
     firstCleanPriceCents: 0,
     recurringPriceCents: 0,
     savingsCents: 0,
-    discountPercent: 10,
+    discountPercent: 30,
     estimatedMinutes: 120,
   },
   {
@@ -42,10 +43,20 @@ const fallbackQuotes: RecurringOfferQuote[] = [
     firstCleanPriceCents: 0,
     recurringPriceCents: 0,
     savingsCents: 0,
-    discountPercent: 5,
+    discountPercent: 20,
     estimatedMinutes: 120,
   },
 ];
+
+function normalizeLockedCadence(
+  selectedCadence?: SelectedRecurringCadence | null,
+): RecurringCadence | null {
+  return selectedCadence === 'weekly' ||
+    selectedCadence === 'biweekly' ||
+    selectedCadence === 'monthly'
+    ? selectedCadence
+    : null;
+}
 
 function formatCurrency(cents: number) {
   return new Intl.NumberFormat('en-US', {
@@ -57,9 +68,12 @@ function formatCurrency(cents: number) {
 
 export function RecurringPlanConversionCard({
   bookingId,
+  selectedCadence,
 }: {
   bookingId: string;
+  selectedCadence?: SelectedRecurringCadence | null;
 }) {
+  const lockedCadence = normalizeLockedCadence(selectedCadence);
   const [submittingCadence, setSubmittingCadence] =
     useState<RecurringCadence | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(true);
@@ -78,10 +92,12 @@ export function RecurringPlanConversionCard({
       setQuoteError(false);
 
       try {
+        const search = new URLSearchParams({ bookingId });
+        if (lockedCadence) {
+          search.set('cadence', lockedCadence);
+        }
         const response = await fetch(
-          `${WEB_ENV.apiBaseUrl}/recurring-plans/offer-quote?bookingId=${encodeURIComponent(
-            bookingId,
-          )}`,
+          `${WEB_ENV.apiBaseUrl}/recurring-plans/offer-quote?${search.toString()}`,
         );
 
         if (!response.ok) {
@@ -109,12 +125,20 @@ export function RecurringPlanConversionCard({
     return () => {
       cancelled = true;
     };
-  }, [bookingId]);
+  }, [bookingId, lockedCadence]);
 
-  const displayQuotes = useMemo(() => quotes ?? fallbackQuotes, [quotes]);
+  const displayQuotes = useMemo(() => {
+    const source = quotes ?? fallbackQuotes;
+    return lockedCadence
+      ? source.filter((quote) => quote.cadence === lockedCadence)
+      : source;
+  }, [lockedCadence, quotes]);
   const shouldShowReviewPriceNote = displayQuotes.some(
     (quote) => quote.firstCleanPriceCents === 0,
   );
+  const heading = lockedCadence
+    ? `Your ${lockedCadence} recurring plan`
+    : 'Keep your home on a recurring plan';
 
   async function createPlan(cadence: RecurringCadence) {
     setSubmittingCadence(cadence);
@@ -145,9 +169,7 @@ export function RecurringPlanConversionCard({
 
   return (
     <div className="border p-4 rounded-xl space-y-4">
-      <h3 className="font-semibold text-lg">
-        Keep your home on a recurring plan
-      </h3>
+      <h3 className="font-semibold text-lg">{heading}</h3>
 
       <p className="text-sm text-gray-600">
         Your first clean gets your home reset. Recurring visits are priced as
@@ -157,6 +179,12 @@ export function RecurringPlanConversionCard({
       <p className="text-sm text-gray-600">
         Your recurring plan is created after your booking is deposit-confirmed.
       </p>
+
+      {lockedCadence ? (
+        <p className="text-sm text-gray-600">
+          Based on the cadence you selected earlier.
+        </p>
+      ) : null}
 
       {quoteLoading ? (
         <p className="text-sm text-gray-600">Loading recurring pricing…</p>
@@ -186,7 +214,7 @@ export function RecurringPlanConversionCard({
         </p>
       ) : null}
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className={`grid gap-3 ${lockedCadence ? '' : 'md:grid-cols-3'}`}>
         {displayQuotes.map((quote) => (
           <div
             key={quote.cadence}

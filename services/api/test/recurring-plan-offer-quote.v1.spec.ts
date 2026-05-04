@@ -54,6 +54,39 @@ describe("RecurringPlan offer quote V1", () => {
     ]);
   });
 
+  it("quote endpoint with cadence weekly returns one quote only", async () => {
+    const { controller } = createService();
+
+    const quotes = await controller.getOfferQuote("bk_quote", "weekly");
+
+    expect(quotes).toHaveLength(1);
+    expect(quotes[0]).toEqual(
+      expect.objectContaining({
+        cadence: "weekly",
+      }),
+    );
+  });
+
+  it("quote endpoint without cadence returns all three", async () => {
+    const { controller } = createService();
+
+    const quotes = await controller.getOfferQuote("bk_quote");
+
+    expect(quotes.map((quote) => quote.cadence)).toEqual([
+      "weekly",
+      "biweekly",
+      "monthly",
+    ]);
+  });
+
+  it("quote endpoint treats not_sure cadence as unlocked", async () => {
+    const { controller } = createService();
+
+    const quotes = await controller.getOfferQuote("bk_quote", "not_sure");
+
+    expect(quotes).toHaveLength(3);
+  });
+
   it("uses weekly maintenance pricing", () => {
     const { service } = createService();
 
@@ -106,6 +139,108 @@ describe("RecurringPlan offer quote V1", () => {
         savingsCents: 4000,
       }),
     );
+  });
+
+  it("heavy reset and bathroom detail signals do not inflate maintenance multiplier", () => {
+    const { service } = createService();
+
+    const [weekly] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 20000,
+      estimatedMinutes: 180,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 180,
+          primaryIntent: "reset_level",
+          overallLaborCondition: "major_reset",
+          lastProCleanRecency: "unknown_or_not_recently",
+          bathroomComplexity: "heavy_detailing",
+        },
+      },
+      cadence: "weekly",
+    });
+
+    expect(weekly).toEqual(
+      expect.objectContaining({
+        estimatedMinutes: 108,
+        recurringPriceCents: 12000,
+      }),
+    );
+  });
+
+  it("pets and kitchen heavy_use can increase recurring price", () => {
+    const { service } = createService();
+
+    const [baseline] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 20000,
+      estimatedMinutes: 180,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 180,
+        },
+      },
+      cadence: "weekly",
+    });
+    const [higherLoad] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 20000,
+      estimatedMinutes: 180,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 180,
+          kitchenIntensity: "heavy_use",
+          hasPets: true,
+        },
+      },
+      cadence: "weekly",
+    });
+
+    expect(higherLoad.recurringPriceCents).toBeGreaterThan(
+      baseline.recurringPriceCents,
+    );
+  });
+
+  it("weekly price remains below biweekly and monthly for the same load", () => {
+    const { service } = createService();
+
+    const [weekly, biweekly, monthly] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 20000,
+      estimatedMinutes: 180,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 180,
+          kitchenIntensity: "heavy_use",
+          clutterAccess: "moderate_clutter",
+          hasPets: true,
+        },
+      },
+    });
+
+    expect(weekly.recurringPriceCents).toBeLessThan(
+      biweekly.recurringPriceCents,
+    );
+    expect(biweekly.recurringPriceCents).toBeLessThan(
+      monthly.recurringPriceCents,
+    );
+  });
+
+  it("discountPercent is derived dynamically from recurring price ratio", () => {
+    const { service } = createService();
+
+    const [weekly] = service.getRecurringOfferQuote({
+      firstCleanPriceCents: 20000,
+      estimatedMinutes: 180,
+      estimateSnapshot: {
+        outputJson: {
+          estimatedDurationMinutes: 180,
+          kitchenIntensity: "heavy_use",
+          hasPets: true,
+        },
+      },
+      cadence: "weekly",
+    });
+
+    expect(weekly.recurringPriceCents).toBe(14444);
+    expect(weekly.savingsCents).toBe(5556);
+    expect(weekly.discountPercent).toBe(28);
   });
 
   it("quote endpoint rejects missing booking", async () => {

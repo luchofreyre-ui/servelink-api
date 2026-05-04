@@ -174,7 +174,7 @@ export function BookingConfirmationClient() {
     : NaN;
   const urlConfidence = confidenceRaw ? Number(confidenceRaw) : NaN;
 
-  const [remoteLoading, setRemoteLoading] = useState(false);
+  const [remoteLoading, setRemoteLoading] = useState(() => Boolean(bookingId));
   const [remoteError, setRemoteError] = useState<string | null>(null);
   const [remote, setRemote] = useState<Awaited<
     ReturnType<typeof fetchPublicBookingConfirmation>
@@ -225,6 +225,8 @@ export function BookingConfirmationClient() {
     if (typeof fromApi === "number" && Number.isFinite(fromApi)) return fromApi;
     return urlConfidence;
   }, [remote, urlConfidence]);
+
+  const selectedRecurringCadence = remote?.selectedRecurringCadence ?? null;
 
   const visitConfirmedFromRemote = useMemo(() => {
     if (!remote) return false;
@@ -596,9 +598,12 @@ export function BookingConfirmationClient() {
             </div>
           </div>
 
-          {bookingId ? (
+          {bookingId && (!remoteLoading || remote || remoteError) ? (
             <div className="mt-10">
-              <RecurringPlanConversionCard bookingId={bookingId} />
+              <RecurringPlanConversionCard
+                bookingId={bookingId}
+                selectedCadence={selectedRecurringCadence}
+              />
             </div>
           ) : null}
 

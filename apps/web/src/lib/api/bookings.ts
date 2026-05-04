@@ -82,6 +82,7 @@ export type PublicBookingConfirmationResponse = {
     confidence: number;
     serviceType: string | null;
   } | null;
+  selectedRecurringCadence?: "weekly" | "biweekly" | "monthly" | null;
   deepCleanProgram: BookingScreenDeepCleanProgramApi | null;
 };
 

@@ -56,6 +56,8 @@ function readFactor(source: Record<string, unknown>, ...keys: string[]) {
   return undefined;
 }
 
+type RecurringCadence = 'weekly' | 'biweekly' | 'monthly';
+
 @Injectable()
 export class RecurringPlanService {
   constructor(private prisma: PrismaService) {}
@@ -97,8 +99,11 @@ export class RecurringPlanService {
     firstCleanPriceCents: number;
     estimatedMinutes: number;
     estimateSnapshot?: unknown;
+    cadence?: RecurringCadence;
   }) {
-    const cadences = ['weekly', 'biweekly', 'monthly'] as const;
+    const cadences = params.cadence
+      ? ([params.cadence] as const)
+      : (['weekly', 'biweekly', 'monthly'] as const);
 
     return cadences.map((cadence) => {
       const recurringMinutes = this.getRecurringMinutes({
@@ -112,24 +117,20 @@ export class RecurringPlanService {
               params.firstCleanPriceCents
           : 0,
       );
+      const savingsCents = Math.max(
+        0,
+        params.firstCleanPriceCents - recurringPriceCents,
+      );
       const discountPercent =
         params.firstCleanPriceCents > 0
-          ? Math.max(
-              0,
-              Math.round(
-                (1 - recurringPriceCents / params.firstCleanPriceCents) * 100,
-              ),
-            )
+          ? Math.round((savingsCents / params.firstCleanPriceCents) * 100)
           : 0;
 
       return {
         cadence,
         firstCleanPriceCents: params.firstCleanPriceCents,
         recurringPriceCents,
-        savingsCents: Math.max(
-          0,
-          params.firstCleanPriceCents - recurringPriceCents,
-        ),
+        savingsCents,
         discountPercent,
         estimatedMinutes: recurringMinutes,
       };
@@ -158,36 +159,88 @@ export class RecurringPlanService {
 
     let score = 1;
 
-    const kitchenIntensity = readFactor(
-      factors,
-      'kitchenIntensity',
-      'kitchen_intensity',
-    ) ?? readFactor(rawNormalizedIntake, 'kitchenIntensity', 'kitchen_intensity');
-    if (kitchenIntensity === 'heavy_use') score += 0.15;
-    if (kitchenIntensity === 'moderate_use') score += 0.08;
-
-    const bathroomComplexity =
-      readFactor(factors, 'bathroomComplexity', 'bathroom_complexity') ??
-      readFactor(rawNormalizedIntake, 'bathroomComplexity', 'bathroom_complexity');
-    if (bathroomComplexity === 'heavy_detailing') score += 0.12;
+    const kitchenIntensity =
+      readFactor(
+        factors,
+        'kitchenIntensity',
+        'kitchen_intensity',
+        'kitchenUsage',
+        'kitchen_usage',
+      ) ??
+      readFactor(
+        rawNormalizedIntake,
+        'kitchenIntensity',
+        'kitchen_intensity',
+        'kitchenUsage',
+        'kitchen_usage',
+      );
+    if (kitchenIntensity === 'heavy_use') score += 0.1;
+    if (kitchenIntensity === 'moderate_use') score += 0.05;
 
     const clutterAccess =
-      readFactor(factors, 'clutterAccess', 'clutter_access') ??
-      readFactor(rawNormalizedIntake, 'clutterAccess', 'clutter_access');
-    if (clutterAccess === 'heavy_clutter') score += 0.15;
-    if (clutterAccess === 'moderate_clutter') score += 0.08;
+      readFactor(
+        factors,
+        'clutterAccess',
+        'clutter_access',
+        'clutterLevel',
+        'clutter_level',
+      ) ??
+      readFactor(
+        rawNormalizedIntake,
+        'clutterAccess',
+        'clutter_access',
+        'clutterLevel',
+        'clutter_level',
+      );
+    if (clutterAccess === 'heavy_clutter') score += 0.08;
+    if (clutterAccess === 'moderate_clutter') score += 0.04;
 
     const hasPets =
       readFactor(factors, 'hasPets') ??
-      readFactor(rawNormalizedIntake, 'hasPets');
-    if (hasPets === true) score += 0.12;
+      readFactor(factors, 'pets') ??
+      readFactor(rawNormalizedIntake, 'hasPets', 'pets');
+    const petImpact =
+      readFactor(factors, 'petImpact', 'pet_impact') ??
+      readFactor(rawNormalizedIntake, 'petImpact', 'pet_impact');
+    const hasOngoingPetLoad =
+      hasPets === true ||
+      petImpact === 'light' ||
+      petImpact === 'moderate' ||
+      petImpact === 'heavy';
 
-    return Math.min(score, 1.4);
+    if (hasOngoingPetLoad) score += 0.1;
+    if (petImpact === 'moderate') score += 0.05;
+    if (petImpact === 'heavy') score += 0.1;
+
+    const occupants =
+      readFactor(
+        factors,
+        'occupants',
+        'occupantCount',
+        'occupant_count',
+        'peopleCount',
+        'people_count',
+      ) ??
+      readFactor(
+        rawNormalizedIntake,
+        'occupants',
+        'occupantCount',
+        'occupant_count',
+        'peopleCount',
+        'people_count',
+      );
+
+    if (typeof occupants === 'number') {
+      if (occupants >= 5) score += 0.1;
+      else if (occupants >= 3) score += 0.05;
+    }
+
+    return Math.min(score, 1.25);
   }
 
   private getRecurringMinutes(params: {
     estimatedMinutes: number;
-    cadence: 'weekly' | 'biweekly' | 'monthly';
+    cadence: RecurringCadence;
     estimateSnapshot: unknown;
   }) {
     const cadenceMultiplier = this.cadenceMultiplierMap[params.cadence] ?? 1;
@@ -200,7 +253,7 @@ export class RecurringPlanService {
     );
   }
 
-  async getOfferQuoteForBooking(bookingId: string) {
+  async getOfferQuoteForBooking(bookingId: string, cadence?: RecurringCadence) {
     const booking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
       include: { estimateSnapshot: true },
@@ -218,6 +271,7 @@ export class RecurringPlanService {
       firstCleanPriceCents: this.getFirstCleanPriceCentsFromBooking(booking),
       estimatedMinutes,
       estimateSnapshot: booking.estimateSnapshot,
+      cadence,
     });
   }
 
@@ -305,7 +359,7 @@ export class RecurringPlanService {
 
   async createFromBooking(params: {
     bookingId: string;
-    cadence: 'weekly' | 'biweekly' | 'monthly';
+    cadence: RecurringCadence;
   }) {
     const booking = await this.prisma.booking.findUnique({
       where: { id: params.bookingId },
