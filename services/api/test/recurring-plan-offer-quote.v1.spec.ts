@@ -74,7 +74,7 @@ describe("RecurringPlanService offer quote V1", () => {
       "biweekly",
       "monthly",
     ]);
-    expect(quotes[0].recurringPriceCents).toBe(30000);
+    expect(quotes[0].recurringPriceCents).toBe(28889);
   });
 
   it("prices weekly below every_10_days below biweekly below monthly", () => {
@@ -129,16 +129,16 @@ describe("RecurringPlanService offer quote V1", () => {
       estimateSnapshot: {
         outputJson: {
           kitchenIntensity: "heavy_use",
-          clutterAccess: "heavy_clutter",
           petImpact: "heavy",
-          occupantCount: 5,
+          occupancyLevel: "ppl_5_plus",
+          childrenInHome: "yes",
         },
       },
       cadence: "weekly",
     })[0];
 
-    expect(heavy.recurringPriceCents).toBe(30000);
-    expect(heavy.discountPercent).toBe(40);
+    expect(heavy.recurringPriceCents).toBe(28889);
+    expect(heavy.discountPercent).toBe(42);
   });
 
   it("loads booking quote without requiring completed or assigned status", async () => {
@@ -172,52 +172,6 @@ describe("RecurringPlanService offer quote V1", () => {
   });
 
   describe("V2.1 recurring baseline + hard cap invariants", () => {
-    const heavyMaintenanceSnapshot = {
-      outputJson: {
-        kitchenIntensity: "heavy_use",
-        clutterAccess: "heavy_clutter",
-        petImpact: "heavy",
-        occupantCount: 5,
-      },
-    };
-
-    it("worst-realistic monthly recurring stays below first clean and cap (75%)", () => {
-      const service = createService();
-      const firstCleanPriceCents = 165_100;
-      const estimatedMinutes = 381;
-
-      const quote = service.getRecurringOfferQuote({
-        firstCleanPriceCents,
-        estimatedMinutes,
-        estimateSnapshot: heavyMaintenanceSnapshot,
-        cadence: "monthly",
-      })[0];
-
-      expect(quote.estimatedMinutes).toBeLessThan(estimatedMinutes);
-      expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
-      expect(quote.estimatedMinutes).toBeLessThanOrEqual(
-        Math.floor(estimatedMinutes * 0.75),
-      );
-    });
-
-    it("heavy reset biweekly recurring respects 70% minute hard cap", () => {
-      const service = createService();
-      const estimatedMinutes = 298;
-      const firstCleanPriceCents = 129_134;
-
-      const quote = service.getRecurringOfferQuote({
-        firstCleanPriceCents,
-        estimatedMinutes,
-        estimateSnapshot: heavyMaintenanceSnapshot,
-        cadence: "biweekly",
-      })[0];
-
-      expect(quote.estimatedMinutes).toBeLessThanOrEqual(
-        Math.floor(estimatedMinutes * 0.7),
-      );
-      expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
-    });
-
     it("weekly standard deep-clean preview stays plausible under 60% cap", () => {
       const service = createService();
       const estimatedMinutes = 149;
@@ -253,6 +207,110 @@ describe("RecurringPlanService offer quote V1", () => {
       expect(quote.estimatedMinutes).toBeGreaterThan(60);
       expect(quote.estimatedMinutes).toBeLessThan(estimatedMinutes);
       expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
+    });
+  });
+
+  describe("V2.2 lived-in maintenance load", () => {
+    const heavyLivedInSnapshot = {
+      outputJson: {
+        occupancyLevel: "ppl_5_plus",
+        childrenInHome: "yes",
+        petImpact: "heavy",
+        kitchenIntensity: "heavy_use",
+      },
+    };
+
+    it("heavy monthly is below 75% and not cap-pinned", () => {
+      const service = createService();
+      const firstCleanPriceCents = 165_100;
+      const estimatedMinutes = 381;
+
+      const quote = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        estimateSnapshot: heavyLivedInSnapshot,
+        cadence: "monthly",
+      })[0];
+
+      const minuteHardCap = Math.floor(estimatedMinutes * 0.75);
+      expect(quote.estimatedMinutes).toBeLessThan(minuteHardCap);
+      expect(quote.recurringPriceCents).toBeLessThan(
+        Math.floor(firstCleanPriceCents * 0.75),
+      );
+    });
+
+    it("heavy biweekly stays below 70% minute cap and not cap-pinned", () => {
+      const service = createService();
+      const estimatedMinutes = 298;
+      const firstCleanPriceCents = 129_134;
+
+      const quote = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        estimateSnapshot: heavyLivedInSnapshot,
+        cadence: "biweekly",
+      })[0];
+
+      expect(quote.estimatedMinutes).toBeLessThan(
+        Math.floor(estimatedMinutes * 0.7),
+      );
+      expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
+    });
+
+    it("clean weekly gets mild downward load", () => {
+      const service = createService();
+      const estimatedMinutes = 139;
+
+      const quote = service.getRecurringOfferQuote({
+        firstCleanPriceCents: 150_59,
+        estimatedMinutes,
+        estimateSnapshot: {
+          outputJson: {
+            occupancyLevel: "ppl_1_2",
+            childrenInHome: "no",
+            petImpact: "none",
+            kitchenIntensity: "average_use",
+          },
+        },
+        cadence: "weekly",
+      })[0];
+
+      expect(quote.estimatedMinutes).toBeLessThan(
+        Math.round(estimatedMinutes * 0.55),
+      );
+      expect(quote.estimatedMinutes).toBeGreaterThan(50);
+    });
+
+    it("medium lived-in weekly remains plausible vs clean baseline", () => {
+      const service = createService();
+      const estimatedMinutes = 149;
+      const firstCleanPriceCents = 401_92;
+
+      const cleanWeekly = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        cadence: "weekly",
+      })[0];
+
+      const medium = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        estimateSnapshot: {
+          outputJson: {
+            occupancyLevel: "ppl_3_4",
+            childrenInHome: "yes",
+            petImpact: "light",
+            kitchenIntensity: "average_use",
+          },
+        },
+        cadence: "weekly",
+      })[0];
+
+      expect(medium.estimatedMinutes).toBeGreaterThan(cleanWeekly.estimatedMinutes);
+      expect(medium.estimatedMinutes).toBeLessThanOrEqual(
+        Math.floor(estimatedMinutes * 0.6),
+      );
+      expect(medium.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
     });
   });
 });
