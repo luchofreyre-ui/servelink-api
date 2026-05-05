@@ -408,10 +408,6 @@ export function isHomeDetailsComplete(
     | "halfBathrooms"
     | "intakeFloors"
     | "intakeStairsFlights"
-    | "floorMix"
-    | "layoutType"
-    | "occupancyLevel"
-    | "childrenInHome"
     | "petImpactLevel"
   >,
 ): boolean {
@@ -427,11 +423,8 @@ export function isHomeDetailsComplete(
   if (!s.halfBathrooms) return false;
   if (!s.intakeFloors) return false;
   if (!s.intakeStairsFlights) return false;
-  if (!s.floorMix) return false;
-  if (!s.layoutType) return false;
-  if (!s.occupancyLevel) return false;
-  if (!s.childrenInHome) return false;
   if (!s.petImpactLevel) return false;
+
   return true;
 }
 

@@ -33,9 +33,9 @@ import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import { bookingServiceCatalog } from "./bookingServiceCatalog";
 import { isBookingMoveTransitionServiceId } from "./bookingDeepClean";
 
-/** Layer 1 baseline fragment for URL fixtures (matches BOOKING_URL_HOME_* keys). */
+/** Tier 1 (conversion-critical) home facts for URL fixtures — blocks continuation until complete. */
 const BOOKING_TEST_LAYER1_QUERY =
-  "halfBath=0&homeFloors=1&homeStairs=none&homeFloorMix=mixed&homeLayout=mixed&homeOccupancy=ppl_1_2&homeChildren=no&homePetImpact=none";
+  "halfBath=0&homeFloors=1&homeStairs=none&homePetImpact=none";
 
 function catalogDeepAndShallow(): {
   deepId: string;
@@ -725,19 +725,101 @@ describe("bookingUrlState", () => {
     ).toBe(false);
   });
 
-  it("isHomeDetailsComplete requires all Layer 1 baseline fields", () => {
+  it("isHomeDetailsComplete is true when Tier 1 required fields are complete", () => {
     expect(
       isHomeDetailsComplete({
         ...defaultBookingFlowState,
         homeSize: "2000",
         bedrooms: "2",
         bathrooms: "2",
-        ...bookingHomeLayer1BaselineComplete,
+        halfBathrooms: "0",
+        intakeFloors: "1",
+        intakeStairsFlights: "none",
+        petImpactLevel: "none",
       }),
     ).toBe(true);
   });
 
-  it("parseBookingSearchParams clamps step=location to home when Layer 1 baseline is missing from URL", () => {
+  it("isHomeDetailsComplete stays true when floorMix, layoutType, occupancyLevel, and childrenInHome are empty", () => {
+    expect(
+      isHomeDetailsComplete({
+        ...defaultBookingFlowState,
+        homeSize: "2000",
+        bedrooms: "2",
+        bathrooms: "2",
+        halfBathrooms: "0",
+        intakeFloors: "1",
+        intakeStairsFlights: "none",
+        petImpactLevel: "none",
+        floorMix: "",
+        layoutType: "",
+        occupancyLevel: "",
+        childrenInHome: "",
+      }),
+    ).toBe(true);
+  });
+
+  it("isHomeDetailsComplete is false when halfBathrooms is missing", () => {
+    expect(
+      isHomeDetailsComplete({
+        ...defaultBookingFlowState,
+        homeSize: "2000",
+        bedrooms: "2",
+        bathrooms: "2",
+        halfBathrooms: "",
+        intakeFloors: "1",
+        intakeStairsFlights: "none",
+        petImpactLevel: "none",
+      }),
+    ).toBe(false);
+  });
+
+  it("isHomeDetailsComplete is false when intakeFloors is missing", () => {
+    expect(
+      isHomeDetailsComplete({
+        ...defaultBookingFlowState,
+        homeSize: "2000",
+        bedrooms: "2",
+        bathrooms: "2",
+        halfBathrooms: "0",
+        intakeFloors: "",
+        intakeStairsFlights: "none",
+        petImpactLevel: "none",
+      }),
+    ).toBe(false);
+  });
+
+  it("isHomeDetailsComplete is false when intakeStairsFlights is missing", () => {
+    expect(
+      isHomeDetailsComplete({
+        ...defaultBookingFlowState,
+        homeSize: "2000",
+        bedrooms: "2",
+        bathrooms: "2",
+        halfBathrooms: "0",
+        intakeFloors: "1",
+        intakeStairsFlights: "",
+        petImpactLevel: "none",
+      }),
+    ).toBe(false);
+  });
+
+  it("isHomeDetailsComplete is false when petImpactLevel is missing", () => {
+    expect(
+      isHomeDetailsComplete({
+        ...defaultBookingFlowState,
+        homeSize: "2000",
+        bedrooms: "2",
+        bathrooms: "2",
+        halfBathrooms: "0",
+        intakeFloors: "1",
+        intakeStairsFlights: "none",
+        petImpactLevel: "",
+      }),
+    ).toBe(false);
+  });
+
+  it("parseBookingSearchParams clamps step=location to home when Tier 1 home facts are missing from URL", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
         "step=location&homeSize=2000&bedrooms=2&bathrooms=2&locZip=94103&locStreet=100%20Market%20St&locCity=SF&locState=CA",
@@ -746,7 +828,7 @@ describe("bookingUrlState", () => {
     expect(s.step).toBe("home");
   });
 
-  it("parseBookingSearchParams allows step=location when Layer 1 is present in the URL", () => {
+  it("parseBookingSearchParams allows step=location when Tier 1 home facts are present in the URL", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
         `step=location&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&locZip=94103&locStreet=100%20Market%20St&locCity=SF&locState=CA`,

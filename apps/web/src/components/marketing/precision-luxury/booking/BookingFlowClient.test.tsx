@@ -95,7 +95,7 @@ const TEST_REVIEW_LOC_QUERY =
 const TEST_INTENT_QUERY = "&intent=RESET";
 /** Layer 1 baseline fields required for structural home completeness (matches bookingUrlState tests). */
 const BOOKING_TEST_LAYER1_QUERY =
-  "halfBath=0&homeFloors=1&homeStairs=none&homeFloorMix=mixed&homeLayout=mixed&homeOccupancy=ppl_1_2&homeChildren=no&homePetImpact=none";
+  "halfBath=0&homeFloors=1&homeStairs=none&homePetImpact=none";
 const recurringQuoteOptions = [
   {
     cadence: "weekly" as const,
