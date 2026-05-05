@@ -31,6 +31,26 @@ function pctRatio(part: number, whole: number): string {
   return `${((part / whole) * 100).toFixed(1)}%`;
 }
 
+/** Diagnostic mirror of recurring hard caps (keep in sync with recurring-plan.service.ts). */
+const DIAG_RECURRING_HARD_CAP_RATIO: Record<
+  "weekly" | "every_10_days" | "biweekly" | "monthly",
+  number
+> = {
+  weekly: 0.6,
+  every_10_days: 0.66,
+  biweekly: 0.7,
+  monthly: 0.75,
+};
+
+function recurringCapPinned(
+  recurringMinutes: number,
+  estimatedDurationMinutes: number,
+  cadence: keyof typeof DIAG_RECURRING_HARD_CAP_RATIO,
+): boolean {
+  const cap = DIAG_RECURRING_HARD_CAP_RATIO[cadence];
+  return recurringMinutes >= Math.floor(estimatedDurationMinutes * cap);
+}
+
 const mockFoService = {
   matchFOs: async () => [],
 } as unknown as FoService;
@@ -225,12 +245,14 @@ function recurringSnapshotForLoad(input: EstimateInput) {
     inputJson: {
       kitchenIntensity: input.kitchen_intensity,
       kitchen_intensity: input.kitchen_intensity,
-      clutterAccess: input.clutter_access,
-      clutter_access: input.clutter_access,
       petImpact: input.pet_impact,
       pet_impact: input.pet_impact,
+      petPresence: input.pet_presence,
+      pet_presence: input.pet_presence,
       occupancyLevel: input.occupancy_level,
       occupancy_level: input.occupancy_level,
+      childrenInHome: input.children_in_home,
+      children_in_home: input.children_in_home,
     },
     outputJson: {},
   };
@@ -238,9 +260,11 @@ function recurringSnapshotForLoad(input: EstimateInput) {
 
 async function main() {
   console.log("=== ESTIMATE SCENARIO BREAKDOWN (diagnostic) ===\n");
-  console.log("Estimator: V2.1 candidate (deep_clean labor multiplier 1.20).\n");
   console.log(
-    "Recurring: RecurringPlanService.getRecurringOfferQuote — maintenance-normalized baseline ratio per cadence × load, then hard cap vs first-clean minutes; price = (recurringMinutes / estimatedMinutes) × firstCleanPriceCents.\n",
+    "Estimator + recurring: V2.2 candidate — lived-in recurring maintenance load (re-soiling drivers; V2.1 cadence baselines + hard caps unchanged).\n",
+  );
+  console.log(
+    "Estimator core unchanged in this drop (e.g. deep_clean labor multiplier remains prior V2.1 value).\n",
   );
 
   for (const sc of scenarios) {
@@ -291,14 +315,19 @@ async function main() {
       cadence: sc.recurringCadenceFilter,
     });
     const q = quotes[0];
-    if (q) {
+    if (q && sc.recurringCadenceFilter) {
       const dur = res.estimatedDurationMinutes;
+      const capPinned = recurringCapPinned(
+        q.estimatedMinutes,
+        dur,
+        sc.recurringCadenceFilter,
+      );
       console.log("\nRecurring quote (real RecurringPlanService):");
       console.log(`  cadence: ${q.cadence} (${q.cadenceDays}d)`);
-      console.log(`  estimatedMinutes (recurring): ${q.estimatedMinutes}`);
+      console.log(`  estimatedMinutes (recurring): ${q.estimatedMinutes} | capPinned: ${capPinned}`);
       console.log(`  recurringPriceCents: ${q.recurringPriceCents} (${dollars(q.recurringPriceCents)})`);
       console.log(`  firstCleanPriceCents: ${q.firstCleanPriceCents} | savingsCents: ${q.savingsCents} | discountPercent: ${q.discountPercent}`);
-      console.log("\n  Recurring ratio (V2.1 candidate):");
+      console.log("\n  Recurring ratio (V2.2 candidate):");
       console.log(`    minutesRatio: ${pctRatio(q.estimatedMinutes, dur)}`);
       console.log(`    priceRatio: ${pctRatio(q.recurringPriceCents, q.firstCleanPriceCents)}`);
     }

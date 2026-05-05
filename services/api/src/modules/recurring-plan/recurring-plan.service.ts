@@ -426,53 +426,61 @@ export class RecurringPlanService {
       : 120;
   }
 
+  /**
+   * V2.2 lived-in maintenance load: recurring is driven by re-soiling rate, not first-clean difficulty.
+   * Product of occupancy × children × pet impact × kitchen use, clamped to [0.85, 1.05].
+   */
   private getMaintenanceLoadMultiplier(estimateSnapshot: unknown): number {
     const root = this.normalizeEstimateSnapshot(estimateSnapshot);
-    const factors = { ...root.inputJson, ...root.outputJson };
-    let score = 1;
+    const f = { ...root.inputJson, ...root.outputJson };
 
-    const kitchenIntensity =
-      factors.kitchenIntensity ??
-      factors.kitchen_intensity ??
-      factors.kitchenUsage ??
-      factors.kitchen_usage;
-    if (kitchenIntensity === 'heavy_use') score += 0.1;
-    if (kitchenIntensity === 'moderate_use') score += 0.05;
+    const occupancyLevel = f.occupancyLevel ?? f.occupancy_level;
+    let occupancyFactor = 1.0;
+    if (occupancyLevel === 'ppl_1_2') occupancyFactor = 0.92;
+    else if (occupancyLevel === 'ppl_3_4') occupancyFactor = 1.0;
+    else if (occupancyLevel === 'ppl_5_plus') occupancyFactor = 1.08;
 
-    const clutterAccess =
-      factors.clutterAccess ??
-      factors.clutter_access ??
-      factors.clutterLevel ??
-      factors.clutter_level;
-    if (clutterAccess === 'heavy_clutter') score += 0.08;
-    if (clutterAccess === 'moderate_clutter') score += 0.04;
+    const childrenRaw = f.childrenInHome ?? f.children_in_home;
+    let childrenFactor = 1.0;
+    if (childrenRaw === 'yes' || childrenRaw === true) childrenFactor = 1.07;
+    else if (childrenRaw === 'no' || childrenRaw === false) childrenFactor = 1.0;
 
-    const petImpact = factors.petImpact ?? factors.pet_impact;
-    const hasPets =
-      factors.hasPets === true ||
-      factors.pets === true ||
-      petImpact === 'light' ||
-      petImpact === 'moderate' ||
-      petImpact === 'heavy';
-    if (hasPets) score += 0.1;
-    if (petImpact === 'moderate') score += 0.05;
-    if (petImpact === 'heavy') score += 0.1;
-
-    const occupants =
-      factors.occupants ??
-      factors.occupantCount ??
-      factors.occupant_count ??
-      factors.peopleCount ??
-      factors.people_count;
-    if (typeof occupants === 'number') {
-      if (occupants >= 5) score += 0.1;
-      else if (occupants >= 3) score += 0.05;
+    const petImpact = f.petImpact ?? f.pet_impact;
+    let petFactor = 1.0;
+    if (petImpact === 'none') petFactor = 0.97;
+    else if (petImpact === 'light') petFactor = 1.03;
+    else if (petImpact === 'heavy') petFactor = 1.08;
+    else if (petImpact === 'moderate') petFactor = 1.05;
+    else {
+      const presence = f.petPresence ?? f.pet_presence;
+      if (presence === 'none') petFactor = 0.97;
     }
-    const occupancyLevel = factors.occupancyLevel ?? factors.occupancy_level;
-    if (occupancyLevel === 'ppl_5_plus') score += 0.1;
-    if (occupancyLevel === 'ppl_3_4') score += 0.05;
 
-    return Math.min(score, 1.25);
+    const kitchenRaw = (
+      f.kitchenIntensity ??
+      f.kitchen_intensity ??
+      f.kitchenUsage ??
+      f.kitchen_usage ??
+      ''
+    ).toString();
+    const kitchenNorm = kitchenRaw.toLowerCase();
+    let kitchenFactor = 1.0;
+    if (
+      kitchenNorm === 'heavy_use' ||
+      kitchenNorm === 'heavy' ||
+      kitchenNorm === 'heavy_grease'
+    ) {
+      kitchenFactor = 1.05;
+    } else if (
+      kitchenNorm === 'light_use' ||
+      kitchenNorm === 'light'
+    ) {
+      kitchenFactor = 0.97;
+    }
+
+    const product =
+      occupancyFactor * childrenFactor * petFactor * kitchenFactor;
+    return Math.min(1.05, Math.max(0.85, product));
   }
 
   private getRecurringMinutes(params: {

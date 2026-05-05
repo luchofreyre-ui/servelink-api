@@ -216,8 +216,9 @@ describe("RecurringPlanService V1", () => {
       estimateSnapshot: {
         outputJson: {
           kitchenIntensity: "heavy_use",
-          clutterAccess: "heavy_clutter",
           petImpact: "heavy",
+          occupancyLevel: "ppl_5_plus",
+          childrenInHome: "yes",
         },
       },
       cadence: "weekly",
