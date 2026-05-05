@@ -12,6 +12,21 @@ type RecurringVisitStructure = 'one_visit' | 'three_visit_reset';
 
 type JsonRecord = Record<string, unknown>;
 
+/** V2.1 recurring minutes: baseline × load, then hard cap (see getRecurringMinutes). */
+const RECURRING_MAINTENANCE_BASELINE_RATIO_BY_CADENCE = {
+  weekly: 0.55,
+  every_10_days: 0.6,
+  biweekly: 0.65,
+  monthly: 0.7,
+} as const;
+
+const RECURRING_HARD_CAP_RATIO_BY_CADENCE = {
+  weekly: 0.6,
+  every_10_days: 0.66,
+  biweekly: 0.7,
+  monthly: 0.75,
+} as const;
+
 export type RecurringQuoteOption = {
   cadence: RecurringCadenceV2;
   cadenceDays: number;
@@ -465,14 +480,20 @@ export class RecurringPlanService {
     cadence: RecurringCadenceV2;
     estimateSnapshot?: unknown;
   }): number {
-    const cadenceMultiplier = this.cadenceMultiplierMap[params.cadence];
+    const baselineRatio =
+      RECURRING_MAINTENANCE_BASELINE_RATIO_BY_CADENCE[params.cadence];
+    const hardCapRatio = RECURRING_HARD_CAP_RATIO_BY_CADENCE[params.cadence];
     const loadMultiplier = this.getMaintenanceLoadMultiplier(
       params.estimateSnapshot,
     );
-    return Math.max(
-      1,
-      Math.round(params.estimatedMinutes * cadenceMultiplier * loadMultiplier),
+    const rawRecurringMinutes = Math.round(
+      params.estimatedMinutes * baselineRatio * loadMultiplier,
     );
+    const cappedRecurringMinutes = Math.min(
+      rawRecurringMinutes,
+      Math.floor(params.estimatedMinutes * hardCapRatio),
+    );
+    return Math.max(1, cappedRecurringMinutes);
   }
 
   private getSelectedCadenceFromEstimateSnapshot(

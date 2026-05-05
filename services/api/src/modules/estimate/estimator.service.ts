@@ -393,7 +393,7 @@ const SERVICE_LABOR_MODEL_VERSION = "labor_v1.0.0";
 
 const SERVICE_TYPE_LABOR_MULTIPLIER: Record<ServiceType, number> = {
   maintenance: 1.0,
-  deep_clean: 1.35,
+  deep_clean: 1.2,
   move_in: 1.3,
   move_out: 1.3,
 };
