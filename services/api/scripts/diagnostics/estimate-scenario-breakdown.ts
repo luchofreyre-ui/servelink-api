@@ -261,10 +261,10 @@ function recurringSnapshotForLoad(input: EstimateInput) {
 async function main() {
   console.log("=== ESTIMATE SCENARIO BREAKDOWN (diagnostic) ===\n");
   console.log(
-    "Estimator + recurring: V2.2 candidate — lived-in recurring maintenance load (re-soiling drivers; V2.1 cadence baselines + hard caps unchanged).\n",
+    "Estimator V2.2 candidate — lived-in recurring maintenance load (V2.1 cadence baselines + hard caps × lived-in load; read-only diagnostic).\n",
   );
   console.log(
-    "Estimator core unchanged in this drop (e.g. deep_clean labor multiplier remains prior V2.1 value).\n",
+    "Estimator: V2.1 stabilization (e.g. deep_clean labor multiplier 1.20). Recurring = baselineRatio × livedInLoad × first-clean minutes, then hard cap; price scales by minutes ratio.\n",
   );
 
   for (const sc of scenarios) {

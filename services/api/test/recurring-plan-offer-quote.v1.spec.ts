@@ -171,6 +171,45 @@ describe("RecurringPlanService offer quote V1", () => {
     );
   });
 
+  describe("V2.1 recurring baseline + hard cap invariants", () => {
+    it("weekly standard deep-clean preview stays plausible under 60% cap", () => {
+      const service = createService();
+      const estimatedMinutes = 149;
+      const firstCleanPriceCents = 401_92;
+
+      const quote = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        estimateSnapshot: {
+          outputJson: { kitchenIntensity: "moderate_use" },
+        },
+        cadence: "weekly",
+      })[0];
+
+      expect(quote.estimatedMinutes).toBeGreaterThan(0);
+      expect(quote.estimatedMinutes).toBeLessThanOrEqual(
+        Math.floor(estimatedMinutes * 0.6),
+      );
+      expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
+    });
+
+    it("minimal maintenance weekly does not collapse", () => {
+      const service = createService();
+      const estimatedMinutes = 139;
+      const firstCleanPriceCents = 150_59;
+
+      const quote = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        cadence: "weekly",
+      })[0];
+
+      expect(quote.estimatedMinutes).toBeGreaterThan(60);
+      expect(quote.estimatedMinutes).toBeLessThan(estimatedMinutes);
+      expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
+    });
+  });
+
   describe("V2.2 lived-in maintenance load", () => {
     const heavyLivedInSnapshot = {
       outputJson: {

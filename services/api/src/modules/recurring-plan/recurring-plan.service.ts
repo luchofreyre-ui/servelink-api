@@ -428,7 +428,7 @@ export class RecurringPlanService {
 
   /**
    * V2.2 lived-in maintenance load: recurring is driven by re-soiling rate, not first-clean difficulty.
-   * Product of occupancy × children × pet impact × kitchen use, clamped to [0.85, 1.05].
+   * Product of occupancy × children × pet impact × kitchen use, clamped to [0.95, 1.05].
    */
   private getMaintenanceLoadMultiplier(estimateSnapshot: unknown): number {
     const root = this.normalizeEstimateSnapshot(estimateSnapshot);
@@ -480,7 +480,7 @@ export class RecurringPlanService {
 
     const product =
       occupancyFactor * childrenFactor * petFactor * kitchenFactor;
-    return Math.min(1.05, Math.max(0.85, product));
+    return Math.min(1.05, Math.max(0.95, product));
   }
 
   private getRecurringMinutes(params: {
