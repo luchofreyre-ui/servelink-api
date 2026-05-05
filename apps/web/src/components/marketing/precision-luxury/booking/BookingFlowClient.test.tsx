@@ -58,7 +58,6 @@ import {
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED_HINT,
   BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_TITLE,
-  BOOKING_SCHEDULE_SLOTS_TITLE,
   BOOKING_SCHEDULE_SUMMARY_TITLE,
   BOOKING_SCHEDULE_ZERO_TEAMS_TITLE,
   BOOKING_TRANSITION_STATE_LABELS,
@@ -94,6 +93,9 @@ import {
 const TEST_REVIEW_LOC_QUERY =
   "&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA";
 const TEST_INTENT_QUERY = "&intent=RESET";
+/** Layer 1 baseline fields required for structural home completeness (matches bookingUrlState tests). */
+const BOOKING_TEST_LAYER1_QUERY =
+  "halfBath=0&homeFloors=1&homeStairs=none&homePetImpact=none";
 const recurringQuoteOptions = [
   {
     cadence: "weekly" as const,
@@ -358,7 +360,7 @@ vi.mock("../layout/PublicSiteFooter", () => ({
 function buildReviewSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}${TEST_INTENT_QUERY}&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}${TEST_INTENT_QUERY}&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -370,7 +372,7 @@ function buildReviewSearchStringWithoutIntent(): string {
 function buildReviewSearchStringWithIncompleteLocation(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&locZip=94103&locStreet=100%20Market%20St&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=&locZip=94103&locStreet=100%20Market%20St&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -378,7 +380,7 @@ function buildReviewSearchStringWithIncompleteLocation(): string {
 function buildReviewSearchStringWithLegacyAddressOnly(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&locZip=94103&locAddr=100%20Market%20St&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=&locZip=94103&locAddr=100%20Market%20St&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -390,7 +392,7 @@ function buildRecurringReviewSearchString(): string {
 function buildIncompleteHomeStepSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=home&homeSize=&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
+  return `step=home&homeSize=&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -399,7 +401,7 @@ function buildIncompleteHomeStepSearchString(): string {
 function buildIncompleteCadenceHomeSearchString(): string {
   const svc = getBookingDefaultServiceId();
   const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-  return `step=home&homeSize=&bedrooms=2&bathrooms=2&pets=${TEST_INTENT_QUERY}&service=${encodeURIComponent(
+  return `step=home&homeSize=&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=${TEST_INTENT_QUERY}&service=${encodeURIComponent(
     svc,
   )}${dc}`;
 }
@@ -408,7 +410,7 @@ function buildReviewSearchStringForService(serviceId: string): string {
   const dc = isDeepCleaningBookingServiceId(serviceId)
     ? "&dcProgram=single_visit"
     : "";
-  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}${TEST_INTENT_QUERY}&service=${encodeURIComponent(
+  return `step=review&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=&frequency=Weekly&preferredTime=Friday${TEST_REVIEW_LOC_QUERY}${TEST_INTENT_QUERY}&service=${encodeURIComponent(
     serviceId,
   )}${dc}`;
 }
@@ -442,7 +444,7 @@ function buildHomeStepSearchStringForService(serviceId = getBookingDefaultServic
   const dc = isDeepCleaningBookingServiceId(serviceId)
     ? "&dcProgram=single_visit"
     : "";
-  return `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
+  return `step=home&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
     serviceId,
   )}${dc}`;
 }
@@ -684,7 +686,7 @@ describe("BookingFlowClient", () => {
       expect(screen.queryByTestId("booking-schedule-slot-section")).toBeNull();
       fireEvent.click(screen.getByText("North Team"));
       expect(await screen.findByTestId("booking-schedule-slot-section")).toBeInTheDocument();
-      expect(screen.getByText(BOOKING_SCHEDULE_SLOTS_TITLE)).toBeInTheDocument();
+      expect(screen.getByText("Choose your first visit time")).toBeInTheDocument();
     });
 
     it("availability refetches when the selected team changes (slots follow the team)", async () => {
@@ -997,6 +999,7 @@ describe("BookingFlowClient", () => {
           onSwitchToAlternateTeam={vi.fn()}
           onRetryConfirmBooking={vi.fn()}
           onChooseDifferentTimeAfterConfirmFail={vi.fn()}
+          schedulePreview={null}
         />,
       );
       expect(screen.queryByTestId("booking-schedule-summary")).not.toBeInTheDocument();
@@ -1306,7 +1309,7 @@ describe("BookingFlowClient", () => {
 
     it("advances home → service location before review (ZIP gate)", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(
-        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
+        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
           getBookingDefaultServiceId(),
         )}&dcProgram=single_visit`,
       );
@@ -1323,7 +1326,7 @@ describe("BookingFlowClient", () => {
       const svc = getBookingDefaultServiceId();
       const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
       bookingFlowTestSearch.sp = new URLSearchParams(
-        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=${TEST_INTENT_QUERY}&service=${encodeURIComponent(svc)}${dc}`,
+        `step=home&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=${TEST_INTENT_QUERY}&service=${encodeURIComponent(svc)}${dc}`,
       );
       render(<BookingFlowClient />);
       expect(screen.queryByTestId("booking-home-cadence-section")).not.toBeInTheDocument();
@@ -1333,7 +1336,7 @@ describe("BookingFlowClient", () => {
       const svc = getBookingDefaultServiceId();
       const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
       bookingFlowTestSearch.sp = new URLSearchParams(
-        `step=location&homeSize=2000&bedrooms=2&bathrooms=2&pets=${TEST_INTENT_QUERY}&service=${encodeURIComponent(svc)}${dc}&locZip=94103`,
+        `step=location&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=${TEST_INTENT_QUERY}&service=${encodeURIComponent(svc)}${dc}&locZip=94103`,
       );
       render(<BookingFlowClient />);
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
@@ -1381,7 +1384,7 @@ describe("BookingFlowClient", () => {
       )!;
 
       bookingFlowTestSearch.sp = new URLSearchParams(
-        `step=service&service=${encodeURIComponent(deepEntry.id)}&dcProgram=phased_3_visit&homeSize=2000&bedrooms=2&bathrooms=2&pets=${encodeURIComponent("Cat family")}&frequency=Weekly&preferredTime=Friday`,
+        `step=service&service=${encodeURIComponent(deepEntry.id)}&dcProgram=phased_3_visit&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=${encodeURIComponent("Cat family")}&frequency=Weekly&preferredTime=Friday`,
       );
       render(<BookingFlowClient />);
 
@@ -1529,7 +1532,7 @@ describe("BookingFlowClient", () => {
     function buildHomeStepSearchString(): string {
       const svc = getBookingDefaultServiceId();
       const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
-      return `step=home&homeSize=2000&bedrooms=2&bathrooms=2&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
+      return `step=home&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
         svc,
       )}${dc}`;
     }

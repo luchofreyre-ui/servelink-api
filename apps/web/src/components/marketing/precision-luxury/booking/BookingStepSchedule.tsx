@@ -17,7 +17,6 @@ import {
   BOOKING_SCHEDULE_RECOMMENDED_BADGE,
   BOOKING_SCHEDULE_RETRY_CONFIRM_CTA,
   BOOKING_SCHEDULE_SLOTS_LEAD,
-  BOOKING_SCHEDULE_SLOTS_TITLE,
   BOOKING_SCHEDULE_SLOT_CARD_BODY,
   BOOKING_SCHEDULE_SUMMARY_ARRIVAL_LABEL,
   BOOKING_SCHEDULE_SUMMARY_TEAM_LABEL,
@@ -40,6 +39,13 @@ import {
   BOOKING_STEP_EDIT_CONTINUITY_HINT,
 } from "./bookingPublicSurfaceCopy";
 import type { BookingAvailableTeamOption, BookingFlowState } from "./bookingFlowTypes";
+
+export type DerivedSchedulePreview = {
+  visit1: Date;
+  visit2: Date;
+  visit3: Date;
+  recurringStart: Date;
+};
 
 export type BookingScheduleTeamsEmptyState =
   | "none"
@@ -70,6 +76,17 @@ function formatArrivalWindow(startAt: string, endAt: string): string {
   return `${startLabel} – ${endPart}`;
 }
 
+function formatSchedulePreviewDate(d: Date): string {
+  if (!Number.isFinite(d.getTime())) return "";
+  return d.toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 type BookingStepScheduleProps = {
   state: BookingFlowState;
   serviceId: string;
@@ -94,6 +111,7 @@ type BookingStepScheduleProps = {
   onSwitchToAlternateTeam: () => void;
   onRetryConfirmBooking: () => void;
   onChooseDifferentTimeAfterConfirmFail: () => void;
+  schedulePreview: DerivedSchedulePreview | null;
 };
 
 export function BookingStepSchedule({
@@ -119,6 +137,7 @@ export function BookingStepSchedule({
   onSwitchToAlternateTeam,
   onRetryConfirmBooking,
   onChooseDifferentTimeAfterConfirmFail,
+  schedulePreview,
 }: BookingStepScheduleProps) {
   void _serviceId;
   const displayTeams = state.availableTeams.slice(0, 2);
@@ -259,7 +278,10 @@ export function BookingStepSchedule({
           data-testid="booking-schedule-slot-section"
         >
           <p className="font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.02em] text-[#0F172A]">
-            {BOOKING_SCHEDULE_SLOTS_TITLE}
+            Choose your first visit time
+          </p>
+          <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm font-medium leading-6 text-[#475569]">
+            This sets your full reset plan and recurring schedule automatically.
           </p>
           <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
             {BOOKING_SCHEDULE_SLOTS_LEAD}
@@ -380,6 +402,22 @@ export function BookingStepSchedule({
                       state.selectedSlotEnd.trim(),
                     )}
                   </p>
+                </div>
+              ) : null}
+
+              {slotChosen && schedulePreview != null ? (
+                <div data-testid="schedule-preview" className="mt-6 rounded-2xl border p-4">
+                  <p className="mb-2 font-semibold">
+                    Your full schedule based on this time:
+                  </p>
+                  <ul className="space-y-1 text-sm">
+                    <li>Visit 1: {formatSchedulePreviewDate(schedulePreview.visit1)}</li>
+                    <li>Visit 2: {formatSchedulePreviewDate(schedulePreview.visit2)}</li>
+                    <li>Visit 3: {formatSchedulePreviewDate(schedulePreview.visit3)}</li>
+                    <li className="mt-2 font-medium">
+                      Recurring begins: {formatSchedulePreviewDate(schedulePreview.recurringStart)}
+                    </li>
+                  </ul>
                 </div>
               ) : null}
 
