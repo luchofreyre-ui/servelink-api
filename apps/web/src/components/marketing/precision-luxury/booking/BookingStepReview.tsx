@@ -98,6 +98,18 @@ import {
 } from "./bookingPublicSurfaceCopy";
 import { getBookingUpsellOptionsByIds } from "./bookingUpsells";
 import { getPublicBookingMarketingTitle } from "./publicBookingTaxonomy";
+import type { DerivedSchedulePreview } from "./BookingStepSchedule";
+
+function formatSchedulePreviewDateForReview(d: Date): string {
+  if (!Number.isFinite(d.getTime())) return "";
+  return d.toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
 
 type BookingStepReviewProps = {
   state: BookingFlowState;
@@ -136,6 +148,7 @@ type BookingStepReviewProps = {
   onRecurringCadenceIntentChange: (
     value: BookingFlowState["recurringCadenceIntent"],
   ) => void;
+  schedulePreview: DerivedSchedulePreview | null;
 };
 
 function isBookingReady(state: BookingFlowState) {
@@ -257,6 +270,7 @@ export function BookingStepReview({
   onFirstTimePostEstimateVisitChoiceChange,
   onRecurringInterestChange,
   onRecurringCadenceIntentChange,
+  schedulePreview,
 }: BookingStepReviewProps) {
   const reviewFunnelOnceRef = useRef(false);
   useEffect(() => {
@@ -1005,17 +1019,19 @@ export function BookingStepReview({
               <p>
                 <span className="font-medium text-[#64748B]">Half baths:</span>{" "}
                 <span className="text-[#0F172A]">
-                  {state.halfBathrooms === "0"
-                    ? "None"
-                    : state.halfBathrooms === "1"
-                      ? "One"
-                      : "Two or more"}
+                  {!state.halfBathrooms
+                    ? "—"
+                    : state.halfBathrooms === "0"
+                      ? "None"
+                      : state.halfBathrooms === "1"
+                        ? "One"
+                        : "Two or more"}
                 </span>
               </p>
               <p>
                 <span className="font-medium text-[#64748B]">Pet impact:</span>{" "}
                 <span className="text-[#0F172A]">
-                  {petImpactDisplay[state.petImpactLevel]}
+                  {petImpactDisplay[state.petImpactLevel] ?? "—"}
                 </span>
               </p>
               <p>
@@ -1041,8 +1057,8 @@ export function BookingStepReview({
                   Floor mix and layout:
                 </span>{" "}
                 <span className="text-[#0F172A]">
-                  {floorMixDisplay[state.floorMix]} ·{" "}
-                  {layoutDisplay[state.layoutType]}
+                  {floorMixDisplay[state.floorMix] ?? "—"} ·{" "}
+                  {layoutDisplay[state.layoutType] ?? "—"}
                 </span>
               </p>
               <p>
@@ -1177,6 +1193,21 @@ export function BookingStepReview({
             </div>
           ) : null}
         </ReviewSection>
+
+        {schedulePreview ? (
+          <div data-testid="review-schedule-preview" className="mb-6 rounded-2xl border p-4">
+            <p className="mb-2 font-semibold">Your scheduled visits</p>
+            <ul className="space-y-1 text-sm">
+              <li>Visit 1: {formatSchedulePreviewDateForReview(schedulePreview.visit1)}</li>
+              <li>Visit 2: {formatSchedulePreviewDateForReview(schedulePreview.visit2)}</li>
+              <li>Visit 3: {formatSchedulePreviewDateForReview(schedulePreview.visit3)}</li>
+              <li className="mt-2 font-medium">
+                Recurring begins:{" "}
+                {formatSchedulePreviewDateForReview(schedulePreview.recurringStart)}
+              </li>
+            </ul>
+          </div>
+        ) : null}
 
         <div
           className="mt-10 rounded-2xl border border-[#0D9488]/20 bg-[rgba(13,148,136,0.06)] px-6 py-6"

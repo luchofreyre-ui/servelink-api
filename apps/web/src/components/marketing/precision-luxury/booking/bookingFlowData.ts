@@ -8,6 +8,28 @@ import {
   getBookingServiceCatalogItem,
 } from "./bookingServiceCatalog";
 
+/** Explicit Layer 1 baseline — use in tests when the home step must be structurally complete. */
+export const bookingHomeLayer1BaselineComplete: Pick<
+  BookingFlowState,
+  | "halfBathrooms"
+  | "intakeFloors"
+  | "intakeStairsFlights"
+  | "floorMix"
+  | "layoutType"
+  | "occupancyLevel"
+  | "childrenInHome"
+  | "petImpactLevel"
+> = {
+  halfBathrooms: "0",
+  intakeFloors: "1",
+  intakeStairsFlights: "none",
+  floorMix: "mixed",
+  layoutType: "mixed",
+  occupancyLevel: "ppl_1_2",
+  childrenInHome: "no",
+  petImpactLevel: "none",
+};
+
 export const bookingSteps: BookingStepDefinition[] = [
   { id: "service", order: 1, label: "Service" },
   { id: "home", order: 2, label: "Home Details" },
@@ -32,14 +54,14 @@ export const defaultBookingFlowState: BookingFlowState = {
   bedrooms: "",
   bathrooms: "",
   pets: "",
-  halfBathrooms: "0",
-  intakeFloors: "1",
-  intakeStairsFlights: "none",
-  floorMix: "mixed",
-  layoutType: "mixed",
-  occupancyLevel: "ppl_1_2",
-  childrenInHome: "no",
-  petImpactLevel: "none",
+  halfBathrooms: "",
+  intakeFloors: "",
+  intakeStairsFlights: "",
+  floorMix: "",
+  layoutType: "",
+  occupancyLevel: "",
+  childrenInHome: "",
+  petImpactLevel: "",
   overallLaborCondition: "normal_lived_in",
   kitchenIntensity: "average_use",
   bathroomComplexity: "standard",

@@ -21,13 +21,21 @@ import {
   normalizeBookingAddOnsForPayload,
   normalizeBookingHomeSizeParam,
   parseBookingSearchParams,
+  isHomeDetailsComplete,
   type BookingConfirmationSessionSnapshotV1,
 } from "./bookingUrlState";
-import { defaultBookingFlowState } from "./bookingFlowData";
+import {
+  defaultBookingFlowState,
+  bookingHomeLayer1BaselineComplete,
+} from "./bookingFlowData";
 import type { BookingFlowState } from "./bookingFlowTypes";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import { bookingServiceCatalog } from "./bookingServiceCatalog";
 import { isBookingMoveTransitionServiceId } from "./bookingDeepClean";
+
+/** Layer 1 baseline fragment for URL fixtures (matches BOOKING_URL_HOME_* keys). */
+const BOOKING_TEST_LAYER1_QUERY =
+  "halfBath=0&homeFloors=1&homeStairs=none&homeFloorMix=mixed&homeLayout=mixed&homeOccupancy=ppl_1_2&homeChildren=no&homePetImpact=none";
 
 function catalogDeepAndShallow(): {
   deepId: string;
@@ -182,6 +190,7 @@ describe("bookingUrlState", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
+      ...bookingHomeLayer1BaselineComplete,
       step: "review",
       serviceId: shallowId,
       deepCleanProgram: "",
@@ -391,6 +400,7 @@ describe("bookingUrlState", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
+      ...bookingHomeLayer1BaselineComplete,
       step: "review",
       serviceId: shallowId,
       deepCleanProgram: "",
@@ -449,6 +459,7 @@ describe("bookingUrlState", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
+      ...bookingHomeLayer1BaselineComplete,
       step: "review",
       serviceId: shallowId,
       deepCleanProgram: "",
@@ -480,6 +491,7 @@ describe("bookingUrlState", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
+      ...bookingHomeLayer1BaselineComplete,
       step: "review",
       serviceId: shallowId,
       deepCleanProgram: "",
@@ -534,7 +546,7 @@ describe("bookingUrlState", () => {
   it("shaped URL without step lands on review when home and location are complete", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
-        "homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA",
+        `homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&frequency=Weekly&preferredTime=Friday&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA`,
       ),
     );
     expect(s.step).toBe("review");
@@ -543,7 +555,7 @@ describe("bookingUrlState", () => {
   it("parse/build round-trips bookingId and intakeId while scheduling context is present", () => {
     const { shallowId } = catalogDeepAndShallow();
     const sp = new URLSearchParams(
-      `step=schedule&service=${encodeURIComponent(shallowId)}&homeSize=2000&bedrooms=2&bathrooms=2&frequency=Weekly&preferredTime=Friday&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA&bookingId=bk_xyz&intakeId=in_abc`,
+      `step=schedule&service=${encodeURIComponent(shallowId)}&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&frequency=Weekly&preferredTime=Friday&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA&bookingId=bk_xyz&intakeId=in_abc`,
     );
     const parsed = parseBookingSearchParams(sp);
     expect(parsed.step).toBe("schedule");
@@ -566,6 +578,7 @@ describe("bookingUrlState", () => {
   it("clampBookingStepToStructuralMax demotes review to location when street address is missing", () => {
     const s: BookingFlowState = {
       ...defaultBookingFlowState,
+      ...bookingHomeLayer1BaselineComplete,
       step: "review",
       homeSize: "2000",
       bedrooms: "2",
@@ -604,6 +617,7 @@ describe("bookingUrlState", () => {
   it("clampBookingStepToStructuralMax demotes review to location when ZIP is missing", () => {
     const s: BookingFlowState = {
       ...defaultBookingFlowState,
+      ...bookingHomeLayer1BaselineComplete,
       step: "review",
       homeSize: "2000",
       bedrooms: "2",
@@ -675,7 +689,7 @@ describe("bookingUrlState", () => {
   it("allows review without legacy intent when home and structured service location are complete", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
-        "step=review&homeSize=2000&bedrooms=2&bathrooms=2&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA",
+        `step=review&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA`,
       ),
     );
     expect(s.intent).toBeUndefined();
@@ -685,7 +699,7 @@ describe("bookingUrlState", () => {
   it("clamps stale review URLs with incomplete structured location back to location", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
-        "step=review&homeSize=2000&bedrooms=2&bathrooms=2&locZip=94103&locStreet=100%20Market%20St",
+        `step=review&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&locZip=94103&locStreet=100%20Market%20St`,
       ),
     );
     expect(s.step).toBe("location");
@@ -694,7 +708,48 @@ describe("bookingUrlState", () => {
   it("does not treat legacy locAddr alone as enough for review readiness", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
-        "step=review&homeSize=2000&bedrooms=2&bathrooms=2&locZip=94103&locAddr=100%20Market%20St",
+        `step=review&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&locZip=94103&locAddr=100%20Market%20St`,
+      ),
+    );
+    expect(s.step).toBe("location");
+  });
+
+  it("isHomeDetailsComplete is false when only square footage, bedrooms, and bathrooms are set", () => {
+    expect(
+      isHomeDetailsComplete({
+        ...defaultBookingFlowState,
+        homeSize: "2000",
+        bedrooms: "2",
+        bathrooms: "2",
+      }),
+    ).toBe(false);
+  });
+
+  it("isHomeDetailsComplete requires all Layer 1 baseline fields", () => {
+    expect(
+      isHomeDetailsComplete({
+        ...defaultBookingFlowState,
+        homeSize: "2000",
+        bedrooms: "2",
+        bathrooms: "2",
+        ...bookingHomeLayer1BaselineComplete,
+      }),
+    ).toBe(true);
+  });
+
+  it("parseBookingSearchParams clamps step=location to home when Layer 1 baseline is missing from URL", () => {
+    const s = parseBookingSearchParams(
+      new URLSearchParams(
+        "step=location&homeSize=2000&bedrooms=2&bathrooms=2&locZip=94103&locStreet=100%20Market%20St&locCity=SF&locState=CA",
+      ),
+    );
+    expect(s.step).toBe("home");
+  });
+
+  it("parseBookingSearchParams allows step=location when Layer 1 is present in the URL", () => {
+    const s = parseBookingSearchParams(
+      new URLSearchParams(
+        `step=location&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&locZip=94103&locStreet=100%20Market%20St&locCity=SF&locState=CA`,
       ),
     );
     expect(s.step).toBe("location");

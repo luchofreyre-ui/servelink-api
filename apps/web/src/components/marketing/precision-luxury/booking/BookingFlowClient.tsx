@@ -90,6 +90,7 @@ import { BookingStepServiceLocation } from "./BookingStepServiceLocation";
 import {
   BookingStepSchedule,
   type BookingScheduleTeamsEmptyState,
+  type DerivedSchedulePreview,
 } from "./BookingStepSchedule";
 import { BookingStepReview } from "./BookingStepReview";
 import { BookingSummaryCard } from "./BookingSummaryCard";
@@ -168,6 +169,104 @@ function getPublicBookingOriginServiceHref(s: BookingFlowState): string {
     return `/services/${PUBLIC_BOOK_INTERNAL_FIRST_TIME}`;
   }
   return `/services/${PUBLIC_BOOK_INTERNAL_FIRST_TIME}`;
+}
+
+type DerivedSchedulePreviewCadence =
+  | "weekly"
+  | "biweekly"
+  | "monthly"
+  | "every_10_days";
+
+function resolveSchedulePreviewCadence(
+  s: BookingFlowState,
+): DerivedSchedulePreviewCadence {
+  const intent = s.recurringCadenceIntent;
+  if (
+    intent === "weekly" ||
+    intent === "biweekly" ||
+    intent === "monthly" ||
+    intent === "every_10_days"
+  ) {
+    return intent;
+  }
+  const c = s.recurringInterest?.cadence;
+  if (c === "weekly") return "weekly";
+  if (c === "biweekly") return "biweekly";
+  if (c === "monthly") return "monthly";
+  if (c === "every_10_days") return "every_10_days";
+  return "weekly";
+}
+
+function buildDerivedSchedulePreview(params: {
+  selectedStartAt?: string | null;
+  cadence: DerivedSchedulePreviewCadence;
+}): DerivedSchedulePreview | null {
+  const raw = params.selectedStartAt?.trim();
+  if (!raw) return null;
+  const start = new Date(raw);
+  if (!Number.isFinite(start.getTime())) return null;
+
+  const addDays = (d: Date, days: number) => {
+    const n = new Date(d);
+    n.setDate(n.getDate() + days);
+    return n;
+  };
+
+  const visit1 = start;
+  const visit2 = addDays(start, 14);
+  const visit3 = addDays(start, 28);
+
+  let recurringStart: Date;
+  switch (params.cadence) {
+    case "weekly":
+      recurringStart = addDays(visit3, 7);
+      break;
+    case "biweekly":
+      recurringStart = addDays(visit3, 14);
+      break;
+    case "monthly":
+      recurringStart = addDays(visit3, 30);
+      break;
+    case "every_10_days":
+      recurringStart = addDays(visit3, 10);
+      break;
+    default:
+      recurringStart = addDays(visit3, 7);
+  }
+
+  return { visit1, visit2, visit3, recurringStart };
+}
+
+function resolveSelectedStartAtForPreview(state: BookingFlowState): string | null {
+  if (state.selectedSlotStart.trim()) return state.selectedSlotStart.trim();
+
+  const holdStart =
+    (state as any).hold?.startAt ??
+    (state as any).hold?.window?.startAt ??
+    null;
+  if (holdStart) return holdStart;
+
+  const confirmStart =
+    (state as any).confirmationState?.startAt ??
+    (state as any).confirmationSession?.startAt ??
+    null;
+  if (confirmStart) return confirmStart;
+
+  try {
+    const fromSession =
+      readBookingConfirmationSessionSnapshot()?.selectedSlotStart?.trim() ?? "";
+    if (fromSession) return fromSession;
+  } catch {
+    // ignore
+  }
+
+  const urlStart =
+    (state as any).urlParams?.startAt ??
+    (state as any).persisted?.startAt ??
+    null;
+  if (urlStart) return urlStart;
+
+  return null;
 }
 
 function getStepError(state: BookingFlowState): string | null {
@@ -421,6 +520,23 @@ export function BookingFlowClient() {
   /** Latest booking state when committing the URL at step boundaries. */
   const stateRefForBookingUrl = useRef(state);
   stateRefForBookingUrl.current = state;
+
+  useEffect(() => {
+    const handler = () => {
+      try {
+        const snapshot = readBookingConfirmationSessionSnapshot();
+        if (snapshot?.selectedSlotStart) {
+          setState((prev) => ({ ...prev }));
+        }
+      } catch {}
+    };
+
+    window.addEventListener("bookingSessionUpdated", handler);
+
+    return () => {
+      window.removeEventListener("bookingSessionUpdated", handler);
+    };
+  }, []);
 
   const stripePromise = useMemo(() => getStripePromise(), []);
 
@@ -914,6 +1030,23 @@ export function BookingFlowClient() {
     () => JSON.stringify(recurringInterestPayload ?? null),
     [recurringInterestPayload],
   );
+
+  const selectedStartAtForPreview = useMemo(
+    () => resolveSelectedStartAtForPreview(state),
+    [state],
+  );
+
+  const resolvedSchedulePreviewCadence = useMemo(
+    () => resolveSchedulePreviewCadence(state),
+    [state.recurringCadenceIntent, state.recurringInterest?.cadence],
+  );
+
+  const schedulePreview = useMemo(() => {
+    return buildDerivedSchedulePreview({
+      selectedStartAt: selectedStartAtForPreview,
+      cadence: resolvedSchedulePreviewCadence,
+    });
+  }, [selectedStartAtForPreview, resolvedSchedulePreviewCadence]);
 
   const isHeavyCondition = useMemo(
     () =>
@@ -2569,6 +2702,7 @@ export function BookingFlowClient() {
                       }),
                     );
                   }}
+                  schedulePreview={schedulePreview}
                 />
               ) : null}
 
@@ -2703,6 +2837,7 @@ export function BookingFlowClient() {
                   onChooseDifferentTimeAfterConfirmFail={() =>
                     chooseDifferentTimeAfterConfirmFail()
                   }
+                  schedulePreview={schedulePreview}
                 />
               ) : null}
 

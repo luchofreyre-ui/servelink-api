@@ -212,14 +212,15 @@ export type BookingFlowState = {
   serviceLocationAddressLine: string;
   /** Opening clean structure — chosen only after estimate is ready on review. */
   firstTimePostEstimateVisitChoice: BookingFirstTimePostEstimateVisitChoice;
-  halfBathrooms: BookingHalfBathroomsKey;
-  intakeFloors: BookingIntakeFloors;
-  intakeStairsFlights: BookingIntakeStairsFlights;
-  floorMix: BookingFloorMix;
-  layoutType: BookingLayoutType;
-  occupancyLevel: BookingOccupancyLevel;
-  childrenInHome: BookingChildrenInHome;
-  petImpactLevel: BookingPetImpactLevel;
+  /** Empty until the customer selects a Layer 1 option (not a silent default). */
+  halfBathrooms: BookingHalfBathroomsKey | "";
+  intakeFloors: BookingIntakeFloors | "";
+  intakeStairsFlights: BookingIntakeStairsFlights | "";
+  floorMix: BookingFloorMix | "";
+  layoutType: BookingLayoutType | "";
+  occupancyLevel: BookingOccupancyLevel | "";
+  childrenInHome: BookingChildrenInHome | "";
+  petImpactLevel: BookingPetImpactLevel | "";
   overallLaborCondition: BookingOverallLaborCondition;
   kitchenIntensity: BookingKitchenIntensity;
   bathroomComplexity: BookingBathroomComplexity;

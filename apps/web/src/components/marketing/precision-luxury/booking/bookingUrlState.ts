@@ -1,12 +1,20 @@
 import type {
   BookingAddOnToken,
   BookingAppliancePresenceToken,
+  BookingChildrenInHome,
   BookingDeepCleanFocus,
   BookingDeepCleanProgramChoice,
   BookingFirstTimePostEstimateVisitChoice,
+  BookingFloorMix,
   BookingFlowState,
   BookingFrequencyOption,
+  BookingHalfBathroomsKey,
   BookingHomeCondition,
+  BookingIntakeFloors,
+  BookingIntakeStairsFlights,
+  BookingLayoutType,
+  BookingOccupancyLevel,
+  BookingPetImpactLevel,
   BookingProblemAreaToken,
   BookingPublicPath,
   BookingScopeIntensity,
@@ -80,6 +88,16 @@ export const BOOKING_URL_SERVICE_LOC_STATE = "locState";
 export const BOOKING_URL_SERVICE_LOC_UNIT = "locUnit";
 export const BOOKING_URL_CUSTOMER_INTENT = "intent";
 
+/** Layer 1 baseline facts — echoed on /book for step clamp + refresh. */
+export const BOOKING_URL_HOME_HALF_BATH = "halfBath";
+export const BOOKING_URL_HOME_INTAKE_FLOORS = "homeFloors";
+export const BOOKING_URL_HOME_STAIRS_FLIGHTS = "homeStairs";
+export const BOOKING_URL_HOME_FLOOR_MIX = "homeFloorMix";
+export const BOOKING_URL_HOME_LAYOUT_TYPE = "homeLayout";
+export const BOOKING_URL_HOME_OCCUPANCY = "homeOccupancy";
+export const BOOKING_URL_HOME_CHILDREN = "homeChildren";
+export const BOOKING_URL_HOME_PET_IMPACT = "homePetImpact";
+
 function isValidStep(value: string | null): value is BookingStepId {
   return !!value && validSteps.includes(value as BookingStepId);
 }
@@ -118,6 +136,56 @@ export function normalizeBookingHomeSizeParam(raw: string): string {
 
 export function normalizeBookingPetsParam(raw: string): string {
   return String(raw ?? "").trim();
+}
+
+function parseBookingHalfBathroomsParam(raw: string): BookingHalfBathroomsKey | "" {
+  const v = String(raw ?? "").trim();
+  if (v === "0" || v === "1" || v === "2_plus") return v;
+  return "";
+}
+
+function parseBookingIntakeFloorsParam(raw: string): BookingIntakeFloors | "" {
+  const v = String(raw ?? "").trim();
+  if (v === "1" || v === "2" || v === "3_plus") return v;
+  return "";
+}
+
+function parseBookingIntakeStairsFlightsParam(
+  raw: string,
+): BookingIntakeStairsFlights | "" {
+  const v = String(raw ?? "").trim();
+  if (v === "none" || v === "one" || v === "two_plus" || v === "not_sure") return v;
+  return "";
+}
+
+function parseBookingFloorMixParam(raw: string): BookingFloorMix | "" {
+  const v = String(raw ?? "").trim();
+  if (v === "mostly_hard" || v === "mixed" || v === "mostly_carpet") return v;
+  return "";
+}
+
+function parseBookingLayoutTypeParam(raw: string): BookingLayoutType | "" {
+  const v = String(raw ?? "").trim();
+  if (v === "open_plan" || v === "mixed" || v === "segmented") return v;
+  return "";
+}
+
+function parseBookingOccupancyLevelParam(raw: string): BookingOccupancyLevel | "" {
+  const v = String(raw ?? "").trim();
+  if (v === "ppl_1_2" || v === "ppl_3_4" || v === "ppl_5_plus") return v;
+  return "";
+}
+
+function parseBookingChildrenInHomeParam(raw: string): BookingChildrenInHome | "" {
+  const v = String(raw ?? "").trim();
+  if (v === "yes" || v === "no") return v;
+  return "";
+}
+
+function parseBookingPetImpactLevelParam(raw: string): BookingPetImpactLevel | "" {
+  const v = String(raw ?? "").trim();
+  if (v === "none" || v === "light" || v === "heavy") return v;
+  return "";
 }
 
 const BOOKING_HOME_CONDITION_VALUES = new Set<BookingHomeCondition>([
@@ -332,15 +400,39 @@ export function normalizeBookingAppliancePresenceForPayload(
 }
 
 export function isHomeDetailsComplete(
-  s: Pick<BookingFlowState, "homeSize" | "bedrooms" | "bathrooms">,
+  s: Pick<
+    BookingFlowState,
+    | "homeSize"
+    | "bedrooms"
+    | "bathrooms"
+    | "halfBathrooms"
+    | "intakeFloors"
+    | "intakeStairsFlights"
+    | "floorMix"
+    | "layoutType"
+    | "occupancyLevel"
+    | "childrenInHome"
+    | "petImpactLevel"
+  >,
 ): boolean {
   const size = normalizeBookingHomeSizeParam(s.homeSize);
-  return (
-    !!size &&
-    Number(size) >= 300 &&
-    !!String(s.bedrooms ?? "").trim() &&
-    !!String(s.bathrooms ?? "").trim()
-  );
+  if (
+    !size ||
+    Number(size) < 300 ||
+    !String(s.bedrooms ?? "").trim() ||
+    !String(s.bathrooms ?? "").trim()
+  ) {
+    return false;
+  }
+  if (!s.halfBathrooms) return false;
+  if (!s.intakeFloors) return false;
+  if (!s.intakeStairsFlights) return false;
+  if (!s.floorMix) return false;
+  if (!s.layoutType) return false;
+  if (!s.occupancyLevel) return false;
+  if (!s.childrenInHome) return false;
+  if (!s.petImpactLevel) return false;
+  return true;
 }
 
 export function isScheduleDetailsComplete(
@@ -853,6 +945,14 @@ export function hasUrlBookingShapeBeyondColdStart(
     "bedrooms",
     "bathrooms",
     "pets",
+    BOOKING_URL_HOME_HALF_BATH,
+    BOOKING_URL_HOME_INTAKE_FLOORS,
+    BOOKING_URL_HOME_STAIRS_FLIGHTS,
+    BOOKING_URL_HOME_FLOOR_MIX,
+    BOOKING_URL_HOME_LAYOUT_TYPE,
+    BOOKING_URL_HOME_OCCUPANCY,
+    BOOKING_URL_HOME_CHILDREN,
+    BOOKING_URL_HOME_PET_IMPACT,
     BOOKING_URL_HOME_CONDITION,
     BOOKING_URL_HOME_PROBLEMS,
     BOOKING_URL_HOME_SURFACE,
@@ -956,6 +1056,30 @@ export function buildBookingSearchParams(state: BookingFlowState) {
   if (state.bathrooms.trim()) params.set("bathrooms", state.bathrooms.trim());
   const pets = normalizeBookingPetsParam(state.pets);
   if (pets) params.set("pets", pets);
+  if (state.halfBathrooms) {
+    params.set(BOOKING_URL_HOME_HALF_BATH, state.halfBathrooms);
+  }
+  if (state.intakeFloors) {
+    params.set(BOOKING_URL_HOME_INTAKE_FLOORS, state.intakeFloors);
+  }
+  if (state.intakeStairsFlights) {
+    params.set(BOOKING_URL_HOME_STAIRS_FLIGHTS, state.intakeStairsFlights);
+  }
+  if (state.floorMix) {
+    params.set(BOOKING_URL_HOME_FLOOR_MIX, state.floorMix);
+  }
+  if (state.layoutType) {
+    params.set(BOOKING_URL_HOME_LAYOUT_TYPE, state.layoutType);
+  }
+  if (state.occupancyLevel) {
+    params.set(BOOKING_URL_HOME_OCCUPANCY, state.occupancyLevel);
+  }
+  if (state.childrenInHome) {
+    params.set(BOOKING_URL_HOME_CHILDREN, state.childrenInHome);
+  }
+  if (state.petImpactLevel) {
+    params.set(BOOKING_URL_HOME_PET_IMPACT, state.petImpactLevel);
+  }
   if (state.frequency) params.set("frequency", String(state.frequency).trim());
   if (state.preferredTime) {
     params.set("preferredTime", String(state.preferredTime).trim());
@@ -1034,6 +1158,14 @@ export type ParsedBookingIntakeFields = Pick<
   | "bedrooms"
   | "bathrooms"
   | "pets"
+  | "halfBathrooms"
+  | "intakeFloors"
+  | "intakeStairsFlights"
+  | "floorMix"
+  | "layoutType"
+  | "occupancyLevel"
+  | "childrenInHome"
+  | "petImpactLevel"
   | "condition"
   | "problemAreas"
   | "surfaceComplexity"
@@ -1085,6 +1217,30 @@ export function parseIntakeFieldsFromSearchParams(
       getParamValue(searchParams, "bathrooms").trim(),
     ),
     pets: normalizeBookingPetsParam(getParamValue(searchParams, "pets")),
+    halfBathrooms: parseBookingHalfBathroomsParam(
+      getParamValue(searchParams, BOOKING_URL_HOME_HALF_BATH),
+    ),
+    intakeFloors: parseBookingIntakeFloorsParam(
+      getParamValue(searchParams, BOOKING_URL_HOME_INTAKE_FLOORS),
+    ),
+    intakeStairsFlights: parseBookingIntakeStairsFlightsParam(
+      getParamValue(searchParams, BOOKING_URL_HOME_STAIRS_FLIGHTS),
+    ),
+    floorMix: parseBookingFloorMixParam(
+      getParamValue(searchParams, BOOKING_URL_HOME_FLOOR_MIX),
+    ),
+    layoutType: parseBookingLayoutTypeParam(
+      getParamValue(searchParams, BOOKING_URL_HOME_LAYOUT_TYPE),
+    ),
+    occupancyLevel: parseBookingOccupancyLevelParam(
+      getParamValue(searchParams, BOOKING_URL_HOME_OCCUPANCY),
+    ),
+    childrenInHome: parseBookingChildrenInHomeParam(
+      getParamValue(searchParams, BOOKING_URL_HOME_CHILDREN),
+    ),
+    petImpactLevel: parseBookingPetImpactLevelParam(
+      getParamValue(searchParams, BOOKING_URL_HOME_PET_IMPACT),
+    ),
     condition: parseBookingHomeConditionParam(
       getParamValue(searchParams, BOOKING_URL_HOME_CONDITION),
     ),
@@ -1240,6 +1396,14 @@ export function appendPublicIntakeContextToSearchParams(
     | "bedrooms"
     | "bathrooms"
     | "pets"
+    | "halfBathrooms"
+    | "intakeFloors"
+    | "intakeStairsFlights"
+    | "floorMix"
+    | "layoutType"
+    | "occupancyLevel"
+    | "childrenInHome"
+    | "petImpactLevel"
     | "condition"
     | "problemAreas"
     | "surfaceComplexity"
@@ -1270,6 +1434,30 @@ export function appendPublicIntakeContextToSearchParams(
   if (state.bathrooms.trim()) q.set("bathrooms", state.bathrooms.trim());
   const pets = normalizeBookingPetsParam(state.pets);
   if (pets) q.set("pets", pets);
+  if (state.halfBathrooms) {
+    q.set(BOOKING_URL_HOME_HALF_BATH, state.halfBathrooms);
+  }
+  if (state.intakeFloors) {
+    q.set(BOOKING_URL_HOME_INTAKE_FLOORS, state.intakeFloors);
+  }
+  if (state.intakeStairsFlights) {
+    q.set(BOOKING_URL_HOME_STAIRS_FLIGHTS, state.intakeStairsFlights);
+  }
+  if (state.floorMix) {
+    q.set(BOOKING_URL_HOME_FLOOR_MIX, state.floorMix);
+  }
+  if (state.layoutType) {
+    q.set(BOOKING_URL_HOME_LAYOUT_TYPE, state.layoutType);
+  }
+  if (state.occupancyLevel) {
+    q.set(BOOKING_URL_HOME_OCCUPANCY, state.occupancyLevel);
+  }
+  if (state.childrenInHome) {
+    q.set(BOOKING_URL_HOME_CHILDREN, state.childrenInHome);
+  }
+  if (state.petImpactLevel) {
+    q.set(BOOKING_URL_HOME_PET_IMPACT, state.petImpactLevel);
+  }
   if (state.frequency) q.set("frequency", String(state.frequency).trim());
   if (state.preferredTime) {
     q.set("preferredTime", String(state.preferredTime).trim());
@@ -1456,6 +1644,7 @@ export function writeBookingConfirmationSessionSnapshot(
       BOOKING_CONFIRMATION_SESSION_KEY,
       JSON.stringify(payload),
     );
+    window.dispatchEvent(new CustomEvent("bookingSessionUpdated"));
   } catch {
     // quota / private mode
   }

@@ -369,14 +369,18 @@ export function buildIntakeEstimateFactorsFromBookingHomeState(
     addonIds: [...BOOKING_INTAKE_DEFAULT_ESTIMATE_FACTORS.addonIds],
   };
 
-  f.halfBathrooms = state.halfBathrooms;
-  f.floors = state.intakeFloors;
-  f.stairsFlights = state.intakeStairsFlights;
-  f.floorMix = state.floorMix;
-  f.layoutType = state.layoutType;
-  f.occupancyLevel = state.occupancyLevel;
-  f.childrenInHome = state.childrenInHome;
-  f.petImpact = state.petImpactLevel;
+  f.halfBathrooms =
+    state.halfBathrooms as BookingIntakeEstimateFactors["halfBathrooms"];
+  f.floors = state.intakeFloors as BookingIntakeEstimateFactors["floors"];
+  f.stairsFlights =
+    state.intakeStairsFlights as BookingIntakeEstimateFactors["stairsFlights"];
+  f.floorMix = state.floorMix as BookingIntakeEstimateFactors["floorMix"];
+  f.layoutType = state.layoutType as BookingIntakeEstimateFactors["layoutType"];
+  f.occupancyLevel =
+    state.occupancyLevel as BookingIntakeEstimateFactors["occupancyLevel"];
+  f.childrenInHome =
+    state.childrenInHome as BookingIntakeEstimateFactors["childrenInHome"];
+  f.petImpact = state.petImpactLevel as BookingIntakeEstimateFactors["petImpact"];
   f.overallLaborCondition = state.overallLaborCondition;
   f.kitchenIntensity = state.kitchenIntensity;
   f.bathroomComplexity = state.bathroomComplexity;

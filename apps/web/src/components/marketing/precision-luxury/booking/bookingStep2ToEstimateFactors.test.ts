@@ -4,10 +4,11 @@ import {
   buildIntakeEstimateFactorsFromBookingHomeState,
 } from "./bookingStep2ToEstimateFactors";
 import type { BookingFlowState } from "./bookingFlowTypes";
-import { defaultBookingFlowState } from "./bookingFlowData";
+import { defaultBookingFlowState, bookingHomeLayer1BaselineComplete } from "./bookingFlowData";
 
 const baseState = (): BookingFlowState => ({
   ...defaultBookingFlowState,
+  ...bookingHomeLayer1BaselineComplete,
   step: "review",
   serviceId: "recurring-home-cleaning",
   homeSize: "2200",

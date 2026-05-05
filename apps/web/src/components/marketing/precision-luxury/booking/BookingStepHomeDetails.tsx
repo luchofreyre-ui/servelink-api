@@ -53,9 +53,9 @@ import {
   isDeepCleaningBookingServiceId,
 } from "./bookingDeepClean";
 import {
+  isHomeDetailsComplete,
   normalizeBookingAddOnsForPayload,
   normalizeBookingAppliancePresenceForPayload,
-  normalizeBookingHomeSizeParam,
 } from "./bookingUrlState";
 import { BOOKING_HOME_SIZE_RANGE_OPTIONS } from "./bookingHomeSizeRanges";
 
@@ -75,13 +75,10 @@ export function BookingStepHomeDetails({
   const visitContextSectionRef = useRef<HTMLDivElement | null>(null);
   const prevCoreHomeCompleteRef = useRef(false);
 
-  const homeSizeOk = Boolean(normalizeBookingHomeSizeParam(state.homeSize));
-  const bedroomsOk = Boolean(String(state.bedrooms ?? "").trim());
-  const bathroomsOk = Boolean(String(state.bathrooms ?? "").trim());
-  const coreHomeComplete = homeSizeOk && bedroomsOk && bathroomsOk;
+  const layer1Complete = isHomeDetailsComplete(state);
 
   useEffect(() => {
-    if (coreHomeComplete && !prevCoreHomeCompleteRef.current) {
+    if (layer1Complete && !prevCoreHomeCompleteRef.current) {
       try {
         visitContextSectionRef.current?.scrollIntoView({
           behavior: "smooth",
@@ -91,8 +88,8 @@ export function BookingStepHomeDetails({
         /* jsdom may not implement scrollIntoView options */
       }
     }
-    prevCoreHomeCompleteRef.current = coreHomeComplete;
-  }, [coreHomeComplete]);
+    prevCoreHomeCompleteRef.current = layer1Complete;
+  }, [layer1Complete]);
 
   const bedroomOptions: BookingSelectFieldOption[] = [
     "",
@@ -105,6 +102,7 @@ export function BookingStepHomeDetails({
   ];
 
   const halfBathOptions: BookingSelectFieldOption[] = [
+    { value: "", label: "Select half bathrooms" },
     { value: "0", label: "None" },
     { value: "1", label: "One half bath" },
     { value: "2_plus", label: "Two or more half baths" },
@@ -363,6 +361,7 @@ export function BookingStepHomeDetails({
                 })
               }
               options={[
+                { value: "", label: "Select levels / stairs context" },
                 { value: "1", label: "Single level" },
                 { value: "2", label: "Two levels" },
                 { value: "3_plus", label: "Three or more levels" },
@@ -379,6 +378,7 @@ export function BookingStepHomeDetails({
                 })
               }
               options={[
+                { value: "", label: "Select interior stair flights" },
                 { value: "none", label: "None" },
                 { value: "one", label: "One flight" },
                 { value: "two_plus", label: "Two or more flights" },
