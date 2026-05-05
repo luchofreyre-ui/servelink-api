@@ -132,9 +132,9 @@ describe("RecurringPlanService V1", () => {
 
     const data = prisma.recurringPlan.create.mock.calls[0][0].data;
     expect(data.cadence).toBe("biweekly");
-    expect(data.discountPercent).toBe(30);
-    expect(data.estimatedMinutes).toBe(126);
-    expect(data.pricePerVisitCents).toBe(35000);
+    expect(data.discountPercent).toBe(35);
+    expect(data.estimatedMinutes).toBe(117);
+    expect(data.pricePerVisitCents).toBe(32500);
     expect(data.startAt).toBeInstanceOf(Date);
     expect(data.nextRunAt).toBeInstanceOf(Date);
     expect(data.nextRunAt.toISOString()).toBe("2030-01-15T10:00:00.000Z");
@@ -168,8 +168,8 @@ describe("RecurringPlanService V1", () => {
 
     const data = prisma.recurringPlan.create.mock.calls[0][0].data;
     expect(data.cadence).toBe("every_10_days");
-    expect(data.estimatedMinutes).toBe(119);
-    expect(data.pricePerVisitCents).toBe(33056);
+    expect(data.estimatedMinutes).toBe(108);
+    expect(data.pricePerVisitCents).toBe(30000);
     expect(data.nextRunAt.toISOString()).toBe("2030-01-11T10:00:00.000Z");
   });
 
@@ -223,7 +223,7 @@ describe("RecurringPlanService V1", () => {
       cadence: "weekly",
     })[0];
 
-    expect(cleanQuote.recurringPriceCents).toBe(30000);
+    expect(cleanQuote.recurringPriceCents).toBe(27500);
     expect(maintenanceQuote.recurringPriceCents).toBeGreaterThan(
       cleanQuote.recurringPriceCents,
     );

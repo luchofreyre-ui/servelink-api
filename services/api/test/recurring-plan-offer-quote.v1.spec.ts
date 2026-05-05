@@ -74,7 +74,7 @@ describe("RecurringPlanService offer quote V1", () => {
       "biweekly",
       "monthly",
     ]);
-    expect(quotes[0].recurringPriceCents).toBe(33056);
+    expect(quotes[0].recurringPriceCents).toBe(30000);
   });
 
   it("prices weekly below every_10_days below biweekly below monthly", () => {
@@ -137,8 +137,8 @@ describe("RecurringPlanService offer quote V1", () => {
       cadence: "weekly",
     })[0];
 
-    expect(heavy.recurringPriceCents).toBe(37500);
-    expect(heavy.discountPercent).toBe(25);
+    expect(heavy.recurringPriceCents).toBe(30000);
+    expect(heavy.discountPercent).toBe(40);
   });
 
   it("loads booking quote without requiring completed or assigned status", async () => {
@@ -158,7 +158,7 @@ describe("RecurringPlanService offer quote V1", () => {
     ).resolves.toEqual([
       expect.objectContaining({
         cadence: "every_10_days",
-        recurringPriceCents: 33056,
+        recurringPriceCents: 30000,
       }),
     ]);
   });
@@ -169,5 +169,90 @@ describe("RecurringPlanService offer quote V1", () => {
     await expect(service.getOfferQuoteForBooking("missing")).rejects.toThrow(
       new BadRequestException("BOOKING_NOT_FOUND"),
     );
+  });
+
+  describe("V2.1 recurring baseline + hard cap invariants", () => {
+    const heavyMaintenanceSnapshot = {
+      outputJson: {
+        kitchenIntensity: "heavy_use",
+        clutterAccess: "heavy_clutter",
+        petImpact: "heavy",
+        occupantCount: 5,
+      },
+    };
+
+    it("worst-realistic monthly recurring stays below first clean and cap (75%)", () => {
+      const service = createService();
+      const firstCleanPriceCents = 165_100;
+      const estimatedMinutes = 381;
+
+      const quote = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        estimateSnapshot: heavyMaintenanceSnapshot,
+        cadence: "monthly",
+      })[0];
+
+      expect(quote.estimatedMinutes).toBeLessThan(estimatedMinutes);
+      expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
+      expect(quote.estimatedMinutes).toBeLessThanOrEqual(
+        Math.floor(estimatedMinutes * 0.75),
+      );
+    });
+
+    it("heavy reset biweekly recurring respects 70% minute hard cap", () => {
+      const service = createService();
+      const estimatedMinutes = 298;
+      const firstCleanPriceCents = 129_134;
+
+      const quote = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        estimateSnapshot: heavyMaintenanceSnapshot,
+        cadence: "biweekly",
+      })[0];
+
+      expect(quote.estimatedMinutes).toBeLessThanOrEqual(
+        Math.floor(estimatedMinutes * 0.7),
+      );
+      expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
+    });
+
+    it("weekly standard deep-clean preview stays plausible under 60% cap", () => {
+      const service = createService();
+      const estimatedMinutes = 149;
+      const firstCleanPriceCents = 401_92;
+
+      const quote = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        estimateSnapshot: {
+          outputJson: { kitchenIntensity: "moderate_use" },
+        },
+        cadence: "weekly",
+      })[0];
+
+      expect(quote.estimatedMinutes).toBeGreaterThan(0);
+      expect(quote.estimatedMinutes).toBeLessThanOrEqual(
+        Math.floor(estimatedMinutes * 0.6),
+      );
+      expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
+    });
+
+    it("minimal maintenance weekly does not collapse", () => {
+      const service = createService();
+      const estimatedMinutes = 139;
+      const firstCleanPriceCents = 150_59;
+
+      const quote = service.getRecurringOfferQuote({
+        firstCleanPriceCents,
+        estimatedMinutes,
+        cadence: "weekly",
+      })[0];
+
+      expect(quote.estimatedMinutes).toBeGreaterThan(60);
+      expect(quote.estimatedMinutes).toBeLessThan(estimatedMinutes);
+      expect(quote.recurringPriceCents).toBeLessThan(firstCleanPriceCents);
+    });
   });
 });
