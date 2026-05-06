@@ -102,4 +102,184 @@ describe("EstimatorService labor model (unit)", () => {
     expect(large.recommendedTeamSize).toBeGreaterThanOrEqual(small.recommendedTeamSize);
     expect(large.adjustedLaborMinutes).toBeGreaterThan(small.adjustedLaborMinutes);
   });
+
+  it("V2.4 heavy deep clean stays materially above standard with service-aware drag (bounded ratio, not V2.3-compressed)", async () => {
+    const standard = await svc.estimate(
+      baseInput({
+        service_type: "deep_clean",
+        clutter_level: "light",
+        kitchen_condition: "normal",
+        bathroom_condition: "normal",
+        pet_presence: "none",
+        overall_labor_condition: "normal_lived_in",
+      }),
+    );
+
+    const heavy = await svc.estimate(
+      baseInput({
+        service_type: "deep_clean",
+        clutter_level: "heavy",
+        kitchen_condition: "heavy_grease",
+        bathroom_condition: "heavy_scale",
+        pet_presence: "multiple",
+        pet_shedding: "high",
+        pet_impact: "heavy",
+        overall_labor_condition: "major_reset",
+        last_professional_clean: "6_plus_months",
+      }),
+    );
+
+    expect(heavy.adjustedLaborMinutes).toBeGreaterThan(standard.adjustedLaborMinutes);
+    const ratio = heavy.adjustedLaborMinutes / standard.adjustedLaborMinutes;
+    expect(ratio).toBeLessThan(2.25);
+    // Wider spread than V2.3 universal clamp allowed for deep reset backlog.
+    expect(ratio).toBeGreaterThan(1.12);
+  });
+
+  it("V2.4 maintenance heavy stays controlled and below deep clean for same heavy stress inputs", async () => {
+    const stress = {
+      clutter_level: "heavy" as const,
+      kitchen_condition: "heavy_grease" as const,
+      bathroom_condition: "heavy_scale" as const,
+      pet_presence: "multiple" as const,
+      pet_shedding: "high" as const,
+      pet_impact: "heavy" as const,
+      overall_labor_condition: "major_reset" as const,
+      last_professional_clean: "6_plus_months" as const,
+    };
+
+    const heavyMaint = await svc.estimate(baseInput({ service_type: "maintenance", ...stress }));
+    const standardMaint = await svc.estimate(
+      baseInput({
+        service_type: "maintenance",
+        clutter_level: "light",
+        kitchen_condition: "normal",
+        bathroom_condition: "normal",
+        pet_presence: "none",
+        overall_labor_condition: "normal_lived_in",
+      }),
+    );
+    const heavyDeep = await svc.estimate(baseInput({ service_type: "deep_clean", ...stress }));
+
+    expect(heavyMaint.adjustedLaborMinutes).toBeGreaterThan(standardMaint.adjustedLaborMinutes);
+    expect(heavyMaint.adjustedLaborMinutes / standardMaint.adjustedLaborMinutes).toBeLessThan(1.65);
+    expect(heavyDeep.adjustedLaborMinutes).toBeGreaterThan(heavyMaint.adjustedLaborMinutes);
+  });
+
+  it("V2.4 deep clean exceeds maintenance for the same home (no add-ons)", async () => {
+    const home = {
+      clutter_level: "light" as const,
+      kitchen_condition: "normal" as const,
+      bathroom_condition: "normal" as const,
+      pet_presence: "none" as const,
+      overall_labor_condition: "normal_lived_in" as const,
+    };
+
+    const maintenance = await svc.estimate(baseInput({ service_type: "maintenance", addons: [], ...home }));
+    const deep = await svc.estimate(baseInput({ service_type: "deep_clean", addons: [], ...home }));
+
+    expect(deep.adjustedLaborMinutes).toBeGreaterThan(maintenance.adjustedLaborMinutes);
+  });
+
+  it("V2.4 move-out heavy beats maintenance and does not eclipse deep-clean stress on comparable scope", async () => {
+    const home = {
+      sqft_band: "1600_1999" as const,
+      bedrooms: "3" as const,
+      bathrooms: "2" as const,
+      floors: "2" as const,
+      stairs_flights: "one" as const,
+      first_time_with_servelink: "yes" as const,
+      clutter_level: "heavy" as const,
+      kitchen_condition: "heavy_grease" as const,
+      bathroom_condition: "heavy_scale" as const,
+      pet_presence: "multiple" as const,
+      pet_impact: "heavy" as const,
+      overall_labor_condition: "major_reset" as const,
+      last_professional_clean: "6_plus_months" as const,
+      addons: [],
+    };
+
+    const maint = await svc.estimate(
+      baseInput({
+        ...home,
+        service_type: "maintenance",
+        first_time_with_servelink: "no",
+      }),
+    );
+
+    const moveOut = await svc.estimate(
+      baseInput({
+        ...home,
+        service_type: "move_out",
+        occupancy_state: "vacant",
+      }),
+    );
+
+    const deepStress = await svc.estimate(
+      baseInput({
+        ...home,
+        service_type: "deep_clean",
+        occupancy_state: "occupied_cluttered",
+        floor_visibility: "some_obstacles",
+      }),
+    );
+
+    expect(moveOut.adjustedLaborMinutes).toBeGreaterThan(maint.adjustedLaborMinutes);
+    expect(deepStress.adjustedLaborMinutes).toBeGreaterThanOrEqual(moveOut.adjustedLaborMinutes);
+  });
+
+  it("V2.4 recently maintained easy maintenance lowers labor vs normal lived-in (same structure)", async () => {
+    const easy = await svc.estimate(
+      baseInput({
+        overall_labor_condition: "recently_maintained",
+        pet_presence: "none",
+        kitchen_condition: "light",
+        bathroom_condition: "light",
+        clutter_level: "minimal",
+      }),
+    );
+
+    const normal = await svc.estimate(
+      baseInput({
+        overall_labor_condition: "normal_lived_in",
+        pet_presence: "none",
+        kitchen_condition: "normal",
+        bathroom_condition: "normal",
+        clutter_level: "light",
+      }),
+    );
+
+    expect(easy.adjustedLaborMinutes).toBeLessThan(normal.adjustedLaborMinutes);
+  });
+
+  it("V2.4 worst-case deep clean stays high but below pre–V2.3 stacked-chain reference (~1355 adj labor)", async () => {
+    const worst = await svc.estimate(
+      baseInput({
+        service_type: "deep_clean",
+        sqft_band: "3000_3499",
+        bedrooms: "4",
+        bathrooms: "3",
+        half_bathrooms: "1",
+        floors: "2",
+        stairs_flights: "two_plus",
+        first_time_with_servelink: "yes",
+        clutter_level: "heavy",
+        kitchen_condition: "heavy_grease",
+        bathroom_condition: "heavy_scale",
+        glass_showers: "multiple",
+        pet_presence: "multiple",
+        pet_shedding: "high",
+        pet_impact: "heavy",
+        pet_accidents_or_litter_areas: "yes",
+        occupancy_state: "occupied_cluttered",
+        floor_visibility: "lots_of_items",
+        overall_labor_condition: "major_reset",
+        addons: ["inside_oven", "inside_fridge", "interior_windows"],
+        last_professional_clean: "6_plus_months",
+      }),
+    );
+
+    expect(worst.adjustedLaborMinutes).toBeGreaterThan(650);
+    expect(worst.adjustedLaborMinutes).toBeLessThan(1355);
+  });
 });

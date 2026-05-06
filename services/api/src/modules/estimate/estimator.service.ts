@@ -398,42 +398,6 @@ const SERVICE_TYPE_LABOR_MULTIPLIER: Record<ServiceType, number> = {
   move_out: 1.3,
 };
 
-const LAST_PRO_CLEAN_MULTIPLIER: Record<
-  NonNullable<EstimateInput["last_professional_clean"]>,
-  number
-> = {
-  under_2_weeks: 0.92,
-  "2_4_weeks": 0.97,
-  "1_3_months": 1.0,
-  "3_6_months": 1.16,
-  "6_plus_months": 1.28,
-  not_sure: 1.08,
-};
-
-const CLUTTER_LABOR_MULTIPLIER: Record<ClutterLevel, number> = {
-  minimal: 1.0,
-  light: 1.03,
-  moderate: 1.08,
-  heavy: 1.18,
-  not_sure: 1.1,
-};
-
-const PET_HAIR_LABOR_MULTIPLIER: Record<SheddingLevel | "none", number> = {
-  none: 1.0,
-  low: 1.02,
-  medium: 1.06,
-  high: 1.15,
-  not_sure: 1.08,
-};
-
-const CONDITION_LABOR_MULTIPLIER = {
-  light: 0.95,
-  normal: 1.0,
-  heavy_grease: 1.18,
-  heavy_scale: 1.18,
-  not_sure: 1.08,
-} as const;
-
 const TEAM_EFFICIENCY: Record<number, number> = {
   1: 1.0,
   2: 1.8,
@@ -513,44 +477,6 @@ const SURFACE_DETAIL_MINUTES: Record<string, number> = {
   detailed_trim: 16,
   many_touchpoints: 12,
 };
-
-/**
- * Multiplier derived from explicit three-layer intake answers (orthogonal to
- * legacy clutter/kitchen/bath tokens, which remain authoritative for risk tables).
- */
-function layeredIntakeLaborMultiplier(input: EstimateInput): number {
-  let m = 1;
-  const c = input.overall_labor_condition;
-  if (c === "recently_maintained") m *= 0.94;
-  else if (c === "behind_weeks") m *= 1.06;
-  else if (c === "major_reset") m *= 1.14;
-
-  const intent = input.primary_cleaning_intent;
-  if (intent === "maintenance_clean") m *= 0.94;
-  else if (intent === "reset_level") m *= 1.1;
-
-  const layout = input.layout_type;
-  if (layout === "segmented") m *= 1.04;
-  else if (layout === "open_plan") m *= 0.99;
-
-  if (input.children_in_home === "yes") m *= 1.03;
-
-  const petImpact = input.pet_impact;
-  if (petImpact === "light") m *= 1.02;
-  else if (petImpact === "heavy") m *= 1.06;
-
-  const prog = input.first_time_visit_program;
-  if (prog === "two_visit") m *= 1.05;
-  else if (prog === "three_visit") m *= 1.08;
-
-  const cad = input.recurring_cadence_intent;
-  if (cad === "weekly") m *= 0.98;
-  else if (cad === "monthly") m *= 1.02;
-
-  if (input.bathroom_complexity === "moderate_detailing") m *= 1.02;
-
-  return m;
-}
 
 function floorCount(value: Floors): number {
   switch (value) {
@@ -976,6 +902,136 @@ function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
 }
 
+/** V2.4: service-aware bounded whole-job drag (replaces stacked labor multipliers). */
+type DragBounds = {
+  min: number;
+  max: number;
+};
+
+function dragBoundsForService(service: ServiceType): DragBounds {
+  if (service === "maintenance") return { min: 0.9, max: 1.25 };
+  if (service === "deep_clean") return { min: 1.0, max: 1.7 };
+  if (service === "move_in" || service === "move_out") {
+    return { min: 1.05, max: 1.6 };
+  }
+  return { min: 0.9, max: 1.35 };
+}
+
+function serviceTypeDrag(service: ServiceType): number {
+  if (service === "maintenance") return 1.0;
+  if (service === "deep_clean") return 1.24;
+  if (service === "move_in" || service === "move_out") return 1.15;
+  return 1.0;
+}
+
+function conditionDragFromInput(input: EstimateInput): number {
+  let drag = 1.0;
+
+  if (input.overall_labor_condition === "recently_maintained") drag -= 0.04;
+  else if (input.overall_labor_condition === "behind_weeks") drag += 0.05;
+  else if (input.overall_labor_condition === "major_reset") drag += 0.1;
+
+  const kitchenHeavy = input.kitchen_condition === "heavy_grease";
+  const bathroomHeavy = input.bathroom_condition === "heavy_scale";
+
+  if (kitchenHeavy || bathroomHeavy) drag += 0.06;
+  else if (input.kitchen_condition === "light" && input.bathroom_condition === "light") drag -= 0.03;
+
+  return clamp(drag, 0.94, 1.16);
+}
+
+function accessDragFromInput(input: EstimateInput): number {
+  if (input.clutter_level === "minimal") return 0.96;
+  if (input.clutter_level === "light") return 1.0;
+  if (input.clutter_level === "moderate") return 1.07;
+  if (input.clutter_level === "heavy") return 1.14;
+  if (input.clutter_level === "not_sure") return 1.08;
+  return 1.0;
+}
+
+function petDragFromInput(input: EstimateInput): number {
+  if (input.pet_presence === "none" && input.pet_impact !== "light" && input.pet_impact !== "heavy") {
+    return 0.98;
+  }
+
+  if (input.pet_impact === "heavy") return 1.08;
+  if (input.pet_impact === "light") return 1.03;
+
+  if (input.pet_presence === "multiple") return 1.06;
+  if (input.pet_presence === "one") return 1.03;
+
+  return 1.0;
+}
+
+function recencyDragFromInput(input: EstimateInput): number {
+  const legacy = input.last_professional_clean;
+  if (legacy === "under_2_weeks" || legacy === "2_4_weeks") return 0.97;
+  if (legacy === "1_3_months") return 1.0;
+  if (legacy === "3_6_months" || legacy === "6_plus_months" || legacy === "not_sure") {
+    return 1.08;
+  }
+
+  const rec = input.last_pro_clean_recency;
+  if (rec === "within_30_days") return 0.97;
+  if (rec === "days_30_90") return 1.0;
+  if (rec === "days_90_plus" || rec === "unknown_or_not_recently") return 1.08;
+
+  return 1.0;
+}
+
+function normalizedWholeJobDrag(input: EstimateInput): number {
+  const service = input.service_type;
+  const bounds = dragBoundsForService(service);
+
+  const serviceDrag = serviceTypeDrag(service);
+  const conditionDrag = conditionDragFromInput(input);
+  const accessDrag = accessDragFromInput(input);
+  const petDrag = petDragFromInput(input);
+  const recencyDrag = recencyDragFromInput(input);
+
+  let drag = 1;
+
+  if (service === "maintenance") {
+    drag =
+      1 +
+      (conditionDrag - 1) * 0.7 +
+      (accessDrag - 1) * 0.7 +
+      (petDrag - 1) * 0.7;
+    return clamp(drag, bounds.min, bounds.max);
+  }
+
+  if (service === "deep_clean") {
+    drag =
+      1 +
+      (serviceDrag - 1) +
+      (conditionDrag - 1) * 1.15 +
+      (accessDrag - 1) * 1.0 +
+      (petDrag - 1) * 0.9 +
+      (recencyDrag - 1) * 0.35;
+    return clamp(drag, bounds.min, bounds.max);
+  }
+
+  if (service === "move_in" || service === "move_out") {
+    drag =
+      1 +
+      (serviceDrag - 1) +
+      (conditionDrag - 1) * 0.8 +
+      (accessDrag - 1) * 0.4 +
+      (petDrag - 1) * 0.4;
+    return clamp(drag, bounds.min, bounds.max);
+  }
+
+  drag =
+    1 +
+    (serviceDrag - 1) +
+    (conditionDrag - 1) +
+    (accessDrag - 1) +
+    (petDrag - 1) +
+    (recencyDrag - 1);
+
+  return clamp(drag, bounds.min, bounds.max);
+}
+
 function validateEstimateInputForExecution(input: EstimateInput): void {
   if (!(input.sqft_band in BASE_MIN_BY_SQFT)) {
     throw new EstimatorInputValidationError(
@@ -1241,25 +1297,8 @@ export class EstimatorService {
       Math.max(0, floorsCount - 1) * 12 +
       addOnLaborMinutes(input.addons);
 
-    const kitchenLaborMultiplier = CONDITION_LABOR_MULTIPLIER[input.kitchen_condition];
-    const bathroomLaborMultiplier = CONDITION_LABOR_MULTIPLIER[input.bathroom_condition];
-    const conditionLaborMultiplier = Math.max(kitchenLaborMultiplier, bathroomLaborMultiplier);
-
-    const petHairMultiplier =
-      input.pet_presence === "none"
-        ? PET_HAIR_LABOR_MULTIPLIER.none
-        : PET_HAIR_LABOR_MULTIPLIER[input.pet_shedding ?? "not_sure"];
-
-    const layerMultiplier = layeredIntakeLaborMultiplier(input);
-
     const baseAdjustedLaborMinutes = Math.round(
-      baseLaborMinutes *
-        SERVICE_TYPE_LABOR_MULTIPLIER[input.service_type] *
-        LAST_PRO_CLEAN_MULTIPLIER[input.last_professional_clean ?? "1_3_months"] *
-        CLUTTER_LABOR_MULTIPLIER[input.clutter_level] *
-        conditionLaborMultiplier *
-        petHairMultiplier *
-        layerMultiplier,
+      baseLaborMinutes * normalizedWholeJobDrag(input),
     );
 
     let adjustedLaborMinutes = baseAdjustedLaborMinutes;
