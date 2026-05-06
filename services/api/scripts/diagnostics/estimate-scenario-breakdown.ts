@@ -261,10 +261,7 @@ function recurringSnapshotForLoad(input: EstimateInput) {
 async function main() {
   console.log("=== ESTIMATE SCENARIO BREAKDOWN (diagnostic) ===\n");
   console.log(
-    "Estimator V2.2 candidate — lived-in recurring maintenance load (V2.1 cadence baselines + hard caps × lived-in load; read-only diagnostic).\n",
-  );
-  console.log(
-    "Estimator: V2.1 stabilization (e.g. deep_clean labor multiplier 1.20). Recurring = baselineRatio × livedInLoad × first-clean minutes, then hard cap; price scales by minutes ratio.\n",
+    "Estimator V2.4 candidate — service-aware normalized whole-job drag (labor = baseLaborMinutes × service-bounded drag; recurring V2.2 lived-in + V2.1 baselines/caps).\n",
   );
 
   for (const sc of scenarios) {
@@ -327,7 +324,7 @@ async function main() {
       console.log(`  estimatedMinutes (recurring): ${q.estimatedMinutes} | capPinned: ${capPinned}`);
       console.log(`  recurringPriceCents: ${q.recurringPriceCents} (${dollars(q.recurringPriceCents)})`);
       console.log(`  firstCleanPriceCents: ${q.firstCleanPriceCents} | savingsCents: ${q.savingsCents} | discountPercent: ${q.discountPercent}`);
-      console.log("\n  Recurring ratio (V2.2 candidate):");
+      console.log("\n  Recurring ratio (V2.2 lived-in load; first-clean from V2.4 labor):");
       console.log(`    minutesRatio: ${pctRatio(q.estimatedMinutes, dur)}`);
       console.log(`    priceRatio: ${pctRatio(q.recurringPriceCents, q.firstCleanPriceCents)}`);
     }
