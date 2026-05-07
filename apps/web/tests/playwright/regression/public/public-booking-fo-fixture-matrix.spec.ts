@@ -21,6 +21,23 @@ const FO = {
 const FIXTURE_CUSTOMER_EMAIL = "public_booking_fixture_customer@servelink.test";
 const apiRoot = path.resolve(process.cwd(), "../../services/api");
 
+/**
+ * Layer-1 home fields required by {@link isHomeDetailsComplete} + V2.2/V2.4 estimate
+ * factors (mirrors `bookingHomeLayer1BaselineComplete` in bookingFlowData).
+ * Without these, `step=review` is clamped back to Home Details and the flow never reaches
+ * “Review your direction”.
+ */
+const BOOKING_URL_HOME_LAYER1_BASELINE = {
+  halfBath: "0",
+  homeFloors: "1",
+  homeStairs: "none",
+  homeFloorMix: "mixed",
+  homeLayout: "mixed",
+  homeOccupancy: "ppl_1_2",
+  homeChildren: "no",
+  homePetImpact: "none",
+} as const;
+
 function bookingUrl(opts: {
   service: string;
   pubPath: string;
@@ -37,6 +54,14 @@ function bookingUrl(opts: {
   q.set("homeSize", "1500");
   q.set("bedrooms", "2");
   q.set("bathrooms", "2");
+  q.set("halfBath", BOOKING_URL_HOME_LAYER1_BASELINE.halfBath);
+  q.set("homeFloors", BOOKING_URL_HOME_LAYER1_BASELINE.homeFloors);
+  q.set("homeStairs", BOOKING_URL_HOME_LAYER1_BASELINE.homeStairs);
+  q.set("homeFloorMix", BOOKING_URL_HOME_LAYER1_BASELINE.homeFloorMix);
+  q.set("homeLayout", BOOKING_URL_HOME_LAYER1_BASELINE.homeLayout);
+  q.set("homeOccupancy", BOOKING_URL_HOME_LAYER1_BASELINE.homeOccupancy);
+  q.set("homeChildren", BOOKING_URL_HOME_LAYER1_BASELINE.homeChildren);
+  q.set("homePetImpact", BOOKING_URL_HOME_LAYER1_BASELINE.homePetImpact);
   q.set("locStreet", opts.locStreet);
   q.set("locCity", opts.locCity);
   q.set("locState", opts.locState);
@@ -49,6 +74,7 @@ async function waitForReviewReady(
   page: import("@playwright/test").Page,
   opts?: { contactName?: string },
 ) {
+  // Requires `bookingUrl()` to include Layer-1 home query params so step is not clamped to Home Details.
   await expect(
     page.getByRole("heading", { name: /Review your direction/i }),
   ).toBeVisible({
