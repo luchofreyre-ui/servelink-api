@@ -25,7 +25,8 @@
     "seed:fo-test-matrix-15": "ts-node -P scripts/tsconfig.json scripts/seedFoTestMatrix15.ts",
     "validate:fo-test-matrix-15": "ts-node -P scripts/tsconfig.json scripts/validateFoTestMatrix15.ts",
     "seed:fo:test": "ts-node -P scripts/tsconfig.json scripts/seedDispatchTestFranchiseOwners.ts",
-    "verify:fo:test": "ts-node -P scripts/tsconfig.json scripts/verifyFoTestProfiles.ts"
+    "verify:fo:test": "ts-node -P scripts/tsconfig.json scripts/verifyFoTestProfiles.ts",
+    "check:migration-history": "ts-node -P scripts/tsconfig.json scripts/check-migration-history-integrity.ts"
   },
   "keywords": [],
   "author": "",
