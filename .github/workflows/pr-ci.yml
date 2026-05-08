@@ -56,6 +56,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -78,11 +80,12 @@ jobs:
           npm install
           npm run build
 
-      - name: Prisma generate + migrate
+      - name: Prisma generate + migrate deploy + status (fresh DB lineage)
         working-directory: services/api
         run: |
           npx prisma generate
           npx prisma migrate deploy
+          npx prisma migrate status
 
       - name: Seed encyclopedia content
         working-directory: services/api
