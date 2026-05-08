@@ -16,6 +16,8 @@
 | **S5** | **Canonical service registry** (code map + tests) — no DB | **None** |
 | **S6+** | Optional DB-backed policy rows, zone tables — **only after** shadow stability | **Separate ADR** |
 
+**S1 completion:** Pure façade `evaluateServiceMatrixCandidate` and `ServiceMatrixEvaluator` live under `services/api/src/modules/service-matrix/`, composing existing supply, execution, geography, crew, service-policy, and daily-cap logic with no database or HTTP calls; parity tests live in `test/service-matrix.evaluator.spec.ts`. The module is not registered in `AppModule` and is not wired into public booking or dispatch. **S2** remains shadow-only integration behind `SERVICE_MATRIX_SHADOW` per plan §3.
+
 ---
 
 ## 2. Rollout order
