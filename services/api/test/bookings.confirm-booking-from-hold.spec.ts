@@ -23,6 +23,8 @@ describe("BookingsService.confirmBookingFromHold", () => {
     foId: null,
     estimatedHours: 5.42,
     scheduledStart: null,
+    tenantId: "nustandard",
+    estimateSnapshot: null as { outputJson: string } | null,
   };
 
   const crewAdjustedHold = {
@@ -169,7 +171,13 @@ describe("BookingsService.confirmBookingFromHold", () => {
     tx.booking.findUnique = jest
       .fn()
       .mockResolvedValueOnce(baseBooking)
-      .mockResolvedValueOnce({ ...baseBooking, status: BookingStatus.assigned });
+      .mockResolvedValueOnce({
+        ...baseBooking,
+        status: BookingStatus.assigned,
+        foId: "fo1",
+        scheduledStart: crewAdjustedHold.startAt,
+        scheduledEnd: crewAdjustedHold.endAt,
+      });
 
     await expect(
       svc.confirmBookingFromHold({
@@ -181,5 +189,13 @@ describe("BookingsService.confirmBookingFromHold", () => {
     ).resolves.toMatchObject({ id: "bk1", status: BookingStatus.assigned });
 
     expect(fo.getEligibility).toHaveBeenCalledWith("fo1");
+    expect(tx.booking.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          scheduledStart: crewAdjustedHold.startAt,
+          scheduledEnd: crewAdjustedHold.endAt,
+        }),
+      }),
+    );
   });
 });

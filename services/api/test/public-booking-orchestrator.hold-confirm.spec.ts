@@ -58,6 +58,7 @@ function schedulableHoldBooking() {
     foId: null,
     preferredFoId: null,
     scheduledStart: null,
+    scheduledEnd: null,
     estimatedHours: 1,
     siteLat: null,
     siteLng: null,

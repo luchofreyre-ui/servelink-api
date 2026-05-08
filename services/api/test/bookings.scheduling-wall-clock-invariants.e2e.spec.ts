@@ -156,6 +156,7 @@ describe("Scheduling wall-clock invariants (E2E)", () => {
         status: BookingStatus.assigned,
         foId: fo1Id,
         scheduledStart: t0,
+        scheduledEnd: new Date(t0.getTime() + wallMinutes * 60 * 1000),
         paymentStatus: BookingPaymentStatus.authorized,
         paymentAuthorizedAt: new Date(),
         estimateSnapshot: {
@@ -224,10 +225,12 @@ describe("Scheduling wall-clock invariants (E2E)", () => {
     ).toISOString();
     expect(pub.body?.scheduledEnd).not.toBe(laborPhantomEnd);
 
-    const expectedEnd = new Date(
-      new Date(out.scheduledStart!).getTime() + bWall * 60 * 1000,
-    ).toISOString();
-    expect(pub.body?.scheduledEnd).toBe(expectedEnd);
+    expect(pub.body?.scheduledEnd).toBe(hold.endAt.toISOString());
+    const persistedB = await prisma.booking.findUnique({
+      where: { id: bookingB.id },
+      select: { scheduledEnd: true },
+    });
+    expect(persistedB?.scheduledEnd?.toISOString()).toBe(hold.endAt.toISOString());
   });
 
   it("overlapping hold is rejected (same FO, real overlap)", async () => {

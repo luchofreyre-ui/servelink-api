@@ -16,6 +16,7 @@ import { DispatchDecisionService } from "../modules/bookings/dispatch-decision.s
 import { DispatchConfigService } from "../modules/dispatch/dispatch-config.service";
 import { ensureProviderForFranchiseOwner } from "../modules/fo/fo-provider-sync";
 import { PrismaService } from "../prisma";
+import { setBookingWindowFromDuration } from "../modules/bookings/booking-window-mutation";
 import { ADMIN_CC_ACTIVITY } from "../modules/admin/bookings/admin-bookings.service";
 
 export const PLAYWRIGHT_ADMIN_SCENARIO_MARKER = "playwright_admin_scenario" as const;
@@ -1203,16 +1204,25 @@ async function ensureBooking(
         },
       })
     : await prisma.booking.create({
-        data: {
-          customerId: args.customerId,
-          hourlyRateCents: 5000,
-          estimatedHours: 2,
-          currency: "usd",
-          status: args.status,
-          foId: args.foId,
-          notes: args.notes,
-          scheduledStart: new Date(Date.now() + 86400000),
-        },
+        data: (() => {
+          const scheduledStart = new Date(Date.now() + 86400000);
+          const window = setBookingWindowFromDuration({
+            scheduledStart,
+            estimatedHours: 2,
+            estimateSnapshotOutputJson: null,
+          });
+          return {
+            customerId: args.customerId,
+            hourlyRateCents: 5000,
+            estimatedHours: 2,
+            currency: "usd",
+            status: args.status,
+            foId: args.foId,
+            notes: args.notes,
+            scheduledStart: window.scheduledStart,
+            scheduledEnd: window.scheduledEnd,
+          };
+        })(),
       });
 
   await seedBookingPaymentAuthorized(prisma, row.id);

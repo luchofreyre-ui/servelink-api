@@ -2,7 +2,7 @@ import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
 import { BookingPublicDepositStatus } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { serializeDeepCleanProgramForScreen } from "./serializers/deep-clean-program-screen.serializer";
-import { computePublicBookingConfirmationScheduledEndIso } from "./public-booking-confirmation-scheduled-end";
+import { resolveCanonicalBookingScheduledEnd } from "./booking-scheduled-window";
 
 type PublicRecurringCadence = "weekly" | "every_10_days" | "biweekly" | "monthly";
 type PublicVisitStructure = "one_visit" | "three_visit_reset";
@@ -105,6 +105,7 @@ export class PublicBookingConfirmationController {
         id: true,
         status: true,
         scheduledStart: true,
+        scheduledEnd: true,
         estimatedHours: true,
         publicDepositStatus: true,
         estimateSnapshot: { select: { outputJson: true, inputJson: true } },
@@ -133,15 +134,15 @@ export class PublicBookingConfirmationController {
       booking.estimateSnapshot?.outputJson,
       booking.estimateSnapshot?.inputJson,
     );
-    // `estimatedHours` is labor-weighted; public calendar end uses wall minutes from the
-    // persisted estimate snapshot when available (hold row is deleted after confirm).
-    const scheduledEndIso = computePublicBookingConfirmationScheduledEndIso(
-      booking.scheduledStart,
-      {
-        wallClockDurationMinutes: snap?.estimatedDurationMinutes,
+    const scheduledEndIso =
+      resolveCanonicalBookingScheduledEnd({
+        scheduledStart: booking.scheduledStart,
+        scheduledEnd: booking.scheduledEnd,
         estimatedHours: booking.estimatedHours,
-      },
-    );
+        estimateSnapshotOutputJson: booking.estimateSnapshot?.outputJson,
+        preferWallClockFromSnapshot: true,
+        hold: null,
+      })?.toISOString() ?? null;
     const latestRecurringPlan = booking.recurringPlans[0] ?? null;
     const planCadence = isPublicRecurringCadence(latestRecurringPlan?.cadence)
       ? latestRecurringPlan.cadence

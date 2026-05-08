@@ -18,6 +18,7 @@ describe("slot availability and holds — wall-clock existing booking overlap", 
   const existingBooking = {
     id: "booking-existing",
     scheduledStart: bookingStart,
+    scheduledEnd: null as Date | null,
     estimatedHours: 5.17,
     estimateSnapshot: {
       outputJson: JSON.stringify({ estimatedDurationMinutes: 139 }),
@@ -49,10 +50,46 @@ describe("slot availability and holds — wall-clock existing booking overlap", 
         select: {
           id: true,
           scheduledStart: true,
+          scheduledEnd: true,
           estimatedHours: true,
           estimateSnapshot: { select: { outputJson: true } },
         },
       }),
+    );
+  });
+
+  it("uses persisted scheduledEnd instead of a mismatched snapshot wall-clock when blocking", async () => {
+    const phantomSnapshotMinutes = 600;
+    const db = {
+      booking: {
+        findMany: jest.fn().mockResolvedValue([
+          {
+            ...existingBooking,
+            scheduledEnd: wallEnd,
+            estimateSnapshot: {
+              outputJson: JSON.stringify({
+                estimatedDurationMinutes: phantomSnapshotMinutes,
+              }),
+            },
+          },
+        ]),
+      },
+      bookingSlotHold: {
+        findMany: jest.fn().mockResolvedValue([]),
+      },
+    } as unknown as PrismaService;
+    const service = new SlotAvailabilityService(db);
+
+    const windows = await service.listAvailableWindows({
+      foId,
+      rangeStart: bookingStart,
+      rangeEnd: new Date("2035-06-05T00:00:00.000Z"),
+      durationMinutes: 60,
+      slotIntervalMinutes: 30,
+    });
+
+    expect(windows.some((w) => w.startAt.toISOString() === "2035-06-04T21:30:00.000Z")).toBe(
+      true,
     );
   });
 
@@ -126,6 +163,7 @@ describe("slot availability and holds — wall-clock existing booking overlap", 
     const tx = {
       booking: {
         findMany: jest.fn().mockResolvedValue([existingBooking]),
+        findUnique: jest.fn().mockResolvedValue({ tenantId: null }),
       },
       bookingSlotHold: {
         deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
@@ -166,6 +204,7 @@ describe("slot availability and holds — wall-clock existing booking overlap", 
             status: BookingStatus.assigned,
           },
         ]),
+        findUnique: jest.fn().mockResolvedValue({ tenantId: null }),
       },
       bookingSlotHold: {
         deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
@@ -199,6 +238,7 @@ describe("slot availability and holds — wall-clock existing booking overlap", 
           {
             id: "booking-existing-after-request",
             scheduledStart: adjacentExistingStart,
+            scheduledEnd: null,
             estimatedHours: 1,
             estimateSnapshot: {
               outputJson: JSON.stringify({ estimatedDurationMinutes: 60 }),

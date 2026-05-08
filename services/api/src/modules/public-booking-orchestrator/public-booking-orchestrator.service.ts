@@ -35,10 +35,7 @@ import type {
 } from "./public-booking-orchestrator.types";
 import { publicBookingFixtureFoEmails } from "../../dev/publicBookingFoFixtures";
 import { PublicBookingDepositService } from "./public-booking-deposit.service";
-import {
-  computePublicBookingConfirmationScheduledEndIso,
-  computePublicHoldConfirmScheduledEndIso,
-} from "../bookings/public-booking-confirmation-scheduled-end";
+import { resolveCanonicalBookingScheduledEnd } from "../bookings/booking-scheduled-window";
 import {
   decodePublicSlotId,
   encodePublicSlotId,
@@ -70,6 +67,7 @@ type BookingForOrchestration = {
   foId: string | null;
   preferredFoId: string | null;
   scheduledStart: Date | null;
+  scheduledEnd: Date | null;
   estimatedHours: number;
   siteLat: number | null;
   siteLng: number | null;
@@ -243,6 +241,7 @@ export class PublicBookingOrchestratorService {
         foId: true,
         preferredFoId: true,
         scheduledStart: true,
+        scheduledEnd: true,
         estimatedHours: true,
         siteLat: true,
         siteLng: true,
@@ -258,6 +257,7 @@ export class PublicBookingOrchestratorService {
       foId: row.foId,
       preferredFoId: row.preferredFoId,
       scheduledStart: row.scheduledStart,
+      scheduledEnd: row.scheduledEnd,
       estimatedHours: Number(row.estimatedHours ?? 0),
       siteLat: row.siteLat,
       siteLng: row.siteLng,
@@ -1334,30 +1334,18 @@ export class PublicBookingOrchestratorService {
         booking.status === BookingStatus.assigned &&
         booking.scheduledStart != null
       ) {
-        let wallClockDurationMinutes: number | null = null;
-        try {
-          const out = JSON.parse(
-            booking.estimateSnapshot?.outputJson ?? "{}",
-          ) as Record<string, unknown>;
-          const raw = out.estimatedDurationMinutes;
-          wallClockDurationMinutes =
-            typeof raw === "number" && Number.isFinite(raw) && raw > 0
-              ? Math.floor(raw)
-              : null;
-        } catch {
-          wallClockDurationMinutes = null;
-        }
         const replayResult = {
           kind: "public_booking_confirmation" as const,
           bookingId: booking.id,
           scheduledStart: booking.scheduledStart.toISOString(),
-          scheduledEnd: computePublicBookingConfirmationScheduledEndIso(
-            booking.scheduledStart,
-            {
-              wallClockDurationMinutes,
-              estimatedHours: booking.estimatedHours,
-            },
-          ),
+          scheduledEnd: resolveCanonicalBookingScheduledEnd({
+            scheduledStart: booking.scheduledStart,
+            scheduledEnd: booking.scheduledEnd,
+            estimatedHours: booking.estimatedHours,
+            estimateSnapshotOutputJson: booking.estimateSnapshot?.outputJson,
+            preferWallClockFromSnapshot: true,
+            hold: null,
+          })?.toISOString() ?? null,
           status: booking.status,
           alreadyApplied: true,
         };
@@ -1565,14 +1553,23 @@ export class PublicBookingOrchestratorService {
     const scheduledStart = result.scheduledStart
       ? new Date(result.scheduledStart).toISOString()
       : null;
-    const scheduledEnd = computePublicHoldConfirmScheduledEndIso({
-      scheduledStart: result.scheduledStart
-        ? new Date(result.scheduledStart)
-        : null,
-      holdEndAt: responseHold.endAt,
-      holdStartAt: responseHold.startAt,
-      estimatedHours: result.estimatedHours,
-    });
+    const scheduledEnd =
+      resolveCanonicalBookingScheduledEnd({
+        scheduledStart: result.scheduledStart
+          ? new Date(result.scheduledStart)
+          : null,
+        scheduledEnd:
+          "scheduledEnd" in result && result.scheduledEnd != null
+            ? new Date(result.scheduledEnd as Date | string)
+            : null,
+        estimatedHours: result.estimatedHours,
+        estimateSnapshotOutputJson: booking.estimateSnapshot?.outputJson,
+        preferWallClockFromSnapshot: true,
+        hold: {
+          startAt: responseHold.startAt,
+          endAt: responseHold.endAt,
+        },
+      })?.toISOString() ?? null;
 
     this.logLifecycle({
       event: "confirm_succeeded",

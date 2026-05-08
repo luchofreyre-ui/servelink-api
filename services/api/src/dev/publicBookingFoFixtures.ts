@@ -2,6 +2,7 @@ import { BookingStatus, type PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcryptjs";
 
 import { ensureProviderForFranchiseOwner } from "../modules/fo/fo-provider-sync";
+import { setBookingWindowFromDuration } from "../modules/bookings/booking-window-mutation";
 
 /**
  * Synthetic bookings that reserve FO3 calendar space for public slot scarcity tests.
@@ -283,6 +284,12 @@ export async function seedPublicBookingFoFixtures(
     const scheduledStart = new Date(day);
     scheduledStart.setUTCHours(8, 0, 0, 0);
 
+    const window = setBookingWindowFromDuration({
+      scheduledStart,
+      estimatedHours: 13,
+      estimateSnapshotOutputJson: null,
+    });
+
     await prisma.booking.create({
       data: {
         customerId: customer.id,
@@ -290,7 +297,8 @@ export async function seedPublicBookingFoFixtures(
         status: BookingStatus.pending_dispatch,
         hourlyRateCents: 7500,
         estimatedHours: 13,
-        scheduledStart,
+        scheduledStart: window.scheduledStart,
+        scheduledEnd: window.scheduledEnd,
         notes: `${PUBLIC_BOOKING_FIXTURE_BLOCK_MARKER} fo_slot_fixture day_index=${d}`,
       },
     });
