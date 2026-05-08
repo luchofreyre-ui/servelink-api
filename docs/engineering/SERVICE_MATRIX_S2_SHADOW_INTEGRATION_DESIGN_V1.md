@@ -167,6 +167,12 @@ Before starting **S3** (`DispatchCandidateService` / shared `JobContext` with ma
 
 ---
 
+## Implementation note (typed payload builder)
+
+`buildServiceMatrixShadowPayload` and serializable shadow types live in `services/api/src/modules/service-matrix/` (pure builder + unit tests). They are **still not wired** into production, orchestration, or logging paths — S2 **runtime** shadow integration remains future work. The contract is **redaction-oriented**: callers must supply `jobContextHash` from canonical non-PII material; customer name, email, phone, raw address, payment details, and full estimate payloads stay out of this layer.
+
+---
+
 ## 6. Related documents
 
 - `SERVICE_MATRIX_IMPLEMENTATION_PLAN_V1.md` — S2 shadow sequencing.  

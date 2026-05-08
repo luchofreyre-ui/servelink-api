@@ -139,3 +139,108 @@ export type MatrixCandidateInput = {
 export type MatrixEvaluateOptions = {
   mode?: MatrixEvaluationMode;
 };
+
+// --- S2 shadow comparison contract (`SERVICE_MATRIX_S2_SHADOW_INTEGRATION_DESIGN_V1.md`)
+
+/** Log / trace surfaces for shadow comparison (no PII — ids and codes only). */
+export type ServiceMatrixShadowSourceSurface =
+  | "public_booking"
+  | "dispatch"
+  | "slots"
+  | "admin_explain";
+
+export type ServiceMatrixShadowDurationInputSummary = {
+  laborMinutes: number | null;
+  recommendedTeamSize: number | null;
+  durationMinutesForSlots?: number | null;
+  source: "estimate_snapshot" | "booking_derived" | "missing";
+};
+
+export type ServiceMatrixShadowCapacityInputSummary = {
+  maxDailyLaborMinutes: number | null;
+  committedLaborMinutesToday: number | null;
+  committedInputStatus: "present" | "absent" | "not_applicable";
+};
+
+export type ServiceMatrixShadowGeographyInputSummary = {
+  siteLatPresent: boolean;
+  siteLngPresent: boolean;
+  foHomeLatLngPresent: boolean;
+  maxTravelMinutes: number | null;
+};
+
+/** Declared keys/patterns omitted from any nested logging (payload carries none of these as values). */
+export type ServiceMatrixShadowSafeRedactions = readonly string[];
+
+/** Grouped summaries (helpers may build one object before spreading into payload fields). */
+export type ServiceMatrixShadowInputSummary = {
+  duration: ServiceMatrixShadowDurationInputSummary;
+  capacity: ServiceMatrixShadowCapacityInputSummary;
+  geography: ServiceMatrixShadowGeographyInputSummary;
+};
+
+/** Per-FO shadow inputs; never include customer name, email, phone, address, payments, or raw estimate JSON. */
+export type ServiceMatrixShadowPerCandidateRow = {
+  legacyEligible: boolean;
+  matrixEligible: boolean;
+  legacyPrimaryReasonCodes?: readonly string[];
+  matrixPrimaryReasonCodes?: readonly string[];
+};
+
+export type ServiceMatrixShadowCandidateDiff = {
+  foId: string;
+  legacyEligible: boolean;
+  matrixEligible: boolean;
+  inLegacyEligibleSet: boolean;
+  inMatrixEligibleSet: boolean;
+};
+
+export type ServiceMatrixShadowDecisionDiff = {
+  foId: string;
+  legacyEligible: boolean;
+  matrixEligible: boolean;
+};
+
+export type ServiceMatrixShadowReasonCodeDiff = {
+  foId: string;
+  legacyPrimaryReasonCodes: string[];
+  matrixPrimaryReasonCodes: string[];
+};
+
+/** Serializable shadow comparison row (S2 — log contract only until wired). */
+export type ServiceMatrixShadowPayload = {
+  requestId: string;
+  sourceSurface: ServiceMatrixShadowSourceSurface;
+  evaluatedAt: string;
+  jobContextHash: string;
+  legacyCandidateIds: string[];
+  matrixCandidateIds: string[];
+  addedByMatrix: string[];
+  removedByMatrix: string[];
+  decisionDiffs: ServiceMatrixShadowDecisionDiff[];
+  reasonCodeDiffs: ServiceMatrixShadowReasonCodeDiff[];
+  durationInputSummary: ServiceMatrixShadowDurationInputSummary;
+  capacityInputSummary: ServiceMatrixShadowCapacityInputSummary;
+  geographyInputSummary: ServiceMatrixShadowGeographyInputSummary;
+  safeRedactions: ServiceMatrixShadowSafeRedactions;
+};
+
+export type BuildServiceMatrixShadowPayloadInput = {
+  requestId: string;
+  sourceSurface: ServiceMatrixShadowSourceSurface;
+  /** ISO-8601; omit to use builder wall-clock (non-deterministic). */
+  evaluatedAt?: string;
+  /**
+   * Caller-supplied digest over redacted/canonical job context.
+   * Builder does **not** hash raw job payloads (PII / estimate blobs stay out of this layer).
+   */
+  jobContextHash: string;
+  legacyCandidateIds: readonly string[];
+  matrixCandidateIds: readonly string[];
+  perCandidate: Readonly<Record<string, ServiceMatrixShadowPerCandidateRow>>;
+  durationInputSummary: ServiceMatrixShadowDurationInputSummary;
+  capacityInputSummary: ServiceMatrixShadowCapacityInputSummary;
+  geographyInputSummary: ServiceMatrixShadowGeographyInputSummary;
+  safeRedactions: ServiceMatrixShadowSafeRedactions;
+};
+
