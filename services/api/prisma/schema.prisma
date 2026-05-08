@@ -129,6 +129,8 @@ model Booking {
   stripeLastEventId       String?
   stripeClientSecret      String?
   scheduledStart        DateTime?
+  /// Authoritative FO wall-clock reservation end (slot hold end at confirm); legacy rows may be null.
+  scheduledEnd          DateTime?
   notes                 String?
   createdAt             DateTime                    @default(now())
   updatedAt             DateTime                    @updatedAt

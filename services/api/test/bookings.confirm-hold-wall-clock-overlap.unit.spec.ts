@@ -19,6 +19,7 @@ describe("BookingsService.confirmBookingFromHold — wall-clock overlap (useHold
   const existingA = {
     id: "bkA",
     scheduledStart: t0,
+    scheduledEnd: null as Date | null,
     estimatedHours: 12.07,
     estimateSnapshot: {
       outputJson: JSON.stringify({ estimatedDurationMinutes: 184 }),
@@ -44,6 +45,8 @@ describe("BookingsService.confirmBookingFromHold — wall-clock overlap (useHold
       foId: null,
       estimatedHours: 5,
       scheduledStart: null,
+      tenantId: "nustandard",
+      estimateSnapshot: null as { outputJson: string } | null,
     };
 
     let findUniqueCount = 0;
@@ -57,6 +60,7 @@ describe("BookingsService.confirmBookingFromHold — wall-clock overlap (useHold
             status: BookingStatus.assigned,
             foId,
             scheduledStart: hold.startAt,
+            scheduledEnd: hold.endAt,
           });
         }),
         findMany: jest.fn().mockResolvedValue([existingA]),
@@ -112,6 +116,8 @@ describe("BookingsService.confirmBookingFromHold — wall-clock overlap (useHold
       foId: null,
       estimatedHours: 5,
       scheduledStart: null,
+      tenantId: "nustandard",
+      estimateSnapshot: null as { outputJson: string } | null,
     };
 
     const tx = {

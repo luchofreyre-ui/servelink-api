@@ -22,6 +22,7 @@ import { buildCustomerAuthorityEducationalContext } from "../authority/customer-
 import { mapAuthorityTagsToFoKnowledgeLinks } from "../authority/fo-authority-knowledge.mapper";
 import { BookingIntelligenceService } from "../authority/booking-intelligence.service";
 import { BookingAuthorityPersistenceService } from "../authority/booking-authority-persistence.service";
+import { resolveCanonicalBookingScheduledEnd } from "./booking-scheduled-window";
 
 type JwtViewer = { userId: string; role: string };
 
@@ -320,6 +321,15 @@ export class BookingScreenService {
       customerName: booking.customer?.email ?? undefined,
       locationLabel: undefined as string | undefined,
       scheduledStart: booking.scheduledStart?.toISOString() ?? undefined,
+      scheduledEnd:
+        resolveCanonicalBookingScheduledEnd({
+          scheduledStart: booking.scheduledStart,
+          scheduledEnd: booking.scheduledEnd,
+          estimatedHours: booking.estimatedHours,
+          estimateSnapshotOutputJson: booking.estimateSnapshot?.outputJson,
+          preferWallClockFromSnapshot: true,
+          hold: null,
+        })?.toISOString() ?? undefined,
       paymentStatus: booking.paymentStatus,
       foId: booking.foId,
       hourlyRateCents: booking.hourlyRateCents,

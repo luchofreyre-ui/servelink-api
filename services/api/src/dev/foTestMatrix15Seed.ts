@@ -10,6 +10,7 @@ import { BookingStatus, type PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcryptjs";
 
 import { ensureProviderForFranchiseOwner } from "../modules/fo/fo-provider-sync";
+import { setBookingWindowFromDuration } from "../modules/bookings/booking-window-mutation";
 
 export const FO_TEST_MATRIX15_MARKER = "fo_test_matrix15" as const;
 export const FO_TEST_MATRIX15_SLOT_NOTE = "FO_TEST_MATRIX15_SLOT_BLOCK" as const;
@@ -226,6 +227,11 @@ async function seedSlotBlocks(
     day.setUTCDate(anchor.getUTCDate() + d);
     const scheduledStart = new Date(day);
     scheduledStart.setUTCHours(8, 0, 0, 0);
+    const window = setBookingWindowFromDuration({
+      scheduledStart,
+      estimatedHours: 12,
+      estimateSnapshotOutputJson: null,
+    });
     await prisma.booking.create({
       data: {
         customerId,
@@ -233,7 +239,8 @@ async function seedSlotBlocks(
         status: BookingStatus.pending_dispatch,
         hourlyRateCents: 7500,
         estimatedHours: 12,
-        scheduledStart,
+        scheduledStart: window.scheduledStart,
+        scheduledEnd: window.scheduledEnd,
         notes: `${FO_TEST_MATRIX15_SLOT_NOTE} day_index=${d}`,
       },
     });

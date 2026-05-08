@@ -50,6 +50,12 @@ import {
 } from "./utils/assignment-state.util";
 import { assertConfirmHoldSlotDuration } from "./confirm-hold-slot-duration";
 import { resolveBookingCalendarEndMs } from "./booking-scheduling-calendar-end";
+import { resolveCanonicalBookingScheduledEndMs } from "./booking-scheduled-window";
+import {
+  computeScheduleWritePatch,
+  setBookingWindowFromDuration,
+  setBookingWindowFromHold,
+} from "./booking-window-mutation";
 import { BookingCancellationPaymentInvariantService } from "./payment-lifecycle/booking-cancellation-payment-invariant.service";
 import { RemainingBalanceCaptureService } from "./payment-lifecycle/remaining-balance-capture.service";
 import { requireReadTenantId, requireTenantId } from "../tenant/tenant.enforcement";
@@ -852,6 +858,7 @@ export class BookingsService {
       select: {
         id: true,
         scheduledStart: true,
+        scheduledEnd: true,
         estimatedHours: true,
         estimateSnapshot: { select: { outputJson: true } },
       },
@@ -864,17 +871,17 @@ export class BookingsService {
       const existingEstimatedHours = Number(existing.estimatedHours ?? 0);
 
       if (!Number.isFinite(existingStart.getTime())) return false;
-      if (!(existingEstimatedHours > 0)) return false;
 
-      // estimatedHours is labor-oriented and must only be a legacy fallback for calendar overlap.
-      const existingEnd = new Date(
-        resolveBookingCalendarEndMs({
-          scheduledStart: existingStart,
-          estimatedHours: existingEstimatedHours,
-          estimateSnapshotOutputJson: existing.estimateSnapshot?.outputJson,
-          preferWallClockFromSnapshot: true,
-        }),
-      );
+      const existingEndMs = resolveCanonicalBookingScheduledEndMs({
+        scheduledStart: existingStart,
+        scheduledEnd: existing.scheduledEnd,
+        estimatedHours: existingEstimatedHours,
+        estimateSnapshotOutputJson: existing.estimateSnapshot?.outputJson,
+        preferWallClockFromSnapshot: true,
+        hold: null,
+      });
+      if (existingEndMs == null) return false;
+      const existingEnd = new Date(existingEndMs);
 
       return requestedStart < existingEnd && existingStart < requestedEnd;
     });
@@ -900,6 +907,9 @@ export class BookingsService {
       return await this.db.$transaction(async (tx: any) => {
         const current = await tx.booking.findUnique({
           where: { id: args.bookingId },
+          include: {
+            estimateSnapshot: { select: { outputJson: true } },
+          },
         });
 
         if (!current) {
@@ -1005,6 +1015,7 @@ export class BookingsService {
           select: {
             id: true,
             scheduledStart: true,
+            scheduledEnd: true,
             estimatedHours: true,
             estimateSnapshot: { select: { outputJson: true } },
           },
@@ -1017,14 +1028,16 @@ export class BookingsService {
           const existingEstimatedHours = Number(existing.estimatedHours ?? 0);
 
           if (!Number.isFinite(existingStart.getTime())) return false;
-          if (!(existingEstimatedHours > 0)) return false;
 
-          const existingEndMs = resolveBookingCalendarEndMs({
+          const existingEndMs = resolveCanonicalBookingScheduledEndMs({
             scheduledStart: existingStart,
+            scheduledEnd: existing.scheduledEnd,
             estimatedHours: existingEstimatedHours,
             estimateSnapshotOutputJson: existing.estimateSnapshot?.outputJson,
             preferWallClockFromSnapshot: useWallClockOverlap,
+            hold: null,
           });
+          if (existingEndMs == null) return false;
           const existingEnd = new Date(existingEndMs);
 
           return requestedStart < existingEnd && existingStart < requestedEnd;
@@ -1032,6 +1045,20 @@ export class BookingsService {
 
         if (conflicting) {
           throw new ConflictException("FO_NOT_AVAILABLE_AT_SCHEDULED_TIME");
+        }
+
+        let confirmWindow: { scheduledStart: Date; scheduledEnd: Date };
+        try {
+          confirmWindow = setBookingWindowFromHold({
+            startAt: hold.startAt,
+            endAt: hold.endAt,
+          });
+        } catch {
+          confirmWindow = setBookingWindowFromDuration({
+            scheduledStart: hold.startAt,
+            estimatedHours,
+            estimateSnapshotOutputJson: current.estimateSnapshot?.outputJson ?? null,
+          });
         }
 
         const otherBookings = await tx.booking.findMany({
@@ -1049,6 +1076,7 @@ export class BookingsService {
           select: {
             id: true,
             scheduledStart: true,
+            scheduledEnd: true,
             estimatedHours: true,
             estimateSnapshot: { select: { outputJson: true } },
           },
@@ -1057,19 +1085,20 @@ export class BookingsService {
         const conflict = otherBookings.find(
           (b: {
             scheduledStart: Date | null;
+            scheduledEnd: Date | null;
             estimatedHours: number | null;
             estimateSnapshot: { outputJson: string } | null;
           }) => {
-            if (b.scheduledStart == null || b.estimatedHours == null) return false;
-            const eh = Number(b.estimatedHours);
-            if (!(eh > 0)) return false;
-            const endMs = resolveBookingCalendarEndMs({
+            if (b.scheduledStart == null) return false;
+            const endMs = resolveCanonicalBookingScheduledEndMs({
               scheduledStart: new Date(b.scheduledStart),
-              estimatedHours: eh,
+              scheduledEnd: b.scheduledEnd,
+              estimatedHours: b.estimatedHours,
               estimateSnapshotOutputJson: b.estimateSnapshot?.outputJson,
               preferWallClockFromSnapshot: useWallClockOverlap,
+              hold: null,
             });
-            return endMs > hold.startAt.getTime();
+            return endMs != null && endMs > hold.startAt.getTime();
           },
         );
 
@@ -1085,7 +1114,8 @@ export class BookingsService {
           data: {
             status: BookingStatus.assigned,
             foId: hold.foId,
-            scheduledStart: hold.startAt,
+            scheduledStart: confirmWindow.scheduledStart,
+            scheduledEnd: confirmWindow.scheduledEnd,
           },
         });
 
@@ -1212,6 +1242,25 @@ export class BookingsService {
       });
     }
 
+    const estimateSnapshotRow = args.scheduledStart
+      ? await this.db.bookingEstimateSnapshot.findUnique({
+          where: { bookingId: booking.id },
+          select: { outputJson: true },
+        })
+      : null;
+
+    const schedulePatch = computeScheduleWritePatch({
+      nextScheduledStart: args.scheduledStart
+        ? new Date(args.scheduledStart)
+        : undefined,
+      currentScheduledStart: booking.scheduledStart,
+      currentScheduledEnd: booking.scheduledEnd,
+      estimatedHours: booking.estimatedHours,
+      estimateSnapshotOutputJson: estimateSnapshotRow?.outputJson ?? null,
+      bookingId: booking.id,
+      log: this.log,
+    });
+
     try {
       const { result, prevStatus } = await this.db.$transaction(async (tx: any) => {
         const prevStatus = booking.status;
@@ -1219,9 +1268,7 @@ export class BookingsService {
           where: { id: booking.id, status: expectedCurrentStatus },
           data: {
             status: to,
-            ...(args.scheduledStart
-              ? { scheduledStart: new Date(args.scheduledStart) }
-              : {}),
+            ...schedulePatch,
             ...(to === BookingStatus.canceled &&
             expectedCurrentStatus !== BookingStatus.canceled &&
             expectedCurrentStatus !== BookingStatus.cancelled
@@ -1897,16 +1944,36 @@ export class BookingsService {
 
   async patchBookingForApi(id: string, dto: UpdateBookingPatchDto) {
     const booking = await this.getBooking(id);
+
+    const estimateSnapshotRow =
+      dto.scheduledStart !== undefined
+        ? await this.db.bookingEstimateSnapshot.findUnique({
+            where: { bookingId: booking.id },
+            select: { outputJson: true },
+          })
+        : null;
+
+    const schedulePatch = computeScheduleWritePatch({
+      nextScheduledStart:
+        dto.scheduledStart === undefined
+          ? undefined
+          : dto.scheduledStart
+            ? new Date(dto.scheduledStart)
+            : null,
+      currentScheduledStart: booking.scheduledStart,
+      currentScheduledEnd: booking.scheduledEnd,
+      estimatedHours: booking.estimatedHours,
+      estimateSnapshotOutputJson: estimateSnapshotRow?.outputJson ?? null,
+      bookingId: booking.id,
+      log: this.log,
+    });
+
     return this.db.booking.update({
       where: { id: booking.id },
       data: {
         notes: dto.notes === undefined ? undefined : dto.notes,
-        scheduledStart:
-          dto.scheduledStart === undefined
-            ? undefined
-            : dto.scheduledStart
-              ? new Date(dto.scheduledStart)
-              : null,
+        scheduledStart: schedulePatch.scheduledStart,
+        scheduledEnd: schedulePatch.scheduledEnd,
         status: dto.status ?? undefined,
         estimatedHours: dto.estimatedHours ?? undefined,
       },
