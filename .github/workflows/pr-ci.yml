@@ -74,6 +74,23 @@ jobs:
         working-directory: services/api
         run: npm ci
 
+      # Forward-only migrations: anything already on the PR base / push parent must not
+      # be edited, deleted, or renamed under prisma/migrations. fetch-depth: 0 ensures
+      # base SHAs and origin/main resolve in the runner clone (see governance doc §4).
+      - name: Migration history integrity (immutable landed migrations)
+        working-directory: services/api
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          elif [ "${{ github.event_name }}" = "push" ] && [ -n "${{ github.event.before }}" ] \
+            && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            BASE="${{ github.event.before }}"
+          else
+            BASE="origin/main"
+          fi
+          npm run check:migration-history -- --base "$BASE" --head HEAD
+
       - name: Build system-test-intelligence
         working-directory: packages/system-test-intelligence
         run: |

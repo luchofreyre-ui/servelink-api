@@ -127,6 +127,6 @@ Use only when ops and engineering agree there is **documented** drift between a 
 | Mechanism | What it covers |
 |-----------|----------------|
 | `npm run check:migration-history` | Immutability of files under `prisma/migrations` present at merge base / parent push. |
-| PR CI | Fresh Postgres + `prisma generate`, `migrate deploy`, `migrate status`, plus history check. |
+| PR CI | Fresh Postgres + `prisma generate`, `migrate deploy`, `migrate status`, plus **`npm run check:migration-history`** (immutable landed migration files). |
 
 This is **lightweight governance**: it does not replace code review, additive design, or production runbooks.
