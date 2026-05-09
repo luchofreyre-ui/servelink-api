@@ -5,6 +5,8 @@ import {
   BOOKING_SCHEDULE_CHOOSE_SLOT_HINT,
   BOOKING_SCHEDULE_CHOOSE_TEAM_HINT,
   BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE,
+  BOOKING_SCHEDULE_FIRST_VISIT_TIME_EXPLAINER,
+  BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE,
   BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA,
   BOOKING_SCHEDULE_CONFIRMING,
   BOOKING_SCHEDULE_HOLD_FAILED_HINT,
@@ -278,10 +280,10 @@ export function BookingStepSchedule({
           data-testid="booking-schedule-slot-section"
         >
           <p className="font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.02em] text-[#0F172A]">
-            Choose your first visit time
+            {BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE}
           </p>
           <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm font-medium leading-6 text-[#475569]">
-            This sets your full reset plan and recurring schedule automatically.
+            {BOOKING_SCHEDULE_FIRST_VISIT_TIME_EXPLAINER}
           </p>
           <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
             {BOOKING_SCHEDULE_SLOTS_LEAD}

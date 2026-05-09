@@ -25,6 +25,19 @@ export function formatEstimateConfidence(confidence: number): string {
   return `${Math.round(confidence * (confidence <= 1 ? 100 : 1))}%`;
 }
 
+/** Customer-facing planning signal — band + score; not “probability the quote is wrong.” */
+export function formatScopePredictabilitySummary(confidence: number): string {
+  if (!Number.isFinite(confidence)) return "—";
+  const pct = Math.round(confidence * (confidence <= 1 ? 100 : 1));
+  const band =
+    pct >= 75
+      ? "High planning clarity"
+      : pct >= 55
+        ? "Moderate planning clarity"
+        : "Limited planning clarity";
+  return `${band} (${pct}% detail signal)`;
+}
+
 /**
  * Maps intake preview / submit deep-clean program JSON into the card component model.
  */

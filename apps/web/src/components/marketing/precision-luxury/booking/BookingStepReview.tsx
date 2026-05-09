@@ -17,9 +17,9 @@ import type {
   BookingSurfaceComplexity,
 } from "./bookingFlowTypes";
 import {
-  formatEstimateConfidence,
   formatEstimateDurationMinutes,
   formatEstimateUsdFromCents,
+  formatScopePredictabilitySummary,
 } from "./bookingIntakePreviewDisplay";
 import type { FunnelReviewEstimate } from "./bookingFunnelLocalEstimate";
 import { emitBookingFunnelEvent } from "./bookingFunnelAnalytics";
@@ -83,9 +83,24 @@ import {
   BOOKING_REVIEW_BANNER_READY_NEXT_STEP,
   BOOKING_REVIEW_NEXT_SCHEDULE_BODY,
   BOOKING_REVIEW_NEXT_SCHEDULE_TITLE,
+  BOOKING_REVIEW_LABOR_EFFORT_GLOSS,
+  BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL,
+  BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL,
   BOOKING_REVIEW_PREP_SECTION_TITLE,
   BOOKING_REVIEW_RECOMMEND_SECTION_TITLE,
+  BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD,
+  BOOKING_REVIEW_RECURRING_LABOR_LABEL,
+  BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD,
+  BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD,
+  BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER,
+  BOOKING_REVIEW_RECURRING_PER_VISIT_DELTA_LABEL,
+  BOOKING_REVIEW_RECURRING_PRICE_LABEL,
+  BOOKING_REVIEW_RECURRING_SECTION_LEAD,
+  BOOKING_REVIEW_RECURRING_SECTION_TITLE,
+  BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD,
   BOOKING_REVIEW_SCHEDULE_NOTE,
+  BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE,
+  BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
   BOOKING_REVIEW_STEP_BODY,
   BOOKING_REVIEW_STEP_TITLE,
   BOOKING_REVIEW_SELECTED_ARRIVAL_LABEL,
@@ -744,16 +759,29 @@ export function BookingStepReview({
           {previewEstimate ? (
             <div className="space-y-2">
               <p className="font-medium">
-                <span className="text-[#64748B]">Price:</span>{" "}
+                <span className="text-[#64748B]">
+                  {isRecurringContract
+                    ? BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL
+                    : BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL}
+                  :
+                </span>{" "}
                 {formatEstimateUsdFromCents(previewEstimate.priceCents)}
               </p>
               <p className="font-medium">
                 <span className="text-[#64748B]">Estimated labor effort:</span>{" "}
                 {formatEstimateDurationMinutes(previewEstimate.durationMinutes)}
               </p>
+              <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                {BOOKING_REVIEW_LABOR_EFFORT_GLOSS}
+              </p>
               <p className="font-medium">
-                <span className="text-[#64748B]">How sure we are:</span>{" "}
-                {formatEstimateConfidence(previewEstimate.confidence)}
+                <span className="text-[#64748B]">
+                  {BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL}:
+                </span>{" "}
+                {formatScopePredictabilitySummary(previewEstimate.confidence)}
+              </p>
+              <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                {BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE}
               </p>
               <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
                 {previewEstimate.source === "server"
@@ -853,53 +881,81 @@ export function BookingStepReview({
         </ReviewSection>
 
         {isRecurringContract ? (
-          <ReviewSection title="Recurring plan">
+          <ReviewSection title={BOOKING_REVIEW_RECURRING_SECTION_TITLE}>
             <div className="space-y-4">
               <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-                Review and lock your recurring service cadence before choosing a
-                team and paying the deposit.
+                {BOOKING_REVIEW_RECURRING_SECTION_LEAD}
               </p>
+              <div className="rounded-2xl border border-[#C9B27C]/18 bg-[#FFF9F3] px-4 py-3 ring-1 ring-[#C9B27C]/10">
+                <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                  {BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD}
+                </p>
+                <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
+                  {BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER}
+                </p>
+              </div>
               {previewEstimate ? (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <p className="font-medium">
-                    <span className="text-[#64748B]">First visit price:</span>{" "}
-                    {formatEstimateUsdFromCents(previewEstimate.priceCents)}
+                <div
+                  data-testid="booking-review-recurring-maintenance"
+                  className="rounded-2xl border border-[#0D9488]/20 bg-[rgba(13,148,136,0.06)] px-4 py-4 ring-1 ring-[#0D9488]/12"
+                >
+                  <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                    {BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD}
                   </p>
-                  <p className="font-medium">
-                    <span className="text-[#64748B]">Recurring visit price:</span>{" "}
-                    {recurringQuote
-                      ? formatEstimateUsdFromCents(recurringQuote.recurringPriceCents)
-                      : "Unavailable"}
-                  </p>
-                  <p className="font-medium">
-                    <span className="text-[#64748B]">
-                      Estimated recurring labor effort:
-                    </span>{" "}
-                    {recurringQuote
-                      ? formatEstimateDurationMinutes(recurringQuote.estimatedMinutes)
-                      : "Unavailable"}
-                  </p>
-                  <p className="font-medium">
-                    <span className="text-[#64748B]">Savings:</span>{" "}
-                    {recurringQuote
-                      ? `${formatEstimateUsdFromCents(recurringQuote.savingsCents)} / ${recurringQuote.discountPercent}%`
-                      : "Unavailable"}
-                  </p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <p className="font-medium">
+                      <span className="text-[#64748B]">
+                        {BOOKING_REVIEW_RECURRING_PRICE_LABEL}:
+                      </span>{" "}
+                      {recurringQuote
+                        ? formatEstimateUsdFromCents(
+                            recurringQuote.recurringPriceCents,
+                          )
+                        : "Unavailable"}
+                    </p>
+                    <p className="font-medium">
+                      <span className="text-[#64748B]">
+                        {BOOKING_REVIEW_RECURRING_LABOR_LABEL}:
+                      </span>{" "}
+                      {recurringQuote
+                        ? formatEstimateDurationMinutes(
+                            recurringQuote.estimatedMinutes,
+                          )
+                        : "Unavailable"}
+                    </p>
+                  </div>
+                  {recurringQuote && recurringQuote.savingsCents > 0 ? (
+                    <div className="mt-4 space-y-2 border-t border-[#0D9488]/16 pt-3">
+                      <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                        {BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD}
+                      </p>
+                      <p className="font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
+                        <span className="text-[#64748B]">
+                          {BOOKING_REVIEW_RECURRING_PER_VISIT_DELTA_LABEL}:
+                        </span>{" "}
+                        {formatEstimateUsdFromCents(recurringQuote.savingsCents)}{" "}
+                        less scheduled labor than the opening visit under the same
+                        model.
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               ) : (
                 <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
-                  Recurring pricing could not be loaded. Please refresh before continuing.
+                  Recurring pricing could not be loaded. Please refresh before
+                  continuing.
                 </p>
               )}
               {previewEstimate && !hasRecurringQuoteOptions ? (
                 <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
-                  Recurring pricing could not be loaded. Please refresh before continuing.
+                  Recurring pricing could not be loaded. Please refresh before
+                  continuing.
                 </p>
               ) : null}
 
               <div>
                 <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                  Cadence
+                  {BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD}
                 </p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-4">
                   {(

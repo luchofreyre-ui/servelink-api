@@ -560,8 +560,42 @@ export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION =
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES =
   "Appliances in scope are reflected through included add-on work in this preview.";
 
+/** Step 4 — opening vs recurring framing (recurring path). */
+export const BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL =
+  "Opening visit price (preview)";
+export const BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL =
+  "This visit price (preview)";
+export const BOOKING_REVIEW_LABOR_EFFORT_GLOSS =
+  "Cleaning effort is sized in labor time. Actual time in your home depends on the team size you choose next.";
+export const BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL = "Scope predictability";
+export const BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE =
+  "This reflects how well your answers narrow the scope for planning—not the odds your final price will change after we confirm details.";
+export const BOOKING_REVIEW_RECURRING_SECTION_TITLE =
+  "Ongoing maintenance (after opening)";
+export const BOOKING_REVIEW_RECURRING_SECTION_LEAD =
+  "Choose how often you want maintenance visits once your home is in a steady rhythm. Recurring visits are sized for a maintained home—less recovery work than your opening visit.";
+export const BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD = "Initial / opening visit";
+export const BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD =
+  "Maintained-home visits";
+export const BOOKING_REVIEW_RECURRING_PRICE_LABEL = "Typical recurring visit price";
+export const BOOKING_REVIEW_RECURRING_LABOR_LABEL = "Typical recurring cleaning effort";
+export const BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER =
+  "Opening visit price and cleaning effort are in “Estimated cleaning time & cost” above.";
+export const BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD =
+  "At this cadence, each recurring visit reflects lower labor need than the opening visit under the same pricing model (less catch-up work when the home stays on schedule).";
+export const BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD = "How often you want upkeep";
+export const BOOKING_REVIEW_RECURRING_PER_VISIT_DELTA_LABEL =
+  "Maintenance vs opening visit (this cadence)";
+/** @deprecated Use BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD; kept for tests migrating off old wording. */
+export const BOOKING_REVIEW_RECURRING_LABOR_DELTA_PREFIX =
+  "Roughly less labor than opening per visit";
+
+export const BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE = "Choose your first visit time";
+export const BOOKING_SCHEDULE_FIRST_VISIT_TIME_EXPLAINER =
+  "You’re scheduling the arrival for your opening visit. After that visit stabilizes the home, your recurring cadence continues upkeep—not another full reset every time.";
+
 /** Step 4 — quote / planning clarity (derived from selections only; never numeric). */
-export const BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE = "Quote clarity";
+export const BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE = "Planning clarity";
 
 export const BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE =
   "Your details support a clear planning estimate.";

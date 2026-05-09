@@ -38,6 +38,7 @@ import {
   BOOKING_PLANNING_NOTE_DENSE_FURNISHINGS,
   BOOKING_REVIEW_PLANNING_NOTES_TITLE,
   BOOKING_REVIEW_PREP_DENSE_LAYOUT,
+  BOOKING_REVIEW_RECURRING_SECTION_TITLE,
   BOOKING_REVIEW_PREP_FRIDGE,
   BOOKING_REVIEW_PREP_MOVE_FURNISHED,
   BOOKING_REVIEW_PREP_OVEN,
@@ -56,6 +57,7 @@ import {
   BOOKING_SCHEDULE_CHOOSE_SLOT_HINT,
   BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE,
   BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA,
+  BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE,
   BOOKING_SCHEDULE_CONFIRM_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED_HINT,
@@ -614,15 +616,28 @@ describe("BookingFlowClient", () => {
 
     await waitFor(() => {
       expect(document.body.textContent).toContain("$310");
-      expect(document.body.textContent).toContain("$190 / 38%");
+      expect(document.body.textContent).toContain("$190");
+      expect(document.body.textContent).not.toMatch(/Savings/i);
+      expect(document.body.textContent).not.toContain("38%");
     }, { timeout: 8000 });
 
     fireEvent.click(screen.getByRole("button", { name: /Every 10 days/i }));
 
     await waitFor(() => {
       expect(document.body.textContent).toContain("$333");
-      expect(document.body.textContent).toContain("$167 / 33%");
+      expect(document.body.textContent).toContain("$167");
+      expect(document.body.textContent).not.toContain("33%");
     }, { timeout: 8000 });
+  });
+
+  it("recurring review uses maintenance framing and omits savings/discount copy", async () => {
+    bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
+    render(<BookingFlowClient />);
+    await fillReviewContactAndOptionalFirstTimePlan(8000);
+    expect(screen.getByText(BOOKING_REVIEW_RECURRING_SECTION_TITLE)).toBeInTheDocument();
+    expect(screen.getByTestId("booking-review-recurring-maintenance")).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/Savings/i);
+    expect(document.body.textContent).not.toMatch(/discount/i);
   });
 
   it("blocks recurring review when preview response omits recurring quotes", async () => {
@@ -688,7 +703,12 @@ describe("BookingFlowClient", () => {
       expect(screen.queryByTestId("booking-schedule-slot-section")).toBeNull();
       fireEvent.click(screen.getByText("North Team"));
       expect(await screen.findByTestId("booking-schedule-slot-section")).toBeInTheDocument();
-      expect(screen.getByText("Choose your first visit time")).toBeInTheDocument();
+      expect(
+        screen.getByText(BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/scheduling the arrival for your opening visit/i),
+      ).toBeInTheDocument();
     });
 
     it("availability refetches when the selected team changes (slots follow the team)", async () => {
@@ -2469,11 +2489,19 @@ describe("BookingFlowClient", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("uses labor-effort wording for preview duration on review", async () => {
+    it("uses labor-effort wording and scope predictability framing on review", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(5000);
       expect(screen.getByText(/Estimated labor effort:/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Actual time in your home depends on the team size/i),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/Scope predictability:/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/planning clarity/i).length).toBeGreaterThan(0);
+      expect(
+        screen.getByText(/not the odds your final price will change/i),
+      ).toBeInTheDocument();
     });
   });
 

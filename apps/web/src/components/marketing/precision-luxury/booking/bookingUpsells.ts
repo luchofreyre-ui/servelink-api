@@ -57,7 +57,7 @@ export const BOOKING_UPSELL_OPTIONS: BookingUpsellOption[] = [
   },
   {
     id: "recurring_plan_prompt",
-    label: "Save with recurring service",
+    label: "Recurring maintenance option",
     description: "Ask us about weekly, biweekly, or monthly upkeep.",
     intent: [CUSTOMER_INTENT_MAINTAIN],
     category: "recurring",
