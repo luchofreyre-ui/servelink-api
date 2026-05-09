@@ -115,7 +115,7 @@ export class BookingDirectionRecurringInterestDto {
     return t.length ? t : undefined;
   })
   @IsString()
-  @MaxLength(1000)
+  @MaxLength(2500)
   note?: string;
 
   @IsOptional()

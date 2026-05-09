@@ -75,6 +75,27 @@ export const BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED =
 export const BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED =
   "We read what you sent and reply from the email you provided. If something urgent changed, mention it when we write—you do not need to resend this entire form unless your needs are materially different.";
 
+export const BOOKING_CONFIRMATION_VISIT_ESTIMATE_PRICE_LABEL =
+  "Estimate for this visit";
+
+export const BOOKING_CONFIRMATION_OPENING_VISIT_ESTIMATE_PRICE_LABEL =
+  "Opening / first-visit estimate";
+
+export const BOOKING_CONFIRMATION_CLEANING_EFFORT_LABEL =
+  "Estimated cleaning effort";
+
+export const BOOKING_CONFIRMATION_IN_HOME_WINDOW_LABEL =
+  "Estimated time in your home";
+
+export const BOOKING_CONFIRMATION_IN_HOME_WINDOW_HINT =
+  "From your booked arrival window with this team. Cleaning effort is total work planned—on-site time can be shorter when a team works in parallel.";
+
+export const BOOKING_CONFIRMATION_RECURRING_SURFACE_LEAD =
+  "Maintenance visits keep a steady home on schedule—typically less reset work than your opening visit. The per-visit figure for your cadence reflects ongoing upkeep, not a repeat of the full opening scope.";
+
+export const BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE =
+  "Opening reset visit schedule";
+
 /** Server-reported codes already passed through the confirmation URL today. */
 export function bookingConfirmationNoticeForBookingErrorCode(
   code: string,
@@ -360,6 +381,38 @@ export const BOOKING_SCHEDULE_SUMMARY_TEAM_LABEL = "Team";
 
 export const BOOKING_SCHEDULE_SUMMARY_ARRIVAL_LABEL = "Arrival";
 
+export const BOOKING_SCHEDULE_DURATION_CONTEXT_TITLE = "Planning time in your home";
+
+export const BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL = "Estimated cleaning effort";
+
+export const BOOKING_SCHEDULE_IN_HOME_TIME_LABEL =
+  "Expected time in your home with this team";
+
+export const BOOKING_SCHEDULE_CLEANING_EFFORT_EXPLAINER =
+  "Cleaning effort reflects the total work required—think of it as labor time, not a stopwatch on your visit.";
+
+export const BOOKING_SCHEDULE_IN_HOME_LOADING =
+  "We're updating visit length for the team you picked…";
+
+export const BOOKING_SCHEDULE_IN_HOME_FALLBACK =
+  "We’ll confirm visit length with your team. Larger crews often complete the same cleaning effort in less wall-clock time.";
+
+export const BOOKING_SCHEDULE_PARALLELIZATION_NOTE =
+  "Multiple professionals working together can shorten the visit compared with cleaning effort alone—without changing how much work gets done.";
+
+export function bookingScheduleTeamSizeAssumptionCopy(
+  assignedCrewSize: number,
+): string {
+  const n = Math.floor(assignedCrewSize);
+  if (!Number.isFinite(n) || n < 1) {
+    return "Team size for this visit is reflected in the in-home estimate above.";
+  }
+  if (n === 1) {
+    return "This estimate assumes one professional from this team on the visit.";
+  }
+  return `This estimate assumes a ${n}-person team working together.`;
+}
+
 export const BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA = "Confirm your booking";
 
 /** @deprecated Use BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA */
@@ -539,28 +592,63 @@ export const BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL = "Visit focus";
 export const BOOKING_REVIEW_TRANSITION_SETUP_LABEL = "Home transition setup";
 export const BOOKING_REVIEW_TRANSITION_APPLIANCES_LABEL = "Appliances included";
 
-/** Step 4 — transparent “why” hints tied to estimate-driving inputs (no math or pricing breakdown). */
-export const BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE =
-  "What's driving your estimate";
+/** Step 4 — signals that are actually reflected in estimateFactors / preview intake. */
+export const BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE = "What shaped this estimate";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_CONDITION =
-  "Heavier buildup increases time required.";
-export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS =
-  "Targeted problem areas add focused cleaning time.";
-export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT =
-  "Dense layout requires more detailed work.";
-export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE =
-  "A more detailed scope increases the time needed throughout the home.";
+  "Heavier overall labor condition or heavy access limits are reflected in this preview.";
+export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH =
+  "Heavy-use kitchen or detailed bathroom selections are reflected in this preview.";
+export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT =
+  "A segmented layout with moderate or heavy access limits is reflected in this preview.";
+export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT =
+  "A reset-level clean intention is reflected in this preview.";
+export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SURFACE_DETAILS =
+  "Selected surface-detail tags are reflected in this preview.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS =
-  "Selected add-ons add focused work beyond the main cleaning.";
+  "Selected add-ons add focused work in the estimator preview.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DEEP_CLEAN_FOCUS =
   "Your visit focus shifts more time toward the areas that need the most attention.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION =
-  "Furnishings and move-state complexity can increase the detail needed throughout the home.";
+  "Furnishings and move-state complexity are reflected in this preview.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES =
-  "Including appliances adds focused work beyond the main cleaning.";
+  "Appliances in scope are reflected through included add-on work in this preview.";
+
+/** Step 4 — opening vs recurring framing (recurring path). */
+export const BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL =
+  "Opening visit price (preview)";
+export const BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL =
+  "This visit price (preview)";
+export const BOOKING_REVIEW_LABOR_EFFORT_GLOSS =
+  "Cleaning effort is sized in labor time. Actual time in your home depends on the team size you choose next.";
+export const BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL = "Scope predictability";
+export const BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE =
+  "This reflects how well your answers narrow the scope for planning—not the odds your final price will change after we confirm details.";
+export const BOOKING_REVIEW_RECURRING_SECTION_TITLE =
+  "Ongoing maintenance (after opening)";
+export const BOOKING_REVIEW_RECURRING_SECTION_LEAD =
+  "Choose how often you want maintenance visits once your home is in a steady rhythm. Recurring visits are sized for a maintained home—less recovery work than your opening visit.";
+export const BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD = "Initial / opening visit";
+export const BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD =
+  "Maintained-home visits";
+export const BOOKING_REVIEW_RECURRING_PRICE_LABEL = "Typical recurring visit price";
+export const BOOKING_REVIEW_RECURRING_LABOR_LABEL = "Typical recurring cleaning effort";
+export const BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER =
+  "Opening visit price and cleaning effort are in “Estimated cleaning time & cost” above.";
+export const BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD =
+  "At this cadence, each recurring visit reflects lower labor need than the opening visit under the same pricing model (less catch-up work when the home stays on schedule).";
+export const BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD = "How often you want upkeep";
+export const BOOKING_REVIEW_RECURRING_PER_VISIT_DELTA_LABEL =
+  "Maintenance vs opening visit (this cadence)";
+/** @deprecated Use BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD; kept for tests migrating off old wording. */
+export const BOOKING_REVIEW_RECURRING_LABOR_DELTA_PREFIX =
+  "Roughly less labor than opening per visit";
+
+export const BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE = "Choose your first visit time";
+export const BOOKING_SCHEDULE_FIRST_VISIT_TIME_EXPLAINER =
+  "You’re scheduling the arrival for your opening visit. After that visit stabilizes the home, your recurring cadence continues upkeep—not another full reset every time.";
 
 /** Step 4 — quote / planning clarity (derived from selections only; never numeric). */
-export const BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE = "Quote clarity";
+export const BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE = "Planning clarity";
 
 export const BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE =
   "Your details support a clear planning estimate.";
@@ -570,18 +658,44 @@ export const BOOKING_REVIEW_PRE_CONF_HIGH_SUPPORTING =
   "Planning is straightforward from the details provided.";
 
 export const BOOKING_REVIEW_PRE_CONF_CUSTOM_HEADLINE =
-  "Your estimate reflects a more tailored scope.";
+  "Your preview reflects a more tailored scope.";
 export const BOOKING_REVIEW_PRE_CONF_CUSTOM_BODY =
-  "A few meaningful choices are shaping how this visit comes together.";
+  "A few meaningful choices are shaping both the estimator preview and crew planning.";
 export const BOOKING_REVIEW_PRE_CONF_CUSTOM_SUPPORTING =
-  "Multiple request details are shaping the estimate.";
+  "Multiple selections are informing the preview—not every note changes automated pricing.";
 
 export const BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE =
   "Your request includes details that may require a more customized final plan.";
 export const BOOKING_REVIEW_PRE_CONF_SPECIAL_BODY =
   "The combination you described asks for extra nuance in how we plan the work.";
 export const BOOKING_REVIEW_PRE_CONF_SPECIAL_SUPPORTING =
-  "Selected details increase the need for a more tailored planning view.";
+  "Selected details increase the need for a more tailored planning view before the visit.";
+
+/** Review — narrative fields that help ops but are not claimable as estimateFactors levers. */
+/** Auto-derived cues from earlier home steps — distinct from estimator drivers block. */
+export const BOOKING_REVIEW_PLANNING_NOTES_TITLE = "Notes from your home details";
+
+/** Optional free-text crew prep (access, parking, off-limits, etc.) — not part of the live estimator. */
+export const BOOKING_REVIEW_TEAM_PLANNING_DETAILS_TITLE = "Team planning details";
+
+export const BOOKING_REVIEW_TEAM_PLANNING_DETAILS_LEAD =
+  "Optional — helps our crew prepare. This does not change the automated quote you see on this page.";
+
+export const BOOKING_REVIEW_TEAM_PLANNING_DETAILS_SUMMARY =
+  "We’ll pass these notes to your service team to limit surprises on arrival. Editing them does not refresh your price preview.";
+
+/** `/book/confirmation` — echoes session snapshot; never paired with pricing language. */
+export const BOOKING_CONFIRMATION_TEAM_PREP_TITLE =
+  "Details we’ll share with your team";
+
+export const BOOKING_PLANNING_NOTE_FOCUS_AREAS_LEAD =
+  "Focus-area notes your crew will read:";
+export const BOOKING_PLANNING_NOTE_DENSE_FURNISHINGS =
+  "You noted denser furnishings and tighter paths—helpful for on-site pacing (not a separate automated preview lever today).";
+export const BOOKING_PLANNING_NOTE_DETAIL_HEAVY_PREFERENCE =
+  "You preferred detail-heavy breadth—your team will align finishing expectations on site.";
+export const BOOKING_PLANNING_NOTE_HOME_CONDITION_LEAD =
+  "Overall home-condition label on file:";
 
 /** Step 4 — visit prep hints (informational; from selections only). */
 export const BOOKING_REVIEW_PREP_SECTION_TITLE = "Before we arrive";

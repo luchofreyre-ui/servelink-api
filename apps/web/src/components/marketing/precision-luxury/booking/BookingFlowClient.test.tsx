@@ -22,12 +22,12 @@ import {
   BOOKING_DEEP_CLEAN_FOCUS_LABELS,
   BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DEEP_CLEAN_FOCUS,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_CONDITION,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES,
   BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE,
   BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD,
@@ -35,7 +35,10 @@ import {
   BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE,
   BOOKING_REVIEW_PRE_CONF_HIGH_SUPPORTING,
   BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE,
+  BOOKING_PLANNING_NOTE_DENSE_FURNISHINGS,
+  BOOKING_REVIEW_PLANNING_NOTES_TITLE,
   BOOKING_REVIEW_PREP_DENSE_LAYOUT,
+  BOOKING_REVIEW_RECURRING_SECTION_TITLE,
   BOOKING_REVIEW_PREP_FRIDGE,
   BOOKING_REVIEW_PREP_MOVE_FURNISHED,
   BOOKING_REVIEW_PREP_OVEN,
@@ -54,6 +57,7 @@ import {
   BOOKING_SCHEDULE_CHOOSE_SLOT_HINT,
   BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE,
   BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA,
+  BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE,
   BOOKING_SCHEDULE_CONFIRM_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED_HINT,
@@ -228,6 +232,8 @@ async function defaultPostPublicBookingAvailability(body: {
       selectedTeam: {
         id: body.foId,
         displayName: isSouth ? "South Team" : "North Team",
+        assignedCrewSize: 2,
+        estimatedDurationMinutes: 90,
       },
       windows: [
         {
@@ -612,15 +618,28 @@ describe("BookingFlowClient", () => {
 
     await waitFor(() => {
       expect(document.body.textContent).toContain("$310");
-      expect(document.body.textContent).toContain("$190 / 38%");
+      expect(document.body.textContent).toContain("$190");
+      expect(document.body.textContent).not.toMatch(/Savings/i);
+      expect(document.body.textContent).not.toContain("38%");
     }, { timeout: 8000 });
 
     fireEvent.click(screen.getByRole("button", { name: /Every 10 days/i }));
 
     await waitFor(() => {
       expect(document.body.textContent).toContain("$333");
-      expect(document.body.textContent).toContain("$167 / 33%");
+      expect(document.body.textContent).toContain("$167");
+      expect(document.body.textContent).not.toContain("33%");
     }, { timeout: 8000 });
+  });
+
+  it("recurring review uses maintenance framing and omits savings/discount copy", async () => {
+    bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
+    render(<BookingFlowClient />);
+    await fillReviewContactAndOptionalFirstTimePlan(8000);
+    expect(screen.getByText(BOOKING_REVIEW_RECURRING_SECTION_TITLE)).toBeInTheDocument();
+    expect(screen.getByTestId("booking-review-recurring-maintenance")).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/Savings/i);
+    expect(document.body.textContent).not.toMatch(/discount/i);
   });
 
   it("blocks recurring review when preview response omits recurring quotes", async () => {
@@ -686,7 +705,12 @@ describe("BookingFlowClient", () => {
       expect(screen.queryByTestId("booking-schedule-slot-section")).toBeNull();
       fireEvent.click(screen.getByText("North Team"));
       expect(await screen.findByTestId("booking-schedule-slot-section")).toBeInTheDocument();
-      expect(screen.getByText("Choose your first visit time")).toBeInTheDocument();
+      expect(
+        screen.getByText(BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/scheduling the arrival for your opening visit/i),
+      ).toBeInTheDocument();
     });
 
     it("availability refetches when the selected team changes (slots follow the team)", async () => {
@@ -817,6 +841,26 @@ describe("BookingFlowClient", () => {
         "no_teams_available",
         expect.objectContaining({ bookingId: "bk_test" }),
       );
+    });
+
+    it("after team selection, separates cleaning effort from in-home duration", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      expect(screen.queryByTestId("booking-schedule-duration-context")).not.toBeInTheDocument();
+
+      fireEvent.click(screen.getByText("North Team"));
+      const ctx = await screen.findByTestId("booking-schedule-duration-context");
+      expect(ctx).toBeInTheDocument();
+      expect(ctx).toHaveTextContent(/Estimated cleaning effort/);
+      expect(ctx).toHaveTextContent("3 hr");
+      await waitFor(() => {
+        expect(screen.getByTestId("booking-schedule-in-home-duration")).toHaveTextContent(
+          "About 1 hr 30 min",
+        );
+      });
+      expect(ctx).toHaveTextContent(/2-person team/);
     });
 
     it("team with zero slots shows no-slots fallback and switch team when two teams exist", async () => {
@@ -1000,6 +1044,12 @@ describe("BookingFlowClient", () => {
           onRetryConfirmBooking={vi.fn()}
           onChooseDifferentTimeAfterConfirmFail={vi.fn()}
           schedulePreview={null}
+          laborEffortMinutes={180}
+          scheduleTeamDurationContext={{
+            teamId: "fo_test_pick",
+            assignedCrewSize: 2,
+            estimatedInHomeMinutes: 90,
+          }}
         />,
       );
       expect(screen.queryByTestId("booking-schedule-summary")).not.toBeInTheDocument();
@@ -2406,7 +2456,7 @@ describe("BookingFlowClient", () => {
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
       );
       expect(
-        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS),
+        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH),
       ).toBeInTheDocument();
     });
 
@@ -2425,7 +2475,7 @@ describe("BookingFlowClient", () => {
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
       );
       expect(
-        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT),
+        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT),
       ).toBeInTheDocument();
     });
 
@@ -2438,6 +2488,79 @@ describe("BookingFlowClient", () => {
       expect(
         screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE),
       ).not.toBeInTheDocument();
+    });
+
+    it("shows planning notes for focus-area tokens that are not estimator fields", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `${buildReviewSearchString()}&homeProblems=pet_hair`,
+      );
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      const planning = screen.getByTestId("booking-review-planning-notes");
+      expect(planning).toBeInTheDocument();
+      expect(within(planning).getByText(/Pet hair/i)).toBeInTheDocument();
+      expect(
+        screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH),
+      ).not.toBeInTheDocument();
+    });
+
+    it("treats dense furnishings selection as planning notes when segmented-access driver does not apply", async () => {
+      const sp = new URLSearchParams(buildReviewSearchString());
+      sp.set("homeSurface", "dense_layout");
+      bookingFlowTestSearch.sp = sp;
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      expect(screen.getByTestId("booking-review-planning-notes")).toBeInTheDocument();
+      expect(screen.getByText(BOOKING_PLANNING_NOTE_DENSE_FURNISHINGS)).toBeInTheDocument();
+      expect(
+        screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT),
+      ).not.toBeInTheDocument();
+    });
+
+    it("submits team planning via recurringInterest.note without adding estimator-only keys", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+
+      const panel = screen.getByTestId("booking-review-team-planning-details");
+      const summary = panel.querySelector("summary");
+      expect(summary).toBeTruthy();
+      fireEvent.click(summary!);
+      fireEvent.change(
+        within(panel).getByRole("textbox", { name: /Access instructions/i }),
+        { target: { value: "Lockbox 1919" } },
+      );
+
+      submitBookingDirectionIntakeMock.mockClear();
+      fireEvent.click(screen.getByTestId("booking-direction-send"));
+      await waitFor(() => expect(submitBookingDirectionIntakeMock).toHaveBeenCalled());
+      const payload = submitBookingDirectionIntakeMock.mock.calls[0][0] as Record<
+        string,
+        unknown
+      >;
+      const ri = payload.recurringInterest as Record<string, unknown> | undefined;
+      expect(ri?.interested).toBe(false);
+      expect(String(ri?.note)).toContain("Access instructions:");
+      expect(String(ri?.note)).toContain("Lockbox 1919");
+      const ef = payload.estimateFactors as Record<string, unknown>;
+      expect("accessInstructions" in ef).toBe(false);
+      expect("offLimitsRooms" in ef).toBe(false);
+    });
+
+    it("uses labor-effort wording and scope predictability framing on review", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      expect(screen.getByText(/Estimated labor effort:/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Actual time in your home depends on the team size/i),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/Scope predictability:/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/planning clarity/i).length).toBeGreaterThan(0);
+      expect(
+        screen.getByText(/not the odds your final price will change/i),
+      ).toBeInTheDocument();
     });
   });
 
@@ -2547,7 +2670,7 @@ describe("BookingFlowClient", () => {
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
       );
       expect(
-        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE),
+        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT),
       ).toBeInTheDocument();
       expect(
         screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS),
@@ -2573,7 +2696,7 @@ describe("BookingFlowClient", () => {
         screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE),
+        screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT),
       ).not.toBeInTheDocument();
     });
 
@@ -2992,11 +3115,19 @@ describe("BookingFlowClient", () => {
     });
 
     it("heavier combined signals show special-attention band copy", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(
-        `${buildReviewSearchString()}&homeSurface=dense_layout&homeCondition=heavy_buildup&homeScope=detail_heavy`,
-      );
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(5000);
+      goHomeFromReviewViaBackOnce();
+      fireEvent.click(screen.getByRole("radio", { name: /major reset needed/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /heavy clutter/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /Many segmented rooms/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /Moderate clutter/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /reset-level clean/i }));
+      fireEvent.click(
+        screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.inside_oven }),
+      );
+      await continueThroughLocationGateToReview();
       await waitFor(
         () =>
           expect(screen.getByText(BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE)).toBeInTheDocument(),

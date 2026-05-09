@@ -63,7 +63,7 @@ export const CUSTOMER_INTENT_SCHEDULE_MESSAGE: Record<CustomerIntent, string> = 
 
 export const CUSTOMER_INTENT_UPSHIFT_HOOK: Record<CustomerIntent, string> = {
   [CustomerIntent.RESET]: "Add deep areas for a full reset",
-  [CustomerIntent.MAINTAIN]: "Save with recurring plans",
+  [CustomerIntent.MAINTAIN]: "Recurring maintenance plans",
   [CustomerIntent.TOP_UP]: "Make this a regular clean?",
   [CustomerIntent.TRANSACTIONAL]: "Ensure everything is move-ready",
 };

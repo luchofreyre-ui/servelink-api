@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { buildEstimateRequestKey } from "./bookingEstimateKey";
 import {
   type EstimateFailureType,
@@ -40,6 +40,8 @@ function failureTypeFromError(err: unknown): EstimateFailureType {
 
 export function useBookingEstimate(input: Record<string, unknown> | null) {
   const [state, setState] = useState<EstimateState>(createInitialEstimateState());
+  const inputRef = useRef(input);
+  inputRef.current = input;
 
   const requestKey = useMemo(
     () => (input == null ? "__idle__" : buildEstimateRequestKey(input)),
@@ -47,12 +49,13 @@ export function useBookingEstimate(input: Record<string, unknown> | null) {
   );
 
   useEffect(() => {
-    if (input == null) {
+    const latest = inputRef.current;
+    if (latest == null) {
       setState(createInitialEstimateState());
       return;
     }
 
-    const key = buildEstimateRequestKey(input);
+    const key = buildEstimateRequestKey(latest);
     let cancelled = false;
 
     setState({
@@ -61,7 +64,7 @@ export function useBookingEstimate(input: Record<string, unknown> | null) {
       data: null,
     });
 
-    void previewEstimate(input as Parameters<typeof previewEstimate>[0])
+    void previewEstimate(latest as Parameters<typeof previewEstimate>[0])
       .then((res) => {
         if (cancelled) return;
         setState((prev) => {
@@ -97,7 +100,7 @@ export function useBookingEstimate(input: Record<string, unknown> | null) {
     return () => {
       cancelled = true;
     };
-  }, [requestKey, input]);
+  }, [requestKey]);
 
   return state;
 }

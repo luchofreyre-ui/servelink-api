@@ -20,9 +20,32 @@ export function formatEstimateDurationMinutes(total: number): string {
   return `${h} hr ${m} min`;
 }
 
+/** Softer wall-clock framing for team-contextual visit length (nearest 15 minutes). */
+export function formatApproximateInHomeDurationMinutes(total: number): string {
+  if (!Number.isFinite(total) || total < 0) return "—";
+  const rounded = Math.round(total / 15) * 15;
+  const bounded = Math.max(15, rounded);
+  const inner = formatEstimateDurationMinutes(bounded);
+  if (inner === "—") return "—";
+  return `About ${inner}`;
+}
+
 export function formatEstimateConfidence(confidence: number): string {
   if (!Number.isFinite(confidence)) return "—";
   return `${Math.round(confidence * (confidence <= 1 ? 100 : 1))}%`;
+}
+
+/** Customer-facing planning signal — band + score; not “probability the quote is wrong.” */
+export function formatScopePredictabilitySummary(confidence: number): string {
+  if (!Number.isFinite(confidence)) return "—";
+  const pct = Math.round(confidence * (confidence <= 1 ? 100 : 1));
+  const band =
+    pct >= 75
+      ? "High planning clarity"
+      : pct >= 55
+        ? "Moderate planning clarity"
+        : "Limited planning clarity";
+  return `${band} (${pct}% detail signal)`;
 }
 
 /**

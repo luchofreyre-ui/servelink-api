@@ -78,7 +78,6 @@ import {
 import type {
   BookingAvailableTeamOption,
   BookingFlowState,
-  BookingPreviewConfidenceBand,
   BookingStepId,
 } from "./bookingFlowTypes";
 import {
@@ -89,6 +88,7 @@ import { BookingStepHomeDetails } from "./BookingStepHomeDetails";
 import { BookingStepServiceLocation } from "./BookingStepServiceLocation";
 import {
   BookingStepSchedule,
+  type BookingScheduleTeamDurationContext,
   type BookingScheduleTeamsEmptyState,
   type DerivedSchedulePreview,
 } from "./BookingStepSchedule";
@@ -110,6 +110,17 @@ import {
 import { DepositPaymentElement } from "./DepositPaymentElement";
 import { getStripePromise } from "@/lib/stripe/stripeClient";
 import { buildIntakeEstimateFactorsFromBookingHomeState } from "./bookingStep2ToEstimateFactors";
+import {
+  buildIntakePlanningNoteLines,
+  computePreviewConfidenceBandInputs,
+  computeWiredEstimateDriverFlags,
+  derivePreviewConfidenceBand,
+} from "./bookingIntakeEstimateDrivers";
+import {
+  buildRecurringInterestPayloadForDirectionIntake,
+  buildTeamPlanningDisplayLines,
+  BOOKING_TEAM_PLANNING_FIELD_MAX_CHARS,
+} from "./bookingTeamPlanningDetails";
 import { buildEstimateRequestKey } from "./bookingEstimateKey";
 import { useBookingEstimate } from "./useBookingEstimate";
 import { mapIntakeDeepCleanSnapshotToCardProgram } from "./bookingIntakePreviewDisplay";
@@ -305,34 +316,6 @@ function getStepError(state: BookingFlowState): string | null {
   return null;
 }
 
-/** Internal weighting only — never shown. Maps canonical complexity signals to a band. */
-function derivePreviewConfidenceBand(input: {
-  isHeavyCondition: boolean;
-  problemAreaCount: number;
-  isDenseLayout: boolean;
-  isDetailHeavyScope: boolean;
-  addOnCount: number;
-  nonDefaultDeepCleanFocus: boolean;
-  furnishedMoveTransition: boolean;
-  transitionAppliances: boolean;
-}): BookingPreviewConfidenceBand {
-  let weight = 0;
-  if (input.isHeavyCondition) weight += 2;
-  if (input.problemAreaCount >= 1) {
-    weight += Math.min(2, input.problemAreaCount);
-  }
-  if (input.isDenseLayout) weight += 2;
-  if (input.isDetailHeavyScope) weight += 2;
-  weight += Math.min(3, input.addOnCount);
-  if (input.nonDefaultDeepCleanFocus) weight += 1;
-  if (input.furnishedMoveTransition) weight += 1;
-  if (input.transitionAppliances) weight += 1;
-
-  if (weight <= 1) return "high_clarity";
-  if (weight <= 4) return "customized";
-  return "special_attention";
-}
-
 function pushUniqueCap3(list: string[], line: string) {
   if (list.length >= 3) return;
   if (list.includes(line)) return;
@@ -466,6 +449,8 @@ export function BookingFlowClient() {
   const [windowsRefreshKey, setWindowsRefreshKey] = useState(0);
   const [teamsLoadSlowHint, setTeamsLoadSlowHint] = useState(false);
   const [windowsLoadSlowHint, setWindowsLoadSlowHint] = useState(false);
+  const [scheduleTeamDurationContext, setScheduleTeamDurationContext] =
+    useState<BookingScheduleTeamDurationContext | null>(null);
   const [scheduleCommitError, setScheduleCommitError] = useState<string | null>(null);
   const [scheduleCommitPhase, setScheduleCommitPhase] = useState<
     "none" | "hold_failed" | "confirm_failed"
@@ -520,6 +505,21 @@ export function BookingFlowClient() {
   /** Latest booking state when committing the URL at step boundaries. */
   const stateRefForBookingUrl = useRef(state);
   stateRefForBookingUrl.current = state;
+
+  function teamPlanningSnapshotForSession():
+    | { teamPlanningLines: string[] }
+    | Record<string, never> {
+    const lines = buildTeamPlanningDisplayLines(
+      stateRefForBookingUrl.current.teamPlanningDetails,
+    );
+    return lines.length ? { teamPlanningLines: lines } : {};
+  }
+
+  useEffect(() => {
+    if (state.step !== "schedule") {
+      setScheduleTeamDurationContext(null);
+    }
+  }, [state.step]);
 
   useEffect(() => {
     const handler = () => {
@@ -662,7 +662,10 @@ export function BookingFlowClient() {
     if (s.selectedSlotEnd.trim()) payload.selectedSlotEnd = s.selectedSlotEnd.trim();
     const expiresAt = args.expiresAt?.trim();
     if (expiresAt) payload.paymentSessionExpiresAt = expiresAt;
-    writeBookingConfirmationSessionSnapshot(payload);
+    writeBookingConfirmationSessionSnapshot({
+      ...payload,
+      ...teamPlanningSnapshotForSession(),
+    });
   }
   /**
    * Last `state.step` written to the location bar. Same-step edits stay in React only
@@ -718,11 +721,35 @@ export function BookingFlowClient() {
           });
           return;
         }
-        const teams = (res.teams ?? []).map((t, i) => ({
-          id: t.id,
-          displayName: t.displayName,
-          isRecommended: t.isRecommended ?? i === 0,
-        }));
+        const teams = (res.teams ?? []).map((t, i) => {
+          const option: BookingAvailableTeamOption = {
+            id: t.id,
+            displayName: t.displayName,
+            isRecommended: t.isRecommended ?? i === 0,
+          };
+          if (
+            typeof t.assignedCrewSize === "number" &&
+            Number.isFinite(t.assignedCrewSize)
+          ) {
+            option.assignedCrewSize = t.assignedCrewSize;
+          }
+          if (
+            typeof t.estimatedDurationMinutes === "number" &&
+            Number.isFinite(t.estimatedDurationMinutes)
+          ) {
+            option.estimatedDurationMinutes = t.estimatedDurationMinutes;
+          }
+          if (
+            t.crewCapacityMeta &&
+            typeof t.crewCapacityMeta.requiredLaborMinutes === "number" &&
+            Number.isFinite(t.crewCapacityMeta.requiredLaborMinutes)
+          ) {
+            option.crewCapacityMeta = {
+              requiredLaborMinutes: t.crewCapacityMeta.requiredLaborMinutes,
+            };
+          }
+          return option;
+        });
         const teamIds = teams.map((t) => t.id);
         const recommendedTeamId =
           teams.find((t) => t.isRecommended)?.id ?? teamIds[0] ?? null;
@@ -788,6 +815,7 @@ export function BookingFlowClient() {
     ) {
       setSlotsEmptyForTeam(false);
       setWindowsLoadSlowHint(false);
+      setScheduleTeamDurationContext(null);
       return;
     }
     let cancelled = false;
@@ -803,6 +831,7 @@ export function BookingFlowClient() {
       .then((res) => {
         if (cancelled) return;
         if (res.kind !== "public_booking_team_availability") {
+          setScheduleTeamDurationContext(null);
           setScheduleSurfaceError(
             "We couldn’t load times for that team. Try another team or refresh.",
           );
@@ -814,6 +843,25 @@ export function BookingFlowClient() {
             ok: false,
           });
           return;
+        }
+        const st = res.selectedTeam;
+        const currentTeamId = stateRefForBookingUrl.current.selectedTeamId.trim();
+        if (currentTeamId && st?.id?.trim() === currentTeamId) {
+          setScheduleTeamDurationContext({
+            teamId: currentTeamId,
+            assignedCrewSize:
+              typeof st.assignedCrewSize === "number" &&
+              Number.isFinite(st.assignedCrewSize)
+                ? st.assignedCrewSize
+                : null,
+            estimatedInHomeMinutes:
+              typeof st.estimatedDurationMinutes === "number" &&
+              Number.isFinite(st.estimatedDurationMinutes)
+                ? st.estimatedDurationMinutes
+                : null,
+          });
+        } else {
+          setScheduleTeamDurationContext(null);
         }
         const windows = (res.windows ?? []).map((w) => ({
           slotId: w.slotId,
@@ -871,6 +919,7 @@ export function BookingFlowClient() {
       })
       .catch(() => {
         if (!cancelled) {
+          setScheduleTeamDurationContext(null);
           setScheduleSurfaceError(
             "We couldn’t load open times. Try again in a moment.",
           );
@@ -1007,24 +1056,16 @@ export function BookingFlowClient() {
     [requestedEnhancementIds],
   );
 
-  const recurringInterestPayload = useMemo(() => {
-    if (state.recurringInterest?.interested !== true) return undefined;
-    return {
-      interested: true,
-      ...(state.recurringInterest.cadence
-        ? { cadence: state.recurringInterest.cadence }
-        : {}),
-      ...(state.recurringInterest.note?.trim()
-        ? { note: state.recurringInterest.note.trim() }
-        : {}),
-      ...(state.intent ? { sourceIntent: state.intent } : {}),
-    };
-  }, [
-    state.recurringInterest?.interested,
-    state.recurringInterest?.cadence,
-    state.recurringInterest?.note,
-    state.intent,
-  ]);
+  const recurringInterestPayload = useMemo(
+    () => buildRecurringInterestPayloadForDirectionIntake(state),
+    [
+      state.recurringInterest?.interested,
+      state.recurringInterest?.cadence,
+      state.recurringInterest?.note,
+      state.teamPlanningDetails,
+      state.intent,
+    ],
+  );
 
   const recurringInterestPayloadKey = useMemo(
     () => JSON.stringify(recurringInterestPayload ?? null),
@@ -1048,98 +1089,64 @@ export function BookingFlowClient() {
     });
   }, [selectedStartAtForPreview, resolvedSchedulePreviewCadence]);
 
-  const isHeavyCondition = useMemo(
-    () =>
-      state.overallLaborCondition === "major_reset" ||
-      state.clutterAccess === "heavy_clutter" ||
-      state.condition === "heavy_buildup" ||
-      state.condition === "move_in_out_reset",
+  const wiredEstimateDriverFlags = useMemo(
+    () => computeWiredEstimateDriverFlags(state),
     [
+      state.serviceId,
       state.overallLaborCondition,
       state.clutterAccess,
+      state.kitchenIntensity,
+      state.bathroomComplexity,
+      state.layoutType,
+      state.primaryIntent,
+      state.surfaceDetailTokens,
+      selectedAddOnsPayloadKey,
+      state.deepCleanFocus,
+      state.transitionState,
+      appliancePresencePayloadKey,
+    ],
+  );
+
+  const intakePlanningNoteLines = useMemo(
+    () => buildIntakePlanningNoteLines(state),
+    [
+      problemAreasPayloadKey,
+      state.surfaceComplexity,
+      state.layoutType,
+      state.clutterAccess,
+      state.scopeIntensity,
+      state.primaryIntent,
       state.condition,
     ],
   );
 
-  const hasProblemAreas = useMemo(
+  const previewConfidenceBand = useMemo(
     () =>
-      normalizeBookingProblemAreasForPayload(state.problemAreas).length > 0 ||
-      state.kitchenIntensity === "heavy_use" ||
-      state.bathroomComplexity === "heavy_detailing",
-    [state.problemAreas, state.kitchenIntensity, state.bathroomComplexity],
+      derivePreviewConfidenceBand(computePreviewConfidenceBandInputs(state)),
+    [
+      state.serviceId,
+      state.overallLaborCondition,
+      state.clutterAccess,
+      state.kitchenIntensity,
+      state.bathroomComplexity,
+      state.layoutType,
+      state.primaryIntent,
+      state.surfaceDetailTokens,
+      selectedAddOnsPayloadKey,
+      state.deepCleanFocus,
+      state.transitionState,
+      appliancePresencePayloadKey,
+    ],
   );
 
-  const isDenseLayout = useMemo(
-    () =>
-      state.surfaceComplexity === "dense_layout" ||
-      (state.layoutType === "segmented" &&
-        state.clutterAccess !== "mostly_clear"),
-    [state.surfaceComplexity, state.layoutType, state.clutterAccess],
-  );
+  const estimateDriverHasAddOns = wiredEstimateDriverFlags.hasAddOns;
 
-  const estimateDriverDetailHeavyScope = useMemo(
-    () =>
-      state.scopeIntensity === "detail_heavy" ||
-      state.primaryIntent === "reset_level",
-    [state.scopeIntensity, state.primaryIntent],
-  );
+  const estimateDriverDeepCleanFocus = wiredEstimateDriverFlags.deepCleanFocusNonDefault;
 
-  const estimateDriverHasAddOns = useMemo(
-    () => normalizeBookingAddOnsForPayload(state.selectedAddOns).length > 0,
-    [state.selectedAddOns],
-  );
+  const estimateDriverFurnishedTransition = wiredEstimateDriverFlags.furnishedTransition;
 
-  const estimateDriverDeepCleanFocus = useMemo(
-    () =>
-      isDeepCleaningBookingServiceId(state.serviceId) &&
-      state.deepCleanFocus !== "whole_home_reset",
-    [state.serviceId, state.deepCleanFocus],
-  );
-
-  const estimateDriverFurnishedTransition = useMemo(
-    () =>
-      isBookingMoveTransitionServiceId(state.serviceId) &&
-      (state.transitionState === "lightly_furnished" ||
-        state.transitionState === "fully_furnished"),
-    [state.serviceId, state.transitionState],
-  );
-
-  const estimateDriverTransitionAppliances = useMemo(
-    () =>
-      isBookingMoveTransitionServiceId(state.serviceId) &&
-      normalizeBookingAppliancePresenceForPayload(state.appliancePresence)
-        .length > 0,
-    [state.serviceId, state.appliancePresence],
-  );
-
-  const previewConfidenceBand = useMemo((): BookingPreviewConfidenceBand => {
-    const problemAreaCount =
-      normalizeBookingProblemAreasForPayload(state.problemAreas).length +
-      (state.kitchenIntensity === "heavy_use" ? 1 : 0) +
-      (state.bathroomComplexity === "heavy_detailing" ? 1 : 0);
-    const addOnCount = normalizeBookingAddOnsForPayload(
-      state.selectedAddOns,
-    ).length;
-    return derivePreviewConfidenceBand({
-      isHeavyCondition,
-      problemAreaCount,
-      isDenseLayout,
-      isDetailHeavyScope: estimateDriverDetailHeavyScope,
-      addOnCount,
-      nonDefaultDeepCleanFocus: estimateDriverDeepCleanFocus,
-      furnishedMoveTransition: estimateDriverFurnishedTransition,
-      transitionAppliances: estimateDriverTransitionAppliances,
-    });
-  }, [
-    isHeavyCondition,
-    problemAreasPayloadKey,
-    isDenseLayout,
-    estimateDriverDetailHeavyScope,
-    selectedAddOnsPayloadKey,
-    estimateDriverDeepCleanFocus,
-    estimateDriverFurnishedTransition,
-    estimateDriverTransitionAppliances,
-  ]);
+  const estimateDriverTransitionAppliances =
+    wiredEstimateDriverFlags.transitionAppliances;
 
   const prepGuidanceItems = useMemo(
     () => derivePrepGuidanceItems(state),
@@ -1394,6 +1401,36 @@ export function BookingFlowClient() {
       recurringQuoteOptions: estimate.data.recurringQuoteOptions,
     };
   }, [estimate.status, estimate.data, estimate.requestKey, estimateInput]);
+
+  const lastPreviewLaborMinutesRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (
+      previewEstimate &&
+      typeof previewEstimate.durationMinutes === "number" &&
+      Number.isFinite(previewEstimate.durationMinutes)
+    ) {
+      lastPreviewLaborMinutesRef.current = previewEstimate.durationMinutes;
+    }
+  }, [previewEstimate]);
+
+  /** Labor minutes from the confirmed intake snapshot — schedule step has no live preview input. */
+  const scheduleLaborEffortMinutes = useMemo((): number | null => {
+    if (state.step !== "schedule") return null;
+    const bookingId = state.schedulingBookingId.trim();
+    if (!bookingId) return null;
+    try {
+      const snap = readBookingConfirmationSessionSnapshot();
+      if (snap?.bookingId?.trim() === bookingId) {
+        const dm = snap.durationMinutes;
+        if (typeof dm === "number" && Number.isFinite(dm)) return dm;
+      }
+    } catch {
+      /* sessionStorage may be unavailable */
+    }
+    const sticky = lastPreviewLaborMinutesRef.current;
+    if (typeof sticky === "number" && Number.isFinite(sticky)) return sticky;
+    return null;
+  }, [state.step, state.schedulingBookingId]);
 
   const previewDeepCleanCard = useMemo((): DeepCleanProgramDisplay | null => {
     if (
@@ -1653,20 +1690,27 @@ export function BookingFlowClient() {
   ) {
     const bookingId = prep.bookingId.trim();
     if (!bookingId) return;
-    const intakeId = stateRefForBookingUrl.current.schedulingIntakeId.trim();
+    const prior = readBookingConfirmationSessionSnapshot();
+    const intakeId =
+      stateRefForBookingUrl.current.schedulingIntakeId.trim() ||
+      prior?.intakeId?.trim() ||
+      "";
     const holdId = pendingConfirmHoldIdRef.current?.trim();
+    const priorMatchesBooking =
+      prior != null && prior.bookingId.trim() === bookingId;
     writeBookingConfirmationSessionSnapshot({
       intakeId,
       bookingId,
-      priceCents: null,
-      durationMinutes: null,
-      confidence: null,
-      bookingErrorCode: "",
+      priceCents: priorMatchesBooking ? prior.priceCents : null,
+      durationMinutes: priorMatchesBooking ? prior.durationMinutes : null,
+      confidence: priorMatchesBooking ? prior.confidence : null,
+      bookingErrorCode: priorMatchesBooking ? prior.bookingErrorCode : "",
       publicDepositPaymentIntentId: prep.paymentIntentId?.trim() || undefined,
       publicDepositStatus:
         prep.publicDepositStatus?.trim() || "deposit_succeeded",
       publicDepositHoldId: holdId || undefined,
       paymentSessionKey: currentPaymentSessionKey(bookingId, holdId),
+      ...teamPlanningSnapshotForSession(),
     });
     clearDepositUi();
     if (holdId) {
@@ -1983,6 +2027,7 @@ export function BookingFlowClient() {
         durationMinutes: result.estimate?.durationMinutes ?? null,
         confidence: result.estimate?.confidence ?? null,
         bookingErrorCode: result.bookingError?.code ?? "",
+        ...teamPlanningSnapshotForSession(),
       });
 
       if (
@@ -1997,6 +2042,7 @@ export function BookingFlowClient() {
           durationMinutes: result.estimate?.durationMinutes ?? null,
           confidence: result.estimate?.confidence ?? null,
           bookingErrorCode: result.bookingError?.code ?? "",
+          ...teamPlanningSnapshotForSession(),
         });
 
         setScheduleSurfaceError(null);
@@ -2445,6 +2491,7 @@ export function BookingFlowClient() {
     setScheduleCommitError(null);
     setScheduleCommitPhase("none");
     setPendingConfirmHoldId(null);
+    setScheduleTeamDurationContext(null);
     const teams = state.availableTeams;
     const idx = Math.max(
       0,
@@ -2501,6 +2548,37 @@ export function BookingFlowClient() {
     const teams = state.availableTeams;
     const other = teams.find((t) => t.id !== state.selectedTeamId.trim());
     if (other) handleSelectTeam(other);
+  }
+
+  function patchTeamPlanningDetails(
+    patch: Partial<NonNullable<BookingFlowState["teamPlanningDetails"]>>,
+  ) {
+    setSubmitRecoverableFailure(false);
+    setState((prev) => {
+      const base: NonNullable<BookingFlowState["teamPlanningDetails"]> = {
+        ...(prev.teamPlanningDetails ?? {}),
+      };
+      for (const [rawKey, rawVal] of Object.entries(patch)) {
+        const key = rawKey as keyof NonNullable<
+          BookingFlowState["teamPlanningDetails"]
+        >;
+        const s =
+          typeof rawVal === "string"
+            ? rawVal.slice(0, BOOKING_TEAM_PLANNING_FIELD_MAX_CHARS)
+            : "";
+        if (!s.trim()) {
+          delete base[key];
+        } else {
+          base[key] = s;
+        }
+      }
+      const teamPlanningDetails =
+        Object.keys(base).length > 0 ? base : undefined;
+      return clampBookingStepToStructuralMax({
+        ...prev,
+        teamPlanningDetails,
+      });
+    });
   }
 
   function patchContactState(
@@ -2648,10 +2726,21 @@ export function BookingFlowClient() {
                   condition={state.condition}
                   problemAreas={state.problemAreas}
                   surfaceComplexity={state.surfaceComplexity}
-                  estimateDriverHeavyCondition={isHeavyCondition}
-                  estimateDriverHasProblemAreas={hasProblemAreas}
-                  estimateDriverDenseLayout={isDenseLayout}
-                  estimateDriverDetailHeavyScope={estimateDriverDetailHeavyScope}
+                  estimateDriverHeavyCondition={
+                    wiredEstimateDriverFlags.heavyCondition
+                  }
+                  estimateDriverHeavyKitchenBath={
+                    wiredEstimateDriverFlags.heavyKitchenOrBath
+                  }
+                  estimateDriverSegmentedAccessLayout={
+                    wiredEstimateDriverFlags.segmentedAccessLayout
+                  }
+                  estimateDriverResetLevelIntent={
+                    wiredEstimateDriverFlags.resetLevelIntent
+                  }
+                  estimateDriverSurfaceDetailTokens={
+                    wiredEstimateDriverFlags.hasSurfaceDetailTokens
+                  }
                   estimateDriverHasAddOns={estimateDriverHasAddOns}
                   estimateDriverDeepCleanFocus={estimateDriverDeepCleanFocus}
                   estimateDriverFurnishedTransition={
@@ -2660,6 +2749,7 @@ export function BookingFlowClient() {
                   estimateDriverTransitionAppliances={
                     estimateDriverTransitionAppliances
                   }
+                  intakePlanningNoteLines={intakePlanningNoteLines}
                   previewConfidenceBand={previewConfidenceBand}
                   hasSubmitRecoverableFailure={submitRecoverableFailure}
                   estimatePreviewReady={estimatePreviewReady}
@@ -2694,6 +2784,7 @@ export function BookingFlowClient() {
                       }),
                     );
                   }}
+                  onTeamPlanningDetailsChange={patchTeamPlanningDetails}
                   onRecurringCadenceIntentChange={(recurringCadenceIntent) => {
                     setState((prev) =>
                       clampBookingStepToStructuralMax({
@@ -2838,6 +2929,8 @@ export function BookingFlowClient() {
                     chooseDifferentTimeAfterConfirmFail()
                   }
                   schedulePreview={schedulePreview}
+                  laborEffortMinutes={scheduleLaborEffortMinutes}
+                  scheduleTeamDurationContext={scheduleTeamDurationContext}
                 />
               ) : null}
 

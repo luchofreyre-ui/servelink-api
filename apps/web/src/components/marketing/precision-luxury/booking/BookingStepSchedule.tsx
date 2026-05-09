@@ -5,15 +5,24 @@ import {
   BOOKING_SCHEDULE_CHOOSE_SLOT_HINT,
   BOOKING_SCHEDULE_CHOOSE_TEAM_HINT,
   BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE,
+  BOOKING_SCHEDULE_CLEANING_EFFORT_EXPLAINER,
+  BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL,
   BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA,
   BOOKING_SCHEDULE_CONFIRMING,
+  BOOKING_SCHEDULE_DURATION_CONTEXT_TITLE,
+  BOOKING_SCHEDULE_FIRST_VISIT_TIME_EXPLAINER,
+  BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE,
   BOOKING_SCHEDULE_HOLD_FAILED_HINT,
+  BOOKING_SCHEDULE_IN_HOME_FALLBACK,
+  BOOKING_SCHEDULE_IN_HOME_LOADING,
+  BOOKING_SCHEDULE_IN_HOME_TIME_LABEL,
   BOOKING_SCHEDULE_NO_SLOTS_BACK_TO_REVIEW_CTA,
   BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_BODY,
   BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_TITLE,
   BOOKING_SCHEDULE_NO_SLOTS_TRY_OTHER_TEAM_CTA,
   BOOKING_SCHEDULE_PAGE_LEAD,
   BOOKING_SCHEDULE_PAGE_TITLE,
+  BOOKING_SCHEDULE_PARALLELIZATION_NOTE,
   BOOKING_SCHEDULE_RECOMMENDED_BADGE,
   BOOKING_SCHEDULE_RETRY_CONFIRM_CTA,
   BOOKING_SCHEDULE_SLOTS_LEAD,
@@ -37,8 +46,19 @@ import {
   BOOKING_SCHEDULE_ZERO_TEAMS_CONTINUE_CTA,
   BOOKING_SCHEDULE_ZERO_TEAMS_TITLE,
   BOOKING_STEP_EDIT_CONTINUITY_HINT,
+  bookingScheduleTeamSizeAssumptionCopy,
 } from "./bookingPublicSurfaceCopy";
 import type { BookingAvailableTeamOption, BookingFlowState } from "./bookingFlowTypes";
+import {
+  formatApproximateInHomeDurationMinutes,
+  formatEstimateDurationMinutes,
+} from "./bookingIntakePreviewDisplay";
+
+export type BookingScheduleTeamDurationContext = {
+  teamId: string;
+  assignedCrewSize: number | null;
+  estimatedInHomeMinutes: number | null;
+};
 
 export type DerivedSchedulePreview = {
   visit1: Date;
@@ -112,6 +132,10 @@ type BookingStepScheduleProps = {
   onRetryConfirmBooking: () => void;
   onChooseDifferentTimeAfterConfirmFail: () => void;
   schedulePreview: DerivedSchedulePreview | null;
+  /** Labor-time estimate from the same preview the customer saw on review (not re-derived). */
+  laborEffortMinutes: number | null;
+  /** Team-contextual in-home planning from `public_booking_team_availability.selectedTeam`. */
+  scheduleTeamDurationContext: BookingScheduleTeamDurationContext | null;
 };
 
 export function BookingStepSchedule({
@@ -138,11 +162,17 @@ export function BookingStepSchedule({
   onRetryConfirmBooking,
   onChooseDifferentTimeAfterConfirmFail,
   schedulePreview,
+  laborEffortMinutes,
+  scheduleTeamDurationContext,
 }: BookingStepScheduleProps) {
   void _serviceId;
   const displayTeams = state.availableTeams.slice(0, 2);
   const hasTeams = displayTeams.length > 0;
   const teamChosen = Boolean(state.selectedTeamId.trim());
+  const selectedTeamIdTrim = state.selectedTeamId.trim();
+  const contextMatchesTeam =
+    Boolean(selectedTeamIdTrim) &&
+    scheduleTeamDurationContext?.teamId === selectedTeamIdTrim;
   const selectedSlotId = state.selectedSlotId.trim();
   const selectedSlotIsCurrent =
     Boolean(selectedSlotId) &&
@@ -271,6 +301,66 @@ export function BookingStepSchedule({
         </div>
       ) : null}
 
+      {!showTeamsFallback && teamChosen ? (
+        <div
+          data-testid="booking-schedule-duration-context"
+          className="mt-10 rounded-2xl border border-[#C9B27C]/18 bg-[#FFFCF8] px-5 py-4 shadow-sm ring-1 ring-[#C9B27C]/10"
+        >
+          <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+            {BOOKING_SCHEDULE_DURATION_CONTEXT_TITLE}
+          </p>
+          {laborEffortMinutes != null && Number.isFinite(laborEffortMinutes) ? (
+            <>
+              <p className="mt-3 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
+                <span className="text-[#64748B]">
+                  {BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL}:
+                </span>{" "}
+                {formatEstimateDurationMinutes(laborEffortMinutes)}
+              </p>
+              <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                {BOOKING_SCHEDULE_CLEANING_EFFORT_EXPLAINER}
+              </p>
+            </>
+          ) : null}
+          <p className="mt-4 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
+            {BOOKING_SCHEDULE_IN_HOME_TIME_LABEL}
+          </p>
+          {windowsLoading ? (
+            <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+              {BOOKING_SCHEDULE_IN_HOME_LOADING}
+            </p>
+          ) : contextMatchesTeam &&
+            scheduleTeamDurationContext?.estimatedInHomeMinutes != null &&
+            Number.isFinite(scheduleTeamDurationContext.estimatedInHomeMinutes) ? (
+            <>
+              <p
+                className="mt-2 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]"
+                data-testid="booking-schedule-in-home-duration"
+              >
+                {formatApproximateInHomeDurationMinutes(
+                  scheduleTeamDurationContext.estimatedInHomeMinutes,
+                )}
+              </p>
+              {scheduleTeamDurationContext.assignedCrewSize != null &&
+              Number.isFinite(scheduleTeamDurationContext.assignedCrewSize) ? (
+                <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                  {bookingScheduleTeamSizeAssumptionCopy(
+                    scheduleTeamDurationContext.assignedCrewSize,
+                  )}
+                </p>
+              ) : null}
+            </>
+          ) : (
+            <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+              {BOOKING_SCHEDULE_IN_HOME_FALLBACK}
+            </p>
+          )}
+          <p className="mt-3 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+            {BOOKING_SCHEDULE_PARALLELIZATION_NOTE}
+          </p>
+        </div>
+      ) : null}
+
       {/* Section B — slots (only after team) */}
       {!showTeamsFallback && teamChosen ? (
         <div
@@ -278,10 +368,10 @@ export function BookingStepSchedule({
           data-testid="booking-schedule-slot-section"
         >
           <p className="font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.02em] text-[#0F172A]">
-            Choose your first visit time
+            {BOOKING_SCHEDULE_FIRST_VISIT_TIME_TITLE}
           </p>
           <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm font-medium leading-6 text-[#475569]">
-            This sets your full reset plan and recurring schedule automatically.
+            {BOOKING_SCHEDULE_FIRST_VISIT_TIME_EXPLAINER}
           </p>
           <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
             {BOOKING_SCHEDULE_SLOTS_LEAD}
@@ -402,6 +492,30 @@ export function BookingStepSchedule({
                       state.selectedSlotEnd.trim(),
                     )}
                   </p>
+                  {laborEffortMinutes != null &&
+                  Number.isFinite(laborEffortMinutes) ? (
+                    <p className="mt-2 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
+                      <span className="text-[#64748B]">
+                        {BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL}:
+                      </span>{" "}
+                      {formatEstimateDurationMinutes(laborEffortMinutes)}
+                    </p>
+                  ) : null}
+                  {!windowsLoading &&
+                  contextMatchesTeam &&
+                  scheduleTeamDurationContext?.estimatedInHomeMinutes != null &&
+                  Number.isFinite(
+                    scheduleTeamDurationContext.estimatedInHomeMinutes,
+                  ) ? (
+                    <p className="mt-2 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
+                      <span className="text-[#64748B]">
+                        {BOOKING_SCHEDULE_IN_HOME_TIME_LABEL}:
+                      </span>{" "}
+                      {formatApproximateInHomeDurationMinutes(
+                        scheduleTeamDurationContext.estimatedInHomeMinutes,
+                      )}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
 

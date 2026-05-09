@@ -15,11 +15,12 @@ import type {
   BookingPreviewConfidenceBand,
   BookingProblemAreaToken,
   BookingSurfaceComplexity,
+  BookingTeamPlanningDetails,
 } from "./bookingFlowTypes";
 import {
-  formatEstimateConfidence,
   formatEstimateDurationMinutes,
   formatEstimateUsdFromCents,
+  formatScopePredictabilitySummary,
 } from "./bookingIntakePreviewDisplay";
 import type { FunnelReviewEstimate } from "./bookingFunnelLocalEstimate";
 import { emitBookingFunnelEvent } from "./bookingFunnelAnalytics";
@@ -55,12 +56,13 @@ import {
   BOOKING_REVIEW_TRANSITION_SETUP_LABEL,
   BOOKING_REVIEW_BANNER_AFTER_SEND_DID_NOT_FINISH,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DEEP_CLEAN_FOCUS,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_CONDITION,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SURFACE_DETAILS,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES,
   BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE,
   BOOKING_REVIEW_ESTIMATE_NONE_AFTER_FETCH,
@@ -69,6 +71,10 @@ import {
   BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_HINT,
   BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD,
   BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE,
+  BOOKING_REVIEW_PLANNING_NOTES_TITLE,
+  BOOKING_REVIEW_TEAM_PLANNING_DETAILS_LEAD,
+  BOOKING_REVIEW_TEAM_PLANNING_DETAILS_SUMMARY,
+  BOOKING_REVIEW_TEAM_PLANNING_DETAILS_TITLE,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_BODY,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_HEADLINE,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_SUPPORTING,
@@ -81,9 +87,24 @@ import {
   BOOKING_REVIEW_BANNER_READY_NEXT_STEP,
   BOOKING_REVIEW_NEXT_SCHEDULE_BODY,
   BOOKING_REVIEW_NEXT_SCHEDULE_TITLE,
+  BOOKING_REVIEW_LABOR_EFFORT_GLOSS,
+  BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL,
+  BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL,
   BOOKING_REVIEW_PREP_SECTION_TITLE,
   BOOKING_REVIEW_RECOMMEND_SECTION_TITLE,
+  BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD,
+  BOOKING_REVIEW_RECURRING_LABOR_LABEL,
+  BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD,
+  BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD,
+  BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER,
+  BOOKING_REVIEW_RECURRING_PER_VISIT_DELTA_LABEL,
+  BOOKING_REVIEW_RECURRING_PRICE_LABEL,
+  BOOKING_REVIEW_RECURRING_SECTION_LEAD,
+  BOOKING_REVIEW_RECURRING_SECTION_TITLE,
+  BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD,
   BOOKING_REVIEW_SCHEDULE_NOTE,
+  BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE,
+  BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
   BOOKING_REVIEW_STEP_BODY,
   BOOKING_REVIEW_STEP_TITLE,
   BOOKING_REVIEW_SELECTED_ARRIVAL_LABEL,
@@ -96,6 +117,10 @@ import {
   BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
   BOOKING_REVIEW_VISIT_STRUCTURE_LABEL,
 } from "./bookingPublicSurfaceCopy";
+import {
+  BOOKING_TEAM_PLANNING_FIELD_MAX_CHARS,
+  BOOKING_TEAM_PLANNING_FIELD_SPECS,
+} from "./bookingTeamPlanningDetails";
 import { getBookingUpsellOptionsByIds } from "./bookingUpsells";
 import { getPublicBookingMarketingTitle } from "./publicBookingTaxonomy";
 import type { DerivedSchedulePreview } from "./BookingStepSchedule";
@@ -117,13 +142,15 @@ type BookingStepReviewProps = {
   problemAreas: readonly BookingProblemAreaToken[];
   surfaceComplexity: BookingSurfaceComplexity;
   estimateDriverHeavyCondition: boolean;
-  estimateDriverHasProblemAreas: boolean;
-  estimateDriverDenseLayout: boolean;
-  estimateDriverDetailHeavyScope: boolean;
+  estimateDriverHeavyKitchenBath: boolean;
+  estimateDriverSegmentedAccessLayout: boolean;
+  estimateDriverResetLevelIntent: boolean;
+  estimateDriverSurfaceDetailTokens: boolean;
   estimateDriverHasAddOns: boolean;
   estimateDriverDeepCleanFocus: boolean;
   estimateDriverFurnishedTransition: boolean;
   estimateDriverTransitionAppliances: boolean;
+  intakePlanningNoteLines: readonly string[];
   previewConfidenceBand: BookingPreviewConfidenceBand;
   hasSubmitRecoverableFailure?: boolean;
   estimatePreviewReady: boolean;
@@ -144,6 +171,9 @@ type BookingStepReviewProps = {
   ) => void;
   onRecurringInterestChange: (
     value: BookingFlowState["recurringInterest"],
+  ) => void;
+  onTeamPlanningDetailsChange: (
+    patch: Partial<BookingTeamPlanningDetails>,
   ) => void;
   onRecurringCadenceIntentChange: (
     value: BookingFlowState["recurringCadenceIntent"],
@@ -247,13 +277,15 @@ export function BookingStepReview({
   problemAreas,
   surfaceComplexity,
   estimateDriverHeavyCondition,
-  estimateDriverHasProblemAreas,
-  estimateDriverDenseLayout,
-  estimateDriverDetailHeavyScope,
+  estimateDriverHeavyKitchenBath,
+  estimateDriverSegmentedAccessLayout,
+  estimateDriverResetLevelIntent,
+  estimateDriverSurfaceDetailTokens,
   estimateDriverHasAddOns,
   estimateDriverDeepCleanFocus,
   estimateDriverFurnishedTransition,
   estimateDriverTransitionAppliances,
+  intakePlanningNoteLines,
   previewConfidenceBand,
   hasSubmitRecoverableFailure = false,
   estimatePreviewReady,
@@ -269,6 +301,7 @@ export function BookingStepReview({
   recommendedAttentionItems,
   onFirstTimePostEstimateVisitChoiceChange,
   onRecurringInterestChange,
+  onTeamPlanningDetailsChange,
   onRecurringCadenceIntentChange,
   schedulePreview,
 }: BookingStepReviewProps) {
@@ -412,9 +445,9 @@ export function BookingStepReview({
     : null;
   const recurringTimingText =
     reviewRecurringCadence && selectedVisitStructure === "three_visit_reset"
-      ? `Reset visits are spaced 14 days apart. ${recurringCadenceDisplay[reviewRecurringCadence]} recurring service begins ${recurringQuote?.cadenceDays ?? "the selected cadence"} days after Visit 3.`
+      ? `Reset visits are spaced 14 days apart. After Visit 3, recurring visits follow your ${recurringCadenceDisplay[reviewRecurringCadence]} cadence—the recurring line is priced separately from these opening visits.`
       : reviewRecurringCadence
-        ? `Recurring service begins ${recurringQuote?.cadenceDays ?? "the selected cadence"} days after your first visit.`
+        ? `The preview above is your first visit. Recurring visits on a ${recurringCadenceDisplay[reviewRecurringCadence]} cadence are quoted separately and typically begin after that visit—changing cadence mainly affects the recurring line, not necessarily this opening price.`
         : null;
 
   useEffect(() => {
@@ -502,9 +535,14 @@ export function BookingStepReview({
       key: "mva",
     },
     {
-      on: estimateDriverDetailHeavyScope,
-      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE,
-      key: "scope",
+      on: estimateDriverResetLevelIntent,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT,
+      key: "reset",
+    },
+    {
+      on: estimateDriverSurfaceDetailTokens,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SURFACE_DETAILS,
+      key: "surfaces",
     },
     {
       on: estimateDriverHasAddOns,
@@ -517,13 +555,13 @@ export function BookingStepReview({
       key: "heavy",
     },
     {
-      on: estimateDriverHasProblemAreas,
-      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS,
-      key: "problems",
+      on: estimateDriverHeavyKitchenBath,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH,
+      key: "kitchenbath",
     },
     {
-      on: estimateDriverDenseLayout,
-      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT,
+      on: estimateDriverSegmentedAccessLayout,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT,
       key: "dense",
     },
   ] as const;
@@ -549,6 +587,7 @@ export function BookingStepReview({
     state.deepCleanFocus,
     state.transitionState,
     appliancesNormalized.join(","),
+    intakePlanningNoteLines.join("|"),
   ].join(":");
 
   const showPlanningConfidenceBlock =
@@ -732,16 +771,29 @@ export function BookingStepReview({
           {previewEstimate ? (
             <div className="space-y-2">
               <p className="font-medium">
-                <span className="text-[#64748B]">Price:</span>{" "}
+                <span className="text-[#64748B]">
+                  {isRecurringContract
+                    ? BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL
+                    : BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL}
+                  :
+                </span>{" "}
                 {formatEstimateUsdFromCents(previewEstimate.priceCents)}
               </p>
               <p className="font-medium">
-                <span className="text-[#64748B]">Duration:</span>{" "}
+                <span className="text-[#64748B]">Estimated labor effort:</span>{" "}
                 {formatEstimateDurationMinutes(previewEstimate.durationMinutes)}
               </p>
+              <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                {BOOKING_REVIEW_LABOR_EFFORT_GLOSS}
+              </p>
               <p className="font-medium">
-                <span className="text-[#64748B]">How sure we are:</span>{" "}
-                {formatEstimateConfidence(previewEstimate.confidence)}
+                <span className="text-[#64748B]">
+                  {BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL}:
+                </span>{" "}
+                {formatScopePredictabilitySummary(previewEstimate.confidence)}
+              </p>
+              <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                {BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE}
               </p>
               <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
                 {previewEstimate.source === "server"
@@ -841,51 +893,81 @@ export function BookingStepReview({
         </ReviewSection>
 
         {isRecurringContract ? (
-          <ReviewSection title="Recurring plan">
+          <ReviewSection title={BOOKING_REVIEW_RECURRING_SECTION_TITLE}>
             <div className="space-y-4">
               <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-                Review and lock your recurring service cadence before choosing a
-                team and paying the deposit.
+                {BOOKING_REVIEW_RECURRING_SECTION_LEAD}
               </p>
+              <div className="rounded-2xl border border-[#C9B27C]/18 bg-[#FFF9F3] px-4 py-3 ring-1 ring-[#C9B27C]/10">
+                <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                  {BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD}
+                </p>
+                <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
+                  {BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER}
+                </p>
+              </div>
               {previewEstimate ? (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <p className="font-medium">
-                    <span className="text-[#64748B]">First visit price:</span>{" "}
-                    {formatEstimateUsdFromCents(previewEstimate.priceCents)}
+                <div
+                  data-testid="booking-review-recurring-maintenance"
+                  className="rounded-2xl border border-[#0D9488]/20 bg-[rgba(13,148,136,0.06)] px-4 py-4 ring-1 ring-[#0D9488]/12"
+                >
+                  <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                    {BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD}
                   </p>
-                  <p className="font-medium">
-                    <span className="text-[#64748B]">Recurring visit price:</span>{" "}
-                    {recurringQuote
-                      ? formatEstimateUsdFromCents(recurringQuote.recurringPriceCents)
-                      : "Unavailable"}
-                  </p>
-                  <p className="font-medium">
-                    <span className="text-[#64748B]">Estimated recurring duration:</span>{" "}
-                    {recurringQuote
-                      ? formatEstimateDurationMinutes(recurringQuote.estimatedMinutes)
-                      : "Unavailable"}
-                  </p>
-                  <p className="font-medium">
-                    <span className="text-[#64748B]">Savings:</span>{" "}
-                    {recurringQuote
-                      ? `${formatEstimateUsdFromCents(recurringQuote.savingsCents)} / ${recurringQuote.discountPercent}%`
-                      : "Unavailable"}
-                  </p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <p className="font-medium">
+                      <span className="text-[#64748B]">
+                        {BOOKING_REVIEW_RECURRING_PRICE_LABEL}:
+                      </span>{" "}
+                      {recurringQuote
+                        ? formatEstimateUsdFromCents(
+                            recurringQuote.recurringPriceCents,
+                          )
+                        : "Unavailable"}
+                    </p>
+                    <p className="font-medium">
+                      <span className="text-[#64748B]">
+                        {BOOKING_REVIEW_RECURRING_LABOR_LABEL}:
+                      </span>{" "}
+                      {recurringQuote
+                        ? formatEstimateDurationMinutes(
+                            recurringQuote.estimatedMinutes,
+                          )
+                        : "Unavailable"}
+                    </p>
+                  </div>
+                  {recurringQuote && recurringQuote.savingsCents > 0 ? (
+                    <div className="mt-4 space-y-2 border-t border-[#0D9488]/16 pt-3">
+                      <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                        {BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD}
+                      </p>
+                      <p className="font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
+                        <span className="text-[#64748B]">
+                          {BOOKING_REVIEW_RECURRING_PER_VISIT_DELTA_LABEL}:
+                        </span>{" "}
+                        {formatEstimateUsdFromCents(recurringQuote.savingsCents)}{" "}
+                        less scheduled labor than the opening visit under the same
+                        model.
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               ) : (
                 <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
-                  Recurring pricing could not be loaded. Please refresh before continuing.
+                  Recurring pricing could not be loaded. Please refresh before
+                  continuing.
                 </p>
               )}
               {previewEstimate && !hasRecurringQuoteOptions ? (
                 <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
-                  Recurring pricing could not be loaded. Please refresh before continuing.
+                  Recurring pricing could not be loaded. Please refresh before
+                  continuing.
                 </p>
               ) : null}
 
               <div>
                 <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                  Cadence
+                  {BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD}
                 </p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-4">
                   {(
@@ -950,9 +1032,67 @@ export function BookingStepReview({
         {showEstimateDriverBlock ? (
           <div key={estimateDriverBlockKey}>
             <ReviewSection title={BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE}>
+              <p className="mb-3 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                These selections are included in the live estimator preview for
+                this path.
+              </p>
               <ul className="list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A] marker:text-[#94A3B8]">
                 {estimateDriverBullets.map((b) => (
                   <li key={b.key}>{b.text}</li>
+                ))}
+              </ul>
+            </ReviewSection>
+          </div>
+        ) : null}
+
+        <details
+          data-testid="booking-review-team-planning-details"
+          className="group mt-2 rounded-2xl border border-[#C9B27C]/16 bg-[#FFFCF8] px-5 py-4 open:pb-5"
+        >
+          <summary className="cursor-pointer list-none font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] marker:content-none [&::-webkit-details-marker]:hidden">
+            <span className="flex items-start justify-between gap-3">
+              <span>
+                {BOOKING_REVIEW_TEAM_PLANNING_DETAILS_TITLE}
+                <span className="mt-1 block font-[var(--font-manrope)] text-xs font-normal leading-5 text-[#64748B]">
+                  {BOOKING_REVIEW_TEAM_PLANNING_DETAILS_LEAD}
+                </span>
+              </span>
+              <span className="shrink-0 pt-0.5 text-xs font-normal text-[#94A3B8] group-open:hidden">
+                Tap to add (optional)
+              </span>
+            </span>
+          </summary>
+          <div className="mt-4 space-y-4">
+            {BOOKING_TEAM_PLANNING_FIELD_SPECS.map(({ key, label }) => (
+              <label key={key} className="block space-y-1.5">
+                <span className="font-[var(--font-manrope)] text-xs font-medium text-[#64748B]">
+                  {label}
+                </span>
+                <textarea
+                  value={state.teamPlanningDetails?.[key] ?? ""}
+                  maxLength={BOOKING_TEAM_PLANNING_FIELD_MAX_CHARS}
+                  rows={2}
+                  onChange={(e) =>
+                    onTeamPlanningDetailsChange({
+                      [key]: e.target.value,
+                    } as Partial<BookingTeamPlanningDetails>)
+                  }
+                  className="w-full rounded-xl border border-[#E2E8F0] bg-white px-3 py-2 font-[var(--font-manrope)] text-sm text-[#0F172A] outline-none ring-[#C9B27C]/25 focus:ring-2"
+                />
+              </label>
+            ))}
+            <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+              {BOOKING_REVIEW_TEAM_PLANNING_DETAILS_SUMMARY}
+            </p>
+          </div>
+        </details>
+
+        {intakePlanningNoteLines.length > 0 ? (
+          <div data-testid="booking-review-planning-notes">
+            <ReviewSection title={BOOKING_REVIEW_PLANNING_NOTES_TITLE}>
+              <ul className="list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A] marker:text-[#94A3B8]">
+                {intakePlanningNoteLines.map((text) => (
+                  <li key={text}>{text}</li>
                 ))}
               </ul>
             </ReviewSection>

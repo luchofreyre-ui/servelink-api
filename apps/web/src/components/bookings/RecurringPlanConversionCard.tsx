@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { WEB_ENV } from "@/lib/env";
+import { BOOKING_REVIEW_RECURRING_PRICE_LABEL } from "@/components/marketing/precision-luxury/booking/bookingPublicSurfaceCopy";
 
 type RecurringCadence = "weekly" | "every_10_days" | "biweekly" | "monthly";
 
@@ -124,7 +125,7 @@ export function RecurringPlanConversionCard({
           {typeof recurringPlan?.pricePerVisitCents === "number" ? (
             <p>
               <span className="font-semibold text-[#0F172A]">
-                Recurring visit price:{" "}
+                {BOOKING_REVIEW_RECURRING_PRICE_LABEL}:{" "}
               </span>
               {formatUsdFromCents(recurringPlan.pricePerVisitCents)}
             </p>

@@ -7,10 +7,11 @@ import {
   normalizeBookingServiceLocationZipParam,
 } from "./bookingUrlState";
 import { getBookingHomeSizeRangeLabel } from "./bookingHomeSizeRanges";
+import { BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL } from "./bookingPublicSurfaceCopy";
 import {
-  formatEstimateConfidence,
   formatEstimateDurationMinutes,
   formatEstimateUsdFromCents,
+  formatScopePredictabilitySummary,
 } from "./bookingIntakePreviewDisplay";
 import type { FunnelReviewEstimate } from "./bookingFunnelLocalEstimate";
 import {
@@ -139,14 +140,16 @@ export function BookingSummaryCard({
           ...(previewEstimate && !previewLoading && !previewError
             ? [
                 {
-                  label: "Est. time",
+                  label: "Est. labor effort",
                   value: formatEstimateDurationMinutes(
                     previewEstimate.durationMinutes,
                   ),
                 },
                 {
-                  label: "How sure we are",
-                  value: formatEstimateConfidence(previewEstimate.confidence),
+                  label: BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
+                  value: formatScopePredictabilitySummary(
+                    previewEstimate.confidence,
+                  ),
                 },
               ]
             : []),
