@@ -75,6 +75,27 @@ export const BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED =
 export const BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED =
   "We read what you sent and reply from the email you provided. If something urgent changed, mention it when we write—you do not need to resend this entire form unless your needs are materially different.";
 
+export const BOOKING_CONFIRMATION_VISIT_ESTIMATE_PRICE_LABEL =
+  "Estimate for this visit";
+
+export const BOOKING_CONFIRMATION_OPENING_VISIT_ESTIMATE_PRICE_LABEL =
+  "Opening / first-visit estimate";
+
+export const BOOKING_CONFIRMATION_CLEANING_EFFORT_LABEL =
+  "Estimated cleaning effort";
+
+export const BOOKING_CONFIRMATION_IN_HOME_WINDOW_LABEL =
+  "Estimated time in your home";
+
+export const BOOKING_CONFIRMATION_IN_HOME_WINDOW_HINT =
+  "From your booked arrival window with this team. Cleaning effort is total work planned—on-site time can be shorter when a team works in parallel.";
+
+export const BOOKING_CONFIRMATION_RECURRING_SURFACE_LEAD =
+  "Maintenance visits keep a steady home on schedule—typically less reset work than your opening visit. The per-visit figure for your cadence reflects ongoing upkeep, not a repeat of the full opening scope.";
+
+export const BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE =
+  "Opening reset visit schedule";
+
 /** Server-reported codes already passed through the confirmation URL today. */
 export function bookingConfirmationNoticeForBookingErrorCode(
   code: string,

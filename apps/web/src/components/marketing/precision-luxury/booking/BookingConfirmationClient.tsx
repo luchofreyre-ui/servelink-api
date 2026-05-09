@@ -15,11 +15,14 @@ import {
   formatBookingBedroomsForDisplay,
 } from "./bookingEstimateFactorFields";
 import {
+  BOOKING_CONFIRMATION_CLEANING_EFFORT_LABEL,
   BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE,
   BOOKING_CONFIRMATION_HEADLINE_BOOKING_SAVED,
   BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY,
   BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED,
   BOOKING_CONFIRMATION_HEADLINE_VISIT_CONFIRMED,
+  BOOKING_CONFIRMATION_IN_HOME_WINDOW_HINT,
+  BOOKING_CONFIRMATION_IN_HOME_WINDOW_LABEL,
   BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL,
   BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD,
   BOOKING_CONFIRMATION_INTRO_NEUTRAL_REENTRY,
@@ -31,13 +34,25 @@ import {
   BOOKING_CONFIRMATION_NEXT_STEPS_NEUTRAL_REENTRY,
   BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED,
   BOOKING_CONFIRMATION_NEXT_STEPS_VISIT_CONFIRMED,
+  BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE,
+  BOOKING_CONFIRMATION_OPENING_VISIT_ESTIMATE_PRICE_LABEL,
+  BOOKING_CONFIRMATION_RECURRING_SURFACE_LEAD,
   BOOKING_CONFIRMATION_REQUEST_SECTION_TITLE,
   BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE,
   BOOKING_CONFIRMATION_RETURN_TO_BOOKING_CTA,
   BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA,
+  BOOKING_CONFIRMATION_VISIT_ESTIMATE_PRICE_LABEL,
+  BOOKING_REVIEW_RECURRING_PRICE_LABEL,
+  BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE,
+  BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
   bookingConfirmationDeepPlanEchoLabel,
   bookingConfirmationNoticeForBookingErrorCode,
 } from "./bookingPublicSurfaceCopy";
+import {
+  formatApproximateInHomeDurationMinutes,
+  formatEstimateDurationMinutes,
+  formatScopePredictabilitySummary,
+} from "./bookingIntakePreviewDisplay";
 import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
 import {
   clearBookingConfirmationPaymentSessionState,
@@ -81,6 +96,18 @@ function formatVisitWindowLabel(startIso: string, endIso: string | null | undefi
     minute: "2-digit",
   });
   return `${start} – ${endPart}`;
+}
+
+/** Booked arrival window length in minutes (when both endpoints exist). */
+function scheduledWindowDurationMinutes(
+  startIso: string,
+  endIso: string | null | undefined,
+): number | null {
+  if (!endIso?.trim()) return null;
+  const a = new Date(startIso).getTime();
+  const b = new Date(endIso).getTime();
+  if (!Number.isFinite(a) || !Number.isFinite(b) || b <= a) return null;
+  return Math.round((b - a) / 60000);
 }
 
 function parseDcProgramFromQuery(raw: string | null | undefined) {
@@ -299,6 +326,23 @@ export function BookingConfirmationClient() {
       recurringBeginsAt,
     };
   }, [remote]);
+
+  const wallClockMinutesFromSchedule = useMemo(() => {
+    if (!visitConfirmedFromRemote || !remote) return null;
+    if (!remote.assignedTeamDisplayName?.trim()) return null;
+    if (!remote.scheduledStart?.trim()) return null;
+    return scheduledWindowDurationMinutes(
+      remote.scheduledStart,
+      remote.scheduledEnd ?? null,
+    );
+  }, [visitConfirmedFromRemote, remote]);
+
+  const estimatePriceLabel = recurringContract
+    ? BOOKING_CONFIRMATION_OPENING_VISIT_ESTIMATE_PRICE_LABEL
+    : BOOKING_CONFIRMATION_VISIT_ESTIMATE_PRICE_LABEL;
+
+  const showScopePredictability =
+    Number.isFinite(confidence) && confidence >= 0 && confidence <= 1;
 
   useEffect(() => {
     if (!remote) return;
@@ -579,33 +623,70 @@ export function BookingConfirmationClient() {
           ) : null}
 
           {hasEstimate ? (
-            <div className="mt-10 space-y-6 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div>
-                  <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                    Estimated price
-                  </p>
-                  <p className="mt-2 font-[var(--font-poppins)] text-3xl font-semibold text-[#0F172A]">
-                    {formatUsdFromCents(priceCents)}
-                  </p>
-                </div>
-                <div>
-                  <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                    Estimated duration
-                  </p>
-                  <p className="mt-2 font-[var(--font-poppins)] text-3xl font-semibold text-[#0F172A]">
-                    {Math.round(durationMinutes)} minutes
-                  </p>
-                </div>
-              </div>
+            <div
+              data-testid="booking-confirmation-estimate"
+              className="mt-10 space-y-6 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]"
+            >
               <div>
                 <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                  How sure we are
+                  {estimatePriceLabel}
                 </p>
-                <p className="mt-2 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
-                  {Math.min(100, Math.max(0, Math.round(confidence * 100)))}%
+                <p className="mt-2 font-[var(--font-poppins)] text-3xl font-semibold text-[#0F172A]">
+                  {formatUsdFromCents(priceCents)}
                 </p>
               </div>
+
+              {wallClockMinutesFromSchedule != null ? (
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div>
+                    <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                      {BOOKING_CONFIRMATION_CLEANING_EFFORT_LABEL}
+                    </p>
+                    <p className="mt-2 font-[var(--font-poppins)] text-2xl font-semibold text-[#0F172A]">
+                      {formatEstimateDurationMinutes(durationMinutes)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                      {BOOKING_CONFIRMATION_IN_HOME_WINDOW_LABEL}
+                    </p>
+                    <p
+                      data-testid="booking-confirmation-in-home-duration"
+                      className="mt-2 font-[var(--font-poppins)] text-2xl font-semibold text-[#0F172A]"
+                    >
+                      {formatApproximateInHomeDurationMinutes(
+                        wallClockMinutesFromSchedule,
+                      )}
+                    </p>
+                    <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                      {BOOKING_CONFIRMATION_IN_HOME_WINDOW_HINT}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                    {BOOKING_CONFIRMATION_CLEANING_EFFORT_LABEL}
+                  </p>
+                  <p className="mt-2 font-[var(--font-poppins)] text-3xl font-semibold text-[#0F172A]">
+                    {formatEstimateDurationMinutes(durationMinutes)}
+                  </p>
+                </div>
+              )}
+
+              {showScopePredictability ? (
+                <div data-testid="booking-confirmation-scope-predictability">
+                  <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                    {BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL}
+                  </p>
+                  <p className="mt-2 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
+                    {formatScopePredictabilitySummary(confidence)}
+                  </p>
+                  <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                    {BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE}
+                  </p>
+                </div>
+              ) : null}
               {bookingId ? (
                 <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
                   Booking reference:{" "}
@@ -672,6 +753,9 @@ export function BookingConfirmationClient() {
               <h2 className="mt-3 font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.03em] text-[#0F172A]">
                 Your recurring service is set
               </h2>
+              <p className="mt-4 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
+                {BOOKING_CONFIRMATION_RECURRING_SURFACE_LEAD}
+              </p>
               <div className="mt-5 grid gap-4 font-[var(--font-manrope)] text-sm leading-6 text-[#334155] sm:grid-cols-2">
                 <p>
                   <span className="font-semibold text-[#0F172A]">Cadence: </span>
@@ -680,7 +764,7 @@ export function BookingConfirmationClient() {
                 {typeof recurringContract.plan?.pricePerVisitCents === "number" ? (
                   <p>
                     <span className="font-semibold text-[#0F172A]">
-                      Recurring visit price:{" "}
+                      {BOOKING_REVIEW_RECURRING_PRICE_LABEL}:{" "}
                     </span>
                     {formatUsdFromCents(recurringContract.plan.pricePerVisitCents)}
                   </p>
@@ -707,7 +791,7 @@ export function BookingConfirmationClient() {
               recurringContract.resetSchedule ? (
                 <div className="mt-6 rounded-2xl border border-[#0D9488]/18 bg-white px-5 py-4">
                   <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
-                    Three-visit reset schedule
+                    {BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE}
                   </p>
                   <div className="mt-3 grid gap-3 font-[var(--font-manrope)] text-sm leading-6 text-[#334155] sm:grid-cols-2">
                     {recurringContract.resetSchedule.visit1At ? (

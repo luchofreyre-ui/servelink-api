@@ -8,8 +8,10 @@ import {
   BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY,
   BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED,
   BOOKING_CONFIRMATION_HEADLINE_VISIT_CONFIRMED,
+  BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE,
   BOOKING_CONFIRMATION_RETURN_TO_BOOKING_CTA,
   BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA,
+  BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
 } from "./bookingPublicSurfaceCopy";
 import {
   BOOKING_CONFIRMATION_SESSION_KEY,
@@ -108,6 +110,15 @@ describe("BookingConfirmationClient", () => {
     await waitFor(() => {
       expect(screen.getByText("Surface reset")).toBeTruthy();
     });
+
+    expect(screen.queryByText(/How sure we are/i)).toBeNull();
+    expect(
+      screen.getByTestId("booking-confirmation-scope-predictability"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL)).toBeInTheDocument();
+    expect(screen.getByText(/Estimated cleaning effort/i)).toBeInTheDocument();
+    expect(screen.getByText(/3 hr/)).toBeInTheDocument();
+    expect(screen.getByText(/Estimate for this visit/i)).toBeInTheDocument();
   });
 
   it("shows visit-confirmed headline when API reports assigned booking with schedule", async () => {
@@ -176,6 +187,14 @@ describe("BookingConfirmationClient", () => {
       expect(snap.paymentSessionKey).toBeUndefined();
       expect(sessionStorage.getItem("booking_deposit_in_flight")).toBeNull();
     });
+
+    expect(screen.queryByText(/How sure we are/i)).toBeNull();
+    expect(screen.getByText(BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL)).toBeInTheDocument();
+    expect(screen.getByText(/Estimated cleaning effort/i)).toBeInTheDocument();
+    expect(screen.getByTestId("booking-confirmation-in-home-duration")).toHaveTextContent(
+      /About 4 hr/,
+    );
+    expect(screen.getByText(/Estimated time in your home/i)).toBeInTheDocument();
   });
 
   it("renders selected recurring cadence and recurring plan as read-only status", async () => {
@@ -219,10 +238,16 @@ describe("BookingConfirmationClient", () => {
     });
     expect(screen.getByText("Every 10 days")).toBeTruthy();
     expect(screen.getByText("$331")).toBeTruthy();
-    expect(screen.getByText("Three-visit reset schedule")).toBeTruthy();
+    expect(
+      screen.getByText(BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE),
+    ).toBeInTheDocument();
     expect(screen.getByText(/Visit 1:/)).toBeTruthy();
     expect(screen.getByText(/Visit 2:/)).toBeTruthy();
     expect(screen.getByText(/Visit 3:/)).toBeTruthy();
+    expect(screen.getByText(/Typical recurring visit price/i)).toBeInTheDocument();
+    expect(screen.getByText(/Opening \/ first-visit estimate/i)).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/Savings/i);
+    expect(document.body.textContent).not.toMatch(/discount/i);
     expect(screen.queryByText(/Start weekly plan/i)).toBeNull();
     expect(screen.queryByText(/Convert to recurring/i)).toBeNull();
     expect(screen.queryByText(/Keep your home on a recurring plan/i)).toBeNull();
