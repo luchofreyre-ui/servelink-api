@@ -107,6 +107,7 @@ describe("backfill-booking-operational-metadata-dry-run.lib", () => {
       includeSamples: true,
       sampleLimit: 5,
     });
+    expect(report.mode).toBe("dry_run");
     const serialized = JSON.stringify(report);
     expect(serialized).not.toContain(secret);
     expect(serialized).not.toContain("customerPrep=");

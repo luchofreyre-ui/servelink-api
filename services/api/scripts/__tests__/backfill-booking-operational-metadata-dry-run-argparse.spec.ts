@@ -1,4 +1,5 @@
 import {
+  BOOKING_OPERATIONAL_METADATA_WRITE_CONFIRM_PHRASE,
   classifyBookingForOperationalMetadataBackfillBucket,
   OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT,
   parseOperationalMetadataDryRunArgv,
@@ -81,8 +82,49 @@ describe("parseOperationalMetadataDryRunArgv", () => {
     );
   });
 
-  it("rejects unknown flags", () => {
-    expect(() => parseOperationalMetadataDryRunArgv(["--write"])).toThrow(/unknown option/);
+  it("rejects --write without exact confirm phrase", () => {
+    expect(() => parseOperationalMetadataDryRunArgv(["--write"])).toThrow(/write mode requires exact/);
+    expect(() => parseOperationalMetadataDryRunArgv(["--write", "--confirm=wrong"])).toThrow(
+      /write mode requires exact/,
+    );
+  });
+
+  it("accepts --write with exact confirm phrase", () => {
+    const r = parseOperationalMetadataDryRunArgv([
+      "--write",
+      `--confirm=${BOOKING_OPERATIONAL_METADATA_WRITE_CONFIRM_PHRASE}`,
+    ]);
+    expect(r.mode).toBe("run");
+    if (r.mode === "run") {
+      expect(r.options.write).toBe(true);
+    }
+  });
+
+  it("rejects --confirm without --write", () => {
+    expect(() =>
+      parseOperationalMetadataDryRunArgv([
+        `--confirm=${BOOKING_OPERATIONAL_METADATA_WRITE_CONFIRM_PHRASE}`,
+      ]),
+    ).toThrow(/only allowed with --write/);
+  });
+
+  it("defaults executed-by to unspecified when omitted", () => {
+    const r = parseOperationalMetadataDryRunArgv([
+      "--write",
+      `--confirm=${BOOKING_OPERATIONAL_METADATA_WRITE_CONFIRM_PHRASE}`,
+    ]);
+    expect(r.mode).toBe("run");
+    if (r.mode === "run") expect(r.options.executedBy).toBe("unspecified");
+  });
+
+  it("parses --executed-by", () => {
+    const r = parseOperationalMetadataDryRunArgv([
+      "--write",
+      `--confirm=${BOOKING_OPERATIONAL_METADATA_WRITE_CONFIRM_PHRASE}`,
+      "--executed-by=ops-alice",
+    ]);
+    expect(r.mode).toBe("run");
+    if (r.mode === "run") expect(r.options.executedBy).toBe("ops-alice");
   });
 
   it("rejects cursor mismatch", () => {
@@ -96,7 +138,8 @@ describe("OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT", () => {
   it("does not contain literal note bridge examples or customerPrep= assignments", () => {
     expect(OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT).not.toContain("Booking direction intake");
     expect(OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT).not.toContain("customerPrep=");
-    expect(OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT).toContain("READ-ONLY");
+    expect(OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT).toContain("DANGER");
+    expect(OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT).toContain("--write");
     expect(OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT).toContain("--silent");
   });
 });
