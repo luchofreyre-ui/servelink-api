@@ -54,7 +54,7 @@ describe("DeepCleanExecutionReadOnlyPanel", () => {
     expect(screen.getByTestId("deep-clean-execution-readonly")).toBeTruthy();
     expect(screen.getByText(/1 \/ 1 visits completed/i)).toBeTruthy();
     expect(screen.getByText(/Status: Completed/i)).toBeTruthy();
-    expect(screen.getByText(/Actual duration \(minutes\):/i)).toBeTruthy();
+    expect(screen.getByText(/Time on site \(actual, minutes\):/i)).toBeTruthy();
     expect(screen.getByText("88")).toBeTruthy();
   });
 

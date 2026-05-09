@@ -43,7 +43,7 @@ describe("CustomerBookingEducationBlock", () => {
     expect(screen.queryByTestId("customer-booking-education-persisted-note")).toBeNull();
   });
 
-  it("shows reviewer confidence line when authorityConfidence is reviewed_for_booking", () => {
+  it("shows reviewer verification line when authorityConfidence is reviewed_for_booking", () => {
     render(
       <CustomerBookingEducationBlock
         context={{

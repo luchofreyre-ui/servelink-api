@@ -125,6 +125,26 @@ describe("CustomerBookingDetail", () => {
     expect(screen.queryByTestId("customer-booking-education")).toBeNull();
   });
 
+  it("shows persisted team prep from booking notes without internal intake tokens", () => {
+    render(
+      <CustomerBookingDetail
+        screen={{
+          booking: {
+            id: "b1",
+            status: "confirmed",
+            notes:
+              "Booking direction intake in_x | serviceId=s | frequency=w | preferredTime=m | customerPrep=Back door",
+          },
+          estimateSnapshot: { serviceType: "maintenance" },
+        }}
+      />,
+    );
+    expect(screen.getByTestId("customer-booking-team-prep")).toBeInTheDocument();
+    expect(screen.getByText(/Back door/)).toBeInTheDocument();
+    expect(screen.queryByText(/serviceId=/)).toBeNull();
+    expect(screen.queryByText(/Booking direction intake/i)).toBeNull();
+  });
+
   it("hides deep clean sections for non-deep-clean", () => {
     render(
       <CustomerBookingDetail

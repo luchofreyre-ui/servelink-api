@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DeepCleanProgramCard } from "@/components/booking/deep-clean/DeepCleanProgramCard";
+import { BOOKING_CONFIRMATION_TEAM_PREP_TITLE } from "@/components/marketing/precision-luxury/booking/bookingPublicSurfaceCopy";
 import { selectCustomerAuthorityEducationalContext } from "@/booking-screen/customerAuthorityEducationSelectors";
 import {
   isDeepCleanServiceType,
@@ -12,6 +13,9 @@ import {
 } from "@/mappers/deepCleanProgramMappers";
 
 import { DeepCleanExecutionReadOnlyPanel } from "../shared/DeepCleanExecutionReadOnlyPanel";
+import {
+  extractCustomerTeamPrepFromBookingNotes,
+} from "@/lib/bookings/bookingDisplay";
 
 function asRecord(v: unknown): Record<string, unknown> | null {
   return v && typeof v === "object" ? (v as Record<string, unknown>) : null;
@@ -24,6 +28,13 @@ export function CustomerBookingDetail({ screen }: { screen: unknown }) {
     booking && typeof booking.id === "string" ? booking.id : "—";
   const bookingStatus =
     booking && typeof booking.status === "string" ? booking.status : null;
+
+  const bookingNotes =
+    booking && typeof (booking as { notes?: unknown }).notes === "string"
+      ? String((booking as { notes?: string }).notes)
+      : null;
+  const teamPrepDetails =
+    extractCustomerTeamPrepFromBookingNotes(bookingNotes);
 
   const fields = selectDeepCleanFieldsFromScreen(screen);
   const isDeepClean = isDeepCleanServiceType(fields.serviceType);
@@ -55,6 +66,23 @@ export function CustomerBookingDetail({ screen }: { screen: unknown }) {
 
       {authorityEducation ? (
         <CustomerBookingEducationBlock context={authorityEducation} />
+      ) : null}
+
+      {teamPrepDetails ? (
+        <section
+          data-testid="customer-booking-team-prep"
+          className="rounded-xl border border-slate-200 bg-slate-50/80 p-4 text-sm"
+        >
+          <h2 className="font-semibold text-slate-900">
+            {BOOKING_CONFIRMATION_TEAM_PREP_TITLE}
+          </h2>
+          <p className="mt-2 whitespace-pre-wrap leading-6 text-slate-700">
+            {teamPrepDetails}
+          </p>
+          <p className="mt-3 text-xs leading-5 text-slate-500">
+            For your crew on arrival — not used to change your quoted visit total.
+          </p>
+        </section>
       ) : null}
 
       <section

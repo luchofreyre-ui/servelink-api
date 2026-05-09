@@ -6,7 +6,7 @@ import type {
 
 function confidenceCopy(confidence: CustomerAuthorityConfidence | undefined): string | null {
   if (confidence === "reviewed_for_booking") {
-    return "An operations reviewer double-checked this short list against your booking details.";
+    return "An operations reviewer matched this short list to your booking details.";
   }
   return null;
 }
