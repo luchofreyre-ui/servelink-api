@@ -1,15 +1,17 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "rootDir": "."
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "scripts/**/*.ts"],
   "exclude": [
     "node_modules",
     "dist",
     "test",
     "app.module.ts",
     "prisma.config.ts",
-    "src/**/__tests__/**"
+    "src/**/__tests__/**",
+    "scripts/**/__tests__/**"
   ]
 }

@@ -1,4 +1,5 @@
 import {
+  analyzeCustomerPrepFieldsInBookingNotes,
   BOOKING_OPERATIONAL_METADATA_SCHEMA_VERSION_V1,
   buildBookingOperationalMetadataPayloadV1,
   extractCustomerPrepFromBookingNotes,
@@ -73,6 +74,13 @@ describe("booking-operational-metadata", () => {
     const raw =
       "Booking direction intake in_x | serviceId=s | frequency=w | preferredTime=m | customerPrep=Gate code 123";
     expect(extractCustomerPrepFromBookingNotes(raw)).toBe("Gate code 123");
+  });
+
+  it("analyzeCustomerPrepFieldsInBookingNotes counts empty customerPrep fields", () => {
+    const raw =
+      "Booking direction intake in_x | serviceId=s | frequency=w | preferredTime=m | customerPrep=";
+    expect(analyzeCustomerPrepFieldsInBookingNotes(raw).customerPrepFieldCount).toBe(1);
+    expect(analyzeCustomerPrepFieldsInBookingNotes(raw).nonEmptySegments).toEqual([]);
   });
 
   it("getCustomerTeamPrepFromBookingOperationalMetadataOrNotes prefers structured metadata", () => {
