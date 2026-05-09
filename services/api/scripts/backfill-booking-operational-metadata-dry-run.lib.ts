@@ -1,9 +1,15 @@
+import type { PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+
 import {
+  type BookingOperationalMetadataPayloadV1,
   type BookingOperationalMetadataProvenance,
+  BOOKING_OPERATIONAL_METADATA_SCHEMA_VERSION_V1,
   analyzeCustomerPrepFieldsInBookingNotes,
   buildBookingOperationalMetadataPayloadV1,
   extractCustomerPrepFromBookingNotes,
   hasCustomerTeamPrep,
+  parseBookingOperationalMetadataPayloadV1,
 } from "../src/modules/bookings/booking-operational-metadata";
 
 /** Matches intake-bridge rows like `Booking direction intake … | serviceId=…` (see API bridge / web `bookingDisplay`). */
@@ -167,6 +173,7 @@ export type OperationalMetadataBackfillDryRunCursor = {
 };
 
 export type SafeOperationalMetadataBackfillReport = {
+  mode: "dry_run";
   summary: {
     totalScanned: number;
     batchSize: number;
@@ -238,6 +245,7 @@ export function buildSafeOperationalMetadataBackfillReport(args: {
       : undefined;
 
   return {
+    mode: "dry_run",
     summary: {
       totalScanned,
       batchSize,
@@ -259,17 +267,268 @@ export function buildSafeOperationalMetadataBackfillReport(args: {
 export const OPERATIONAL_METADATA_DRY_RUN_CLI_ID =
   "backfill-booking-operational-metadata-dry-run-v1";
 
-export type OperationalMetadataDryRunCliOptions = {
+export const BOOKING_OPERATIONAL_METADATA_WRITE_CONFIRM_PHRASE =
+  "BACKFILL_BOOKING_OPERATIONAL_METADATA";
+
+export const BOOKING_OPERATIONAL_METADATA_BACKFILL_SCRIPT_VERSION =
+  "booking-operational-metadata-backfill-v1";
+
+export const WRITE_BACKFILL_FAILURE_CODES = {
+  INSERT_FAILED: "INSERT_FAILED",
+  PAYLOAD_BUILD_FAILED: "PAYLOAD_BUILD_FAILED",
+} as const;
+
+export type OperationalMetadataBackfillCliOptions = {
   limit: number | null;
   batchSize: number;
   cursor: OperationalMetadataBackfillDryRunCursor | null;
   includeSamples: boolean;
   sampleLimit: number;
+  write: boolean;
+  executedBy: string;
 };
+
+/** @deprecated alias — use {@link OperationalMetadataBackfillCliOptions}. */
+export type OperationalMetadataDryRunCliOptions = OperationalMetadataBackfillCliOptions;
 
 export type ParsedOperationalMetadataDryRunCli =
   | { mode: "help" }
-  | { mode: "run"; options: OperationalMetadataDryRunCliOptions };
+  | { mode: "run"; options: OperationalMetadataBackfillCliOptions };
+
+const WRITE_INELIGIBLE_INSERT_BUCKETS = new Set<OperationalMetadataBackfillBucket>([
+  "C_no_prep",
+  "D_ambiguous_notes",
+  "E_bridge_only_no_prep",
+  "F_free_form_notes_no_prep",
+  "G_invalid_or_empty_prep",
+]);
+
+export type OperationalMetadataWriteBackfillReport = {
+  mode: "write";
+  scriptVersion: string;
+  executedBy: string;
+  scanned: number;
+  created: number;
+  alreadyExists: number;
+  failed: number;
+  skippedByBucket: Record<OperationalMetadataBackfillBucket, number>;
+  buckets: Record<OperationalMetadataBackfillBucket, number>;
+  failures: Array<{ bookingId: string; code: string }>;
+  summary: SafeOperationalMetadataBackfillReport["summary"];
+  samples?: Partial<Record<OperationalMetadataBackfillBucket, string[]>>;
+  nextCursor: OperationalMetadataBackfillDryRunCursor | null;
+};
+
+export type OperationalMetadataBackfillJobReport =
+  | SafeOperationalMetadataBackfillReport
+  | OperationalMetadataWriteBackfillReport;
+
+function emptySkippedByBucketHistogram(): Record<OperationalMetadataBackfillBucket, number> {
+  return Object.fromEntries(
+    OPERATIONAL_METADATA_BACKFILL_BUCKETS.map((b) => [b, 0]),
+  ) as Record<OperationalMetadataBackfillBucket, number>;
+}
+
+function mapPersistFailureCode(err: unknown): string {
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    return err.code;
+  }
+  return WRITE_BACKFILL_FAILURE_CODES.INSERT_FAILED;
+}
+
+/** Persistable JSON-only payload derived from notes (matches bucket `B` classifier path). */
+export function buildPersistableOperationalMetadataPayloadFromBookingNotes(args: {
+  notes: string | null | undefined;
+  bookingCreatedAt: Date | string;
+}): BookingOperationalMetadataPayloadV1 | null {
+  const { notes, bookingCreatedAt } = args;
+  if (notes == null || notes === undefined || !String(notes).trim()) return null;
+  const prepJoined = extractCustomerPrepFromBookingNotes(String(notes));
+  if (!prepJoined?.trim()) return null;
+  try {
+    const capturedAt = iso(bookingCreatedAt);
+    const built = buildBookingOperationalMetadataPayloadV1({
+      customerTeamPrepFreeText: prepJoined,
+      provenance: {
+        source: "booking_direction_intake",
+        capturedAt,
+        legacyNotesTransport: "recurringInterest.note",
+      },
+    });
+    const persistable: unknown = { customerTeamPrep: built.customerTeamPrep };
+    return parseBookingOperationalMetadataPayloadV1(persistable);
+  } catch {
+    return null;
+  }
+}
+
+export async function runOperationalMetadataBackfillJob(
+  prisma: PrismaClient,
+  args: OperationalMetadataBackfillCliOptions,
+): Promise<OperationalMetadataBackfillJobReport> {
+  const classifications: OperationalMetadataBackfillClassificationResult[] = [];
+
+  let scanned = 0;
+  let orderingCursor: { createdAt: Date; id: string } | null = args.cursor
+    ? parseCursorToOrderingForJob(args.cursor)
+    : null;
+
+  let created = 0;
+  let alreadyExists = 0;
+  let failed = 0;
+  const skippedByBucket = emptySkippedByBucketHistogram();
+  const failures: Array<{ bookingId: string; code: string }> = [];
+
+  while (true) {
+      if (args.limit !== null && scanned >= args.limit) break;
+
+      const take = Math.min(
+        args.batchSize,
+        args.limit !== null ? args.limit - scanned : args.batchSize,
+      );
+      if (take <= 0) break;
+
+      const rows = await prisma.booking.findMany({
+        where: orderingCursor
+          ? {
+              OR: [
+                { createdAt: { gt: orderingCursor.createdAt } },
+                {
+                  AND: [
+                    { createdAt: orderingCursor.createdAt },
+                    { id: { gt: orderingCursor.id } },
+                  ],
+                },
+              ],
+            }
+          : {},
+        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+        take,
+        select: { id: true, notes: true, createdAt: true },
+      });
+
+      if (rows.length === 0) break;
+
+      const metaHits = await prisma.bookingOperationalMetadata.findMany({
+        where: { bookingId: { in: rows.map((r) => r.id) } },
+        select: { bookingId: true },
+      });
+      const metaSet = new Set(metaHits.map((m) => m.bookingId));
+
+      let lastConsumed: { createdAt: Date; id: string } | null = null;
+      for (const r of rows) {
+        const hasOperationalMetadataRow = metaSet.has(r.id);
+        const classification = classifyBookingForOperationalMetadataBackfill({
+          id: r.id,
+          notes: r.notes,
+          createdAt: r.createdAt,
+          hasOperationalMetadataRow,
+        });
+        classifications.push(classification);
+
+        if (args.write) {
+          if (hasOperationalMetadataRow) {
+            alreadyExists++;
+          } else if (classification.bucket !== "B_would_create_from_notes") {
+            if (WRITE_INELIGIBLE_INSERT_BUCKETS.has(classification.bucket)) {
+              skippedByBucket[classification.bucket]++;
+            }
+          } else {
+            const validatedPayload = buildPersistableOperationalMetadataPayloadFromBookingNotes({
+              notes: r.notes,
+              bookingCreatedAt: r.createdAt,
+            });
+            if (!validatedPayload) {
+              failed++;
+              failures.push({
+                bookingId: r.id,
+                code: WRITE_BACKFILL_FAILURE_CODES.PAYLOAD_BUILD_FAILED,
+              });
+            } else {
+              try {
+                await prisma.$transaction((tx) =>
+                  tx.bookingOperationalMetadata.create({
+                    data: {
+                      bookingId: r.id,
+                      schemaVersion: BOOKING_OPERATIONAL_METADATA_SCHEMA_VERSION_V1,
+                      payload: validatedPayload as unknown as Prisma.InputJsonValue,
+                    },
+                  }),
+                );
+                created++;
+              } catch (err: unknown) {
+                if (
+                  err instanceof Prisma.PrismaClientKnownRequestError &&
+                  err.code === "P2002"
+                ) {
+                  alreadyExists++;
+                } else {
+                  failed++;
+                  failures.push({
+                    bookingId: r.id,
+                    code: mapPersistFailureCode(err),
+                  });
+                }
+              }
+            }
+          }
+        }
+
+        scanned++;
+        lastConsumed = { createdAt: r.createdAt, id: r.id };
+        if (args.limit !== null && scanned >= args.limit) break;
+      }
+
+      if (lastConsumed) {
+        orderingCursor = lastConsumed;
+      }
+
+      if (rows.length < take) break;
+      if (args.limit !== null && scanned >= args.limit) break;
+    }
+
+    const dryRunReport = buildSafeOperationalMetadataBackfillReport({
+      classifications,
+      batchSize: args.batchSize,
+      limit: args.limit,
+      cursorStart: args.cursor,
+      includeSamples: args.includeSamples,
+      sampleLimit: args.sampleLimit,
+    });
+
+    if (!args.write) {
+      return dryRunReport;
+    }
+
+    return {
+      mode: "write",
+      scriptVersion: BOOKING_OPERATIONAL_METADATA_BACKFILL_SCRIPT_VERSION,
+      executedBy: args.executedBy,
+      scanned: dryRunReport.summary.totalScanned,
+      summary: dryRunReport.summary,
+      buckets: dryRunReport.buckets,
+      ...(dryRunReport.samples ? { samples: dryRunReport.samples } : {}),
+      nextCursor: dryRunReport.nextCursor,
+      created,
+      alreadyExists,
+      failed,
+      skippedByBucket,
+      failures,
+    };
+}
+
+function parseCursorToOrderingForJob(cursor: OperationalMetadataBackfillDryRunCursor): {
+  createdAt: Date;
+  id: string;
+} {
+  const createdAt = new Date(cursor.createdAt);
+  if (!Number.isFinite(createdAt.getTime())) {
+    throw new Error(
+      `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: invalid cursor createdAt (expected ISO-8601).`,
+    );
+  }
+  return { createdAt, id: cursor.id };
+}
 
 function flagMatches(arg: string, name: string): boolean {
   return arg === `--${name}` || arg.startsWith(`--${name}=`);
@@ -327,8 +586,14 @@ function parseCursorToken(raw: string, flagLabel: string): string {
 /** Safe usage text — no booking note contents, no customer data examples. */
 export const OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT = `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}
 
-READ-ONLY: Classifies bookings for BookingOperationalMetadata backfill readiness.
-No writes. No database mutations. No write flags exist.
+DEFAULT (dry-run): Classifies bookings for BookingOperationalMetadata backfill readiness.
+Dry-run performs no writes and remains the default when --write is omitted.
+
+DANGER — WRITE MODE
+  --write enables INSERT into BookingOperationalMetadata for bucket B_would_create_from_notes only.
+  Requires a second gate: exact --confirm=${BOOKING_OPERATIONAL_METADATA_WRITE_CONFIRM_PHRASE}
+  No updates, deletes, or Booking.notes changes. Never overwrites existing rows.
+  Misuse can corrupt operational data — run only with ops approval and a disposable or backed-up DB.
 
 OPTIONS
   --help, -h              Show this message (stdout only).
@@ -343,6 +608,9 @@ OPTIONS
   --include-samples       Emit bookingId-only samples per bucket in JSON.
   --sample-limit=<n> | --sample-limit <n>
                           Cap samples per bucket (non-negative integer). Default 10.
+  --write                 Perform guarded inserts (see DANGER above). Not valid without exact --confirm.
+  --confirm=<phrase>      Required with --write; must match the canonical phrase exactly (see DANGER).
+  --executed-by=<label>   Operator id or label for audit JSON in write mode (optional; default "unspecified").
 
 MACHINE-READABLE STDOUT
   npm echoes lifecycle lines unless suppressed. For piping JSON (e.g. jq), prefer:
@@ -356,6 +624,7 @@ MACHINE-READABLE STDOUT
 OUTPUT SAFETY
   JSON contains aggregates and optional bookingId strings only — never raw Booking.notes,
   embedded intake prep strings, names, emails, phones, addresses, or payment fields.
+  Write-mode failures list bookingId and safe machine codes only (no raw driver messages).
 
 EXAMPLES
   npm run --silent backfill:booking-operational-metadata:dry-run -- --limit 5
@@ -371,6 +640,9 @@ export function parseOperationalMetadataDryRunArgv(
   let cursorId: string | null = null;
   let includeSamples = false;
   let sampleLimit = 10;
+  let write = false;
+  let confirmPhrase: string | null = null;
+  let executedBy = "unspecified";
 
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
@@ -379,6 +651,26 @@ export function parseOperationalMetadataDryRunArgv(
     }
     if (arg === "--include-samples") {
       includeSamples = true;
+      continue;
+    }
+
+    if (arg === "--write") {
+      write = true;
+      continue;
+    }
+
+    if (flagMatches(arg, "confirm")) {
+      const { raw, extraSlots } = readFlagValue(argv, i, "confirm");
+      confirmPhrase = raw;
+      i += extraSlots;
+      continue;
+    }
+
+    if (flagMatches(arg, "executed-by")) {
+      const { raw, extraSlots } = readFlagValue(argv, i, "executed-by");
+      const t = raw.trim();
+      executedBy = t === "" ? "unspecified" : t;
+      i += extraSlots;
       continue;
     }
 
@@ -436,8 +728,31 @@ export function parseOperationalMetadataDryRunArgv(
   const cursor: OperationalMetadataBackfillDryRunCursor | null =
     cursorCreatedAt && cursorId ? { createdAt: cursorCreatedAt, id: cursorId } : null;
 
+  if (confirmPhrase !== null && !write) {
+    throw new Error(
+      `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: --confirm is only allowed with --write`,
+    );
+  }
+
+  if (
+    write &&
+    confirmPhrase !== BOOKING_OPERATIONAL_METADATA_WRITE_CONFIRM_PHRASE
+  ) {
+    throw new Error(
+      `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: write mode requires exact --confirm=${BOOKING_OPERATIONAL_METADATA_WRITE_CONFIRM_PHRASE}`,
+    );
+  }
+
   return {
     mode: "run",
-    options: { limit, batchSize, cursor, includeSamples, sampleLimit },
+    options: {
+      limit,
+      batchSize,
+      cursor,
+      includeSamples,
+      sampleLimit,
+      write,
+      executedBy,
+    },
   };
 }
