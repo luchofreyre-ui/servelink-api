@@ -255,3 +255,189 @@ export function buildSafeOperationalMetadataBackfillReport(args: {
     nextCursor: last ? computeNextCursorFromLastRow(last) : null,
   };
 }
+
+export const OPERATIONAL_METADATA_DRY_RUN_CLI_ID =
+  "backfill-booking-operational-metadata-dry-run-v1";
+
+export type OperationalMetadataDryRunCliOptions = {
+  limit: number | null;
+  batchSize: number;
+  cursor: OperationalMetadataBackfillDryRunCursor | null;
+  includeSamples: boolean;
+  sampleLimit: number;
+};
+
+export type ParsedOperationalMetadataDryRunCli =
+  | { mode: "help" }
+  | { mode: "run"; options: OperationalMetadataDryRunCliOptions };
+
+function flagMatches(arg: string, name: string): boolean {
+  return arg === `--${name}` || arg.startsWith(`--${name}=`);
+}
+
+function readFlagValue(argv: string[], i: number, name: string): { raw: string; extraSlots: number } {
+  const arg = argv[i];
+  const prefix = `--${name}=`;
+  if (arg.startsWith(prefix)) {
+    return { raw: arg.slice(prefix.length), extraSlots: 0 };
+  }
+  if (arg === `--${name}`) {
+    const next = argv[i + 1];
+    if (next === undefined || next.startsWith("-")) {
+      throw new Error(
+        `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: --${name} requires a value (use --${name}=… or --${name} <value>)`,
+      );
+    }
+    return { raw: next, extraSlots: 1 };
+  }
+  throw new Error(`${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: internal parser error (${name})`);
+}
+
+function parseUintDecimal(raw: string, flagLabel: string, min: number): number {
+  const t = raw.trim();
+  if (t === "") {
+    throw new Error(
+      `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: --${flagLabel} value must not be empty`,
+    );
+  }
+  if (!/^\d+$/.test(t)) {
+    throw new Error(
+      `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: --${flagLabel} must be a base-10 integer (${JSON.stringify(t)})`,
+    );
+  }
+  const n = Number(t);
+  if (n < min) {
+    throw new Error(
+      `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: --${flagLabel} must be >= ${min} (got ${n})`,
+    );
+  }
+  return n;
+}
+
+function parseCursorToken(raw: string, flagLabel: string): string {
+  const t = raw.trim();
+  if (!t) {
+    throw new Error(
+      `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: --${flagLabel} value must not be empty`,
+    );
+  }
+  return t;
+}
+
+/** Safe usage text — no booking note contents, no customer data examples. */
+export const OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT = `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}
+
+READ-ONLY: Classifies bookings for BookingOperationalMetadata backfill readiness.
+No writes. No database mutations. No write flags exist.
+
+OPTIONS
+  --help, -h              Show this message (stdout only).
+  --limit=<n> | --limit <n>
+                          Scan at most n bookings (non-negative integer). Omit for full scan.
+  --batch-size=<n> | --batch-size <n>
+                          Prisma page size (integer >= 1). Default 100.
+  --cursor-created-at=<iso> | --cursor-created-at <iso>
+                          Resume after (createdAt, id); must pair with --cursor-id.
+  --cursor-id=<id> | --cursor-id <id>
+                          Resume cursor booking id; must pair with --cursor-created-at.
+  --include-samples       Emit bookingId-only samples per bucket in JSON.
+  --sample-limit=<n> | --sample-limit <n>
+                          Cap samples per bucket (non-negative integer). Default 10.
+
+MACHINE-READABLE STDOUT
+  npm echoes lifecycle lines unless suppressed. For piping JSON (e.g. jq), prefer:
+
+    npm run --silent backfill:booking-operational-metadata:dry-run -- --limit 25 --include-samples
+
+  Direct invocation (no npm lifecycle noise on stdout):
+
+    npx ts-node -P scripts/tsconfig.json scripts/backfill-booking-operational-metadata-dry-run.ts -- --limit 25
+
+OUTPUT SAFETY
+  JSON contains aggregates and optional bookingId strings only — never raw Booking.notes,
+  embedded intake prep strings, names, emails, phones, addresses, or payment fields.
+
+EXAMPLES
+  npm run --silent backfill:booking-operational-metadata:dry-run -- --limit 5
+  npm run --silent backfill:booking-operational-metadata:dry-run -- --limit=5 --include-samples
+`;
+
+export function parseOperationalMetadataDryRunArgv(
+  argv: string[],
+): ParsedOperationalMetadataDryRunCli {
+  let limit: number | null = null;
+  let batchSize = 100;
+  let cursorCreatedAt: string | null = null;
+  let cursorId: string | null = null;
+  let includeSamples = false;
+  let sampleLimit = 10;
+
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--help" || arg === "-h") {
+      return { mode: "help" };
+    }
+    if (arg === "--include-samples") {
+      includeSamples = true;
+      continue;
+    }
+
+    if (flagMatches(arg, "limit")) {
+      const { raw, extraSlots } = readFlagValue(argv, i, "limit");
+      limit = parseUintDecimal(raw, "limit", 0);
+      i += extraSlots;
+      continue;
+    }
+
+    if (flagMatches(arg, "batch-size")) {
+      const { raw, extraSlots } = readFlagValue(argv, i, "batch-size");
+      batchSize = parseUintDecimal(raw, "batch-size", 1);
+      i += extraSlots;
+      continue;
+    }
+
+    if (flagMatches(arg, "sample-limit")) {
+      const { raw, extraSlots } = readFlagValue(argv, i, "sample-limit");
+      sampleLimit = parseUintDecimal(raw, "sample-limit", 0);
+      i += extraSlots;
+      continue;
+    }
+
+    if (flagMatches(arg, "cursor-created-at")) {
+      const { raw, extraSlots } = readFlagValue(argv, i, "cursor-created-at");
+      cursorCreatedAt = parseCursorToken(raw, "cursor-created-at");
+      i += extraSlots;
+      continue;
+    }
+
+    if (flagMatches(arg, "cursor-id")) {
+      const { raw, extraSlots } = readFlagValue(argv, i, "cursor-id");
+      cursorId = parseCursorToken(raw, "cursor-id");
+      i += extraSlots;
+      continue;
+    }
+
+    if (arg.startsWith("--")) {
+      throw new Error(`${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: unknown option: ${arg}`);
+    }
+
+    throw new Error(`${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: unexpected argument: ${arg}`);
+  }
+
+  if (
+    (cursorCreatedAt !== null && cursorId === null) ||
+    (cursorCreatedAt === null && cursorId !== null)
+  ) {
+    throw new Error(
+      `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: --cursor-created-at and --cursor-id must both be set or both omitted.`,
+    );
+  }
+
+  const cursor: OperationalMetadataBackfillDryRunCursor | null =
+    cursorCreatedAt && cursorId ? { createdAt: cursorCreatedAt, id: cursorId } : null;
+
+  return {
+    mode: "run",
+    options: { limit, batchSize, cursor, includeSamples, sampleLimit },
+  };
+}
