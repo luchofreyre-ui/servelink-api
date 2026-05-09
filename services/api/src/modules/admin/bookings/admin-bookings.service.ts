@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { BookingAuthorityReviewStatus, BookingStatus, Prisma } from "@prisma/client";
@@ -17,6 +18,10 @@ import type {
 import { BookingAuthorityPersistenceService } from "../../authority/booking-authority-persistence.service";
 import { BookingIntelligenceService } from "../../authority/booking-intelligence.service";
 import { toBookingAuthorityListItem } from "../../authority/dto/booking-authority-admin.dto";
+import {
+  compareBookingOperationalMetadataShadow,
+  isStructuredBookingMetadataShadowEnabled,
+} from "../../bookings/booking-operational-metadata-shadow";
 
 export const ADMIN_CC_ACTIVITY = {
   NOTE_SAVED: "admin_operator_note_saved",
@@ -35,6 +40,8 @@ const NON_REASSIGN_STATUSES: BookingStatus[] = [
 
 @Injectable()
 export class AdminBookingsService {
+  private readonly logger = new Logger(AdminBookingsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly bookingAuthorityPersistence: BookingAuthorityPersistenceService,
@@ -587,6 +594,44 @@ export class AdminBookingsService {
     if (!booking) {
       return null;
     }
+
+    if (isStructuredBookingMetadataShadowEnabled()) {
+      try {
+        const metaRow = await this.prisma.bookingOperationalMetadata.findUnique({
+          where: { bookingId },
+          select: { payload: true, schemaVersion: true },
+        });
+        const shadow = compareBookingOperationalMetadataShadow({
+          bookingId,
+          structuredPayload: metaRow?.payload ?? null,
+          bookingNotes: booking.notes,
+        });
+        this.logger.log(
+          JSON.stringify({
+            event: "structured_booking_metadata_shadow",
+            bookingId: shadow.bookingId,
+            status: shadow.status,
+            safeReason: shadow.safeReason,
+            hasStructured: shadow.hasStructuredPrep,
+            hasNotes: shadow.hasNotesPrep,
+            schemaVersion: metaRow?.schemaVersion ?? null,
+          }),
+        );
+      } catch (err: unknown) {
+        const errorName = err instanceof Error ? err.name : "Error";
+        const errorMessage =
+          err instanceof Error ? err.message : String(err ?? "unknown");
+        this.logger.warn(
+          JSON.stringify({
+            event: "structured_booking_metadata_shadow_failure",
+            bookingId,
+            errorName,
+            errorMessage,
+          }),
+        );
+      }
+    }
+
     const authority = await this.buildAdminBookingAuthorityBlock(
       bookingId,
       booking.notes ?? null,
