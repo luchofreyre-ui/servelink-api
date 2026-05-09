@@ -206,26 +206,53 @@ export function hasCustomerTeamPrep(payload: unknown): boolean {
 }
 
 /**
- * Legacy `Booking.notes` bridge extraction (aligned with web `bookingDisplay` helpers).
+ * Shared scan of pipe-delimited bridge segments for `customerPrep=` fields.
+ * Preserves legacy alignment with web `bookingDisplay` helpers.
  */
-export function extractCustomerPrepFromBookingNotes(
+export function analyzeCustomerPrepFieldsInBookingNotes(
   raw: string | null | undefined,
-): string | null {
-  if (!raw?.trim()) return null;
-  const chunks: string[] = [];
+): {
+  /** Non-empty trimmed values from each `customerPrep=` segment (joined by newline when multiple). */
+  nonEmptySegments: string[];
+  /** Count of `customerPrep=` pipe segments, including empty values after `=`. */
+  customerPrepFieldCount: number;
+} {
+  if (!raw?.trim()) {
+    return { nonEmptySegments: [], customerPrepFieldCount: 0 };
+  }
+  const nonEmptySegments: string[] = [];
+  let customerPrepFieldCount = 0;
   for (const line of raw.split(/\n+/)) {
     const t = line.trim();
     if (!t) continue;
     for (const part of t.split(/\s\|\s/)) {
       const p = part.trim();
       if (p.startsWith("customerPrep=")) {
+        customerPrepFieldCount++;
         const v = p.slice("customerPrep=".length).trim();
-        if (v) chunks.push(v);
+        if (v) nonEmptySegments.push(v);
       }
     }
   }
-  if (chunks.length === 0) return null;
-  return chunks.join("\n");
+  return { nonEmptySegments, customerPrepFieldCount };
+}
+
+/** Number of `customerPrep=` fields (may be empty after `=`). */
+export function countCustomerPrepFieldOccurrencesInBookingNotes(
+  raw: string | null | undefined,
+): number {
+  return analyzeCustomerPrepFieldsInBookingNotes(raw).customerPrepFieldCount;
+}
+
+/**
+ * Legacy `Booking.notes` bridge extraction (aligned with web `bookingDisplay` helpers).
+ */
+export function extractCustomerPrepFromBookingNotes(
+  raw: string | null | undefined,
+): string | null {
+  const { nonEmptySegments } = analyzeCustomerPrepFieldsInBookingNotes(raw);
+  if (nonEmptySegments.length === 0) return null;
+  return nonEmptySegments.join("\n");
 }
 
 export type CustomerTeamPrepDisplayResult = {

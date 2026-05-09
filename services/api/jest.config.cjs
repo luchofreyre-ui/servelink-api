@@ -4,6 +4,7 @@ module.exports = {
   testMatch: [
     '**/test/**/*.spec.ts',
     '**/src/modules/**/__tests__/**/*.spec.ts',
+    '**/scripts/__tests__/**/*.spec.ts',
   ],
   moduleFileExtensions: ['ts', 'js', 'json'],
   verbose: true,

@@ -26,7 +26,8 @@
     "validate:fo-test-matrix-15": "ts-node -P scripts/tsconfig.json scripts/validateFoTestMatrix15.ts",
     "seed:fo:test": "ts-node -P scripts/tsconfig.json scripts/seedDispatchTestFranchiseOwners.ts",
     "verify:fo:test": "ts-node -P scripts/tsconfig.json scripts/verifyFoTestProfiles.ts",
-    "check:migration-history": "ts-node -P scripts/tsconfig.json scripts/check-migration-history-integrity.ts"
+    "check:migration-history": "ts-node -P scripts/tsconfig.json scripts/check-migration-history-integrity.ts",
+    "backfill:booking-operational-metadata:dry-run": "ts-node -P scripts/tsconfig.json scripts/backfill-booking-operational-metadata-dry-run.ts"
   },
   "keywords": [],
   "author": "",
