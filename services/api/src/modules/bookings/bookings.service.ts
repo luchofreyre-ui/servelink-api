@@ -65,6 +65,11 @@ import {
   REAL_COMPLETION_LEARNING_GOVERNANCE,
 } from "./learning-governance";
 import type { LearningGovernanceMetadata } from "./learning-governance";
+import {
+  BOOKING_OPERATIONAL_METADATA_SCHEMA_VERSION_V1,
+  hasCustomerTeamPrep,
+  parseBookingOperationalMetadataPayloadV1,
+} from "./booking-operational-metadata";
 
 @Injectable()
 export class BookingsService {
@@ -104,6 +109,8 @@ export class BookingsService {
     customerId: string;
     tenantId: string;
     note?: string;
+    /** V1 operational metadata JSON payload (validated inside transaction). */
+    operationalMetadataPayload?: unknown;
     idempotencyKey?: string | null;
     estimateInput?: EstimateInput;
     /** Optional public funnel preference only; does not assign `foId`. */
@@ -159,6 +166,24 @@ export class BookingsService {
           idempotencyKey: input.idempotencyKey ?? null,
         },
       });
+
+      if (
+        input.operationalMetadataPayload !== undefined &&
+        input.operationalMetadataPayload !== null
+      ) {
+        const parsed = parseBookingOperationalMetadataPayloadV1(
+          input.operationalMetadataPayload,
+        );
+        if (parsed && hasCustomerTeamPrep(parsed)) {
+          await tx.bookingOperationalMetadata.create({
+            data: {
+              bookingId: booking.id,
+              schemaVersion: BOOKING_OPERATIONAL_METADATA_SCHEMA_VERSION_V1,
+              payload: parsed as Prisma.InputJsonValue,
+            },
+          });
+        }
+      }
 
       let est: EstimateResult | undefined;
       let reconciliation: EstimateV2Reconciliation | undefined;

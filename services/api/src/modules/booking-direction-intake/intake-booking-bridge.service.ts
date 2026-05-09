@@ -51,6 +51,7 @@ import {
   type RecurringCadenceV2,
   type RecurringQuoteOption,
 } from "../recurring-plan/recurring-plan.service";
+import { buildBookingOperationalMetadataPayloadV1 } from "../bookings/booking-operational-metadata";
 
 export type DeepCleanProgramVisitSubmitDisplay = {
   visitIndex: number;
@@ -455,12 +456,27 @@ export class IntakeBookingBridgeService {
 
     const note = noteParts.join(" | ");
 
+    let operationalMetadataPayload:
+      | ReturnType<typeof buildBookingOperationalMetadataPayloadV1>
+      | undefined;
+    if (prepNote) {
+      operationalMetadataPayload = buildBookingOperationalMetadataPayloadV1({
+        customerTeamPrepFreeText: prepNote.replace(/\|/g, " — "),
+        provenance: {
+          source: "booking_direction_intake",
+          capturedAt: new Date().toISOString(),
+          legacyNotesTransport: "recurringInterest.note",
+        },
+      });
+    }
+
     try {
       const { booking, estimate } = await this.bookings.createBooking({
         customerId,
         tenantId,
         estimateInput,
         note,
+        operationalMetadataPayload,
         preferredFoId: intake.preferredFoId,
         bookingMatchMode: "public_one_time",
       });

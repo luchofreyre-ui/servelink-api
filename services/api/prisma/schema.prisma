@@ -225,6 +225,7 @@ model Booking {
   foAuthorityKnowledgeFeedbacks  FoAuthorityKnowledgeFeedback[]
   directionIntake                BookingDirectionIntake?
   estimateAccuracyAudit          EstimateAccuracyAudit?
+  operationalMetadata            BookingOperationalMetadata?
 
   @@index([customerId])
   @@index([status])
@@ -234,6 +235,20 @@ model Booking {
   @@index([foId, scheduledStart])
   @@index([status, scheduledStart, remainingBalanceStatus])
   @@index([tenantId])
+}
+
+/// Structured operational metadata sidecar (1:1). Customer-safe projections must filter provenance.
+model BookingOperationalMetadata {
+  id            String   @id @default(cuid())
+  bookingId     String   @unique
+  schemaVersion Int      @default(1)
+  payload       Json
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
 }
 
 model BookingAuthorityResult {
