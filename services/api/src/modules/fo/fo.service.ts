@@ -2,11 +2,12 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { Role, type FoStatus as PrismaFoStatus } from "@prisma/client";
 import * as bcrypt from "bcrypt";
-import { randomBytes } from "crypto";
+import { createHash, randomBytes } from "crypto";
 import { PrismaService } from "../../prisma";
 import {
   backfillFranchiseOwnerProviders,
@@ -34,6 +35,17 @@ import {
 } from "../crew-capacity/assigned-crew-and-duration";
 import { getWorkloadMinCrew } from "../crew-capacity/workload-min-crew";
 import { evaluateFoSupplyReadiness } from "./fo-supply-readiness";
+import { evaluateServiceMatrixCandidate } from "../service-matrix/service-matrix.evaluator";
+import { buildServiceMatrixShadowPayload } from "../service-matrix/service-matrix-shadow-payload";
+import {
+  parseServiceMatrixShadowConfig,
+  shouldRunServiceMatrixShadow,
+} from "../service-matrix/service-matrix-shadow-config";
+import type {
+  JobContext,
+  MatrixCandidateInput,
+  ServiceMatrixShadowPerCandidateRow,
+} from "../service-matrix/service-matrix.types";
 
 export enum FoStatus {
   onboarding = "onboarding",
@@ -167,8 +179,34 @@ export type JobMatchInput = {
   bookingMatchMode?: BookingMatchMode;
 };
 
+/** FO row shape from `getEligibleFOs()` — used for matrix shadow candidate build. */
+export type FranchiseOwnerMatchLoopRow = {
+  id: string;
+  userId: string;
+  providerId: string | null;
+  homeLat: number | null;
+  homeLng: number | null;
+  maxTravelMinutes: number | null;
+  maxDailyLaborMinutes: number | null;
+  maxLaborMinutes: number | null;
+  maxSquareFootage: number | null;
+  teamSize: number | null;
+  minCrewSize: number | null;
+  preferredCrewSize: number | null;
+  maxCrewSize: number | null;
+  matchableServiceTypes: unknown;
+  status: string;
+  safetyHold: boolean;
+  isDeleted?: boolean;
+  isBanned?: boolean;
+  provider?: { userId: string | null } | null;
+  _count?: { foSchedules?: number };
+};
+
 @Injectable()
 export class FoService {
+  private readonly log = new Logger(FoService.name);
+
   constructor(private readonly db: PrismaService) {}
 
   async getFo(id: string) {
@@ -683,6 +721,166 @@ export class FoService {
     return (distanceKm / avgSpeedKmh) * 60;
   }
 
+  private buildPublicBookingShadowJobContextDigest(input: JobMatchInput): string {
+    const round2 = (n: number) => Math.round(n * 100) / 100;
+    const canonical = {
+      bookingMatchMode: input.bookingMatchMode ?? null,
+      serviceType: input.serviceType ?? null,
+      serviceSegment: input.serviceSegment ?? null,
+      squareFootage: input.squareFootage,
+      estimatedLaborMinutes: input.estimatedLaborMinutes,
+      recommendedTeamSize: input.recommendedTeamSize,
+      siteGeoCell: `${round2(input.lat)}:${round2(input.lng)}`,
+    };
+    return createHash("sha256").update(JSON.stringify(canonical)).digest("hex");
+  }
+
+  private buildMatrixCandidateFromEligibleFo(
+    fo: FranchiseOwnerMatchLoopRow,
+    committedLaborMinutesToday: number,
+  ): MatrixCandidateInput {
+    return {
+      foId: fo.id,
+      franchiseOwnerUserId: fo.userId,
+      providerId: fo.providerId,
+      providerUserId: fo.provider?.userId,
+      status: fo.status,
+      safetyHold: fo.safetyHold,
+      isDeleted: fo.isDeleted === true,
+      isBanned: fo.isBanned === true,
+      homeLat: fo.homeLat,
+      homeLng: fo.homeLng,
+      maxTravelMinutes: fo.maxTravelMinutes,
+      maxDailyLaborMinutes: fo.maxDailyLaborMinutes,
+      maxLaborMinutes: fo.maxLaborMinutes,
+      maxSquareFootage: fo.maxSquareFootage,
+      scheduleRowCount: fo._count?.foSchedules ?? 0,
+      teamSize: fo.teamSize,
+      minCrewSize: fo.minCrewSize ?? null,
+      preferredCrewSize: fo.preferredCrewSize ?? null,
+      maxCrewSize: fo.maxCrewSize ?? null,
+      matchableServiceTypes: fo.matchableServiceTypes as
+        | string[]
+        | null
+        | undefined,
+      committedLaborMinutesToday,
+    };
+  }
+
+  /**
+   * Non-authoritative matrix observation for `public_one_time` path. Failures are swallowed except warn log.
+   */
+  private recordPublicBookingShadowRow(
+    runShadow: boolean,
+    input: JobMatchInput,
+    fo: FranchiseOwnerMatchLoopRow,
+    committedLaborMinutesToday: number,
+    legacyEligible: boolean,
+    acc: Record<string, ServiceMatrixShadowPerCandidateRow>,
+  ): void {
+    if (!runShadow) return;
+    try {
+      const jobContext: JobContext = {
+        lat: input.lat,
+        lng: input.lng,
+        squareFootage: input.squareFootage,
+        estimatedLaborMinutes: input.estimatedLaborMinutes,
+        recommendedTeamSize: input.recommendedTeamSize,
+        serviceType: input.serviceType,
+        serviceSegment: input.serviceSegment,
+        bookingMatchMode: input.bookingMatchMode,
+      };
+      const candidate = this.buildMatrixCandidateFromEligibleFo(
+        fo,
+        committedLaborMinutesToday,
+      );
+      const result = evaluateServiceMatrixCandidate(jobContext, candidate);
+      const matrixCodes = result.primaryFailureCode
+        ? [result.primaryFailureCode]
+        : [];
+      acc[fo.id] = {
+        legacyEligible,
+        matrixEligible: result.eligible,
+        legacyPrimaryReasonCodes: [],
+        matrixPrimaryReasonCodes: matrixCodes,
+      };
+    } catch (err: unknown) {
+      const e = err instanceof Error ? err : new Error(String(err));
+      this.log.warn({
+        event: "service_matrix_shadow_failure",
+        sourceSurface: "public_booking",
+        errorName: e.name,
+        errorMessage: e.message,
+      });
+    }
+  }
+
+  private emitPublicBookingShadowSummary(params: {
+    runShadow: boolean;
+    input: JobMatchInput;
+    shadowAcc: Record<string, ServiceMatrixShadowPerCandidateRow>;
+    scored: Array<{ fo: { id: string } }>;
+    shadowRequestId: string;
+  }): void {
+    const { runShadow, input, shadowAcc, scored, shadowRequestId } = params;
+    if (!runShadow || Object.keys(shadowAcc).length === 0) return;
+    try {
+      const legacyCandidateIds = scored
+        .map((s) => s.fo.id)
+        .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+      const matrixCandidateIds = Object.entries(shadowAcc)
+        .filter(([, row]) => row.matrixEligible)
+        .map(([id]) => id)
+        .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+      const payload = buildServiceMatrixShadowPayload({
+        requestId: shadowRequestId,
+        sourceSurface: "public_booking",
+        evaluatedAt: new Date().toISOString(),
+        jobContextHash: this.buildPublicBookingShadowJobContextDigest(input),
+        legacyCandidateIds,
+        matrixCandidateIds,
+        perCandidate: shadowAcc,
+        durationInputSummary: {
+          laborMinutes: input.estimatedLaborMinutes,
+          recommendedTeamSize: input.recommendedTeamSize,
+          source: "booking_derived",
+        },
+        capacityInputSummary: {
+          maxDailyLaborMinutes: null,
+          committedLaborMinutesToday: null,
+          committedInputStatus: "not_applicable",
+        },
+        geographyInputSummary: {
+          siteLatPresent: Number.isFinite(input.lat),
+          siteLngPresent: Number.isFinite(input.lng),
+          foHomeLatLngPresent: true,
+          maxTravelMinutes: null,
+        },
+        safeRedactions: [
+          "customerName",
+          "customerEmail",
+          "phone",
+          "street",
+          "address",
+          "fullEstimatePayload",
+          "payment",
+        ],
+      });
+      this.log.log({
+        event: "service_matrix_shadow_public_booking",
+        payload,
+      });
+    } catch (err: unknown) {
+      const e = err instanceof Error ? err : new Error(String(err));
+      this.log.warn({
+        event: "service_matrix_shadow_failure",
+        sourceSurface: "public_booking",
+        errorName: e.name,
+        errorMessage: e.message,
+      });
+    }
+  }
+
   async matchFOs(input: JobMatchInput) {
     const fos = await this.getEligibleFOs();
 
@@ -695,7 +893,19 @@ export class FoService {
 
     const scored: any[] = [];
 
+    const shadowCfg = parseServiceMatrixShadowConfig(process.env);
+    const runPublicShadow =
+      input.bookingMatchMode === "public_one_time" &&
+      shouldRunServiceMatrixShadow(shadowCfg, "public_booking");
+    const shadowAcc: Record<string, ServiceMatrixShadowPerCandidateRow> = {};
+    const shadowRequestId = runPublicShadow
+      ? randomBytes(12).toString("hex")
+      : "";
+
     for (const fo of fos) {
+      let committedLaborMinutesToday = 0;
+      const row = fo as FranchiseOwnerMatchLoopRow;
+
       const supply = evaluateFoSupplyReadiness({
         homeLat: fo.homeLat,
         homeLng: fo.homeLng,
@@ -706,14 +916,34 @@ export class FoService {
         scheduleRowCount: (fo as { _count?: { foSchedules?: number } })._count
           ?.foSchedules ?? 0,
       });
-      if (!supply.ok) continue;
+      if (!supply.ok) {
+        this.recordPublicBookingShadowRow(
+          runPublicShadow,
+          input,
+          row,
+          committedLaborMinutesToday,
+          false,
+          shadowAcc,
+        );
+        continue;
+      }
 
       const exec = evaluateFoExecutionReadiness({
         franchiseOwnerUserId: fo.userId,
         providerId: fo.providerId,
         providerUserId: fo.provider?.userId,
       });
-      if (!exec.ok) continue;
+      if (!exec.ok) {
+        this.recordPublicBookingShadowRow(
+          runPublicShadow,
+          input,
+          row,
+          committedLaborMinutesToday,
+          false,
+          shadowAcc,
+        );
+        continue;
+      }
 
       const homeLat = fo.homeLat as number;
       const homeLng = fo.homeLng as number;
@@ -722,9 +952,27 @@ export class FoService {
 
       const travelMinutes = this.travelMinutes(dist);
 
-      if (fo.maxTravelMinutes && travelMinutes > fo.maxTravelMinutes) continue;
+      if (fo.maxTravelMinutes && travelMinutes > fo.maxTravelMinutes) {
+        this.recordPublicBookingShadowRow(
+          runPublicShadow,
+          input,
+          row,
+          committedLaborMinutesToday,
+          false,
+          shadowAcc,
+        );
+        continue;
+      }
 
       if (fo.maxSquareFootage && input.squareFootage > fo.maxSquareFootage) {
+        this.recordPublicBookingShadowRow(
+          runPublicShadow,
+          input,
+          row,
+          committedLaborMinutesToday,
+          false,
+          shadowAcc,
+        );
         continue;
       }
 
@@ -732,6 +980,14 @@ export class FoService {
         fo.maxLaborMinutes &&
         input.estimatedLaborMinutes > fo.maxLaborMinutes
       ) {
+        this.recordPublicBookingShadowRow(
+          runPublicShadow,
+          input,
+          row,
+          committedLaborMinutesToday,
+          false,
+          shadowAcc,
+        );
         continue;
       }
 
@@ -754,6 +1010,14 @@ export class FoService {
         serviceType,
       });
       if (crew.maxCrewSize < workloadMinCrew) {
+        this.recordPublicBookingShadowRow(
+          runPublicShadow,
+          input,
+          row,
+          committedLaborMinutesToday,
+          false,
+          shadowAcc,
+        );
         continue;
       }
 
@@ -769,6 +1033,14 @@ export class FoService {
         allowed.length > 0 &&
         (!input.serviceType || !allowed.includes(input.serviceType))
       ) {
+        this.recordPublicBookingShadowRow(
+          runPublicShadow,
+          input,
+          row,
+          committedLaborMinutesToday,
+          false,
+          shadowAcc,
+        );
         continue;
       }
 
@@ -786,17 +1058,27 @@ export class FoService {
           },
         });
 
-        const alreadyCommittedMinutes = todaysBookings.reduce(
+        committedLaborMinutesToday = todaysBookings.reduce(
           (sum, b) => sum + Math.round((b.estimatedHours ?? 0) * 60),
           0,
         );
 
         if (
-          alreadyCommittedMinutes + input.estimatedLaborMinutes >
+          committedLaborMinutesToday + input.estimatedLaborMinutes >
           fo.maxDailyLaborMinutes
         ) {
+          this.recordPublicBookingShadowRow(
+            runPublicShadow,
+            input,
+            row,
+            committedLaborMinutesToday,
+            false,
+            shadowAcc,
+          );
           continue;
         }
+      } else {
+        committedLaborMinutesToday = 0;
       }
 
       const reliabilityScore = fo.reliabilityScore ?? 0;
@@ -820,6 +1102,15 @@ export class FoService {
         estimatedJobDurationMinutes,
       });
 
+      this.recordPublicBookingShadowRow(
+        runPublicShadow,
+        input,
+        row,
+        committedLaborMinutesToday,
+        true,
+        shadowAcc,
+      );
+
       scored.push({
         fo,
         score,
@@ -830,6 +1121,14 @@ export class FoService {
     }
 
     scored.sort((a, b) => b.score - a.score);
+
+    this.emitPublicBookingShadowSummary({
+      runShadow: runPublicShadow,
+      input,
+      shadowAcc,
+      scored,
+      shadowRequestId,
+    });
 
     const limit =
       typeof input.limit === "number" &&

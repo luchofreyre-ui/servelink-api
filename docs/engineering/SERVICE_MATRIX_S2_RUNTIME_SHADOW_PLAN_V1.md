@@ -159,6 +159,12 @@ Any exception in shadow path → catch, log **one** `service_matrix.shadow_failu
 
 ---
 
+## Implementation note (runtime V1)
+
+**Implemented:** `FoService.matchFOs` runs in-loop, non-authoritative shadow when `bookingMatchMode === "public_one_time"` and env sampling permits (`service-matrix-shadow-config.ts`). **Legacy** scoring, sort, `limit` slice, and return shape are unchanged. Defaults remain **off**. Structured logs only: `service_matrix_shadow_public_booking` / `service_matrix_shadow_failure`; payload uses **redacted** `jobContextHash` and safe summaries — **no** customer PII/raw address/payment/full estimate fields in emitted JSON, **no** DB persistence, **no** enforcement.
+
+---
+
 ## 10. Related documents
 
 - `SERVICE_MATRIX_S2_SHADOW_INTEGRATION_DESIGN_V1.md`
