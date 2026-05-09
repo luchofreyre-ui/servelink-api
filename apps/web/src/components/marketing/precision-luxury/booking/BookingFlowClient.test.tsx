@@ -232,6 +232,8 @@ async function defaultPostPublicBookingAvailability(body: {
       selectedTeam: {
         id: body.foId,
         displayName: isSouth ? "South Team" : "North Team",
+        assignedCrewSize: 2,
+        estimatedDurationMinutes: 90,
       },
       windows: [
         {
@@ -841,6 +843,26 @@ describe("BookingFlowClient", () => {
       );
     });
 
+    it("after team selection, separates cleaning effort from in-home duration", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      expect(screen.queryByTestId("booking-schedule-duration-context")).not.toBeInTheDocument();
+
+      fireEvent.click(screen.getByText("North Team"));
+      const ctx = await screen.findByTestId("booking-schedule-duration-context");
+      expect(ctx).toBeInTheDocument();
+      expect(ctx).toHaveTextContent(/Estimated cleaning effort/);
+      expect(ctx).toHaveTextContent("3 hr");
+      await waitFor(() => {
+        expect(screen.getByTestId("booking-schedule-in-home-duration")).toHaveTextContent(
+          "About 1 hr 30 min",
+        );
+      });
+      expect(ctx).toHaveTextContent(/2-person team/);
+    });
+
     it("team with zero slots shows no-slots fallback and switch team when two teams exist", async () => {
       postPublicBookingAvailabilityMock.mockImplementation(async (body) => {
         if (body.foId === "fo_test_pick") {
@@ -1022,6 +1044,12 @@ describe("BookingFlowClient", () => {
           onRetryConfirmBooking={vi.fn()}
           onChooseDifferentTimeAfterConfirmFail={vi.fn()}
           schedulePreview={null}
+          laborEffortMinutes={180}
+          scheduleTeamDurationContext={{
+            teamId: "fo_test_pick",
+            assignedCrewSize: 2,
+            estimatedInHomeMinutes: 90,
+          }}
         />,
       );
       expect(screen.queryByTestId("booking-schedule-summary")).not.toBeInTheDocument();

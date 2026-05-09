@@ -164,6 +164,10 @@ export type BookingAvailableTeamOption = {
   id: string;
   displayName: string;
   isRecommended?: boolean;
+  /** Present when the booking orchestrator includes crew metadata (not guaranteed). */
+  assignedCrewSize?: number;
+  estimatedDurationMinutes?: number;
+  crewCapacityMeta?: { requiredLaborMinutes: number };
 };
 
 export type BookingFlowState = {

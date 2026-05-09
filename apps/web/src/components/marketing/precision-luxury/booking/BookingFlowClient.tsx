@@ -88,6 +88,7 @@ import { BookingStepHomeDetails } from "./BookingStepHomeDetails";
 import { BookingStepServiceLocation } from "./BookingStepServiceLocation";
 import {
   BookingStepSchedule,
+  type BookingScheduleTeamDurationContext,
   type BookingScheduleTeamsEmptyState,
   type DerivedSchedulePreview,
 } from "./BookingStepSchedule";
@@ -443,6 +444,8 @@ export function BookingFlowClient() {
   const [windowsRefreshKey, setWindowsRefreshKey] = useState(0);
   const [teamsLoadSlowHint, setTeamsLoadSlowHint] = useState(false);
   const [windowsLoadSlowHint, setWindowsLoadSlowHint] = useState(false);
+  const [scheduleTeamDurationContext, setScheduleTeamDurationContext] =
+    useState<BookingScheduleTeamDurationContext | null>(null);
   const [scheduleCommitError, setScheduleCommitError] = useState<string | null>(null);
   const [scheduleCommitPhase, setScheduleCommitPhase] = useState<
     "none" | "hold_failed" | "confirm_failed"
@@ -497,6 +500,12 @@ export function BookingFlowClient() {
   /** Latest booking state when committing the URL at step boundaries. */
   const stateRefForBookingUrl = useRef(state);
   stateRefForBookingUrl.current = state;
+
+  useEffect(() => {
+    if (state.step !== "schedule") {
+      setScheduleTeamDurationContext(null);
+    }
+  }, [state.step]);
 
   useEffect(() => {
     const handler = () => {
@@ -695,11 +704,35 @@ export function BookingFlowClient() {
           });
           return;
         }
-        const teams = (res.teams ?? []).map((t, i) => ({
-          id: t.id,
-          displayName: t.displayName,
-          isRecommended: t.isRecommended ?? i === 0,
-        }));
+        const teams = (res.teams ?? []).map((t, i) => {
+          const option: BookingAvailableTeamOption = {
+            id: t.id,
+            displayName: t.displayName,
+            isRecommended: t.isRecommended ?? i === 0,
+          };
+          if (
+            typeof t.assignedCrewSize === "number" &&
+            Number.isFinite(t.assignedCrewSize)
+          ) {
+            option.assignedCrewSize = t.assignedCrewSize;
+          }
+          if (
+            typeof t.estimatedDurationMinutes === "number" &&
+            Number.isFinite(t.estimatedDurationMinutes)
+          ) {
+            option.estimatedDurationMinutes = t.estimatedDurationMinutes;
+          }
+          if (
+            t.crewCapacityMeta &&
+            typeof t.crewCapacityMeta.requiredLaborMinutes === "number" &&
+            Number.isFinite(t.crewCapacityMeta.requiredLaborMinutes)
+          ) {
+            option.crewCapacityMeta = {
+              requiredLaborMinutes: t.crewCapacityMeta.requiredLaborMinutes,
+            };
+          }
+          return option;
+        });
         const teamIds = teams.map((t) => t.id);
         const recommendedTeamId =
           teams.find((t) => t.isRecommended)?.id ?? teamIds[0] ?? null;
@@ -765,6 +798,7 @@ export function BookingFlowClient() {
     ) {
       setSlotsEmptyForTeam(false);
       setWindowsLoadSlowHint(false);
+      setScheduleTeamDurationContext(null);
       return;
     }
     let cancelled = false;
@@ -780,6 +814,7 @@ export function BookingFlowClient() {
       .then((res) => {
         if (cancelled) return;
         if (res.kind !== "public_booking_team_availability") {
+          setScheduleTeamDurationContext(null);
           setScheduleSurfaceError(
             "We couldn’t load times for that team. Try another team or refresh.",
           );
@@ -791,6 +826,25 @@ export function BookingFlowClient() {
             ok: false,
           });
           return;
+        }
+        const st = res.selectedTeam;
+        const currentTeamId = stateRefForBookingUrl.current.selectedTeamId.trim();
+        if (currentTeamId && st?.id?.trim() === currentTeamId) {
+          setScheduleTeamDurationContext({
+            teamId: currentTeamId,
+            assignedCrewSize:
+              typeof st.assignedCrewSize === "number" &&
+              Number.isFinite(st.assignedCrewSize)
+                ? st.assignedCrewSize
+                : null,
+            estimatedInHomeMinutes:
+              typeof st.estimatedDurationMinutes === "number" &&
+              Number.isFinite(st.estimatedDurationMinutes)
+                ? st.estimatedDurationMinutes
+                : null,
+          });
+        } else {
+          setScheduleTeamDurationContext(null);
         }
         const windows = (res.windows ?? []).map((w) => ({
           slotId: w.slotId,
@@ -848,6 +902,7 @@ export function BookingFlowClient() {
       })
       .catch(() => {
         if (!cancelled) {
+          setScheduleTeamDurationContext(null);
           setScheduleSurfaceError(
             "We couldn’t load open times. Try again in a moment.",
           );
@@ -1338,6 +1393,36 @@ export function BookingFlowClient() {
     };
   }, [estimate.status, estimate.data, estimate.requestKey, estimateInput]);
 
+  const lastPreviewLaborMinutesRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (
+      previewEstimate &&
+      typeof previewEstimate.durationMinutes === "number" &&
+      Number.isFinite(previewEstimate.durationMinutes)
+    ) {
+      lastPreviewLaborMinutesRef.current = previewEstimate.durationMinutes;
+    }
+  }, [previewEstimate]);
+
+  /** Labor minutes from the confirmed intake snapshot — schedule step has no live preview input. */
+  const scheduleLaborEffortMinutes = useMemo((): number | null => {
+    if (state.step !== "schedule") return null;
+    const bookingId = state.schedulingBookingId.trim();
+    if (!bookingId) return null;
+    try {
+      const snap = readBookingConfirmationSessionSnapshot();
+      if (snap?.bookingId?.trim() === bookingId) {
+        const dm = snap.durationMinutes;
+        if (typeof dm === "number" && Number.isFinite(dm)) return dm;
+      }
+    } catch {
+      /* sessionStorage may be unavailable */
+    }
+    const sticky = lastPreviewLaborMinutesRef.current;
+    if (typeof sticky === "number" && Number.isFinite(sticky)) return sticky;
+    return null;
+  }, [state.step, state.schedulingBookingId]);
+
   const previewDeepCleanCard = useMemo((): DeepCleanProgramDisplay | null => {
     if (
       estimate.status !== "success" ||
@@ -1596,15 +1681,21 @@ export function BookingFlowClient() {
   ) {
     const bookingId = prep.bookingId.trim();
     if (!bookingId) return;
-    const intakeId = stateRefForBookingUrl.current.schedulingIntakeId.trim();
+    const prior = readBookingConfirmationSessionSnapshot();
+    const intakeId =
+      stateRefForBookingUrl.current.schedulingIntakeId.trim() ||
+      prior?.intakeId?.trim() ||
+      "";
     const holdId = pendingConfirmHoldIdRef.current?.trim();
+    const priorMatchesBooking =
+      prior != null && prior.bookingId.trim() === bookingId;
     writeBookingConfirmationSessionSnapshot({
       intakeId,
       bookingId,
-      priceCents: null,
-      durationMinutes: null,
-      confidence: null,
-      bookingErrorCode: "",
+      priceCents: priorMatchesBooking ? prior.priceCents : null,
+      durationMinutes: priorMatchesBooking ? prior.durationMinutes : null,
+      confidence: priorMatchesBooking ? prior.confidence : null,
+      bookingErrorCode: priorMatchesBooking ? prior.bookingErrorCode : "",
       publicDepositPaymentIntentId: prep.paymentIntentId?.trim() || undefined,
       publicDepositStatus:
         prep.publicDepositStatus?.trim() || "deposit_succeeded",
@@ -2388,6 +2479,7 @@ export function BookingFlowClient() {
     setScheduleCommitError(null);
     setScheduleCommitPhase("none");
     setPendingConfirmHoldId(null);
+    setScheduleTeamDurationContext(null);
     const teams = state.availableTeams;
     const idx = Math.max(
       0,
@@ -2793,6 +2885,8 @@ export function BookingFlowClient() {
                     chooseDifferentTimeAfterConfirmFail()
                   }
                   schedulePreview={schedulePreview}
+                  laborEffortMinutes={scheduleLaborEffortMinutes}
+                  scheduleTeamDurationContext={scheduleTeamDurationContext}
                 />
               ) : null}
 

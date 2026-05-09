@@ -360,6 +360,38 @@ export const BOOKING_SCHEDULE_SUMMARY_TEAM_LABEL = "Team";
 
 export const BOOKING_SCHEDULE_SUMMARY_ARRIVAL_LABEL = "Arrival";
 
+export const BOOKING_SCHEDULE_DURATION_CONTEXT_TITLE = "Planning time in your home";
+
+export const BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL = "Estimated cleaning effort";
+
+export const BOOKING_SCHEDULE_IN_HOME_TIME_LABEL =
+  "Expected time in your home with this team";
+
+export const BOOKING_SCHEDULE_CLEANING_EFFORT_EXPLAINER =
+  "Cleaning effort reflects the total work required—think of it as labor time, not a stopwatch on your visit.";
+
+export const BOOKING_SCHEDULE_IN_HOME_LOADING =
+  "We're updating visit length for the team you picked…";
+
+export const BOOKING_SCHEDULE_IN_HOME_FALLBACK =
+  "We’ll confirm visit length with your team. Larger crews often complete the same cleaning effort in less wall-clock time.";
+
+export const BOOKING_SCHEDULE_PARALLELIZATION_NOTE =
+  "Multiple professionals working together can shorten the visit compared with cleaning effort alone—without changing how much work gets done.";
+
+export function bookingScheduleTeamSizeAssumptionCopy(
+  assignedCrewSize: number,
+): string {
+  const n = Math.floor(assignedCrewSize);
+  if (!Number.isFinite(n) || n < 1) {
+    return "Team size for this visit is reflected in the in-home estimate above.";
+  }
+  if (n === 1) {
+    return "This estimate assumes one professional from this team on the visit.";
+  }
+  return `This estimate assumes a ${n}-person team working together.`;
+}
+
 export const BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA = "Confirm your booking";
 
 /** @deprecated Use BOOKING_SCHEDULE_CONFIRM_BOOKING_CTA */

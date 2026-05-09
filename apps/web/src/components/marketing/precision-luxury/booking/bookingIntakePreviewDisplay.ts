@@ -20,6 +20,16 @@ export function formatEstimateDurationMinutes(total: number): string {
   return `${h} hr ${m} min`;
 }
 
+/** Softer wall-clock framing for team-contextual visit length (nearest 15 minutes). */
+export function formatApproximateInHomeDurationMinutes(total: number): string {
+  if (!Number.isFinite(total) || total < 0) return "—";
+  const rounded = Math.round(total / 15) * 15;
+  const bounded = Math.max(15, rounded);
+  const inner = formatEstimateDurationMinutes(bounded);
+  if (inner === "—") return "—";
+  return `About ${inner}`;
+}
+
 export function formatEstimateConfidence(confidence: number): string {
   if (!Number.isFinite(confidence)) return "—";
   return `${Math.round(confidence * (confidence <= 1 ? 100 : 1))}%`;
