@@ -41,6 +41,7 @@ import {
   BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE,
   BOOKING_CONFIRMATION_RETURN_TO_BOOKING_CTA,
   BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA,
+  BOOKING_CONFIRMATION_TEAM_PREP_TITLE,
   BOOKING_CONFIRMATION_VISIT_ESTIMATE_PRICE_LABEL,
   BOOKING_REVIEW_RECURRING_PRICE_LABEL,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE,
@@ -226,6 +227,10 @@ export function BookingConfirmationClient() {
 
   const bookingId = effectiveSearchParams.get("bookingId")?.trim() || "";
   const intakeId = effectiveSearchParams.get("intakeId")?.trim() || "";
+
+  const [sessionTeamPrepLines, setSessionTeamPrepLines] = useState<string[]>(
+    [],
+  );
   const priceCentsRaw = effectiveSearchParams.get("priceCents");
   const durationMinutesRaw = effectiveSearchParams.get("durationMinutes");
   const confidenceRaw = effectiveSearchParams.get("confidence");
@@ -279,6 +284,27 @@ export function BookingConfirmationClient() {
       cancelled = true;
     };
   }, [bookingId]);
+
+  useEffect(() => {
+    const snap = readBookingConfirmationSessionSnapshot();
+    if (!snap?.teamPlanningLines?.length) {
+      setSessionTeamPrepLines([]);
+      return;
+    }
+    if (!intakeId || snap.intakeId.trim() !== intakeId.trim()) {
+      setSessionTeamPrepLines([]);
+      return;
+    }
+    if (
+      bookingId.trim() &&
+      snap.bookingId.trim() &&
+      snap.bookingId.trim() !== bookingId.trim()
+    ) {
+      setSessionTeamPrepLines([]);
+      return;
+    }
+    setSessionTeamPrepLines(snap.teamPlanningLines);
+  }, [intakeId, bookingId, urlString]);
 
   const priceCents = useMemo(() => {
     const fromApi = remote?.estimateSnapshot?.estimatedPriceCents;
@@ -600,6 +626,22 @@ export function BookingConfirmationClient() {
                   </p>
                 ) : null}
               </div>
+            </div>
+          ) : null}
+
+          {sessionTeamPrepLines.length > 0 ? (
+            <div
+              data-testid="booking-confirmation-team-prep"
+              className="mt-8 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]"
+            >
+              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                {BOOKING_CONFIRMATION_TEAM_PREP_TITLE}
+              </p>
+              <ul className="mt-4 list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-7 text-[#334155] marker:text-[#94A3B8]">
+                {sessionTeamPrepLines.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
             </div>
           ) : null}
 

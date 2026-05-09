@@ -337,7 +337,9 @@ export type SubmitBookingDirectionIntakePayload = {
   deepCleanProgram?: "single_visit" | "phased_3_visit";
   /** Intent-aware enhancement requests; capture only, no pricing/estimate effect. */
   requestedEnhancementIds?: string[];
-  /** Recurring interest capture only; does not create schedules, contracts, or billing. */
+  /** Recurring interest capture only; does not create schedules, contracts, or billing.
+   * `note` may also carry optional team-planning prose from the public funnel (see web merge helper).
+   */
   recurringInterest?: {
     interested: boolean;
     cadence?:

@@ -1564,6 +1564,8 @@ export type BookingConfirmationSessionSnapshotV1 = {
   selectedSlotEnd?: string;
   paymentSessionCreatedAt?: string;
   paymentSessionExpiresAt?: string;
+  /** Same-origin echo of operational crew-prep lines (never placed in the confirmation URL). */
+  teamPlanningLines?: string[];
 };
 
 export function writeBookingConfirmationSessionSnapshot(
@@ -1631,6 +1633,17 @@ export function writeBookingConfirmationSessionSnapshot(
       ...(typeof partial.paymentSessionExpiresAt === "string" &&
       partial.paymentSessionExpiresAt.trim()
         ? { paymentSessionExpiresAt: partial.paymentSessionExpiresAt.trim() }
+        : {}),
+      ...(Array.isArray(partial.teamPlanningLines) &&
+      partial.teamPlanningLines.some(
+        (l) => typeof l === "string" && l.trim().length > 0,
+      )
+        ? {
+            teamPlanningLines: partial.teamPlanningLines
+              .filter((l) => typeof l === "string")
+              .map((l) => l.trim())
+              .filter(Boolean),
+          }
         : {}),
     };
     window.sessionStorage.setItem(
@@ -1708,6 +1721,18 @@ export function readBookingConfirmationSessionSnapshot(): BookingConfirmationSes
         typeof o.paymentSessionExpiresAt === "string"
           ? o.paymentSessionExpiresAt.trim()
           : undefined,
+      teamPlanningLines: (() => {
+        if (
+          !Array.isArray(o.teamPlanningLines) ||
+          !o.teamPlanningLines.every((x: unknown) => typeof x === "string")
+        ) {
+          return undefined;
+        }
+        const lines = (o.teamPlanningLines as string[])
+          .map((l) => l.trim())
+          .filter((l) => l.length > 0);
+        return lines.length ? lines : undefined;
+      })(),
     };
   } catch {
     return null;

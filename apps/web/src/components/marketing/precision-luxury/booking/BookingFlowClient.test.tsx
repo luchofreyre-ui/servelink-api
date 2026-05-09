@@ -2517,6 +2517,37 @@ describe("BookingFlowClient", () => {
       ).not.toBeInTheDocument();
     });
 
+    it("submits team planning via recurringInterest.note without adding estimator-only keys", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+
+      const panel = screen.getByTestId("booking-review-team-planning-details");
+      const summary = panel.querySelector("summary");
+      expect(summary).toBeTruthy();
+      fireEvent.click(summary!);
+      fireEvent.change(
+        within(panel).getByRole("textbox", { name: /Access instructions/i }),
+        { target: { value: "Lockbox 1919" } },
+      );
+
+      submitBookingDirectionIntakeMock.mockClear();
+      fireEvent.click(screen.getByTestId("booking-direction-send"));
+      await waitFor(() => expect(submitBookingDirectionIntakeMock).toHaveBeenCalled());
+      const payload = submitBookingDirectionIntakeMock.mock.calls[0][0] as Record<
+        string,
+        unknown
+      >;
+      const ri = payload.recurringInterest as Record<string, unknown> | undefined;
+      expect(ri?.interested).toBe(false);
+      expect(String(ri?.note)).toContain("Access instructions:");
+      expect(String(ri?.note)).toContain("Lockbox 1919");
+      const ef = payload.estimateFactors as Record<string, unknown>;
+      expect("accessInstructions" in ef).toBe(false);
+      expect("offLimitsRooms" in ef).toBe(false);
+    });
+
     it("uses labor-effort wording and scope predictability framing on review", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);

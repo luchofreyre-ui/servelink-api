@@ -116,6 +116,11 @@ import {
   computeWiredEstimateDriverFlags,
   derivePreviewConfidenceBand,
 } from "./bookingIntakeEstimateDrivers";
+import {
+  buildRecurringInterestPayloadForDirectionIntake,
+  buildTeamPlanningDisplayLines,
+  BOOKING_TEAM_PLANNING_FIELD_MAX_CHARS,
+} from "./bookingTeamPlanningDetails";
 import { buildEstimateRequestKey } from "./bookingEstimateKey";
 import { useBookingEstimate } from "./useBookingEstimate";
 import { mapIntakeDeepCleanSnapshotToCardProgram } from "./bookingIntakePreviewDisplay";
@@ -501,6 +506,15 @@ export function BookingFlowClient() {
   const stateRefForBookingUrl = useRef(state);
   stateRefForBookingUrl.current = state;
 
+  function teamPlanningSnapshotForSession():
+    | { teamPlanningLines: string[] }
+    | Record<string, never> {
+    const lines = buildTeamPlanningDisplayLines(
+      stateRefForBookingUrl.current.teamPlanningDetails,
+    );
+    return lines.length ? { teamPlanningLines: lines } : {};
+  }
+
   useEffect(() => {
     if (state.step !== "schedule") {
       setScheduleTeamDurationContext(null);
@@ -648,7 +662,10 @@ export function BookingFlowClient() {
     if (s.selectedSlotEnd.trim()) payload.selectedSlotEnd = s.selectedSlotEnd.trim();
     const expiresAt = args.expiresAt?.trim();
     if (expiresAt) payload.paymentSessionExpiresAt = expiresAt;
-    writeBookingConfirmationSessionSnapshot(payload);
+    writeBookingConfirmationSessionSnapshot({
+      ...payload,
+      ...teamPlanningSnapshotForSession(),
+    });
   }
   /**
    * Last `state.step` written to the location bar. Same-step edits stay in React only
@@ -1039,24 +1056,16 @@ export function BookingFlowClient() {
     [requestedEnhancementIds],
   );
 
-  const recurringInterestPayload = useMemo(() => {
-    if (state.recurringInterest?.interested !== true) return undefined;
-    return {
-      interested: true,
-      ...(state.recurringInterest.cadence
-        ? { cadence: state.recurringInterest.cadence }
-        : {}),
-      ...(state.recurringInterest.note?.trim()
-        ? { note: state.recurringInterest.note.trim() }
-        : {}),
-      ...(state.intent ? { sourceIntent: state.intent } : {}),
-    };
-  }, [
-    state.recurringInterest?.interested,
-    state.recurringInterest?.cadence,
-    state.recurringInterest?.note,
-    state.intent,
-  ]);
+  const recurringInterestPayload = useMemo(
+    () => buildRecurringInterestPayloadForDirectionIntake(state),
+    [
+      state.recurringInterest?.interested,
+      state.recurringInterest?.cadence,
+      state.recurringInterest?.note,
+      state.teamPlanningDetails,
+      state.intent,
+    ],
+  );
 
   const recurringInterestPayloadKey = useMemo(
     () => JSON.stringify(recurringInterestPayload ?? null),
@@ -1701,6 +1710,7 @@ export function BookingFlowClient() {
         prep.publicDepositStatus?.trim() || "deposit_succeeded",
       publicDepositHoldId: holdId || undefined,
       paymentSessionKey: currentPaymentSessionKey(bookingId, holdId),
+      ...teamPlanningSnapshotForSession(),
     });
     clearDepositUi();
     if (holdId) {
@@ -2017,6 +2027,7 @@ export function BookingFlowClient() {
         durationMinutes: result.estimate?.durationMinutes ?? null,
         confidence: result.estimate?.confidence ?? null,
         bookingErrorCode: result.bookingError?.code ?? "",
+        ...teamPlanningSnapshotForSession(),
       });
 
       if (
@@ -2031,6 +2042,7 @@ export function BookingFlowClient() {
           durationMinutes: result.estimate?.durationMinutes ?? null,
           confidence: result.estimate?.confidence ?? null,
           bookingErrorCode: result.bookingError?.code ?? "",
+          ...teamPlanningSnapshotForSession(),
         });
 
         setScheduleSurfaceError(null);
@@ -2538,6 +2550,37 @@ export function BookingFlowClient() {
     if (other) handleSelectTeam(other);
   }
 
+  function patchTeamPlanningDetails(
+    patch: Partial<NonNullable<BookingFlowState["teamPlanningDetails"]>>,
+  ) {
+    setSubmitRecoverableFailure(false);
+    setState((prev) => {
+      const base: NonNullable<BookingFlowState["teamPlanningDetails"]> = {
+        ...(prev.teamPlanningDetails ?? {}),
+      };
+      for (const [rawKey, rawVal] of Object.entries(patch)) {
+        const key = rawKey as keyof NonNullable<
+          BookingFlowState["teamPlanningDetails"]
+        >;
+        const s =
+          typeof rawVal === "string"
+            ? rawVal.slice(0, BOOKING_TEAM_PLANNING_FIELD_MAX_CHARS)
+            : "";
+        if (!s.trim()) {
+          delete base[key];
+        } else {
+          base[key] = s;
+        }
+      }
+      const teamPlanningDetails =
+        Object.keys(base).length > 0 ? base : undefined;
+      return clampBookingStepToStructuralMax({
+        ...prev,
+        teamPlanningDetails,
+      });
+    });
+  }
+
   function patchContactState(
     patch: Partial<Pick<BookingFlowState, "customerName" | "customerEmail">>,
   ) {
@@ -2741,6 +2784,7 @@ export function BookingFlowClient() {
                       }),
                     );
                   }}
+                  onTeamPlanningDetailsChange={patchTeamPlanningDetails}
                   onRecurringCadenceIntentChange={(recurringCadenceIntent) => {
                     setState((prev) =>
                       clampBookingStepToStructuralMax({

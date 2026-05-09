@@ -15,6 +15,7 @@ import type {
   BookingPreviewConfidenceBand,
   BookingProblemAreaToken,
   BookingSurfaceComplexity,
+  BookingTeamPlanningDetails,
 } from "./bookingFlowTypes";
 import {
   formatEstimateDurationMinutes,
@@ -71,6 +72,9 @@ import {
   BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD,
   BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE,
   BOOKING_REVIEW_PLANNING_NOTES_TITLE,
+  BOOKING_REVIEW_TEAM_PLANNING_DETAILS_LEAD,
+  BOOKING_REVIEW_TEAM_PLANNING_DETAILS_SUMMARY,
+  BOOKING_REVIEW_TEAM_PLANNING_DETAILS_TITLE,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_BODY,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_HEADLINE,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_SUPPORTING,
@@ -113,6 +117,10 @@ import {
   BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
   BOOKING_REVIEW_VISIT_STRUCTURE_LABEL,
 } from "./bookingPublicSurfaceCopy";
+import {
+  BOOKING_TEAM_PLANNING_FIELD_MAX_CHARS,
+  BOOKING_TEAM_PLANNING_FIELD_SPECS,
+} from "./bookingTeamPlanningDetails";
 import { getBookingUpsellOptionsByIds } from "./bookingUpsells";
 import { getPublicBookingMarketingTitle } from "./publicBookingTaxonomy";
 import type { DerivedSchedulePreview } from "./BookingStepSchedule";
@@ -163,6 +171,9 @@ type BookingStepReviewProps = {
   ) => void;
   onRecurringInterestChange: (
     value: BookingFlowState["recurringInterest"],
+  ) => void;
+  onTeamPlanningDetailsChange: (
+    patch: Partial<BookingTeamPlanningDetails>,
   ) => void;
   onRecurringCadenceIntentChange: (
     value: BookingFlowState["recurringCadenceIntent"],
@@ -290,6 +301,7 @@ export function BookingStepReview({
   recommendedAttentionItems,
   onFirstTimePostEstimateVisitChoiceChange,
   onRecurringInterestChange,
+  onTeamPlanningDetailsChange,
   onRecurringCadenceIntentChange,
   schedulePreview,
 }: BookingStepReviewProps) {
@@ -1032,6 +1044,48 @@ export function BookingStepReview({
             </ReviewSection>
           </div>
         ) : null}
+
+        <details
+          data-testid="booking-review-team-planning-details"
+          className="group mt-2 rounded-2xl border border-[#C9B27C]/16 bg-[#FFFCF8] px-5 py-4 open:pb-5"
+        >
+          <summary className="cursor-pointer list-none font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] marker:content-none [&::-webkit-details-marker]:hidden">
+            <span className="flex items-start justify-between gap-3">
+              <span>
+                {BOOKING_REVIEW_TEAM_PLANNING_DETAILS_TITLE}
+                <span className="mt-1 block font-[var(--font-manrope)] text-xs font-normal leading-5 text-[#64748B]">
+                  {BOOKING_REVIEW_TEAM_PLANNING_DETAILS_LEAD}
+                </span>
+              </span>
+              <span className="shrink-0 pt-0.5 text-xs font-normal text-[#94A3B8] group-open:hidden">
+                Tap to add (optional)
+              </span>
+            </span>
+          </summary>
+          <div className="mt-4 space-y-4">
+            {BOOKING_TEAM_PLANNING_FIELD_SPECS.map(({ key, label }) => (
+              <label key={key} className="block space-y-1.5">
+                <span className="font-[var(--font-manrope)] text-xs font-medium text-[#64748B]">
+                  {label}
+                </span>
+                <textarea
+                  value={state.teamPlanningDetails?.[key] ?? ""}
+                  maxLength={BOOKING_TEAM_PLANNING_FIELD_MAX_CHARS}
+                  rows={2}
+                  onChange={(e) =>
+                    onTeamPlanningDetailsChange({
+                      [key]: e.target.value,
+                    } as Partial<BookingTeamPlanningDetails>)
+                  }
+                  className="w-full rounded-xl border border-[#E2E8F0] bg-white px-3 py-2 font-[var(--font-manrope)] text-sm text-[#0F172A] outline-none ring-[#C9B27C]/25 focus:ring-2"
+                />
+              </label>
+            ))}
+            <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+              {BOOKING_REVIEW_TEAM_PLANNING_DETAILS_SUMMARY}
+            </p>
+          </div>
+        </details>
 
         {intakePlanningNoteLines.length > 0 ? (
           <div data-testid="booking-review-planning-notes">

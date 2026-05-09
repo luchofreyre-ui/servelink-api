@@ -672,7 +672,21 @@ export const BOOKING_REVIEW_PRE_CONF_SPECIAL_SUPPORTING =
   "Selected details increase the need for a more tailored planning view before the visit.";
 
 /** Review — narrative fields that help ops but are not claimable as estimateFactors levers. */
-export const BOOKING_REVIEW_PLANNING_NOTES_TITLE = "Helpful planning notes";
+/** Auto-derived cues from earlier home steps — distinct from estimator drivers block. */
+export const BOOKING_REVIEW_PLANNING_NOTES_TITLE = "Notes from your home details";
+
+/** Optional free-text crew prep (access, parking, off-limits, etc.) — not part of the live estimator. */
+export const BOOKING_REVIEW_TEAM_PLANNING_DETAILS_TITLE = "Team planning details";
+
+export const BOOKING_REVIEW_TEAM_PLANNING_DETAILS_LEAD =
+  "Optional — helps our crew prepare. This does not change the automated quote you see on this page.";
+
+export const BOOKING_REVIEW_TEAM_PLANNING_DETAILS_SUMMARY =
+  "We’ll pass these notes to your service team to limit surprises on arrival. Editing them does not refresh your price preview.";
+
+/** `/book/confirmation` — echoes session snapshot; never paired with pricing language. */
+export const BOOKING_CONFIRMATION_TEAM_PREP_TITLE =
+  "Details we’ll share with your team";
 
 export const BOOKING_PLANNING_NOTE_FOCUS_AREAS_LEAD =
   "Focus-area notes your crew will read:";

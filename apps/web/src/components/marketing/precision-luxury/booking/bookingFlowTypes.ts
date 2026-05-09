@@ -160,6 +160,22 @@ export type BookingRecurringInterest = {
   note?: string;
 };
 
+/**
+ * Operational / crew-prep details only — not mapped into `estimateFactors` or the estimator.
+ * Persisted opportunistically via `recurringInterest.note` + `Booking.notes` on submit (see bridge).
+ */
+export type BookingTeamPlanningDetails = {
+  offLimitsRooms?: string;
+  accessInstructions?: string;
+  parkingInstructions?: string;
+  fragileAreas?: string;
+  petsHandling?: string;
+  priorityRooms?: string;
+  residentConstraints?: string;
+  fragranceSensitivity?: string;
+  gateBuildingInstructions?: string;
+};
+
 export type BookingAvailableTeamOption = {
   id: string;
   displayName: string;
@@ -195,6 +211,8 @@ export type BookingFlowState = {
   selectedUpsellIds: string[];
   /** Optional recurring service interest; capture only, not a recurring contract. */
   recurringInterest?: BookingRecurringInterest;
+  /** Optional crew prep / access context — never treated as estimator drivers. */
+  teamPlanningDetails?: BookingTeamPlanningDetails;
   /**
    * Public anonymous funnel always stores one-time; recurring cadence belongs in
    * `/customer` after login. Kept for payload compatibility with direction intake.

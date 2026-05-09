@@ -448,6 +448,11 @@ export class IntakeBookingBridgeService {
     if (displayName) {
       noteParts.push(`customerName=${displayName}`);
     }
+    const prepNote = dto.recurringInterest?.note?.trim();
+    if (prepNote) {
+      noteParts.push(`customerPrep=${prepNote.replace(/\|/g, " — ")}`);
+    }
+
     const note = noteParts.join(" | ");
 
     try {

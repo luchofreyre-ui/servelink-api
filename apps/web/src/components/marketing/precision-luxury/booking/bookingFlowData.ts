@@ -78,6 +78,7 @@ export const defaultBookingFlowState: BookingFlowState = {
   selectedAddOns: [],
   selectedUpsellIds: [],
   recurringInterest: undefined,
+  teamPlanningDetails: undefined,
   frequency: "One-Time",
   preferredTime: "",
   deepCleanProgram: "single_visit",
