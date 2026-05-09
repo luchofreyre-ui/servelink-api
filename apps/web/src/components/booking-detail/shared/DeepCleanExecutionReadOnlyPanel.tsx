@@ -164,7 +164,7 @@ export function DeepCleanExecutionReadOnlyPanel({
                 {v.status === "completed" &&
                 v.actualDurationMinutes != null ? (
                   <div>
-                    <dt className={t.dt}>Actual duration (minutes): </dt>
+                    <dt className={t.dt}>Time on site (actual, minutes): </dt>
                     <dd className="inline">{v.actualDurationMinutes}</dd>
                   </div>
                 ) : null}
