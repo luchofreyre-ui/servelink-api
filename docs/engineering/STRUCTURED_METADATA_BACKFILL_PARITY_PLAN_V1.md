@@ -269,3 +269,14 @@ Deliverables:
 | **Mode** | **Read-only** — no writes, no write flags, no transaction mutations |
 | **Output** | JSON summary: bucket counts, percentages, cursor metadata, optional **`bookingId`** samples only — **no** raw `Booking.notes`, **`customerPrep`** text, provenance, customer identity, payments |
 | **Write mode** | **Not implemented** — remains a separate future BUILD DROP after dry-run sign-off |
+
+---
+
+## 10. Implementation note — dry-run CLI ergonomics (V1)
+
+| Item | Detail |
+|------|--------|
+| **Arg forms** | Supported flags accept **both** `--flag=value` and `--flag value` (`limit`, `batch-size`, `sample-limit`, `cursor-created-at`, `cursor-id`). |
+| **Validation** | Non‑negative integer parsing for numeric flags (strict base‑10 digits); **batch-size ≥ 1**; explicit errors on unknown options or missing values. |
+| **`--help`** | Prints safe usage (read‑only guarantee, flags, **canonical `npm run --silent …` invocation**, direct `ts-node` example). |
+| **Stdout** | Still JSON‑only on successful scan; **npm lifecycle lines** avoided when operators follow **`npm run --silent`** or invoke **`ts-node`** directly (documented in help). |

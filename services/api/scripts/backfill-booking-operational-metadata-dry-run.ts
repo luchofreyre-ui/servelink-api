@@ -9,53 +9,12 @@ import { PrismaClient } from "@prisma/client";
 import {
   buildSafeOperationalMetadataBackfillReport,
   classifyBookingForOperationalMetadataBackfill,
+  OPERATIONAL_METADATA_DRY_RUN_CLI_ID,
+  OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT,
+  parseOperationalMetadataDryRunArgv,
   type OperationalMetadataBackfillClassificationResult,
   type OperationalMetadataBackfillDryRunCursor,
 } from "./backfill-booking-operational-metadata-dry-run.lib";
-
-const SCRIPT_ID = "backfill-booking-operational-metadata-dry-run-v1";
-
-function parseArgs(argv: string[]) {
-  let limit: number | null = null;
-  let batchSize = 100;
-  let cursorCreatedAt: string | null = null;
-  let cursorId: string | null = null;
-  let includeSamples = false;
-  let sampleLimit = 10;
-
-  for (const arg of argv) {
-    if (arg.startsWith("--limit=")) {
-      const n = Number(arg.slice("--limit=".length));
-      if (Number.isFinite(n) && n >= 0) limit = Math.floor(n);
-    } else if (arg.startsWith("--batch-size=")) {
-      const n = Number(arg.slice("--batch-size=".length));
-      if (Number.isFinite(n) && n >= 1) batchSize = Math.floor(n);
-    } else if (arg.startsWith("--cursor-created-at=")) {
-      cursorCreatedAt = arg.slice("--cursor-created-at=".length).trim() || null;
-    } else if (arg.startsWith("--cursor-id=")) {
-      cursorId = arg.slice("--cursor-id=".length).trim() || null;
-    } else if (arg === "--include-samples") {
-      includeSamples = true;
-    } else if (arg.startsWith("--sample-limit=")) {
-      const n = Number(arg.slice("--sample-limit=".length));
-      if (Number.isFinite(n) && n >= 0) sampleLimit = Math.floor(n);
-    }
-  }
-
-  if (
-    (cursorCreatedAt && !cursorId) ||
-    (!cursorCreatedAt && cursorId)
-  ) {
-    throw new Error(
-      `${SCRIPT_ID}: --cursor-created-at and --cursor-id must both be set or both omitted.`,
-    );
-  }
-
-  const cursor: OperationalMetadataBackfillDryRunCursor | null =
-    cursorCreatedAt && cursorId ? { createdAt: cursorCreatedAt, id: cursorId } : null;
-
-  return { limit, batchSize, cursor, includeSamples, sampleLimit };
-}
 
 function parseCursorToOrdering(cursor: OperationalMetadataBackfillDryRunCursor): {
   createdAt: Date;
@@ -63,13 +22,21 @@ function parseCursorToOrdering(cursor: OperationalMetadataBackfillDryRunCursor):
 } {
   const createdAt = new Date(cursor.createdAt);
   if (!Number.isFinite(createdAt.getTime())) {
-    throw new Error(`${SCRIPT_ID}: invalid cursor createdAt (expected ISO-8601).`);
+    throw new Error(
+      `${OPERATIONAL_METADATA_DRY_RUN_CLI_ID}: invalid cursor createdAt (expected ISO-8601).`,
+    );
   }
   return { createdAt, id: cursor.id };
 }
 
 async function main() {
-  const args = parseArgs(process.argv.slice(2));
+  const parsed = parseOperationalMetadataDryRunArgv(process.argv.slice(2));
+  if (parsed.mode === "help") {
+    console.log(OPERATIONAL_METADATA_DRY_RUN_HELP_TEXT.trimEnd());
+    return;
+  }
+
+  const args = parsed.options;
 
   const prisma = new PrismaClient();
   const classifications: OperationalMetadataBackfillClassificationResult[] = [];
@@ -155,6 +122,6 @@ async function main() {
 
 main().catch((err: unknown) => {
   const message = err instanceof Error ? err.message : String(err);
-  console.error(JSON.stringify({ error: SCRIPT_ID, message }));
+  console.error(JSON.stringify({ error: OPERATIONAL_METADATA_DRY_RUN_CLI_ID, message }));
   process.exit(1);
 });
