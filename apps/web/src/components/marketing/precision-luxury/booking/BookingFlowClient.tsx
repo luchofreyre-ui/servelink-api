@@ -78,7 +78,6 @@ import {
 import type {
   BookingAvailableTeamOption,
   BookingFlowState,
-  BookingPreviewConfidenceBand,
   BookingStepId,
 } from "./bookingFlowTypes";
 import {
@@ -110,6 +109,12 @@ import {
 import { DepositPaymentElement } from "./DepositPaymentElement";
 import { getStripePromise } from "@/lib/stripe/stripeClient";
 import { buildIntakeEstimateFactorsFromBookingHomeState } from "./bookingStep2ToEstimateFactors";
+import {
+  buildIntakePlanningNoteLines,
+  computePreviewConfidenceBandInputs,
+  computeWiredEstimateDriverFlags,
+  derivePreviewConfidenceBand,
+} from "./bookingIntakeEstimateDrivers";
 import { buildEstimateRequestKey } from "./bookingEstimateKey";
 import { useBookingEstimate } from "./useBookingEstimate";
 import { mapIntakeDeepCleanSnapshotToCardProgram } from "./bookingIntakePreviewDisplay";
@@ -303,34 +308,6 @@ function getStepError(state: BookingFlowState): string | null {
   }
 
   return null;
-}
-
-/** Internal weighting only — never shown. Maps canonical complexity signals to a band. */
-function derivePreviewConfidenceBand(input: {
-  isHeavyCondition: boolean;
-  problemAreaCount: number;
-  isDenseLayout: boolean;
-  isDetailHeavyScope: boolean;
-  addOnCount: number;
-  nonDefaultDeepCleanFocus: boolean;
-  furnishedMoveTransition: boolean;
-  transitionAppliances: boolean;
-}): BookingPreviewConfidenceBand {
-  let weight = 0;
-  if (input.isHeavyCondition) weight += 2;
-  if (input.problemAreaCount >= 1) {
-    weight += Math.min(2, input.problemAreaCount);
-  }
-  if (input.isDenseLayout) weight += 2;
-  if (input.isDetailHeavyScope) weight += 2;
-  weight += Math.min(3, input.addOnCount);
-  if (input.nonDefaultDeepCleanFocus) weight += 1;
-  if (input.furnishedMoveTransition) weight += 1;
-  if (input.transitionAppliances) weight += 1;
-
-  if (weight <= 1) return "high_clarity";
-  if (weight <= 4) return "customized";
-  return "special_attention";
 }
 
 function pushUniqueCap3(list: string[], line: string) {
@@ -1048,98 +1025,64 @@ export function BookingFlowClient() {
     });
   }, [selectedStartAtForPreview, resolvedSchedulePreviewCadence]);
 
-  const isHeavyCondition = useMemo(
-    () =>
-      state.overallLaborCondition === "major_reset" ||
-      state.clutterAccess === "heavy_clutter" ||
-      state.condition === "heavy_buildup" ||
-      state.condition === "move_in_out_reset",
+  const wiredEstimateDriverFlags = useMemo(
+    () => computeWiredEstimateDriverFlags(state),
     [
+      state.serviceId,
       state.overallLaborCondition,
       state.clutterAccess,
+      state.kitchenIntensity,
+      state.bathroomComplexity,
+      state.layoutType,
+      state.primaryIntent,
+      state.surfaceDetailTokens,
+      selectedAddOnsPayloadKey,
+      state.deepCleanFocus,
+      state.transitionState,
+      appliancePresencePayloadKey,
+    ],
+  );
+
+  const intakePlanningNoteLines = useMemo(
+    () => buildIntakePlanningNoteLines(state),
+    [
+      problemAreasPayloadKey,
+      state.surfaceComplexity,
+      state.layoutType,
+      state.clutterAccess,
+      state.scopeIntensity,
+      state.primaryIntent,
       state.condition,
     ],
   );
 
-  const hasProblemAreas = useMemo(
+  const previewConfidenceBand = useMemo(
     () =>
-      normalizeBookingProblemAreasForPayload(state.problemAreas).length > 0 ||
-      state.kitchenIntensity === "heavy_use" ||
-      state.bathroomComplexity === "heavy_detailing",
-    [state.problemAreas, state.kitchenIntensity, state.bathroomComplexity],
+      derivePreviewConfidenceBand(computePreviewConfidenceBandInputs(state)),
+    [
+      state.serviceId,
+      state.overallLaborCondition,
+      state.clutterAccess,
+      state.kitchenIntensity,
+      state.bathroomComplexity,
+      state.layoutType,
+      state.primaryIntent,
+      state.surfaceDetailTokens,
+      selectedAddOnsPayloadKey,
+      state.deepCleanFocus,
+      state.transitionState,
+      appliancePresencePayloadKey,
+    ],
   );
 
-  const isDenseLayout = useMemo(
-    () =>
-      state.surfaceComplexity === "dense_layout" ||
-      (state.layoutType === "segmented" &&
-        state.clutterAccess !== "mostly_clear"),
-    [state.surfaceComplexity, state.layoutType, state.clutterAccess],
-  );
+  const estimateDriverHasAddOns = wiredEstimateDriverFlags.hasAddOns;
 
-  const estimateDriverDetailHeavyScope = useMemo(
-    () =>
-      state.scopeIntensity === "detail_heavy" ||
-      state.primaryIntent === "reset_level",
-    [state.scopeIntensity, state.primaryIntent],
-  );
+  const estimateDriverDeepCleanFocus = wiredEstimateDriverFlags.deepCleanFocusNonDefault;
 
-  const estimateDriverHasAddOns = useMemo(
-    () => normalizeBookingAddOnsForPayload(state.selectedAddOns).length > 0,
-    [state.selectedAddOns],
-  );
+  const estimateDriverFurnishedTransition = wiredEstimateDriverFlags.furnishedTransition;
 
-  const estimateDriverDeepCleanFocus = useMemo(
-    () =>
-      isDeepCleaningBookingServiceId(state.serviceId) &&
-      state.deepCleanFocus !== "whole_home_reset",
-    [state.serviceId, state.deepCleanFocus],
-  );
-
-  const estimateDriverFurnishedTransition = useMemo(
-    () =>
-      isBookingMoveTransitionServiceId(state.serviceId) &&
-      (state.transitionState === "lightly_furnished" ||
-        state.transitionState === "fully_furnished"),
-    [state.serviceId, state.transitionState],
-  );
-
-  const estimateDriverTransitionAppliances = useMemo(
-    () =>
-      isBookingMoveTransitionServiceId(state.serviceId) &&
-      normalizeBookingAppliancePresenceForPayload(state.appliancePresence)
-        .length > 0,
-    [state.serviceId, state.appliancePresence],
-  );
-
-  const previewConfidenceBand = useMemo((): BookingPreviewConfidenceBand => {
-    const problemAreaCount =
-      normalizeBookingProblemAreasForPayload(state.problemAreas).length +
-      (state.kitchenIntensity === "heavy_use" ? 1 : 0) +
-      (state.bathroomComplexity === "heavy_detailing" ? 1 : 0);
-    const addOnCount = normalizeBookingAddOnsForPayload(
-      state.selectedAddOns,
-    ).length;
-    return derivePreviewConfidenceBand({
-      isHeavyCondition,
-      problemAreaCount,
-      isDenseLayout,
-      isDetailHeavyScope: estimateDriverDetailHeavyScope,
-      addOnCount,
-      nonDefaultDeepCleanFocus: estimateDriverDeepCleanFocus,
-      furnishedMoveTransition: estimateDriverFurnishedTransition,
-      transitionAppliances: estimateDriverTransitionAppliances,
-    });
-  }, [
-    isHeavyCondition,
-    problemAreasPayloadKey,
-    isDenseLayout,
-    estimateDriverDetailHeavyScope,
-    selectedAddOnsPayloadKey,
-    estimateDriverDeepCleanFocus,
-    estimateDriverFurnishedTransition,
-    estimateDriverTransitionAppliances,
-  ]);
+  const estimateDriverTransitionAppliances =
+    wiredEstimateDriverFlags.transitionAppliances;
 
   const prepGuidanceItems = useMemo(
     () => derivePrepGuidanceItems(state),
@@ -2648,10 +2591,21 @@ export function BookingFlowClient() {
                   condition={state.condition}
                   problemAreas={state.problemAreas}
                   surfaceComplexity={state.surfaceComplexity}
-                  estimateDriverHeavyCondition={isHeavyCondition}
-                  estimateDriverHasProblemAreas={hasProblemAreas}
-                  estimateDriverDenseLayout={isDenseLayout}
-                  estimateDriverDetailHeavyScope={estimateDriverDetailHeavyScope}
+                  estimateDriverHeavyCondition={
+                    wiredEstimateDriverFlags.heavyCondition
+                  }
+                  estimateDriverHeavyKitchenBath={
+                    wiredEstimateDriverFlags.heavyKitchenOrBath
+                  }
+                  estimateDriverSegmentedAccessLayout={
+                    wiredEstimateDriverFlags.segmentedAccessLayout
+                  }
+                  estimateDriverResetLevelIntent={
+                    wiredEstimateDriverFlags.resetLevelIntent
+                  }
+                  estimateDriverSurfaceDetailTokens={
+                    wiredEstimateDriverFlags.hasSurfaceDetailTokens
+                  }
                   estimateDriverHasAddOns={estimateDriverHasAddOns}
                   estimateDriverDeepCleanFocus={estimateDriverDeepCleanFocus}
                   estimateDriverFurnishedTransition={
@@ -2660,6 +2614,7 @@ export function BookingFlowClient() {
                   estimateDriverTransitionAppliances={
                     estimateDriverTransitionAppliances
                   }
+                  intakePlanningNoteLines={intakePlanningNoteLines}
                   previewConfidenceBand={previewConfidenceBand}
                   hasSubmitRecoverableFailure={submitRecoverableFailure}
                   estimatePreviewReady={estimatePreviewReady}

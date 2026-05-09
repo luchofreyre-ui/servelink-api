@@ -55,12 +55,13 @@ import {
   BOOKING_REVIEW_TRANSITION_SETUP_LABEL,
   BOOKING_REVIEW_BANNER_AFTER_SEND_DID_NOT_FINISH,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DEEP_CLEAN_FOCUS,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_CONDITION,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SURFACE_DETAILS,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES,
   BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE,
   BOOKING_REVIEW_ESTIMATE_NONE_AFTER_FETCH,
@@ -69,6 +70,7 @@ import {
   BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_HINT,
   BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD,
   BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE,
+  BOOKING_REVIEW_PLANNING_NOTES_TITLE,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_BODY,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_HEADLINE,
   BOOKING_REVIEW_PRE_CONF_CUSTOM_SUPPORTING,
@@ -117,13 +119,15 @@ type BookingStepReviewProps = {
   problemAreas: readonly BookingProblemAreaToken[];
   surfaceComplexity: BookingSurfaceComplexity;
   estimateDriverHeavyCondition: boolean;
-  estimateDriverHasProblemAreas: boolean;
-  estimateDriverDenseLayout: boolean;
-  estimateDriverDetailHeavyScope: boolean;
+  estimateDriverHeavyKitchenBath: boolean;
+  estimateDriverSegmentedAccessLayout: boolean;
+  estimateDriverResetLevelIntent: boolean;
+  estimateDriverSurfaceDetailTokens: boolean;
   estimateDriverHasAddOns: boolean;
   estimateDriverDeepCleanFocus: boolean;
   estimateDriverFurnishedTransition: boolean;
   estimateDriverTransitionAppliances: boolean;
+  intakePlanningNoteLines: readonly string[];
   previewConfidenceBand: BookingPreviewConfidenceBand;
   hasSubmitRecoverableFailure?: boolean;
   estimatePreviewReady: boolean;
@@ -247,13 +251,15 @@ export function BookingStepReview({
   problemAreas,
   surfaceComplexity,
   estimateDriverHeavyCondition,
-  estimateDriverHasProblemAreas,
-  estimateDriverDenseLayout,
-  estimateDriverDetailHeavyScope,
+  estimateDriverHeavyKitchenBath,
+  estimateDriverSegmentedAccessLayout,
+  estimateDriverResetLevelIntent,
+  estimateDriverSurfaceDetailTokens,
   estimateDriverHasAddOns,
   estimateDriverDeepCleanFocus,
   estimateDriverFurnishedTransition,
   estimateDriverTransitionAppliances,
+  intakePlanningNoteLines,
   previewConfidenceBand,
   hasSubmitRecoverableFailure = false,
   estimatePreviewReady,
@@ -412,9 +418,9 @@ export function BookingStepReview({
     : null;
   const recurringTimingText =
     reviewRecurringCadence && selectedVisitStructure === "three_visit_reset"
-      ? `Reset visits are spaced 14 days apart. ${recurringCadenceDisplay[reviewRecurringCadence]} recurring service begins ${recurringQuote?.cadenceDays ?? "the selected cadence"} days after Visit 3.`
+      ? `Reset visits are spaced 14 days apart. After Visit 3, recurring visits follow your ${recurringCadenceDisplay[reviewRecurringCadence]} cadence—the recurring line is priced separately from these opening visits.`
       : reviewRecurringCadence
-        ? `Recurring service begins ${recurringQuote?.cadenceDays ?? "the selected cadence"} days after your first visit.`
+        ? `The preview above is your first visit. Recurring visits on a ${recurringCadenceDisplay[reviewRecurringCadence]} cadence are quoted separately and typically begin after that visit—changing cadence mainly affects the recurring line, not necessarily this opening price.`
         : null;
 
   useEffect(() => {
@@ -502,9 +508,14 @@ export function BookingStepReview({
       key: "mva",
     },
     {
-      on: estimateDriverDetailHeavyScope,
-      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE,
-      key: "scope",
+      on: estimateDriverResetLevelIntent,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT,
+      key: "reset",
+    },
+    {
+      on: estimateDriverSurfaceDetailTokens,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SURFACE_DETAILS,
+      key: "surfaces",
     },
     {
       on: estimateDriverHasAddOns,
@@ -517,13 +528,13 @@ export function BookingStepReview({
       key: "heavy",
     },
     {
-      on: estimateDriverHasProblemAreas,
-      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS,
-      key: "problems",
+      on: estimateDriverHeavyKitchenBath,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH,
+      key: "kitchenbath",
     },
     {
-      on: estimateDriverDenseLayout,
-      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT,
+      on: estimateDriverSegmentedAccessLayout,
+      text: BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT,
       key: "dense",
     },
   ] as const;
@@ -549,6 +560,7 @@ export function BookingStepReview({
     state.deepCleanFocus,
     state.transitionState,
     appliancesNormalized.join(","),
+    intakePlanningNoteLines.join("|"),
   ].join(":");
 
   const showPlanningConfidenceBlock =
@@ -736,7 +748,7 @@ export function BookingStepReview({
                 {formatEstimateUsdFromCents(previewEstimate.priceCents)}
               </p>
               <p className="font-medium">
-                <span className="text-[#64748B]">Duration:</span>{" "}
+                <span className="text-[#64748B]">Estimated labor effort:</span>{" "}
                 {formatEstimateDurationMinutes(previewEstimate.durationMinutes)}
               </p>
               <p className="font-medium">
@@ -860,7 +872,9 @@ export function BookingStepReview({
                       : "Unavailable"}
                   </p>
                   <p className="font-medium">
-                    <span className="text-[#64748B]">Estimated recurring duration:</span>{" "}
+                    <span className="text-[#64748B]">
+                      Estimated recurring labor effort:
+                    </span>{" "}
                     {recurringQuote
                       ? formatEstimateDurationMinutes(recurringQuote.estimatedMinutes)
                       : "Unavailable"}
@@ -950,9 +964,25 @@ export function BookingStepReview({
         {showEstimateDriverBlock ? (
           <div key={estimateDriverBlockKey}>
             <ReviewSection title={BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE}>
+              <p className="mb-3 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                These selections are included in the live estimator preview for
+                this path.
+              </p>
               <ul className="list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A] marker:text-[#94A3B8]">
                 {estimateDriverBullets.map((b) => (
                   <li key={b.key}>{b.text}</li>
+                ))}
+              </ul>
+            </ReviewSection>
+          </div>
+        ) : null}
+
+        {intakePlanningNoteLines.length > 0 ? (
+          <div data-testid="booking-review-planning-notes">
+            <ReviewSection title={BOOKING_REVIEW_PLANNING_NOTES_TITLE}>
+              <ul className="list-disc space-y-2 pl-5 font-[var(--font-manrope)] text-sm leading-6 text-[#0F172A] marker:text-[#94A3B8]">
+                {intakePlanningNoteLines.map((text) => (
+                  <li key={text}>{text}</li>
                 ))}
               </ul>
             </ReviewSection>

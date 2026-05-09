@@ -139,7 +139,7 @@ export function BookingSummaryCard({
           ...(previewEstimate && !previewLoading && !previewError
             ? [
                 {
-                  label: "Est. time",
+                  label: "Est. labor effort",
                   value: formatEstimateDurationMinutes(
                     previewEstimate.durationMinutes,
                   ),

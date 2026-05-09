@@ -22,12 +22,12 @@ import {
   BOOKING_DEEP_CLEAN_FOCUS_LABELS,
   BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DEEP_CLEAN_FOCUS,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_CONDITION,
-  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT,
+  BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT,
   BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES,
   BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE,
   BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD,
@@ -35,6 +35,8 @@ import {
   BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE,
   BOOKING_REVIEW_PRE_CONF_HIGH_SUPPORTING,
   BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE,
+  BOOKING_PLANNING_NOTE_DENSE_FURNISHINGS,
+  BOOKING_REVIEW_PLANNING_NOTES_TITLE,
   BOOKING_REVIEW_PREP_DENSE_LAYOUT,
   BOOKING_REVIEW_PREP_FRIDGE,
   BOOKING_REVIEW_PREP_MOVE_FURNISHED,
@@ -2406,7 +2408,7 @@ describe("BookingFlowClient", () => {
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
       );
       expect(
-        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS),
+        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH),
       ).toBeInTheDocument();
     });
 
@@ -2425,7 +2427,7 @@ describe("BookingFlowClient", () => {
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
       );
       expect(
-        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT),
+        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT),
       ).toBeInTheDocument();
     });
 
@@ -2438,6 +2440,40 @@ describe("BookingFlowClient", () => {
       expect(
         screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE),
       ).not.toBeInTheDocument();
+    });
+
+    it("shows planning notes for focus-area tokens that are not estimator fields", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(
+        `${buildReviewSearchString()}&homeProblems=pet_hair`,
+      );
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      const planning = screen.getByTestId("booking-review-planning-notes");
+      expect(planning).toBeInTheDocument();
+      expect(within(planning).getByText(/Pet hair/i)).toBeInTheDocument();
+      expect(
+        screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH),
+      ).not.toBeInTheDocument();
+    });
+
+    it("treats dense furnishings selection as planning notes when segmented-access driver does not apply", async () => {
+      const sp = new URLSearchParams(buildReviewSearchString());
+      sp.set("homeSurface", "dense_layout");
+      bookingFlowTestSearch.sp = sp;
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      expect(screen.getByTestId("booking-review-planning-notes")).toBeInTheDocument();
+      expect(screen.getByText(BOOKING_PLANNING_NOTE_DENSE_FURNISHINGS)).toBeInTheDocument();
+      expect(
+        screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT),
+      ).not.toBeInTheDocument();
+    });
+
+    it("uses labor-effort wording for preview duration on review", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(5000);
+      expect(screen.getByText(/Estimated labor effort:/i)).toBeInTheDocument();
     });
   });
 
@@ -2547,7 +2583,7 @@ describe("BookingFlowClient", () => {
         expect(screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE)).toBeInTheDocument(),
       );
       expect(
-        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE),
+        screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT),
       ).toBeInTheDocument();
       expect(
         screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS),
@@ -2573,7 +2609,7 @@ describe("BookingFlowClient", () => {
         screen.getByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE),
+        screen.queryByText(BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT),
       ).not.toBeInTheDocument();
     });
 
@@ -2992,11 +3028,19 @@ describe("BookingFlowClient", () => {
     });
 
     it("heavier combined signals show special-attention band copy", async () => {
-      bookingFlowTestSearch.sp = new URLSearchParams(
-        `${buildReviewSearchString()}&homeSurface=dense_layout&homeCondition=heavy_buildup&homeScope=detail_heavy`,
-      );
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(5000);
+      goHomeFromReviewViaBackOnce();
+      fireEvent.click(screen.getByRole("radio", { name: /major reset needed/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /heavy clutter/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /Many segmented rooms/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /Moderate clutter/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /reset-level clean/i }));
+      fireEvent.click(
+        screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.inside_oven }),
+      );
+      await continueThroughLocationGateToReview();
       await waitFor(
         () =>
           expect(screen.getByText(BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE)).toBeInTheDocument(),

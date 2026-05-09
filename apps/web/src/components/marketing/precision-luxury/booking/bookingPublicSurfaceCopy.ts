@@ -539,25 +539,26 @@ export const BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL = "Visit focus";
 export const BOOKING_REVIEW_TRANSITION_SETUP_LABEL = "Home transition setup";
 export const BOOKING_REVIEW_TRANSITION_APPLIANCES_LABEL = "Appliances included";
 
-/** Step 4 — transparent “why” hints tied to estimate-driving inputs (no math or pricing breakdown). */
-export const BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE =
-  "What's driving your estimate";
+/** Step 4 — signals that are actually reflected in estimateFactors / preview intake. */
+export const BOOKING_REVIEW_ESTIMATE_DRIVERS_TITLE = "What shaped this estimate";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_CONDITION =
-  "Heavier buildup increases time required.";
-export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_PROBLEM_AREAS =
-  "Targeted problem areas add focused cleaning time.";
-export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DENSE_LAYOUT =
-  "Dense layout requires more detailed work.";
-export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DETAIL_HEAVY_SCOPE =
-  "A more detailed scope increases the time needed throughout the home.";
+  "Heavier overall labor condition or heavy access limits are reflected in this preview.";
+export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_HEAVY_KITCHEN_BATH =
+  "Heavy-use kitchen or detailed bathroom selections are reflected in this preview.";
+export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SEGMENTED_ACCESS_LAYOUT =
+  "A segmented layout with moderate or heavy access limits is reflected in this preview.";
+export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_RESET_INTENT =
+  "A reset-level clean intention is reflected in this preview.";
+export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_SURFACE_DETAILS =
+  "Selected surface-detail tags are reflected in this preview.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_ADD_ONS =
-  "Selected add-ons add focused work beyond the main cleaning.";
+  "Selected add-ons add focused work in the estimator preview.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_DEEP_CLEAN_FOCUS =
   "Your visit focus shifts more time toward the areas that need the most attention.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_FURNISHED_TRANSITION =
-  "Furnishings and move-state complexity can increase the detail needed throughout the home.";
+  "Furnishings and move-state complexity are reflected in this preview.";
 export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES =
-  "Including appliances adds focused work beyond the main cleaning.";
+  "Appliances in scope are reflected through included add-on work in this preview.";
 
 /** Step 4 — quote / planning clarity (derived from selections only; never numeric). */
 export const BOOKING_REVIEW_PLANNING_CONFIDENCE_TITLE = "Quote clarity";
@@ -570,18 +571,30 @@ export const BOOKING_REVIEW_PRE_CONF_HIGH_SUPPORTING =
   "Planning is straightforward from the details provided.";
 
 export const BOOKING_REVIEW_PRE_CONF_CUSTOM_HEADLINE =
-  "Your estimate reflects a more tailored scope.";
+  "Your preview reflects a more tailored scope.";
 export const BOOKING_REVIEW_PRE_CONF_CUSTOM_BODY =
-  "A few meaningful choices are shaping how this visit comes together.";
+  "A few meaningful choices are shaping both the estimator preview and crew planning.";
 export const BOOKING_REVIEW_PRE_CONF_CUSTOM_SUPPORTING =
-  "Multiple request details are shaping the estimate.";
+  "Multiple selections are informing the preview—not every note changes automated pricing.";
 
 export const BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE =
   "Your request includes details that may require a more customized final plan.";
 export const BOOKING_REVIEW_PRE_CONF_SPECIAL_BODY =
   "The combination you described asks for extra nuance in how we plan the work.";
 export const BOOKING_REVIEW_PRE_CONF_SPECIAL_SUPPORTING =
-  "Selected details increase the need for a more tailored planning view.";
+  "Selected details increase the need for a more tailored planning view before the visit.";
+
+/** Review — narrative fields that help ops but are not claimable as estimateFactors levers. */
+export const BOOKING_REVIEW_PLANNING_NOTES_TITLE = "Helpful planning notes";
+
+export const BOOKING_PLANNING_NOTE_FOCUS_AREAS_LEAD =
+  "Focus-area notes your crew will read:";
+export const BOOKING_PLANNING_NOTE_DENSE_FURNISHINGS =
+  "You noted denser furnishings and tighter paths—helpful for on-site pacing (not a separate automated preview lever today).";
+export const BOOKING_PLANNING_NOTE_DETAIL_HEAVY_PREFERENCE =
+  "You preferred detail-heavy breadth—your team will align finishing expectations on site.";
+export const BOOKING_PLANNING_NOTE_HOME_CONDITION_LEAD =
+  "Overall home-condition label on file:";
 
 /** Step 4 — visit prep hints (informational; from selections only). */
 export const BOOKING_REVIEW_PREP_SECTION_TITLE = "Before we arrive";

@@ -251,7 +251,7 @@ const SURFACE_DETAIL_ALLOWED = new Set<string>([
   "many_touchpoints",
 ]);
 
-function normalizeSurfaceDetailTokens(
+export function normalizeSurfaceDetailTokens(
   tokens: readonly BookingSurfaceDetailToken[],
 ): string[] {
   const out = tokens.filter((x) => SURFACE_DETAIL_ALLOWED.has(x));
