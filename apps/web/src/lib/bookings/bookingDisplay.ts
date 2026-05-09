@@ -34,11 +34,7 @@ export function extractCustomerTeamPrepFromBookingNotes(
   return chunks.join("\n");
 }
 
-/**
- * Customer-safe booking note lines for timelines: hides intake-bridge internals; does not expand `customerPrep`
- * (use `extractCustomerTeamPrepFromBookingNotes` for that under team-prep labeling).
- */
-export function displayCustomerSafeBookingNotesLines(
+function bookingNotesLinesExcludingIntakeBridge(
   notes: string | null | undefined,
 ): string[] {
   if (!notes?.trim()) return [];
@@ -47,6 +43,33 @@ export function displayCustomerSafeBookingNotesLines(
     .map((s) => s.trim())
     .filter(Boolean)
     .filter((line) => !isBookingDirectionIntakeBridgeLine(line));
+}
+
+/**
+ * Customer-safe booking note lines for timelines: hides intake-bridge internals; does not expand `customerPrep`
+ * (use `extractCustomerTeamPrepFromBookingNotes` for that under team-prep labeling).
+ */
+export function displayCustomerSafeBookingNotesLines(
+  notes: string | null | undefined,
+): string[] {
+  return bookingNotesLinesExcludingIntakeBridge(notes);
+}
+
+/**
+ * Admin / ops / FO human-readable booking note lines: hides intake-bridge blobs from default views while
+ * preserving free-form operational notes. Raw lines remain available via {@link displayBookingNotesLines}.
+ */
+export function displayOpsBookingNotesLines(
+  notes: string | null | undefined,
+): string[] {
+  return bookingNotesLinesExcludingIntakeBridge(notes);
+}
+
+/** Parsed `customerPrep=` payload from `Booking.notes` (ops-facing alias). */
+export function extractTeamPrepFromBookingNotes(
+  raw: string | null | undefined,
+): string | null {
+  return extractCustomerTeamPrepFromBookingNotes(raw);
 }
 
 export function displayBookingPrice(booking: BookingRecord): string {

@@ -8,6 +8,7 @@ import type { AdminBookingCommandCenterPayload } from "@/lib/api/adminBookingCom
 import { useAdminBookingCommandCenterMutations } from "@/hooks/admin/useAdminBookingCommandCenterMutations";
 import { AdminBookingOperationalDetailCard } from "@/components/admin/AdminBookingOperationalDetailCard";
 import { AdminBookingAuthorityActionSurface } from "@/components/admin/AdminBookingAuthorityActionSurface";
+import { OpsCustomerTeamPrepSection } from "@/components/booking-detail/ops/OpsCustomerTeamPrepSection";
 import { AdminDeepCleanBookingSection } from "@/components/booking-detail/admin/AdminDeepCleanBookingSection";
 import { AdminBookingLifecyclePanel } from "@/components/booking/AdminBookingLifecyclePanel";
 import { dispatchAdminActivityRefresh } from "@/lib/adminActivityRefresh";
@@ -18,6 +19,10 @@ import type {
   BookingPaymentStatus,
   BookingRecord,
 } from "@/lib/bookings/bookingApiTypes";
+import {
+  displayOpsBookingNotesLines,
+  extractTeamPrepFromBookingNotes,
+} from "@/lib/bookings/bookingDisplay";
 import {
   assignBooking,
   assignRecommendedBooking,
@@ -725,6 +730,14 @@ export default function AdminBookingDetailPage() {
   const snapshotVisibility = useMemo(
     () => buildSnapshotVisibility(booking.data),
     [booking.data],
+  );
+  const adminOpsTeamPrep = useMemo(
+    () => extractTeamPrepFromBookingNotes(booking.data?.notes ?? null),
+    [booking.data?.notes],
+  );
+  const adminOpsBookingNoteLines = useMemo(
+    () => displayOpsBookingNotesLines(booking.data?.notes ?? null),
+    [booking.data?.notes],
   );
   const controlledCompletionBookingStatus = String(booking.data?.status ?? "").trim();
   const controlledCompletionSnapshotReady = snapshotVisibility.exists;
@@ -1793,6 +1806,45 @@ export default function AdminBookingDetailPage() {
             ) : null}
           </section>
         </div>
+
+        {booking.data &&
+        (adminOpsTeamPrep || adminOpsBookingNoteLines.length > 0) ? (
+          <div className="grid gap-6">
+            {adminOpsTeamPrep ? (
+              <OpsCustomerTeamPrepSection
+                variant="dark"
+                teamPrepDetails={adminOpsTeamPrep}
+                testId="admin-booking-team-prep"
+              />
+            ) : null}
+            {adminOpsBookingNoteLines.length > 0 ? (
+              <section
+                data-testid="admin-booking-ops-notes-timeline"
+                className="rounded-[28px] border border-white/10 bg-white/5 p-6"
+              >
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold text-white">
+                    Operational booking notes
+                  </h2>
+                  <p className="mt-1 text-sm text-white/60">
+                    Free-form lines from booking notes. Structured intake-bridge rows stay hidden here — use
+                    server logs if you need raw ingest artifacts.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  {adminOpsBookingNoteLines.map((line, index) => (
+                    <div
+                      key={`admin-booking-note-${bookingId}-${index}`}
+                      className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-white/85"
+                    >
+                      {line}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+          </div>
+        ) : null}
 
         <section
           role="region"

@@ -3,7 +3,9 @@ import type { BookingRecord } from "./bookingApiTypes";
 import {
   displayBookingNotesLines,
   displayCustomerSafeBookingNotesLines,
+  displayOpsBookingNotesLines,
   extractCustomerTeamPrepFromBookingNotes,
+  extractTeamPrepFromBookingNotes,
 } from "./bookingDisplay";
 
 describe("customer booking notes display helpers", () => {
@@ -35,7 +37,25 @@ describe("customer booking notes display helpers", () => {
     ]);
   });
 
-  it("displayBookingNotesLines still returns raw lines for admin/FO surfaces", () => {
+  it("displayOpsBookingNotesLines mirrors customer-safe filtering for ops timelines", () => {
+    const bridgeOnly =
+      "Booking direction intake in_abc | serviceId=x | frequency=Weekly | preferredTime=m | customerPrep=Hidden";
+    expect(displayOpsBookingNotesLines(bridgeOnly)).toEqual([]);
+
+    const mixed =
+      "Booking direction intake in_1 | serviceId=x | frequency=w | preferredTime=m\nFO confirmed arrival window.";
+    expect(displayOpsBookingNotesLines(mixed)).toEqual(["FO confirmed arrival window."]);
+  });
+
+  it("extractTeamPrepFromBookingNotes matches extractCustomerTeamPrepFromBookingNotes", () => {
+    const raw =
+      "Booking direction intake in_x | serviceId=s | frequency=w | preferredTime=m | customerPrep=Back door";
+    expect(extractTeamPrepFromBookingNotes(raw)).toBe(
+      extractCustomerTeamPrepFromBookingNotes(raw),
+    );
+  });
+
+  it("displayBookingNotesLines returns raw lines including intake bridge for legacy/debug callers", () => {
     const bridge =
       "Booking direction intake in_1 | serviceId=x | frequency=w | preferredTime=m";
     const booking = { notes: bridge } as BookingRecord;

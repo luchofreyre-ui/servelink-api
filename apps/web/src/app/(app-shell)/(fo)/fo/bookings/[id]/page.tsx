@@ -5,8 +5,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { AuthRoleGate } from "@/components/auth/AuthRoleGate";
 import { BookingStatusBadge } from "@/components/booking/BookingStatusBadge";
+import { OpsCustomerTeamPrepSection } from "@/components/booking-detail/ops/OpsCustomerTeamPrepSection";
 import type { BookingRecord } from "@/lib/bookings/bookingApiTypes";
-import { displayBookingNotesLines, displayBookingPrice } from "@/lib/bookings/bookingDisplay";
+import {
+  displayBookingPrice,
+  displayOpsBookingNotesLines,
+  extractTeamPrepFromBookingNotes,
+} from "@/lib/bookings/bookingDisplay";
 import { getBookingById, transitionBooking } from "@/lib/bookings/bookingStore";
 
 function FOBookingDetailContent() {
@@ -54,7 +59,8 @@ function FOBookingDetailContent() {
   }
 
   const linkBookingId = booking?.id ?? bookingId;
-  const noteLines = booking ? displayBookingNotesLines(booking) : [];
+  const teamPrepDetails = booking ? extractTeamPrepFromBookingNotes(booking.notes) : null;
+  const noteLines = booking ? displayOpsBookingNotesLines(booking.notes) : [];
 
   return (
     <main data-testid="fo-booking-detail-shell" className="min-h-screen px-6 py-10">
@@ -91,6 +97,16 @@ function FOBookingDetailContent() {
               </button>
             </div>
           </div>
+
+          {teamPrepDetails ? (
+            <div className="mt-6">
+              <OpsCustomerTeamPrepSection
+                variant="light"
+                teamPrepDetails={teamPrepDetails}
+                testId="fo-booking-team-prep"
+              />
+            </div>
+          ) : null}
 
           <div data-testid="fo-booking-knowledge-guidance" className="mt-6 rounded-xl border border-slate-200 p-4">
             <h2 className="text-lg font-medium">Knowledge Guidance</h2>
