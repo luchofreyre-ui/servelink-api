@@ -7,6 +7,7 @@ import { WEB_ENV } from "@/lib/env";
 import type { AdminBookingCommandCenterPayload } from "@/lib/api/adminBookingCommandCenter";
 import { useAdminBookingCommandCenterMutations } from "@/hooks/admin/useAdminBookingCommandCenterMutations";
 import { AdminBookingOperationalDetailCard } from "@/components/admin/AdminBookingOperationalDetailCard";
+import { AdminBookingFunnelMilestonesSection } from "@/components/admin/AdminBookingFunnelMilestonesSection";
 import { AdminBookingAuthorityActionSurface } from "@/components/admin/AdminBookingAuthorityActionSurface";
 import { OpsCustomerTeamPrepSection } from "@/components/booking-detail/ops/OpsCustomerTeamPrepSection";
 import { AdminDeepCleanBookingSection } from "@/components/booking-detail/admin/AdminDeepCleanBookingSection";
@@ -1548,6 +1549,8 @@ export default function AdminBookingDetailPage() {
         ) : null}
 
         <AdminBookingOperationalDetailCard bookingId={bookingId} />
+
+        <AdminBookingFunnelMilestonesSection bookingId={bookingId} />
 
         {bookingScreen.loading ? (
           <p className="text-sm text-white/50">Loading booking screen…</p>

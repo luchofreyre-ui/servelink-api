@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   HttpCode,
   HttpStatus,
   Param,
@@ -19,6 +20,7 @@ import { AdminGuard } from "../../../guards/admin.guard";
 import { AdminPermissions } from "../../../common/admin/admin-permissions.decorator";
 import { AdminPermissionsGuard } from "../../../common/admin/admin-permissions.guard";
 import { AdminBookingsService } from "./admin-bookings.service";
+import { AdminBookingFunnelMilestonesService } from "./admin-booking-funnel-milestones.service";
 import { UpdateOperatorNoteDto } from "./dto/update-operator-note.dto";
 import { ReassignBookingDto } from "./dto/reassign-booking.dto";
 
@@ -31,7 +33,17 @@ type AuthenticatedRequest = Request & {
 @Controller("api/v1/admin/bookings")
 @UseGuards(JwtAuthGuard, AdminGuard, AdminPermissionsGuard)
 export class AdminBookingsController {
-  constructor(private readonly adminBookings: AdminBookingsService) {}
+  constructor(
+    private readonly adminBookings: AdminBookingsService,
+    private readonly funnelMilestones: AdminBookingFunnelMilestonesService,
+  ) {}
+
+  @Get(":bookingId/funnel-milestones")
+  @AdminPermissions("exceptions.read")
+  @Header("Cache-Control", "private, no-store, max-age=0, must-revalidate")
+  async getFunnelMilestones(@Param("bookingId") bookingId: string) {
+    return this.funnelMilestones.getTimelineForBooking(bookingId);
+  }
 
   @Get(":bookingId/command-center")
   @AdminPermissions("exceptions.read")
