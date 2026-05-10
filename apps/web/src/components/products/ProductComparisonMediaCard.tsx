@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 
 import { ProductImageGalleryMini } from "@/components/products/ProductImageGalleryMini";
-import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
+import { TrackedProductPurchaseActions } from "@/components/products/TrackedProductPurchaseActions";
+import type { ProductRecommendationTrackingContext } from "@/lib/products/productRecommendationTrackingTypes";
 
 type ProductComparisonMediaCardProps = {
   product: {
@@ -17,12 +20,16 @@ type ProductComparisonMediaCardProps = {
   };
   subtitle?: string;
   viewHref?: string;
+  trackingContext: ProductRecommendationTrackingContext;
+  purchaseRecommendationPosition: number;
 };
 
 export function ProductComparisonMediaCard({
   product,
   subtitle,
   viewHref,
+  trackingContext,
+  purchaseRecommendationPosition,
 }: ProductComparisonMediaCardProps) {
   return (
     <div className="space-y-3 rounded-2xl border border-zinc-200 bg-white p-4 transition hover:shadow-sm">
@@ -43,9 +50,12 @@ export function ProductComparisonMediaCard({
         ) : null}
       </div>
 
-      <ProductPurchaseActions
+      <TrackedProductPurchaseActions
         product={product}
         viewHref={viewHref}
+        trackingContext={trackingContext}
+        recommendationPosition={purchaseRecommendationPosition}
+        roleLabel="comparison_purchase_grid"
         usedForSummary={product.compatibleProblems?.slice(0, 3).join(" · ")}
       />
     </div>

@@ -6,7 +6,8 @@ import { formatComparisonLinkLabel } from "@/authority/data/authorityComparisonS
 import { getSurfaceSlugsForProblem } from "@/authority/data/authorityGraphSelectors";
 import { getSurfacePageBySlug } from "@/authority/data/authoritySurfacePageData";
 import { ProductImage } from "@/components/products/ProductImage";
-import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
+import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
+import { TrackedProductPurchaseActions } from "@/components/products/TrackedProductPurchaseActions";
 import { getProductBySlug } from "@/lib/products/productRegistry";
 import {
   productProblemStringForAuthorityProblemSlug,
@@ -55,6 +56,9 @@ export function AuthorityProblemExploreMore({
       <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#475569]">
         Comparisons, nearby problems, and top-ranked products tied to this hub.
       </p>
+      <div className="mt-3 max-w-prose">
+        <ProductAffiliateDisclosure />
+      </div>
       <div className="mt-6 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
         {compSlugs.length ? (
           <div>
@@ -91,7 +95,7 @@ export function AuthorityProblemExploreMore({
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">Top products</p>
             <ul className="mt-2 space-y-3 text-sm">
-              {prodSlugs.map((s) => {
+              {prodSlugs.map((s, productIdx) => {
                 const product = getProductBySlug(s);
                 if (!product) {
                   return (
@@ -120,9 +124,18 @@ export function AuthorityProblemExploreMore({
                         <Link href={`/products/${s}`} className="font-medium text-[#0D9488] hover:underline">
                           {product.name}
                         </Link>
-                        <ProductPurchaseActions
+                        <TrackedProductPurchaseActions
                           product={product}
+                          viewHref={`/products/${s}`}
                           usedForSummary={product.compatibleProblems?.slice(0, 3).join(" · ")}
+                          trackingContext={{
+                            pageType: "problem_page",
+                            sourcePageType: "problem_explore_more",
+                            problemSlug,
+                            surfaceSlug: null,
+                            intent: null,
+                          }}
+                          recommendationPosition={productIdx + 1}
                         />
                       </div>
                     </div>

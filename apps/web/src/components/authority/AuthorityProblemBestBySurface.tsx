@@ -9,7 +9,8 @@ import {
   productSurfaceStringForAuthoritySurfaceSlug,
 } from "@/lib/authority/authorityProductTaxonomyBridge";
 import { ProductImage } from "@/components/products/ProductImage";
-import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
+import { ProductAffiliateDisclosure } from "@/components/products/ProductAffiliateDisclosure";
+import { TrackedProductPurchaseActions } from "@/components/products/TrackedProductPurchaseActions";
 import { getRecommendedProducts, inferRecommendationIntent } from "@/lib/products/getRecommendedProducts";
 import { recommendationConfidence } from "@/lib/products/recommendationConfidence";
 import type { ProductCleaningIntent } from "@/lib/products/productTypes";
@@ -25,6 +26,7 @@ export function AuthorityProblemBestBySurface({
   if (!pStr) return null;
 
   const rows: {
+    surfaceSlug: string;
     surfaceTitle: string;
     products: ReturnType<typeof getRecommendedProducts>;
     playbook: string;
@@ -50,6 +52,7 @@ export function AuthorityProblemBestBySurface({
     }
     const surfaceTitle = getSurfacePageBySlug(surfaceSlug)?.title ?? surfaceSlug;
     rows.push({
+      surfaceSlug,
       surfaceTitle,
       products: pick,
       playbook: `/surfaces/${surfaceSlug}/${problemSlug}`,
@@ -64,6 +67,9 @@ export function AuthorityProblemBestBySurface({
         Live top library picks for this problem on each surface (up to three when the lead pick is a clear choice for
         that pairing)—the same picks you see on playbooks and product pages.
       </p>
+      <div className="mt-3 max-w-prose">
+        <ProductAffiliateDisclosure />
+      </div>
       {data.bestBySurfaceExtras?.length ? (
         <ul className="mt-4 space-y-2 font-[var(--font-manrope)] text-sm text-[#0F172A]">
           {data.bestBySurfaceExtras.map((x, i) => (
@@ -79,11 +85,11 @@ export function AuthorityProblemBestBySurface({
       ) : null}
       {rows.length ? (
         <ul className="mt-6 space-y-3 font-[var(--font-manrope)] text-sm">
-          {rows.map((r) => (
+          {rows.map((r, surfaceIdx) => (
             <li key={r.playbook} className="flex flex-col gap-3 border-b border-[#C9B27C]/15 pb-3 last:border-0">
               <div className="font-semibold text-[#0F172A]">{r.surfaceTitle}</div>
               <div className="space-y-3">
-                {r.products.map((product) => (
+                {r.products.map((product, productIdx) => (
                   <div key={product.slug} className="rounded-lg border border-[#C9B27C]/20 bg-white/60 p-3">
                     <div className="flex gap-3">
                       <ProductImage
@@ -104,10 +110,19 @@ export function AuthorityProblemBestBySurface({
                         >
                           {product.title ?? product.slug}
                         </Link>
-                        <ProductPurchaseActions
+                        <TrackedProductPurchaseActions
                           product={{ ...product, name: product.title }}
+                          viewHref={`/products/${product.slug}`}
                           usedForSummary={product.compatibleProblems?.slice(0, 3).join(" · ")}
                           compact
+                          trackingContext={{
+                            pageType: "problem_page",
+                            sourcePageType: "problem_best_by_surface",
+                            problemSlug,
+                            surfaceSlug: r.surfaceSlug,
+                            intent: String(inferRecommendationIntent(pStr)),
+                          }}
+                          recommendationPosition={surfaceIdx * 10 + productIdx + 1}
                         />
                       </div>
                     </div>

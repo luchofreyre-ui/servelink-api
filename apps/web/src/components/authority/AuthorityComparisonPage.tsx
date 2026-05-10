@@ -549,6 +549,8 @@ export function AuthorityComparisonPage({
                   undefined
                 }
                 viewHref={`/products/${leftComparisonProduct.slug}`}
+                trackingContext={comparePurchaseTracking!}
+                purchaseRecommendationPosition={20}
               />
               <ProductComparisonMediaCard
                 product={rightComparisonProduct}
@@ -558,6 +560,8 @@ export function AuthorityComparisonPage({
                   undefined
                 }
                 viewHref={`/products/${rightComparisonProduct.slug}`}
+                trackingContext={comparePurchaseTracking!}
+                purchaseRecommendationPosition={21}
               />
             </div>
             <ProductAffiliateDisclosure />
