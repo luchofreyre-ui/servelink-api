@@ -9,10 +9,12 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 import { PublicAvailabilityQueryDto } from "./dto/public-availability-query.dto";
+import { PublicBookingFunnelMilestoneDto } from "./dto/public-booking-funnel-milestone.dto";
 import { PublicDepositPrepareDto } from "./dto/public-deposit-prepare.dto";
 import { PublicSlotConfirmDto } from "./dto/public-slot-confirm.dto";
 import { PublicSlotSelectDto } from "./dto/public-slot-select.dto";
 import { PublicBookingOrchestratorService } from "./public-booking-orchestrator.service";
+import { PublicBookingFunnelMilestoneService } from "./public-booking-funnel-milestone.service";
 
 const publicBookingPipe = new ValidationPipe({
   whitelist: true,
@@ -22,7 +24,10 @@ const publicBookingPipe = new ValidationPipe({
 
 @Controller("/api/v1/public-booking")
 export class PublicBookingOrchestratorController {
-  constructor(private readonly orchestrator: PublicBookingOrchestratorService) {}
+  constructor(
+    private readonly orchestrator: PublicBookingOrchestratorService,
+    private readonly funnelMilestones: PublicBookingFunnelMilestoneService,
+  ) {}
 
   @Post("availability")
   @HttpCode(HttpStatus.OK)
@@ -43,6 +48,13 @@ export class PublicBookingOrchestratorController {
   @UsePipes(publicBookingPipe)
   depositPrepare(@Body() body: PublicDepositPrepareDto) {
     return this.orchestrator.preparePublicDeposit(body);
+  }
+
+  @Post("funnel-milestone")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UsePipes(publicBookingPipe)
+  async funnelMilestone(@Body() body: PublicBookingFunnelMilestoneDto) {
+    await this.funnelMilestones.record(body);
   }
 
   @Post("confirm")

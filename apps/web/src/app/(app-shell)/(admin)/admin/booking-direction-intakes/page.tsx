@@ -8,6 +8,7 @@ import { WEB_ENV } from "@/lib/env";
 type IntakeRow = {
   intakeId: string;
   bookingId?: string | null;
+  funnelMilestoneCount?: number;
   serviceId: string;
   homeSize: string;
   bedrooms: string;
@@ -142,6 +143,7 @@ export default function AdminBookingDirectionIntakesPage() {
                   <tr>
                     <th className="px-4 py-3 font-medium">Received</th>
                     <th className="px-4 py-3 font-medium">Booking</th>
+                    <th className="px-4 py-3 font-medium">Funnel JSON</th>
                     <th className="px-4 py-3 font-medium">Service</th>
                     <th className="px-4 py-3 font-medium">Deep clean</th>
                     <th className="px-4 py-3 font-medium">Home</th>
@@ -154,7 +156,7 @@ export default function AdminBookingDirectionIntakesPage() {
                   {items.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={8}
+                        colSpan={9}
                         className="px-4 py-8 text-center text-slate-500"
                       >
                         No booking direction intakes yet.
@@ -180,6 +182,11 @@ export default function AdminBookingDirectionIntakesPage() {
                           ) : (
                             <span className="text-slate-600">—</span>
                           )}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-center text-xs tabular-nums text-slate-400">
+                          {typeof row.funnelMilestoneCount === "number"
+                            ? row.funnelMilestoneCount
+                            : "—"}
                         </td>
                         <td className="px-4 py-3 font-mono text-xs text-teal-200/90">
                           {row.serviceId}

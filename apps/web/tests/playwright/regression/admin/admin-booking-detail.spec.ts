@@ -12,6 +12,10 @@ test.describe("admin booking detail", () => {
       page.getByRole("region", { name: /command center authority/i }),
     ).toBeVisible();
 
+    await expect(
+      page.getByRole("region", { name: /booking funnel milestones/i }),
+    ).toBeVisible();
+
     const paymentRegion = page.getByRole("region", { name: /booking payment/i });
     await expect(paymentRegion).toBeVisible();
     await expect(paymentRegion.getByText(/payment source:/i)).toBeVisible();

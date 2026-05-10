@@ -2550,6 +2550,9 @@ model BookingDirectionIntake {
   siteLat Float?
   siteLng Float?
 
+  /// Append-only operational funnel echoes for anonymous `/book` milestones (server-capped).
+  funnelMilestones Json?
+
   createdAt DateTime @default(now())
 
   @@index([createdAt])

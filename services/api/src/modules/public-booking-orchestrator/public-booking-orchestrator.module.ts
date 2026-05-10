@@ -5,6 +5,7 @@ import { StripeBookingPaymentModule } from "../bookings/stripe/stripe-booking-pa
 import { FoModule } from "../fo/fo.module";
 import { SlotHoldsModule } from "../slot-holds/slot-holds.module";
 import { PublicBookingDepositService } from "./public-booking-deposit.service";
+import { PublicBookingFunnelMilestoneService } from "./public-booking-funnel-milestone.service";
 import { PublicBookingOrchestratorController } from "./public-booking-orchestrator.controller";
 import { PublicBookingOrchestratorService } from "./public-booking-orchestrator.service";
 import { RecurringPlanModule } from "../recurring-plan/recurring-plan.module";
@@ -19,7 +20,11 @@ import { RecurringPlanModule } from "../recurring-plan/recurring-plan.module";
     RecurringPlanModule,
   ],
   controllers: [PublicBookingOrchestratorController],
-  providers: [PublicBookingOrchestratorService, PublicBookingDepositService],
+  providers: [
+    PublicBookingOrchestratorService,
+    PublicBookingDepositService,
+    PublicBookingFunnelMilestoneService,
+  ],
   exports: [PublicBookingOrchestratorService],
 })
 export class PublicBookingOrchestratorModule {}

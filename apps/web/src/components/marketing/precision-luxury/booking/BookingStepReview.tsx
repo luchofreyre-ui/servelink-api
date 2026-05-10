@@ -24,6 +24,7 @@ import {
 } from "./bookingIntakePreviewDisplay";
 import type { FunnelReviewEstimate } from "./bookingFunnelLocalEstimate";
 import { emitBookingFunnelEvent } from "./bookingFunnelAnalytics";
+import { postPublicBookingFunnelMilestone } from "./bookingFunnelMilestoneClient";
 import {
   getBookingCustomerEmailError,
   getBookingCustomerNameError,
@@ -95,8 +96,6 @@ import {
   BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD,
   BOOKING_REVIEW_RECURRING_LABOR_LABEL,
   BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD,
-  BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD,
-  BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER,
   BOOKING_REVIEW_RECURRING_PER_VISIT_DELTA_LABEL,
   BOOKING_REVIEW_RECURRING_PRICE_LABEL,
   BOOKING_REVIEW_RECURRING_SECTION_LEAD,
@@ -193,6 +192,8 @@ type BookingStepReviewProps = {
     value: BookingFlowState["recurringCadenceIntent"],
   ) => void;
   schedulePreview: DerivedSchedulePreview | null;
+  funnelBookingId?: string;
+  funnelIntakeId?: string;
 };
 
 function isBookingReady(state: BookingFlowState) {
@@ -318,13 +319,24 @@ export function BookingStepReview({
   onTeamPlanningDetailsChange,
   onRecurringCadenceIntentChange,
   schedulePreview,
+  funnelBookingId = "",
+  funnelIntakeId = "",
 }: BookingStepReviewProps) {
   const reviewFunnelOnceRef = useRef(false);
   useEffect(() => {
     if (reviewFunnelOnceRef.current) return;
     reviewFunnelOnceRef.current = true;
     emitBookingFunnelEvent("review_viewed", { serviceId: state.serviceId });
-  }, [state.serviceId]);
+    const bid = funnelBookingId.trim();
+    const iid = funnelIntakeId.trim();
+    if (bid || iid) {
+      postPublicBookingFunnelMilestone({
+        milestone: "REVIEW_VIEWED",
+        ...(bid ? { bookingId: bid } : {}),
+        ...(iid ? { intakeId: iid } : {}),
+      });
+    }
+  }, [state.serviceId, funnelBookingId, funnelIntakeId]);
 
   const homeOk = isHomeDetailsComplete(state);
   const cadenceOk = isServiceLocationComplete(state);
@@ -649,7 +661,7 @@ export function BookingStepReview({
       title={BOOKING_REVIEW_STEP_TITLE}
       body={BOOKING_REVIEW_STEP_BODY}
     >
-      <div className="mb-8 rounded-2xl border border-[#0D9488]/18 bg-[rgba(13,148,136,0.06)] px-5 py-4">
+      <div className="mb-6 rounded-2xl border border-[#0D9488]/18 bg-[rgba(13,148,136,0.06)] px-5 py-4">
         <p className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]">
           You’re almost done
         </p>
@@ -664,7 +676,7 @@ export function BookingStepReview({
       </div>
 
       <div
-        className={`mb-8 rounded-2xl border px-5 py-4 ${
+        className={`mb-6 rounded-2xl border px-5 py-4 ${
           bannerFullyReady
             ? "border-[#0D9488]/25 bg-[rgba(13,148,136,0.08)]"
             : "border-[#C9B27C]/20 bg-white"
@@ -938,22 +950,14 @@ export function BookingStepReview({
 
         {isRecurringContract ? (
           <ReviewSection title={BOOKING_REVIEW_RECURRING_SECTION_TITLE}>
-            <div className="space-y-4">
+            <div className="space-y-3">
               <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
                 {BOOKING_REVIEW_RECURRING_SECTION_LEAD}
               </p>
-              <div className="rounded-2xl border border-[#C9B27C]/18 bg-[#FFF9F3] px-4 py-3 ring-1 ring-[#C9B27C]/10">
-                <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                  {BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD}
-                </p>
-                <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
-                  {BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER}
-                </p>
-              </div>
               {previewEstimate ? (
                 <div
                   data-testid="booking-review-recurring-maintenance"
-                  className="rounded-2xl border border-[#0D9488]/20 bg-[rgba(13,148,136,0.06)] px-4 py-4 ring-1 ring-[#0D9488]/12"
+                  className="rounded-2xl border border-[#0D9488]/20 bg-[rgba(13,148,136,0.06)] px-4 py-3 ring-1 ring-[#0D9488]/12"
                 >
                   <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
                     {BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD}

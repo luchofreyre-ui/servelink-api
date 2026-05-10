@@ -13,6 +13,14 @@ import {
   PublicBookingDepositService,
   publicBookingDepositPiIdempotencyKey,
 } from "../src/modules/public-booking-orchestrator/public-booking-deposit.service";
+import type { PublicBookingFunnelMilestoneService } from "../src/modules/public-booking-orchestrator/public-booking-funnel-milestone.service";
+
+function stubPublicBookingFunnelMilestones(): PublicBookingFunnelMilestoneService {
+  return {
+    record: jest.fn().mockResolvedValue(undefined),
+    recordDepositUiReached: jest.fn().mockResolvedValue(undefined),
+  } as unknown as PublicBookingFunnelMilestoneService;
+}
 
 function estimateHash(outputJson: string) {
   return createHash("sha256").update(outputJson.trim()).digest("hex").slice(0, 32);
@@ -55,7 +63,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       prisma,
       {} as PaymentReliabilityService,
     );
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
     expect(res.paymentMode).toBe("none");
@@ -73,7 +85,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       prisma,
       {} as PaymentReliabilityService,
     );
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
     expect(res).toEqual({
@@ -124,7 +140,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       {} as PaymentReliabilityService,
     );
     const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     await expect(svc.preparePublicBookingDeposit("bk1", "h1")).rejects.toMatchObject({
       response: expect.objectContaining({ code: "PUBLIC_BOOKING_TENANT_REQUIRED" }),
@@ -189,7 +209,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       client_secret: "cs_test",
     } as never);
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
 
     expect(res.paymentMode).toBe("none");
@@ -280,7 +304,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       client_secret: "cs_existing",
     } as never);
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
     await expect(svc.preparePublicBookingDeposit("bk1", "h1")).resolves.toEqual(
       expect.objectContaining({
         alreadyCompleted: true,
@@ -357,7 +385,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       {} as PaymentReliabilityService,
     );
     const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
 
@@ -436,7 +468,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
         client_secret: "cs_new",
       } as never);
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
 
     expect(res.amountCents).toBe(10_000);
@@ -503,7 +539,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
     } as never);
     const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
 
     expect(createPi).not.toHaveBeenCalled();
@@ -566,7 +606,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
     const ensureCustomer = jest.spyOn(stripePayments, "ensureStripeCustomerForUser");
     const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
 
     expect(createPi).not.toHaveBeenCalled();
@@ -633,7 +677,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
     const retrievePi = jest.spyOn(stripePayments, "retrievePaymentIntent");
     const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
     const res = await svc.preparePublicBookingDeposit("bk1", "h1");
 
     expect(createPi).not.toHaveBeenCalled();
@@ -705,7 +753,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       client_secret: "cs_existing",
     } as never);
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     await expect(svc.preparePublicBookingDeposit("bk1", "h1")).rejects.toThrow(
       "database unavailable",
@@ -770,7 +822,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       client_secret: "cs_existing",
     } as never);
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     await expect(svc.preparePublicBookingDeposit("bk1", "h1")).resolves.toEqual(
       expect.objectContaining({
@@ -836,7 +892,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       client_secret: "cs_existing",
     } as never);
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     await expect(svc.preparePublicBookingDeposit("bk1", "h1")).rejects.toMatchObject({
       code: "P2002",
@@ -922,7 +982,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       client_secret: "cs_new",
     } as never);
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
     const first = await svc.preparePublicBookingDeposit("bk1", "h1");
     const second = await svc.preparePublicBookingDeposit("bk1", "h1");
     stripeStatus = "succeeded";
@@ -985,7 +1049,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
       .mockRejectedValue(new Error("No such payment_intent"));
     const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     const res = await svc.preparePublicBookingDeposit("bk1");
 
@@ -1057,7 +1125,11 @@ describe("PublicBookingDepositService.preparePublicBookingDeposit", () => {
         client_secret: "cs_new",
       } as never);
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
     const res = await svc.preparePublicBookingDeposit("bk1");
 
     expect(res.paymentMode).toBe("deposit");
@@ -1144,6 +1216,7 @@ describe("prepare + confirm deposit PI idempotency", () => {
     const prepareSvc = new PublicBookingDepositService(
       prismaPrepare,
       stripePaymentsPrepare,
+      stubPublicBookingFunnelMilestones(),
     );
     await prepareSvc.preparePublicBookingDeposit("bk1", "h1");
     const prepareKey = createPrepare.mock.calls[0]?.[0]?.idempotencyKey;
@@ -1183,7 +1256,11 @@ describe("prepare + confirm deposit PI idempotency", () => {
         client_secret: "cs_gate",
       } as never);
 
-    const ensureSvc = new PublicBookingDepositService(prismaEnsure, stripePaymentsEnsure);
+    const ensureSvc = new PublicBookingDepositService(
+      prismaEnsure,
+      stripePaymentsEnsure,
+      stubPublicBookingFunnelMilestones(),
+    );
     await expect(
       ensureSvc.ensurePublicDepositResolvedBeforeConfirm({
         bookingId: "bk1",
@@ -1248,7 +1325,11 @@ describe("prepare + confirm deposit PI idempotency", () => {
     );
     const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     await expect(
       svc.ensurePublicDepositResolvedBeforeConfirm({
@@ -1353,7 +1434,11 @@ describe("prepare + confirm deposit PI idempotency", () => {
     } as never);
     const createPi = jest.spyOn(stripePayments, "createPublicBookingDepositPaymentIntent");
 
-    const svc = new PublicBookingDepositService(prisma, stripePayments);
+    const svc = new PublicBookingDepositService(
+      prisma,
+      stripePayments,
+      stubPublicBookingFunnelMilestones(),
+    );
 
     await expect(
       svc.ensurePublicDepositResolvedBeforeConfirm({
