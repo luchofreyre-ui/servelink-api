@@ -1,7 +1,7 @@
-import Link from "next/link";
-
 import { ProductImage } from "@/components/products/ProductImage";
 import { ProductPurchaseActions } from "@/components/products/ProductPurchaseActions";
+import { ProductSummaryRailRetailerCtas } from "@/components/products/ProductSummaryRailRetailerCtas";
+import { TrackedProductPurchaseActions } from "@/components/products/TrackedProductPurchaseActions";
 
 type ProductLike = {
   slug?: string;
@@ -98,7 +98,7 @@ function SurfaceChips({ surfaces }: { surfaces: string[] }) {
   );
 }
 
-function CtaButtons({
+function LegacyRetailerLinks({
   affiliateLinks,
 }: {
   affiliateLinks: { walmart?: string; homedepot?: string };
@@ -108,14 +108,12 @@ function CtaButtons({
     affiliateLinks.homedepot ? { href: affiliateLinks.homedepot, label: "View at Home Depot" } : null,
   ].filter(Boolean) as { href: string; label: string }[];
 
-  if (links.length === 0) {
-    return null;
-  }
+  if (links.length === 0) return null;
 
   return (
     <div className="flex flex-wrap gap-3">
       {links.map((link) => (
-        <Link
+        <a
           key={link.href}
           href={link.href}
           target="_blank"
@@ -123,11 +121,19 @@ function CtaButtons({
           className="inline-flex items-center rounded-xl bg-[#1F2937] px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
         >
           {link.label}
-        </Link>
+        </a>
       ))}
     </div>
   );
 }
+
+const summaryRailTrackingContext = {
+  pageType: "product_page" as const,
+  sourcePageType: "product_summary_rail" as const,
+  problemSlug: null,
+  surfaceSlug: null,
+  intent: null,
+};
 
 export default function ProductSummaryRail(props: Props) {
   const view = toViewModel(props);
@@ -208,9 +214,27 @@ export default function ProductSummaryRail(props: Props) {
             </div>
           </div>
 
-          <CtaButtons affiliateLinks={view.affiliateLinks} />
+          {"product" in props && props.product.slug?.trim() ? (
+            <ProductSummaryRailRetailerCtas
+              affiliateLinks={view.affiliateLinks}
+              productSlug={props.product.slug.trim()}
+              trackingContext={summaryRailTrackingContext}
+            />
+          ) : (
+            <LegacyRetailerLinks affiliateLinks={view.affiliateLinks} />
+          )}
 
-          {view.purchaseProduct ? <ProductPurchaseActions product={view.purchaseProduct} compact /> : null}
+          {view.purchaseProduct ?
+            "product" in props && props.product.slug?.trim() ?
+              <TrackedProductPurchaseActions
+                product={view.purchaseProduct}
+                compact
+                trackingContext={summaryRailTrackingContext}
+                recommendationPosition={0}
+                roleLabel="Best overall"
+              />
+            : <ProductPurchaseActions product={view.purchaseProduct} compact />
+          : null}
         </div>
       </div>
     </section>

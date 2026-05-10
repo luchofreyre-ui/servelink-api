@@ -44,7 +44,7 @@ export function AuthorityComparisonTrackedBuyLink({
       <a
         href={outbound}
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer sponsored"
         className={className}
         onClick={onClick}
       >
