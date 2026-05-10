@@ -24,6 +24,7 @@ import {
 } from "../bookings/public-deposit-policy";
 import type Stripe from "stripe";
 import { StripePaymentService } from "../bookings/stripe/stripe-payment.service";
+import { PublicBookingFunnelMilestoneService } from "./public-booking-funnel-milestone.service";
 
 /** Stable Stripe idempotency for public-deposit PI creation (shared by prepare + confirm). */
 export function publicBookingDepositPiIdempotencyKey(
@@ -140,6 +141,7 @@ export class PublicBookingDepositService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly stripePayments: StripePaymentService,
+    private readonly funnelMilestones: PublicBookingFunnelMilestoneService,
     private readonly config: ConfigService = new ConfigService(),
   ) {}
 
@@ -797,6 +799,18 @@ export class PublicBookingDepositService {
           nextAction: result.nextAction,
         });
       }
+      if (
+        result.nextAction === "confirm_deposit" &&
+        typeof result.paymentIntentId === "string" &&
+        result.paymentIntentId.trim() &&
+        typeof result.clientSecret === "string" &&
+        result.clientSecret.trim()
+      ) {
+        await this.funnelMilestones.recordDepositUiReached({
+          bookingId: result.bookingId,
+          paymentIntentId: result.paymentIntentId.trim(),
+        });
+      }
       return result;
     };
 
@@ -1103,6 +1117,7 @@ export class PublicBookingDepositService {
           payload: {
             publicDeposit: true,
             paymentIntentId: args.paymentIntentId,
+            funnelMilestone: "DEPOSIT_SUCCEEDED",
           } as Prisma.InputJsonValue,
         },
       });

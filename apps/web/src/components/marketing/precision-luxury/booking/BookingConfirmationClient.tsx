@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { DeepCleanProgramCard } from "@/components/booking/deep-clean/DeepCleanProgramCard";
 import { RecurringPlanConversionCard } from "@/components/bookings/RecurringPlanConversionCard";
@@ -66,6 +66,7 @@ import {
   readBookingConfirmationSessionSnapshot,
   readPublicIntakeEchoFromSearchParams,
 } from "./bookingUrlState";
+import { postPublicBookingFunnelMilestone } from "./bookingFunnelMilestoneClient";
 
 function formatUsdFromCents(cents: number): string {
   const n = Number.isFinite(cents) ? cents / 100 : 0;
@@ -245,6 +246,22 @@ export function BookingConfirmationClient() {
     () => classifyConfirmationOutcome(effectiveSearchParams),
     [effectiveSearchParams],
   );
+
+  const confirmationReentryLoggedRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const bid = bookingId.trim();
+    if (!bid) return;
+    const dedupeKey = `${bid}:${intakeId.trim()}`;
+    if (confirmationReentryLoggedRef.current === dedupeKey) return;
+    confirmationReentryLoggedRef.current = dedupeKey;
+    postPublicBookingFunnelMilestone({
+      milestone: "BOOKING_REENTRY",
+      bookingId: bid,
+      ...(intakeId.trim() ? { intakeId: intakeId.trim() } : {}),
+      payload: { surface: "confirmation_page" },
+    });
+  }, [bookingId, intakeId]);
 
   const urlPriceCents = priceCentsRaw ? Number(priceCentsRaw) : NaN;
   const urlDurationMinutes = durationMinutesRaw

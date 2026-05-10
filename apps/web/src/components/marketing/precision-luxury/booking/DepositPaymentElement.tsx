@@ -52,6 +52,8 @@ export type DepositPaymentElementProps = {
   holdId?: string;
   paymentIntentId?: string | null;
   paymentSessionKey?: string | null;
+  /** Invoked when the customer submits the deposit form (before Stripe confirms). */
+  onSubmitInitiated?: () => void;
 };
 
 function succeededPaymentIntentIdFromUnexpectedState(error: unknown): string | null {
@@ -109,6 +111,7 @@ function DepositPaymentForm({
   disabled,
   onSuccess,
   onError,
+  onSubmitInitiated,
   payLabel,
   clientSecret,
   bookingId,
@@ -119,6 +122,7 @@ function DepositPaymentForm({
   DepositPaymentElementProps,
   | "onSuccess"
   | "onError"
+  | "onSubmitInitiated"
   | "disabled"
   | "clientSecret"
   | "bookingId"
@@ -179,6 +183,7 @@ function DepositPaymentForm({
 
     confirmInFlightRef.current = true;
     setBusy(true);
+    onSubmitInitiated?.();
     const returnUrl = buildPublicBookingPaymentReturnUrl({
       bookingId,
       holdId,
@@ -276,6 +281,7 @@ function DepositPaymentElementWithStripe({
   disabled,
   onSuccess,
   onError,
+  onSubmitInitiated,
   bookingId,
   holdId,
   paymentIntentId,
@@ -335,6 +341,7 @@ function DepositPaymentElementWithStripe({
         disabled={disabled}
         onSuccess={onSuccess}
         onError={onError}
+        onSubmitInitiated={onSubmitInitiated}
         payLabel={payLabel}
         clientSecret={clientSecret}
         bookingId={bookingId}

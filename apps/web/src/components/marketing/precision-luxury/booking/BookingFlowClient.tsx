@@ -36,12 +36,12 @@ import {
   BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_NEEDS_ATTENTION,
   BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_REFRESHING,
   BOOKING_SCHEDULE_CONFIRM_FAILED,
-  BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA,
   BOOKING_REVIEW_DEPOSIT_EXPECTATION_CHANGES,
   BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHEN,
   BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHY,
   BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT,
+  BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_PAYMENT_REASSURANCE,
   BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE,
@@ -146,6 +146,7 @@ import { BOOKING_INTAKE_PREFERRED_TIME_DEFERRED } from "./bookingIntakePreferred
 import type { DeepCleanProgramDisplay } from "@/types/deepCleanProgram";
 import { isBookingContactValid } from "./bookingContactValidation";
 import { emitBookingFunnelEvent } from "./bookingFunnelAnalytics";
+import { postPublicBookingFunnelMilestone } from "./bookingFunnelMilestoneClient";
 
 type ReviewPaymentPhase =
   | "idle"
@@ -506,6 +507,7 @@ export function BookingFlowClient() {
     schedulingConfirmed: initialState.schedulingConfirmed,
     bookingId: initialState.schedulingBookingId,
     teamId: initialState.selectedTeamId,
+    intakeId: initialState.schedulingIntakeId,
   });
 
   /** Latest booking state when committing the URL at step boundaries. */
@@ -957,19 +959,39 @@ export function BookingFlowClient() {
       schedulingConfirmed: state.schedulingConfirmed,
       bookingId: state.schedulingBookingId,
       teamId: state.selectedTeamId,
+      intakeId: state.schedulingIntakeId,
     };
   }, [
     state.step,
     state.schedulingConfirmed,
     state.schedulingBookingId,
     state.selectedTeamId,
+    state.schedulingIntakeId,
   ]);
 
   useEffect(() => {
     const onPageHide = () => {
       const snap = scheduleSnapshotForAbandonRef.current;
+      if (snap.step === "review" && !snap.schedulingConfirmed) {
+        const bid = snap.bookingId.trim();
+        const iid = snap.intakeId.trim();
+        if (bid || iid) {
+          postPublicBookingFunnelMilestone({
+            milestone: "REVIEW_ABANDONED",
+            ...(bid ? { bookingId: bid } : {}),
+            ...(iid ? { intakeId: iid } : {}),
+            payload: { surface: "review_pagehide" },
+          });
+        }
+      }
       if (snap.step !== "schedule" || snap.schedulingConfirmed) return;
       if (!snap.bookingId.trim()) return;
+      postPublicBookingFunnelMilestone({
+        milestone: "REVIEW_ABANDONED",
+        bookingId: snap.bookingId.trim(),
+        ...(snap.intakeId.trim() ? { intakeId: snap.intakeId.trim() } : {}),
+        payload: { surface: "schedule_pagehide" },
+      });
       emitBookingFunnelEvent("booking_unfinished_after_review", {
         bookingId: snap.bookingId,
       });
@@ -1840,6 +1862,15 @@ export function BookingFlowClient() {
       return;
     }
 
+    postPublicBookingFunnelMilestone({
+      milestone: "BOOKING_REENTRY",
+      bookingId,
+      ...(session?.intakeId?.trim()
+        ? { intakeId: session.intakeId.trim() }
+        : {}),
+      payload: { surface: "stripe_payment_return" },
+    });
+
     const paymentIntentId =
       params.get("paymentIntentId")?.trim() ||
       session?.publicDepositPaymentIntentId?.trim() ||
@@ -2412,6 +2443,14 @@ export function BookingFlowClient() {
         emitBookingFunnelEvent("abandoned_after_review", {
           bookingId: state.schedulingBookingId,
         });
+        postPublicBookingFunnelMilestone({
+          milestone: "REVIEW_ABANDONED",
+          bookingId: state.schedulingBookingId.trim(),
+          ...(state.schedulingIntakeId.trim()
+            ? { intakeId: state.schedulingIntakeId.trim() }
+            : {}),
+          payload: { surface: "schedule_go_back" },
+        });
         if (state.selectedTeamId.trim()) {
           emitBookingFunnelEvent("abandoned_after_team_select", {
             bookingId: state.schedulingBookingId,
@@ -2608,20 +2647,20 @@ export function BookingFlowClient() {
 
       <main>
         <section className="border-b border-[#C9B27C]/14">
-          <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 lg:py-20">
+          <div className="mx-auto max-w-7xl px-6 py-10 md:px-8 md:py-16 lg:py-20">
             <div className="max-w-4xl">
               <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
                 {BOOKING_FLOW_HERO_EYEBROW}
               </p>
-              <h1 className="mt-4 font-[var(--font-poppins)] text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-[#0F172A] md:text-6xl">
+              <h1 className="mt-3 font-[var(--font-poppins)] text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-[#0F172A] sm:text-5xl md:mt-4 md:text-6xl">
                 {BOOKING_FLOW_HERO_HEADLINE}
               </h1>
-              <p className="mt-6 max-w-3xl font-[var(--font-manrope)] text-lg leading-8 text-[#475569] md:text-xl">
+              <p className="mt-4 max-w-3xl font-[var(--font-manrope)] text-base leading-7 text-[#475569] md:mt-6 md:text-lg md:leading-8 lg:text-xl">
                 {BOOKING_FLOW_HERO_BODY}
               </p>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-6 md:mt-10">
               <BookingFlowProgress
                 currentStep={currentStepOrder}
                 steps={bookingSteps.map((step) => ({
@@ -2634,8 +2673,14 @@ export function BookingFlowClient() {
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-16 md:px-8 lg:py-20">
-          <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
-            <div className="space-y-8">
+          <div
+            className={
+              state.step === "review"
+                ? "flex min-w-0 flex-col-reverse gap-6 xl:grid xl:grid-cols-[1.15fr_0.85fr] xl:gap-8"
+                : "grid gap-8 xl:grid-cols-[1.15fr_0.85fr]"
+            }
+          >
+            <div className="min-w-0 space-y-8">
               <BookingServiceHandoffCard
                 serviceId={state.serviceId}
                 bookingPublicPath={state.bookingPublicPath}
@@ -2792,14 +2837,26 @@ export function BookingFlowClient() {
                   }}
                   onTeamPlanningDetailsChange={patchTeamPlanningDetails}
                   onRecurringCadenceIntentChange={(recurringCadenceIntent) => {
-                    setState((prev) =>
-                      clampBookingStepToStructuralMax({
+                    setState((prev) => {
+                      const bid = prev.schedulingBookingId.trim();
+                      const iid = prev.schedulingIntakeId.trim();
+                      if (bid || iid) {
+                        postPublicBookingFunnelMilestone({
+                          milestone: "RECURRING_CADENCE_SELECTED",
+                          ...(bid ? { bookingId: bid } : {}),
+                          ...(iid ? { intakeId: iid } : {}),
+                          payload: { cadence: recurringCadenceIntent },
+                        });
+                      }
+                      return clampBookingStepToStructuralMax({
                         ...prev,
                         recurringCadenceIntent,
-                      }),
-                    );
+                      });
+                    });
                   }}
                   schedulePreview={schedulePreview}
+                  funnelBookingId={state.schedulingBookingId}
+                  funnelIntakeId={state.schedulingIntakeId}
                 />
               ) : null}
 
@@ -2902,6 +2959,24 @@ export function BookingFlowClient() {
                         onError={(msg) => {
                           setReviewPaymentPhase("failed");
                           setDepositError(msg);
+                        }}
+                        onSubmitInitiated={() => {
+                          const s = stateRefForBookingUrl.current;
+                          const bid = s.schedulingBookingId.trim();
+                          const iid = s.schedulingIntakeId.trim();
+                          const hold =
+                            pendingConfirmHoldIdRef.current?.trim() || "";
+                          if (!bid) return;
+                          const sk = currentPaymentSessionKey(
+                            bid,
+                            hold || null,
+                          );
+                          postPublicBookingFunnelMilestone({
+                            milestone: "DEPOSIT_SUBMIT_INITIATED",
+                            bookingId: bid,
+                            ...(iid ? { intakeId: iid } : {}),
+                            payload: { paymentSessionKey: sk },
+                          });
                         }}
                       />
                     </div>
@@ -3051,7 +3126,7 @@ export function BookingFlowClient() {
               ) : null}
             </div>
 
-            <aside className="space-y-6">
+            <aside className="min-w-0 space-y-6">
               <BookingSummaryCard
                 state={state}
                 step={state.step}

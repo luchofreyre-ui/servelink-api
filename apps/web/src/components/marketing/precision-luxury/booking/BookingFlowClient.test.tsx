@@ -360,6 +360,10 @@ vi.mock("./bookingFunnelAnalytics", () => ({
   emitBookingFunnelEvent: (...args: unknown[]) => emitBookingFunnelEventMock(...args),
 }));
 
+vi.mock("./bookingFunnelMilestoneClient", () => ({
+  postPublicBookingFunnelMilestone: vi.fn(),
+}));
+
 vi.mock("../layout/ServiceHeader", () => ({
   ServiceHeader: () => <div data-testid="mock-service-header" />,
 }));

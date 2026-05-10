@@ -1,6 +1,8 @@
 /**
  * Lightweight public booking funnel signals for observability (console, dataLayer, gtag).
  * No network I/O — safe to call from the client bundle.
+ *
+ * Durable operational echoes use `postPublicBookingFunnelMilestone` (BookingEvent / intake JSON).
  */
 
 export type BookingFunnelEventName =

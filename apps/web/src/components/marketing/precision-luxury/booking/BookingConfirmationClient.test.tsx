@@ -27,6 +27,10 @@ vi.mock("@/lib/api/bookings", () => ({
   fetchPublicBookingConfirmation: vi.fn(),
 }));
 
+vi.mock("./bookingFunnelMilestoneClient", () => ({
+  postPublicBookingFunnelMilestone: vi.fn(),
+}));
+
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(mockConfirmationSearch.value),
 }));
