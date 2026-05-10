@@ -49,7 +49,6 @@ import {
   bookingScheduleTeamSizeAssumptionCopy,
 } from "./bookingPublicSurfaceCopy";
 import type { BookingAvailableTeamOption, BookingFlowState } from "./bookingFlowTypes";
-import { BookingTrustRibbon } from "./BookingTrustRibbon";
 import {
   formatApproximateInHomeDurationMinutes,
   formatEstimateDurationMinutes,
@@ -197,13 +196,9 @@ export function BookingStepSchedule({
       title={BOOKING_SCHEDULE_PAGE_TITLE}
       body={BOOKING_SCHEDULE_PAGE_LEAD}
     >
-      <p className="mb-10 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+      <p className="mb-8 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B] md:mb-10">
         {BOOKING_STEP_EDIT_CONTINUITY_HINT}
       </p>
-
-      <div className="mb-8">
-        <BookingTrustRibbon />
-      </div>
 
       {surfaceError && teamsEmptyState === "none" ? (
         <p className="mb-6 rounded-2xl border border-amber-200/90 bg-amber-50/90 px-4 py-3 font-[var(--font-manrope)] text-sm text-amber-950">

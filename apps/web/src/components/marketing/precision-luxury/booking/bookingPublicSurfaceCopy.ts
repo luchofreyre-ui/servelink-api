@@ -360,6 +360,14 @@ export const BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE =
 export const BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE =
   "Your deposit is applied toward your booking.";
 
+/** Single-screen deposit expectations (mobile compression). */
+export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY =
+  "Collects now to hold your spot through team and time selection; applies toward the visit you confirm. Change expectations arrive with your confirmation—reply there anytime.";
+
+/** Replaces separate next-step + applied lines where stacked height matters. */
+export const BOOKING_REVIEW_DEPOSIT_FLOW_REMINDER =
+  "After payment, you’ll choose your team and arrival time. Your deposit is applied toward your booking.";
+
 export const BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT =
   "Payment was submitted and is still finalizing. Please try checking again.";
 
@@ -369,18 +377,20 @@ export const BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA = "Check payment status";
 export const BOOKING_REVIEW_DEPOSIT_SECTION_TITLE =
   "Secure your visit with a deposit";
 
-/** Concise expectation layer — no policy invention; points to confirmation conversation. */
+/** @deprecated Split into BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY for UI; retained for reference. */
 export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHY =
   "The deposit reserves your place while you choose a team and arrival window.";
 
+/** @deprecated Split into BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY for UI. */
 export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHEN =
   "We collect it now; it applies toward the service total for the visit you confirm.";
 
+/** @deprecated Split into BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY for UI. */
 export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_CHANGES =
   "Reschedule and cancellation expectations are spelled out when your visit is confirmed—reply in that thread anytime with questions.";
 
 export const BOOKING_REVIEW_DEPOSIT_PAYMENT_REASSURANCE =
-  "Payment runs through a secure form; you’ll move straight on to scheduling when it completes.";
+  "Secure card checkout—scheduling is next.";
 
 export const BOOKING_SCHEDULE_RETRY_CONFIRM_CTA = "Try again";
 
@@ -642,7 +652,7 @@ export const BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE =
 /** Section A — first cleaning narrative (recurring review only). */
 export const BOOKING_REVIEW_SECTION_FIRST_CLEANING_TITLE = "Your first cleaning";
 export const BOOKING_REVIEW_SECTION_FIRST_CLEANING_BODY =
-  "The first visit is a deeper reset: more labor and time to lift buildup and establish a clean baseline. It is a one-time intensive scope—not the same ongoing workload as maintenance visits.";
+  "The first visit resets buildup and sets baseline—more labor than steady-state maintenance visits.";
 
 export const BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL =
   "Opening visit price (preview)";
@@ -656,7 +666,8 @@ export const BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE =
 export const BOOKING_REVIEW_RECURRING_SECTION_TITLE =
   "Your recurring maintenance plan";
 export const BOOKING_REVIEW_RECURRING_SECTION_LEAD =
-  "Choose how often you want upkeep once your home is in rhythm. Recurring visits are planned for a maintained home—less recovery work than your opening visit.";
+  "Choose upkeep cadence once your home is in rhythm—maintenance assumes less recovery than opening. Opening figures stay in “Opening visit — estimated time & cost” above.";
+
 export const BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD = "Where to find your opening visit";
 export const BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD =
   "Maintenance visit economics (this cadence)";
@@ -669,7 +680,7 @@ export const BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD =
 export const BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD = "Pick a cadence";
 export const BOOKING_REVIEW_RECOMMENDED_SCHEDULE_TITLE = "Recommended schedule";
 export const BOOKING_REVIEW_RECOMMENDED_SCHEDULE_LEAD =
-  "Cadence shapes how steady your home stays between visits. Weekly keeps the tightest rhythm; monthly allows more buildup.";
+  "Weekly keeps the tightest rhythm; monthly allows more buildup between visits.";
 export const BOOKING_REVIEW_CADENCE_HELPER_WEEKLY =
   "Strongest upkeep rhythm; least buildup between visits.";
 export const BOOKING_REVIEW_CADENCE_HELPER_EVERY_10_DAYS =
