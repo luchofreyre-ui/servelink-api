@@ -126,7 +126,9 @@ import {
   BOOKING_POST_ESTIMATE_VISIT_ONE,
   BOOKING_POST_ESTIMATE_VISIT_THREE,
   BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
+  BOOKING_PLAN_SUMMARY_LABEL,
   BOOKING_REVIEW_VISIT_STRUCTURE_LABEL,
+  bookingPlanClassificationSummary,
 } from "./bookingPublicSurfaceCopy";
 import {
   BOOKING_TEAM_PLANNING_FIELD_MAX_CHARS,
@@ -135,6 +137,7 @@ import {
 import { getBookingUpsellOptionsByIds } from "./bookingUpsells";
 import { getPublicBookingMarketingTitle } from "./publicBookingTaxonomy";
 import type { DerivedSchedulePreview } from "./BookingStepSchedule";
+import { BookingTrustRibbon } from "./BookingTrustRibbon";
 
 function formatSchedulePreviewDateForReview(d: Date): string {
   if (!Number.isFinite(d.getTime())) return "";
@@ -674,6 +677,10 @@ export function BookingStepReview({
         >
           {bannerMessage}
         </p>
+      </div>
+
+      <div className="mb-8">
+        <BookingTrustRibbon />
       </div>
 
       <div className="grid gap-4">
@@ -1308,8 +1315,8 @@ export function BookingStepReview({
           {cadenceOk ? (
             <div className="space-y-1">
               <p className="font-medium">
-                <span className="text-[#64748B]">Visit type:</span>{" "}
-                One-time (public booking)
+                <span className="text-[#64748B]">{BOOKING_PLAN_SUMMARY_LABEL}:</span>{" "}
+                {bookingPlanClassificationSummary(state)}
               </p>
               <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
                 {BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE}

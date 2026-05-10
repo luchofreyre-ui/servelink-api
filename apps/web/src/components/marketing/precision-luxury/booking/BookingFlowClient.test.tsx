@@ -35,6 +35,9 @@ import {
   BOOKING_REVIEW_PRE_CONF_HIGH_HEADLINE,
   BOOKING_REVIEW_PRE_CONF_HIGH_SUPPORTING,
   BOOKING_REVIEW_PRE_CONF_SPECIAL_HEADLINE,
+  BOOKING_PLAN_CLASSIFICATION_MOVE_TRANSITION,
+  BOOKING_PLAN_CLASSIFICATION_OPENING_AND_RECURRING,
+  BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT,
   BOOKING_PLANNING_NOTE_DENSE_FURNISHINGS,
   BOOKING_REVIEW_PLANNING_NOTES_TITLE,
   BOOKING_REVIEW_PREP_DENSE_LAYOUT,
@@ -637,6 +640,15 @@ describe("BookingFlowClient", () => {
     bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
     render(<BookingFlowClient />);
     await fillReviewContactAndOptionalFirstTimePlan(8000);
+    const reviewRoot = screen
+      .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+      .closest("section")!;
+    const scheduleBlock = within(reviewRoot)
+      .getByText("Schedule")
+      .closest("div.rounded-2xl")!;
+    expect(
+      within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_OPENING_AND_RECURRING),
+    ).toBeInTheDocument();
     expect(screen.getByText(BOOKING_REVIEW_RECURRING_SECTION_TITLE)).toBeInTheDocument();
     expect(screen.getByTestId("booking-review-recurring-maintenance")).toBeInTheDocument();
     expect(screen.getByTestId("booking-review-section-first-cleaning")).toBeInTheDocument();
@@ -1486,7 +1498,7 @@ describe("BookingFlowClient", () => {
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
       expect(
-        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+        within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_MOVE_TRANSITION),
       ).toBeInTheDocument();
       expect(
         within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
@@ -1612,7 +1624,7 @@ describe("BookingFlowClient", () => {
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
       expect(
-        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+        within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT),
       ).toBeInTheDocument();
       expect(
         within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
@@ -1706,7 +1718,7 @@ describe("BookingFlowClient", () => {
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
       expect(
-        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+        within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT),
       ).toBeInTheDocument();
 
       await waitFor(() =>
@@ -1793,7 +1805,7 @@ describe("BookingFlowClient", () => {
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
       expect(
-        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+        within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT),
       ).toBeInTheDocument();
       expect(
         within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
@@ -1832,7 +1844,7 @@ describe("BookingFlowClient", () => {
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
       expect(
-        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+        within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT),
       ).toBeInTheDocument();
 
       fireEvent.change(screen.getByLabelText(/^email$/i), {
@@ -1868,7 +1880,7 @@ describe("BookingFlowClient", () => {
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
       expect(
-        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+        within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT),
       ).toBeInTheDocument();
 
       const homeBlock = within(reviewRoot)
@@ -2417,7 +2429,7 @@ describe("BookingFlowClient", () => {
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
       expect(
-        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+        within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT),
       ).toBeInTheDocument();
       expect(
         within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
@@ -2768,7 +2780,7 @@ describe("BookingFlowClient", () => {
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
       expect(
-        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+        within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT),
       ).toBeInTheDocument();
       expect(
         within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
@@ -3068,7 +3080,7 @@ describe("BookingFlowClient", () => {
         .getByText("Schedule")
         .closest("div.rounded-2xl")!;
       expect(
-        within(scheduleBlock).getByText(/One-time \(public booking\)/i),
+        within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT),
       ).toBeInTheDocument();
       expect(
         within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),

@@ -7,7 +7,11 @@ import {
   normalizeBookingServiceLocationZipParam,
 } from "./bookingUrlState";
 import { getBookingHomeSizeRangeLabel } from "./bookingHomeSizeRanges";
-import { BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL } from "./bookingPublicSurfaceCopy";
+import {
+  BOOKING_PLAN_SUMMARY_LABEL,
+  BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
+  bookingPlanClassificationSummary,
+} from "./bookingPublicSurfaceCopy";
 import {
   formatEstimateDurationMinutes,
   formatEstimateUsdFromCents,
@@ -93,8 +97,8 @@ export function BookingSummaryCard({
         ]
       : []),
     {
-      label: "Visit type",
-      value: "One-time (public booking)",
+      label: BOOKING_PLAN_SUMMARY_LABEL,
+      value: bookingPlanClassificationSummary(state),
     },
     {
       label: "Home profile",

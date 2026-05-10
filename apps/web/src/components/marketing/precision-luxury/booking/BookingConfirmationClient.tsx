@@ -43,6 +43,7 @@ import {
   BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA,
   BOOKING_CONFIRMATION_TEAM_PREP_TITLE,
   BOOKING_CONFIRMATION_VISIT_ESTIMATE_PRICE_LABEL,
+  BOOKING_CONFIRMATION_WHATS_NEXT_SECTION_TITLE,
   BOOKING_REVIEW_RECURRING_PRICE_LABEL,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
@@ -452,7 +453,7 @@ export function BookingConfirmationClient() {
 
             <div className="mt-10 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
               <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                Next steps
+                {BOOKING_CONFIRMATION_WHATS_NEXT_SECTION_TITLE}
               </p>
               <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
                 {BOOKING_CONFIRMATION_NEXT_STEPS_NEUTRAL_REENTRY}
@@ -775,7 +776,7 @@ export function BookingConfirmationClient() {
           <div className="mt-10 space-y-6 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
             <div>
               <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                Next steps
+                {BOOKING_CONFIRMATION_WHATS_NEXT_SECTION_TITLE}
               </p>
               <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
                 {visitConfirmedFromRemote
