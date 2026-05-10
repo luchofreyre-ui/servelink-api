@@ -102,6 +102,17 @@ import {
   BOOKING_REVIEW_RECURRING_SECTION_LEAD,
   BOOKING_REVIEW_RECURRING_SECTION_TITLE,
   BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD,
+  BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE,
+  BOOKING_REVIEW_SECTION_FIRST_CLEANING_BODY,
+  BOOKING_REVIEW_SECTION_FIRST_CLEANING_TITLE,
+  BOOKING_REVIEW_RECOMMENDED_SCHEDULE_LEAD,
+  BOOKING_REVIEW_RECOMMENDED_SCHEDULE_TITLE,
+  BOOKING_REVIEW_CADENCE_HELPER_BIWEEKLY,
+  BOOKING_REVIEW_CADENCE_HELPER_EVERY_10_DAYS,
+  BOOKING_REVIEW_CADENCE_HELPER_MONTHLY,
+  BOOKING_REVIEW_CADENCE_HELPER_WEEKLY,
+  BOOKING_REVIEW_WHAT_CHANGES_BODY,
+  BOOKING_REVIEW_WHAT_CHANGES_TITLE,
   BOOKING_REVIEW_SCHEDULE_NOTE,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
@@ -404,6 +415,12 @@ export function BookingStepReview({
     biweekly: "Biweekly",
     monthly: "Monthly",
   };
+  const recurringCadenceReviewHelpers: Record<ReviewRecurringCadence, string> = {
+    weekly: BOOKING_REVIEW_CADENCE_HELPER_WEEKLY,
+    every_10_days: BOOKING_REVIEW_CADENCE_HELPER_EVERY_10_DAYS,
+    biweekly: BOOKING_REVIEW_CADENCE_HELPER_BIWEEKLY,
+    monthly: BOOKING_REVIEW_CADENCE_HELPER_MONTHLY,
+  };
   const selectedRecurringCadence =
     state.recurringInterest?.interested === true &&
     (state.recurringInterest.cadence === "weekly" ||
@@ -698,10 +715,30 @@ export function BookingStepReview({
           ) : null}
         </ReviewSection>
 
-        <ReviewSection title="Estimated cleaning time & cost">
+        <ReviewSection
+          title={
+            isRecurringContract
+              ? BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE
+              : "Estimated cleaning time & cost"
+          }
+        >
+          {isRecurringContract ? (
+            <div
+              className="mb-4 rounded-2xl border border-[#C9B27C]/22 bg-white px-4 py-3 shadow-sm ring-1 ring-[#C9B27C]/10"
+              data-testid="booking-review-section-first-cleaning"
+            >
+              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                {BOOKING_REVIEW_SECTION_FIRST_CLEANING_TITLE}
+              </p>
+              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
+                {BOOKING_REVIEW_SECTION_FIRST_CLEANING_BODY}
+              </p>
+            </div>
+          ) : null}
           <p className="mb-4 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-            Based on your home details and selected preferences. Final scope is
-            confirmed before service.
+            {isRecurringContract
+              ? "Figures below are your opening visit preview. Final scope is confirmed before service."
+              : "Based on your home details and selected preferences. Final scope is confirmed before service."}
           </p>
           {previewLoading && ready && contactOk ? (
             <div className="mb-4 rounded-2xl border border-[#C9B27C]/18 bg-white px-4 py-3 shadow-sm">
@@ -965,8 +1002,28 @@ export function BookingStepReview({
                 </p>
               ) : null}
 
-              <div>
+              <details className="group rounded-2xl border border-[#E2E8F0] bg-white px-4 py-3 shadow-sm open:pb-4">
+                <summary className="cursor-pointer list-none font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] marker:content-none [&::-webkit-details-marker]:hidden">
+                  <span className="flex items-start justify-between gap-2">
+                    <span>{BOOKING_REVIEW_WHAT_CHANGES_TITLE}</span>
+                    <span className="shrink-0 pt-0.5 text-xs font-normal text-[#94A3B8] group-open:hidden">
+                      Tap to read
+                    </span>
+                  </span>
+                </summary>
+                <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                  {BOOKING_REVIEW_WHAT_CHANGES_BODY}
+                </p>
+              </details>
+
+              <div className="rounded-2xl border border-[#C9B27C]/14 bg-[#FFFCF8] px-4 py-3">
                 <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                  {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_TITLE}
+                </p>
+                <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                  {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_LEAD}
+                </p>
+                <p className="mt-4 font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
                   {BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD}
                 </p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-4">
@@ -988,11 +1045,9 @@ export function BookingStepReview({
                         <span className="font-semibold text-[#0F172A]">
                           {recurringCadenceDisplay[cadence]}
                         </span>
-                        {cadence === "every_10_days" ? (
-                          <span className="mt-1 block text-xs text-[#64748B]">
-                            Roughly 3 visits per month
-                          </span>
-                        ) : null}
+                        <span className="mt-1 block text-xs leading-5 text-[#64748B]">
+                          {recurringCadenceReviewHelpers[cadence]}
+                        </span>
                       </button>
                     );
                   })}

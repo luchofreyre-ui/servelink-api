@@ -38,6 +38,7 @@ import {
   BOOKING_PLANNING_NOTE_DENSE_FURNISHINGS,
   BOOKING_REVIEW_PLANNING_NOTES_TITLE,
   BOOKING_REVIEW_PREP_DENSE_LAYOUT,
+  BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE,
   BOOKING_REVIEW_RECURRING_SECTION_TITLE,
   BOOKING_REVIEW_PREP_FRIDGE,
   BOOKING_REVIEW_PREP_MOVE_FURNISHED,
@@ -638,6 +639,8 @@ describe("BookingFlowClient", () => {
     await fillReviewContactAndOptionalFirstTimePlan(8000);
     expect(screen.getByText(BOOKING_REVIEW_RECURRING_SECTION_TITLE)).toBeInTheDocument();
     expect(screen.getByTestId("booking-review-recurring-maintenance")).toBeInTheDocument();
+    expect(screen.getByTestId("booking-review-section-first-cleaning")).toBeInTheDocument();
+    expect(screen.getByText(BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE)).toBeInTheDocument();
     expect(document.body.textContent).not.toMatch(/Savings/i);
     expect(document.body.textContent).not.toMatch(/discount/i);
   });

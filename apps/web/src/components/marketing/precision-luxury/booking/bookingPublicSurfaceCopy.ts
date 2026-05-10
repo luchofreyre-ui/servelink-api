@@ -614,6 +614,14 @@ export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES =
   "Appliances in scope are reflected through included add-on work in this preview.";
 
 /** Step 4 — opening vs recurring framing (recurring path). */
+export const BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE =
+  "Opening visit — estimated time & cost";
+
+/** Section A — first cleaning narrative (recurring review only). */
+export const BOOKING_REVIEW_SECTION_FIRST_CLEANING_TITLE = "Your first cleaning";
+export const BOOKING_REVIEW_SECTION_FIRST_CLEANING_BODY =
+  "The first visit is a deeper reset: more labor and time to lift buildup and establish a clean baseline. It is a one-time intensive scope—not the same ongoing workload as maintenance visits.";
+
 export const BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL =
   "Opening visit price (preview)";
 export const BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL =
@@ -624,19 +632,33 @@ export const BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL = "Scope predictability";
 export const BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE =
   "This reflects how well your answers narrow the scope for planning—not the odds your final price will change after we confirm details.";
 export const BOOKING_REVIEW_RECURRING_SECTION_TITLE =
-  "Ongoing maintenance (after opening)";
+  "Your recurring maintenance plan";
 export const BOOKING_REVIEW_RECURRING_SECTION_LEAD =
-  "Choose how often you want maintenance visits once your home is in a steady rhythm. Recurring visits are sized for a maintained home—less recovery work than your opening visit.";
-export const BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD = "Initial / opening visit";
+  "Choose how often you want upkeep once your home is in rhythm. Recurring visits are planned for a maintained home—less recovery work than your opening visit.";
+export const BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD = "Where to find your opening visit";
 export const BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD =
-  "Maintained-home visits";
+  "Maintenance visit economics (this cadence)";
 export const BOOKING_REVIEW_RECURRING_PRICE_LABEL = "Typical recurring visit price";
 export const BOOKING_REVIEW_RECURRING_LABOR_LABEL = "Typical recurring cleaning effort";
 export const BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER =
-  "Opening visit price and cleaning effort are in “Estimated cleaning time & cost” above.";
+  "Opening visit price and cleaning effort are in “Opening visit — estimated time & cost” above.";
 export const BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD =
-  "At this cadence, each recurring visit reflects lower labor need than the opening visit under the same pricing model (less catch-up work when the home stays on schedule).";
-export const BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD = "How often you want upkeep";
+  "This dollar difference reflects less scheduled labor on maintenance visits than on the opening reset—not an arbitrary markdown from the opening price.";
+export const BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD = "Pick a cadence";
+export const BOOKING_REVIEW_RECOMMENDED_SCHEDULE_TITLE = "Recommended schedule";
+export const BOOKING_REVIEW_RECOMMENDED_SCHEDULE_LEAD =
+  "Cadence shapes how steady your home stays between visits. Weekly keeps the tightest rhythm; monthly allows more buildup.";
+export const BOOKING_REVIEW_CADENCE_HELPER_WEEKLY =
+  "Strongest upkeep rhythm; least buildup between visits.";
+export const BOOKING_REVIEW_CADENCE_HELPER_EVERY_10_DAYS =
+  "Roughly three visits per month; balances frequency with spacing.";
+export const BOOKING_REVIEW_CADENCE_HELPER_BIWEEKLY =
+  "Common balance for maintained homes.";
+export const BOOKING_REVIEW_CADENCE_HELPER_MONTHLY =
+  "More time between visits; expect more variability between cleans.";
+export const BOOKING_REVIEW_WHAT_CHANGES_TITLE = "What changes between visits";
+export const BOOKING_REVIEW_WHAT_CHANGES_BODY =
+  "Recurring pricing reflects maintenance-focused work after your home is stabilized—not an arbitrary markdown from the opening visit. Maintenance assumes you return the home to a maintained state between visits; workload and scope differ operationally from a reset clean.";
 export const BOOKING_REVIEW_RECURRING_PER_VISIT_DELTA_LABEL =
   "Maintenance vs opening visit (this cadence)";
 /** @deprecated Use BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD; kept for tests migrating off old wording. */
