@@ -11,8 +11,8 @@ export function BookingFlowProgress({
   steps,
 }: BookingFlowProgressProps) {
   return (
-    <div className="rounded-[28px] border border-[#C9B27C]/16 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div className="rounded-[28px] border border-[#C9B27C]/16 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.05)] sm:p-6">
+      <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
         {steps.map((step, index) => {
           const isActive = step.id === currentStep;
           const isComplete = step.id < currentStep;
@@ -20,7 +20,7 @@ export function BookingFlowProgress({
           return (
             <div key={step.id} className="flex flex-1 items-center gap-3">
               <div
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-sm font-semibold font-[var(--font-manrope)] ${
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-sm font-semibold font-[var(--font-manrope)] sm:h-11 sm:w-11 ${
                   isActive
                     ? "border-[#0D9488] bg-[#0D9488] text-white shadow-[0_10px_30px_rgba(13,148,136,0.18)]"
                     : isComplete

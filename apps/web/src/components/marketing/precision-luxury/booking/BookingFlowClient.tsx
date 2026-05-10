@@ -38,9 +38,14 @@ import {
   BOOKING_SCHEDULE_CONFIRM_FAILED,
   BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA,
+  BOOKING_REVIEW_DEPOSIT_EXPECTATION_CHANGES,
+  BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHEN,
+  BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHY,
   BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT,
   BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE,
+  BOOKING_REVIEW_DEPOSIT_PAYMENT_REASSURANCE,
   BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE,
+  BOOKING_REVIEW_DEPOSIT_SECTION_TITLE,
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED,
   PUBLIC_BOOKING_ORCHESTRATOR_LOCATION_NOT_RESOLVED_CODE,
@@ -108,6 +113,7 @@ import {
   type SubmitBookingDirectionIntakePayload,
 } from "./bookingDirectionIntakeApi";
 import { DepositPaymentElement } from "./DepositPaymentElement";
+import { BookingTrustRibbon } from "./BookingTrustRibbon";
 import { getStripePromise } from "@/lib/stripe/stripeClient";
 import { buildIntakeEstimateFactorsFromBookingHomeState } from "./bookingStep2ToEstimateFactors";
 import {
@@ -2809,8 +2815,11 @@ export function BookingFlowClient() {
                 reviewPaymentPhase === "failed" ||
                 reviewPaymentPhase === "satisfied") ? (
                 <div className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-8 shadow-sm ring-1 ring-[#C9B27C]/10">
+                  <div className="mb-6">
+                    <BookingTrustRibbon />
+                  </div>
                   <h2 className="font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.02em] text-[#0F172A]">
-                    Secure your booking with a deposit
+                    {BOOKING_REVIEW_DEPOSIT_SECTION_TITLE}
                   </h2>
                   {reviewDepositGateMessage ? (
                     <p
@@ -2820,7 +2829,12 @@ export function BookingFlowClient() {
                       {reviewDepositGateMessage}
                     </p>
                   ) : null}
-                  <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                  <div className="mt-5 max-w-2xl space-y-2 rounded-2xl border border-[#C9B27C]/14 bg-[#FFF9F3]/80 px-4 py-4 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                    <p>{BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHY}</p>
+                    <p>{BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHEN}</p>
+                    <p>{BOOKING_REVIEW_DEPOSIT_EXPECTATION_CHANGES}</p>
+                  </div>
+                  <p className="mt-4 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
                     {BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE}
                   </p>
                   <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
@@ -2862,6 +2876,9 @@ export function BookingFlowClient() {
                   ) : null}
                   {stripePromise && depositClientSecret ? (
                     <div className="mt-6 max-w-xl">
+                      <p className="mb-3 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                        {BOOKING_REVIEW_DEPOSIT_PAYMENT_REASSURANCE}
+                      </p>
                       <DepositPaymentElement
                         key={depositPaymentIntentId ?? "deposit-pi"}
                         stripePromise={stripePromise}

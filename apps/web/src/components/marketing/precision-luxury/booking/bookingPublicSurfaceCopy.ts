@@ -3,6 +3,7 @@ import type {
   BookingAppliancePresenceToken,
   BookingDeepCleanFocus,
   BookingDeepCleanProgramChoice,
+  BookingFlowState,
   BookingFrequencyOption,
   BookingHomeCondition,
   BookingProblemAreaToken,
@@ -25,7 +26,7 @@ export const BOOKING_CONFIRMATION_HEADLINE_REQUEST_RECEIVED =
 
 /** No credible handoff from this device—address bar may have dropped details or this is a fresh visit. */
 export const BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY =
-  "Pick up where you left off";
+  "Continue your booking";
 
 /** `/book/confirmation` — assigned booking with a scheduled start from the live API read. */
 export const BOOKING_CONFIRMATION_HEADLINE_VISIT_CONFIRMED =
@@ -44,10 +45,10 @@ export const BOOKING_CONFIRMATION_NEXT_STEPS_VISIT_CONFIRMED =
   "You’ll receive a confirmation email with your booking reference and arrival window. If anything changes on your side, reply from that thread and we’ll help adjust.";
 
 export const BOOKING_CONFIRMATION_INTRO_NEUTRAL_REENTRY =
-  "This screen usually appears right after you send a request. If you refreshed, used a bookmark, or arrived here without the usual details, we can’t safely show a finished summary from here alone.";
+  "You opened this page without the usual handoff from the booking flow—often after a refresh, bookmark, or new device. That’s fine; we simply can’t reconstruct your finished summary safely from here alone.";
 
 export const BOOKING_CONFIRMATION_NEXT_STEPS_NEUTRAL_REENTRY =
-  "Head back to booking to continue a request or start a new one—we’ll guide you through the same calm steps.";
+  "Tap Return to booking to continue in the guided flow, or start a new path—the steps stay the same calm pace either way.";
 
 /** Primary control returning to the live funnel (clears local continuity on click in the client). */
 export const BOOKING_CONFIRMATION_RETURN_TO_BOOKING_CTA = "Return to booking";
@@ -62,12 +63,12 @@ export const BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE =
 export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD =
   "The estimate below reflects what you just confirmed with us.";
 export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL =
-  "Final pricing and visit timing are set when we follow up by email—nothing on this page alone schedules your first visit.";
+  "Final pricing and visit timing are confirmed when we follow up by email—nothing on this page alone locks your first arrival.";
 
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD =
   "Your preferences and contact path are on file with Servelink.";
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL =
-  "We could not finish every automated step in one go, but your details are not lost—our team continues from here.";
+  "We couldn’t finish every automated step in one pass, but your details are safe—our team picks up from here and replies personally.";
 
 export const BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED =
   "Watch the inbox you used on the previous step—we may ask a brief follow-up before we lock timing. You can also start a fresh booking note if your home or cadence changes meaningfully.";
@@ -95,6 +96,10 @@ export const BOOKING_CONFIRMATION_RECURRING_SURFACE_LEAD =
 
 export const BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE =
   "Opening reset visit schedule";
+
+/** Shared section title for confirmation “closure” blocks (neutral + standard outcomes). */
+export const BOOKING_CONFIRMATION_WHATS_NEXT_SECTION_TITLE =
+  "What happens next";
 
 /** Server-reported codes already passed through the confirmation URL today. */
 export function bookingConfirmationNoticeForBookingErrorCode(
@@ -355,10 +360,37 @@ export const BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE =
 export const BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE =
   "Your deposit is applied toward your booking.";
 
+/** Single-screen deposit expectations (mobile compression). */
+export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY =
+  "Collects now to hold your spot through team and time selection; applies toward the visit you confirm. Change expectations arrive with your confirmation—reply there anytime.";
+
+/** Replaces separate next-step + applied lines where stacked height matters. */
+export const BOOKING_REVIEW_DEPOSIT_FLOW_REMINDER =
+  "After payment, you’ll choose your team and arrival time. Your deposit is applied toward your booking.";
+
 export const BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT =
   "Payment was submitted and is still finalizing. Please try checking again.";
 
 export const BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA = "Check payment status";
+
+/** Deposit card — section framing (matches premium operational tone). */
+export const BOOKING_REVIEW_DEPOSIT_SECTION_TITLE =
+  "Secure your visit with a deposit";
+
+/** @deprecated Split into BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY for UI; retained for reference. */
+export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHY =
+  "The deposit reserves your place while you choose a team and arrival window.";
+
+/** @deprecated Split into BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY for UI. */
+export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHEN =
+  "We collect it now; it applies toward the service total for the visit you confirm.";
+
+/** @deprecated Split into BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY for UI. */
+export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_CHANGES =
+  "Reschedule and cancellation expectations are spelled out when your visit is confirmed—reply in that thread anytime with questions.";
+
+export const BOOKING_REVIEW_DEPOSIT_PAYMENT_REASSURANCE =
+  "Secure card checkout—scheduling is next.";
 
 export const BOOKING_SCHEDULE_RETRY_CONFIRM_CTA = "Try again";
 
@@ -433,7 +465,7 @@ export const BOOKING_REVIEW_SUBMIT_SAVING = "Saving your details…";
 export const BOOKING_REVIEW_STEP_TITLE = "Review your direction & quote";
 
 export const BOOKING_REVIEW_STEP_BODY =
-  "Confirm your home details and preview look right. This saves your request and shows teams you can book with—not the final booking yet.";
+  "Confirm your home details and preview look right. Continuing saves your direction and opens team selection—your calendar slot is chosen only after that step.";
 
 export const BOOKING_REVIEW_NEXT_SCHEDULE_TITLE = "Next: choose your team and arrival time";
 
@@ -614,6 +646,14 @@ export const BOOKING_REVIEW_ESTIMATE_DRIVER_BULLET_TRANSITION_APPLIANCES =
   "Appliances in scope are reflected through included add-on work in this preview.";
 
 /** Step 4 — opening vs recurring framing (recurring path). */
+export const BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE =
+  "Opening visit — estimated time & cost";
+
+/** Section A — first cleaning narrative (recurring review only). */
+export const BOOKING_REVIEW_SECTION_FIRST_CLEANING_TITLE = "Your first cleaning";
+export const BOOKING_REVIEW_SECTION_FIRST_CLEANING_BODY =
+  "The first visit resets buildup and sets baseline—more labor than steady-state maintenance visits.";
+
 export const BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL =
   "Opening visit price (preview)";
 export const BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL =
@@ -624,19 +664,34 @@ export const BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL = "Scope predictability";
 export const BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE =
   "This reflects how well your answers narrow the scope for planning—not the odds your final price will change after we confirm details.";
 export const BOOKING_REVIEW_RECURRING_SECTION_TITLE =
-  "Ongoing maintenance (after opening)";
+  "Your recurring maintenance plan";
 export const BOOKING_REVIEW_RECURRING_SECTION_LEAD =
-  "Choose how often you want maintenance visits once your home is in a steady rhythm. Recurring visits are sized for a maintained home—less recovery work than your opening visit.";
-export const BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD = "Initial / opening visit";
+  "Choose upkeep cadence once your home is in rhythm—maintenance assumes less recovery than opening. Opening figures stay in “Opening visit — estimated time & cost” above.";
+
+export const BOOKING_REVIEW_RECURRING_OPENING_SUBHEAD = "Where to find your opening visit";
 export const BOOKING_REVIEW_RECURRING_MAINTENANCE_SUBHEAD =
-  "Maintained-home visits";
+  "Maintenance visit economics (this cadence)";
 export const BOOKING_REVIEW_RECURRING_PRICE_LABEL = "Typical recurring visit price";
 export const BOOKING_REVIEW_RECURRING_LABOR_LABEL = "Typical recurring cleaning effort";
 export const BOOKING_REVIEW_RECURRING_OPENING_SUMMARY_POINTER =
-  "Opening visit price and cleaning effort are in “Estimated cleaning time & cost” above.";
+  "Opening visit price and cleaning effort are in “Opening visit — estimated time & cost” above.";
 export const BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD =
-  "At this cadence, each recurring visit reflects lower labor need than the opening visit under the same pricing model (less catch-up work when the home stays on schedule).";
-export const BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD = "How often you want upkeep";
+  "This dollar difference reflects less scheduled labor on maintenance visits than on the opening reset—not an arbitrary markdown from the opening price.";
+export const BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD = "Pick a cadence";
+export const BOOKING_REVIEW_RECOMMENDED_SCHEDULE_TITLE = "Recommended schedule";
+export const BOOKING_REVIEW_RECOMMENDED_SCHEDULE_LEAD =
+  "Weekly keeps the tightest rhythm; monthly allows more buildup between visits.";
+export const BOOKING_REVIEW_CADENCE_HELPER_WEEKLY =
+  "Strongest upkeep rhythm; least buildup between visits.";
+export const BOOKING_REVIEW_CADENCE_HELPER_EVERY_10_DAYS =
+  "Roughly three visits per month; balances frequency with spacing.";
+export const BOOKING_REVIEW_CADENCE_HELPER_BIWEEKLY =
+  "Common balance for maintained homes.";
+export const BOOKING_REVIEW_CADENCE_HELPER_MONTHLY =
+  "More time between visits; expect more variability between cleans.";
+export const BOOKING_REVIEW_WHAT_CHANGES_TITLE = "What changes between visits";
+export const BOOKING_REVIEW_WHAT_CHANGES_BODY =
+  "Recurring pricing reflects maintenance-focused work after your home is stabilized—not an arbitrary markdown from the opening visit. Maintenance assumes you return the home to a maintained state between visits; workload and scope differ operationally from a reset clean.";
 export const BOOKING_REVIEW_RECURRING_PER_VISIT_DELTA_LABEL =
   "Maintenance vs opening visit (this cadence)";
 /** @deprecated Use BOOKING_REVIEW_RECURRING_VS_OPENING_LEAD; kept for tests migrating off old wording. */
@@ -730,3 +785,55 @@ export const BOOKING_REVIEW_REC_INTERIOR_WINDOWS =
   "Interior windows when you want glass and frames to read crisp for handoff or settling in.";
 export const BOOKING_REVIEW_REC_CABINETS_DETAIL =
   "Detailed cabinet fronts when touch points and trim deserve extra finesse.";
+
+/** Subtle trust ribbon — review, schedule, deposit (restrained). */
+export const BOOKING_TRUST_RIBBON_VETTED = "Vetted professionals";
+export const BOOKING_TRUST_RIBBON_INSURED = "Insured service";
+export const BOOKING_TRUST_RIBBON_COMMS = "Clear communication";
+export const BOOKING_TRUST_RIBBON_SUPPORT = "Thoughtful support";
+
+export const BOOKING_TRUST_RIBBON_ITEMS: readonly string[] = [
+  BOOKING_TRUST_RIBBON_VETTED,
+  BOOKING_TRUST_RIBBON_INSURED,
+  BOOKING_TRUST_RIBBON_COMMS,
+  BOOKING_TRUST_RIBBON_SUPPORT,
+];
+
+/** Sidebar + review — consistent label (value from `bookingPlanClassificationSummary`). */
+export const BOOKING_PLAN_SUMMARY_LABEL = "Your plan";
+
+export const BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT =
+  "Single visit cleaning (public booking)";
+
+/** Opening/first visit framing when recurring maintenance is part of the path. */
+export const BOOKING_PLAN_CLASSIFICATION_OPENING_AND_RECURRING =
+  "Opening visit (reset), then recurring maintenance (public booking)";
+
+export const BOOKING_PLAN_CLASSIFICATION_MOVE_TRANSITION =
+  "Move transition visit (public booking)";
+
+export const BOOKING_PLAN_CLASSIFICATION_RECURRING_GATE =
+  "Recurring service — continue in your account";
+
+export type BookingPlanClassificationInput = Pick<
+  BookingFlowState,
+  "bookingPublicPath" | "recurringInterest"
+>;
+
+export function bookingPlanClassificationSummary(
+  state: BookingPlanClassificationInput,
+): string {
+  if (state.bookingPublicPath === "recurring_auth_gate") {
+    return BOOKING_PLAN_CLASSIFICATION_RECURRING_GATE;
+  }
+  if (state.bookingPublicPath === "move_transition") {
+    return BOOKING_PLAN_CLASSIFICATION_MOVE_TRANSITION;
+  }
+  const hasRecurringMaintenance =
+    state.bookingPublicPath === "first_time_with_recurring" ||
+    state.recurringInterest?.interested === true;
+  if (hasRecurringMaintenance) {
+    return BOOKING_PLAN_CLASSIFICATION_OPENING_AND_RECURRING;
+  }
+  return BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT;
+}

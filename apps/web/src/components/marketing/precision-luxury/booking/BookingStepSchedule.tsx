@@ -196,7 +196,7 @@ export function BookingStepSchedule({
       title={BOOKING_SCHEDULE_PAGE_TITLE}
       body={BOOKING_SCHEDULE_PAGE_LEAD}
     >
-      <p className="mb-10 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+      <p className="mb-8 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B] md:mb-10">
         {BOOKING_STEP_EDIT_CONTINUITY_HINT}
       </p>
 
