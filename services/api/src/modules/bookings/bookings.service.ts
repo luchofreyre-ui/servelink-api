@@ -1807,16 +1807,23 @@ export class BookingsService {
   ) {
     const where: Prisma.BookingWhereInput = {};
     const includeEvents = dto.includeEvents === "true";
-    const include: Prisma.BookingInclude | undefined = includeEvents
-      ? {
-          BookingEvent: {
-            orderBy: { createdAt: "asc" },
-          },
-        }
-      : undefined;
-
     const role = actor.role;
     const uid = actor.userId;
+
+    let include: Prisma.BookingInclude | undefined;
+    if (includeEvents || role === "admin") {
+      include = {};
+      if (includeEvents) {
+        include.BookingEvent = {
+          orderBy: { createdAt: "asc" },
+        };
+      }
+      if (role === "admin") {
+        include.estimateSnapshot = {
+          select: { outputJson: true },
+        };
+      }
+    }
 
     if (dto.status) {
       where.status = dto.status;

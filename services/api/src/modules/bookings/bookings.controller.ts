@@ -46,6 +46,7 @@ import { CreateBookingCheckoutDto } from "./dto/create-booking-checkout.dto";
 import { UpdateBookingPaymentStatusDto } from "./dto/update-booking-payment-status.dto";
 import { SkipIdempotency } from "../../common/reliability/reliability.decorators";
 import { TenantResolver } from "../tenant/tenant.resolver";
+import { buildEstimateGovernanceSummaryFromSnapshotOutputJson } from "../estimate/estimate-snapshot-metadata.read";
 
 @UseGuards(JwtAuthGuard)
 @Controller("/api/v1/bookings")
@@ -91,15 +92,31 @@ export class BookingsController {
     }),
   )
   async listBookingsApi(@Req() req: any, @Query() query: ListBookingsDto) {
+    const role = String(req.user?.role ?? "");
     const rows = await this.bookings.listBookingsForApi(query, {
       userId: String(req.user?.userId ?? ""),
-      role: String(req.user?.role ?? ""),
+      role,
     });
     return {
       ok: true,
-      items: rows.map((b) =>
-        this.bookings.mapBookingWithEvents(b as Record<string, unknown>),
-      ),
+      items: rows.map((b) => {
+        const mapped = this.bookings.mapBookingWithEvents(
+          b as Record<string, unknown>,
+        ) as Record<string, unknown>;
+        if (role !== "admin") {
+          return mapped;
+        }
+        const snap = mapped.estimateSnapshot as
+          | { outputJson?: string | null }
+          | null
+          | undefined;
+        const governanceSummary =
+          buildEstimateGovernanceSummaryFromSnapshotOutputJson(
+            snap?.outputJson ?? null,
+          );
+        const { estimateSnapshot: _omitSnapshot, ...rest } = mapped;
+        return { ...rest, governanceSummary };
+      }),
     };
   }
 

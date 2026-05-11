@@ -7,6 +7,7 @@ import {
   releaseDispatchLock,
   triggerRedispatch,
 } from "@/lib/admin/ops";
+import { EstimateGovernanceListChips } from "./EstimateGovernanceListChips";
 import { opsAllowed, opsDisabledReason, opsShowAction } from "./opsRowFlags";
 
 const linkBtn =
@@ -141,9 +142,15 @@ export function DispatchLockedTable({
           return (
             <tr key={id} className="border-b align-top">
               <td className="p-2 font-medium">
-                <Link href={`/admin/bookings/${id}`} className="underline">
-                  {id}
-                </Link>
+                <div className="flex flex-col gap-1">
+                  <Link href={`/admin/bookings/${id}`} className="underline">
+                    {id}
+                  </Link>
+                  <EstimateGovernanceListChips
+                    bookingId={id}
+                    governanceSummary={row.governanceSummary}
+                  />
+                </div>
               </td>
               {columns
                 .filter((c) => c !== "id")

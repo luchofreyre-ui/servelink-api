@@ -8,6 +8,7 @@ import {
   resolveExceptionForBooking,
   triggerRedispatch,
 } from "@/lib/admin/ops";
+import { EstimateGovernanceListChips } from "./EstimateGovernanceListChips";
 import { opsAllowed, opsDisabledReason, opsShowAction } from "./opsRowFlags";
 
 const linkBtn =
@@ -149,12 +150,18 @@ export function DeferredDispatchTable({
           return (
             <tr key={rowKey} className="border-b align-top">
               <td className="p-2 font-medium">
-                <Link
-                  href={`/admin/bookings/${bookingId}`}
-                  className="underline"
-                >
-                  {bookingId}
-                </Link>
+                <div className="flex flex-col gap-1">
+                  <Link
+                    href={`/admin/bookings/${bookingId}`}
+                    className="underline"
+                  >
+                    {bookingId}
+                  </Link>
+                  <EstimateGovernanceListChips
+                    bookingId={bookingId}
+                    governanceSummary={row.governanceSummary}
+                  />
+                </div>
               </td>
               <td className="p-2">{formatCell(row.trigger)}</td>
               <td className="p-2">{formatCell(row.decisionStatus)}</td>

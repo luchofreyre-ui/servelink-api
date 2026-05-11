@@ -87,6 +87,21 @@ export type BookingEstimateSnapshotRecord = {
   updatedAt?: string | null;
 };
 
+/** Compact list summary derived from persisted estimate snapshot (governance V1). */
+export type EstimateGovernanceSummary = {
+  escalationLevel: string;
+  severityScore: number;
+  confidenceClassification: string;
+  weakestDomainCount: number;
+  criticalDomainCount: number;
+  lowDomainCount: number;
+  hasRecurringInstability: boolean;
+  hasPriceCollapseSignal: boolean;
+  hasSparseIntakeSignal: boolean;
+  recommendedActionCount: number;
+  bookingDetailAnchor: "#estimate-governance";
+};
+
 export type BookingCustomerRecord = {
   id: string;
   email: string | null;
@@ -151,6 +166,8 @@ export interface BookingRecord {
   controlledCompletionAudit?: ControlledCompletionAudit | null;
   /** Present on detail responses. */
   estimateSnapshot?: BookingEstimateSnapshotRecord | null;
+  /** Present on admin list payloads when governance V1 exists on the snapshot. */
+  governanceSummary?: EstimateGovernanceSummary | null;
   customer?: BookingCustomerRecord | null;
   fo?: BookingFoRecord | null;
 }
