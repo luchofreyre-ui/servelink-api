@@ -4,7 +4,10 @@ import {
   EstimateGovernanceCompactBadges,
   EstimateGovernancePanel,
 } from "@/components/booking-detail/admin/EstimateGovernancePanel";
-import type { EstimateGovernancePanelModel } from "@/lib/estimate/estimateGovernanceView";
+import type {
+  EstimateGovernancePanelModel,
+  RecurringEconomicsGovernanceViewModel,
+} from "@/lib/estimate/estimateGovernanceView";
 
 function baseView(partial: Partial<EstimateGovernancePanelModel>): EstimateGovernancePanelModel {
   return {
@@ -46,6 +49,7 @@ describe("EstimateGovernancePanel", () => {
           },
         })}
         snapshotExists
+        recurringEconomics={null}
       />,
     );
     expect(screen.getByRole("region", { name: /estimate governance/i })).toBeTruthy();
@@ -66,11 +70,35 @@ describe("EstimateGovernancePanel", () => {
           },
         })}
         snapshotExists
+        recurringEconomics={null}
       />,
     );
     expect(screen.getByText(/operational visibility only/i)).toBeTruthy();
     expect(screen.getByText(/blocking guidance \(advisory only\)/i)).toBeTruthy();
     expect(screen.getByText(/admin review required/i)).toBeTruthy();
+  });
+
+  it("renders recurring economics governance when snapshot includes lane", () => {
+    const recurring: RecurringEconomicsGovernanceViewModel = {
+      economicRiskLevel: "medium",
+      maintenanceViability: "watch",
+      recurringDiscountRisk: "low",
+      resetReviewRecommendation: "suggested",
+      marginProtectionSignal: "monitor",
+      riskScore: 42,
+      recommendedActions: ["monitor_recurring_account"],
+      topEconomicReasons: ["sparse_structured_intake"],
+      topMaintenanceReasons: ["maintenance_lane_watch"],
+    };
+    render(
+      <EstimateGovernancePanel
+        view={baseView({})}
+        snapshotExists
+        recurringEconomics={recurring}
+      />,
+    );
+    expect(screen.getByText(/recurring economics governance/i)).toBeTruthy();
+    expect(screen.getByText(/monitor recurring account/i)).toBeTruthy();
   });
 
   it("compact badges render for high-confidence snapshots", () => {

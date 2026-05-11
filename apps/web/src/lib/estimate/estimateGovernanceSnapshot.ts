@@ -341,6 +341,80 @@ export function buildEstimateGovernanceSummaryFromSnapshotOutputJson(
   }
 }
 
+export const RECURRING_ECONOMICS_GOVERNANCE_SCHEMA = "recurring_economics_governance_v1";
+
+export function getRecurringEconomicsGovernanceFromSnapshot(
+  parsed: Record<string, unknown> | null | undefined,
+): Record<string, unknown> | undefined {
+  const raw = parsed?.recurringEconomicsGovernance;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  return raw as Record<string, unknown>;
+}
+
+/** Compact recurring economics lane — aligned with API list payloads. */
+export type RecurringEconomicsSummary = {
+  economicRiskLevel: string;
+  maintenanceViability: string;
+  resetReviewRecommendation: string;
+  marginProtectionSignal: string;
+  riskScore: number;
+  recommendedActionCount: number;
+  hasDiscountRisk: boolean;
+  hasResetRisk: boolean;
+  hasMarginProtection: boolean;
+  bookingDetailAnchor: "#estimate-governance";
+};
+
+function readRecurringString(obj: Record<string, unknown>, key: string): string | null {
+  const v = obj[key];
+  return typeof v === "string" && v.trim() ? v.trim() : null;
+}
+
+function readRecurringRiskScore(obj: Record<string, unknown>): number {
+  const v = obj.riskScore;
+  if (typeof v !== "number" || !Number.isFinite(v)) return 0;
+  return Math.round(Math.max(0, Math.min(100, v)));
+}
+
+export function buildRecurringEconomicsSummaryFromParsedOutput(
+  parsed: Record<string, unknown> | null | undefined,
+): RecurringEconomicsSummary | null {
+  try {
+    const row = getRecurringEconomicsGovernanceFromSnapshot(parsed ?? undefined);
+    if (!row || row.schemaVersion !== RECURRING_ECONOMICS_GOVERNANCE_SCHEMA) {
+      return null;
+    }
+    const discount = readRecurringString(row, "recurringDiscountRisk") ?? "none";
+    const reset = readRecurringString(row, "resetReviewRecommendation") ?? "none";
+    const margin = readRecurringString(row, "marginProtectionSignal") ?? "none";
+    const actionsRaw = row.recommendedActions;
+    const recommendedActionCount = Array.isArray(actionsRaw)
+      ? actionsRaw.filter((x) => typeof x === "string").length
+      : 0;
+    const hasDiscountRisk =
+      discount === "medium" || discount === "high" || discount === "critical";
+    const hasResetRisk = reset === "suggested" || reset === "required";
+    const hasMarginProtection =
+      margin === "monitor" || margin === "review" || margin === "protect";
+    return {
+      economicRiskLevel:
+        readRecurringString(row, "economicRiskLevel") ?? "unknown",
+      maintenanceViability:
+        readRecurringString(row, "maintenanceViability") ?? "unknown",
+      resetReviewRecommendation: reset,
+      marginProtectionSignal: margin,
+      riskScore: readRecurringRiskScore(row),
+      recommendedActionCount,
+      hasDiscountRisk,
+      hasResetRisk,
+      hasMarginProtection,
+      bookingDetailAnchor: "#estimate-governance",
+    };
+  } catch {
+    return null;
+  }
+}
+
 /** Tolerant read — never throws for malformed optional blobs. */
 export function readGovernanceLevelFromSnapshotOutputJson(
   raw: string | null | undefined,

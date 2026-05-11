@@ -3,11 +3,37 @@ import { describe, expect, it } from "vitest";
 import { EstimateGovernanceListChips } from "./EstimateGovernanceListChips";
 
 describe("EstimateGovernanceListChips", () => {
-  it("renders nothing when governanceSummary is absent", () => {
+  it("renders nothing when both summaries are absent", () => {
     const { container } = render(
       <EstimateGovernanceListChips bookingId="bk_1" governanceSummary={null} />,
     );
     expect(container.firstChild).toBeNull();
+  });
+
+  it("renders recurring-only chips when compact recurring summary exists", () => {
+    render(
+      <EstimateGovernanceListChips
+        bookingId="bk_rec"
+        governanceSummary={null}
+        recurringEconomicsSummary={{
+          economicRiskLevel: "high",
+          maintenanceViability: "unstable",
+          resetReviewRecommendation: "required",
+          marginProtectionSignal: "protect",
+          riskScore: 88,
+          recommendedActionCount: 3,
+          hasDiscountRisk: true,
+          hasResetRisk: true,
+          hasMarginProtection: true,
+          bookingDetailAnchor: "#estimate-governance",
+        }}
+      />,
+    );
+    const link = screen.getByText(/recurring risk/i);
+    expect(link.getAttribute("href")).toContain(
+      "/admin/bookings/bk_rec#estimate-governance",
+    );
+    expect(screen.getByText(/reset review/i)).toBeTruthy();
   });
 
   it("renders review and severity chips with governance anchor", () => {

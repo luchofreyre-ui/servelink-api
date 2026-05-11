@@ -160,6 +160,7 @@ export function DeferredDispatchTable({
                   <EstimateGovernanceListChips
                     bookingId={bookingId}
                     governanceSummary={row.governanceSummary}
+                    recurringEconomicsSummary={row.recurringEconomicsSummary}
                   />
                 </div>
               </td>

@@ -4,8 +4,9 @@ import { PaymentLifecycleReconciliationCronService } from "../../modules/billing
 import { RemainingBalanceAuthorizationCronService } from "../../modules/billing/remaining-balance-authorization.cron.service";
 import { buildSystemOpsDrilldownEligibility } from "../../modules/dispatch/dispatch-ops-eligibility";
 import {
-  buildEstimateGovernanceSummaryFromSnapshotOutputJson,
+  buildGovernanceLaneSummariesFromSnapshotOutputJson,
   type EstimateGovernanceSummary,
+  type RecurringEconomicsSummary,
 } from "../../modules/estimate/estimate-snapshot-metadata.read";
 import { SlotHoldsService } from "../../modules/slot-holds/slot-holds.service";
 import { PrismaService } from "../../prisma";
@@ -483,14 +484,14 @@ export class OpsVisibilityService {
       return rows;
     }
     const ids = rows.map((r) => r.bookingId);
-    const [actions, govMap] = await Promise.all([
+    const [actions, laneMaps] = await Promise.all([
       this.prisma.dispatchExceptionAction.findMany({
         where: {
           dispatchExceptionKey: { in: ids.map((id) => `dex_v1_${id}`) },
         },
         select: { dispatchExceptionKey: true, status: true },
       }),
-      this.governanceSummaryByBookingId(ids),
+      this.governanceLaneMapsByBookingId(ids),
     ]);
     const actionByKey = new Map(actions.map((a) => [a.dispatchExceptionKey, a]));
     return rows.map((row) => {
@@ -510,7 +511,10 @@ export class OpsVisibilityService {
         return {
           ...row,
           ...merged,
-          governanceSummary: govMap.get(row.bookingId) ?? null,
+          governanceSummary:
+            laneMaps.governanceSummary.get(row.bookingId) ?? null,
+          recurringEconomicsSummary:
+            laneMaps.recurringEconomicsSummary.get(row.bookingId) ?? null,
         };
       }
       const merged = buildSystemOpsDrilldownEligibility(
@@ -521,7 +525,10 @@ export class OpsVisibilityService {
       return {
         ...row,
         ...merged,
-        governanceSummary: govMap.get(row.bookingId) ?? null,
+        governanceSummary:
+          laneMaps.governanceSummary.get(row.bookingId) ?? null,
+        recurringEconomicsSummary:
+          laneMaps.recurringEconomicsSummary.get(row.bookingId) ?? null,
       };
     });
   }
@@ -582,25 +589,30 @@ export class OpsVisibilityService {
     return this.attachDecisionRowEligibility(rows);
   }
 
-  private async governanceSummaryByBookingId(
-    bookingIds: string[],
-  ): Promise<Map<string, EstimateGovernanceSummary | null>> {
+  private async governanceLaneMapsByBookingId(bookingIds: string[]): Promise<{
+    governanceSummary: Map<string, EstimateGovernanceSummary | null>;
+    recurringEconomicsSummary: Map<string, RecurringEconomicsSummary | null>;
+  }> {
     const unique = [...new Set(bookingIds.filter(Boolean))];
-    const map = new Map<string, EstimateGovernanceSummary | null>();
+    const governanceSummary = new Map<string, EstimateGovernanceSummary | null>();
+    const recurringEconomicsSummary = new Map<
+      string,
+      RecurringEconomicsSummary | null
+    >();
     if (unique.length === 0) {
-      return map;
+      return { governanceSummary, recurringEconomicsSummary };
     }
     const snapshots = await this.prisma.bookingEstimateSnapshot.findMany({
       where: { bookingId: { in: unique } },
       select: { bookingId: true, outputJson: true },
     });
     for (const s of snapshots) {
-      map.set(
-        s.bookingId,
-        buildEstimateGovernanceSummaryFromSnapshotOutputJson(s.outputJson),
-      );
+      const { governanceSummary: gs, recurringEconomicsSummary: rs } =
+        buildGovernanceLaneSummariesFromSnapshotOutputJson(s.outputJson);
+      governanceSummary.set(s.bookingId, gs);
+      recurringEconomicsSummary.set(s.bookingId, rs);
     }
-    return map;
+    return { governanceSummary, recurringEconomicsSummary };
   }
 
   private async attachBookingRowEligibility<
@@ -615,7 +627,7 @@ export class OpsVisibilityService {
       return rows as Array<T & Record<string, unknown>>;
     }
     const ids = rows.map((r) => r.id);
-    const [controls, actions, govMap] = await Promise.all([
+    const [controls, actions, laneMaps] = await Promise.all([
       this.prisma.bookingDispatchControl.findMany({
         where: { bookingId: { in: ids } },
         select: { bookingId: true, reviewRequired: true },
@@ -626,7 +638,7 @@ export class OpsVisibilityService {
         },
         select: { dispatchExceptionKey: true, status: true },
       }),
-      this.governanceSummaryByBookingId(ids),
+      this.governanceLaneMapsByBookingId(ids),
     ]);
     const controlByBooking = new Map(controls.map((c) => [c.bookingId, c]));
     const actionByKey = new Map(actions.map((a) => [a.dispatchExceptionKey, a]));
@@ -638,7 +650,9 @@ export class OpsVisibilityService {
       return {
         ...row,
         ...merged,
-        governanceSummary: govMap.get(row.id) ?? null,
+        governanceSummary: laneMaps.governanceSummary.get(row.id) ?? null,
+        recurringEconomicsSummary:
+          laneMaps.recurringEconomicsSummary.get(row.id) ?? null,
       };
     });
   }
@@ -650,7 +664,7 @@ export class OpsVisibilityService {
       return rows as Array<T & Record<string, unknown>>;
     }
     const bookingIds = [...new Set(rows.map((r) => r.bookingId))];
-    const [bookings, controls, actions, govMap] = await Promise.all([
+    const [bookings, controls, actions, laneMaps] = await Promise.all([
       this.prisma.booking.findMany({
         where: { id: { in: bookingIds } },
         select: {
@@ -672,7 +686,7 @@ export class OpsVisibilityService {
         },
         select: { dispatchExceptionKey: true, status: true },
       }),
-      this.governanceSummaryByBookingId(bookingIds),
+      this.governanceLaneMapsByBookingId(bookingIds),
     ]);
     const bookingById = new Map(bookings.map((b) => [b.id, b]));
     const controlByBooking = new Map(controls.map((c) => [c.bookingId, c]));
@@ -695,7 +709,10 @@ export class OpsVisibilityService {
         return {
           ...row,
           ...merged,
-          governanceSummary: govMap.get(row.bookingId) ?? null,
+          governanceSummary:
+            laneMaps.governanceSummary.get(row.bookingId) ?? null,
+          recurringEconomicsSummary:
+            laneMaps.recurringEconomicsSummary.get(row.bookingId) ?? null,
         };
       }
       const control = controlByBooking.get(row.bookingId) ?? null;
@@ -705,7 +722,10 @@ export class OpsVisibilityService {
       return {
         ...row,
         ...merged,
-        governanceSummary: govMap.get(row.bookingId) ?? null,
+        governanceSummary:
+          laneMaps.governanceSummary.get(row.bookingId) ?? null,
+        recurringEconomicsSummary:
+          laneMaps.recurringEconomicsSummary.get(row.bookingId) ?? null,
       };
     });
   }

@@ -46,7 +46,7 @@ import { CreateBookingCheckoutDto } from "./dto/create-booking-checkout.dto";
 import { UpdateBookingPaymentStatusDto } from "./dto/update-booking-payment-status.dto";
 import { SkipIdempotency } from "../../common/reliability/reliability.decorators";
 import { TenantResolver } from "../tenant/tenant.resolver";
-import { buildEstimateGovernanceSummaryFromSnapshotOutputJson } from "../estimate/estimate-snapshot-metadata.read";
+import { buildGovernanceLaneSummariesFromSnapshotOutputJson } from "../estimate/estimate-snapshot-metadata.read";
 
 @UseGuards(JwtAuthGuard)
 @Controller("/api/v1/bookings")
@@ -110,12 +110,12 @@ export class BookingsController {
           | { outputJson?: string | null }
           | null
           | undefined;
-        const governanceSummary =
-          buildEstimateGovernanceSummaryFromSnapshotOutputJson(
+        const { governanceSummary, recurringEconomicsSummary } =
+          buildGovernanceLaneSummariesFromSnapshotOutputJson(
             snap?.outputJson ?? null,
           );
         const { estimateSnapshot: _omitSnapshot, ...rest } = mapped;
-        return { ...rest, governanceSummary };
+        return { ...rest, governanceSummary, recurringEconomicsSummary };
       }),
     };
   }

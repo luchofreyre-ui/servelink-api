@@ -50,6 +50,127 @@ export function tryReadEscalationGovernanceFromSnapshotOutput(
   return getEscalationGovernanceFromSnapshot(parsed);
 }
 
+const RECURRING_ECONOMICS_GOVERNANCE_SCHEMA = "recurring_economics_governance_v1";
+
+/** Tolerant read of recurring economics governance from parsed snapshot root. */
+export function getRecurringEconomicsGovernanceFromSnapshot(
+  parsed: Record<string, unknown> | null | undefined,
+): Record<string, unknown> | undefined {
+  const raw = parsed?.recurringEconomicsGovernance;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  return raw as Record<string, unknown>;
+}
+
+/**
+ * Parses `outputJson` and returns recurring economics governance blob when present.
+ */
+export function getRecurringEconomicsGovernanceFromSnapshotOutputJson(
+  raw: string | null | undefined,
+): Record<string, unknown> | undefined {
+  const parsed = tryParseEstimateSnapshotOutputJson(raw);
+  return getRecurringEconomicsGovernanceFromSnapshot(parsed ?? undefined);
+}
+
+/** Compact ops/list summary for recurring economics lane — schema-gated. */
+export type RecurringEconomicsSummary = {
+  economicRiskLevel: string;
+  maintenanceViability: string;
+  resetReviewRecommendation: string;
+  marginProtectionSignal: string;
+  riskScore: number;
+  recommendedActionCount: number;
+  hasDiscountRisk: boolean;
+  hasResetRisk: boolean;
+  hasMarginProtection: boolean;
+  bookingDetailAnchor: "#estimate-governance";
+};
+
+function readStringField(obj: Record<string, unknown>, key: string): string | null {
+  const v = obj[key];
+  return typeof v === "string" && v.trim() ? v.trim() : null;
+}
+
+function readRiskScore(obj: Record<string, unknown>): number {
+  const v = obj.riskScore;
+  if (typeof v !== "number" || !Number.isFinite(v)) return 0;
+  return Math.round(Math.max(0, Math.min(100, v)));
+}
+
+function readRecommendedActionCount(obj: Record<string, unknown>): number {
+  const v = obj.recommendedActions;
+  if (!Array.isArray(v)) return 0;
+  return v.filter((x) => typeof x === "string").length;
+}
+
+function buildRecurringEconomicsSummaryFromParsedSnapshot(
+  parsed: Record<string, unknown>,
+): RecurringEconomicsSummary | null {
+  try {
+    const row = getRecurringEconomicsGovernanceFromSnapshot(parsed);
+    if (!row || row.schemaVersion !== RECURRING_ECONOMICS_GOVERNANCE_SCHEMA) {
+      return null;
+    }
+    const discount = readStringField(row, "recurringDiscountRisk") ?? "none";
+    const reset = readStringField(row, "resetReviewRecommendation") ?? "none";
+    const margin = readStringField(row, "marginProtectionSignal") ?? "none";
+    const hasDiscountRisk =
+      discount === "medium" || discount === "high" || discount === "critical";
+    const hasResetRisk = reset === "suggested" || reset === "required";
+    const hasMarginProtection =
+      margin === "monitor" || margin === "review" || margin === "protect";
+    return {
+      economicRiskLevel: readStringField(row, "economicRiskLevel") ?? "unknown",
+      maintenanceViability:
+        readStringField(row, "maintenanceViability") ?? "unknown",
+      resetReviewRecommendation: reset,
+      marginProtectionSignal: margin,
+      riskScore: readRiskScore(row),
+      recommendedActionCount: readRecommendedActionCount(row),
+      hasDiscountRisk,
+      hasResetRisk,
+      hasMarginProtection,
+      bookingDetailAnchor: "#estimate-governance",
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Single-parse helper for admin list + ops drilldowns (avoids duplicate JSON.parse).
+ */
+export function buildGovernanceLaneSummariesFromSnapshotOutputJson(
+  outputJson: string | null | undefined,
+): {
+  governanceSummary: EstimateGovernanceSummary | null;
+  recurringEconomicsSummary: RecurringEconomicsSummary | null;
+} {
+  try {
+    const parsed = tryParseEstimateSnapshotOutputJson(outputJson);
+    if (!parsed) {
+      return { governanceSummary: null, recurringEconomicsSummary: null };
+    }
+    return {
+      governanceSummary: buildEstimateGovernanceSummaryFromParsedSnapshot(parsed),
+      recurringEconomicsSummary: buildRecurringEconomicsSummaryFromParsedSnapshot(parsed),
+    };
+  } catch {
+    return { governanceSummary: null, recurringEconomicsSummary: null };
+  }
+}
+
+export function buildRecurringEconomicsSummaryFromSnapshotOutputJson(
+  outputJson: string | null | undefined,
+): RecurringEconomicsSummary | null {
+  try {
+    const parsed = tryParseEstimateSnapshotOutputJson(outputJson);
+    if (!parsed) return null;
+    return buildRecurringEconomicsSummaryFromParsedSnapshot(parsed);
+  } catch {
+    return null;
+  }
+}
+
 export type SnapshotGovernanceDomainRow = {
   domainKey: string;
   domainLabel: string;
@@ -290,12 +411,10 @@ function governanceConfidenceClassificationEcho(
  * Builds a compact summary from persisted snapshot JSON for internal list surfaces.
  * Returns null for legacy snapshots, missing governance, wrong schema, or malformed JSON.
  */
-export function buildEstimateGovernanceSummaryFromSnapshotOutputJson(
-  outputJson: string | null | undefined,
+function buildEstimateGovernanceSummaryFromParsedSnapshot(
+  parsed: Record<string, unknown>,
 ): EstimateGovernanceSummary | null {
   try {
-    const parsed = tryParseEstimateSnapshotOutputJson(outputJson);
-    if (!parsed) return null;
     const govRaw = getEscalationGovernanceFromSnapshot(parsed);
     if (!govRaw || govRaw.schemaVersion !== ESCALATION_GOVERNANCE_SCHEMA) {
       return null;
@@ -349,6 +468,18 @@ export function buildEstimateGovernanceSummaryFromSnapshotOutputJson(
       recommendedActionCount: esc.recommendedActions.length,
       bookingDetailAnchor: "#estimate-governance",
     };
+  } catch {
+    return null;
+  }
+}
+
+export function buildEstimateGovernanceSummaryFromSnapshotOutputJson(
+  outputJson: string | null | undefined,
+): EstimateGovernanceSummary | null {
+  try {
+    const parsed = tryParseEstimateSnapshotOutputJson(outputJson);
+    if (!parsed) return null;
+    return buildEstimateGovernanceSummaryFromParsedSnapshot(parsed);
   } catch {
     return null;
   }

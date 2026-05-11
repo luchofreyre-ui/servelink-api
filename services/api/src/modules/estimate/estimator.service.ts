@@ -26,6 +26,8 @@ import type {
 } from "../../estimating/confidence/estimate-confidence-breakdown.types";
 import type { EstimateEscalationGovernance } from "../../estimating/escalation/estimate-escalation-governance.types";
 import { evaluateEstimateEscalationGovernance } from "../../estimating/escalation/estimate-escalation-governance";
+import type { RecurringEconomicsGovernance } from "../../estimating/recurring-economics/recurring-economics-governance.types";
+import { evaluateRecurringEconomicsGovernance } from "../../estimating/recurring-economics/recurring-economics-governance";
 
 export type {
   DeepCleanProgramEstimate,
@@ -173,6 +175,9 @@ export type EstimateResult = {
    * Escalation governance recommendations (V1). Omitted on historical snapshots deserialized without this field.
    */
   escalationGovernance?: EstimateEscalationGovernance;
+
+  /** Recurring economics advisory lane — additive for snapshots; does not change pricing. */
+  recurringEconomicsGovernance?: RecurringEconomicsGovernance;
 
   riskPercentUncapped: number; // actual accumulated risk (0–100)
   riskPercentCappedForRange: number; // used to compute upper bound, capped by service cap
@@ -1470,6 +1475,19 @@ export class EstimatorService {
       estimatorMode: mode,
     });
 
+    const recurringEconomicsGovernance = evaluateRecurringEconomicsGovernance({
+      serviceType: input.service_type,
+      recurringCadenceIntent: input.recurring_cadence_intent,
+      estimatedMinutes: estimateMinutes,
+      pricedMinutes: adjustedLaborMinutes,
+      estimatedPriceCents,
+      comparisonHints: options?.confidenceComparisonHints ?? null,
+      confidenceBreakdown,
+      escalationGovernance,
+      estimatorFlags: flags,
+      riskPercentUncapped,
+    });
+
     return {
       estimatorVersion: ESTIMATOR_VERSION,
 
@@ -1494,6 +1512,7 @@ export class EstimatorService {
       confidence,
       confidenceBreakdown,
       escalationGovernance,
+      recurringEconomicsGovernance,
 
       riskPercentUncapped,
       riskPercentCappedForRange,

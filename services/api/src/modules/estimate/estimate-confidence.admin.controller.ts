@@ -85,11 +85,34 @@ export class EstimateConfidenceAdminController {
         ]),
       ].sort((a, b) => a.localeCompare(b));
 
+      const reg = result.recurringEconomicsGovernance ?? null;
+      const recurringEconomicSummary = reg
+        ? {
+            economicRiskLevel: reg.economicRiskLevel,
+            maintenanceViability: reg.maintenanceViability,
+            recurringDiscountRisk: reg.recurringDiscountRisk,
+            resetReviewRecommendation: reg.resetReviewRecommendation,
+            marginProtectionSignal: reg.marginProtectionSignal,
+            riskScore: reg.riskScore,
+            recommendedActionCount: reg.recommendedActions.length,
+          }
+        : null;
+      const recurringEconomicActions = reg?.recommendedActions ?? [];
+      const recurringEconomicReasons = reg
+        ? [...new Set([...reg.economicReasons, ...reg.maintenanceReasons])].sort(
+            (a, b) => a.localeCompare(b),
+          )
+        : [];
+
       return {
         kind: "estimate_confidence_admin_decomposition" as const,
         aggregateConfidence: result.confidence,
         confidenceBreakdown: result.confidenceBreakdown,
         escalationGovernance: result.escalationGovernance,
+        recurringEconomicsGovernance: reg,
+        recurringEconomicSummary,
+        recurringEconomicActions,
+        recurringEconomicReasons,
         recommendedAdminActions: result.escalationGovernance?.recommendedActions ?? [],
         blockingReasons: result.escalationGovernance?.blockingReasons ?? [],
         topUncertaintyDrivers,

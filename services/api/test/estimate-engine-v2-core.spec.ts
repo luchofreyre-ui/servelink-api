@@ -12,6 +12,7 @@ import { calculateEstimateVariance } from "../src/modules/estimate/estimate-vari
 import type { EstimateInput, EstimateResult } from "../src/modules/estimate/estimator.service";
 import { analyzeEstimateConfidence } from "../src/estimating/confidence/estimate-confidence-analyzer";
 import { evaluateEstimateEscalationGovernance } from "../src/estimating/escalation/estimate-escalation-governance";
+import { evaluateRecurringEconomicsGovernance } from "../src/estimating/recurring-economics/recurring-economics-governance";
 import { createBookingsServiceTestHarness } from "./helpers/createBookingsServiceTestHarness";
 
 function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
@@ -72,16 +73,32 @@ function legacyEstimate(overrides: Partial<EstimateResult> = {}): EstimateResult
       input: baseInput(),
       aggregateConfidence: merged.confidence,
     });
+  const esc =
+    overrides.escalationGovernance ??
+    evaluateEstimateEscalationGovernance(breakdown, {
+      estimatorFlags: merged.flags,
+      riskPercentUncapped: merged.riskPercentUncapped,
+      estimatorMode: merged.mode,
+    });
+  const recurringEconomicsGovernance =
+    overrides.recurringEconomicsGovernance ??
+    evaluateRecurringEconomicsGovernance({
+      serviceType: baseInput().service_type,
+      recurringCadenceIntent: baseInput().recurring_cadence_intent,
+      estimatedMinutes: merged.estimateMinutes,
+      pricedMinutes: merged.adjustedLaborMinutes,
+      estimatedPriceCents: merged.estimatedPriceCents,
+      comparisonHints: null,
+      confidenceBreakdown: breakdown,
+      escalationGovernance: esc,
+      estimatorFlags: merged.flags,
+      riskPercentUncapped: merged.riskPercentUncapped,
+    });
   return {
     ...merged,
     confidenceBreakdown: breakdown,
-    escalationGovernance:
-      overrides.escalationGovernance ??
-      evaluateEstimateEscalationGovernance(breakdown, {
-        estimatorFlags: merged.flags,
-        riskPercentUncapped: merged.riskPercentUncapped,
-        estimatorMode: merged.mode,
-      }),
+    escalationGovernance: esc,
+    recurringEconomicsGovernance,
   };
 }
 
