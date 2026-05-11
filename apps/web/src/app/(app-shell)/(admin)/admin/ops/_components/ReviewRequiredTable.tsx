@@ -148,6 +148,7 @@ export function ReviewRequiredTable({
                   <EstimateGovernanceListChips
                     bookingId={bookingId}
                     governanceSummary={rowFlags.governanceSummary}
+                    recurringEconomicsSummary={rowFlags.recurringEconomicsSummary}
                   />
                 </div>
               </td>

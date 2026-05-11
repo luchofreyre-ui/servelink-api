@@ -16,7 +16,10 @@ import {
   EstimateGovernancePanel,
 } from "@/components/booking-detail/admin/EstimateGovernancePanel";
 import { AdminBookingLifecyclePanel } from "@/components/booking/AdminBookingLifecyclePanel";
-import { buildEstimateGovernanceViewFromParsedOutput } from "@/lib/estimate/estimateGovernanceView";
+import {
+  buildEstimateGovernanceViewFromParsedOutput,
+  buildRecurringEconomicsGovernanceViewFromParsedOutput,
+} from "@/lib/estimate/estimateGovernanceView";
 import { dispatchAdminActivityRefresh } from "@/lib/adminActivityRefresh";
 import type {
   AdminPaymentAnomalyRow,
@@ -25,7 +28,10 @@ import type {
   BookingPaymentStatus,
   BookingRecord,
 } from "@/lib/bookings/bookingApiTypes";
-import type { EstimateGovernancePanelModel } from "@/lib/estimate/estimateGovernanceView";
+import type {
+  EstimateGovernancePanelModel,
+  RecurringEconomicsGovernanceViewModel,
+} from "@/lib/estimate/estimateGovernanceView";
 import {
   displayOpsBookingNotesLines,
   extractTeamPrepFromBookingNotes,
@@ -109,6 +115,7 @@ type SnapshotVisibility = {
   learningReady: boolean;
   warnings: string[];
   governanceView: EstimateGovernancePanelModel | null;
+  recurringEconomicsView: RecurringEconomicsGovernanceViewModel | null;
 };
 
 function workflowStateLabel(
@@ -373,6 +380,7 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
       Boolean(snapshot) && booking?.status === "completed" && actualMinutes != null,
     warnings,
     governanceView: buildEstimateGovernanceViewFromParsedOutput(output),
+    recurringEconomicsView: buildRecurringEconomicsGovernanceViewFromParsedOutput(output),
   };
 }
 
@@ -1437,6 +1445,7 @@ export default function AdminBookingDetailPage() {
 
         <EstimateGovernancePanel
           view={snapshotVisibility.governanceView}
+          recurringEconomics={snapshotVisibility.recurringEconomicsView}
           snapshotExists={snapshotVisibility.exists}
         />
 

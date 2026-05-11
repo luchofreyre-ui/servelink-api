@@ -2,6 +2,12 @@
  * API-aligned booking types (GET /api/v1/bookings/:id and related responses).
  * Source of truth for UI that reflects persisted booking state.
  */
+import type {
+  EstimateGovernanceSummary,
+  RecurringEconomicsSummary,
+} from "../estimate/estimateGovernanceSnapshot";
+
+export type { EstimateGovernanceSummary, RecurringEconomicsSummary };
 
 export type BookingStatus =
   | "pending_payment"
@@ -87,11 +93,6 @@ export type BookingEstimateSnapshotRecord = {
   updatedAt?: string | null;
 };
 
-/** Compact list summary derived from persisted estimate snapshot (governance V1). */
-import type { EstimateGovernanceSummary } from "../estimate/estimateGovernanceSnapshot";
-
-export type { EstimateGovernanceSummary };
-
 export type BookingCustomerRecord = {
   id: string;
   email: string | null;
@@ -158,6 +159,8 @@ export interface BookingRecord {
   estimateSnapshot?: BookingEstimateSnapshotRecord | null;
   /** Present on admin list payloads when governance V1 exists on the snapshot. */
   governanceSummary?: EstimateGovernanceSummary | null;
+  /** Present on admin list payloads when recurring economics lane exists on the snapshot. */
+  recurringEconomicsSummary?: RecurringEconomicsSummary | null;
   customer?: BookingCustomerRecord | null;
   fo?: BookingFoRecord | null;
 }

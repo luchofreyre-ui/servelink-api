@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
-import type { EstimateGovernancePanelModel } from "@/lib/estimate/estimateGovernanceView";
+import type {
+  EstimateGovernancePanelModel,
+  RecurringEconomicsGovernanceViewModel,
+} from "@/lib/estimate/estimateGovernanceView";
 import type { SnapshotGovernanceDomainRow } from "@/lib/estimate/estimateGovernanceSnapshot";
 
 function Badge({
@@ -85,6 +88,112 @@ function DomainRow({ row }: { row: SnapshotGovernanceDomainRow }) {
   );
 }
 
+function RecurringEconomicsGovernanceSection(props: {
+  recurringEconomics: RecurringEconomicsGovernanceViewModel | null;
+  snapshotExists: boolean;
+}) {
+  if (!props.snapshotExists) return null;
+  return (
+    <div className="mt-8 border-t border-white/10 pt-8">
+      <h3 className="text-sm font-semibold uppercase tracking-wide text-white/55">
+        Recurring economics governance
+      </h3>
+      <p className="mt-1 max-w-3xl text-xs text-white/50">
+        Advisory-only economics and maintenance viability signals — does not change pricing or booking
+        flows.
+      </p>
+      {!props.recurringEconomics ? (
+        <p className="mt-4 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/60">
+          No recurring economics metadata on this snapshot (likely captured before this lane shipped).
+        </p>
+      ) : (
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="text-xs uppercase tracking-wide text-white/45">Economic risk</div>
+              <div className="mt-2 text-sm font-semibold text-white">
+                {props.recurringEconomics.economicRiskLevel.replace(/_/g, " ")}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="text-xs uppercase tracking-wide text-white/45">Maintenance viability</div>
+              <div className="mt-2 text-sm font-semibold text-white">
+                {props.recurringEconomics.maintenanceViability.replace(/_/g, " ")}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="text-xs uppercase tracking-wide text-white/45">Discount risk</div>
+              <div className="mt-2 text-sm font-semibold text-white">
+                {props.recurringEconomics.recurringDiscountRisk.replace(/_/g, " ")}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="text-xs uppercase tracking-wide text-white/45">Reset review</div>
+              <div className="mt-2 text-sm font-semibold text-white">
+                {props.recurringEconomics.resetReviewRecommendation.replace(/_/g, " ")}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="text-xs uppercase tracking-wide text-white/45">Margin protection</div>
+              <div className="mt-2 text-sm font-semibold text-white">
+                {props.recurringEconomics.marginProtectionSignal.replace(/_/g, " ")}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="text-xs uppercase tracking-wide text-white/45">Risk score</div>
+              <div className="mt-2 text-lg font-semibold text-white">
+                {props.recurringEconomics.riskScore}
+              </div>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="text-xs uppercase tracking-wide text-white/45">Recommended actions</div>
+              {props.recurringEconomics.recommendedActions.length === 0 ? (
+                <p className="mt-2 text-sm text-white/55">None listed.</p>
+              ) : (
+                <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-white/80">
+                  {props.recurringEconomics.recommendedActions.map((a) => (
+                    <li key={a}>{a.replace(/_/g, " ")}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4">
+              <div className="text-xs uppercase tracking-wide text-emerald-100/70">
+                Top economic reasons
+              </div>
+              {props.recurringEconomics.topEconomicReasons.length === 0 ? (
+                <p className="mt-2 text-sm text-white/55">None.</p>
+              ) : (
+                <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-emerald-50/95">
+                  {props.recurringEconomics.topEconomicReasons.map((r) => (
+                    <li key={r}>{r.replace(/_/g, " ")}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4">
+              <div className="text-xs uppercase tracking-wide text-sky-100/70">
+                Top maintenance reasons
+              </div>
+              {props.recurringEconomics.topMaintenanceReasons.length === 0 ? (
+                <p className="mt-2 text-sm text-white/55">None.</p>
+              ) : (
+                <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-sky-50/95">
+                  {props.recurringEconomics.topMaintenanceReasons.map((r) => (
+                    <li key={r}>{r.replace(/_/g, " ")}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function EstimateGovernanceCompactBadges(props: {
   view: EstimateGovernancePanelModel | null;
 }) {
@@ -127,9 +236,10 @@ export function EstimateGovernanceCompactBadges(props: {
 
 export function EstimateGovernancePanel(props: {
   view: EstimateGovernancePanelModel | null;
+  recurringEconomics: RecurringEconomicsGovernanceViewModel | null;
   snapshotExists: boolean;
 }) {
-  const { view, snapshotExists } = props;
+  const { view, recurringEconomics, snapshotExists } = props;
 
   if (!snapshotExists) {
     return (
@@ -166,6 +276,10 @@ export function EstimateGovernancePanel(props: {
           No confidence breakdown or escalation governance on this snapshot — likely captured before
           governance V1.
         </div>
+        <RecurringEconomicsGovernanceSection
+          recurringEconomics={recurringEconomics}
+          snapshotExists={snapshotExists}
+        />
       </section>
     );
   }
@@ -341,6 +455,11 @@ export function EstimateGovernancePanel(props: {
           </div>
         </div>
       </div>
+
+      <RecurringEconomicsGovernanceSection
+        recurringEconomics={recurringEconomics}
+        snapshotExists={snapshotExists}
+      />
     </section>
   );
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildEstimateGovernanceViewFromParsedOutput,
+  buildRecurringEconomicsGovernanceViewFromParsedOutput,
   estimateGovernanceRiskBadge,
 } from "@/lib/estimate/estimateGovernanceView";
 
@@ -93,6 +94,36 @@ describe("buildEstimateGovernanceViewFromParsedOutput", () => {
     });
     expect(view!.hasBreakdown).toBe(false);
     expect(view!.hasGovernance).toBe(false);
+  });
+});
+
+describe("buildRecurringEconomicsGovernanceViewFromParsedOutput", () => {
+  it("returns null for legacy snapshots", () => {
+    expect(buildRecurringEconomicsGovernanceViewFromParsedOutput({})).toBeNull();
+  });
+
+  it("parses recurring economics governance V1 blob", () => {
+    const m = buildRecurringEconomicsGovernanceViewFromParsedOutput({
+      recurringEconomicsGovernance: {
+        schemaVersion: "recurring_economics_governance_v1",
+        economicRiskLevel: "low",
+        maintenanceViability: "stable",
+        recurringDiscountRisk: "none",
+        resetReviewRecommendation: "none",
+        marginProtectionSignal: "none",
+        riskScore: 12,
+        economicReasons: ["recurring_lane_not_applicable"],
+        maintenanceReasons: [],
+        recommendedActions: ["no_action"],
+        affectedSignals: [],
+        adminSummary: [],
+        customerSafeSummary: [],
+        sourceSignals: { appliesRecurringLane: false, serviceType: "deep_clean" },
+      },
+    });
+    expect(m).not.toBeNull();
+    expect(m!.riskScore).toBe(12);
+    expect(m!.recommendedActions).toContain("no_action");
   });
 });
 

@@ -149,6 +149,7 @@ export function DispatchLockedTable({
                   <EstimateGovernanceListChips
                     bookingId={id}
                     governanceSummary={row.governanceSummary}
+                    recurringEconomicsSummary={row.recurringEconomicsSummary}
                   />
                 </div>
               </td>

@@ -619,6 +619,7 @@ function BookingTable({
                   <EstimateGovernanceListChips
                     bookingId={id}
                     governanceSummary={row.governanceSummary}
+                    recurringEconomicsSummary={row.recurringEconomicsSummary}
                   />
                 </div>
               </td>
@@ -677,6 +678,7 @@ function ManualDispatchTable({
                   <EstimateGovernanceListChips
                     bookingId={bookingId}
                     governanceSummary={row.governanceSummary}
+                    recurringEconomicsSummary={row.recurringEconomicsSummary}
                   />
                 </div>
               </td>

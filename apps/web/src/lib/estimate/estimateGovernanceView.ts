@@ -7,8 +7,10 @@ import {
   getEscalationGovernanceFromSnapshot,
   getEscalationSummary,
   getIntakeStabilityDriverHits,
+  getRecurringEconomicsGovernanceFromSnapshot,
   getTopUncertaintyDrivers,
   getWeakestConfidenceDomains,
+  RECURRING_ECONOMICS_GOVERNANCE_SCHEMA,
 } from "./estimateGovernanceSnapshot";
 
 export type EstimateGovernancePanelModel = {
@@ -22,6 +24,18 @@ export type EstimateGovernancePanelModel = {
   intakeStabilityDriverHits: string[];
   intakeStabilityLines: string[];
   recurringTransitionReasoning: string[];
+};
+
+export type RecurringEconomicsGovernanceViewModel = {
+  economicRiskLevel: string;
+  maintenanceViability: string;
+  recurringDiscountRisk: string;
+  resetReviewRecommendation: string;
+  marginProtectionSignal: string;
+  riskScore: number;
+  recommendedActions: string[];
+  topEconomicReasons: string[];
+  topMaintenanceReasons: string[];
 };
 
 const INTAKE_STABILITY_COPY: Record<string, string> = {
@@ -43,6 +57,50 @@ const INTAKE_STABILITY_COPY: Record<string, string> = {
   condition_cross_signal_conflict: "Condition narrative conflicts with kitchen/bathroom signals.",
   kitchen_intensity_missing: "Kitchen intensity not captured.",
 };
+
+function readGovernanceStringField(obj: Record<string, unknown>, key: string): string {
+  const v = obj[key];
+  return typeof v === "string" && v.trim() ? v.trim() : "unknown";
+}
+
+function readCodeList(obj: Record<string, unknown>, key: string, limit: number): string[] {
+  const v = obj[key];
+  if (!Array.isArray(v)) return [];
+  return v
+    .filter((x): x is string => typeof x === "string" && x.trim().length > 0)
+    .map((s) => s.trim())
+    .slice(0, limit);
+}
+
+/**
+ * Admin recurring economics view from persisted snapshot root object.
+ */
+export function buildRecurringEconomicsGovernanceViewFromParsedOutput(
+  output: Record<string, unknown> | null | undefined,
+): RecurringEconomicsGovernanceViewModel | null {
+  if (!output) return null;
+  const raw = getRecurringEconomicsGovernanceFromSnapshot(output);
+  if (!raw || raw.schemaVersion !== RECURRING_ECONOMICS_GOVERNANCE_SCHEMA) return null;
+  const rs = raw.riskScore;
+  const riskScore =
+    typeof rs === "number" && Number.isFinite(rs)
+      ? Math.round(Math.max(0, Math.min(100, rs)))
+      : 0;
+  const recommendedActions = readCodeList(raw, "recommendedActions", 48).sort((a, b) =>
+    a.localeCompare(b),
+  );
+  return {
+    economicRiskLevel: readGovernanceStringField(raw, "economicRiskLevel"),
+    maintenanceViability: readGovernanceStringField(raw, "maintenanceViability"),
+    recurringDiscountRisk: readGovernanceStringField(raw, "recurringDiscountRisk"),
+    resetReviewRecommendation: readGovernanceStringField(raw, "resetReviewRecommendation"),
+    marginProtectionSignal: readGovernanceStringField(raw, "marginProtectionSignal"),
+    riskScore,
+    recommendedActions,
+    topEconomicReasons: readCodeList(raw, "economicReasons", 8),
+    topMaintenanceReasons: readCodeList(raw, "maintenanceReasons", 8),
+  };
+}
 
 function pctFromConfidence(raw: unknown): string | null {
   if (typeof raw !== "number" || !Number.isFinite(raw)) return null;
