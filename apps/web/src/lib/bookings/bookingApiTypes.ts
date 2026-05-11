@@ -88,19 +88,9 @@ export type BookingEstimateSnapshotRecord = {
 };
 
 /** Compact list summary derived from persisted estimate snapshot (governance V1). */
-export type EstimateGovernanceSummary = {
-  escalationLevel: string;
-  severityScore: number;
-  confidenceClassification: string;
-  weakestDomainCount: number;
-  criticalDomainCount: number;
-  lowDomainCount: number;
-  hasRecurringInstability: boolean;
-  hasPriceCollapseSignal: boolean;
-  hasSparseIntakeSignal: boolean;
-  recommendedActionCount: number;
-  bookingDetailAnchor: "#estimate-governance";
-};
+import type { EstimateGovernanceSummary } from "../estimate/estimateGovernanceSnapshot";
+
+export type { EstimateGovernanceSummary };
 
 export type BookingCustomerRecord = {
   id: string;

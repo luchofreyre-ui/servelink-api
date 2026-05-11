@@ -1,7 +1,7 @@
 import type {
   EscalationGovernanceSummary,
   SnapshotGovernanceDomainRow,
-} from "../../../../../services/api/src/modules/estimate/estimate-snapshot-metadata.read";
+} from "./estimateGovernanceSnapshot";
 import {
   getConfidenceBreakdownFromSnapshot,
   getEscalationGovernanceFromSnapshot,
@@ -9,7 +9,7 @@ import {
   getIntakeStabilityDriverHits,
   getTopUncertaintyDrivers,
   getWeakestConfidenceDomains,
-} from "../../../../../services/api/src/modules/estimate/estimate-snapshot-metadata.read";
+} from "./estimateGovernanceSnapshot";
 
 export type EstimateGovernancePanelModel = {
   hasBreakdown: boolean;
@@ -65,7 +65,7 @@ function readReasoningLines(domainObj: unknown, limit = 6): string[] {
 
 /**
  * Builds a null-safe admin view from already-parsed `outputJson` (booking snapshot root).
- * Uses shared selectors from `services/api` — do not duplicate parsing logic here.
+ * Parsing mirrors `estimateGovernanceSnapshot.ts` (aligned with API snapshot reads).
  */
 export function buildEstimateGovernanceViewFromParsedOutput(
   output: Record<string, unknown> | null | undefined,

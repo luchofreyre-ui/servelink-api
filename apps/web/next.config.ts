@@ -59,10 +59,6 @@ const CONTENT_SECURITY_POLICY =
   ].join("; ") + ";";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    externalDir: true,
-  },
-
   async headers() {
     return [
       {

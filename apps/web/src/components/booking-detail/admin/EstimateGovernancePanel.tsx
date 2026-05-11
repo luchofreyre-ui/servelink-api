@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { EstimateGovernancePanelModel } from "@/lib/estimate/estimateGovernanceView";
-import type { SnapshotGovernanceDomainRow } from "../../../../../../services/api/src/modules/estimate/estimate-snapshot-metadata.read";
+import type { SnapshotGovernanceDomainRow } from "@/lib/estimate/estimateGovernanceSnapshot";
 
 function Badge({
   children,
