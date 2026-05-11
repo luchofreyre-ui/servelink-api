@@ -62,6 +62,8 @@ export class EstimateConfidenceAdminController {
     }
 
     const raw = body as Record<string, unknown>;
+    const includeMaintenanceStateEvolution =
+      raw.includeMaintenanceStateEvolution === true;
     const { input, hints } = extractEstimatePayload(raw);
 
     try {
@@ -127,6 +129,13 @@ export class EstimateConfidenceAdminController {
         },
         estimatorFlags: result.flags,
         riskPercentUncapped: result.riskPercentUncapped,
+        ...(includeMaintenanceStateEvolution
+          ? {
+              maintenanceStateEvolution: result.maintenanceStateEvolution ?? null,
+              maintenanceShadowSummary:
+                result.maintenanceStateEvolution?.adminShadowSummary ?? null,
+            }
+          : {}),
       };
     } catch (err: unknown) {
       const message =
