@@ -11,7 +11,12 @@ import { AdminBookingFunnelMilestonesSection } from "@/components/admin/AdminBoo
 import { AdminBookingAuthorityActionSurface } from "@/components/admin/AdminBookingAuthorityActionSurface";
 import { OpsCustomerTeamPrepSection } from "@/components/booking-detail/ops/OpsCustomerTeamPrepSection";
 import { AdminDeepCleanBookingSection } from "@/components/booking-detail/admin/AdminDeepCleanBookingSection";
+import {
+  EstimateGovernanceCompactBadges,
+  EstimateGovernancePanel,
+} from "@/components/booking-detail/admin/EstimateGovernancePanel";
 import { AdminBookingLifecyclePanel } from "@/components/booking/AdminBookingLifecyclePanel";
+import { buildEstimateGovernanceViewFromParsedOutput } from "@/lib/estimate/estimateGovernanceView";
 import { dispatchAdminActivityRefresh } from "@/lib/adminActivityRefresh";
 import type {
   AdminPaymentAnomalyRow,
@@ -20,6 +25,7 @@ import type {
   BookingPaymentStatus,
   BookingRecord,
 } from "@/lib/bookings/bookingApiTypes";
+import type { EstimateGovernancePanelModel } from "@/lib/estimate/estimateGovernanceView";
 import {
   displayOpsBookingNotesLines,
   extractTeamPrepFromBookingNotes,
@@ -102,6 +108,7 @@ type SnapshotVisibility = {
   controlledAuditTrainingEligible: string;
   learningReady: boolean;
   warnings: string[];
+  governanceView: EstimateGovernancePanelModel | null;
 };
 
 function workflowStateLabel(
@@ -365,6 +372,7 @@ function buildSnapshotVisibility(booking: BookingRecord | null): SnapshotVisibil
     learningReady:
       Boolean(snapshot) && booking?.status === "completed" && actualMinutes != null,
     warnings,
+    governanceView: buildEstimateGovernanceViewFromParsedOutput(output),
   };
 }
 
@@ -1424,7 +1432,13 @@ export default function AdminBookingDetailPage() {
           ) : commandCenter.error ? (
             <p className="text-sm text-amber-200">{commandCenter.error}</p>
           ) : null}
+          <EstimateGovernanceCompactBadges view={snapshotVisibility.governanceView} />
         </div>
+
+        <EstimateGovernancePanel
+          view={snapshotVisibility.governanceView}
+          snapshotExists={snapshotVisibility.exists}
+        />
 
         <EstimateSnapshotVisibilitySection
           booking={booking}

@@ -19,6 +19,13 @@ import {
   EstimatorExecutionError,
   EstimatorInputValidationError,
 } from "./errors/estimator.errors";
+import { analyzeEstimateConfidence } from "../../estimating/confidence/estimate-confidence-analyzer";
+import type {
+  EstimateConfidenceBreakdown,
+  EstimateConfidenceComparisonHints,
+} from "../../estimating/confidence/estimate-confidence-breakdown.types";
+import type { EstimateEscalationGovernance } from "../../estimating/escalation/estimate-escalation-governance.types";
+import { evaluateEstimateEscalationGovernance } from "../../estimating/escalation/estimate-escalation-governance";
 
 export type {
   DeepCleanProgramEstimate,
@@ -159,6 +166,14 @@ export type EstimateResult = {
 
   confidence: number;
 
+  /** Deterministic domain decomposition; additive for snapshots. Aggregate `confidence` is unchanged. */
+  confidenceBreakdown: EstimateConfidenceBreakdown;
+
+  /**
+   * Escalation governance recommendations (V1). Omitted on historical snapshots deserialized without this field.
+   */
+  escalationGovernance?: EstimateEscalationGovernance;
+
   riskPercentUncapped: number; // actual accumulated risk (0–100)
   riskPercentCappedForRange: number; // used to compute upper bound, capped by service cap
   riskCapped: boolean;
@@ -220,6 +235,8 @@ export type EstimateOptions = {
   };
   /** Passed through to `FoService.matchFOs` for service-type allow-list policy. */
   bookingMatchMode?: BookingMatchMode;
+  /** Admin/diagnostics only — enriches `confidenceBreakdown` recurring-transition hints; does not change pricing. */
+  confidenceComparisonHints?: EstimateConfidenceComparisonHints;
 };
 
 export type EstimateInput = {
@@ -1196,6 +1213,11 @@ export class EstimatorService {
 
     // ---- Confidence
     const confidence = computeConfidence(input);
+    const confidenceBreakdown = analyzeEstimateConfidence({
+      input,
+      aggregateConfidence: confidence,
+      comparisonHints: options?.confidenceComparisonHints,
+    });
 
     // ---- Range math (anchored asymmetric)
     let lower = roundInt(estimateMinutes * (1 - caps.downsideCapPct / 100));
@@ -1442,6 +1464,12 @@ export class EstimatorService {
       matchedCleaners = dispatchCandidatePool.slice(0, 2);
     }
 
+    const escalationGovernance = evaluateEstimateEscalationGovernance(confidenceBreakdown, {
+      estimatorFlags: flags,
+      riskPercentUncapped,
+      estimatorMode: mode,
+    });
+
     return {
       estimatorVersion: ESTIMATOR_VERSION,
 
@@ -1464,6 +1492,8 @@ export class EstimatorService {
       stagedPlan,
 
       confidence,
+      confidenceBreakdown,
+      escalationGovernance,
 
       riskPercentUncapped,
       riskPercentCappedForRange,

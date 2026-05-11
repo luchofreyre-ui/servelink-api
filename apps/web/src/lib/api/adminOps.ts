@@ -1,5 +1,8 @@
 import { apiFetch } from "../api";
 import { readApiJson } from "../api-response";
+import type { EstimateGovernanceSummary } from "../bookings/bookingApiTypes";
+
+export type { EstimateGovernanceSummary };
 
 /** Server-side ops reads: no caching (RSC + authenticated drilldowns). */
 const OPS_FETCH_INIT = {
@@ -131,6 +134,7 @@ export type OpsDrilldownItemEligibility = {
   assignExceptionToMeDisabledReason?: string | null;
   canResolveException?: boolean;
   resolveExceptionDisabledReason?: string | null;
+  governanceSummary?: EstimateGovernanceSummary | null;
 };
 
 export type OpsItemsResponse = {

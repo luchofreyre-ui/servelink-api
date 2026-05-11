@@ -3,6 +3,10 @@ import type { BookingStatus } from "@prisma/client";
 import { PaymentLifecycleReconciliationCronService } from "../../modules/billing/payment-lifecycle-reconciliation.cron.service";
 import { RemainingBalanceAuthorizationCronService } from "../../modules/billing/remaining-balance-authorization.cron.service";
 import { buildSystemOpsDrilldownEligibility } from "../../modules/dispatch/dispatch-ops-eligibility";
+import {
+  buildEstimateGovernanceSummaryFromSnapshotOutputJson,
+  type EstimateGovernanceSummary,
+} from "../../modules/estimate/estimate-snapshot-metadata.read";
 import { SlotHoldsService } from "../../modules/slot-holds/slot-holds.service";
 import { PrismaService } from "../../prisma";
 import { CronRunLedgerService } from "./cron-run-ledger.service";
@@ -479,12 +483,15 @@ export class OpsVisibilityService {
       return rows;
     }
     const ids = rows.map((r) => r.bookingId);
-    const actions = await this.prisma.dispatchExceptionAction.findMany({
-      where: {
-        dispatchExceptionKey: { in: ids.map((id) => `dex_v1_${id}`) },
-      },
-      select: { dispatchExceptionKey: true, status: true },
-    });
+    const [actions, govMap] = await Promise.all([
+      this.prisma.dispatchExceptionAction.findMany({
+        where: {
+          dispatchExceptionKey: { in: ids.map((id) => `dex_v1_${id}`) },
+        },
+        select: { dispatchExceptionKey: true, status: true },
+      }),
+      this.governanceSummaryByBookingId(ids),
+    ]);
     const actionByKey = new Map(actions.map((a) => [a.dispatchExceptionKey, a]));
     return rows.map((row) => {
       const b = row.booking;
@@ -500,14 +507,22 @@ export class OpsVisibilityService {
           { reviewRequired: row.reviewRequired },
           action,
         );
-        return { ...row, ...merged };
+        return {
+          ...row,
+          ...merged,
+          governanceSummary: govMap.get(row.bookingId) ?? null,
+        };
       }
       const merged = buildSystemOpsDrilldownEligibility(
         b,
         { reviewRequired: row.reviewRequired },
         action,
       );
-      return { ...row, ...merged };
+      return {
+        ...row,
+        ...merged,
+        governanceSummary: govMap.get(row.bookingId) ?? null,
+      };
     });
   }
 
@@ -567,6 +582,27 @@ export class OpsVisibilityService {
     return this.attachDecisionRowEligibility(rows);
   }
 
+  private async governanceSummaryByBookingId(
+    bookingIds: string[],
+  ): Promise<Map<string, EstimateGovernanceSummary | null>> {
+    const unique = [...new Set(bookingIds.filter(Boolean))];
+    const map = new Map<string, EstimateGovernanceSummary | null>();
+    if (unique.length === 0) {
+      return map;
+    }
+    const snapshots = await this.prisma.bookingEstimateSnapshot.findMany({
+      where: { bookingId: { in: unique } },
+      select: { bookingId: true, outputJson: true },
+    });
+    for (const s of snapshots) {
+      map.set(
+        s.bookingId,
+        buildEstimateGovernanceSummaryFromSnapshotOutputJson(s.outputJson),
+      );
+    }
+    return map;
+  }
+
   private async attachBookingRowEligibility<
     T extends {
       id: string;
@@ -579,7 +615,7 @@ export class OpsVisibilityService {
       return rows as Array<T & Record<string, unknown>>;
     }
     const ids = rows.map((r) => r.id);
-    const [controls, actions] = await Promise.all([
+    const [controls, actions, govMap] = await Promise.all([
       this.prisma.bookingDispatchControl.findMany({
         where: { bookingId: { in: ids } },
         select: { bookingId: true, reviewRequired: true },
@@ -590,6 +626,7 @@ export class OpsVisibilityService {
         },
         select: { dispatchExceptionKey: true, status: true },
       }),
+      this.governanceSummaryByBookingId(ids),
     ]);
     const controlByBooking = new Map(controls.map((c) => [c.bookingId, c]));
     const actionByKey = new Map(actions.map((a) => [a.dispatchExceptionKey, a]));
@@ -598,7 +635,11 @@ export class OpsVisibilityService {
       const dexKey = `dex_v1_${row.id}`;
       const action = actionByKey.get(dexKey) ?? null;
       const merged = buildSystemOpsDrilldownEligibility(row, control, action);
-      return { ...row, ...merged };
+      return {
+        ...row,
+        ...merged,
+        governanceSummary: govMap.get(row.id) ?? null,
+      };
     });
   }
 
@@ -609,7 +650,7 @@ export class OpsVisibilityService {
       return rows as Array<T & Record<string, unknown>>;
     }
     const bookingIds = [...new Set(rows.map((r) => r.bookingId))];
-    const [bookings, controls, actions] = await Promise.all([
+    const [bookings, controls, actions, govMap] = await Promise.all([
       this.prisma.booking.findMany({
         where: { id: { in: bookingIds } },
         select: {
@@ -631,6 +672,7 @@ export class OpsVisibilityService {
         },
         select: { dispatchExceptionKey: true, status: true },
       }),
+      this.governanceSummaryByBookingId(bookingIds),
     ]);
     const bookingById = new Map(bookings.map((b) => [b.id, b]));
     const controlByBooking = new Map(controls.map((c) => [c.bookingId, c]));
@@ -650,13 +692,21 @@ export class OpsVisibilityService {
           null,
           action,
         );
-        return { ...row, ...merged };
+        return {
+          ...row,
+          ...merged,
+          governanceSummary: govMap.get(row.bookingId) ?? null,
+        };
       }
       const control = controlByBooking.get(row.bookingId) ?? null;
       const action =
         actionByKey.get(`dex_v1_${row.bookingId}`) ?? null;
       const merged = buildSystemOpsDrilldownEligibility(b, control, action);
-      return { ...row, ...merged };
+      return {
+        ...row,
+        ...merged,
+        governanceSummary: govMap.get(row.bookingId) ?? null,
+      };
     });
   }
 

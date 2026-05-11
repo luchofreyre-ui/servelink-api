@@ -7,6 +7,7 @@ import type {
 } from "@/lib/api/adminOps";
 import { DeferredDispatchTable } from "./DeferredDispatchTable";
 import { DispatchLockedTable } from "./DispatchLockedTable";
+import { EstimateGovernanceListChips } from "./EstimateGovernanceListChips";
 import { FoSupplyReadinessSection } from "./FoSupplyReadinessSection";
 import { RecurringPlanOutcomesSection } from "./RecurringPlanOutcomesSection";
 import { RecurringPlansSection } from "./RecurringPlansSection";
@@ -611,9 +612,15 @@ function BookingTable({
           return (
             <tr key={id} className="border-b align-top">
               <td className="p-2 font-medium">
-                <Link href={`/admin/bookings/${id}`} className="underline">
-                  {id}
-                </Link>
+                <div className="flex flex-col gap-1">
+                  <Link href={`/admin/bookings/${id}`} className="underline">
+                    {id}
+                  </Link>
+                  <EstimateGovernanceListChips
+                    bookingId={id}
+                    governanceSummary={row.governanceSummary}
+                  />
+                </div>
               </td>
               {columns
                 .filter((c) => c !== "id")
@@ -663,9 +670,15 @@ function ManualDispatchTable({
           return (
             <tr key={`${bookingId}-${index}`} className="border-b align-top">
               <td className="p-2 font-medium">
-                <Link href={`/admin/bookings/${bookingId}`} className="underline">
-                  {bookingId}
-                </Link>
+                <div className="flex flex-col gap-1">
+                  <Link href={`/admin/bookings/${bookingId}`} className="underline">
+                    {bookingId}
+                  </Link>
+                  <EstimateGovernanceListChips
+                    bookingId={bookingId}
+                    governanceSummary={row.governanceSummary}
+                  />
+                </div>
               </td>
               <td className="p-2">{formatCell(row.trigger)}</td>
               <td className="p-2">{formatCell(row.decisionStatus)}</td>

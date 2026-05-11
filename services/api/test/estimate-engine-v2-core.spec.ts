@@ -10,6 +10,8 @@ import {
 } from "../src/modules/estimate/estimate-v2-snapshot";
 import { calculateEstimateVariance } from "../src/modules/estimate/estimate-variance.types";
 import type { EstimateInput, EstimateResult } from "../src/modules/estimate/estimator.service";
+import { analyzeEstimateConfidence } from "../src/estimating/confidence/estimate-confidence-analyzer";
+import { evaluateEstimateEscalationGovernance } from "../src/estimating/escalation/estimate-escalation-governance";
 import { createBookingsServiceTestHarness } from "./helpers/createBookingsServiceTestHarness";
 
 function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
@@ -38,7 +40,7 @@ function baseInput(overrides: Partial<EstimateInput> = {}): EstimateInput {
 }
 
 function legacyEstimate(overrides: Partial<EstimateResult> = {}): EstimateResult {
-  return {
+  const base: EstimateResult = {
     estimatorVersion: "estimator_v1",
     mode: "STANDARD",
     serviceLaborModelVersion: "labor_v1",
@@ -53,12 +55,33 @@ function legacyEstimate(overrides: Partial<EstimateResult> = {}): EstimateResult
     lowerBoundMinutes: 120,
     upperBoundMinutes: 170,
     confidence: 0.9,
+    confidenceBreakdown: analyzeEstimateConfidence({
+      input: baseInput(),
+      aggregateConfidence: 0.9,
+    }),
     riskPercentUncapped: 0,
     riskPercentCappedForRange: 0,
     riskCapped: false,
     breakdown: { baseline: [], adjustments: [], riskSignals: [] },
     flags: [],
-    ...overrides,
+  };
+  const merged = { ...base, ...overrides };
+  const breakdown =
+    overrides.confidenceBreakdown ??
+    analyzeEstimateConfidence({
+      input: baseInput(),
+      aggregateConfidence: merged.confidence,
+    });
+  return {
+    ...merged,
+    confidenceBreakdown: breakdown,
+    escalationGovernance:
+      overrides.escalationGovernance ??
+      evaluateEstimateEscalationGovernance(breakdown, {
+        estimatorFlags: merged.flags,
+        riskPercentUncapped: merged.riskPercentUncapped,
+        estimatorMode: merged.mode,
+      }),
   };
 }
 
