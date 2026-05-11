@@ -1,4 +1,7 @@
-import type { EstimateGovernanceSummary } from "../../../modules/estimate/estimate-snapshot-metadata.read";
+import type {
+  EstimateGovernanceSummary,
+  RecurringEconomicsSummary,
+} from "../../../modules/estimate/estimate-snapshot-metadata.read";
 
 /**
  * Appended to every row returned by `/api/v1/system/ops/**` drilldown list endpoints.
@@ -19,4 +22,5 @@ export interface SystemOpsDrilldownEligibilityFields {
   canResolveException: boolean;
   resolveExceptionDisabledReason: string | null;
   governanceSummary?: EstimateGovernanceSummary | null;
+  recurringEconomicsSummary?: RecurringEconomicsSummary | null;
 }
