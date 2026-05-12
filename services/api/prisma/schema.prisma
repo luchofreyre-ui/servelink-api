@@ -30,6 +30,15 @@ model User {
   dispatchExceptionActionsOwned    DispatchExceptionAction[]  @relation("DispatchExceptionActionOwner")
   dispatchExceptionActionEventsAuthored DispatchExceptionActionEvent[] @relation("DispatchExceptionActionEventActor")
   dispatchExceptionActionNotesAuthored DispatchExceptionActionNote[] @relation("DispatchExceptionActionNoteUser")
+
+  OperationalCommandWorkspace                                                              OperationalCommandWorkspace[]
+  OperationalCommandWorkspaceShare_OperationalCommandWorkspaceShare_sharedByUserIdToUser   OperationalCommandWorkspaceShare[]         @relation("OperationalCommandWorkspaceShare_sharedByUserIdToUser")
+  OperationalCommandWorkspaceShare_OperationalCommandWorkspaceShare_sharedWithUserIdToUser OperationalCommandWorkspaceShare[]         @relation("OperationalCommandWorkspaceShare_sharedWithUserIdToUser")
+  OperationalCommandWorkspaceTimelineEvent                                                 OperationalCommandWorkspaceTimelineEvent[]
+  OperationalGraphCollaborationAnnotation                                                  OperationalGraphCollaborationAnnotation[]
+  OperationalOperatorPresence                                                              OperationalOperatorPresence?
+  OperationalReplayReviewComment                                                           OperationalReplayReviewComment[]
+  OperationalReplayReviewSession                                                           OperationalReplayReviewSession[]
 }
 
 model RefreshToken {
@@ -47,6 +56,968 @@ model RefreshToken {
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+
+
+model CausalAttributionSnapshot {
+  id                  String   @id @default(cuid())
+  causalEngineVersion String   @default("causal_attribution_phase25_v1")
+  aggregateWindow     String   @default("as_of_now")
+  attributionCategory String
+  attributionResult   String
+  payloadJson         Json     @default("{}")
+  createdAt           DateTime @default(now())
+
+  @@index([attributionCategory, attributionResult], map: "CausalAttributionSnapshot_attributionCategory_attributionResult")
+  @@index([causalEngineVersion, aggregateWindow, createdAt], map: "CausalAttributionSnapshot_causalEngineVersion_aggregateWindow_c")
+}
+
+model ControlCohortSnapshot {
+  id                         String   @id @default(cuid())
+  controlCohortEngineVersion String   @default("control_cohort_phase28_v1")
+  cohortCategory             String
+  aggregateWindow            String   @default("as_of_now")
+  payloadJson                Json     @default("{}")
+  createdAt                  DateTime @default(now())
+
+  @@index([cohortCategory])
+  @@index([controlCohortEngineVersion, aggregateWindow, createdAt], map: "ControlCohortSnapshot_controlCohortEngineVersion_aggregateWindo")
+}
+
+model CounterfactualEvaluationSnapshot {
+  id                        String   @id @default(cuid())
+  longitudinalEngineVersion String   @default("operational_longitudinal_phase26_v1")
+  aggregateWindow           String   @default("as_of_now")
+  evaluationCategory        String
+  comparisonWindow          String
+  payloadJson               Json     @default("{}")
+  createdAt                 DateTime @default(now())
+
+  @@index([evaluationCategory, comparisonWindow], map: "CounterfactualEvaluationSnapshot_evaluationCategory_comparisonW")
+  @@index([longitudinalEngineVersion, aggregateWindow, createdAt], map: "CounterfactualEvaluationSnapshot_longitudinalEngineVersion_aggr")
+}
+
+model ExperimentCertificationRecord {
+  id                         String   @id @default(cuid())
+  certificationEngineVersion String   @default("experiment_certification_phase25_v1")
+  aggregateWindow            String   @default("as_of_now")
+  experimentCategory         String
+  certificationState         String
+  evaluationSummary          String   @default("")
+  payloadJson                Json     @default("{}")
+  createdAt                  DateTime @default(now())
+
+  @@index([certificationEngineVersion, aggregateWindow, createdAt], map: "ExperimentCertificationRecord_certificationEngineVersion_aggreg")
+  @@index([experimentCategory, certificationState], map: "ExperimentCertificationRecord_experimentCategory_certificationS")
+}
+
+model InterventionEvaluationSnapshot {
+  id                      String   @id @default(cuid())
+  evaluationEngineVersion String   @default("intervention_evaluation_phase27_v1")
+  evaluationCategory      String
+  aggregateWindow         String   @default("as_of_now")
+  evaluationResult        String
+  payloadJson             Json     @default("{}")
+  createdAt               DateTime @default(now())
+
+  @@index([evaluationCategory, evaluationResult], map: "InterventionEvaluationSnapshot_evaluationCategory_evaluationRes")
+  @@index([evaluationEngineVersion, aggregateWindow, createdAt], map: "InterventionEvaluationSnapshot_evaluationEngineVersion_aggregat")
+}
+
+model OperationalAnalyticsSnapshot {
+  id                     String   @id @default(cuid())
+  analyticsEngineVersion String   @default("operational_analytics_phase16_v1")
+  aggregateType          String
+  aggregateId            String
+  aggregateWindow        String   @default("as_of_now")
+  metricCategory         String
+  metricKey              String
+  metricValue            Int
+  payloadJson            Json?
+  createdAt              DateTime @default(now())
+
+  @@index([aggregateType, aggregateId, metricCategory], map: "OperationalAnalyticsSnapshot_aggregateType_aggregateId_metricCa")
+  @@index([analyticsEngineVersion, aggregateWindow, createdAt], map: "OperationalAnalyticsSnapshot_analyticsEngineVersion_aggregateWi")
+}
+
+model OperationalBalancingSnapshot {
+  id                     String   @id @default(cuid())
+  balancingEngineVersion String   @default("operational_balancing_phase22_v1")
+  balancingCategory      String
+  aggregateWindow        String   @default("as_of_now")
+  severity               String
+  payloadJson            Json     @default("{}")
+  createdAt              DateTime @default(now())
+
+  @@index([balancingCategory, severity, createdAt], map: "OperationalBalancingSnapshot_balancingCategory_severity_created")
+  @@index([balancingEngineVersion, aggregateWindow, createdAt], map: "OperationalBalancingSnapshot_balancingEngineVersion_aggregateWi")
+}
+
+model OperationalChronologyDelta {
+  id                          String                @id @default(cuid())
+  replayAnalysisEngineVersion String                @default("operational_replay_analysis_phase33_v1")
+  aggregateWindow             String                @default("as_of_now")
+  operationalReplayDiffId     String
+  deltaCategory               String
+  payloadJson                 Json                  @default("{}")
+  createdAt                   DateTime              @default(now())
+  replayDiff       OperationalReplayDiff @relation(fields: [operationalReplayDiffId], references: [id], onDelete: Cascade)
+
+  @@index([operationalReplayDiffId])
+  @@index([replayAnalysisEngineVersion, aggregateWindow, createdAt], map: "OperationalChronologyDelta_replayAnalysisEngineVersion_aggregat")
+}
+
+model OperationalChronologyFrame {
+  id                 String   @id @default(cuid())
+  graphEngineVersion String   @default("operational_entity_graph_phase31_v1")
+  aggregateWindow    String   @default("as_of_now")
+  chronologyCategory String
+  payloadJson        Json     @default("{}")
+  createdAt          DateTime @default(now())
+
+  @@index([chronologyCategory])
+  @@index([graphEngineVersion, aggregateWindow, createdAt], map: "OperationalChronologyFrame_graphEngineVersion_aggregateWindow_c")
+}
+
+model OperationalChronologySemanticAlignment {
+  id                       String                @id @default(cuid())
+  replaySuiteEngineVersion String                @default("operational_replay_intelligence_suite_mega_a_v1")
+  aggregateWindow          String                @default("as_of_now")
+  operationalReplayDiffId  String                @unique
+  payloadJson              Json                  @default("{}")
+  createdAt                DateTime              @default(now())
+  OperationalReplayDiff    OperationalReplayDiff @relation(fields: [operationalReplayDiffId], references: [id], onDelete: Cascade)
+
+  @@index([replaySuiteEngineVersion, aggregateWindow, createdAt], map: "OperationalChronologySemanticAlignment_replaySuiteEngineVersion")
+}
+
+model OperationalCohortSnapshot {
+  id                  String   @id @default(cuid())
+  cohortEngineVersion String   @default("operational_cohort_phase27_v1")
+  cohortCategory      String
+  aggregateWindow     String   @default("as_of_now")
+  payloadJson         Json     @default("{}")
+  createdAt           DateTime @default(now())
+
+  @@index([cohortCategory])
+  @@index([cohortEngineVersion, aggregateWindow, createdAt], map: "OperationalCohortSnapshot_cohortEngineVersion_aggregateWindow_c")
+}
+
+model OperationalCommandWorkspace {
+  id                                       String                                     @id @default(cuid())
+  workspaceEngineVersion                   String                                     @default("collaborative_command_workspace_phase_d_v1")
+  ownerUserId                              String
+  title                                    String
+  notes                                    String                                     @default("")
+  handoffSummary                           String                                     @default("")
+  bookmarks                                Json                                       @default("[]")
+  markers                                  Json                                       @default("[]")
+  linkedReplaySessionId                    String?
+  linkedOlderReplaySessionId               String?
+  linkedNewerReplaySessionId               String?
+  createdAt                                DateTime                                   @default(now())
+  updatedAt                                DateTime                                   @updatedAt
+  owner                                     User                                       @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+  shares         OperationalCommandWorkspaceShare[]
+  timelineEvents OperationalCommandWorkspaceTimelineEvent[]
+  replayReviewSessions           OperationalReplayReviewSession[]
+
+  @@index([ownerUserId, updatedAt])
+}
+
+model OperationalCommandWorkspaceShare {
+  id                                                           String                      @id @default(cuid())
+  workspaceId                                                  String
+  sharedWithUserId                                             String
+  sharedByUserId                                               String
+  createdAt                                                    DateTime                    @default(now())
+  sharedBy   User                        @relation("OperationalCommandWorkspaceShare_sharedByUserIdToUser", fields: [sharedByUserId], references: [id], onDelete: Cascade)
+  sharedWith User                        @relation("OperationalCommandWorkspaceShare_sharedWithUserIdToUser", fields: [sharedWithUserId], references: [id], onDelete: Cascade)
+  workspace                                  OperationalCommandWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, sharedWithUserId], map: "OperationalCommandWorkspaceShare_workspaceId_sharedWithUserId_k")
+  @@index([sharedWithUserId])
+}
+
+model OperationalCommandWorkspaceTimelineEvent {
+  id                          String                      @id @default(cuid())
+  workspaceId                 String
+  actorUserId                 String
+  eventKind                   String
+  payloadJson                 Json                        @default("{}")
+  createdAt                   DateTime                    @default(now())
+  actor                        User                        @relation(fields: [actorUserId], references: [id], onDelete: Cascade)
+  workspace OperationalCommandWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, createdAt], map: "OperationalCommandWorkspaceTimelineEvent_workspaceId_createdAt_")
+}
+
+model OperationalDriftSnapshot {
+  id                   String   @id @default(cuid())
+  outcomeEngineVersion String   @default("operational_outcome_phase23_v1")
+  aggregateWindow      String   @default("as_of_now")
+  driftCategory        String
+  severity             String
+  payloadJson          Json     @default("{}")
+  createdAt            DateTime @default(now())
+
+  @@index([driftCategory, severity, createdAt])
+  @@index([outcomeEngineVersion, aggregateWindow, createdAt], map: "OperationalDriftSnapshot_outcomeEngineVersion_aggregateWindow_c")
+}
+
+model OperationalEntityEdge {
+  id                                                                              String                @id @default(cuid())
+  graphEngineVersion                                                              String                @default("operational_entity_graph_phase31_v1")
+  aggregateWindow                                                                 String                @default("as_of_now")
+  sourceNodeId                                                                    String
+  targetNodeId                                                                    String
+  edgeCategory                                                                    String
+  payloadJson                                                                     Json                  @default("{}")
+  createdAt                                                                       DateTime              @default(now())
+  OperationalEntityNode_OperationalEntityEdge_sourceNodeIdToOperationalEntityNode OperationalEntityNode @relation("OperationalEntityEdge_sourceNodeIdToOperationalEntityNode", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+  OperationalEntityNode_OperationalEntityEdge_targetNodeIdToOperationalEntityNode OperationalEntityNode @relation("OperationalEntityEdge_targetNodeIdToOperationalEntityNode", fields: [targetNodeId], references: [id], onDelete: Cascade)
+
+  @@index([edgeCategory])
+  @@index([graphEngineVersion, aggregateWindow, createdAt], map: "OperationalEntityEdge_graphEngineVersion_aggregateWindow_create")
+  @@index([sourceNodeId])
+  @@index([targetNodeId])
+}
+
+model OperationalEntityNode {
+  id                                                                              String                  @id @default(cuid())
+  graphEngineVersion                                                              String                  @default("operational_entity_graph_phase31_v1")
+  aggregateWindow                                                                 String                  @default("as_of_now")
+  idempotencyKey                                                                  String?                 @unique
+  entityCategory                                                                  String
+  entityState                                                                     String
+  payloadJson                                                                     Json                    @default("{}")
+  createdAt                                                                       DateTime                @default(now())
+  OperationalEntityEdge_OperationalEntityEdge_sourceNodeIdToOperationalEntityNode OperationalEntityEdge[] @relation("OperationalEntityEdge_sourceNodeIdToOperationalEntityNode")
+  OperationalEntityEdge_OperationalEntityEdge_targetNodeIdToOperationalEntityNode OperationalEntityEdge[] @relation("OperationalEntityEdge_targetNodeIdToOperationalEntityNode")
+
+  @@index([entityCategory, entityState])
+  @@index([graphEngineVersion, aggregateWindow, createdAt], map: "OperationalEntityNode_graphEngineVersion_aggregateWindow_create")
+}
+
+model OperationalExperimentLineage {
+  id                        String   @id @default(cuid())
+  longitudinalEngineVersion String   @default("operational_longitudinal_phase26_v1")
+  aggregateWindow           String   @default("as_of_now")
+  lineageCategory           String
+  sourceExperimentId        String?
+  comparisonExperimentId    String?
+  payloadJson               Json     @default("{}")
+  createdAt                 DateTime @default(now())
+
+  @@index([lineageCategory])
+  @@index([longitudinalEngineVersion, aggregateWindow, createdAt], map: "OperationalExperimentLineage_longitudinalEngineVersion_aggregat")
+}
+
+model OperationalExperimentSnapshot {
+  id                      String   @id @default(cuid())
+  experimentEngineVersion String   @default("operational_experiment_phase24_v1")
+  experimentCategory      String
+  aggregateWindow         String   @default("as_of_now")
+  evaluationResult        String
+  payloadJson             Json     @default("{}")
+  createdAt               DateTime @default(now())
+
+  @@index([experimentCategory, evaluationResult], map: "OperationalExperimentSnapshot_experimentCategory_evaluationResu")
+  @@index([experimentEngineVersion, aggregateWindow, createdAt], map: "OperationalExperimentSnapshot_experimentEngineVersion_aggregate")
+}
+
+model OperationalGraphCollaborationAnnotation {
+  id                 String   @id @default(cuid())
+  graphEngineVersion String   @default("operational_graph_collaboration_phase_f_v1")
+  aggregateWindow    String   @default("as_of_now")
+  graphNodeId        String
+  authorUserId       String
+  body               String
+  createdAt          DateTime @default(now())
+  author               User     @relation(fields: [authorUserId], references: [id], onDelete: Cascade)
+
+  @@index([graphNodeId, createdAt], map: "OperationalGraphCollaborationAnnotation_graphNodeId_createdAt_i")
+}
+
+model OperationalGraphHistory {
+  id                        String                    @id @default(cuid())
+  graphHistoryEngineVersion String                    @default("operational_graph_history_phase32_v1")
+  aggregateWindow           String                    @default("as_of_now")
+  historyCategory           String
+  payloadJson               Json                      @default("{}")
+  createdAt                 DateTime                  @default(now())
+  replaySession  OperationalReplaySession?
+
+  @@index([graphHistoryEngineVersion, aggregateWindow, createdAt], map: "OperationalGraphHistory_graphHistoryEngineVersion_aggregateWind")
+  @@index([historyCategory])
+}
+
+model OperationalIncident {
+  id                            String                          @id @default(cuid())
+  incidentEngineVersion         String                          @default("operational_incident_phase30_v1")
+  aggregateWindow               String                          @default("as_of_now")
+  idempotencyKey                String?                         @unique
+  incidentCategory              String
+  incidentState                 String
+  severity                      String
+  payloadJson                   Json                            @default("{}")
+  createdAt                     DateTime                        @default(now())
+  links       OperationalIncidentLink[]
+  trails OperationalInvestigationTrail[]
+
+  @@index([incidentCategory, incidentState])
+  @@index([incidentEngineVersion, aggregateWindow, createdAt], map: "OperationalIncident_incidentEngineVersion_aggregateWindow_creat")
+}
+
+model OperationalIncidentLink {
+  id                    String              @id @default(cuid())
+  incidentEngineVersion String              @default("operational_incident_phase30_v1")
+  aggregateWindow       String              @default("as_of_now")
+  incidentId            String
+  linkedObjectType      String
+  linkedObjectId        String
+  payloadJson           Json                @default("{}")
+  createdAt             DateTime            @default(now())
+  incident   OperationalIncident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+
+  @@index([incidentEngineVersion, aggregateWindow, createdAt], map: "OperationalIncidentLink_incidentEngineVersion_aggregateWindow_c")
+  @@index([incidentId])
+  @@index([linkedObjectType, linkedObjectId])
+}
+
+model OperationalInterventionAssignment {
+  id                      String   @id @default(cuid())
+  assignmentEngineVersion String   @default("operational_intervention_assignment_phase28_v1")
+  aggregateWindow         String   @default("as_of_now")
+  assignmentCategory      String
+  cohortType              String
+  workflowExecutionId     String
+  activationId            String?
+  assignmentState         String
+  idempotencyKey          String?  @unique
+  payloadJson             Json     @default("{}")
+  createdAt               DateTime @default(now())
+
+  @@index([assignmentEngineVersion, aggregateWindow, createdAt], map: "OperationalInterventionAssignment_assignmentEngineVersion_aggre")
+  @@index([cohortType, assignmentState], map: "OperationalInterventionAssignment_cohortType_assignmentState_id")
+  @@index([workflowExecutionId])
+}
+
+model OperationalInterventionSandbox {
+  id                   String   @id @default(cuid())
+  sandboxEngineVersion String   @default("operational_intervention_sandbox_phase27_v1")
+  aggregateWindow      String   @default("as_of_now")
+  sandboxCategory      String
+  sandboxState         String
+  workflowExecutionId  String
+  activationId         String?
+  idempotencyKey       String?  @unique
+  payloadJson          Json     @default("{}")
+  resultJson           Json     @default("{}")
+  createdAt            DateTime @default(now())
+
+  @@index([sandboxEngineVersion, aggregateWindow, createdAt], map: "OperationalInterventionSandbox_sandboxEngineVersion_aggregateWi")
+  @@index([workflowExecutionId])
+}
+
+model OperationalInvestigationTrail {
+  id                    String              @id @default(cuid())
+  incidentEngineVersion String              @default("operational_incident_phase30_v1")
+  aggregateWindow       String              @default("as_of_now")
+  incidentId            String
+  trailCategory         String
+  payloadJson           Json                @default("{}")
+  createdAt             DateTime            @default(now())
+  incident   OperationalIncident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+
+  @@index([incidentEngineVersion, aggregateWindow, createdAt], map: "OperationalInvestigationTrail_incidentEngineVersion_aggregateWi")
+  @@index([incidentId])
+}
+
+model OperationalOperatorPresence {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  surface                 String
+  workspaceId             String?
+  replayReviewSessionId   String?
+  graphSelectedNodeId     String?
+  replayChronologyFrameId String?
+  warRoomActive           Boolean  @default(false)
+  payloadJson             Json     @default("{}")
+  updatedAt               DateTime @updatedAt
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([replayReviewSessionId])
+  @@index([updatedAt])
+  @@index([workspaceId])
+}
+
+model OperationalOutboxDeliveryAttempt {
+  id                     String                 @id @default(cuid())
+  outboxEventId          String
+  channel                String
+  attemptNo              Int
+  dryRun                 Boolean                @default(false)
+  success                Boolean
+  resultJson             Json?
+  errorMessage           String?
+  createdAt              DateTime               @default(now())
+  providerKind           String?
+  notificationCategory   String?
+  templateKey            String?
+  templateVersion        Int?
+  outboxEvent OperationalOutboxEvent @relation(fields: [outboxEventId], references: [id], onDelete: Cascade)
+
+  @@index([outboxEventId, createdAt])
+}
+
+model OperationalOutboxEvent {
+  id                               String                             @id @default(cuid())
+  aggregateType                    String
+  aggregateId                      String
+  correlationId                    String
+  eventType                        String
+  lifecycleCategory                String?
+  operationalEventCategory         String?
+  dedupeKey                        String                             @unique
+  payloadJson                      Json
+  metadataJson                     Json?
+  createdAt                        DateTime                           @default(now())
+  publishAfter                     DateTime?
+  processingState                  String                             @default("pending")
+  attempts                         Int                                @default(0)
+  lastAttemptAt                    DateTime?
+  processingStartedAt              DateTime?
+  payloadSchemaVersion             Int                                @default(1)
+  deliveredAt                      DateTime?
+  lastDeliveryResultJson           Json?
+  processingError                  String?
+  deliveryAttempts OperationalOutboxDeliveryAttempt[]
+
+  @@index([aggregateType, aggregateId, createdAt])
+  @@index([correlationId])
+  @@index([processingState, createdAt])
+}
+
+model OperationalPolicyEvaluation {
+  id                  String            @id @default(cuid())
+  workflowExecutionId String
+  policyEngineVersion String            @default("operational_policy_phase15_v1")
+  policyCategory      String
+  policyKey           String
+  evaluationResult    String
+  severity            String
+  explanation         String
+  payloadJson         Json?
+  createdAt           DateTime          @default(now())
+  execution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+
+  @@index([workflowExecutionId, createdAt])
+  @@index([workflowExecutionId, policyEngineVersion], map: "OperationalPolicyEvaluation_workflowExecutionId_policyEngineVer")
+}
+
+model OperationalReplayAlignment {
+  id                        String   @id @default(cuid())
+  longitudinalEngineVersion String   @default("operational_longitudinal_phase26_v1")
+  aggregateWindow           String   @default("as_of_now")
+  replayCategory            String
+  replayState               String
+  payloadJson               Json     @default("{}")
+  createdAt                 DateTime @default(now())
+
+  @@index([longitudinalEngineVersion, aggregateWindow, createdAt], map: "OperationalReplayAlignment_longitudinalEngineVersion_aggregateW")
+  @@index([replayCategory, replayState])
+}
+
+model OperationalReplayDiff {
+  id                                                                                                 String                                  @id @default(cuid())
+  replayAnalysisEngineVersion                                                                        String                                  @default("operational_replay_analysis_phase33_v1")
+  aggregateWindow                                                                                    String                                  @default("as_of_now")
+  diffCategory                                                                                       String
+  sourceReplaySessionId                                                                              String
+  comparisonReplaySessionId                                                                          String
+  payloadJson                                                                                        Json                                    @default("{}")
+  createdAt                                                                                          DateTime                                @default(now())
+  chronologyDeltas OperationalChronologyDelta[]
+  semanticAlignment OperationalChronologySemanticAlignment?
+  OperationalReplaySession_OperationalReplayDiff_comparisonReplaySessionIdToOperationalReplaySession OperationalReplaySession                @relation("OperationalReplayDiff_comparisonReplaySessionIdToOperationalReplaySession", fields: [comparisonReplaySessionId], references: [id], onDelete: Cascade)
+  OperationalReplaySession_OperationalReplayDiff_sourceReplaySessionIdToOperationalReplaySession     OperationalReplaySession                @relation("OperationalReplayDiff_sourceReplaySessionIdToOperationalReplaySession", fields: [sourceReplaySessionId], references: [id], onDelete: Cascade)
+  pairingLineage OperationalReplayPairing?
+  interpretation ReplayInterpretationSnapshot?
+
+  @@unique([sourceReplaySessionId, comparisonReplaySessionId, diffCategory], map: "OperationalReplayDiff_sourceReplaySessionId_comparisonReplaySes")
+  @@index([diffCategory])
+  @@index([replayAnalysisEngineVersion, aggregateWindow, createdAt], map: "OperationalReplayDiff_replayAnalysisEngineVersion_aggregateWind")
+}
+
+model OperationalReplayFrame {
+  id                       String                   @id @default(cuid())
+  replayEngineVersion      String                   @default("operational_replay_phase32_v1")
+  replaySessionId          String
+  frameCategory            String
+  sequenceIndex            Int
+  payloadJson              Json                     @default("{}")
+  createdAt                DateTime                 @default(now())
+  replaySession OperationalReplaySession @relation(fields: [replaySessionId], references: [id], onDelete: Cascade)
+
+  @@index([replayEngineVersion, replaySessionId])
+  @@index([replaySessionId, sequenceIndex])
+}
+
+model OperationalReplayInterventionBridge {
+  id                       String                   @id @default(cuid())
+  replaySuiteEngineVersion String                   @default("operational_replay_intelligence_suite_mega_a_v1")
+  aggregateWindow          String                   @default("as_of_now")
+  replaySessionId          String                   @unique
+  payloadJson              Json                     @default("{}")
+  createdAt                DateTime                 @default(now())
+  replaySession OperationalReplaySession @relation(fields: [replaySessionId], references: [id], onDelete: Cascade)
+
+  @@index([replaySuiteEngineVersion, aggregateWindow, createdAt], map: "OperationalReplayInterventionBridge_replaySuiteEngineVersion_ag")
+}
+
+model OperationalReplayPairing {
+  id                                                                                                      String                   @id @default(cuid())
+  replaySuiteEngineVersion                                                                                String                   @default("operational_replay_intelligence_suite_mega_a_v1")
+  aggregateWindow                                                                                         String                   @default("as_of_now")
+  pairingCategory                                                                                         String
+  orderedOlderReplaySessionId                                                                             String
+  orderedNewerReplaySessionId                                                                             String
+  operationalReplayDiffId                                                                                 String?                  @unique
+  payloadJson                                                                                             Json                     @default("{}")
+  createdAt                                                                                               DateTime                 @default(now())
+  replayDiff                                                                                   OperationalReplayDiff?   @relation(fields: [operationalReplayDiffId], references: [id])
+  OperationalReplaySession_OperationalReplayPairing_orderedNewerReplaySessionIdToOperationalReplaySession OperationalReplaySession @relation("OperationalReplayPairing_orderedNewerReplaySessionIdToOperationalReplaySession", fields: [orderedNewerReplaySessionId], references: [id], onDelete: Cascade)
+  OperationalReplaySession_OperationalReplayPairing_orderedOlderReplaySessionIdToOperationalReplaySession OperationalReplaySession @relation("OperationalReplayPairing_orderedOlderReplaySessionIdToOperationalReplaySession", fields: [orderedOlderReplaySessionId], references: [id], onDelete: Cascade)
+
+  @@index([pairingCategory])
+  @@index([replaySuiteEngineVersion, aggregateWindow, createdAt], map: "OperationalReplayPairing_replaySuiteEngineVersion_aggregateWind")
+}
+
+model OperationalReplayReviewComment {
+  id                             String                         @id @default(cuid())
+  sessionId                      String
+  authorUserId                   String
+  body                           String
+  anchorKind                     String?
+  anchorPayloadJson              Json?
+  createdAt                      DateTime                       @default(now())
+  author                           User                           @relation(fields: [authorUserId], references: [id], onDelete: Cascade)
+  session OperationalReplayReviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+}
+
+model OperationalReplayReviewSession {
+  id                             String                           @id @default(cuid())
+  reviewEngineVersion            String                           @default("collaborative_replay_review_phase_d_v1")
+  createdByUserId                String
+  workspaceId                    String?
+  title                          String
+  investigationReviewState       String                           @default("open")
+  replaySessionIdPrimary         String?
+  replaySessionIdCompare         String?
+  aggregateWindow                String                           @default("as_of_now")
+  createdAt                      DateTime                         @default(now())
+  updatedAt                      DateTime                         @updatedAt
+  comments OperationalReplayReviewComment[]
+  creator                           User                             @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  workspace    OperationalCommandWorkspace?     @relation(fields: [workspaceId], references: [id])
+
+  @@index([createdByUserId, updatedAt])
+  @@index([workspaceId])
+}
+
+model OperationalReplaySession {
+  id                                                                                                      String                               @id @default(cuid())
+  replayEngineVersion                                                                                     String                               @default("operational_replay_phase32_v1")
+  aggregateWindow                                                                                         String                               @default("as_of_now")
+  replayCategory                                                                                          String
+  replayState                                                                                             String
+  graphHistoryId                                                                                          String                               @unique
+  payloadJson                                                                                             Json                                 @default("{}")
+  createdAt                                                                                               DateTime                             @default(now())
+  OperationalReplayDiff_OperationalReplayDiff_comparisonReplaySessionIdToOperationalReplaySession         OperationalReplayDiff[]              @relation("OperationalReplayDiff_comparisonReplaySessionIdToOperationalReplaySession")
+  OperationalReplayDiff_OperationalReplayDiff_sourceReplaySessionIdToOperationalReplaySession             OperationalReplayDiff[]              @relation("OperationalReplayDiff_sourceReplaySessionIdToOperationalReplaySession")
+  frames OperationalReplayFrame[]
+  interventionBridge OperationalReplayInterventionBridge?
+  OperationalReplayPairing_OperationalReplayPairing_orderedNewerReplaySessionIdToOperationalReplaySession OperationalReplayPairing[]           @relation("OperationalReplayPairing_orderedNewerReplaySessionIdToOperationalReplaySession")
+  OperationalReplayPairing_OperationalReplayPairing_orderedOlderReplaySessionIdToOperationalReplaySession OperationalReplayPairing[]           @relation("OperationalReplayPairing_orderedOlderReplaySessionIdToOperationalReplaySession")
+  graphHistory                  OperationalGraphHistory             @relation(fields: [graphHistoryId], references: [id], onDelete: Cascade)
+  topologySnapshot OperationalTopologySnapshot?
+
+  @@index([replayCategory, replayState])
+  @@index([replayEngineVersion, aggregateWindow, createdAt], map: "OperationalReplaySession_replayEngineVersion_aggregateWindow_cr")
+}
+
+model OperationalSafetyEvaluation {
+  id                         String                      @id @default(cuid())
+  workflowExecutionId        String
+  simulationScenarioId       String?
+  evaluationCategory         String
+  severity                   String
+  explanation                String
+  payloadJson                Json                        @default("{}")
+  createdAt                  DateTime                    @default(now())
+  WorkflowSimulationScenario WorkflowSimulationScenario? @relation(fields: [simulationScenarioId], references: [id])
+  workflowExecution          WorkflowExecution           @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+
+  @@index([evaluationCategory, severity, createdAt], map: "OperationalSafetyEvaluation_evaluationCategory_severity_created")
+  @@index([workflowExecutionId, createdAt])
+}
+
+model OperationalSimulationLabRun {
+  id                  String   @id @default(cuid())
+  labEngineVersion    String   @default("operational_sim_lab_phase25_v1")
+  aggregateWindow     String   @default("as_of_now")
+  simulationCategory  String
+  benchmarkScenarioId String?
+  simulationState     String   @default("completed")
+  idempotencyKey      String?  @unique
+  payloadJson         Json     @default("{}")
+  resultJson          Json     @default("{}")
+  createdAt           DateTime @default(now())
+
+  @@index([benchmarkScenarioId])
+  @@index([labEngineVersion, aggregateWindow, createdAt], map: "OperationalSimulationLabRun_labEngineVersion_aggregateWindow_cr")
+  @@index([simulationCategory])
+}
+
+model OperationalTopologySnapshot {
+  id                       String                   @id @default(cuid())
+  replaySuiteEngineVersion String                   @default("operational_replay_intelligence_suite_mega_a_v1")
+  aggregateWindow          String                   @default("as_of_now")
+  replaySessionId          String                   @unique
+  payloadJson              Json                     @default("{}")
+  createdAt                DateTime                 @default(now())
+  replaySession OperationalReplaySession @relation(fields: [replaySessionId], references: [id], onDelete: Cascade)
+
+  @@index([replaySuiteEngineVersion, aggregateWindow, createdAt], map: "OperationalTopologySnapshot_replaySuiteEngineVersion_aggregateW")
+}
+
+model OperationalValidityCertification {
+  id                    String   @id @default(cuid())
+  validityEngineVersion String   @default("operational_validity_cert_phase28_v1")
+  aggregateWindow       String   @default("as_of_now")
+  certificationCategory String
+  certificationState    String
+  payloadJson           Json     @default("{}")
+  createdAt             DateTime @default(now())
+
+  @@index([certificationCategory, certificationState], map: "OperationalValidityCertification_certificationCategory_certific")
+  @@index([validityEngineVersion, aggregateWindow, createdAt], map: "OperationalValidityCertification_validityEngineVersion_aggregat")
+}
+
+model ReplayInterpretationSnapshot {
+  id                          String                @id @default(cuid())
+  replayAnalysisEngineVersion String                @default("operational_replay_analysis_phase33_v1")
+  aggregateWindow             String                @default("as_of_now")
+  operationalReplayDiffId     String                @unique
+  interpretationCategory      String
+  payloadJson                 Json                  @default("{}")
+  createdAt                   DateTime              @default(now())
+  replayDiff       OperationalReplayDiff @relation(fields: [operationalReplayDiffId], references: [id], onDelete: Cascade)
+
+  @@index([interpretationCategory])
+  @@index([replayAnalysisEngineVersion, aggregateWindow, createdAt], map: "ReplayInterpretationSnapshot_replayAnalysisEngineVersion_aggreg")
+}
+
+model SimulationAccuracySnapshot {
+  id                   String   @id @default(cuid())
+  outcomeEngineVersion String   @default("operational_outcome_phase23_v1")
+  aggregateWindow      String   @default("as_of_now")
+  workflowExecutionId  String
+  simulationScenarioId String
+  accuracyCategory     String
+  predictedJson        Json     @default("{}")
+  actualJson           Json     @default("{}")
+  payloadJson          Json     @default("{}")
+  createdAt            DateTime @default(now())
+
+  @@index([outcomeEngineVersion, aggregateWindow, createdAt], map: "SimulationAccuracySnapshot_outcomeEngineVersion_aggregateWindow")
+  @@index([simulationScenarioId])
+  @@index([workflowExecutionId, createdAt])
+}
+
+model WorkflowAnalyticsAggregate {
+  id                     String   @id @default(cuid())
+  analyticsEngineVersion String   @default("operational_analytics_phase16_v1")
+  workflowType           String
+  orchestrationCategory  String
+  aggregateWindow        String
+  countsJson             Json
+  payloadJson            Json?
+  createdAt              DateTime @default(now())
+
+  @@index([analyticsEngineVersion, aggregateWindow, createdAt], map: "WorkflowAnalyticsAggregate_engine_window_created_idx")
+  @@index([analyticsEngineVersion, aggregateWindow, workflowType], map: "WorkflowAnalyticsAggregate_engine_window_type_idx")
+}
+
+model WorkflowApproval {
+  id                               String                             @id @default(cuid())
+  workflowExecutionId              String
+  approvalType                     String
+  approvalState                    String                             @default("pending")
+  requestedByUserId                String?
+  approvedByUserId                 String?
+  deniedByUserId                   String?
+  expiresAt                        DateTime?
+  requestedAt                      DateTime                           @default(now())
+  approvedAt                       DateTime?
+  deniedAt                         DateTime?
+  payloadJson                      Json
+  metadataJson                     Json?
+  execution                WorkflowExecution                  @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+  audits            WorkflowApprovalAudit[]
+  escalations       WorkflowApprovalEscalation[]
+  WorkflowRecommendationAcceptance WorkflowRecommendationAcceptance[]
+
+  @@index([approvalState, requestedAt])
+  @@index([workflowExecutionId, approvalState])
+}
+
+model WorkflowApprovalAudit {
+  id                 String           @id @default(cuid())
+  workflowApprovalId String
+  actionType         String
+  actorUserId        String?
+  result             String?
+  payloadJson        Json?
+  createdAt          DateTime         @default(now())
+  approval           WorkflowApproval @relation(fields: [workflowApprovalId], references: [id], onDelete: Cascade)
+
+  @@index([workflowApprovalId, createdAt])
+}
+
+model WorkflowApprovalEscalation {
+  id                 String           @id @default(cuid())
+  workflowApprovalId String
+  escalationCategory String
+  escalationState    String           @default("open")
+  triggeredAt        DateTime         @default(now())
+  resolvedAt         DateTime?
+  triggeredByUserId  String?
+  payloadJson        Json?
+  approval   WorkflowApproval @relation(fields: [workflowApprovalId], references: [id], onDelete: Cascade)
+
+  @@index([workflowApprovalId, escalationState], map: "WorkflowApprovalEscalation_workflowApprovalId_escalationState_i")
+}
+
+model WorkflowBenchmarkScenario {
+  id                     String   @id @default(cuid())
+  benchmarkEngineVersion String   @default("workflow_benchmark_phase24_v1")
+  aggregateWindow        String   @default("as_of_now")
+  benchmarkCategory      String
+  workflowExecutionId    String
+  simulationScenarioId   String?
+  benchmarkState         String   @default("completed")
+  idempotencyKey         String?  @unique
+  payloadJson            Json     @default("{}")
+  resultJson             Json     @default("{}")
+  createdAt              DateTime @default(now())
+
+  @@index([benchmarkCategory])
+  @@index([benchmarkEngineVersion, aggregateWindow, createdAt], map: "WorkflowBenchmarkScenario_benchmarkEngineVersion_aggregateWindo")
+  @@index([workflowExecutionId, createdAt])
+}
+
+model WorkflowCongestionSnapshot {
+  id                      String   @id @default(cuid())
+  congestionEngineVersion String   @default("workflow_congestion_phase22_v1")
+  workflowType            String
+  congestionCategory      String
+  aggregateWindow         String   @default("as_of_now")
+  severity                String
+  payloadJson             Json     @default("{}")
+  createdAt               DateTime @default(now())
+
+  @@index([congestionEngineVersion, aggregateWindow, createdAt], map: "WorkflowCongestionSnapshot_congestionEngineVersion_aggregateWin")
+  @@index([workflowType, congestionCategory])
+}
+
+model WorkflowDryRunExecution {
+  id                  String            @id @default(cuid())
+  workflowExecutionId String
+  previewCategory     String
+  previewState        String            @default("completed")
+  recommendationKey   String?
+  idempotencyKey      String?           @unique
+  requestedByUserId   String?
+  payloadJson         Json              @default("{}")
+  resultJson          Json              @default("{}")
+  createdAt           DateTime          @default(now())
+  workflowExecution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+
+  @@index([workflowExecutionId, createdAt])
+  @@index([workflowExecutionId, previewCategory])
+}
+
+model WorkflowExecution {
+  id                               String                             @id @default(cuid())
+  workflowType                     String
+  workflowVersion                  Int                                @default(1)
+  aggregateType                    String
+  aggregateId                      String
+  correlationId                    String
+  triggeringOutboxEventId          String?                            @unique
+  state                            String                             @default("pending")
+  executionStage                   String                             @default("initialized")
+  payloadJson                      Json
+  metadataJson                     Json?
+  createdAt                        DateTime                           @default(now())
+  updatedAt                        DateTime                           @default(now())
+  completedAt                      DateTime?
+  failedAt                         DateTime?
+  failureReason                    String?
+  executionMode                    String                             @default("observe_only")
+  approvalState                    String?
+  policyEvaluations OperationalPolicyEvaluation[]
+  safetyEvaluations OperationalSafetyEvaluation[]
+  approvals WorkflowApproval[]
+  dryRuns WorkflowDryRunExecution[]
+  activations WorkflowExecutionActivation[]
+  steps WorkflowExecutionStep[]
+  recommendationAcceptances WorkflowRecommendationAcceptance[]
+  scenarios WorkflowSimulationScenario[]
+  timers WorkflowTimer[]
+  waitStates WorkflowWaitState[]
+
+  @@index([aggregateType, aggregateId, createdAt])
+  @@index([correlationId])
+  @@index([state, createdAt])
+  @@index([workflowType, createdAt])
+}
+
+model WorkflowExecutionActivation {
+  id                               String                           @id @default(cuid())
+  workflowExecutionId              String
+  recommendationAcceptanceId       String
+  activationState                  String                           @default("registered")
+  activationCategory               String
+  requestedByUserId                String?
+  approvedByUserId                 String?
+  invokedAt                        DateTime?
+  payloadJson                      Json                             @default("{}")
+  resultJson                       Json                             @default("{}")
+  idempotencyKey                   String?                          @unique
+  createdAt                        DateTime                         @default(now())
+  updatedAt                        DateTime                         @default(now())
+  recommendationAcceptance WorkflowRecommendationAcceptance @relation(fields: [recommendationAcceptanceId], references: [id], onDelete: Cascade)
+  execution                WorkflowExecution                @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+  WorkflowSimulationScenario       WorkflowSimulationScenario[]
+
+  @@index([recommendationAcceptanceId, activationState], map: "WorkflowExecutionActivation_recommendationAcceptanceId_activati")
+  @@index([workflowExecutionId, activationState], map: "WorkflowExecutionActivation_workflowExecutionId_activationState")
+}
+
+model WorkflowExecutionStep {
+  id                  String            @id @default(cuid())
+  workflowExecutionId String
+  stepType            String
+  stepVersion         Int               @default(1)
+  state               String            @default("pending")
+  startedAt           DateTime?
+  completedAt         DateTime?
+  failedAt            DateTime?
+  payloadJson         Json?
+  resultJson          Json?
+  createdAt           DateTime          @default(now())
+  runnerKey           String?
+  governanceOutcome   String?
+  workflowExecution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+
+  @@index([workflowExecutionId, createdAt])
+}
+
+model WorkflowOutcomeEvaluation {
+  id                   String   @id @default(cuid())
+  outcomeEngineVersion String   @default("operational_outcome_phase23_v1")
+  aggregateWindow      String   @default("as_of_now")
+  workflowExecutionId  String
+  activationId         String?
+  evaluationCategory   String
+  evaluationResult     String
+  effectivenessScore   Int      @default(0)
+  payloadJson          Json     @default("{}")
+  createdAt            DateTime @default(now())
+
+  @@index([outcomeEngineVersion, aggregateWindow, createdAt], map: "WorkflowOutcomeEvaluation_outcomeEngineVersion_aggregateWindow_")
+  @@index([workflowExecutionId, createdAt])
+}
+
+model WorkflowRecommendationAcceptance {
+  id                          String                        @id @default(cuid())
+  workflowExecutionId         String
+  recommendationKey           String
+  acceptanceState             String                        @default("recorded")
+  acceptedByUserId            String?
+  acceptedAt                  DateTime?
+  revokedAt                   DateTime?
+  revokedByUserId             String?
+  workflowApprovalId          String?
+  payloadJson                 Json                          @default("{}")
+  idempotencyKey              String?                       @unique
+  createdAt                   DateTime                      @default(now())
+  updatedAt                   DateTime                      @default(now())
+  activations WorkflowExecutionActivation[]
+  approval            WorkflowApproval?             @relation(fields: [workflowApprovalId], references: [id])
+  execution           WorkflowExecution             @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+
+  @@index([workflowExecutionId, acceptanceState], map: "WorkflowRecommendationAcceptance_workflowExecutionId_acceptance")
+  @@index([workflowExecutionId, recommendationKey], map: "WorkflowRecommendationAcceptance_workflowExecutionId_recommenda")
+}
+
+model WorkflowSimulationScenario {
+  id                          String                        @id @default(cuid())
+  scenarioCategory            String
+  workflowExecutionId         String
+  activationId                String?
+  simulationState             String                        @default("completed")
+  requestedByUserId           String?
+  idempotencyKey              String?                       @unique
+  payloadJson                 Json                          @default("{}")
+  resultJson                  Json                          @default("{}")
+  createdAt                   DateTime                      @default(now())
+  OperationalSafetyEvaluation OperationalSafetyEvaluation[]
+  WorkflowExecutionActivation WorkflowExecutionActivation?  @relation(fields: [activationId], references: [id])
+  execution           WorkflowExecution             @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+
+  @@index([scenarioCategory, createdAt])
+  @@index([workflowExecutionId, createdAt])
+}
+
+model WorkflowTimer {
+  id                  String            @id @default(cuid())
+  workflowExecutionId String
+  timerType           String
+  timerState          String            @default("pending")
+  wakeAt              DateTime
+  triggeredAt         DateTime?
+  dedupeKey           String
+  payloadJson         Json?
+  metadataJson        Json?
+  createdAt           DateTime          @default(now())
+  execution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+
+  @@unique([workflowExecutionId, dedupeKey])
+  @@index([timerState, wakeAt])
+}
+
+model WorkflowWaitState {
+  id                  String            @id @default(cuid())
+  workflowExecutionId String
+  waitCategory        String
+  waitState           String            @default("active")
+  waitingOn           String
+  expiresAt           DateTime?
+  resolvedAt          DateTime?
+  payloadJson         Json?
+  createdAt           DateTime          @default(now())
+  execution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+
+  @@unique([workflowExecutionId, waitingOn])
+  @@index([workflowExecutionId, waitState])
 }
 
 enum BookingAuthorityReviewStatus {
