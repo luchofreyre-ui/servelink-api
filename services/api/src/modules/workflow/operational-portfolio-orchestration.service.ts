@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma";
 import {
   WORKFLOW_ACTIVATION_STATE,
-} from "../orchestration/workflow-execution-activation.constants";
+} from "./workflow-execution-activation.constants";
 import { ESCALATION_STATE } from "./operational-policy.constants";
 import {
   WORKFLOW_APPROVAL_RECORD_STATE,

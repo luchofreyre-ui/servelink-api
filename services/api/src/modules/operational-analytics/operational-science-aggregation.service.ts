@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../prisma";
-import { WORKFLOW_ACTIVATION_STATE } from "../orchestration/workflow-execution-activation.constants";
+import { WORKFLOW_ACTIVATION_STATE } from "../workflow/workflow-execution-activation.constants";
 import {
   OPERATIONAL_BALANCING_ENGINE_VERSION,
   BALANCING_SIGNAL_SEVERITY,

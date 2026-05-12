@@ -7,7 +7,7 @@ import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import {
   WORKFLOW_ACTIVATION_STATE,
-} from "../orchestration/workflow-execution-activation.constants";
+} from "./workflow-execution-activation.constants";
 import {
   WORKFLOW_APPROVAL_RECORD_STATE,
   WORKFLOW_APPROVAL_TYPE_BOOKING_TRANSITION_INVOKE_V1,
