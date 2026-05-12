@@ -1,13 +1,46 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { BookingStatusBadge } from "@/components/booking/BookingStatusBadge";
 import { AdminActivityFeed } from "@/components/admin/activity/AdminActivityFeed";
 import { AdminAnomaliesQueue } from "@/components/admin/anomalies/AdminAnomaliesQueue";
 import { AdminLaunchReadinessCard } from "@/components/admin/AdminLaunchReadinessCard";
 import { AdminBookingRevenueReadinessCard } from "@/components/admin/AdminBookingRevenueReadinessCard";
 import { AdminOpsAnomaliesPanel } from "@/components/admin/AdminOpsAnomaliesPanel";
+import { AdminApprovalQueueSummaryStrip } from "@/components/admin/AdminApprovalQueueSummaryStrip";
+import { AdminPortfolioOrchestrationStrip } from "@/components/admin/AdminPortfolioOrchestrationStrip";
+import { AdminOperationalAttentionBoard } from "@/components/admin/AdminOperationalAttentionBoard";
+import { AdminOperationalIncidentCommandRail } from "@/components/admin/AdminOperationalIncidentCommandRail";
+import { AdminOperationalInvestigationContinuityStrip } from "@/components/admin/AdminOperationalInvestigationContinuityStrip";
+import { AdminOperationalInvestigationWorkspacePanel } from "@/components/admin/AdminOperationalInvestigationWorkspacePanel";
+import { AdminOperationalSituationCockpit } from "@/components/admin/AdminOperationalSituationCockpit";
+import { AdminOperationalPressureHeatStrip } from "@/components/admin/AdminOperationalPressureHeatStrip";
+import { AdminOperationalRapidInvestigationZones } from "@/components/admin/AdminOperationalRapidInvestigationZones";
+import { AdminOperationalGraphRelationshipStrip } from "@/components/admin/AdminOperationalGraphRelationshipStrip";
+import { AdminOperationalGraphExplorer } from "@/components/admin/AdminOperationalGraphExplorer";
+import { AdminOperationalGraphTopologyView } from "@/components/admin/AdminOperationalGraphTopologyView";
+import { AdminOperationalGraphCollaborationAnnotations } from "@/components/admin/AdminOperationalGraphCollaborationAnnotations";
+import { AdminOperationalPresenceRibbon } from "@/components/admin/AdminOperationalPresenceRibbon";
+import { AdminOperationalSubstrateNavigationStrip } from "@/components/admin/AdminOperationalSubstrateNavigationStrip";
+import { AdminOperationalRealitySynthesisPanel } from "@/components/admin/AdminOperationalRealitySynthesisPanel";
+import { AdminOperationalScienceGlanceStrip } from "@/components/admin/AdminOperationalScienceGlanceStrip";
+import { AdminOperationalOutboxCommandGuidanceStrip } from "@/components/admin/AdminOperationalOutboxCommandGuidanceStrip";
+import { AdminOperationalEscalationCoordinationStrip } from "@/components/admin/AdminOperationalEscalationCoordinationStrip";
+import { AdminOperationalTacticalContinuityStrip } from "@/components/admin/AdminOperationalTacticalContinuityStrip";
+import { AdminOperationalReplayTimelineStrip } from "@/components/admin/AdminOperationalReplayTimelineStrip";
+import { AdminOperationalReplayExplorerStrip } from "@/components/admin/AdminOperationalReplayExplorerStrip";
+import { AdminOperationalInterventionReplayRail } from "@/components/admin/AdminOperationalInterventionReplayRail";
+import { AdminOperationalReplaySuiteStrip } from "@/components/admin/AdminOperationalReplaySuiteStrip";
+import { AdminOperationalReplayAnalysisStrip } from "@/components/admin/AdminOperationalReplayAnalysisStrip";
+import { AdminOperationalReplayReviewPanel } from "@/components/admin/AdminOperationalReplayReviewPanel";
+import { AdminOperationalIntelligenceStrip } from "@/components/admin/AdminOperationalIntelligenceStrip";
+import {
+  fetchAdminOperationalIntelligenceDashboard,
+  type AdminOperationalIntelligenceDashboard,
+} from "@/lib/api/operationalIntelligence";
+import { publishOperationalGraphFocus } from "@/lib/operational/operationalRealtimePresenceBridge";
+import { COMMAND_CENTER_UX } from "@/lib/operational/commandCenterVocabulary";
 import { WEB_ENV } from "@/lib/env";
 import {
   clearStoredAccessToken,
@@ -99,7 +132,9 @@ function statusClass(status: StatusTone) {
 }
 
 function DashboardShell(props: { children: ReactNode }) {
-  return <div className="space-y-6">{props.children}</div>;
+  return (
+    <div className="space-y-4 scroll-smooth md:space-y-6">{props.children}</div>
+  );
 }
 
 function DashboardCard(props: {
@@ -181,8 +216,12 @@ function mapAdminActivityApiItem(
   };
 }
 
-export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
-  const { children } = props;
+export function AdminOperationsCommandCenter(props: {
+  children?: ReactNode;
+  commandSurfaceVariant?: "command_center" | "war_room";
+}) {
+  const { children, commandSurfaceVariant: surfaceVariantProp } = props;
+  const commandSurfaceVariant = surfaceVariantProp ?? "command_center";
   const [tokenChecked, setTokenChecked] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -210,6 +249,34 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
   const [paymentBookingsLoading, setPaymentBookingsLoading] = useState(true);
   const [opsSummary, setOpsSummary] = useState<AdminOpsSummary | null>(null);
   const [opsSummaryError, setOpsSummaryError] = useState<string | null>(null);
+
+  const [opDashboard, setOpDashboard] =
+    useState<AdminOperationalIntelligenceDashboard | null>(null);
+  const [opDashboardLoading, setOpDashboardLoading] = useState(false);
+  const [opDashboardError, setOpDashboardError] = useState<string | null>(null);
+
+  const [coordinatedGraphNodeId, setCoordinatedGraphNodeId] = useState<
+    string | null
+  >(null);
+
+  const loadOperationalDashboard = useCallback(async () => {
+    if (!token?.trim()) return;
+    setOpDashboardLoading(true);
+    setOpDashboardError(null);
+    try {
+      const d = await fetchAdminOperationalIntelligenceDashboard();
+      setOpDashboard(d);
+    } catch (err) {
+      setOpDashboard(null);
+      setOpDashboardError(
+        err instanceof Error ?
+          err.message
+        : "Operational dashboard unavailable.",
+      );
+    } finally {
+      setOpDashboardLoading(false);
+    }
+  }, [token]);
 
   useEffect(() => {
     const nextToken = getStoredAccessToken();
@@ -320,6 +387,15 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
       cancelled = true;
     };
   }, [token, tokenChecked]);
+
+  useEffect(() => {
+    if (!tokenChecked || !token) {
+      setOpDashboard(null);
+      setOpDashboardError(null);
+      return;
+    }
+    void loadOperationalDashboard();
+  }, [tokenChecked, token, loadOperationalDashboard]);
 
   useEffect(() => {
     if (!tokenChecked || !token) {
@@ -456,18 +532,222 @@ export function AdminOperationsCommandCenter(props: { children?: ReactNode }) {
 
   return shell(
     <DashboardShell>
-      <section className="rounded-2xl border border-white/10 bg-slate-950/70 p-6 shadow-[0_12px_40px_rgba(0,0,0,0.28)]">
+      <section
+        id="operational-situation-landmark"
+        aria-label={
+          commandSurfaceVariant === "war_room" ?
+            COMMAND_CENTER_UX.warRoomLandmarkTitle
+          : COMMAND_CENTER_UX.situationLandmarkTitle
+        }
+        className="motion-safe:transition-[box-shadow,background-color] motion-safe:duration-300 rounded-2xl border border-teal-400/20 bg-teal-950/25 px-5 py-4 text-slate-200 shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
+      >
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-teal-200/90">
+          {commandSurfaceVariant === "war_room" ?
+            COMMAND_CENTER_UX.warRoomLandmarkEyebrow
+          : COMMAND_CENTER_UX.situationLandmarkTitle}
+        </p>
+        <h1 className="mt-1 text-2xl font-semibold text-slate-50">
+          {commandSurfaceVariant === "war_room" ?
+            COMMAND_CENTER_UX.warRoomLandmarkTitle
+          : "Operations command center"}
+        </h1>
+        <p className="mt-2 max-w-4xl text-sm text-slate-400">
+          {commandSurfaceVariant === "war_room" ?
+            COMMAND_CENTER_UX.warRoomLandmarkSubtitle
+          : COMMAND_CENTER_UX.situationLandmarkSubtitle}
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pt-3 text-xs text-slate-500">
+          <span>{COMMAND_CENTER_UX.governanceRail}</span>
+          {commandSurfaceVariant === "war_room" ?
+            <>
+              <Link
+                href="/admin/ops"
+                className="font-medium text-teal-200 underline-offset-2 hover:underline"
+              >
+                {COMMAND_CENTER_UX.warRoomExitLink}
+              </Link>
+              <Link
+                href="#operational-substrate-navigation-strip"
+                className="font-medium text-teal-200 underline-offset-2 hover:underline"
+              >
+                {COMMAND_CENTER_UX.rapidZoneSubstrateMap}
+              </Link>
+            </>
+          : <>
+              <Link
+                href="/admin/ops/war-room"
+                className="font-medium text-teal-200 underline-offset-2 hover:underline"
+              >
+                {COMMAND_CENTER_UX.warRoomEnterLink}
+              </Link>
+              <Link
+                href="#operational-substrate-navigation-strip"
+                className="font-medium text-teal-200 underline-offset-2 hover:underline"
+              >
+                {COMMAND_CENTER_UX.rapidZoneSubstrateMap}
+              </Link>
+            </>}
+        </div>
+      </section>
+
+      <AdminOperationalPresenceRibbon
+        enabled={hasToken}
+        commandSurfaceVariant={commandSurfaceVariant}
+      />
+
+      <AdminOperationalSubstrateNavigationStrip />
+
+      <AdminOperationalRealitySynthesisPanel
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalInvestigationContinuityStrip />
+
+      <AdminOperationalRapidInvestigationZones />
+
+      <AdminOperationalInvestigationWorkspacePanel />
+
+      <AdminOperationalSituationCockpit
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalPressureHeatStrip
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalAttentionBoard
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalEscalationCoordinationStrip
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalIncidentCommandRail
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalGraphRelationshipStrip
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalGraphExplorer
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+        coordinatedSelectedNodeId={coordinatedGraphNodeId}
+        onCoordinatedSelectedNodeIdChange={(id) => {
+          setCoordinatedGraphNodeId(id);
+          publishOperationalGraphFocus("graph_explorer", id);
+        }}
+      />
+
+      <AdminOperationalGraphTopologyView
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+        coordinatedSelectedNodeId={coordinatedGraphNodeId}
+        onCoordinatedSelectedNodeIdChange={(id) => {
+          setCoordinatedGraphNodeId(id);
+          publishOperationalGraphFocus("graph_topology", id);
+        }}
+      />
+
+      <AdminOperationalGraphCollaborationAnnotations
+        graphNodeId={coordinatedGraphNodeId}
+      />
+
+      <AdminOperationalTacticalContinuityStrip
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalReplayTimelineStrip
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalReplayExplorerStrip
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+        onCompared={loadOperationalDashboard}
+      />
+
+      <AdminOperationalReplaySuiteStrip
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalReplayAnalysisStrip
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalReplayReviewPanel />
+
+      <AdminOperationalInterventionReplayRail
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminOperationalScienceGlanceStrip
+        dashboard={opDashboard}
+        loading={opDashboardLoading}
+        error={opDashboardError}
+      />
+
+      <AdminPortfolioOrchestrationStrip />
+      <AdminApprovalQueueSummaryStrip />
+      <AdminOperationalOutboxCommandGuidanceStrip />
+
+      <AdminOperationalIntelligenceStrip
+        coordinatedDashboard={opDashboard}
+        coordinatedLoading={opDashboardLoading}
+        coordinatedError={opDashboardError}
+        onCoordinatedReload={loadOperationalDashboard}
+      />
+
+      <section
+        id="admin-command-secondary-navigation"
+        className="rounded-2xl border border-white/10 bg-slate-950/70 p-6 shadow-[0_12px_40px_rgba(0,0,0,0.28)]"
+      >
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
               Servelink admin
             </p>
-            <h1 className="mt-1 text-3xl font-semibold text-slate-50">
-              Operations control center
-            </h1>
+            <h2 className="mt-1 text-xl font-semibold text-slate-50">
+              Navigation & deep surfaces
+            </h2>
             <p className="mt-2 max-w-3xl text-sm text-slate-400">
-              Unified launch readiness, revenue readiness, operational exceptions,
-              dispatch visibility, and admin activity in one dashboard.
+              Secondary navigation — operational posture and intelligence appear above.{" "}
+              <Link
+                href="#operational-substrate-navigation-strip"
+                className="font-medium text-teal-200 underline-offset-2 hover:underline"
+              >
+                Jump to operational substrate map
+              </Link>{" "}
+              for every rail anchor.
             </p>
           </div>
 
