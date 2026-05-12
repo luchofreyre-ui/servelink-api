@@ -27,7 +27,12 @@ export function buildSupportOperationalTrustLines(booking: BookingRecord): strin
     );
   }
 
-  if (booking.recurringPlan?.status === "active") {
+  const recurringPlan = (
+    booking as BookingRecord & {
+      recurringPlan?: { status?: string } | null;
+    }
+  ).recurringPlan;
+  if (recurringPlan?.status === "active") {
     lines.push(
       "Recurring cadence reflects the latest plan row linked to this booking — operational transitions do not imply schedule edits elsewhere.",
     );
