@@ -15,6 +15,7 @@
 - [ ] admin anomalies page loads and actions work
 
 ## Operational
+- [ ] Warehouse refresh cadence understood — **`docs/operations/warehouse-refresh-scheduling-governance-v1.md`** (manual **`POST /api/v1/admin/operational-intelligence/refresh-snapshots`**; automation only after approval gate).
 - [ ] create booking
 - [ ] quote is persisted
 - [ ] payment intent can be created

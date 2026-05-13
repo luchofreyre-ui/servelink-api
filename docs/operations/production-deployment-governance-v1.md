@@ -82,6 +82,7 @@ Immediately after any production deploy:
 
 ## Related docs
 
+- Warehouse refresh cadence (analytics snapshots): `docs/operations/warehouse-refresh-scheduling-governance-v1.md`
 - Railway upload / untracked hygiene: `docs/operations/railway-deploy-hygiene-v1.md`
 - Prisma prod behavior: `docs/operations/prisma-production-migration-governance-v1.md`
 - CI merge gates: `docs/operations/ci-and-merge-governance-v1.md`
