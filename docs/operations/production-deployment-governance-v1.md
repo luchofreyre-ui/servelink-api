@@ -25,6 +25,7 @@ Operational rules for **Nu Standard / Servelink** production delivery. Anti-chao
 
 ## Railway expectations
 
+- **CLI uploads:** **`railway up` ships your working tree**, including **untracked** files outside `.gitignore`. See **`docs/operations/railway-deploy-hygiene-v1.md`** before any manual upload deploy.
 - **Service:** `servelink-api` (production environment).
 - **Build:** `services/api/Dockerfile` with monorepo context as configured in Railway.
 - **Health:** Platform healthcheck uses **`/api/v1/system/readiness`** (see Railway service settings).
@@ -81,6 +82,7 @@ Immediately after any production deploy:
 
 ## Related docs
 
+- Railway upload / untracked hygiene: `docs/operations/railway-deploy-hygiene-v1.md`
 - Prisma prod behavior: `docs/operations/prisma-production-migration-governance-v1.md`
 - CI merge gates: `docs/operations/ci-and-merge-governance-v1.md`
 - Failure modes: `docs/operations/rollback-and-recovery-governance-v1.md`

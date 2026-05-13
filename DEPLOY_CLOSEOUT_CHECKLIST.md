@@ -1,6 +1,7 @@
 # Servelink Deploy Closeout Checklist
 
 ## Backend
+- [ ] Before any **`railway up`** API deploy: **`npm run check:railway-api-deploy-tree`** passes from repo root (see **`docs/operations/railway-deploy-hygiene-v1.md`**).
 - [ ] `npx prisma migrate deploy` completed successfully
 - [ ] environment variables present
 - [ ] Stripe secrets configured correctly
