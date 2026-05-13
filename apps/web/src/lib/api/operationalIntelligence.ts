@@ -51,6 +51,21 @@ export type DeterministicPrioritizationSignal = {
   sortKey: number;
 };
 
+export type WarehouseOperationalFreshnessLabel =
+  | "NOT_REFRESHED"
+  | "FRESH"
+  | "STALE"
+  | "FAILED"
+  | "EMPTY_BUT_VALID";
+
+export type WarehouseOperationalFreshness = {
+  label: WarehouseOperationalFreshnessLabel;
+  warehouseBatchRefreshedAt: string | null;
+  latestCronStatus: string | null;
+  lastCronSuccessFinishedAt: string | null;
+  anchorRefreshedAt: string | null;
+};
+
 export type AdminOperationalIntelligenceDashboard = {
   analyticsGovernanceVersion: string;
   analyticsEngineVersion: string;
@@ -320,6 +335,7 @@ export type AdminOperationalIntelligenceDashboard = {
       };
     }>;
   };
+  warehouseOperationalFreshness: WarehouseOperationalFreshness;
 };
 
 async function readJson(res: Response): Promise<unknown> {

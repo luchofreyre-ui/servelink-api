@@ -134,6 +134,14 @@ describe("System Truth V6 invariants", () => {
       { getSummary: jest.fn(async () => ({ available: true, jobs: {} })) } as never,
       { getHealthSnapshot: () => ({ stale: false }) } as never,
       { getHealthSnapshot: () => ({ stale: false }) } as never,
+      {
+        getHealthSnapshot: () => ({
+          stale: false,
+          lastRunAt: null,
+          lastSuccessAt: null,
+          lastFailureAt: null,
+        }),
+      } as never,
       { getSlotHoldIntegritySummary: jest.fn(async () => ({ active: 0 })) } as never,
     );
 

@@ -59,3 +59,7 @@ export const ANALYTICS_METRIC_KEY = {
 } as const;
 
 export const ANALYTICS_WORKFLOW_ROLLUP_ALL = "__all_workflows__" as const;
+
+/** Stable `CronRunLedger.jobName` for governed warehouse refresh automation (env-gated). */
+export const OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON_JOB_NAME =
+  "operational_analytics_warehouse_refresh" as const;

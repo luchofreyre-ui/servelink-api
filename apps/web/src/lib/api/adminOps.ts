@@ -33,6 +33,7 @@ export type OpsSummaryResponse = {
   cron?: {
     reconciliation?: OpsCronHealthSnapshot;
     remainingBalanceAuth?: OpsCronHealthSnapshot;
+    operationalAnalyticsWarehouseRefresh?: OpsCronHealthSnapshot;
   };
   cronLedger?: OpsCronLedgerSummary;
   payment?: OpsPaymentSummary;
@@ -46,6 +47,7 @@ export type OpsSummaryResponse = {
     cron?: {
       reconciliation?: OpsCronHealthSnapshot;
       remainingBalanceAuth?: OpsCronHealthSnapshot;
+      operationalAnalyticsWarehouseRefresh?: OpsCronHealthSnapshot;
     };
     cronLedger?: OpsCronLedgerSummary;
     payment?: OpsPaymentSummary;

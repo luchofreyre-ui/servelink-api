@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import type { BookingStatus } from "@prisma/client";
 import { PaymentLifecycleReconciliationCronService } from "../../modules/billing/payment-lifecycle-reconciliation.cron.service";
 import { RemainingBalanceAuthorizationCronService } from "../../modules/billing/remaining-balance-authorization.cron.service";
+import { OperationalAnalyticsWarehouseRefreshCronService } from "../../modules/operational-analytics/operational-analytics-warehouse-refresh.cron";
 import { buildSystemOpsDrilldownEligibility } from "../../modules/dispatch/dispatch-ops-eligibility";
 import {
   buildGovernanceLaneSummariesFromSnapshotOutputJson,
@@ -29,6 +30,7 @@ export class OpsVisibilityService {
     private readonly cronRunLedger: CronRunLedgerService,
     private readonly paymentLifecycleReconciliationCron: PaymentLifecycleReconciliationCronService,
     private readonly remainingBalanceAuthorizationCron: RemainingBalanceAuthorizationCronService,
+    private readonly operationalAnalyticsWarehouseRefreshCron: OperationalAnalyticsWarehouseRefreshCronService,
     private readonly slotHolds: SlotHoldsService,
   ) {}
 
@@ -173,6 +175,8 @@ export class OpsVisibilityService {
           this.paymentLifecycleReconciliationCron.getHealthSnapshot(now),
         remainingBalanceAuth:
           this.remainingBalanceAuthorizationCron.getHealthSnapshot(now),
+        operationalAnalyticsWarehouseRefresh:
+          this.operationalAnalyticsWarehouseRefreshCron.getHealthSnapshot(now),
       },
       cronLedger,
       slotHolds: slotHoldIntegrity,

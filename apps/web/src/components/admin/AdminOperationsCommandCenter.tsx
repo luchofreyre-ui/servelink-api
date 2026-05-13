@@ -882,7 +882,7 @@ export function AdminOperationsCommandCenter(props: {
         {opsSummaryError ? (
           <p className="text-sm text-amber-200/90">{opsSummaryError}</p>
         ) : (
-          <div className="grid gap-3 lg:grid-cols-2">
+          <div className="grid gap-3 lg:grid-cols-3">
             {[
               {
                 label: "Payment reconciliation cron",
@@ -891,6 +891,10 @@ export function AdminOperationsCommandCenter(props: {
               {
                 label: "Remaining balance auth cron",
                 snapshot: opsSummary?.cron?.remainingBalanceAuth,
+              },
+              {
+                label: "Operational analytics warehouse refresh cron",
+                snapshot: opsSummary?.cron?.operationalAnalyticsWarehouseRefresh,
               },
             ].map(({ label, snapshot }) => {
               const status = cronStatus(snapshot);

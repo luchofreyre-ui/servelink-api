@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { CronRunLedgerService } from "../../common/reliability/cron-run-ledger.service";
 import { PrismaService } from "../../prisma";
 import type { AdminPortfolioOrchestrationSummary } from "../workflow/operational-portfolio-orchestration.service";
 import { OperationalPortfolioOrchestrationService } from "../workflow/operational-portfolio-orchestration.service";
@@ -12,6 +13,7 @@ import {
   ANALYTICS_AGGREGATE_WINDOW,
   ANALYTICS_METRIC_KEY,
   OPERATIONAL_ANALYTICS_ENGINE_VERSION,
+  OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON_JOB_NAME,
 } from "./operational-analytics.constants";
 import {
   assertPolicyAnalyticsVersionAlignment,
@@ -46,6 +48,10 @@ import { OPERATIONAL_INCIDENT_ENGINE_VERSION } from "./operational-incident-comm
 import { OPERATIONAL_ENTITY_GRAPH_ENGINE_VERSION } from "./operational-entity-graph.constants";
 import { OPERATIONAL_GRAPH_HISTORY_ENGINE_VERSION } from "./operational-replay.constants";
 import { OPERATIONAL_REPLAY_ANALYSIS_ENGINE_VERSION } from "./operational-replay-analysis.constants";
+import {
+  classifyWarehouseOperationalFreshness,
+  type WarehouseOperationalFreshness,
+} from "./warehouse-operational-freshness";
 
 const PAYMENT_ATTENTION_STATUSES = [
   "unpaid",
@@ -380,6 +386,8 @@ export type AdminOperationalIntelligenceDashboard = {
       };
     }>;
   };
+  /** Warehouse batch + cron-ledger derived freshness (analytics read-model only). */
+  warehouseOperationalFreshness: WarehouseOperationalFreshness;
 };
 
 export type FoOperationalIntelligenceSummary = {
@@ -559,7 +567,7 @@ function buildSafeActivationCandidates(args: {
       kind: "warehouse_refresh",
       title: "Refresh operational analytics warehouse",
       detail:
-        "Recomputes deterministic analytics plus Phase 22 balancing/congestion snapshots — explicit POST only; never auto-scheduled from this surface.",
+        "Recomputes deterministic analytics plus Phase 22 balancing/congestion snapshots — explicit POST on demand; optional governed cron exists but stays default-off until operators set ENABLE_OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON=true after manual proof.",
       suggestedAdminHints: [
         "POST /api/v1/admin/operational-intelligence/refresh-snapshots",
       ],
@@ -893,6 +901,7 @@ export class OperationalIntelligenceQueryService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly portfolio: OperationalPortfolioOrchestrationService,
+    private readonly cronRunLedger: CronRunLedgerService,
   ) {}
 
   async getFoOperationalIntelligenceSummary(
@@ -1922,6 +1931,20 @@ export class OperationalIntelligenceQueryService {
           : null,
       }));
 
+    const cronRunsGrouped = await this.cronRunLedger.getLatestRuns(25);
+    const warehouseJobRunsRaw =
+      cronRunsGrouped[OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON_JOB_NAME] ?? [];
+    const latestJobRuns = warehouseJobRunsRaw.map((r: Record<string, unknown>) => ({
+      status: String(r.status ?? ""),
+      finishedAt: typeof r.finishedAt === "string" ? r.finishedAt : null,
+      metadata: r.metadata,
+    }));
+    const warehouseOperationalFreshness = classifyWarehouseOperationalFreshness({
+      warehouseBatchRefreshedAt: refreshedAt?.toISOString() ?? null,
+      latestJobRuns,
+      nowMs: Date.now(),
+    });
+
     return {
       analyticsGovernanceVersion: OPERATIONAL_ANALYTICS_GOVERNANCE_VERSION,
       analyticsEngineVersion: ENGINE,
@@ -2020,6 +2043,7 @@ export class OperationalIntelligenceQueryService {
         aggregateWindow: WINDOW,
         diffs: replayAnalysisDiffs,
       },
+      warehouseOperationalFreshness,
     };
   }
 }

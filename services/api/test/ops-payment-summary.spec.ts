@@ -180,6 +180,7 @@ describe("OpsVisibilityService payment summary", () => {
       {} as never,
       {} as never,
       {} as never,
+      {} as never,
     );
 
     const summary = await (
