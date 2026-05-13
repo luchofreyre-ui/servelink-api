@@ -130,6 +130,13 @@ function baseDashboard(): AdminOperationalIntelligenceDashboard {
       aggregateWindow: "as_of_now",
       diffs: [],
     },
+    warehouseOperationalFreshness: {
+      label: "FRESH",
+      warehouseBatchRefreshedAt: "2026-01-01T00:00:00.000Z",
+      latestCronStatus: null,
+      lastCronSuccessFinishedAt: null,
+      anchorRefreshedAt: "2026-01-01T00:00:00.000Z",
+    },
   };
 }
 

@@ -8,6 +8,7 @@ import {
 } from "@/lib/api/operationalIntelligence";
 import { ORCHESTRATION_UX } from "@/lib/operational/orchestrationVocabulary";
 import { getStoredAccessToken } from "@/lib/auth";
+import { AdminWarehouseOperationalFreshnessCallout } from "@/components/admin/AdminWarehouseOperationalFreshnessCallout";
 
 function fmtPct(num: number): string {
   if (!Number.isFinite(num)) return "—";
@@ -210,6 +211,9 @@ export function AdminOperationalIntelligenceStrip(
           <p className="mt-2 text-[10px] text-slate-500">
             {ORCHESTRATION_UX.operationalLoadBalancingStripSubtitle}
           </p>
+          <AdminWarehouseOperationalFreshnessCallout
+            freshness={dash.warehouseOperationalFreshness}
+          />
         </div>
         <button
           type="button"

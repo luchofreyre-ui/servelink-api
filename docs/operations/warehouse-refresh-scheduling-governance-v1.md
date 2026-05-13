@@ -1,6 +1,6 @@
 # Warehouse refresh scheduling governance (v1)
 
-Governed cadence and observability expectations for **operational analytics warehouse** refreshes — **documentation and operator process only** until an explicit implementation lane is approved.
+Governed cadence and observability for **operational analytics warehouse** refreshes — includes an **env-gated cron scaffold** (**default off**) and canonical manual **`POST`** refresh.
 
 ---
 
@@ -32,7 +32,9 @@ Warehouse refresh **must never** be confused with or substituted for:
 | **Behavior** | Calls **`OperationalAnalyticsAggregationService.refreshPlatformOperationalSnapshots`**, which **reads** operational/workflow/booking counts and **writes** analytics warehouse tables (snapshots, aggregates, and chained snapshot batches — replay/graph/science/incident paths as implemented). |
 | **Distinct from** | **`POST /api/v1/admin/operational-intelligence/replay-compare`** — explicit pairwise replay comparison for selected sessions; still analytics-side, but **not** the bulk warehouse refresh. |
 
-**Product copy:** The operational intelligence dashboard describes refresh as **explicit POST only; never auto-scheduled from this surface** (see `operational-intelligence-query.service.ts`). This governance doc **does not** change runtime behavior until **Warehouse Refresh Cron V1** is implemented and approved.
+**Product copy:** The operational intelligence dashboard supports **explicit POST** refresh on demand and surfaces **governed cron scaffold** status (**default off** via **`ENABLE_OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON`**). Operators enable cron only after manual refresh proof; scheduled ticks never substitute governance review.
+
+This governance doc describes **cadence, visibility, and approval gates** — runtime defaults keep automation **off** unless env explicitly opts in.
 
 ---
 
@@ -56,7 +58,7 @@ Warehouse refresh **must never** be confused with or substituted for:
 
 ## Required observability before automation
 
-Before enabling **any** cron or external scheduler that calls the refresh path, operators must be able to see (via logs, admin API, or admin UI — implementation TBD in **Warehouse Refresh Cron V1**):
+Before enabling **any** cron or external scheduler that calls the refresh path, operators must be able to see (via logs, admin API, and admin UI — **`CronRunLedger`** rows, **`GET /api/v1/system/ops/summary`**, operational intelligence **`warehouseOperationalFreshness`**):
 
 | Signal | Why |
 |--------|-----|
@@ -99,17 +101,35 @@ Until all four hold, remain on **manual POST only**.
 | Pattern | Location | Behavior |
 |---------|----------|----------|
 | **Nest `@Cron` + env disable** | `payment-lifecycle-reconciliation.cron.service.ts`, `remaining-balance-authorization.cron.service.ts` | `*/15 * * * *`, **`ENABLE_*` explicit false** skips run and ledger **`skipped`**. |
+| **Warehouse refresh cron (scaffold)** | `operational-analytics-warehouse-refresh.cron.ts` | **`*/30 * * * *`**, runs only when **`ENABLE_OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON === "true"`**; otherwise **`CronRunLedger`** **`skipped`**. Failures **`recordFailed`** and logged without rethrow (timer-wake style). |
 | **`CronRunLedgerService`** | `common/reliability/cron-run-ledger.service.ts` | Persists **`CronRunLedger`** rows: `jobName`, `status`, `startedAt`, `finishedAt`, `durationMs`, `errorMessage`, `metadata`. |
 | **Dispatch worker crons** | `dispatch.worker.ts` | Higher frequency; ledger-wrapped; swallow errors to avoid process crash — **different risk profile** than warehouse refresh. |
-| **Manual-only refresh** | `admin-operational-intelligence.controller.ts` | **`refresh-snapshots`** — **no `@Cron`** today. |
+| **Manual refresh + optional cron** | `admin-operational-intelligence.controller.ts` (**POST refresh-snapshots**); `operational-analytics-warehouse-refresh.cron.ts` | Canonical human trigger remains **POST**; governed **`@Cron`** calls the same **`refreshPlatformOperationalSnapshots`** path only when env-enabled (default off). |
 
 **Operational intelligence copy** explicitly distinguishes **refresh-snapshots** (analytics) from **`timers/process-once`** (workflow timers).
 
 ---
 
-## Next implementation lane
+## Implemented scaffold (Warehouse Refresh Cron V1)
 
-**Warehouse Refresh Cron V1** — only after this governance doc is acknowledged and the **automation approval gate** checklist is satisfied.
+The following **ships in codebase** but stays **disabled by default** until operators satisfy the **automation approval gate** for each environment.
+
+| Item | Detail |
+|------|--------|
+| **Job name** (`CronRunLedger.jobName`) | **`operational_analytics_warehouse_refresh`** |
+| **Schedule** | **`*/30 * * * *`** (30-minute candidate cadence) |
+| **Enable env** | **`ENABLE_OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON`** — must be exactly **`true`** to run refresh; otherwise **`recordSkipped`** (`disabled_by_env`) with **no** aggregation call. |
+| **Execution path** | **`OperationalAnalyticsWarehouseRefreshCronService.tick`** → **`OperationalAnalyticsAggregationService.refreshPlatformOperationalSnapshots`** (default **`AS_OF_NOW`** / `aggregateWindow` in ledger metadata). |
+| **Success ledger metadata** | `aggregateWindow`, `snapshotsWritten`, `aggregatesWritten`, `operationalReplaySessionsWritten`, `operationalReplayDiffsWritten`, `operationalEntityNodesWritten`, `operationalEntityEdgesWritten`, `cohortSnapshotsWritten`, `operationalExperimentSnapshotsWritten`, `interventionSandboxesWritten`, `interventionAssignmentsWritten`, `validityCertificationsWritten`. |
+| **Admin visibility** | **`GET /api/v1/system/ops/summary`** exposes **`cron.operationalAnalyticsWarehouseRefresh`** (last run/success/failure/stale) plus **`cronLedger.jobs[operational_analytics_warehouse_refresh]`** when rows exist; admin ops command center lists this cron beside payment crons. **`GET .../operational-intelligence/dashboard`** includes **`warehouseOperationalFreshness`** (`NOT_REFRESHED` / `FRESH` / `STALE` / `FAILED` / `EMPTY_BUT_VALID`) with copy separating analytics freshness from live ops truth. |
+
+**Operator rule:** Do **not** set **`ENABLE_OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON=true`** until **manual refresh proof** for that environment is complete.
+
+---
+
+## Enablement gate (still required for production automation)
+
+**Warehouse Refresh Cron V1** automation in **production** remains gated until the **automation approval gate** checklist (above) is satisfied.
 
 Prerequisite operational lane: **Authenticated Manual Refresh Proof V1** — one production POST with captured response JSON and timestamp.
 

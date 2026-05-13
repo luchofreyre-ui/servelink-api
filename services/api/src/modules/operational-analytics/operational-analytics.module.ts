@@ -18,6 +18,7 @@ import { OperationalInterventionValidityAggregationService } from "./operational
 import { OperationalIncidentCommandAggregationService } from "./operational-incident-command-aggregation.service";
 import { OperationalEntityGraphAggregationService } from "./operational-entity-graph-aggregation.service";
 import { OperationalReplayIntelligenceSuiteService } from "./operational-replay-intelligence-suite.service";
+import { OperationalAnalyticsWarehouseRefreshCronService } from "./operational-analytics-warehouse-refresh.cron";
 
 @Module({
   imports: [PrismaModule, WorkflowModule],
@@ -37,6 +38,7 @@ import { OperationalReplayIntelligenceSuiteService } from "./operational-replay-
     OperationalScienceAggregationService,
     OperationalInterventionValidityAggregationService,
     OperationalAnalyticsAggregationService,
+    OperationalAnalyticsWarehouseRefreshCronService,
     OperationalReplayIntelligenceSuiteService,
     OperationalIntelligenceQueryService,
     OperationalCommandCollaborationService,
@@ -52,6 +54,7 @@ import { OperationalReplayIntelligenceSuiteService } from "./operational-replay-
     OperationalScienceAggregationService,
     OperationalInterventionValidityAggregationService,
     OperationalIntelligenceQueryService,
+    OperationalAnalyticsWarehouseRefreshCronService,
   ],
 })
 export class OperationalAnalyticsModule {}

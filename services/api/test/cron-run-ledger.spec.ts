@@ -223,6 +223,14 @@ describe("OpsVisibilityService cron ledger summary", () => {
       cronLedger as never,
       { getHealthSnapshot: () => ({}) } as never,
       { getHealthSnapshot: () => ({}) } as never,
+      {
+        getHealthSnapshot: () => ({
+          stale: false,
+          lastRunAt: null,
+          lastSuccessAt: null,
+          lastFailureAt: null,
+        }),
+      } as never,
       { getSlotHoldIntegritySummary: jest.fn(async () => ({ available: true })) } as never,
     );
 

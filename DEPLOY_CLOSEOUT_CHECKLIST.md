@@ -15,7 +15,9 @@
 - [ ] admin anomalies page loads and actions work
 
 ## Operational
-- [ ] Warehouse refresh cadence understood — **`docs/operations/warehouse-refresh-scheduling-governance-v1.md`** (manual **`POST /api/v1/admin/operational-intelligence/refresh-snapshots`**; automation only after approval gate).
+- [ ] Warehouse refresh cron stays **disabled by default** — **`ENABLE_OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON`** unset or not **`true`** unless explicitly approved for that environment (`docs/operations/warehouse-refresh-scheduling-governance-v1.md`).
+- [ ] Admin ops command center shows **operational analytics warehouse refresh cron** tile and **`cronLedger`** rows for **`operational_analytics_warehouse_refresh`** after first ledger writes (skipped ticks still create rows when DB available).
+- [ ] Warehouse refresh cadence understood — **`docs/operations/warehouse-refresh-scheduling-governance-v1.md`** (manual **`POST /api/v1/admin/operational-intelligence/refresh-snapshots`**; optional cron only after approval gate).
 - [ ] create booking
 - [ ] quote is persisted
 - [ ] payment intent can be created
