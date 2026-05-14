@@ -70,6 +70,7 @@ Merge discipline for **Servelink** so **`main`** stays shippable and deploy risk
 
 ## Related docs
 
+- Architecture primitives + Phase 0: `docs/governance/README.md`
 - Production deploy: `docs/operations/production-deployment-governance-v1.md`
 - Prisma: `docs/operations/prisma-production-migration-governance-v1.md` + `docs/engineering/prisma-migration-governance-v1.md`
 - Failures: `docs/operations/rollback-and-recovery-governance-v1.md`

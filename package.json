@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "prepare": "husky",
+    "check:governance-docs": "bash scripts/check-architecture-governance-v1.sh",
     "check:railway-api-deploy-tree": "bash scripts/check-railway-api-deploy-tree.sh",
     "typecheck:api": "npm run typecheck --prefix services/api",
     "typecheck:web": "npm run typecheck --prefix apps/web"
