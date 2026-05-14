@@ -3,12 +3,18 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   fetchAdminOperationalIntelligenceDashboard,
+  fetchOperationalIntelligenceRefreshRuns,
+  OperationalAnalyticsWarehouseRefreshBlockedError,
   postOperationalAnalyticsRefreshSnapshots,
   type AdminOperationalIntelligenceDashboard,
+  type OperationalAnalyticsRefreshRunsActiveRun,
+  type OperationalAnalyticsWarehouseRefreshBlockedBody,
+  type OperationalAnalyticsWarehouseRefreshRunRow,
 } from "@/lib/api/operationalIntelligence";
 import { ORCHESTRATION_UX } from "@/lib/operational/orchestrationVocabulary";
 import { getStoredAccessToken } from "@/lib/auth";
 import { AdminWarehouseOperationalFreshnessCallout } from "@/components/admin/AdminWarehouseOperationalFreshnessCallout";
+import { AdminWarehouseRefreshAuditPanel } from "@/components/admin/AdminWarehouseRefreshAuditPanel";
 
 function fmtPct(num: number): string {
   if (!Number.isFinite(num)) return "—";
@@ -47,6 +53,16 @@ export function AdminOperationalIntelligenceStrip(
     string | null
   >(null);
   const [busy, setBusy] = useState(false);
+  const [auditRuns, setAuditRuns] = useState<
+    OperationalAnalyticsWarehouseRefreshRunRow[]
+  >([]);
+  const [auditReplayClass, setAuditReplayClass] = useState<string | null>(null);
+  const [auditLoadErr, setAuditLoadErr] = useState<string | null>(null);
+  const [auditActiveRun, setAuditActiveRun] =
+    useState<OperationalAnalyticsRefreshRunsActiveRun | null>(null);
+  const [auditStaleReconciledCount, setAuditStaleReconciledCount] = useState(0);
+  const [blockedRefreshAttempt, setBlockedRefreshAttempt] =
+    useState<OperationalAnalyticsWarehouseRefreshBlockedBody | null>(null);
 
   const load = useCallback(async () => {
     if (coordinated) return;
@@ -69,23 +85,71 @@ export function AdminOperationalIntelligenceStrip(
     void load();
   }, [load, coordinated]);
 
+  const loadWarehouseAuditPanel = useCallback(async () => {
+    if (!getStoredAccessToken()?.trim()) {
+      setAuditRuns([]);
+      setAuditReplayClass(null);
+      setAuditLoadErr(null);
+      setAuditActiveRun(null);
+      setAuditStaleReconciledCount(0);
+      return;
+    }
+    try {
+      const data = await fetchOperationalIntelligenceRefreshRuns(10);
+      setAuditRuns(data.items);
+      setAuditReplayClass(data.latestReplayClassification);
+      setAuditActiveRun(data.activeRun);
+      setAuditStaleReconciledCount(data.staleReconciledCount);
+      setAuditLoadErr(null);
+    } catch {
+      setAuditLoadErr("Refresh audit history unavailable (non-blocking).");
+    }
+  }, []);
+
+  useEffect(() => {
+    const dash = coordinated ?
+        props.coordinatedDashboard ?? null
+      : internalDash;
+    if (!dash) return;
+    void loadWarehouseAuditPanel();
+  }, [
+    coordinated,
+    props.coordinatedDashboard,
+    internalDash,
+    loadWarehouseAuditPanel,
+  ]);
+
   async function onRefreshWarehouse() {
     setBusy(true);
     try {
       setCoordinatedRefreshError(null);
+      setBlockedRefreshAttempt(null);
       await postOperationalAnalyticsRefreshSnapshots();
+      setBlockedRefreshAttempt(null);
       if (coordinated) {
         await props.onCoordinatedReload?.();
       } else {
         await load();
       }
+      await loadWarehouseAuditPanel();
     } catch (e) {
-      const msg =
-        e instanceof Error ? e.message : "Snapshot refresh failed.";
-      if (coordinated) {
-        setCoordinatedRefreshError(msg);
+      if (e instanceof OperationalAnalyticsWarehouseRefreshBlockedError) {
+        setBlockedRefreshAttempt(e.body);
+        const blockedMsg = `Refresh blocked: another warehouse refresh is already running (${e.body.activeRefreshRunId}, ~${Math.round(e.body.activeDurationMs / 1000)}s).`;
+        if (coordinated) {
+          setCoordinatedRefreshError(blockedMsg);
+        } else {
+          setError(blockedMsg);
+        }
+        void loadWarehouseAuditPanel();
       } else {
-        setError(msg);
+        const msg =
+          e instanceof Error ? e.message : "Snapshot refresh failed.";
+        if (coordinated) {
+          setCoordinatedRefreshError(msg);
+        } else {
+          setError(msg);
+        }
       }
     } finally {
       setBusy(false);
@@ -231,6 +295,16 @@ export function AdminOperationalIntelligenceStrip(
           {coordinatedRefreshError}
         </p>
       ) : null}
+
+      <AdminWarehouseRefreshAuditPanel
+        runs={auditRuns}
+        latestReplayClassification={auditReplayClass}
+        loadError={auditLoadErr}
+        activeRun={auditActiveRun}
+        staleReconciledCount={auditStaleReconciledCount}
+        blockedAttempt={blockedRefreshAttempt}
+        warehouseOperationalFreshness={dash.warehouseOperationalFreshness}
+      />
 
       <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
         <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-xs">

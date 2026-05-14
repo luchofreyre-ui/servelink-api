@@ -66,6 +66,55 @@ export type WarehouseOperationalFreshness = {
   anchorRefreshedAt: string | null;
 };
 
+export type OperationalAnalyticsReplayClassification =
+  | "NO_PRIOR_SUCCESS"
+  | "REPLAY_STABLE"
+  | "REPLAY_CHANGED_WITH_SOURCE_COUNTER_DELTA"
+  | "REPLAY_CHANGED_WITHOUT_SOURCE_COUNTER_DELTA"
+  | "REPLAY_FAILED";
+
+export type OperationalAnalyticsWarehouseRefreshRunRow = {
+  refreshRunId: string;
+  triggerSource: string;
+  requestedByEmail: string | null;
+  startedAt: string;
+  finishedAt: string | null;
+  durationMs: number | null;
+  status: "started" | "succeeded" | "failed";
+  beforeFreshnessState: string;
+  afterFreshnessState: string | null;
+  rowsTouchedByWarehouseTable: Record<string, number> | null;
+  warnings: string[];
+  errorCode: string | null;
+  errorMessage: string | null;
+  createdAt: string;
+};
+
+export type OperationalAnalyticsRefreshRunsActiveRun = {
+  refreshRunId: string;
+  startedAt: string;
+  durationMs: number;
+};
+
+export type OperationalAnalyticsWarehouseRefreshBlockedBody = {
+  ok: false;
+  status: "blocked";
+  errorCode: string;
+  activeRefreshRunId: string;
+  activeStartedAt: string;
+  activeDurationMs: number;
+};
+
+export class OperationalAnalyticsWarehouseRefreshBlockedError extends Error {
+  readonly body: OperationalAnalyticsWarehouseRefreshBlockedBody;
+
+  constructor(body: OperationalAnalyticsWarehouseRefreshBlockedBody) {
+    super("Operational analytics warehouse refresh already running.");
+    this.name = "OperationalAnalyticsWarehouseRefreshBlockedError";
+    this.body = body;
+  }
+}
+
 export type AdminOperationalIntelligenceDashboard = {
   analyticsGovernanceVersion: string;
   analyticsEngineVersion: string;
@@ -359,94 +408,171 @@ export async function fetchAdminOperationalIntelligenceDashboard(): Promise<Admi
   return body.dashboard;
 }
 
-/** Explicit warehouse refresh — server recomputes snapshots (admin-only). */
-export async function postOperationalAnalyticsRefreshSnapshots(): Promise<{
+export async function fetchOperationalIntelligenceRefreshRuns(limit = 10): Promise<{
+  ok: true;
+  items: OperationalAnalyticsWarehouseRefreshRunRow[];
+  latestReplayClassification: OperationalAnalyticsReplayClassification;
+  activeRun: OperationalAnalyticsRefreshRunsActiveRun | null;
+  staleReconciledCount: number;
+}> {
+  const q = Number.isFinite(limit) ? `?limit=${encodeURIComponent(String(limit))}` : "";
+  const res = await apiFetch(`/admin/operational-intelligence/refresh-runs${q}`);
+  const body = (await readJson(res)) as {
+    ok?: boolean;
+    items?: OperationalAnalyticsWarehouseRefreshRunRow[];
+    latestReplayClassification?: OperationalAnalyticsReplayClassification;
+    activeRun?: OperationalAnalyticsRefreshRunsActiveRun | null;
+    staleReconciledCount?: number;
+  } | null;
+  if (!res.ok || !body?.ok || !Array.isArray(body.items)) {
+    throw new Error(`Operational intelligence refresh runs failed (${res.status})`);
+  }
+  return {
+    ok: true,
+    items: body.items,
+    latestReplayClassification:
+      body.latestReplayClassification ?? "NO_PRIOR_SUCCESS",
+    activeRun:
+      body.activeRun &&
+      typeof body.activeRun.refreshRunId === "string" &&
+      typeof body.activeRun.startedAt === "string" &&
+      typeof body.activeRun.durationMs === "number" ?
+        body.activeRun
+      : null,
+    staleReconciledCount:
+      typeof body.staleReconciledCount === "number" ?
+        body.staleReconciledCount
+      : 0,
+  };
+}
+
+/** Trace envelope returned alongside deterministic warehouse write counters. */
+export type OperationalAnalyticsWarehouseRefreshSnapshotsResult = {
+  ok: true;
+  refreshRunId: string;
+  status: "succeeded";
+  aggregateWindow: string;
+  startedAt: string;
+  finishedAt: string;
+  durationMs: number;
+  beforeFreshnessState: string;
+  afterFreshnessState: string;
+  rowsTouchedByWarehouseTable: Record<string, number>;
+  warnings: string[];
   snapshotsWritten: number;
   aggregatesWritten: number;
-  balancingSnapshotsWritten?: number;
-  workflowCongestionSnapshotsWritten?: number;
-  workflowOutcomeEvaluationsWritten?: number;
-  simulationAccuracySnapshotsWritten?: number;
-  operationalDriftSnapshotsWritten?: number;
-  workflowBenchmarkScenariosWritten?: number;
-  operationalExperimentSnapshotsWritten?: number;
-  simulationLabRunsWritten?: number;
-  experimentCertificationsWritten?: number;
-  causalAttributionSnapshotsWritten?: number;
-  experimentLineageWritten?: number;
-  counterfactualSnapshotsWritten?: number;
-  replayAlignmentsWritten?: number;
-  cohortSnapshotsWritten?: number;
-  interventionSandboxesWritten?: number;
-  interventionEvaluationsWritten?: number;
-  interventionAssignmentsWritten?: number;
-  controlCohortSnapshotsWritten?: number;
-  validityCertificationsWritten?: number;
-  operationalIncidentsWritten?: number;
-  operationalIncidentLinksWritten?: number;
-  operationalInvestigationTrailsWritten?: number;
-  operationalEntityNodesWritten?: number;
-  operationalEntityEdgesWritten?: number;
-  operationalChronologyFramesWritten?: number;
-  operationalGraphHistoryWritten?: number;
-  operationalReplaySessionsWritten?: number;
-  operationalReplayFramesWritten?: number;
-  operationalReplayDiffsWritten?: number;
-  operationalChronologyDeltasWritten?: number;
-  replayInterpretationSnapshotsWritten?: number;
-  operationalReplayPairingsWritten?: number;
-  operationalChronologySemanticAlignmentsWritten?: number;
-  operationalReplayTopologySnapshotsWritten?: number;
-  operationalReplayInterventionBridgesWritten?: number;
-}> {
+  balancingSnapshotsWritten: number;
+  workflowCongestionSnapshotsWritten: number;
+  workflowOutcomeEvaluationsWritten: number;
+  simulationAccuracySnapshotsWritten: number;
+  operationalDriftSnapshotsWritten: number;
+  workflowBenchmarkScenariosWritten: number;
+  operationalExperimentSnapshotsWritten: number;
+  simulationLabRunsWritten: number;
+  experimentCertificationsWritten: number;
+  causalAttributionSnapshotsWritten: number;
+  experimentLineageWritten: number;
+  counterfactualSnapshotsWritten: number;
+  replayAlignmentsWritten: number;
+  cohortSnapshotsWritten: number;
+  interventionSandboxesWritten: number;
+  interventionEvaluationsWritten: number;
+  interventionAssignmentsWritten: number;
+  controlCohortSnapshotsWritten: number;
+  validityCertificationsWritten: number;
+  operationalIncidentsWritten: number;
+  operationalIncidentLinksWritten: number;
+  operationalInvestigationTrailsWritten: number;
+  operationalEntityNodesWritten: number;
+  operationalEntityEdgesWritten: number;
+  operationalChronologyFramesWritten: number;
+  operationalGraphHistoryWritten: number;
+  operationalReplaySessionsWritten: number;
+  operationalReplayFramesWritten: number;
+  operationalReplayDiffsWritten: number;
+  operationalChronologyDeltasWritten: number;
+  replayInterpretationSnapshotsWritten: number;
+  operationalReplayPairingsWritten: number;
+  operationalChronologySemanticAlignmentsWritten: number;
+  operationalReplayTopologySnapshotsWritten: number;
+  operationalReplayInterventionBridgesWritten: number;
+};
+
+/** Explicit warehouse refresh — server recomputes snapshots (admin-only). */
+export async function postOperationalAnalyticsRefreshSnapshots(): Promise<OperationalAnalyticsWarehouseRefreshSnapshotsResult> {
   const res = await apiFetch("/admin/operational-intelligence/refresh-snapshots", {
     method: "POST",
     json: {},
   });
-  const body = (await readJson(res)) as {
-    ok?: boolean;
-    snapshotsWritten?: number;
-    aggregatesWritten?: number;
-    balancingSnapshotsWritten?: number;
-    workflowCongestionSnapshotsWritten?: number;
-    workflowOutcomeEvaluationsWritten?: number;
-    simulationAccuracySnapshotsWritten?: number;
-    operationalDriftSnapshotsWritten?: number;
-    workflowBenchmarkScenariosWritten?: number;
-    operationalExperimentSnapshotsWritten?: number;
-    simulationLabRunsWritten?: number;
-    experimentCertificationsWritten?: number;
-    causalAttributionSnapshotsWritten?: number;
-    experimentLineageWritten?: number;
-    counterfactualSnapshotsWritten?: number;
-    replayAlignmentsWritten?: number;
-    cohortSnapshotsWritten?: number;
-    interventionSandboxesWritten?: number;
-    interventionEvaluationsWritten?: number;
-    interventionAssignmentsWritten?: number;
-    controlCohortSnapshotsWritten?: number;
-    validityCertificationsWritten?: number;
-    operationalIncidentsWritten?: number;
-    operationalIncidentLinksWritten?: number;
-    operationalInvestigationTrailsWritten?: number;
-    operationalEntityNodesWritten?: number;
-    operationalEntityEdgesWritten?: number;
-    operationalChronologyFramesWritten?: number;
-    operationalGraphHistoryWritten?: number;
-    operationalReplaySessionsWritten?: number;
-    operationalReplayFramesWritten?: number;
-    operationalReplayDiffsWritten?: number;
-    operationalChronologyDeltasWritten?: number;
-    replayInterpretationSnapshotsWritten?: number;
-    operationalReplayPairingsWritten?: number;
-    operationalChronologySemanticAlignmentsWritten?: number;
-    operationalReplayTopologySnapshotsWritten?: number;
-    operationalReplayInterventionBridgesWritten?: number;
-  } | null;
-  if (!res.ok || !body?.ok) {
-    throw new Error(`Analytics snapshot refresh failed (${res.status})`);
+  const body = (await readJson(res)) as Partial<
+    OperationalAnalyticsWarehouseRefreshSnapshotsResult & {
+      errorMessage?: string;
+      errorCode?: string;
+      refreshRunId?: string;
+      status?: string;
+      activeRefreshRunId?: string;
+      activeStartedAt?: string;
+      activeDurationMs?: number;
+    }
+  > | null;
+
+  if (
+    res.status === 409 &&
+    body &&
+    typeof body === "object" &&
+    (body as { status?: string }).status === "blocked"
+  ) {
+    const b = body as unknown as OperationalAnalyticsWarehouseRefreshBlockedBody & {
+      activeRefreshRunId?: string;
+      activeStartedAt?: string;
+      activeDurationMs?: number;
+      errorCode?: string;
+    };
+    const blocked: OperationalAnalyticsWarehouseRefreshBlockedBody = {
+      ok: false,
+      status: "blocked",
+      errorCode: String(b.errorCode ?? ""),
+      activeRefreshRunId: String(b.activeRefreshRunId ?? ""),
+      activeStartedAt: String(b.activeStartedAt ?? ""),
+      activeDurationMs:
+        typeof b.activeDurationMs === "number" ? b.activeDurationMs : 0,
+    };
+    throw new OperationalAnalyticsWarehouseRefreshBlockedError(blocked);
   }
+
+  if (!res.ok || body?.ok !== true) {
+    let detail = `Analytics snapshot refresh failed (${res.status})`;
+    if (body && typeof body === "object") {
+      const em =
+        typeof body.errorMessage === "string" ? body.errorMessage.trim() : "";
+      if (em) detail = em;
+    }
+    throw new Error(detail);
+  }
+
+  const rows =
+    body.rowsTouchedByWarehouseTable &&
+    typeof body.rowsTouchedByWarehouseTable === "object" &&
+    !Array.isArray(body.rowsTouchedByWarehouseTable) ?
+      (body.rowsTouchedByWarehouseTable as Record<string, number>)
+    : {};
+
+  const warnings = Array.isArray(body.warnings) ?
+      body.warnings.filter((w): w is string => typeof w === "string")
+    : [];
+
   return {
+    ok: true,
+    refreshRunId: String(body.refreshRunId ?? ""),
+    status: "succeeded",
+    aggregateWindow: String(body.aggregateWindow ?? "as_of_now"),
+    startedAt: String(body.startedAt ?? ""),
+    finishedAt: String(body.finishedAt ?? ""),
+    durationMs: typeof body.durationMs === "number" ? body.durationMs : 0,
+    beforeFreshnessState: String(body.beforeFreshnessState ?? ""),
+    afterFreshnessState: String(body.afterFreshnessState ?? ""),
+    rowsTouchedByWarehouseTable: rows,
+    warnings,
     snapshotsWritten: body.snapshotsWritten ?? 0,
     aggregatesWritten: body.aggregatesWritten ?? 0,
     balancingSnapshotsWritten: body.balancingSnapshotsWritten ?? 0,

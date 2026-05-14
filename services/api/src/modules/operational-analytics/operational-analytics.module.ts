@@ -19,6 +19,7 @@ import { OperationalIncidentCommandAggregationService } from "./operational-inci
 import { OperationalEntityGraphAggregationService } from "./operational-entity-graph-aggregation.service";
 import { OperationalReplayIntelligenceSuiteService } from "./operational-replay-intelligence-suite.service";
 import { OperationalAnalyticsWarehouseRefreshCronService } from "./operational-analytics-warehouse-refresh.cron";
+import { OperationalAnalyticsRefreshRunService } from "./operational-analytics-refresh-run.service";
 
 @Module({
   imports: [PrismaModule, WorkflowModule],
@@ -41,6 +42,7 @@ import { OperationalAnalyticsWarehouseRefreshCronService } from "./operational-a
     OperationalAnalyticsWarehouseRefreshCronService,
     OperationalReplayIntelligenceSuiteService,
     OperationalIntelligenceQueryService,
+    OperationalAnalyticsRefreshRunService,
     OperationalCommandCollaborationService,
     OperationalCommandPresenceService,
   ],

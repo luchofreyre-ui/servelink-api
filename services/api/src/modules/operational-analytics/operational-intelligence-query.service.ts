@@ -904,6 +904,40 @@ export class OperationalIntelligenceQueryService {
     private readonly cronRunLedger: CronRunLedgerService,
   ) {}
 
+  /** Lightweight freshness projection reused before/after explicit warehouse refresh (matches dashboard classification). */
+  async getWarehouseOperationalFreshnessSnapshot(
+    aggregateWindow?: string,
+  ): Promise<WarehouseOperationalFreshness> {
+    const ENGINE = OPERATIONAL_ANALYTICS_ENGINE_VERSION;
+    const WINDOW = aggregateWindow?.trim() || ANALYTICS_AGGREGATE_WINDOW.AS_OF_NOW;
+
+    const latestStampRow =
+      await this.prisma.workflowAnalyticsAggregate.findFirst({
+        where: {
+          analyticsEngineVersion: ENGINE,
+          aggregateWindow: WINDOW,
+        },
+        orderBy: { createdAt: "desc" },
+        select: { createdAt: true },
+      });
+    const refreshedAt = latestStampRow?.createdAt ?? null;
+
+    const cronRunsGrouped = await this.cronRunLedger.getLatestRuns(25);
+    const warehouseJobRunsRaw =
+      cronRunsGrouped[OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON_JOB_NAME] ?? [];
+    const latestJobRuns = warehouseJobRunsRaw.map((r: Record<string, unknown>) => ({
+      status: String(r.status ?? ""),
+      finishedAt: typeof r.finishedAt === "string" ? r.finishedAt : null,
+      metadata: r.metadata,
+    }));
+
+    return classifyWarehouseOperationalFreshness({
+      warehouseBatchRefreshedAt: refreshedAt?.toISOString() ?? null,
+      latestJobRuns,
+      nowMs: Date.now(),
+    });
+  }
+
   async getFoOperationalIntelligenceSummary(
     franchiseOwnerId: string,
   ): Promise<FoOperationalIntelligenceSummary> {
