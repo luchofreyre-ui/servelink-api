@@ -141,6 +141,38 @@ model OperationalAnalyticsSnapshot {
   @@index([analyticsEngineVersion, aggregateWindow, createdAt], map: "OperationalAnalyticsSnapshot_analyticsEngineVersion_aggregateWi")
 }
 
+enum OperationalAnalyticsRefreshRunStatus {
+  started
+  succeeded
+  failed
+}
+
+model OperationalAnalyticsRefreshRun {
+  refreshRunId                  String                             @id @default(cuid())
+  triggerSource                 String
+  requestedByUserId             String?
+  requestedByEmail              String?
+  sourceRoute                   String
+  aggregateWindow               String
+  idempotencyKey                String?
+  startedAt                     DateTime
+  finishedAt                    DateTime?
+  durationMs                    Int?
+  status                        OperationalAnalyticsRefreshRunStatus
+  beforeFreshnessState          String
+  afterFreshnessState           String?
+  rowsTouchedByWarehouseTable   Json?
+  warnings                      Json                               @default("[]")
+  errorCode                     String?
+  errorMessage                  String?
+  stackHash                     String?
+  createdAt                     DateTime                           @default(now())
+
+  @@index([createdAt(sort: Desc)])
+  @@index([status, finishedAt(sort: Desc)])
+  @@index([requestedByUserId, startedAt(sort: Desc)])
+}
+
 model OperationalBalancingSnapshot {
   id                     String   @id @default(cuid())
   balancingEngineVersion String   @default("operational_balancing_phase22_v1")

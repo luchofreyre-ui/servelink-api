@@ -59,6 +59,19 @@ export type WarehouseOperationalFreshness = {
   anchorRefreshedAt: string | null;
 };
 
+/** Canonical serialized freshness envelope for durable audit columns (stable key order). */
+export function serializeWarehouseOperationalFreshness(
+  f: WarehouseOperationalFreshness,
+): string {
+  return JSON.stringify({
+    label: f.label,
+    warehouseBatchRefreshedAt: f.warehouseBatchRefreshedAt,
+    latestCronStatus: f.latestCronStatus,
+    lastCronSuccessFinishedAt: f.lastCronSuccessFinishedAt,
+    anchorRefreshedAt: f.anchorRefreshedAt,
+  });
+}
+
 /**
  * Deterministic warehouse read-model freshness — uses latest cron ledger rows for this job plus primary warehouse batch timestamp.
  */

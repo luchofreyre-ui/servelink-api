@@ -63,3 +63,23 @@ export const ANALYTICS_WORKFLOW_ROLLUP_ALL = "__all_workflows__" as const;
 /** Stable `CronRunLedger.jobName` for governed warehouse refresh automation (env-gated). */
 export const OPERATIONAL_ANALYTICS_WAREHOUSE_REFRESH_CRON_JOB_NAME =
   "operational_analytics_warehouse_refresh" as const;
+
+/**
+ * Started refresh runs older than this are terminalized as failed before a new refresh is allowed
+ * (crash/orphan protection — audit-only, does not enable cron).
+ */
+export const OPERATIONAL_ANALYTICS_REFRESH_STARTED_STALE_AFTER_MS =
+  15 * 60 * 1000;
+
+export const OPERATIONAL_ANALYTICS_REFRESH_STALE_RECONCILED_ERROR_CODE =
+  "OPERATIONAL_ANALYTICS_REFRESH_STALE_STARTED_RECONCILED" as const;
+
+export const OPERATIONAL_ANALYTICS_REFRESH_STALE_RECONCILED_ERROR_MESSAGE =
+  "Refresh run was left in started state beyond stale threshold and was reconciled before a new refresh attempt.";
+
+/** Persisted on reconciled rows (warnings JSON) for operator visibility. */
+export const OPERATIONAL_ANALYTICS_REFRESH_STALE_RECONCILED_WARNING =
+  "operational_analytics_refresh:stale_started_reconciled";
+
+export const OPERATIONAL_ANALYTICS_REFRESH_ALREADY_RUNNING_ERROR_CODE =
+  "OPERATIONAL_ANALYTICS_REFRESH_ALREADY_RUNNING" as const;
