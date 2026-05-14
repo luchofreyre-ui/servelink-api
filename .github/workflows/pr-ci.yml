@@ -64,6 +64,9 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Architecture governance docs (Phase 0 registry anchors)
+        run: npm run check:governance-docs
+
       - name: Clean install (node_modules only)
         run: |
           rm -rf services/api/node_modules
