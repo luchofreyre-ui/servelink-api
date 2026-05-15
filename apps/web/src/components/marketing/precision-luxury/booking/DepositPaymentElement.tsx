@@ -15,6 +15,14 @@ import type {
 } from "@stripe/stripe-js";
 
 import { WEB_ENV } from "@/lib/env";
+import {
+  BOOKING_DEPOSIT_PAYMENT_BTN_LOADING,
+  BOOKING_DEPOSIT_PAYMENT_BTN_PROCESSING,
+  BOOKING_DEPOSIT_PAYMENT_RECEIVED,
+  BOOKING_DEPOSIT_PAYMENT_RETRY_LOAD,
+  BOOKING_DEPOSIT_PAYMENT_STILL_LOADING,
+  BOOKING_DEPOSIT_PAYMENT_UNAVAILABLE,
+} from "./bookingPublicSurfaceCopy";
 
 function formatDepositCentsLabel(amountCents: number): string {
   const n = Math.max(0, Math.round(amountCents));
@@ -24,13 +32,6 @@ function formatDepositCentsLabel(amountCents: number): string {
     maximumFractionDigits: 0,
   }).format(n / 100);
 }
-
-const MSG_PAYMENT_UNAVAILABLE =
-  "Secure payment is not available right now. Please try again shortly.";
-const MSG_ELEMENT_STILL_LOADING =
-  "Secure payment is still loading. Please wait.";
-const BTN_LOADING = "Loading secure payment…";
-const BTN_PROCESSING = "Processing payment…";
 
 const PUBLIC_BOOKING_PAYMENT_ELEMENT_OPTIONS = {
   paymentMethodOrder: ["card"],
@@ -168,12 +169,12 @@ function DepositPaymentForm({
   );
 
   const buttonLabel = busy
-    ? BTN_PROCESSING
+    ? BOOKING_DEPOSIT_PAYMENT_BTN_PROCESSING
     : depositAlreadySucceeded
-      ? "Payment received"
-    : fullyReady
-      ? payLabel
-      : BTN_LOADING;
+      ? BOOKING_DEPOSIT_PAYMENT_RECEIVED
+      : fullyReady
+        ? payLabel
+        : BOOKING_DEPOSIT_PAYMENT_BTN_LOADING;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -236,7 +237,7 @@ function DepositPaymentForm({
       {elementLoadError ? (
         <div className="space-y-3">
           <p className="font-[var(--font-manrope)] text-sm text-[#B91C1C]">
-            {MSG_ELEMENT_STILL_LOADING}
+            {BOOKING_DEPOSIT_PAYMENT_STILL_LOADING}
           </p>
           <button
             type="button"
@@ -247,7 +248,7 @@ function DepositPaymentForm({
               setElementMountKey((k) => k + 1);
             }}
           >
-            Retry loading payment
+            {BOOKING_DEPOSIT_PAYMENT_RETRY_LOAD}
           </button>
         </div>
       ) : (
@@ -313,7 +314,7 @@ function DepositPaymentElementWithStripe({
           disabled
           className="inline-flex w-full cursor-not-allowed items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white opacity-60 shadow-[0_14px_40px_rgba(13,148,136,0.22)]"
         >
-          {BTN_LOADING}
+          {BOOKING_DEPOSIT_PAYMENT_BTN_LOADING}
         </button>
       </div>
     );
@@ -325,7 +326,7 @@ function DepositPaymentElementWithStripe({
         data-testid="deposit-payment-stripe-init-failed"
         className="font-[var(--font-manrope)] text-sm text-[#B91C1C]"
       >
-        {MSG_PAYMENT_UNAVAILABLE}
+        {BOOKING_DEPOSIT_PAYMENT_UNAVAILABLE}
       </p>
     );
   }
@@ -364,7 +365,7 @@ export function DepositPaymentElement(props: DepositPaymentElementProps) {
         data-testid="deposit-payment-config-unavailable"
         className="font-[var(--font-manrope)] text-sm text-[#B91C1C]"
       >
-        {MSG_PAYMENT_UNAVAILABLE}
+        {BOOKING_DEPOSIT_PAYMENT_UNAVAILABLE}
       </p>
     );
   }
@@ -375,7 +376,7 @@ export function DepositPaymentElement(props: DepositPaymentElementProps) {
         data-testid="deposit-payment-missing-secret"
         className="font-[var(--font-manrope)] text-sm text-[#B91C1C]"
       >
-        {MSG_PAYMENT_UNAVAILABLE}
+        {BOOKING_DEPOSIT_PAYMENT_UNAVAILABLE}
       </p>
     );
   }

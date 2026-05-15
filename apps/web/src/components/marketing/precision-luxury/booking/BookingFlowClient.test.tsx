@@ -166,7 +166,7 @@ async function continueThroughLocationGateToReview() {
   fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
   await waitFor(() =>
     expect(
-      screen.getByRole("heading", { level: 2, name: "Service location" }),
+      screen.getByRole("heading", { level: 2, name: "Visit address" }),
     ).toBeInTheDocument(),
   );
   fireEvent.change(screen.getByLabelText(/^street address$/i), {
@@ -432,7 +432,7 @@ function buildReviewSearchStringForService(serviceId: string): string {
 function goHomeFromReviewViaBackOnce() {
   fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
   expect(
-    screen.getByRole("heading", { level: 2, name: "Service location" }),
+    screen.getByRole("heading", { level: 2, name: "Visit address" }),
   ).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
   expect(
@@ -1386,7 +1386,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
       await waitFor(() =>
         expect(
-          screen.getByRole("heading", { level: 2, name: "Service location" }),
+          screen.getByRole("heading", { level: 2, name: "Visit address" }),
         ).toBeInTheDocument(),
       );
     });
@@ -1974,7 +1974,7 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      await screen.findByRole("heading", { level: 2, name: "Service location" });
+      await screen.findByRole("heading", { level: 2, name: "Visit address" });
       expect(
         screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
       ).not.toBeInTheDocument();
@@ -1988,7 +1988,7 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      await screen.findByRole("heading", { level: 2, name: "Service location" });
+      await screen.findByRole("heading", { level: 2, name: "Visit address" });
       expect(
         screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
       ).not.toBeInTheDocument();
@@ -3458,7 +3458,7 @@ describe("BookingFlowClient", () => {
         ),
       );
       expect(
-        screen.getByText(/after payment, you’ll choose your team and arrival time|applied to your total/i),
+        screen.getByText(/after payment.*choose your team.*arrival|applied to your total/i),
       ).toBeInTheDocument();
       expect(
         screen.getByText(

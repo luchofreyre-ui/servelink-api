@@ -63,12 +63,12 @@ export const BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE =
 export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD =
   "The estimate below reflects what you just confirmed with us.";
 export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL =
-  "Final pricing and visit timing are confirmed when we follow up by email—nothing on this page alone locks your first arrival.";
+  "Final pricing and arrival timing are confirmed when we follow up by email—this screen is your snapshot, not the final calendar lock.";
 
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD =
   "Your preferences and contact details are on file with Nu Standard.";
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL =
-  "We couldn’t finish every automated step in one pass, but your details are safe—our team picks up from here and replies personally.";
+  "If anything didn’t finish on this screen, your details are still safe—our team picks up personally from here.";
 
 export const BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED =
   "Watch the inbox you used on the previous step—we may ask a brief follow-up before we lock timing. You can also start a fresh booking note if your home or cadence changes meaningfully.";
@@ -107,13 +107,13 @@ export function bookingConfirmationNoticeForBookingErrorCode(
 ): string {
   switch (code.trim()) {
     case "ESTIMATE_EXECUTION_FAILED":
-      return "We saved your preferences, but couldn’t finalize an automated quote yet. Our team will reach out with pricing.";
+      return "We saved what you shared and couldn’t finish a quote on-screen yet—you’ll hear from us shortly with pricing.";
     case "ESTIMATE_INPUT_INVALID":
-      return "We saved your preferences. A few details need a quick review—our team will follow up to finish your quote.";
+      return "We saved your preferences. A quick detail needs human eyes—we’ll follow up to finalize your quote.";
     case "BOOKING_CREATE_FAILED":
-      return "We saved your request, but couldn’t finish creating the live booking in one step. Our team will still follow up with next steps.";
+      return "We saved your request. Creating your reservation hit a snag—we’ll still reach out with clear next steps.";
     default:
-      return "We saved your request. One step didn’t complete automatically—our team will follow up with next steps.";
+      return "We saved your request. One step needs a quick human finish—we’ll follow up with next steps.";
   }
 }
 
@@ -130,15 +130,15 @@ export const BOOKING_REVIEW_BANNER_AFTER_SEND_DID_NOT_FINISH =
 export const BOOKING_REVIEW_SUBMIT_TRY_AGAIN = "Try sending again";
 
 /** Step 4 — while the live quote is catching up to the latest selections. */
-export const BOOKING_REVIEW_ESTIMATE_REFRESHING_TITLE = "Refreshing your quote";
+export const BOOKING_REVIEW_ESTIMATE_REFRESHING_TITLE = "Updating your estimate";
 export const BOOKING_REVIEW_ESTIMATE_REFRESHING_BODY =
-  "We’re updating pricing and visit planning for your latest selections—usually just a moment.";
+  "We’re refreshing pricing for what you just selected—usually just a moment.";
 
 /** Step 4 — preview could not be produced for the current inputs. */
 export const BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD =
-  "We couldn’t show a live quote for these details yet.";
+  "We couldn’t show pricing for this combination yet.";
 export const BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_HINT =
-  "Adjust the selections above or try again shortly—we’ll show a fresh preview when it’s ready.";
+  "Try a small change above, or send your request—we’ll reply with numbers if preview stays unavailable.";
 
 /** Step 4 — preview finished but no figures returned. */
 export const BOOKING_REVIEW_ESTIMATE_NONE_AFTER_FETCH =
@@ -156,7 +156,7 @@ export const BOOKING_REVIEW_SUBMIT_ADD_CONTACT_FIRST =
 
 /** Shown on earlier steps as a gentle continuity cue (no jargon). */
 export const BOOKING_STEP_EDIT_CONTINUITY_HINT =
-  "When you return to review, we refresh your quote from these details.";
+  "When you return to review, pricing refreshes from these answers.";
 
 export function bookingConfirmationDeepPlanEchoLabel(
   program: BookingDeepCleanProgramChoice,
@@ -169,12 +169,12 @@ export function bookingConfirmationDeepPlanEchoLabel(
 export const BOOKING_PUBLIC_SERVICE_SECTION_TITLE = "Choose your service";
 
 export const BOOKING_PUBLIC_SERVICE_SECTION_BODY =
-  "Choose one visit, a first-time clean with recurring service, or a move-related clean. You will review pricing and scheduling before deposit.";
+  "Pick how you’d like to work with us first. You’ll review numbers when they’re ready, choose your team next, and hold your spot with a deposit only when you’re comfortable.";
 
 export const BOOKING_PUBLIC_CARD_ONE_TIME_TITLE = "One-Time Cleaning";
 
 export const BOOKING_PUBLIC_CARD_ONE_TIME_BODY =
-  "A single planned visit—home details, estimate, then team choice and scheduling from real availability.";
+  "A single planned visit—tell us about your home, review your estimate, then choose team and timing from real availability.";
 
 export const BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE =
   "First-Time Cleaning With Recurring Service";
@@ -185,7 +185,7 @@ export const BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_BODY =
 export const BOOKING_PUBLIC_CARD_MOVE_TITLE = "Move-In / Move-Out Cleaning";
 
 export const BOOKING_PUBLIC_CARD_MOVE_BODY =
-  "Transition-focused cleaning while occupancy and appliances are in flux—anonymous planning here, then estimate and scheduling once we know the property location.";
+  "For moves and transitions—plan anonymously here first, then we’ll estimate and schedule once we know the property address.";
 
 export const BOOKING_PUBLIC_CARD_RECURRING_TITLE = "Recurring Service";
 
@@ -202,10 +202,10 @@ export const BOOKING_RECURRING_GATE_LOGIN_CTA = "Log in";
 
 export const BOOKING_RECURRING_GATE_REGISTER_CTA = "Create account";
 
-export const BOOKING_LOCATION_STEP_TITLE = "Service location";
+export const BOOKING_LOCATION_STEP_TITLE = "Visit address";
 
 export const BOOKING_LOCATION_STEP_BODY =
-  "We need a routable address where the cleaning will take place before we match teams. All fields below are required except apartment or unit.";
+  "Share where we’ll meet you. Every field below is required except apartment or unit.";
 
 export const BOOKING_LOCATION_STREET_LABEL = "Street address";
 
@@ -271,7 +271,7 @@ export const BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED =
 export const BOOKING_SCHEDULE_PAGE_TITLE = "Schedule your visit";
 
 export const BOOKING_SCHEDULE_PAGE_LEAD =
-  "You choose your team, then a concrete arrival time. Your booking is confirmed only after the final step below.";
+  "Pick who serves your home, then choose an arrival window. Your visit is fully confirmed when you complete the step below.";
 
 export const BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE = "Choose your team";
 
@@ -279,7 +279,7 @@ export const BOOKING_SCHEDULE_TEAM_SUPPORT_LINE =
   "We’ve selected the best teams available for your home and service.";
 
 export const BOOKING_SCHEDULE_CHOOSE_TEAM_LEAD =
-  "Up to two teams you can book with here. Pick one to see only their open times—never mixed across teams.";
+  "When two teams appear, pick one to see only their open windows—we never mix times across teams.";
 
 export const BOOKING_SCHEDULE_TEAM_CARD_RECOMMENDED_BODY =
   "Recommended — strong fit for this visit based on your details.";
@@ -352,45 +352,77 @@ export const BOOKING_SCHEDULE_CONFIRM_FAILED =
 
 /** Shown on review before team/time selection while deposit payment is active. */
 export const BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE =
-  "Secure your booking with a $100 deposit.";
+  "A $100 deposit keeps your place while you finish scheduling.";
 
 export const BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE =
-  "After payment, you’ll choose your team and arrival time.";
+  "After payment, you’ll choose your team and arrival window.";
 
 export const BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE =
-  "Your deposit is applied toward your booking.";
+  "Your deposit is applied toward your booking—remaining balance is handled after service.";
 
 /** Single-screen deposit expectations (mobile compression). */
 export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY =
-  "Collects now to hold your spot through team and time selection; applies toward the visit you confirm. Change expectations arrive with your confirmation—reply there anytime.";
+  "Collected now to hold your spot while you choose team and time; applied toward the visit you confirm. Questions anytime—we reply from your confirmation email.";
 
 /** Replaces separate next-step + applied lines where stacked height matters. */
 export const BOOKING_REVIEW_DEPOSIT_FLOW_REMINDER =
-  "After payment, you’ll choose your team and arrival time. Your deposit is applied toward your booking.";
+  "After checkout, you’ll choose team and arrival. Your deposit applies toward that visit.";
 
 export const BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT =
-  "Payment was submitted and is still finalizing. Please try checking again.";
+  "Your payment went through—we’re still syncing it here. Tap below to refresh.";
 
-export const BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA = "Check payment status";
+export const BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA = "Refresh payment status";
 
 /** Deposit card — section framing (matches premium operational tone). */
 export const BOOKING_REVIEW_DEPOSIT_SECTION_TITLE =
-  "Secure your visit with a deposit";
+  "Hold your visit with a deposit";
 
 /** @deprecated Split into BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY for UI; retained for reference. */
 export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHY =
-  "The deposit reserves your place while you choose a team and arrival window.";
+  "This reserves your spot while you pick who arrives and when.";
 
 /** @deprecated Split into BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY for UI. */
 export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHEN =
-  "We collect it now; it applies toward the service total for the visit you confirm.";
+  "We charge it now; it rolls into the total for the visit you confirm.";
 
 /** @deprecated Split into BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY for UI. */
 export const BOOKING_REVIEW_DEPOSIT_EXPECTATION_CHANGES =
-  "Reschedule and cancellation expectations are spelled out when your visit is confirmed—reply in that thread anytime with questions.";
+  "If dates shift later, we’ll explain options in your confirmation thread—reply there anytime.";
 
 export const BOOKING_REVIEW_DEPOSIT_PAYMENT_REASSURANCE =
-  "Secure card checkout—scheduling is next.";
+  "Checkout is encrypted for card payments; only the deposit shown below is charged now.";
+
+/** Inline status — PaymentIntent / Elements preparing (review step). */
+export const BOOKING_REVIEW_DEPOSIT_PREPARING_CHECKOUT =
+  "Opening secure checkout…";
+
+/** Inline status — server confirmation after Stripe succeeds. */
+export const BOOKING_REVIEW_DEPOSIT_CONFIRMING_RECORDED =
+  "Recording your deposit—almost done.";
+
+/** Stripe publishable key missing (dev / misconfigured client). */
+export const BOOKING_REVIEW_PAYMENT_UNAVAILABLE_ENV =
+  "Card checkout isn’t enabled in this environment.";
+
+/** Deposit prepare returned without usable PaymentIntent client secret. */
+export const BOOKING_REVIEW_PAYMENT_COULD_NOT_START =
+  "We couldn’t open checkout. Refresh and try again—or watch your inbox if we’ve already emailed you.";
+
+/** Deposit Payment Element — unavailable or blocked (customer-facing). */
+export const BOOKING_DEPOSIT_PAYMENT_UNAVAILABLE =
+  "Secure checkout isn’t available right now. Please try again shortly.";
+
+/** Deposit Payment Element — fields still mounting. */
+export const BOOKING_DEPOSIT_PAYMENT_STILL_LOADING =
+  "Payment fields are still loading—one moment.";
+
+export const BOOKING_DEPOSIT_PAYMENT_RETRY_LOAD = "Try loading checkout again";
+
+export const BOOKING_DEPOSIT_PAYMENT_BTN_LOADING = "Loading checkout…";
+
+export const BOOKING_DEPOSIT_PAYMENT_BTN_PROCESSING = "Processing payment…";
+
+export const BOOKING_DEPOSIT_PAYMENT_RECEIVED = "Payment received";
 
 export const BOOKING_SCHEDULE_RETRY_CONFIRM_CTA = "Try again";
 
@@ -460,12 +492,12 @@ export const BOOKING_REVIEW_SAVE_AND_SCHEDULE_CTA = "See available teams";
 
 export const BOOKING_REVIEW_SEE_AVAILABLE_TEAMS_CTA = BOOKING_REVIEW_SAVE_AND_SCHEDULE_CTA;
 
-export const BOOKING_REVIEW_SUBMIT_SAVING = "Saving your details…";
+export const BOOKING_REVIEW_SUBMIT_SAVING = "Saving your request…";
 
-export const BOOKING_REVIEW_STEP_TITLE = "Review your direction & quote";
+export const BOOKING_REVIEW_STEP_TITLE = "Review your visit & estimate";
 
 export const BOOKING_REVIEW_STEP_BODY =
-  "Confirm your home details and preview look right. Continuing saves your direction and opens team selection—your calendar slot is chosen only after that step.";
+  "Confirm your home details and estimate look right. Continuing saves your request and opens team selection—your arrival window is chosen on the next step.";
 
 export const BOOKING_REVIEW_NEXT_SCHEDULE_TITLE = "Next: choose your team and arrival time";
 
@@ -803,17 +835,16 @@ export const BOOKING_TRUST_RIBBON_ITEMS: readonly string[] = [
 export const BOOKING_PLAN_SUMMARY_LABEL = "Your plan";
 
 export const BOOKING_PLAN_CLASSIFICATION_SINGLE_VISIT =
-  "Single visit cleaning (public booking)";
+  "Single visit cleaning";
 
-/** Opening/first visit framing when recurring maintenance is part of the path. */
 export const BOOKING_PLAN_CLASSIFICATION_OPENING_AND_RECURRING =
-  "Opening visit (reset), then recurring maintenance (public booking)";
+  "Opening visit, then recurring maintenance";
 
 export const BOOKING_PLAN_CLASSIFICATION_MOVE_TRANSITION =
-  "Move transition visit (public booking)";
+  "Move-in / move-out visit";
 
 export const BOOKING_PLAN_CLASSIFICATION_RECURRING_GATE =
-  "Recurring service — continue in your account";
+  "Recurring service — sign in to continue";
 
 export type BookingPlanClassificationInput = Pick<
   BookingFlowState,
