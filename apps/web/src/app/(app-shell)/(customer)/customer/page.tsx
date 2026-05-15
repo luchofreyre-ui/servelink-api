@@ -12,6 +12,7 @@ import {
   formatVisitScheduleHeading,
 } from "@/lib/bookings/bookingDisplay";
 import { listBookings } from "@/lib/bookings/bookingStore";
+import { NU_STANDARD_OWNER_OPERATOR_SUMMARY } from "@/components/marketing/precision-luxury/content/nuStandardTrustPositioning";
 
 function CustomerDashboardContent() {
   const user = typeof window !== "undefined" ? getAuthUser() : null;
@@ -54,6 +55,9 @@ function CustomerDashboardContent() {
       <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900">Your visits</h1>
       <p className="mt-2 text-sm leading-relaxed text-slate-600">
         Every reservation lives here — schedules, deposits, and concierge notes stay in sync with what our team sees.
+      </p>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
+        {NU_STANDARD_OWNER_OPERATOR_SUMMARY}
       </p>
 
       {loadError ? (

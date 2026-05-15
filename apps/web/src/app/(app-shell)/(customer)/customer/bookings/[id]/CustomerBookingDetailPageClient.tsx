@@ -165,6 +165,10 @@ export function CustomerBookingDetailPageContent() {
                     Your cleaning partner
                   </p>
                   <p className="mt-1 text-sm text-slate-800">{assignedLabel}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                    Visits are delivered by owner-led Nu Standard teams—accountability stays with the crew that
+                    serves your home, not a faceless dispatch queue.
+                  </p>
                 </div>
               </div>
               <BookingStatusBadge status={booking.status} />

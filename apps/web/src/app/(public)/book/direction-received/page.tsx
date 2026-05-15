@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { NU_STANDARD_OWNER_OPERATOR_ANCHOR } from "@/components/marketing/precision-luxury/content/nuStandardTrustPositioning";
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
 
 export const metadata: Metadata = {
   title: "We received your booking direction | Nu Standard Cleaning",
   description:
-    "Your service request details were received. Our team will use this to follow up with next steps.",
+    "Nu Standard received your service details. Expect owner-led follow-up with next steps.",
 };
 
 export default function BookingDirectionReceivedPage() {
@@ -41,6 +42,9 @@ export default function BookingDirectionReceivedPage() {
                 preferences. Someone from our Nu Standard concierge team will reach out with
                 confirmation options, pricing context, and any follow-up
                 questions—usually within one business day.
+              </p>
+              <p className="mt-4 rounded-xl bg-[#FFF9F3] px-4 py-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                {NU_STANDARD_OWNER_OPERATOR_ANCHOR}
               </p>
             </div>
             <div>
