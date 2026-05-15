@@ -1,101 +1,116 @@
 import { GlobalSearchForm } from "@/components/search/GlobalSearchForm";
+import {
+  EditorialHero,
+  EditorialMediaFrame,
+  EditorialTrustStrip,
+  EditorialCard,
+  EditorialCardGrid,
+  editorialInteractiveTransition,
+} from "@/components/marketing/precision-luxury/ui/PremiumEditorialPrimitives";
 
-const featuredSections = [
+const hubCards = [
   {
-    title: "Methods",
-    href: "/methods",
-    description: "Explore proven cleaning methods, what they solve, and where they should or should not be used.",
+    title: "Problems",
+    href: "/problems",
+    description: "Explore common cleaning challenges, causes, and safer resolution paths.",
   },
   {
     title: "Surfaces",
     href: "/surfaces",
-    description: "Learn how different materials behave, what damages them, and which methods are compatible.",
+    description: "Finish-first guidance for stone, glass, wood, metal, fabrics, and sealed materials.",
   },
   {
-    title: "Problems",
-    href: "/problems",
-    description: "Understand soap scum, grease, hard water deposits, dust buildup, and other common cleaning issues.",
-  },
-  {
-    title: "Tools",
-    href: "/tools",
-    description: "See how professional tools are used, when they help, and where misuse creates damage risk.",
+    title: "Products",
+    href: "/products",
+    description: "Educational product references aligned with compatibility—never a substitute for label direction.",
   },
   {
     title: "Guides",
     href: "/guides",
-    description: "Read long-form guides on chemical safety, why cleaning fails, and system-level cleaning standards.",
+    description: "Long-form references on chemical safety, stain removal, and protecting finishes.",
   },
   {
-    title: "Clusters",
-    href: "/clusters",
-    description: "Follow grouped learning paths around recurring cleaning patterns and problem families.",
+    title: "Methods",
+    href: "/methods",
+    description: "Understand proven routines, when they apply, and where misuse introduces damage risk.",
+  },
+  {
+    title: "Glossary",
+    href: "/encyclopedia/methods",
+    description: "Browse published encyclopedia methods—the structured vocabulary behind safer routines.",
   },
 ];
 
 export function KnowledgeHubLandingPage() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="space-y-8">
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <div className="space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-              Encyclopedia
-            </p>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-              Cleaning Encyclopedia
-            </h1>
-            <p className="max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">
-              The structured knowledge system behind methods, surfaces, problems, tools, and cleaning guidance
-              across the platform. Use search to find a specific answer fast, or browse by topic.
-            </p>
+    <div className="mx-auto w-full max-w-7xl px-6 py-10 md:px-8 md:py-14">
+      <EditorialHero
+        eyebrow="ENCYCLOPEDIA"
+        title="Your home. Every material. Every challenge. Explained."
+        body="Browse by category to find expert knowledge on problems, surfaces, products, methods, and more."
+        aside={
+          <EditorialMediaFrame
+            src="/media/trust/oop-respectful-entry.jpg"
+            alt="Nu Standard professional reviewing cleaning details in a calm residential setting."
+          />
+        }
+      />
 
-            <div data-testid="encyclopedia-hero-search">
-              <GlobalSearchForm
-                placeholder="Search methods, surfaces, stains, tools, guides..."
-                className="max-w-2xl"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {featuredSections.map((section) => (
-            <a
-              key={section.href}
-              href={section.href}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-400 hover:shadow-md"
-            >
-              <h2 className="text-lg font-semibold text-slate-900">{section.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{section.description}</p>
-            </a>
-          ))}
-        </section>
-
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">How to use this encyclopedia</h2>
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-900">Start with search</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Search for a stain, surface, method, or guide to get to the right topic quickly.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-900">Browse by topic</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Navigate methods, surfaces, problems, tools, and guides to understand the system more deeply.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-900">Apply safely</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Use the encyclopedia to understand why a method works, when it fails, and how damage risk changes by surface.
-              </p>
-            </div>
-          </div>
-        </section>
+      <div className="mt-10 rounded-[20px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.35)] sm:p-6">
+        <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+          Search the library
+        </p>
+        <div className="mt-4" data-testid="encyclopedia-hero-search">
+          <GlobalSearchForm
+            placeholder="Search methods, surfaces, stains, tools, guides..."
+            className="max-w-2xl gap-2 [&_button]:px-3 [&_button]:py-2 [&_button]:text-xs [&_input]:px-3 [&_input]:py-2 [&_input]:text-xs"
+          />
+        </div>
       </div>
+
+      <section className="mt-12" aria-labelledby="encyclopedia-categories-heading">
+        <h2 id="encyclopedia-categories-heading" className="sr-only">
+          Encyclopedia categories
+        </h2>
+        <EditorialCardGrid className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {hubCards.map((card) => (
+            <EditorialCard
+              key={card.href}
+              href={card.href}
+              eyebrow="Library"
+              title={card.title}
+              summary={card.description}
+              ctaLabel="Explore"
+              clickable
+            />
+          ))}
+        </EditorialCardGrid>
+      </section>
+
+      <div className="mt-14">
+        <EditorialTrustStrip
+          items={[
+            { title: "Professional Standards", body: "Grounded in careful methodology—not hype." },
+            { title: "Practical Guidance", body: "Written so you can apply judgment room-by-room." },
+            { title: "Updated References", body: "Maintained as the encyclopedia pipeline evolves." },
+            { title: "Clear Explanations", body: "Prioritizes why steps matter, not just what to spray." },
+          ]}
+        />
+      </div>
+
+      <section className="mt-12 rounded-[18px] border border-[#E8DFD0]/90 bg-white/75 p-6 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569]">
+        <p>
+          <span className="font-semibold text-[#0F172A]">How to use this encyclopedia:</span> start with search when you
+          already know the stain or surface, browse categories when you want structure, and cross-check methods against
+          your manufacturer guidance before escalating chemistry.
+        </p>
+        <a
+          href="/encyclopedia/clusters"
+          className={`mt-4 inline-flex items-center gap-1 font-semibold text-[#0D9488] underline-offset-4 hover:underline ${editorialInteractiveTransition}`}
+        >
+          Browse topic clusters →
+        </a>
+      </section>
     </div>
   );
 }

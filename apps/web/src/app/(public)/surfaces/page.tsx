@@ -7,9 +7,14 @@ import {
   buildCollectionPageSchema,
 } from "@/authority/metadata/authoritySchema";
 import { AuthorityJsonLd } from "@/components/authority/AuthorityJsonLd";
-import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
-import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
-import { getPublishedEncyclopediaEntriesByCategory } from "@/lib/encyclopedia/loader";
+import {
+  SurfacesHubExperience,
+  type EditorialSurfaceCard,
+} from "@/components/knowledge/SurfacesHubExperience";
+import {
+  getEncyclopediaDocumentByCategoryAndSlug,
+  getPublishedEncyclopediaEntriesByCategory,
+} from "@/lib/encyclopedia/loader";
 
 export const metadata: Metadata = buildAuthoritySurfacesIndexMetadata();
 
@@ -17,13 +22,34 @@ const SURFACES_TITLE = "Surfaces";
 const SURFACES_DESCRIPTION =
   "Finish-first guidance with graph-linked methods and problems.";
 
+function pipelineSurfaceSummary(slug: string): string {
+  const doc = getEncyclopediaDocumentByCategoryAndSlug("surfaces", slug);
+  return doc?.frontmatter.summary?.trim() ?? "";
+}
+
 export default function SurfacesIndexPage() {
   const legacySurfaces = getAllSurfacePages();
   const pipelineSurfaces = getPublishedEncyclopediaEntriesByCategory("surfaces");
   const legacySlugs = new Set(legacySurfaces.map((surface) => surface.slug));
-  const pipelineOnlySurfaces = pipelineSurfaces.filter(
-    (entry) => !legacySlugs.has(entry.slug),
-  );
+  const pipelineOnlySurfaces = pipelineSurfaces.filter((entry) => !legacySlugs.has(entry.slug));
+  const pipelineBySlug = new Map(pipelineSurfaces.map((entry) => [entry.slug, entry]));
+
+  const surfaces: EditorialSurfaceCard[] = [
+    ...legacySurfaces.map((surface) => ({
+      slug: surface.slug,
+      title: surface.title,
+      summary: surface.summary,
+      href: `/surfaces/${surface.slug}`,
+      imageSrc: pipelineBySlug.get(surface.slug)?.imageAssetPath ?? null,
+    })),
+    ...pipelineOnlySurfaces.map((entry) => ({
+      slug: entry.slug,
+      title: entry.title,
+      summary: pipelineSurfaceSummary(entry.slug),
+      href: `/surfaces/${entry.slug}`,
+      imageSrc: entry.imageAssetPath,
+    })),
+  ].sort((a, b) => a.title.localeCompare(b.title));
 
   const indexJsonLd = [
     buildBreadcrumbListSchema([
@@ -38,111 +64,60 @@ export default function SurfacesIndexPage() {
     }),
   ];
 
-  return (
-    <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
-      <PublicSiteHeader />
-      <AuthorityJsonLd data={indexJsonLd} />
-      <main className="mx-auto max-w-3xl px-6 py-16 md:px-8">
-        <nav className="font-[var(--font-manrope)] text-xs text-[#64748B]">
-          <Link href="/encyclopedia" className="hover:text-[#0D9488]">
-            Encyclopedia
-          </Link>
-          {" / "}
-          <span className="text-[#0F172A]">Surfaces</span>
-        </nav>
-
-        <h1 className="mt-6 font-[var(--font-poppins)] text-4xl font-semibold tracking-tight">
-          {SURFACES_TITLE}
-        </h1>
-
-        <p className="mt-4 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
-          {SURFACES_DESCRIPTION}
+  const bottomSections = (
+    <>
+      <section className="rounded-[18px] border border-[#E8DFD0]/90 bg-white/75 p-6 font-[var(--font-manrope)] text-sm text-[#475569]">
+        <h2 className="font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">Surface protection</h2>
+        <p className="mt-3 leading-relaxed">
+          <Link
+            href="/guides/when-cleaning-damages-surfaces"
+            className="font-semibold text-[#0D9488] hover:underline"
+          >
+            When cleaning damages surfaces
+          </Link>{" "}
+          — abrasion, chemistry, moisture, and cumulative risk.
         </p>
+      </section>
 
-        <section className="mt-10">
-          <h2 className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A]">
-            Authority graph pages
-          </h2>
-          <ul className="mt-4 space-y-3 font-[var(--font-manrope)] text-sm">
-            {legacySurfaces.map((surface) => (
-              <li key={surface.slug}>
-                <Link
-                  href={`/surfaces/${surface.slug}`}
-                  className="font-medium text-[#0D9488] hover:underline"
-                >
-                  {surface.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {pipelineOnlySurfaces.length > 0 ? (
-          <section className="mt-14 border-t border-[#C9B27C]/20 pt-10">
-            <h2 className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A]">
-              Pipeline-backed articles
-            </h2>
-            <ul className="mt-4 space-y-3 font-[var(--font-manrope)] text-sm">
-              {pipelineOnlySurfaces.map((entry) => (
-                <li key={entry.id}>
-                  <Link
-                    href={`/surfaces/${entry.slug}`}
-                    className="font-medium text-[#0D9488] hover:underline"
-                  >
-                    {entry.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
-        <section className="mt-14 border-t border-[#C9B27C]/20 pt-10">
-          <h2 className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A]">
-            Surface protection
-          </h2>
-          <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
+      <section className="rounded-[18px] border border-[#E8DFD0]/90 bg-white/75 p-6 font-[var(--font-manrope)] text-sm text-[#475569]">
+        <p>
+          <Link href="/compare/surfaces" className="font-semibold text-[#0D9488] hover:underline">
+            Compare surfaces
+          </Link>{" "}
+          — structured “vs” pages from the authority graph.
+        </p>
+        <ul className="mt-4 space-y-3">
+          <li>
             <Link
-              href="/guides/when-cleaning-damages-surfaces"
-              className="font-medium text-[#0D9488] hover:underline"
+              href="/clusters/high-visibility-finish-sensitive-surfaces"
+              className="font-semibold text-[#0D9488] hover:underline"
             >
-              When cleaning damages surfaces
+              High-visibility finish-sensitive surfaces (cluster)
             </Link>
-            {" "}— abrasion, chemistry, moisture, and cumulative risk.
-          </p>
-        </section>
-
-        <section className="mt-10 border-t border-[#C9B27C]/20 pt-10">
-          <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
+          </li>
+          <li>
             <Link
-              href="/compare/surfaces"
-              className="font-medium text-[#0D9488] hover:underline"
+              href="/clusters/high-contact-and-high-traffic-surfaces"
+              className="font-semibold text-[#0D9488] hover:underline"
             >
-              Compare surfaces
+              High-contact and high-traffic surfaces (cluster)
             </Link>
-            {" "}— structured “vs” pages from the authority graph.
-          </p>
-          <ul className="mt-4 space-y-2 font-[var(--font-manrope)] text-sm text-[#475569]">
-            <li>
-              <Link
-                href="/clusters/high-visibility-finish-sensitive-surfaces"
-                className="font-medium text-[#0D9488] hover:underline"
-              >
-                High-visibility finish-sensitive surfaces (cluster)
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/clusters/high-contact-and-high-traffic-surfaces"
-                className="font-medium text-[#0D9488] hover:underline"
-              >
-                High-contact and high-traffic surfaces (cluster)
-              </Link>
-            </li>
-          </ul>
-        </section>
-      </main>
-      <PublicSiteFooter />
-    </div>
+          </li>
+        </ul>
+      </section>
+    </>
+  );
+
+  return (
+    <SurfacesHubExperience
+      surfaces={surfaces}
+      breadcrumbs={[
+        { label: "Home", href: "/" },
+        { label: "Encyclopedia", href: "/encyclopedia" },
+        { label: "Surfaces" },
+      ]}
+      jsonLdSlot={<AuthorityJsonLd data={indexJsonLd} />}
+      bottomSections={bottomSections}
+    />
   );
 }

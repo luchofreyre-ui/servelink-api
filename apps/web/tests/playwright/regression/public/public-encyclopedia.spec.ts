@@ -7,8 +7,10 @@ test.use({ viewport: { width: 1280, height: 720 } });
 test.describe("public encyclopedia", () => {
   test("encyclopedia landing page hero renders", async ({ page }) => {
     await page.goto("/encyclopedia");
-    await expect(page.getByRole("heading", { name: /^cleaning encyclopedia$/i })).toBeVisible();
-    await expect(page.getByText(/structured knowledge system behind methods/i)).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /your home\. every material\. every challenge\. explained\./i }),
+    ).toBeVisible();
+    await expect(page.getByText(/browse by category to find expert knowledge/i)).toBeVisible();
     await expect(page.getByTestId(knowledgeTestIds.encyclopediaHeroSearch)).toBeVisible();
   });
 
