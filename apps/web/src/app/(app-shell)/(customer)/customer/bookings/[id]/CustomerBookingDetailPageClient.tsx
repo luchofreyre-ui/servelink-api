@@ -7,11 +7,17 @@ import { BookingStatusBadge } from "@/components/booking/BookingStatusBadge";
 import { BOOKING_CONFIRMATION_TEAM_PREP_TITLE } from "@/components/marketing/precision-luxury/booking/bookingPublicSurfaceCopy";
 import type { BookingRecord } from "@/lib/bookings/bookingApiTypes";
 import {
+  describePaymentStatusForCustomer,
   displayBookingPrice,
   displayCustomerSafeBookingNotesLines,
   extractCustomerTeamPrepFromBookingNotes,
+  formatBookingReferenceLabel,
+  formatVisitScheduleHeading,
 } from "@/lib/bookings/bookingDisplay";
 import { getBookingById } from "@/lib/bookings/bookingStore";
+
+const subtleLink =
+  "inline-flex min-h-[44px] items-center rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-50";
 
 export function CustomerBookingDetailPageContent() {
   const params = useParams<{ id: string }>();
@@ -80,70 +86,105 @@ export function CustomerBookingDetailPageContent() {
       ps === "unpaid" ||
       ps === undefined);
 
-  return (
-    <main className="min-h-screen px-6 py-10">
-      <h1 className="text-2xl font-semibold">Booking Detail</h1>
+  const assignedLabel =
+    booking?.fo?.displayName?.trim() ||
+    (booking?.foId ? "Professional cleaner assigning shortly" : "Assignment pending");
 
+  return (
+    <main className="mx-auto min-h-screen max-w-2xl px-4 py-8 sm:px-6 sm:py-10">
       {loading ? (
-        <p className="mt-6 text-slate-600">Loading…</p>
+        <>
+          <div className="h-8 w-48 animate-pulse rounded-lg bg-slate-100" />
+          <p className="mt-6 text-slate-600">Loading your visit…</p>
+        </>
       ) : booking ? (
         <>
-          <div className="mt-6 rounded-xl border border-slate-200 p-4">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p><strong>ID:</strong> {booking.id}</p>
-                <p className="mt-2">
-                  <strong>Total on file:</strong> {displayBookingPrice(booking)}
-                </p>
-                <p className="mt-2">
-                  <strong>Payment:</strong> {String(booking.paymentStatus ?? "—")}
-                </p>
-                {booking.paymentStatus === "failed" ? (
-                  <p className="mt-2 text-sm text-slate-600">
-                    Payment failed. If checkout is still available below, you can try again — confirmation
-                    always follows the server payment status, not this page alone.
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            Your visit with Nu Standard
+          </p>
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+            {formatVisitScheduleHeading(booking.scheduledStart)}
+          </h1>
+          <p className="mt-2 text-sm text-slate-500">{formatBookingReferenceLabel(booking.id)}</p>
+
+          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0 space-y-3">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                    Quote on file
                   </p>
-                ) : null}
-                {showContinuePayment && booking.paymentCheckoutUrl ? (
-                  <p className="mt-2">
-                    {booking.paymentCheckoutUrl.startsWith("http") ? (
-                      <a
-                        href={booking.paymentCheckoutUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-slate-900 underline"
-                      >
-                        Continue payment (Stripe Checkout)
-                      </a>
-                    ) : (
-                      <Link
-                        href={booking.paymentCheckoutUrl}
-                        className="font-medium text-slate-900 underline"
-                      >
-                        Continue payment
-                      </Link>
-                    )}
+                  <p className="mt-1 text-xl font-semibold text-slate-900">
+                    {displayBookingPrice(booking)}
                   </p>
-                ) : null}
-                {!booking.paymentCheckoutUrl &&
-                (booking.paymentStatus === "unpaid" ||
-                  booking.paymentStatus === undefined) ? (
-                  <p className="mt-2 text-sm text-slate-600">
-                    Payment pending setup.
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                    Deposit & payment
                   </p>
-                ) : null}
-                <p className="mt-2">
-                  <strong>Franchise owner:</strong> {booking.foId ?? "Unassigned"}
-                </p>
+                  <p className="mt-1 text-sm font-medium text-slate-800">
+                    {describePaymentStatusForCustomer(booking.paymentStatus)}
+                  </p>
+                  {booking.paymentStatus === "failed" ? (
+                    <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                      Something interrupted checkout. When you retry below, we&apos;ll pick up where you left
+                      off — your confirmation email stays the source of truth once payment clears.
+                    </p>
+                  ) : null}
+                  {showContinuePayment && booking.paymentCheckoutUrl ? (
+                    <p className="mt-4">
+                      {booking.paymentCheckoutUrl.startsWith("http") ? (
+                        <a
+                          href={booking.paymentCheckoutUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-slate-800 sm:w-auto"
+                        >
+                          Continue secure checkout
+                        </a>
+                      ) : (
+                        <Link
+                          href={booking.paymentCheckoutUrl}
+                          className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-slate-800 sm:w-auto"
+                        >
+                          Continue secure checkout
+                        </Link>
+                      )}
+                    </p>
+                  ) : null}
+                  {!booking.paymentCheckoutUrl &&
+                  (booking.paymentStatus === "unpaid" || booking.paymentStatus === undefined) ? (
+                    <p className="mt-2 text-sm text-slate-600">
+                      We&apos;re preparing checkout details — refresh shortly or watch your inbox for the secure
+                      link.
+                    </p>
+                  ) : null}
+                </div>
+                <div className="rounded-xl bg-slate-50 px-4 py-3">
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                    Your cleaning partner
+                  </p>
+                  <p className="mt-1 text-sm text-slate-800">{assignedLabel}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                    Visits are delivered by owner-led Nu Standard teams—accountability stays with the crew that
+                    serves your home, not a faceless dispatch queue.
+                  </p>
+                </div>
               </div>
               <BookingStatusBadge status={booking.status} />
             </div>
           </div>
 
+          <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-4 text-sm leading-relaxed text-slate-700">
+            <strong className="font-semibold text-slate-900">What happens next:</strong> we&apos;ll email any
+            scheduling updates and reminders from the address you used at booking. Reply directly to that thread
+            for fastest help — no need to repeat details here.
+          </div>
+
           {teamPrepDetails ? (
             <div
               data-testid="customer-booking-team-prep"
-              className="mt-6 rounded-xl border border-slate-200 bg-slate-50/80 p-4"
+              className="mt-6 rounded-xl border border-slate-200 bg-slate-50/80 p-4 sm:p-5"
             >
               <h2 className="text-lg font-medium text-slate-900">
                 {BOOKING_CONFIRMATION_TEAM_PREP_TITLE}
@@ -159,25 +200,32 @@ export function CustomerBookingDetailPageContent() {
 
           <div
             data-testid="customer-booking-knowledge-card"
-            className="mt-6 rounded-xl border border-slate-200 p-4"
+            className="mt-6 rounded-xl border border-slate-200 p-4 sm:p-5"
           >
-            <h2 className="text-lg font-medium">Need cleaning guidance?</h2>
-            <div className="mt-3 flex gap-3">
-              <Link href="/search">Search</Link>
-              <Link href="/encyclopedia">Browse</Link>
+            <h2 className="text-lg font-medium text-slate-900">Between visits</h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Explore Nu Standard cleaning guides tailored to luxury finishes.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link href="/search" className={subtleLink}>
+                Search guides
+              </Link>
+              <Link href="/encyclopedia" className={subtleLink}>
+                Browse encyclopedia
+              </Link>
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl border border-slate-200 p-4">
-            <h2 className="text-lg font-medium">Booking Timeline</h2>
+          <div className="mt-6 rounded-xl border border-slate-200 p-4 sm:p-5">
+            <h2 className="text-lg font-medium text-slate-900">Visit timeline</h2>
             <div className="mt-3 space-y-2">
               {noteLines.length === 0 ? (
-                <div className="text-sm text-slate-600">No updates yet.</div>
+                <div className="text-sm text-slate-600">Updates will appear here as your visit progresses.</div>
               ) : (
                 noteLines.map((note, index) => (
                   <div
                     key={`${booking.id}-note-${index}`}
-                    className="rounded-lg border border-slate-100 bg-slate-50 p-3 text-sm"
+                    className="rounded-lg border border-slate-100 bg-slate-50 p-3 text-sm leading-relaxed"
                   >
                     {note}
                   </div>
@@ -188,19 +236,24 @@ export function CustomerBookingDetailPageContent() {
         </>
       ) : (
         <>
-          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
+          <h1 className="text-2xl font-semibold text-slate-900">We couldn&apos;t open this visit</h1>
+          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-950">
             {error ?? "Booking not found."}
           </div>
 
           {id ? (
             <div
               data-testid="customer-booking-knowledge-card"
-              className="mt-6 rounded-xl border border-slate-200 p-4"
+              className="mt-6 rounded-xl border border-slate-200 p-4 sm:p-5"
             >
-              <h2 className="text-lg font-medium">Need cleaning guidance?</h2>
-              <div className="mt-3 flex gap-3">
-                <Link href="/search">Search</Link>
-                <Link href="/encyclopedia">Browse</Link>
+              <h2 className="text-lg font-medium text-slate-900">Cleaning guidance</h2>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Link href="/search" className={subtleLink}>
+                  Search guides
+                </Link>
+                <Link href="/encyclopedia" className={subtleLink}>
+                  Browse encyclopedia
+                </Link>
               </div>
             </div>
           ) : null}

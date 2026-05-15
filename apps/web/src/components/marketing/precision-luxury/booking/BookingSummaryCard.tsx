@@ -10,8 +10,10 @@ import { getBookingHomeSizeRangeLabel } from "./bookingHomeSizeRanges";
 import {
   BOOKING_PLAN_SUMMARY_LABEL,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
+  BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL,
   bookingPlanClassificationSummary,
 } from "./bookingPublicSurfaceCopy";
+import { NU_STANDARD_OWNER_OPERATOR_SUMMARY } from "../content/nuStandardTrustPositioning";
 import {
   formatEstimateDurationMinutes,
   formatEstimateUsdFromCents,
@@ -144,7 +146,7 @@ export function BookingSummaryCard({
           ...(previewEstimate && !previewLoading && !previewError
             ? [
                 {
-                  label: "Est. labor effort",
+                  label: BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL,
                   value: formatEstimateDurationMinutes(
                     previewEstimate.durationMinutes,
                   ),
@@ -161,7 +163,7 @@ export function BookingSummaryCard({
       : [];
 
   return (
-    <section className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
+    <section className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.05)] sm:p-8">
       <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
         Booking summary
       </p>
@@ -198,10 +200,12 @@ export function BookingSummaryCard({
           At a glance
         </p>
         <p className="mt-3 font-[var(--font-manrope)] text-sm leading-7 text-white">
-          Your selections stay visible here as you go—so nothing gets lost
-          between steps.
+          Your selections stay visible here as you move through each step—nothing gets lost between screens.
         </p>
       </div>
+      <p className="mt-4 font-[var(--font-manrope)] text-xs leading-relaxed text-[#64748B]">
+        {NU_STANDARD_OWNER_OPERATOR_SUMMARY}
+      </p>
     </section>
   );
 }

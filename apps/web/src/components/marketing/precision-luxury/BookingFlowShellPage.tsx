@@ -6,10 +6,10 @@ import { BookingOptionCard } from "./BookingOptionCard";
 import { BookingSectionCard } from "./BookingSectionCard";
 
 const steps = [
-  { id: 1, label: "Service" },
-  { id: 2, label: "Home Details" },
-  { id: 3, label: "Schedule" },
-  { id: 4, label: "Review" },
+  { id: 1, label: "Visit type" },
+  { id: 2, label: "Your home" },
+  { id: 3, label: "Visit address" },
+  { id: 4, label: "Review & estimate" },
 ];
 
 const serviceOptions = [

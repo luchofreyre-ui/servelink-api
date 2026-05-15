@@ -118,7 +118,7 @@ export function RoleLoginPage({
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto flex min-h-screen w-full max-w-lg flex-col justify-center px-6 py-16">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-700">
-          Servelink
+          Nu Standard
         </p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">{title}</h1>
         <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>

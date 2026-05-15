@@ -28,7 +28,7 @@ export default function AdminAuthPage() {
           <AuthLoginForm
             role="admin"
             title="Admin Login"
-            subtitle="Sign in to access Servelink operations."
+            subtitle="Sign in to access Nu Standard operations."
           />
 
         </div>

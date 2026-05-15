@@ -7,6 +7,7 @@ import {
   getHomepageSteps,
   getHomepageTrustPoints,
 } from "../content/publicHomepageSelectors";
+import { NU_STANDARD_OWNER_OPERATOR_ANCHOR, NU_STANDARD_OWNER_OPERATOR_SUMMARY } from "../content/nuStandardTrustPositioning";
 import {
   buildBreadcrumbSchema,
   buildOrganizationSchema,
@@ -48,20 +49,23 @@ export function PrecisionLuxuryHomepage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(201,178,124,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(13,148,136,0.12),transparent_24%)]" />
           <div className="relative mx-auto grid max-w-7xl gap-14 px-6 py-20 md:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-28">
             <div>
-              <p className="text-xs tracking-wide text-zinc-400 uppercase">Precision cleaning guidance</p>
+              <p className="text-xs uppercase tracking-wide text-[#C9B27C]">Nu Standard</p>
               <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-tight text-zinc-900 md:text-3xl">
-                The Cleaning Solution System
+                Residential cleaning held to accountable standards.
               </h1>
-              <p className="mt-3 max-w-2xl text-base text-zinc-600">
-                Fix anything the right way — not by guessing.
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-zinc-700">
+                {NU_STANDARD_OWNER_OPERATOR_ANCHOR}
+              </p>
+              <p className="mt-3 max-w-2xl text-sm text-zinc-600">
+                Browse services when you want to compare visit types—booking stays guided, calm, and explicit about what happens next.
               </p>
               <p className="mt-2 max-w-2xl text-sm text-zinc-500">
-                Powered by a Cleaning Education Engine.
+                Research-backed guidance powers every recommendation · Powered by ServeLink booking technology
               </p>
 
               <div className="mt-8 max-w-xl space-y-2">
                 <p className="font-[var(--font-manrope)] text-sm font-medium text-[#475569]">
-                  Search the encyclopedia for instant cleaning guidance.
+                  Search the encyclopedia for practical cleaning guidance between visits.
                 </p>
                 <GlobalSearchForm
                   placeholder="Search surfaces, stains, methods, and guides"
@@ -107,22 +111,22 @@ export function PrecisionLuxuryHomepage() {
                     <div className="flex min-h-[380px] flex-col justify-between bg-[linear-gradient(180deg,#F9F4EE_0%,#F2ECE4_100%)] p-8">
                       <div>
                         <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.24em] text-[#C9B27C]">
-                          Brand promise
+                          How we work
                         </p>
                         <h2 className="mt-4 font-[var(--font-poppins)] text-3xl font-semibold tracking-[-0.03em] text-[#0F172A]">
-                          Effortless luxury, grounded in precision.
+                          Quiet confidence—from first hello to the final walkthrough.
                         </h2>
                       </div>
 
                       <div className="space-y-3">
                         <div className="rounded-2xl bg-white/85 p-4 shadow-sm">
                           <p className="font-[var(--font-manrope)] text-sm text-[#475569]">
-                            Warm, residential, high-trust design language.
+                            {NU_STANDARD_OWNER_OPERATOR_SUMMARY}
                           </p>
                         </div>
                         <div className="rounded-2xl bg-[#0F172A] p-4 text-white shadow-sm">
                           <p className="font-[var(--font-manrope)] text-sm">
-                            Quiet confidence in every interaction — from booking to finish.
+                            Expect consistent professionalism—your team is led by someone accountable on site, not a rotating roster without ownership.
                           </p>
                         </div>
                       </div>
@@ -135,7 +139,7 @@ export function PrecisionLuxuryHomepage() {
                             Featured services
                           </p>
                           <span className="rounded-full border border-[#C9B27C]/30 px-3 py-1 font-[var(--font-manrope)] text-xs text-[#475569]">
-                            Registry-driven
+                            Curated services
                           </span>
                         </div>
 

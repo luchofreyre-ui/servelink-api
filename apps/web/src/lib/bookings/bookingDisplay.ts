@@ -1,4 +1,4 @@
-import type { BookingRecord } from "./bookingApiTypes";
+import type { BookingPaymentStatus, BookingRecord } from "./bookingApiTypes";
 
 /** Matches intake-bridge rows like `Booking direction intake … | serviceId=…` (see API bridge). */
 function isBookingDirectionIntakeBridgeLine(line: string): boolean {
@@ -87,4 +87,50 @@ export function displayBookingNotesLines(booking: BookingRecord): string[] {
   const raw = booking.notes?.trim();
   if (!raw) return [];
   return raw.split(/\n+/).map((s) => s.trim()).filter(Boolean);
+}
+
+/** Customer portal headline — scheduled visit wins over raw IDs. */
+export function formatVisitScheduleHeading(iso: string | null | undefined): string {
+  if (!iso?.trim()) return "Visit scheduling in progress";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "Visit scheduling in progress";
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(d);
+}
+
+/** Short opaque reference — never the primary headline. */
+export function formatBookingReferenceLabel(bookingId: string): string {
+  const tail = bookingId.length > 8 ? bookingId.slice(-8) : bookingId;
+  return `Ref · ${tail}`;
+}
+
+/** Plain-language payment copy for customer-facing surfaces (not ops enums). */
+export function describePaymentStatusForCustomer(
+  paymentStatus: BookingPaymentStatus | null | undefined,
+): string {
+  switch (paymentStatus) {
+    case "paid":
+      return "Paid — thank you";
+    case "authorized":
+      return "Deposit secured";
+    case "checkout_created":
+      return "Secure checkout ready — finish payment to confirm";
+    case "payment_pending":
+      return "Payment processing";
+    case "unpaid":
+      return "Deposit not completed yet";
+    case "failed":
+      return "Payment needs attention";
+    case "refunded":
+      return "Refunded";
+    case "waived":
+      return "Deposit waived";
+    default:
+      return "Payment status updating…";
+  }
 }

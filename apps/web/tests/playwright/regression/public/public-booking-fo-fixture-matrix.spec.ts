@@ -24,8 +24,8 @@ const apiRoot = path.resolve(process.cwd(), "../../services/api");
 /**
  * Layer-1 home fields required by {@link isHomeDetailsComplete} + V2.2/V2.4 estimate
  * factors (mirrors `bookingHomeLayer1BaselineComplete` in bookingFlowData).
- * Without these, `step=review` is clamped back to Home Details and the flow never reaches
- * “Review your direction”.
+ * Without these, `step=review` is clamped back to home details and the flow never reaches
+ * “Review your visit”.
  */
 const BOOKING_URL_HOME_LAYER1_BASELINE = {
   halfBath: "0",
@@ -74,9 +74,9 @@ async function waitForReviewReady(
   page: import("@playwright/test").Page,
   opts?: { contactName?: string },
 ) {
-  // Requires `bookingUrl()` to include Layer-1 home query params so step is not clamped to Home Details.
+  // Requires `bookingUrl()` to include Layer-1 home query params so step is not clamped to home details.
   await expect(
-    page.getByRole("heading", { name: /Review your direction/i }),
+    page.getByRole("heading", { name: /Review your visit/i }),
   ).toBeVisible({
     timeout: 60_000,
   });
@@ -609,7 +609,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
       })}`,
     );
     await expect(
-      page.getByRole("heading", { name: /Review your direction/i }),
+      page.getByRole("heading", { name: /Review your visit/i }),
     ).toBeVisible({
       timeout: 60_000,
     });

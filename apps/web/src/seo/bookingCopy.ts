@@ -2,6 +2,8 @@
  * Centralized booking page copy. Use on /book.
  */
 
+import { NU_STANDARD_OWNER_OPERATOR_ANCHOR } from "@/components/marketing/precision-luxury/content/nuStandardTrustPositioning";
+
 export function getBookingPageHeading(
   serviceName?: string,
   locationName?: string,
@@ -12,16 +14,19 @@ export function getBookingPageHeading(
 }
 
 export function getBookingPageIntro(): string {
-  return "Choose your service, walk through home details with guided clarity, then continue to teams and timing when you’re ready.";
+  return "Choose your visit type, tell us about your home at your pace, then meet your team and pick a time when you’re ready.";
 }
 
 /** Hero eyebrow on the public booking flow (not meta). */
-export const BOOKING_FLOW_HERO_EYEBROW = "Guided booking";
+export const BOOKING_FLOW_HERO_EYEBROW = "Nu Standard · Reserve online";
 
 /** Primary headline on /book. */
 export const BOOKING_FLOW_HERO_HEADLINE =
-  "Shape your cleaning plan in calm, precise steps.";
+  "Book your cleaning visit with calm, concierge-level clarity.";
 
 /** Supporting line under the hero headline. */
 export const BOOKING_FLOW_HERO_BODY =
-  "Tell us about your home and how you like timing handled. When a live preview is available, you’ll review figures before anything is finalized—otherwise our team follows up with clear pricing context.";
+  "Walk through a few thoughtful questions about your home. When we can show pricing here, you’ll review it before checkout—otherwise Nu Standard replies personally with numbers that match what you shared.";
+
+/** Owner-operator accountability anchor — full sentence under hero body on `/book`. */
+export const BOOKING_FLOW_HERO_ACCOUNTABILITY = NU_STANDARD_OWNER_OPERATOR_ANCHOR;

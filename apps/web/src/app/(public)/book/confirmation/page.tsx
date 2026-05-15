@@ -3,9 +3,9 @@ import { Suspense } from "react";
 import { BookingConfirmationClient } from "@/components/marketing/precision-luxury/booking/BookingConfirmationClient";
 
 export const metadata: Metadata = {
-  title: "Booking received | Servelink",
+  title: "Booking received | Nu Standard Cleaning",
   description:
-    "Your booking request was received. Review your estimate summary and next steps.",
+    "Review your Nu Standard booking summary, estimate context, and clear next steps.",
 };
 
 function ConfirmationFallback() {
