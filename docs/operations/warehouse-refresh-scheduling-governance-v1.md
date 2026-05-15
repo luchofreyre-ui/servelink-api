@@ -137,6 +137,9 @@ Prerequisite operational lane: **Authenticated Manual Refresh Proof V1** — one
 
 ## Related docs
 
+- **`ENABLE_*` matrix (OA cron row):** `docs/operations/ENABLE_RUNTIME_MATRIX_V1.md`
+- **Deploy parity checklist (OA verification examples):** `docs/operations/DEPLOY_RUNTIME_PARITY_CHECKLIST_V1.md`
+- **Activation playbook (manual proof → cron phases):** `docs/operations/CONTROLLED_ACTIVATION_PLAYBOOK_V1.md`
 - `docs/operations/production-deployment-governance-v1.md`
 - `docs/operations/railway-deploy-hygiene-v1.md`
 - `DEPLOY_CLOSEOUT_CHECKLIST.md`
