@@ -9,6 +9,7 @@ import {
 import { getBookingHomeSizeRangeLabel } from "./bookingHomeSizeRanges";
 import {
   BOOKING_PLAN_SUMMARY_LABEL,
+  BOOKING_REVIEW_PRICE_UPDATES_LINE,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
   BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL,
   bookingPlanClassificationSummary,
@@ -197,10 +198,11 @@ export function BookingSummaryCard({
 
       <div className="mt-6 rounded-[24px] border border-[#0D9488]/18 bg-[#0D9488] p-5 text-white shadow-[0_14px_40px_rgba(13,148,136,0.16)]">
         <p className="font-[var(--font-manrope)] text-xs uppercase tracking-[0.16em] text-white/75">
-          At a glance
+          Real-time estimate
         </p>
         <p className="mt-3 font-[var(--font-manrope)] text-sm leading-7 text-white">
-          Your selections stay visible here as you move through each step—nothing gets lost between screens.
+          {BOOKING_REVIEW_PRICE_UPDATES_LINE} Your selections stay visible here as you move—nothing gets lost between
+          screens.
         </p>
       </div>
       <p className="mt-4 font-[var(--font-manrope)] text-xs leading-relaxed text-[#64748B]">

@@ -9,7 +9,7 @@ export const HOMEPAGE_HERO_IMAGE = {
   src: "/media/homepage/hero-nsm-her-002.jpg",
   width: 1536,
   height: 1024,
-  alt: "Calm premium residential living space with soft natural light—orderly, restorative, and materially realistic.",
+  alt: "Premium residential living space with soft natural light—orderly, restorative, and materially realistic.",
   sizes: "(max-width: 1024px) 100vw, 42vw",
 } as const;
 

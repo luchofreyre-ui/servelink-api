@@ -23,8 +23,12 @@ import {
   HomepageTrustOperationalRow,
 } from "./HomepageMedia";
 import { serviceSlugToHomepageVisualVariant } from "./homepageMediaAssets";
-
-const HERO_TRUST_BULLETS = ["Owner-led", "Easy booking", "Trusted & insured"] as const;
+import {
+  PremiumEyebrow,
+  PremiumHeroTitle,
+  PremiumPageShell,
+  TrustMetricStrip,
+} from "../ui/NuStandardPremiumPrimitives";
 
 function formatServiceDisplayTitle(raw: string): string {
   return raw.replace(/, positioned.*$/i, "").replace(/, presented.*$/i, "");
@@ -60,7 +64,7 @@ export function PrecisionLuxuryHomepage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
+    <PremiumPageShell>
       {schemas.map((schema, index) => (
         <script
           key={index}
@@ -73,23 +77,23 @@ export function PrecisionLuxuryHomepage() {
 
       <main>
         {/* Hero — split layout: narrative + media + tighter vertical rhythm */}
-        <section className="relative overflow-hidden pb-10 pt-8 md:pb-14 md:pt-11 lg:pb-[4.25rem] lg:pt-12">
+        <section className="relative overflow-hidden pb-8 pt-6 md:pb-11 md:pt-9 lg:pb-12 lg:pt-10">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(201,178,124,0.14),transparent_32%),radial-gradient(circle_at_85%_25%,rgba(13,148,136,0.1),transparent_28%)]" />
           <div className="relative mx-auto max-w-7xl px-6 md:px-8">
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-center lg:gap-11 xl:gap-12">
-              <div className="flex min-w-0 flex-col gap-6">
+            <div className="grid gap-7 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-center lg:gap-10 xl:gap-11">
+              <div className="flex min-w-0 flex-col gap-5">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#C9B27C]">
+                  <PremiumEyebrow className="font-[var(--font-poppins)] text-[#C9B27C]">
                     Nu Standard
-                  </p>
-                  <h1 className="mt-3 max-w-xl font-[var(--font-poppins)] text-3xl font-semibold tracking-[-0.035em] text-zinc-900 sm:text-4xl lg:max-w-lg lg:text-[2.65rem] lg:leading-[1.12]">
-                    Calm, premium home care—with owner-led accountability.
-                  </h1>
+                  </PremiumEyebrow>
+                  <PremiumHeroTitle className="font-[var(--font-poppins)]">
+                    Premium home care—with owner-led accountability.
+                  </PremiumHeroTitle>
                   <p className="mt-5 max-w-xl font-[var(--font-manrope)] text-base leading-relaxed text-zinc-700">
                     {NU_STANDARD_OWNER_OPERATOR_ANCHOR}
                   </p>
                   <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-sm leading-relaxed text-zinc-600">
-                    Compare visit types anytime—booking stays clear and unhurried.
+                    Honest, real-time estimates when preview is available—compare visit types anytime without pressure.
                   </p>
                   <p className="mt-4 max-w-xl border-l-2 border-[#C9B27C]/35 pl-4 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B]">
                     Owner-led teams bring documented professionalism to your door—clear coordination and respectful
@@ -109,18 +113,6 @@ export function PrecisionLuxuryHomepage() {
                     See how it works
                   </MarketingLinkButton>
                 </div>
-
-                <ul className="flex flex-wrap gap-1.5 pt-0.5" aria-label="Highlights">
-                  {HERO_TRUST_BULLETS.map((label) => (
-                    <li
-                      key={label}
-                      className="inline-flex items-center rounded-full border border-[#C9B27C]/18 bg-white/70 px-3 py-1.5 font-[var(--font-manrope)] text-xs font-medium text-[#475569]"
-                    >
-                      <span className="mr-1.5 h-1 w-1 shrink-0 rounded-full bg-[#0D9488]/85" aria-hidden />
-                      {label}
-                    </li>
-                  ))}
-                </ul>
               </div>
 
               <div className="min-w-0 lg:pl-2">
@@ -136,17 +128,7 @@ export function PrecisionLuxuryHomepage() {
             <p className="mb-5 max-w-3xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px] md:leading-7">
               Prepared teams, clear arrival coordination, and documented service standards—calm professionalism you can recognize.
             </p>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
-              {trustStripItems.map((item) => (
-                <div
-                  key={item}
-                  className="flex items-start gap-3 rounded-2xl border border-[#C9B27C]/12 bg-[#FFF9F3]/90 px-4 py-3 shadow-sm"
-                >
-                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
-                  <span className="font-[var(--font-manrope)] text-sm leading-snug text-[#475569]">{item}</span>
-                </div>
-              ))}
-            </div>
+            <TrustMetricStrip items={trustStripItems} />
           </div>
         </section>
 
@@ -160,7 +142,7 @@ export function PrecisionLuxuryHomepage() {
               A simple rhythm—built for clarity, not clutter.
             </h2>
             <p className="mt-4 max-w-2xl font-[var(--font-manrope)] text-base leading-relaxed text-[#475569]">
-              Guided steps and predictable follow-through—no jargon wall.
+              Guided steps, honest preview estimates when available, and predictable follow-through—without jargon or pressure.
             </p>
 
             <div className="mt-10 grid gap-6 md:grid-cols-3 md:gap-8">
@@ -191,7 +173,7 @@ export function PrecisionLuxuryHomepage() {
         <section className="mx-auto max-w-7xl px-6 pb-16 md:px-8 md:pb-20">
           <MarketingSectionIntro
             eyebrow="Featured services"
-            title="Visit types shaped around how your home actually lives."
+            title="Cleaning shaped around how your home actually lives."
             body="Deep resets, recurring rhythm, and transition-ready scope—each delivered with honest preparation and disciplined execution."
           />
 
@@ -220,14 +202,14 @@ export function PrecisionLuxuryHomepage() {
                       variant="secondary"
                       className="w-full min-h-[46px] px-5 py-3 text-sm sm:w-auto sm:flex-1"
                     >
-                      Details
+                      Learn more
                     </MarketingLinkButton>
                     <MarketingLinkButton
                       href={`/book?service=${service.slug}`}
                       variant="primary"
                       className="w-full min-h-[46px] px-5 py-3 text-sm sm:w-auto sm:flex-1"
                     >
-                      Book
+                      Book this clean
                     </MarketingLinkButton>
                   </div>
                 </div>
@@ -267,30 +249,12 @@ export function PrecisionLuxuryHomepage() {
           </div>
         </section>
 
-        {/* Practical guidance — encyclopedia search */}
-        <section className="mx-auto max-w-7xl px-6 py-14 md:px-8 md:py-16">
-          <div className="rounded-[28px] border border-[#C9B27C]/14 bg-white/90 px-6 py-8 shadow-[0_18px_50px_rgba(15,23,42,0.04)] sm:px-8 sm:py-10">
-            <p className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]">
-              Practical guidance between visits
-            </p>
-            <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B]">
-              Search surfaces, methods, and Nu Standard editorial guides—separate from how your visit is executed.
-            </p>
-            <div className="mt-6 max-w-xl">
-              <GlobalSearchForm
-                placeholder="Search surfaces, stains, methods, and guides"
-                className="w-full"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Featured reading */}
-        <section className="mx-auto max-w-7xl px-6 pb-24 md:px-8">
+        {/* Featured guides */}
+        <section className="mx-auto max-w-7xl px-6 pt-14 md:px-8 md:pt-16">
           <MarketingSectionIntro
-            eyebrow="Featured reading"
-            title="Education that reinforces calm standards—not noise."
-            body="Guides and answers that stay practical—aligned with how we work in your home."
+            eyebrow="Guides & resources"
+            title="Expert tips for a cleaner, healthier home."
+            body="Practical reads—aligned with how we work in your home, placed here so booking stays first."
           />
 
           <div className="mt-12 grid gap-6 md:grid-cols-2">
@@ -321,10 +285,33 @@ export function PrecisionLuxuryHomepage() {
               );
             })}
           </div>
+          <div className="mt-10">
+            <MarketingLinkButton href="/guides" variant="secondary" className="min-h-[46px] px-6">
+              View all guides
+            </MarketingLinkButton>
+          </div>
+        </section>
+
+        {/* Practical guidance — encyclopedia search */}
+        <section className="mx-auto max-w-7xl px-6 py-14 pb-24 md:px-8 md:py-16 md:pb-28">
+          <div className="rounded-[28px] border border-[#C9B27C]/14 bg-white/90 px-6 py-8 shadow-[0_18px_50px_rgba(15,23,42,0.04)] sm:px-8 sm:py-10">
+            <p className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]">
+              Practical guidance between visits
+            </p>
+            <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B]">
+              Search surfaces, methods, and Nu Standard editorial guides—separate from how your visit is executed.
+            </p>
+            <div className="mt-6 max-w-xl">
+              <GlobalSearchForm
+                placeholder="Search surfaces, stains, methods, and guides"
+                className="w-full"
+              />
+            </div>
+          </div>
         </section>
       </main>
 
       <PublicSiteFooter />
-    </div>
+    </PremiumPageShell>
   );
 }

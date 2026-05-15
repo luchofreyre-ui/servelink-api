@@ -44,7 +44,7 @@ export function PublicSiteHeader() {
           </div>
           <a
             href="/products"
-            className={`hidden shrink-0 rounded-full border border-[#E8DFD0]/95 bg-white px-3 py-1.5 font-[var(--font-manrope)] text-xs font-semibold text-[#0F172A] shadow-[0_10px_26px_-18px_rgba(15,23,42,0.35)] sm:inline-flex ${editorialInteractiveTransition} hover:border-[#C9B27C]/45 hover:bg-[#FFFCF7] active:translate-y-px`}
+            className={`hidden shrink-0 rounded-full border border-[#E8DFD0]/95 bg-white px-3 py-1.5 font-[var(--font-manrope)] text-xs font-semibold text-[#0F172A] shadow-[0_10px_26px_-18px_rgba(15,23,42,0.35)] lg:inline-flex ${editorialInteractiveTransition} hover:border-[#C9B27C]/45 hover:bg-[#FFFCF7] active:translate-y-px`}
           >
             View Products
           </a>

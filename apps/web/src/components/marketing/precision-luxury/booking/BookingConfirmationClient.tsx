@@ -9,6 +9,8 @@ import { fetchPublicBookingConfirmation } from "@/lib/api/bookings";
 import { mapBookingScreenProgramToDisplay } from "@/mappers/deepCleanProgramMappers";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
 import { ServiceHeader } from "../layout/ServiceHeader";
+import { MarketingLinkButton } from "../shared/MarketingLinkButton";
+import { TrustMetricStrip } from "../ui/NuStandardPremiumPrimitives";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 import {
   formatBookingBathroomsForDisplay,
@@ -42,6 +44,8 @@ import {
   BOOKING_CONFIRMATION_RETURN_TO_BOOKING_CTA,
   BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA,
   BOOKING_CONFIRMATION_TEAM_PREP_TITLE,
+  BOOKING_CONFIRMATION_TRUST_STRIP_ITEMS,
+  BOOKING_CONFIRMATION_VIEW_BOOKING_CTA,
   BOOKING_CONFIRMATION_VISIT_ESTIMATE_PRICE_LABEL,
   BOOKING_CONFIRMATION_WHATS_NEXT_SECTION_TITLE,
   BOOKING_REVIEW_RECURRING_PRICE_LABEL,
@@ -67,6 +71,25 @@ import {
   readPublicIntakeEchoFromSearchParams,
 } from "./bookingUrlState";
 import { postPublicBookingFunnelMilestone } from "./bookingFunnelMilestoneClient";
+
+function ConfirmationSuccessBadge() {
+  return (
+    <div
+      className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-[#C9B27C]/22 bg-white shadow-[0_12px_36px_rgba(15,23,42,0.06)]"
+      aria-hidden
+    >
+      <svg
+        viewBox="0 0 24 24"
+        className="h-7 w-7 text-[#0F766E]"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+  );
+}
 
 function formatUsdFromCents(cents: number): string {
   const n = Number.isFinite(cents) ? cents / 100 : 0;
@@ -458,6 +481,7 @@ export function BookingConfirmationClient() {
 
         <main>
           <section className="mx-auto max-w-3xl px-6 py-20 md:px-8 md:py-28">
+            <ConfirmationSuccessBadge />
             <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
               Thank you
             </p>
@@ -494,6 +518,10 @@ export function BookingConfirmationClient() {
                 Browse services
               </Link>
             </div>
+
+            <div className="mt-14 border-t border-[#C9B27C]/12 pt-10">
+              <TrustMetricStrip items={[...BOOKING_CONFIRMATION_TRUST_STRIP_ITEMS]} />
+            </div>
           </section>
         </main>
 
@@ -507,7 +535,8 @@ export function BookingConfirmationClient() {
       <ServiceHeader />
 
       <main>
-        <section className="mx-auto max-w-3xl px-6 py-20 md:px-8 md:py-28">
+        <section className="mx-auto max-w-7xl px-6 py-20 md:px-8 md:py-28">
+          <ConfirmationSuccessBadge />
           <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
             Thank you
           </p>
@@ -914,21 +943,31 @@ export function BookingConfirmationClient() {
           ) : null}
 
           <div className="mt-10 flex flex-wrap gap-4">
+            {bookingId.trim() ? (
+              <MarketingLinkButton
+                href={`/customer/bookings/${bookingId.trim()}`}
+                variant="primary"
+                className="min-h-[46px] px-6 py-3 text-sm"
+              >
+                {BOOKING_CONFIRMATION_VIEW_BOOKING_CTA}
+              </MarketingLinkButton>
+            ) : null}
+            <MarketingLinkButton href="/services" variant="secondary" className="min-h-[46px] px-6 py-3 text-sm">
+              Browse services
+            </MarketingLinkButton>
             <Link
               href="/book"
               replace
               title={BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE}
               {...clearSessionAndNavigateProps}
-              className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 bg-white px-6 py-3.5 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] transition hover:bg-[#FFF9F3]"
+              className="inline-flex min-h-[46px] items-center justify-center rounded-full border border-[#C9B27C]/25 bg-white px-6 py-3 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] transition-[transform,box-shadow,border-color,background-color,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:bg-[#FFF9F3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F3] active:translate-y-0 active:scale-[0.99]"
             >
               {BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA}
             </Link>
-            <Link
-              href="/services"
-              className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-3.5 font-[var(--font-manrope)] text-sm font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76]"
-            >
-              Browse services
-            </Link>
+          </div>
+
+          <div className="mt-14 border-t border-[#C9B27C]/12 pt-10">
+            <TrustMetricStrip items={[...BOOKING_CONFIRMATION_TRUST_STRIP_ITEMS]} />
           </div>
         </section>
       </main>

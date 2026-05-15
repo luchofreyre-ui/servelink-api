@@ -10,9 +10,15 @@ import { bookingSteps } from "./bookingFlowData";
 import {
   BOOKING_FLOW_HERO_ACCOUNTABILITY,
   BOOKING_FLOW_HERO_BODY,
+  BOOKING_FLOW_HERO_BULLET_ACCURATE_PRICING,
+  BOOKING_FLOW_HERO_BULLET_CLEAR_EXPECTATIONS,
+  BOOKING_FLOW_HERO_BULLET_EASY_PROCESS,
+  BOOKING_FLOW_HERO_CLEAR_NUMBERS_LINE,
   BOOKING_FLOW_HERO_EYEBROW,
   BOOKING_FLOW_HERO_HEADLINE,
+  BOOKING_FLOW_HERO_NO_PRESSURE_LINE,
   BOOKING_FLOW_HERO_OPERATIONAL_TRANSPARENCY,
+  BOOKING_FLOW_HERO_REALTIME_LINE,
 } from "@/seo/bookingCopy";
 import {
   BOOKING_REVIEW_PREP_DEEP_KITCHEN_BATH,
@@ -40,9 +46,7 @@ import {
   BOOKING_SCHEDULE_CONFIRM_FAILED,
   BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA,
   BOOKING_REVIEW_DEPOSIT_CONFIRMING_RECORDED,
-  BOOKING_REVIEW_DEPOSIT_EXPECTATION_CHANGES,
-  BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHEN,
-  BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHY,
+  BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY,
   BOOKING_REVIEW_DEPOSIT_FINALIZING_TIMEOUT,
   BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE,
@@ -54,6 +58,7 @@ import {
   BOOKING_REVIEW_PAYMENT_UNAVAILABLE_ENV,
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED,
+  BOOKING_TRUST_RIBBON_ITEMS,
   PUBLIC_BOOKING_ORCHESTRATOR_LOCATION_NOT_RESOLVED_CODE,
 } from "./bookingPublicSurfaceCopy";
 import {
@@ -120,6 +125,7 @@ import {
 } from "./bookingDirectionIntakeApi";
 import { DepositPaymentElement } from "./DepositPaymentElement";
 import { BookingTrustRibbon } from "./BookingTrustRibbon";
+import { TrustMetricStrip } from "../ui/NuStandardPremiumPrimitives";
 import { getStripePromise } from "@/lib/stripe/stripeClient";
 import { buildIntakeEstimateFactorsFromBookingHomeState } from "./bookingStep2ToEstimateFactors";
 import {
@@ -2653,33 +2659,57 @@ export function BookingFlowClient() {
 
       <main>
         <section className="border-b border-[#C9B27C]/14">
-          <div className="mx-auto max-w-7xl px-6 py-10 md:px-8 md:py-16 lg:py-20">
-            <div className="max-w-4xl">
-              <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
-                {BOOKING_FLOW_HERO_EYEBROW}
-              </p>
-              <h1 className="mt-3 font-[var(--font-poppins)] text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-[#0F172A] sm:text-5xl md:mt-4 md:text-6xl">
-                {BOOKING_FLOW_HERO_HEADLINE}
-              </h1>
-              <p className="mt-4 max-w-3xl font-[var(--font-manrope)] text-base leading-7 text-[#475569] md:mt-6 md:text-lg md:leading-8 lg:text-xl">
-                {BOOKING_FLOW_HERO_BODY}
-              </p>
-              <p className="mt-4 max-w-3xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-base leading-7 text-[#334155] md:text-lg md:leading-8">
-                {BOOKING_FLOW_HERO_ACCOUNTABILITY}
-              </p>
-              <p className="mt-3 max-w-3xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-base md:leading-7">
-                {BOOKING_FLOW_HERO_OPERATIONAL_TRANSPARENCY}
-              </p>
-            </div>
+          <div className="mx-auto max-w-7xl px-6 py-8 md:px-8 md:py-11 lg:py-14">
+            <div className="grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_minmax(280px,380px)] xl:items-start xl:gap-12">
+              <div className="min-w-0 space-y-5">
+                <div>
+                  <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
+                    {BOOKING_FLOW_HERO_EYEBROW}
+                  </p>
+                  <h1 className="mt-3 font-[var(--font-poppins)] text-4xl font-semibold leading-[1.06] tracking-[-0.04em] text-[#0F172A] sm:text-5xl lg:text-[3.15rem] lg:leading-[1.05]">
+                    {BOOKING_FLOW_HERO_HEADLINE}
+                  </h1>
+                  <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-base leading-relaxed text-[#475569] md:text-lg md:leading-relaxed">
+                    {BOOKING_FLOW_HERO_BODY}
+                  </p>
+                  <ul className="mt-5 space-y-2 font-[var(--font-manrope)] text-sm font-medium text-[#334155] md:text-[15px]">
+                    <li className="flex gap-2">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
+                      {BOOKING_FLOW_HERO_BULLET_ACCURATE_PRICING}
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
+                      {BOOKING_FLOW_HERO_BULLET_CLEAR_EXPECTATIONS}
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
+                      {BOOKING_FLOW_HERO_BULLET_EASY_PROCESS}
+                    </li>
+                  </ul>
+                  <div className="mt-5 space-y-2 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
+                    <p>{BOOKING_FLOW_HERO_REALTIME_LINE}</p>
+                    <p>{BOOKING_FLOW_HERO_CLEAR_NUMBERS_LINE}</p>
+                    <p>{BOOKING_FLOW_HERO_NO_PRESSURE_LINE}</p>
+                  </div>
+                  <p className="mt-5 max-w-2xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-base leading-relaxed text-[#334155] md:text-lg">
+                    {BOOKING_FLOW_HERO_ACCOUNTABILITY}
+                  </p>
+                  <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
+                    {BOOKING_FLOW_HERO_OPERATIONAL_TRANSPARENCY}
+                  </p>
+                </div>
+              </div>
 
-            <div className="mt-6 md:mt-10">
-              <BookingFlowProgress
-                currentStep={currentStepOrder}
-                steps={bookingSteps.map((step) => ({
-                  id: step.order,
-                  label: step.label,
-                }))}
-              />
+              <div className="min-w-0 space-y-5 xl:sticky xl:top-24">
+                <BookingFlowProgress
+                  currentStep={currentStepOrder}
+                  steps={bookingSteps.map((step) => ({
+                    id: step.order,
+                    label: step.label,
+                  }))}
+                />
+                <TrustMetricStrip items={BOOKING_TRUST_RIBBON_ITEMS} />
+              </div>
             </div>
           </div>
         </section>
@@ -2898,10 +2928,8 @@ export function BookingFlowClient() {
                       {reviewDepositGateMessage}
                     </p>
                   ) : null}
-                  <div className="mt-5 max-w-2xl space-y-2 rounded-2xl border border-[#C9B27C]/14 bg-[#FFF9F3]/80 px-4 py-4 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-                    <p>{BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHY}</p>
-                    <p>{BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHEN}</p>
-                    <p>{BOOKING_REVIEW_DEPOSIT_EXPECTATION_CHANGES}</p>
+                  <div className="mt-5 max-w-2xl rounded-2xl border border-[#C9B27C]/14 bg-[#FFF9F3]/90 px-4 py-4 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                    <p>{BOOKING_REVIEW_DEPOSIT_EXPECTATION_SUMMARY}</p>
                   </div>
                   <p className="mt-4 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
                     {BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE}

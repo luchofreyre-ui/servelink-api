@@ -184,7 +184,7 @@ async function continueThroughLocationGateToReview() {
   }
   fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
   await waitFor(() =>
-    expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
+    expect(screen.getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })).toBeInTheDocument(),
   );
 }
 
@@ -436,7 +436,7 @@ function goHomeFromReviewViaBackOnce() {
   ).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
   expect(
-    screen.getByRole("heading", { name: /tell us about your home/i }),
+    screen.getByRole("heading", { level: 2, name: /your home details/i }),
   ).toBeInTheDocument();
 }
 
@@ -451,7 +451,7 @@ async function submitFromReviewToSchedule() {
 }
 
 async function chooseResetIntentAndContinue() {
-  await screen.findByRole("heading", { name: /tell us about your home/i });
+  await screen.findByRole("heading", { level: 2, name: /your home details/i });
 }
 
 function buildHomeStepSearchStringForService(serviceId = getBookingDefaultServiceId()) {
@@ -471,12 +471,12 @@ async function renderAtIntentStep(serviceId = getBookingDefaultServiceId()) {
     `step=home&service=${encodeURIComponent(serviceId)}${dc}`,
   );
   render(<BookingFlowClient />);
-  screen.getByRole("heading", { name: /tell us about your home/i });
+  screen.getByRole("heading", { level: 2, name: /your home details/i });
 }
 
 async function continueFromServiceToHomeStep() {
   fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-  await screen.findByRole("heading", { name: /tell us about your home/i });
+  await screen.findByRole("heading", { level: 2, name: /your home details/i });
 }
 
 const continueFromServiceToIntentStep = continueFromServiceToHomeStep;
@@ -486,7 +486,7 @@ async function renderAtHomeStep(serviceId = getBookingDefaultServiceId()) {
     buildHomeStepSearchStringForService(serviceId),
   );
   render(<BookingFlowClient />);
-  await screen.findByRole("heading", { name: /tell us about your home/i });
+  await screen.findByRole("heading", { level: 2, name: /your home details/i });
 }
 
 async function selectNorthTeamAndFirstSlot() {
@@ -503,7 +503,7 @@ async function selectNorthTeamAndFirstSlot() {
 
 function reviewHomeDetailsSection() {
   const reviewRoot = screen
-    .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+    .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
     .closest("section")!;
   return within(reviewRoot).getByText("Home details").closest("div.rounded-2xl")!;
 }
@@ -645,7 +645,7 @@ describe("BookingFlowClient", () => {
     render(<BookingFlowClient />);
     await fillReviewContactAndOptionalFirstTimePlan(8000);
     const reviewRoot = screen
-      .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+      .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
       .closest("section")!;
     const scheduleBlock = within(reviewRoot)
       .getByText("Schedule")
@@ -1266,7 +1266,7 @@ describe("BookingFlowClient", () => {
 
     render(<BookingFlowClient key="fresh-wins" />);
 
-    expect(screen.queryByText(BOOKING_REVIEW_STEP_TITLE)).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })).not.toBeInTheDocument();
     expect(screen.queryByText(/in_from_confirmation_only/)).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /continue/i })).toBeInTheDocument();
   });
@@ -1290,7 +1290,7 @@ describe("BookingFlowClient", () => {
     render(<BookingFlowClient />);
 
     expect(screen.queryByText(/in_session_only/)).not.toBeInTheDocument();
-    expect(screen.queryByText(BOOKING_REVIEW_STEP_TITLE)).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })).not.toBeInTheDocument();
   });
 
   describe("public booking architecture — taxonomy, recurring gate, location order", () => {
@@ -1330,7 +1330,7 @@ describe("BookingFlowClient", () => {
       ).toBeInTheDocument();
       expect(screen.getByText(BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED)).toBeInTheDocument();
       expect(
-        screen.queryByText("Tell us about your home"),
+        screen.queryByRole("heading", { level: 2, name: /your home details/i }),
       ).not.toBeInTheDocument();
     });
 
@@ -1347,7 +1347,7 @@ describe("BookingFlowClient", () => {
 
       render(<BookingFlowClient />);
 
-      await screen.findByRole("heading", { name: /tell us about your home/i });
+      await screen.findByRole("heading", { level: 2, name: /your home details/i });
       expect(
         screen.queryByRole("heading", { name: /what brings you in today/i }),
       ).not.toBeInTheDocument();
@@ -1359,7 +1359,7 @@ describe("BookingFlowClient", () => {
 
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
 
-      await screen.findByRole("heading", { name: /tell us about your home/i });
+      await screen.findByRole("heading", { level: 2, name: /your home details/i });
       expect(window.scrollTo).toHaveBeenCalledWith({
         top: 0,
         behavior: "auto",
@@ -1425,7 +1425,7 @@ describe("BookingFlowClient", () => {
       });
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
       await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
+        expect(screen.getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })).toBeInTheDocument(),
       );
     });
 
@@ -1486,11 +1486,11 @@ describe("BookingFlowClient", () => {
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
 
       await waitFor(() =>
-        expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument(),
+        expect(screen.getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })).toBeInTheDocument(),
       );
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
@@ -1508,7 +1508,7 @@ describe("BookingFlowClient", () => {
         within(scheduleBlock).getByText(BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE),
       ).toBeInTheDocument();
 
-      expect(screen.getByText(BOOKING_REVIEW_STEP_TITLE)).toBeInTheDocument();
+      expect(screen.getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })).toBeInTheDocument();
     });
   });
 
@@ -1545,7 +1545,7 @@ describe("BookingFlowClient", () => {
       await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
@@ -1589,7 +1589,7 @@ describe("BookingFlowClient", () => {
       expect(
         screen.getByRole("heading", {
           level: 2,
-          name: "Tell us about your home",
+          name: "Your home details",
         }),
       ).toBeInTheDocument();
 
@@ -1622,7 +1622,7 @@ describe("BookingFlowClient", () => {
       await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
@@ -1692,11 +1692,11 @@ describe("BookingFlowClient", () => {
       expect(
         screen.getByRole("heading", {
           level: 2,
-          name: "Tell us about your home",
+          name: "Your home details",
         }),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
+        screen.queryByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE }),
       ).not.toBeInTheDocument();
     });
 
@@ -1716,7 +1716,7 @@ describe("BookingFlowClient", () => {
       await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
@@ -1761,7 +1761,7 @@ describe("BookingFlowClient", () => {
       expect(
         screen.getByRole("heading", {
           level: 2,
-          name: "Tell us about your home",
+          name: "Your home details",
         }),
       ).toBeInTheDocument();
 
@@ -1803,7 +1803,7 @@ describe("BookingFlowClient", () => {
       );
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
@@ -1842,7 +1842,7 @@ describe("BookingFlowClient", () => {
       );
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
@@ -1874,11 +1874,11 @@ describe("BookingFlowClient", () => {
       });
 
       expect(
-        screen.getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE }),
+        screen.getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE }),
       ).toBeInTheDocument();
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
@@ -1963,7 +1963,7 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      await screen.findByText(BOOKING_REVIEW_STEP_TITLE);
+      await screen.findByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE });
       await waitFor(() => expect(previewEstimateMock).toHaveBeenCalledTimes(1));
       expect(screen.getByTestId("booking-direction-send")).toBeInTheDocument();
     });
@@ -1976,7 +1976,7 @@ describe("BookingFlowClient", () => {
 
       await screen.findByRole("heading", { level: 2, name: "Visit address" });
       expect(
-        screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
+        screen.queryByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE }),
       ).not.toBeInTheDocument();
       expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument();
       expect(previewEstimateMock).not.toHaveBeenCalled();
@@ -1990,7 +1990,7 @@ describe("BookingFlowClient", () => {
 
       await screen.findByRole("heading", { level: 2, name: "Visit address" });
       expect(
-        screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
+        screen.queryByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE }),
       ).not.toBeInTheDocument();
       expect(screen.queryByTestId("booking-direction-send")).not.toBeInTheDocument();
       expect(previewEstimateMock).not.toHaveBeenCalled();
@@ -2003,7 +2003,7 @@ describe("BookingFlowClient", () => {
       expect(
         screen.getByRole("heading", {
           level: 2,
-          name: "Tell us about your home",
+          name: "Your home details",
         }),
       ).toBeInTheDocument();
 
@@ -2022,7 +2022,7 @@ describe("BookingFlowClient", () => {
       );
 
       expect(
-        screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
+        screen.queryByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE }),
       ).not.toBeInTheDocument();
     });
 
@@ -2066,7 +2066,7 @@ describe("BookingFlowClient", () => {
       expect(
         screen.getByRole("heading", {
           level: 2,
-          name: "Tell us about your home",
+          name: "Your home details",
         }),
       ).toBeInTheDocument();
 
@@ -2078,7 +2078,7 @@ describe("BookingFlowClient", () => {
         ),
       ).toBeInTheDocument();
       expect(
-        screen.queryByText(BOOKING_REVIEW_STEP_TITLE),
+        screen.queryByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE }),
       ).not.toBeInTheDocument();
 
       expect(screen.getByTestId("booking-home-size-range")).toBeInTheDocument();
@@ -2165,7 +2165,7 @@ describe("BookingFlowClient", () => {
       expect(
         screen.getByRole("heading", {
           level: 2,
-          name: "Tell us about your home",
+          name: "Your home details",
         }),
       ).toBeInTheDocument();
     });
@@ -2239,7 +2239,7 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
@@ -2259,7 +2259,7 @@ describe("BookingFlowClient", () => {
 
       await waitFor(() =>
         expect(
-          screen.getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE }),
+          screen.getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE }),
         ).toBeInTheDocument(),
       );
       expect(screen.queryByText("First visit structure:")).not.toBeInTheDocument();
@@ -2427,7 +2427,7 @@ describe("BookingFlowClient", () => {
       );
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
@@ -2660,7 +2660,7 @@ describe("BookingFlowClient", () => {
       await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
@@ -2778,7 +2778,7 @@ describe("BookingFlowClient", () => {
       await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")
@@ -2851,7 +2851,7 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
@@ -2869,7 +2869,7 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       const reviewRoot2 = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const homeBlock2 = within(reviewRoot2)
         .getByText("Home details")
@@ -2936,7 +2936,7 @@ describe("BookingFlowClient", () => {
       await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const homeBlock = within(reviewRoot)
         .getByText("Home details")
@@ -3078,7 +3078,7 @@ describe("BookingFlowClient", () => {
       await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
-        .getByRole("heading", { name: BOOKING_REVIEW_STEP_TITLE })
+        .getByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE })
         .closest("section")!;
       const scheduleBlock = within(reviewRoot)
         .getByText("Schedule")

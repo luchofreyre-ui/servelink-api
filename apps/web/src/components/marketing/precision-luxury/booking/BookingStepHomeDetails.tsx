@@ -247,7 +247,7 @@ export function BookingStepHomeDetails({
   return (
     <BookingSectionCard
       eyebrow="Step 2"
-      title="Tell us about your home"
+      title="Your home details"
       body="This helps us scope your service correctly and avoid surprises."
     >
       <div className="mb-10 rounded-2xl border border-[#C9B27C]/16 bg-white px-5 py-4 shadow-sm ring-1 ring-[#C9B27C]/10">
