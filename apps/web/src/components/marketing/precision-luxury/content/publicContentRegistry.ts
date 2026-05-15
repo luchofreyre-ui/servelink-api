@@ -140,6 +140,10 @@ export const publicContentRegistry: PublicContentEntry[] = [
         q: "Should this be my first appointment?",
         a: "In many cases, yes. It creates the right baseline for future recurring service and sets expectations around the quality of the home’s overall condition.",
       },
+      {
+        q: "How will I know when my team is arriving?",
+        a: "After booking, you receive confirmation with your arrival window and coordinated updates in plain language—transparent scheduling and respectful communication before anyone arrives.",
+      },
     ],
     bookingTag: "Reset",
     bookingMeta: "Best starting point",
@@ -218,6 +222,10 @@ export const publicContentRegistry: PublicContentEntry[] = [
         q: "Why does recurring service feel more premium in this system?",
         a: "Because it is positioned as a standard-preserving service, not just a commodity task repeated on a schedule.",
       },
+      {
+        q: "How does Nu Standard maintain consistent service standards?",
+        a: "Owner-led teams align to documented quality methods with accountable scheduling—so rhythm stays predictable and professionally coordinated.",
+      },
     ],
     bookingTag: "Maintenance",
     bookingMeta: "Most common long-term fit",
@@ -295,6 +303,10 @@ export const publicContentRegistry: PublicContentEntry[] = [
         q: "Should this be booked before listing photos or after moving out?",
         a: "That depends on the goal, but either way the value is strongest when the property needs to present well immediately.",
       },
+      {
+        q: "How does arrival coordination work for a transition clean?",
+        a: "You receive the same clear arrival window and confirmation thread as any Nu Standard visit—respectful scheduling clarity during tight move timelines.",
+      },
     ],
     bookingTag: "Transition",
     bookingMeta: "Best for transitions",
@@ -348,6 +360,10 @@ export const publicContentRegistry: PublicContentEntry[] = [
         q: "When does one-time cleaning stop being enough?",
         a: "When buildup starts dictating the cleaning experience instead of maintenance protecting the standard.",
       },
+      {
+        q: "What makes Nu Standard different from a traditional quote-based cleaning company?",
+        a: "Transparent scheduling, documented service standards, and owner-led accountability—premium clarity from booking through arrival, not opaque quoting alone.",
+      },
     ],
     ctaTitle: "Turn useful guidance into a real booking path.",
     ctaBody:
@@ -399,6 +415,10 @@ export const publicContentRegistry: PublicContentEntry[] = [
       {
         q: "Why does this matter for conversion?",
         a: "When clients understand the service fit more clearly, they feel more confident moving into booking.",
+      },
+      {
+        q: "How does Nu Standard keep visits accountable beyond pricing?",
+        a: "Owner-led teams operate under documented standards with transparent scheduling—professional coordination rather than vague handoffs.",
       },
     ],
     ctaTitle: "Build educational depth without losing conversion quality.",

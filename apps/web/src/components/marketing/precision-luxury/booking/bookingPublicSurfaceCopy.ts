@@ -47,7 +47,7 @@ export const BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE =
   "A $100 deposit has been applied to secure this booking.";
 
 export const BOOKING_CONFIRMATION_NEXT_STEPS_VISIT_CONFIRMED =
-  "You’ll receive a confirmation email with your booking reference and arrival window. If anything changes on your side, reply from that thread and we’ll help adjust.";
+  "You’ll receive a confirmation email with your booking reference and arrival window—updates stay clear in that thread so timing stays easy to follow. If anything changes on your side, reply there and we’ll help adjust.";
 
 export const BOOKING_CONFIRMATION_INTRO_NEUTRAL_REENTRY =
   "You opened this page without the usual handoff from the booking flow—often after a refresh, bookmark, or new device. That’s fine; we simply can’t reconstruct your finished summary safely from here alone.";
@@ -276,7 +276,7 @@ export const BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED =
 export const BOOKING_SCHEDULE_PAGE_TITLE = "Schedule your visit";
 
 export const BOOKING_SCHEDULE_PAGE_LEAD =
-  "Pick who serves your home, then choose an arrival window. Your visit is fully confirmed when you complete the step below.";
+  "Pick who serves your home, then choose an arrival window with scheduling clarity you can rely on. Your visit is fully confirmed when you complete the step below.";
 
 export const BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE = "Choose your team";
 
@@ -502,7 +502,7 @@ export const BOOKING_REVIEW_SUBMIT_SAVING = "Saving your request…";
 export const BOOKING_REVIEW_STEP_TITLE = "Review your visit & estimate";
 
 export const BOOKING_REVIEW_STEP_BODY =
-  "Confirm your home details and estimate look right. Continuing saves your request and opens owner-led team selection—your arrival window is chosen on the next step.";
+  "Confirm your home details and estimate look right. Continuing saves your request and opens owner-led team selection—your concrete arrival window comes next, with coordination that stays clear through confirmation.";
 
 export const BOOKING_REVIEW_NEXT_SCHEDULE_TITLE = "Next: choose your team and arrival time";
 
@@ -826,8 +826,12 @@ export const BOOKING_REVIEW_REC_CABINETS_DETAIL =
 /** Subtle trust ribbon — review, schedule, deposit (restrained). */
 export const BOOKING_TRUST_RIBBON_ACCOUNTABILITY = "Owner-led accountability";
 export const BOOKING_TRUST_RIBBON_INSURED = "Insured service";
-export const BOOKING_TRUST_RIBBON_COMMS = "Clear standards";
-export const BOOKING_TRUST_RIBBON_SUPPORT = "Guided experience";
+export const BOOKING_TRUST_RIBBON_COMMS = "Documented standards";
+export const BOOKING_TRUST_RIBBON_SUPPORT = "Transparent scheduling";
+
+/** Secondary line under ribbon bullets — booking reassurance density control. */
+export const BOOKING_TRUST_RIBBON_SUBLINE =
+  "Prepared teams, clear coordination from booking through arrival, and quality-assurance discipline—professional transparency, respectfully delivered.";
 
 export const BOOKING_TRUST_RIBBON_ITEMS: readonly string[] = [
   BOOKING_TRUST_RIBBON_ACCOUNTABILITY,

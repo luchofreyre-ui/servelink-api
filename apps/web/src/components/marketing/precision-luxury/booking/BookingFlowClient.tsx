@@ -12,6 +12,7 @@ import {
   BOOKING_FLOW_HERO_BODY,
   BOOKING_FLOW_HERO_EYEBROW,
   BOOKING_FLOW_HERO_HEADLINE,
+  BOOKING_FLOW_HERO_OPERATIONAL_TRANSPARENCY,
 } from "@/seo/bookingCopy";
 import {
   BOOKING_REVIEW_PREP_DEEP_KITCHEN_BATH,
@@ -2665,6 +2666,9 @@ export function BookingFlowClient() {
               </p>
               <p className="mt-4 max-w-3xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-base leading-7 text-[#334155] md:text-lg md:leading-8">
                 {BOOKING_FLOW_HERO_ACCOUNTABILITY}
+              </p>
+              <p className="mt-3 max-w-3xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-base md:leading-7">
+                {BOOKING_FLOW_HERO_OPERATIONAL_TRANSPARENCY}
               </p>
             </div>
 

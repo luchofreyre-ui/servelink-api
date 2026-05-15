@@ -92,8 +92,8 @@ export function PrecisionLuxuryHomepage() {
                     Compare visit types anytime—booking stays clear and unhurried.
                   </p>
                   <p className="mt-4 max-w-xl border-l-2 border-[#C9B27C]/35 pl-4 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B]">
-                    A calm process, guided by people accountable for the result—with respectful arrivals and expectations
-                    stated upfront.
+                    Owner-led teams bring documented professionalism to your door—clear coordination and respectful
+                    standards, not vague promises.
                   </p>
                 </div>
 
@@ -133,6 +133,9 @@ export function PrecisionLuxuryHomepage() {
         {/* Trust strip */}
         <section className="border-y border-[#C9B27C]/14 bg-white/75">
           <div className="mx-auto max-w-7xl px-6 py-7 md:px-8 md:py-8">
+            <p className="mb-5 max-w-3xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px] md:leading-7">
+              Prepared teams, clear arrival coordination, and documented service standards—calm professionalism you can recognize.
+            </p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
               {trustStripItems.map((item) => (
                 <div

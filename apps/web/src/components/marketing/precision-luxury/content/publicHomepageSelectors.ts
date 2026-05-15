@@ -35,7 +35,7 @@ export function getHomepageTrustPoints() {
 /** Full-width trust strip below hero (homepage layout). */
 export function getHomepageTrustStripItems() {
   return [
-    "Satisfaction support",
+    "Transparent scheduling",
     "Background-checked professionals",
     "Clear pricing",
     "Secure payments",
@@ -62,7 +62,7 @@ export function getHomepageSteps() {
     {
       step: "02",
       title: "We prepare",
-      body: "Your visit is aligned to the right plan and crew expectations before anyone arrives—so standards stay consistent visit to visit.",
+      body: "Your visit is aligned to the right plan and crew expectations before anyone arrives—with accountable coordination so standards stay consistent visit to visit.",
     },
     {
       step: "03",
@@ -78,7 +78,7 @@ export function getHomepageProofSectionIntro() {
     eyebrow: "Proof we can stand behind",
     title: "Built around accountable service—not anonymous staffing.",
     supportingLine:
-      "Prepared teams. Clear expectations. Respectful arrivals—and your home treated as a place that matters, not another stop.",
+      "Documented quality standards, transparent scheduling, and respectful in-home professionalism—calm operational clarity from booking through completion.",
   };
 }
 
@@ -86,11 +86,11 @@ export function getHomepageProofCommitments() {
   return [
     {
       title: "Owner-led accountability",
-      body: "A calm process guided by people accountable for the result—not anonymous staffing churn.",
+      body: "Leadership you can recognize—operators personally accountable for how visits are planned, communicated, and completed.",
     },
     {
       title: "Background-checked professionals",
-      body: "Vetted professionals with disciplined in-home conduct expectations.",
+      body: "Vetted professionals trained for disciplined, respectful in-home conduct—not improvised staffing.",
     },
     {
       title: "Clear pricing",

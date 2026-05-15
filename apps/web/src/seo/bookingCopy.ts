@@ -30,3 +30,7 @@ export const BOOKING_FLOW_HERO_BODY =
 
 /** Owner-operator accountability anchor — full sentence under hero body on `/book`. */
 export const BOOKING_FLOW_HERO_ACCOUNTABILITY = NU_STANDARD_OWNER_OPERATOR_ANCHOR;
+
+/** Operational transparency — booking hero reassurance (calm clarity, not monitoring rhetoric). */
+export const BOOKING_FLOW_HERO_OPERATIONAL_TRANSPARENCY =
+  "Clear arrival windows, timely coordination, and documented service standards—your visit stays clearly coordinated from booking through completion.";

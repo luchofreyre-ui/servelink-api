@@ -57,7 +57,7 @@ export function BookingServiceHandoffCard({
         <p className="font-[var(--font-manrope)] text-sm leading-7 text-[#0F172A]">
           {bookingPublicPath === "recurring_auth_gate"
             ? "Recurring visits are managed in your Nu Standard account—sign in to continue this path."
-            : "What you chose above stays with you through each step. You can always adjust visit type on the first step if plans change."}
+            : "What you chose above stays with you through each step—transparent scheduling and documented expectations carry forward as you continue. You can always adjust visit type on the first step if plans change."}
         </p>
       </div>
     </section>
