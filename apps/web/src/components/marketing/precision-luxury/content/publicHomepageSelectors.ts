@@ -71,3 +71,38 @@ export function getHomepageSteps() {
     },
   ];
 }
+
+/** Standards-forward proof lane — commitments, not fabricated testimonials. */
+export function getHomepageProofSectionIntro() {
+  return {
+    eyebrow: "Proof we can stand behind",
+    title: "Built around accountable service—not anonymous staffing.",
+    supportingLine:
+      "Prepared teams. Clear expectations. Respectful arrivals—and your home treated as a place that matters, not another stop.",
+  };
+}
+
+export function getHomepageProofCommitments() {
+  return [
+    {
+      title: "Owner-led accountability",
+      body: "A calm process guided by people accountable for the result—not anonymous staffing churn.",
+    },
+    {
+      title: "Background-checked professionals",
+      body: "Vetted professionals with disciplined in-home conduct expectations.",
+    },
+    {
+      title: "Clear pricing",
+      body: "Transparent scope and pricing signals before you commit—no bait-and-switch choreography.",
+    },
+    {
+      title: "Secure payments",
+      body: "Payments handled through established, secure rails—no improvised handling.",
+    },
+    {
+      title: "Satisfaction support",
+      body: "When something misses the mark, there is a path to resolution—operations you can reach.",
+    },
+  ] as const;
+}

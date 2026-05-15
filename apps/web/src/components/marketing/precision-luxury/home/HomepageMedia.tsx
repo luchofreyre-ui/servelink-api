@@ -38,7 +38,7 @@ export function HomepageHeroMedia() {
 
   return (
     <div className="relative w-full overflow-hidden rounded-[28px] border border-[#C9B27C]/22 bg-[#F4EFE8] shadow-[0_28px_90px_rgba(15,23,42,0.08)]">
-      <div className="relative aspect-[3/2] w-full min-h-[240px] sm:min-h-[280px] lg:aspect-[3/2] lg:max-h-[min(52vh,520px)] lg:min-h-[320px]">
+      <div className="relative aspect-[3/2] w-full min-h-[220px] sm:min-h-[252px] lg:aspect-[3/2] lg:max-h-[min(43vh,448px)] lg:min-h-[288px]">
         <HeroGradientFallback className="z-0" />
         {!failed ? (
           <Image
@@ -52,6 +52,19 @@ export function HomepageHeroMedia() {
             onError={() => setFailed(true)}
           />
         ) : null}
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] bg-gradient-to-t from-[#0F172A]/24 via-[#0F172A]/06 to-transparent pb-4 pt-16 sm:pb-5 sm:pt-20">
+          <div className="mx-auto max-w-lg px-4 sm:px-5">
+            <div className="rounded-2xl border border-white/35 bg-white/88 px-4 py-3 shadow-[0_12px_40px_rgba(15,23,42,0.12)] backdrop-blur-[10px] sm:px-5 sm:py-3.5">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#C9B27C]">
+                Owner-led service presence
+              </p>
+              <p className="mt-1.5 font-[var(--font-manrope)] text-[13px] leading-snug text-[#334155] sm:text-sm">
+                Beautiful homes, maintained by accountable professionals.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -60,15 +73,20 @@ export function HomepageHeroMedia() {
 export function HomepageServiceMedia({
   slug,
   variant,
+  flushCardTop = false,
 }: {
   slug: string;
   variant: HomepageServiceVisualVariant;
+  /** When true, square inner corners so the image sits flush under a rounded article shell. */
+  flushCardTop?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
   const meta = getHomepageServiceImage(slug);
 
+  const frameRounding = flushCardTop ? "rounded-t-[28px] rounded-b-none" : "rounded-[22px]";
+
   return (
-    <div className="relative aspect-[3/2] w-full overflow-hidden rounded-[22px] ring-1 ring-[#C9B27C]/14">
+    <div className={`relative aspect-[5/3] w-full overflow-hidden ring-1 ring-[#C9B27C]/14 ${frameRounding}`}>
       <ServiceGradientFallback variant={variant} />
       {!failed && meta ? (
         <Image
@@ -89,7 +107,7 @@ export function HomepageServiceMedia({
 export function HomepageTrustOperationalRow() {
   return (
     <section className="border-b border-[#C9B27C]/12 bg-[#FFFCF8]">
-      <div className="mx-auto max-w-7xl px-6 py-12 md:px-8 md:py-14">
+      <div className="mx-auto max-w-7xl px-6 py-11 md:px-8 md:py-12">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#C9B27C]">
             Owner-led operations
@@ -98,11 +116,12 @@ export function HomepageTrustOperationalRow() {
             Calm presence. Serious standards.
           </h2>
           <p className="mt-3 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
-            Presence and discipline you can recognize—not loud promises.
+            Presence and discipline you can recognize—not loud promises. Your home is treated as a place that matters,
+            with prepared teams and expectations stated upfront.
           </p>
         </div>
 
-        <div className="mt-10 grid gap-8 md:grid-cols-3 md:gap-7">
+        <div className="mt-9 grid gap-8 md:grid-cols-3 md:gap-7">
           {HOMEPAGE_TRUST_VISUALS.map((item) => (
             <TrustVisualCard key={item.assetId} visual={item} />
           ))}
@@ -132,7 +151,7 @@ function TrustVisualCard({ visual }: { visual: (typeof HOMEPAGE_TRUST_VISUALS)[n
           />
         ) : null}
       </div>
-      <figcaption className="space-y-2 px-5 py-5">
+      <figcaption className="space-y-2 px-6 py-6">
         <p className="font-[var(--font-poppins)] text-sm font-semibold text-[#0F172A]">
           {visual.headline}
         </p>
