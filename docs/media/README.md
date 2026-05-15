@@ -23,6 +23,8 @@ If an upstream creative PDF/Figma vault exists externally, **import references h
 | [`NU_STANDARD_VIDEO_PRODUCTION_LIBRARY_V1.md`](./NU_STANDARD_VIDEO_PRODUCTION_LIBRARY_V1.md) | **Video sequencing**, allowed/forbidden motion + pacing, audio/caption/overlay rules. |
 | [`NU_STANDARD_MEDIA_IMPLEMENTATION_MAP_V1.md`](./NU_STANDARD_MEDIA_IMPLEMENTATION_MAP_V1.md) | Maps **surfaces → assets**, responsive + lazy + motion policies + fallback behavior. |
 | [`NU_STANDARD_MEDIA_PERFORMANCE_GOVERNANCE_V1.md`](./NU_STANDARD_MEDIA_PERFORMANCE_GOVERNANCE_V1.md) | Performance budgets, autoplay policy, a11y + reduced-motion, CDN expectations. |
+| [`NU_STANDARD_LAUNCH_CRITICAL_ASSET_SET_V1.md`](./NU_STANDARD_LAUNCH_CRITICAL_ASSET_SET_V1.md) | **Launch Wave V1:** curated hero / OO trust / booking reassurance / environmental prompts, sequencing, crops, culling. |
+| [`NU_STANDARD_LAUNCH_ASSET_IMPLEMENTATION_PLAN_V1.md`](./NU_STANDARD_LAUNCH_ASSET_IMPLEMENTATION_PLAN_V1.md) | **Launch placement plan:** target surfaces, responsive behavior, loading + fallback, implementation priority order. |
 
 ---
 
