@@ -271,7 +271,7 @@ describe("BookingConfirmationClient", () => {
     ).toBeTruthy();
     expect(
       screen.getByText(
-        /Your preferences and contact path are on file with Servelink/,
+        /Your preferences and contact path are on file with Nu Standard/,
       ),
     ).toBeTruthy();
   });

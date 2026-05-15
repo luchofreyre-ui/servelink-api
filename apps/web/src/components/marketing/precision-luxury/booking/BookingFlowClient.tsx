@@ -8,6 +8,7 @@ import { PublicSiteFooter } from "../layout/PublicSiteFooter";
 import { BookingFlowProgress } from "../BookingFlowProgress";
 import { bookingSteps } from "./bookingFlowData";
 import {
+  BOOKING_FLOW_HERO_ACCOUNTABILITY,
   BOOKING_FLOW_HERO_BODY,
   BOOKING_FLOW_HERO_EYEBROW,
   BOOKING_FLOW_HERO_HEADLINE,
@@ -2662,6 +2663,9 @@ export function BookingFlowClient() {
               <p className="mt-4 max-w-3xl font-[var(--font-manrope)] text-base leading-7 text-[#475569] md:mt-6 md:text-lg md:leading-8 lg:text-xl">
                 {BOOKING_FLOW_HERO_BODY}
               </p>
+              <p className="mt-4 max-w-3xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-base leading-7 text-[#334155] md:text-lg md:leading-8">
+                {BOOKING_FLOW_HERO_ACCOUNTABILITY}
+              </p>
             </div>
 
             <div className="mt-6 md:mt-10">
@@ -3142,16 +3146,15 @@ export function BookingFlowClient() {
                 previewError={previewError}
               />
 
-              <section className="rounded-[32px] border border-[#C9B27C]/16 bg-[#0F172A] p-8 text-white shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
+              <section className="rounded-[32px] border border-[#C9B27C]/16 bg-[#0F172A] p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8">
                 <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
                   Why we ask
                 </p>
-                <h2 className="mt-4 font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.03em] text-white">
-                  Clear details mean a clearer quote.
+                <h2 className="mt-4 font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.03em] text-white sm:text-2xl">
+                  Clear details mean a confident arrival.
                 </h2>
                 <p className="mt-4 font-[var(--font-manrope)] text-base leading-8 text-white/75">
-                  Home size and rooms help us scope time and pricing honestly—so the first
-                  visit reflects what you expected, not a rough guess.
+                  Home size and rooms help us scope time and pricing honestly—so the first visit reflects what you expected. Nu Standard teams are owner-led; that context lets your team plan standards and pacing before they cross your threshold.
                 </p>
               </section>
             </aside>

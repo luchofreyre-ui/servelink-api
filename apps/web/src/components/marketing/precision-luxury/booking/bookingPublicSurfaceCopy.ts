@@ -12,6 +12,11 @@ import type {
   BookingTimeOption,
   BookingTransitionState,
 } from "./bookingFlowTypes";
+import {
+  NU_STANDARD_OWNER_OPERATOR_ANCHOR,
+  NU_STANDARD_OWNER_OPERATOR_SUMMARY,
+  NU_STANDARD_OWNER_OPERATOR_TEAM_CHOICE_NOTE,
+} from "../content/nuStandardTrustPositioning";
 import { isDeepCleaningBookingServiceId } from "./bookingDeepClean";
 
 export const BOOKING_CONFIRMATION_REQUEST_SECTION_TITLE = "What you shared";
@@ -36,7 +41,7 @@ export const BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_LEAD =
   "Your deposit is received and your visit is on the calendar.";
 
 export const BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_DETAIL =
-  "We’ll follow up by email with any final details before we arrive.";
+  `${NU_STANDARD_OWNER_OPERATOR_ANCHOR} We’ll follow up by email with any final details before we arrive.`;
 
 export const BOOKING_CONFIRMATION_DEPOSIT_PAID_LINE =
   "A $100 deposit has been applied to secure this booking.";
@@ -63,10 +68,10 @@ export const BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE =
 export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD =
   "The estimate below reflects what you just confirmed with us.";
 export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL =
-  "Final pricing and arrival timing are confirmed when we follow up by email—this screen is your snapshot, not the final calendar lock.";
+  `Final pricing and arrival timing are confirmed when we follow up by email—this screen is your snapshot, not the final calendar lock. ${NU_STANDARD_OWNER_OPERATOR_SUMMARY}`;
 
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD =
-  "Your preferences and contact path are on file with Servelink.";
+  "Your preferences and contact path are on file with Nu Standard.";
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL =
   "If anything didn’t finish on this screen, your details are still safe—our team picks up personally from here.";
 
@@ -92,7 +97,7 @@ export const BOOKING_CONFIRMATION_IN_HOME_WINDOW_HINT =
   "From your booked arrival window with this team. Cleaning effort is total work planned—on-site time can be shorter when a team works in parallel.";
 
 export const BOOKING_CONFIRMATION_RECURRING_SURFACE_LEAD =
-  "Maintenance visits keep a steady home on schedule—typically less reset work than your opening visit. The per-visit figure for your cadence reflects ongoing upkeep, not a repeat of the full opening scope.";
+  "Maintenance visits keep a steady home on schedule—typically less reset work than your opening visit. Owner-led teams help recurring cadence feel consistent: the same accountability mindset applies visit to visit. The per-visit figure for your cadence reflects ongoing upkeep, not a repeat of the full opening scope.";
 
 export const BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE =
   "Opening reset visit schedule";
@@ -169,7 +174,7 @@ export function bookingConfirmationDeepPlanEchoLabel(
 export const BOOKING_PUBLIC_SERVICE_SECTION_TITLE = "Choose your service";
 
 export const BOOKING_PUBLIC_SERVICE_SECTION_BODY =
-  "Pick how you’d like to work with us first. You’ll review numbers when they’re ready, choose your team next, and hold your spot with a deposit only when you’re comfortable.";
+  "Pick how you’d like to work with us first. Nu Standard teams are owner-led—your visit isn’t random staffing. You’ll review numbers when they’re ready, choose your team next, and hold your spot with a deposit only when you’re comfortable.";
 
 export const BOOKING_PUBLIC_CARD_ONE_TIME_TITLE = "One-Time Cleaning";
 
@@ -276,7 +281,7 @@ export const BOOKING_SCHEDULE_PAGE_LEAD =
 export const BOOKING_SCHEDULE_CHOOSE_TEAM_TITLE = "Choose your team";
 
 export const BOOKING_SCHEDULE_TEAM_SUPPORT_LINE =
-  "We’ve selected the best teams available for your home and service.";
+  `${NU_STANDARD_OWNER_OPERATOR_TEAM_CHOICE_NOTE} These matches reflect your home, scope, and availability—not generic staffing pools.`;
 
 export const BOOKING_SCHEDULE_CHOOSE_TEAM_LEAD =
   "When two teams appear, pick one to see only their open windows—we never mix times across teams.";
@@ -497,12 +502,12 @@ export const BOOKING_REVIEW_SUBMIT_SAVING = "Saving your request…";
 export const BOOKING_REVIEW_STEP_TITLE = "Review your visit & estimate";
 
 export const BOOKING_REVIEW_STEP_BODY =
-  "Confirm your home details and estimate look right. Continuing saves your request and opens team selection—your arrival window is chosen on the next step.";
+  "Confirm your home details and estimate look right. Continuing saves your request and opens owner-led team selection—your arrival window is chosen on the next step.";
 
 export const BOOKING_REVIEW_NEXT_SCHEDULE_TITLE = "Next: choose your team and arrival time";
 
 export const BOOKING_REVIEW_NEXT_SCHEDULE_BODY =
-  "You’ll see the best teams available for your home, then pick a time that works for you.";
+  "You’ll see Nu Standard teams matched to your home—each led by an owner-operator accountable for quality—then pick a time that fits.";
 
 export const BOOKING_REVIEW_BANNER_READY_NEXT_STEP =
   "You’re ready for the next step: pick your team and arrival time.";
@@ -819,13 +824,13 @@ export const BOOKING_REVIEW_REC_CABINETS_DETAIL =
   "Detailed cabinet fronts when touch points and trim deserve extra finesse.";
 
 /** Subtle trust ribbon — review, schedule, deposit (restrained). */
-export const BOOKING_TRUST_RIBBON_VETTED = "Vetted professionals";
+export const BOOKING_TRUST_RIBBON_ACCOUNTABILITY = "Owner-led accountability";
 export const BOOKING_TRUST_RIBBON_INSURED = "Insured service";
-export const BOOKING_TRUST_RIBBON_COMMS = "Clear communication";
-export const BOOKING_TRUST_RIBBON_SUPPORT = "Thoughtful support";
+export const BOOKING_TRUST_RIBBON_COMMS = "Clear standards";
+export const BOOKING_TRUST_RIBBON_SUPPORT = "Guided experience";
 
 export const BOOKING_TRUST_RIBBON_ITEMS: readonly string[] = [
-  BOOKING_TRUST_RIBBON_VETTED,
+  BOOKING_TRUST_RIBBON_ACCOUNTABILITY,
   BOOKING_TRUST_RIBBON_INSURED,
   BOOKING_TRUST_RIBBON_COMMS,
   BOOKING_TRUST_RIBBON_SUPPORT,

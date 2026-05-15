@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { BookingStatusBadge } from "@/components/booking/BookingStatusBadge";
 import { BOOKING_CONFIRMATION_TEAM_PREP_TITLE } from "@/components/marketing/precision-luxury/booking/bookingPublicSurfaceCopy";
+import { NU_STANDARD_OWNER_OPERATOR_SUMMARY } from "@/components/marketing/precision-luxury/content/nuStandardTrustPositioning";
 import type { BookingRecord } from "@/lib/bookings/bookingApiTypes";
 import {
   displayBookingPrice,
@@ -82,7 +83,12 @@ export function CustomerBookingDetailPageContent() {
 
   return (
     <main className="min-h-screen px-6 py-10">
-      <h1 className="text-2xl font-semibold">Booking Detail</h1>
+      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+        Your visit
+      </h1>
+      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
+        {NU_STANDARD_OWNER_OPERATOR_SUMMARY}
+      </p>
 
       {loading ? (
         <p className="mt-6 text-slate-600">Loading…</p>
@@ -132,8 +138,8 @@ export function CustomerBookingDetailPageContent() {
                     Payment pending setup.
                   </p>
                 ) : null}
-                <p className="mt-2">
-                  <strong>Franchise owner:</strong> {booking.foId ?? "Unassigned"}
+                <p className="mt-2 text-sm text-slate-600">
+                  Visits are delivered by owner-led Nu Standard teams—accountability stays with the crew that serves your home, not a faceless dispatch queue.
                 </p>
               </div>
               <BookingStatusBadge status={booking.status} />
@@ -172,7 +178,9 @@ export function CustomerBookingDetailPageContent() {
             <h2 className="text-lg font-medium">Booking Timeline</h2>
             <div className="mt-3 space-y-2">
               {noteLines.length === 0 ? (
-                <div className="text-sm text-slate-600">No updates yet.</div>
+              <div className="mt-3 text-sm text-slate-600">
+                Updates will appear here as your Nu Standard team progresses your visit.
+              </div>
               ) : (
                 noteLines.map((note, index) => (
                   <div
