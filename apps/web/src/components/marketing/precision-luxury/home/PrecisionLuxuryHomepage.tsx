@@ -16,10 +16,11 @@ import { GlobalSearchForm } from "@/components/search/GlobalSearchForm";
 import { MarketingLinkButton } from "../shared/MarketingLinkButton";
 import { MarketingSectionIntro } from "../shared/MarketingSectionIntro";
 import {
-  HomepageHeroMediaPlaceholder,
-  HomepageServiceMediaPlaceholder,
+  HomepageHeroMedia,
+  HomepageServiceMedia,
+  HomepageTrustOperationalRow,
   serviceSlugToHomepageVisualVariant,
-} from "./HomepageMediaPlaceholders";
+} from "./HomepageMedia";
 
 const HERO_TRUST_BULLETS = ["Owner-led", "Easy booking", "Trusted & insured"] as const;
 
@@ -84,7 +85,7 @@ export function PrecisionLuxuryHomepage() {
                     {NU_STANDARD_OWNER_OPERATOR_ANCHOR}
                   </p>
                   <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-sm leading-relaxed text-zinc-600">
-                    Book when you&apos;re ready; compare visit types anytime. Every step stays clear and unhurried.
+                    Compare visit types anytime—booking stays clear and unhurried.
                   </p>
                 </div>
 
@@ -120,7 +121,7 @@ export function PrecisionLuxuryHomepage() {
               </div>
 
               <div className="min-w-0 lg:pl-2">
-                <HomepageHeroMediaPlaceholder />
+                <HomepageHeroMedia />
               </div>
             </div>
           </div>
@@ -142,6 +143,8 @@ export function PrecisionLuxuryHomepage() {
             </div>
           </div>
         </section>
+
+        <HomepageTrustOperationalRow />
 
         {/* Encyclopedia search — secondary, below fold */}
         <section className="mx-auto max-w-7xl px-6 py-14 md:px-8 md:py-16">
@@ -169,7 +172,7 @@ export function PrecisionLuxuryHomepage() {
               A simple rhythm—built for clarity, not clutter.
             </h2>
             <p className="mt-4 max-w-2xl font-[var(--font-manrope)] text-base leading-relaxed text-[#475569]">
-              You always know what happens next. No jargon, no pressure—just dependable preparation and delivery.
+              Guided steps and predictable follow-through—no jargon wall.
             </p>
 
             <div className="mt-10 grid gap-6 md:grid-cols-3 md:gap-8">
@@ -201,7 +204,7 @@ export function PrecisionLuxuryHomepage() {
           <MarketingSectionIntro
             eyebrow="Featured services"
             title="Visit types shaped around how your home actually lives."
-            body="Deep resets, dependable recurring care, and transition-ready cleaning—each framed with honest scope and premium execution."
+            body="Deep resets, recurring rhythm, and transition-ready scope—each delivered with honest preparation."
           />
 
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
@@ -211,7 +214,8 @@ export function PrecisionLuxuryHomepage() {
                 className="flex min-w-0 flex-col overflow-hidden rounded-[30px] border border-[#C9B27C]/16 bg-white shadow-[0_20px_56px_rgba(15,23,42,0.06)]"
               >
                 <div className="p-6 pb-0">
-                  <HomepageServiceMediaPlaceholder
+                  <HomepageServiceMedia
+                    slug={service.slug}
                     variant={serviceSlugToHomepageVisualVariant(service.slug)}
                   />
                 </div>
@@ -254,7 +258,7 @@ export function PrecisionLuxuryHomepage() {
           <MarketingSectionIntro
             eyebrow="Featured reading"
             title="Education that reinforces calm standards—not noise."
-            body="A focused entry point into Nu Standard guides and answers that help you steward your home between visits."
+            body="Guides and answers that stay practical—aligned with how we work in your home."
           />
 
           <div className="mt-12 grid gap-6 md:grid-cols-2">
