@@ -75,6 +75,6 @@ describe("CustomerBookingDetailPageContent", () => {
     await waitFor(() =>
       expect(screen.getByTestId("customer-booking-team-prep")).toBeInTheDocument(),
     );
-    expect(screen.getByText(/No updates yet/i)).toBeInTheDocument();
+    expect(screen.getByText(/Updates will appear here as your visit progresses/i)).toBeInTheDocument();
   });
 });

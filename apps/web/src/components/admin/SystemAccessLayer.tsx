@@ -119,6 +119,10 @@ export function SystemAccessLayer() {
         >
           System Access Layer
         </h2>
+        <p className="mt-3 text-xs leading-relaxed text-slate-400">
+          Operational analytics may lag live dispatch — confirm urgent crew decisions against booking detail and ops
+          backlog, not snapshot freshness alone.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
