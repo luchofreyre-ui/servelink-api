@@ -48,15 +48,17 @@ export function PrecisionLuxuryHomepage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(201,178,124,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(13,148,136,0.12),transparent_24%)]" />
           <div className="relative mx-auto grid max-w-7xl gap-14 px-6 py-20 md:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-28">
             <div>
-              <p className="text-xs tracking-wide text-zinc-400 uppercase">Precision cleaning guidance</p>
-              <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-tight text-zinc-900 md:text-3xl">
-                The Cleaning Solution System
+              <p className="text-xs tracking-wide text-zinc-400 uppercase">
+                Nu Standard · Premium residential cleaning
+              </p>
+              <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-tight text-zinc-900 md:text-4xl">
+                White-glove cleaning, booked with calm clarity.
               </h1>
               <p className="mt-3 max-w-2xl text-base text-zinc-600">
-                Fix anything the right way — not by guessing.
+                Expert crews, meticulous standards, and concierge scheduling — purpose-built for discerning homes.
               </p>
               <p className="mt-2 max-w-2xl text-sm text-zinc-500">
-                Powered by a Cleaning Education Engine.
+                Research-backed guidance powers every recommendation · Powered by ServeLink booking technology
               </p>
 
               <div className="mt-8 max-w-xl space-y-2">
@@ -135,7 +137,7 @@ export function PrecisionLuxuryHomepage() {
                             Featured services
                           </p>
                           <span className="rounded-full border border-[#C9B27C]/30 px-3 py-1 font-[var(--font-manrope)] text-xs text-[#475569]">
-                            Registry-driven
+                            Curated services
                           </span>
                         </div>
 

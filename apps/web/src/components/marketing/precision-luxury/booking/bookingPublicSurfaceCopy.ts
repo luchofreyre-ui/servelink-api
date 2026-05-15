@@ -66,7 +66,7 @@ export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL =
   "Final pricing and arrival timing are confirmed when we follow up by email—this screen is your snapshot, not the final calendar lock.";
 
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD =
-  "Your preferences and contact path are on file with Servelink.";
+  "Your preferences and contact details are on file with Nu Standard.";
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL =
   "If anything didn’t finish on this screen, your details are still safe—our team picks up personally from here.";
 
