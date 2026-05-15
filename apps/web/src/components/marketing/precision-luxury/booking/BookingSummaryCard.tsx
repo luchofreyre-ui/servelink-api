@@ -13,6 +13,7 @@ import {
   BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL,
   bookingPlanClassificationSummary,
 } from "./bookingPublicSurfaceCopy";
+import { NU_STANDARD_OWNER_OPERATOR_SUMMARY } from "../content/nuStandardTrustPositioning";
 import {
   formatEstimateDurationMinutes,
   formatEstimateUsdFromCents,
@@ -202,6 +203,9 @@ export function BookingSummaryCard({
           Your selections stay visible here as you move through each step—nothing gets lost between screens.
         </p>
       </div>
+      <p className="mt-4 font-[var(--font-manrope)] text-xs leading-relaxed text-[#64748B]">
+        {NU_STANDARD_OWNER_OPERATOR_SUMMARY}
+      </p>
     </section>
   );
 }

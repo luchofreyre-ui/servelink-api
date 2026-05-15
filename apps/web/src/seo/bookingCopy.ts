@@ -2,6 +2,8 @@
  * Centralized booking page copy. Use on /book.
  */
 
+import { NU_STANDARD_OWNER_OPERATOR_ANCHOR } from "@/components/marketing/precision-luxury/content/nuStandardTrustPositioning";
+
 export function getBookingPageHeading(
   serviceName?: string,
   locationName?: string,
@@ -25,3 +27,6 @@ export const BOOKING_FLOW_HERO_HEADLINE =
 /** Supporting line under the hero headline. */
 export const BOOKING_FLOW_HERO_BODY =
   "Walk through a few thoughtful questions about your home. When we can show pricing here, you’ll review it before checkout—otherwise Nu Standard replies personally with numbers that match what you shared.";
+
+/** Owner-operator accountability anchor — full sentence under hero body on `/book`. */
+export const BOOKING_FLOW_HERO_ACCOUNTABILITY = NU_STANDARD_OWNER_OPERATOR_ANCHOR;
