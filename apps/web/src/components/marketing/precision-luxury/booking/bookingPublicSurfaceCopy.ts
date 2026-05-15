@@ -66,7 +66,7 @@ export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL =
   "Final pricing and visit timing are confirmed when we follow up by email—nothing on this page alone locks your first arrival.";
 
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD =
-  "Your preferences and contact path are on file with Servelink.";
+  "Your preferences and contact details are on file with Nu Standard.";
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL =
   "We couldn’t finish every automated step in one pass, but your details are safe—our team picks up from here and replies personally.";
 

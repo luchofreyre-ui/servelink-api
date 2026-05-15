@@ -4,7 +4,7 @@ import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
 
 export const metadata: Metadata = {
-  title: "We received your booking direction | Servelink",
+  title: "We received your booking direction | Nu Standard Cleaning",
   description:
     "Your service request details were received. Our team will use this to follow up with next steps.",
 };
@@ -38,7 +38,7 @@ export default function BookingDirectionReceivedPage() {
               </p>
               <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
                 We&apos;ll review your service type, home profile, and timing
-                preferences. Someone from Servelink will reach out with
+                preferences. Someone from our Nu Standard concierge team will reach out with
                 confirmation options, pricing context, and any follow-up
                 questions—usually within one business day.
               </p>
