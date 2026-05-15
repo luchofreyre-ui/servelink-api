@@ -116,8 +116,8 @@ export function HomepageTrustOperationalRow() {
             Calm presence. Serious standards.
           </h2>
           <p className="mt-3 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
-            Presence and discipline you can recognize—not loud promises. Your home is treated as a place that matters,
-            with prepared teams and expectations stated upfront.
+            Presence and discipline you can recognize—not loud promises. Prepared teams, respectful arrivals, and documented
+            standards keep expectations explicit in your home.
           </p>
         </div>
 
