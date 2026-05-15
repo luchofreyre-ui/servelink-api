@@ -7,7 +7,7 @@ test.describe("core flows", () => {
     await page.goto("/");
 
     await expect(
-      page.getByRole("heading", { level: 1, name: /the cleaning solution system/i }),
+      page.getByRole("heading", { level: 1, name: /calm, premium home care/i }),
     ).toBeVisible();
 
     await page.locator("header").getByRole("link", { name: "Problems" }).click();
