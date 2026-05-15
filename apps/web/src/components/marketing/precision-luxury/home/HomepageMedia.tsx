@@ -6,11 +6,8 @@ import {
   HOMEPAGE_HERO_IMAGE,
   HOMEPAGE_TRUST_VISUALS,
   getHomepageServiceImage,
-  serviceSlugToHomepageVisualVariant,
   type HomepageServiceVisualVariant,
 } from "./homepageMediaAssets";
-
-export { serviceSlugToHomepageVisualVariant };
 
 function HeroGradientFallback({ className }: { className?: string }) {
   return (

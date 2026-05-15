@@ -19,8 +19,8 @@ import {
   HomepageHeroMedia,
   HomepageServiceMedia,
   HomepageTrustOperationalRow,
-  serviceSlugToHomepageVisualVariant,
 } from "./HomepageMedia";
+import { serviceSlugToHomepageVisualVariant } from "./homepageMediaAssets";
 
 const HERO_TRUST_BULLETS = ["Owner-led", "Easy booking", "Trusted & insured"] as const;
 
