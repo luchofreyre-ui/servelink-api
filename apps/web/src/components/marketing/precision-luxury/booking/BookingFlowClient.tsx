@@ -37,6 +37,7 @@ import {
   BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_REFRESHING,
   BOOKING_SCHEDULE_CONFIRM_FAILED,
   BOOKING_REVIEW_DEPOSIT_CHECK_STATUS_CTA,
+  BOOKING_REVIEW_DEPOSIT_CONFIRMING_RECORDED,
   BOOKING_REVIEW_DEPOSIT_EXPECTATION_CHANGES,
   BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHEN,
   BOOKING_REVIEW_DEPOSIT_EXPECTATION_WHY,
@@ -44,8 +45,11 @@ import {
   BOOKING_REVIEW_DEPOSIT_APPLIED_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_NEXT_STEP_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_PAYMENT_REASSURANCE,
+  BOOKING_REVIEW_DEPOSIT_PREPARING_CHECKOUT,
   BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE,
   BOOKING_REVIEW_DEPOSIT_SECTION_TITLE,
+  BOOKING_REVIEW_PAYMENT_COULD_NOT_START,
+  BOOKING_REVIEW_PAYMENT_UNAVAILABLE_ENV,
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED,
   PUBLIC_BOOKING_ORCHESTRATOR_LOCATION_NOT_RESOLVED_CODE,
@@ -2680,7 +2684,7 @@ export function BookingFlowClient() {
                 : "grid gap-8 xl:grid-cols-[1.15fr_0.85fr]"
             }
           >
-            <div className="min-w-0 space-y-8">
+            <div className="min-w-0 space-y-8 pb-28 md:pb-0">
               <BookingServiceHandoffCard
                 serviceId={state.serviceId}
                 bookingPublicPath={state.bookingPublicPath}
@@ -2871,7 +2875,7 @@ export function BookingFlowClient() {
                 reviewPaymentPhase === "finalizing_timeout" ||
                 reviewPaymentPhase === "failed" ||
                 reviewPaymentPhase === "satisfied") ? (
-                <div className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-8 shadow-sm ring-1 ring-[#C9B27C]/10">
+                <div className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-5 shadow-sm ring-1 ring-[#C9B27C]/10 sm:p-8">
                   <div className="mb-6">
                     <BookingTrustRibbon />
                   </div>
@@ -2899,12 +2903,12 @@ export function BookingFlowClient() {
                   </p>
                   {reviewPaymentPhase === "preparing" && !depositClientSecret ? (
                     <p className="mt-4 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
-                      Preparing secure payment…
+                      {BOOKING_REVIEW_DEPOSIT_PREPARING_CHECKOUT}
                     </p>
                   ) : null}
                   {depositBackendProcessing ? (
                     <p className="mt-4 font-[var(--font-manrope)] text-sm font-medium text-[#0F172A]">
-                      Confirming payment with our server…
+                      {BOOKING_REVIEW_DEPOSIT_CONFIRMING_RECORDED}
                     </p>
                   ) : null}
                   {reviewPaymentPhase === "finalizing_timeout" ? (
@@ -2985,8 +2989,8 @@ export function BookingFlowClient() {
                     reviewPaymentPhase === "failed" ? (
                     <p className="mt-6 font-[var(--font-manrope)] text-sm text-[#B91C1C]">
                       {depositClientSecret
-                        ? "Payments are not available in this environment (missing Stripe publishable key)."
-                        : "We couldn’t start card payment. Please refresh and try again."}
+                        ? BOOKING_REVIEW_PAYMENT_UNAVAILABLE_ENV
+                        : BOOKING_REVIEW_PAYMENT_COULD_NOT_START}
                     </p>
                   ) : null}
                 </div>
@@ -3026,7 +3030,9 @@ export function BookingFlowClient() {
                 />
               ) : null}
 
-              <div className="flex flex-col gap-3 sm:flex-row">
+              <div className="fixed bottom-0 left-0 right-0 z-40 md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto">
+                <div className="border-t border-[#C9B27C]/14 bg-[#FFF9F3]/96 px-6 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-12px_40px_rgba(15,23,42,0.07)] backdrop-blur-md md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none md:backdrop-blur-none">
+                  <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 sm:flex-row sm:flex-wrap md:max-w-none">
                 {state.step !== "service" ? (
                   <button
                     type="button"
@@ -3036,7 +3042,7 @@ export function BookingFlowClient() {
                       (state.step === "review" && reviewAwaitingDepositPayment)
                     }
                     onClick={goBack}
-                    className="inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex min-h-[48px] flex-1 items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
                   >
                     Back
                   </button>
@@ -3047,7 +3053,7 @@ export function BookingFlowClient() {
                     onClick={(e) => {
                       if (isSubmitting) e.preventDefault();
                     }}
-                    className={`inline-flex items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white ${
+                    className={`inline-flex min-h-[48px] flex-1 items-center justify-center rounded-full border border-[#C9B27C]/25 px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-[#0F172A] transition hover:bg-white sm:flex-none ${
                       isSubmitting ? "pointer-events-none opacity-50" : ""
                     }`}
                   >
@@ -3065,7 +3071,7 @@ export function BookingFlowClient() {
                         ? "booking-step-continue-error"
                         : undefined
                     }
-                    className={`inline-flex items-center justify-center rounded-full px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white transition ${
+                    className={`inline-flex min-h-[48px] flex-1 items-center justify-center rounded-full px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white transition sm:flex-none ${
                       canContinue
                         ? "bg-[#0D9488] shadow-[0_14px_40px_rgba(13,148,136,0.22)] hover:-translate-y-0.5 hover:bg-[#0b7f76]"
                         : "bg-[#94A3B8] shadow-none"
@@ -3079,11 +3085,13 @@ export function BookingFlowClient() {
                     data-testid="booking-direction-send"
                     disabled={disableNext}
                     onClick={() => void confirmBookingDirection()}
-                    className="inline-flex items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-70"
+                    className="inline-flex min-h-[48px] flex-1 items-center justify-center rounded-full bg-[#0D9488] px-6 py-4 font-[var(--font-manrope)] text-base font-semibold text-white shadow-[0_14px_40px_rgba(13,148,136,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0b7f76] disabled:cursor-not-allowed disabled:opacity-70 sm:flex-none"
                   >
                     {reviewSubmitLabel}
                   </button>
                 ) : null}
+                  </div>
+                </div>
               </div>
 
               {state.step === "review" ? (
@@ -3104,8 +3112,7 @@ export function BookingFlowClient() {
                     ref={errorRef}
                     className="font-[var(--font-manrope)] text-sm font-medium text-[#B91C1C]"
                   >
-                    Please complete home details, service location, and review
-                    choices before saving.
+                    Please finish your home profile, visit address, and review section before continuing.
                   </p>
                 ) : attemptedConfirm && isBookingReady && !isContactReady ? (
                   <p

@@ -10,7 +10,7 @@ export function BookingTrustRibbon({ className }: BookingTrustRibbonProps) {
     <p
       data-testid="booking-trust-ribbon"
       role="presentation"
-      className={`rounded-2xl border border-[#C9B27C]/12 bg-[#FFF9F3]/80 px-4 py-2.5 font-[var(--font-manrope)] text-[11px] font-medium uppercase tracking-[0.14em] text-[#64748B] ${className ?? ""}`}
+      className={`rounded-2xl border border-[#C9B27C]/12 bg-[#FFF9F3]/80 px-4 py-3 font-[var(--font-manrope)] text-xs font-medium leading-relaxed tracking-normal text-[#64748B] ${className ?? ""}`}
     >
       {BOOKING_TRUST_RIBBON_ITEMS.join(" · ")}
     </p>

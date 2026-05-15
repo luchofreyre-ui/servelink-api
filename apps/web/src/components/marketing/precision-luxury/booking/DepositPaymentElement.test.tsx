@@ -3,6 +3,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Stripe } from "@stripe/stripe-js";
 
 import { DepositPaymentElement } from "./DepositPaymentElement";
+import {
+  BOOKING_DEPOSIT_PAYMENT_BTN_LOADING,
+  BOOKING_DEPOSIT_PAYMENT_STILL_LOADING,
+  BOOKING_DEPOSIT_PAYMENT_UNAVAILABLE,
+} from "./bookingPublicSurfaceCopy";
 
 const confirmPayment = vi.fn(async () => ({ error: undefined }));
 
@@ -115,9 +120,7 @@ describe("DepositPaymentElement", () => {
 
     expect(
       screen.getByTestId("deposit-payment-config-unavailable"),
-    ).toHaveTextContent(
-      "Secure payment is not available right now. Please try again shortly.",
-    );
+    ).toHaveTextContent(BOOKING_DEPOSIT_PAYMENT_UNAVAILABLE);
     expect(err).toHaveBeenCalledWith("missing Stripe publishable key");
     err.mockRestore();
   });
@@ -133,7 +136,9 @@ describe("DepositPaymentElement", () => {
       />,
     );
 
-    const btn = screen.getByRole("button", { name: /loading secure payment/i });
+    const btn = screen.getByRole("button", {
+      name: BOOKING_DEPOSIT_PAYMENT_BTN_LOADING,
+    });
     expect(btn).toBeDisabled();
   });
 
@@ -150,9 +155,7 @@ describe("DepositPaymentElement", () => {
 
     expect(
       await screen.findByTestId("deposit-payment-stripe-init-failed"),
-    ).toHaveTextContent(
-      "Secure payment is not available right now. Please try again shortly.",
-    );
+    ).toHaveTextContent(BOOKING_DEPOSIT_PAYMENT_UNAVAILABLE);
   });
 
   it("keeps pay button disabled with loading label until hooks and Payment Element are ready", async () => {
@@ -174,7 +177,7 @@ describe("DepositPaymentElement", () => {
     );
 
     expect(
-      screen.getByRole("button", { name: /loading secure payment/i }),
+      screen.getByRole("button", { name: BOOKING_DEPOSIT_PAYMENT_BTN_LOADING }),
     ).toBeDisabled();
     expect(screen.queryByRole("button", { name: /pay \$100 deposit/i })).toBeNull();
 
@@ -519,15 +522,13 @@ describe("DepositPaymentElement", () => {
     });
 
     expect(
-      screen.getByText(
-        "Secure payment is still loading. Please wait.",
-      ),
+      screen.getByText(BOOKING_DEPOSIT_PAYMENT_STILL_LOADING),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /retry loading payment/i }),
+      screen.getByRole("button", { name: /try loading checkout again/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /loading secure payment/i }),
+      screen.getByRole("button", { name: BOOKING_DEPOSIT_PAYMENT_BTN_LOADING }),
     ).toBeDisabled();
   });
 

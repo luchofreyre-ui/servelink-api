@@ -11,10 +11,10 @@ export default function BookingFlowRoute() {
       fallback={
         <div className="flex min-h-[50vh] flex-col items-center justify-center bg-[#FFF9F3] px-6 py-16 text-center">
           <p className="font-[var(--font-manrope)] text-sm font-medium text-[#475569]">
-            Loading your booking page…
+            Preparing your booking experience…
           </p>
           <p className="mt-2 max-w-sm font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
-            This only takes a moment.
+            Nu Standard — just a moment while we open the next screen.
           </p>
         </div>
       }
