@@ -1,7 +1,22 @@
+import type { PublicServiceEntry } from "./publicContentRegistry";
 import { getAllServiceEntries, getAllArticleEntries } from "./publicContentSelectors";
 
+const HOMEPAGE_SERVICE_SLUG_ORDER = [
+  "deep-cleaning",
+  "recurring-home-cleaning",
+  "move-in-move-out",
+] as const;
+
+/** Deep, recurring, and transition cleaning — registry has no separate “standard” service slug. */
+export function getHomepageFeaturedServicesOrdered(): PublicServiceEntry[] {
+  const all = getAllServiceEntries();
+  return HOMEPAGE_SERVICE_SLUG_ORDER.map((slug) => all.find((s) => s.slug === slug)).filter(
+    (s): s is PublicServiceEntry => Boolean(s),
+  );
+}
+
 export function getHomepageFeaturedServices() {
-  return getAllServiceEntries().slice(0, 3);
+  return getHomepageFeaturedServicesOrdered();
 }
 
 export function getHomepageFeaturedArticles() {
@@ -14,6 +29,17 @@ export function getHomepageTrustPoints() {
     "Insured service with explicit expectations",
     "Disciplined, respectful in-home conduct",
     "Realistic timing modeled before we arrive",
+  ];
+}
+
+/** Full-width trust strip below hero (homepage layout). */
+export function getHomepageTrustStripItems() {
+  return [
+    "Satisfaction support",
+    "Background-checked professionals",
+    "Clear pricing",
+    "Secure payments",
+    "Owner-led accountability",
   ];
 }
 
@@ -30,18 +56,18 @@ export function getHomepageSteps() {
   return [
     {
       step: "01",
-      title: "Choose the right service",
-      body: "Match the visit to how your home lives today and the outcome you want—so scope and timing stay honest.",
+      title: "Book in minutes",
+      body: "Share your home profile and preferences in a guided flow—clear questions, no guesswork, and timing that reflects real availability.",
     },
     {
       step: "02",
-      title: "Book with clarity",
-      body: "Walk through a guided flow at your pace. Your estimate and schedule reflect real availability—not generic placeholders.",
+      title: "We prepare",
+      body: "Your visit is aligned to the right plan and crew expectations before anyone arrives—so standards stay consistent visit to visit.",
     },
     {
       step: "03",
-      title: "Come home to calm",
-      body: "Expect an owner-led team accountable for quality and consistency—not anonymous labor at your door.",
+      title: "We deliver",
+      body: "An owner-led team executes with accountable standards you can feel—disciplined, respectful, and focused on the outcome.",
     },
   ];
 }
