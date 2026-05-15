@@ -7,15 +7,17 @@ type MarketingFaqBlockProps = {
   eyebrow: string;
   title: string;
   items: MarketingFaq[];
+  id?: string;
 };
 
 export function MarketingFaqBlock({
   eyebrow,
   title,
   items,
+  id,
 }: MarketingFaqBlockProps) {
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-24 md:px-8">
+    <section id={id} className="scroll-mt-28 mx-auto max-w-7xl px-6 pb-24 md:px-8">
       <div className="max-w-3xl">
         <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
           {eyebrow}

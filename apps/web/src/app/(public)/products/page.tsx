@@ -7,6 +7,13 @@ import { ProductFilterSidebar } from "@/components/products/ProductFilterSidebar
 import { ProductSearchBar } from "@/components/products/ProductSearchBar";
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
+import {
+  EditorialBreadcrumb,
+  EditorialHero,
+  EditorialMediaFrame,
+  EditorialPageShell,
+  EditorialTrustStrip,
+} from "@/components/marketing/precision-luxury/ui/PremiumEditorialPrimitives";
 import { getAllPublishedProducts } from "@/lib/products/productPublishing";
 
 const ALL_PRODUCTS = getAllPublishedProducts();
@@ -90,20 +97,42 @@ export default function ProductsIndexPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
+    <EditorialPageShell>
       <PublicSiteHeader />
-      <main className="mx-auto max-w-7xl px-6 py-10">
-        <div className="max-w-3xl">
-          <p className="text-xs uppercase tracking-[0.18em] text-neutral-500">Product Library</p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight text-neutral-900">
-            Cleaning products, organized by real use case
-          </h1>
-          <p className="mt-4 text-base leading-7 text-neutral-700">
-            Browse products by category, chemistry, surface, and cleaning problem.
-          </p>
-        </div>
+      <main className="pb-16">
+        <section className="mx-auto max-w-7xl px-6 pt-10 md:px-8 md:pt-14">
+          <EditorialBreadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Encyclopedia", href: "/encyclopedia" },
+              { label: "Products" },
+            ]}
+          />
+          <div className="mt-8">
+            <EditorialHero
+              eyebrow="PRODUCTS"
+              title="Understand the tools and chemistry behind responsible cleaning."
+              body="Product guidance built around surface compatibility, label respect, and safer routines."
+              aside={
+                <EditorialMediaFrame
+                  src="/media/trust/oop-quality-inspection.jpg"
+                  alt="Nu Standard technician inspecting finishes during detailed residential cleaning."
+                />
+              }
+            />
+          </div>
+          <div className="mt-10">
+            <EditorialTrustStrip
+              variant="mini"
+              items={[
+                { title: "Label-first", body: "Always defer to manufacturer instructions." },
+                { title: "Surface-aware", body: "Compatibility beats popularity scores." },
+              ]}
+            />
+          </div>
+        </section>
 
-        <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mx-auto mt-6 flex max-w-7xl flex-col gap-4 px-6 md:px-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="w-full lg:max-w-2xl">
             <ProductSearchBar value={query} onChange={setQuery} />
             <div className="mt-4 flex flex-wrap gap-2">
@@ -145,7 +174,7 @@ export default function ProductsIndexPage() {
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-8 px-6 pb-4 md:px-8 lg:grid-cols-[280px_minmax(0,1fr)]">
           <ProductFilterSidebar
             groups={[
               {
@@ -194,9 +223,11 @@ export default function ProductsIndexPage() {
             </div>
 
             <div className="mb-8">
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-neutral-500">Top rated</p>
-              <p className="mt-1 text-sm text-neutral-600">
-                Highest overall scores in the library—starting points when you are unsure what to grab first.
+              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                Reference highlights
+              </p>
+              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569]">
+                Higher compatibility scores can narrow choices—still verify labels and patch-test sensitive finishes.
               </p>
               <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
                 {TOP_RATED.map((product) => (
@@ -231,6 +262,6 @@ export default function ProductsIndexPage() {
         </div>
       </main>
       <PublicSiteFooter />
-    </div>
+    </EditorialPageShell>
   );
 }

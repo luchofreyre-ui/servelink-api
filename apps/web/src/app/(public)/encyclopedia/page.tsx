@@ -10,6 +10,10 @@ import { KnowledgeHubLandingPage } from "@/components/knowledge/KnowledgeHubLand
 import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
 import {
+  EditorialCard,
+  EditorialCardGrid,
+} from "@/components/marketing/precision-luxury/ui/PremiumEditorialPrimitives";
+import {
   getAllEncyclopediaCategories,
   getEncyclopediaCategorySummaries,
   getEncyclopediaHomeStats,
@@ -44,72 +48,71 @@ export default function EncyclopediaPage() {
   ];
 
   return (
-    <div
-      className="min-h-screen bg-[#FFF9F3] text-[#0F172A]"
-      data-testid="encyclopedia-page"
-    >
+    <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]" data-testid="encyclopedia-page">
       <PublicSiteHeader />
       <AuthorityJsonLd data={indexJsonLd} />
       <KnowledgeHubLandingPage />
 
-      <main className="mx-auto max-w-6xl px-6 pb-16 md:px-8">
-        <section className="rounded-[32px] border border-[#C9B27C]/20 bg-white/80 p-8 shadow-sm">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <main className="mx-auto max-w-7xl px-6 pb-16 md:px-8">
+        <section className="rounded-[24px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-7 shadow-[0_18px_46px_-30px_rgba(15,23,42,0.35)] sm:p-9">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-3">
-              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.14em] text-[#64748B]">
+              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                 Pipeline migration status
               </p>
-              <h2 className="font-[var(--font-poppins)] text-3xl font-semibold tracking-tight text-[#0F172A]">
+              <h2 className="font-[var(--font-poppins)] text-2xl font-semibold tracking-tight text-[#0F172A] sm:text-3xl">
                 Unified encyclopedia engine
               </h2>
-              <p className="max-w-3xl font-[var(--font-manrope)] text-base leading-7 text-[#475569]">
-                The public encyclopedia is now being moved onto the file-based
-                content pipeline so the system can scale cleanly without
-                duplicate data definitions.
+              <p className="max-w-3xl font-[var(--font-manrope)] text-base leading-relaxed text-[#475569]">
+                The public encyclopedia is now being moved onto the file-based content pipeline so the system can scale
+                cleanly without duplicate data definitions.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3 font-[var(--font-manrope)] text-sm text-[#475569]">
+            <div className="flex flex-wrap gap-3 font-[var(--font-manrope)] text-xs text-[#64748B] sm:text-sm">
               <span>{stats.totalCount} mapped</span>
+              <span aria-hidden className="hidden text-[#CBD5E1] sm:inline">
+                ·
+              </span>
               <span>{stats.publishedCount} published</span>
+              <span aria-hidden className="hidden text-[#CBD5E1] sm:inline">
+                ·
+              </span>
               <span>{stats.fileBackedCount} file-backed</span>
+              <span aria-hidden className="hidden text-[#CBD5E1] sm:inline">
+                ·
+              </span>
               <span>{stats.imageReadyCount} image-ready</span>
             </div>
           </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {allCategories.map((category) => {
-              const summary = categoryMap.get(category);
+          <div className="mt-10">
+            <EditorialCardGrid className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              {allCategories.map((category) => {
+                const summary = categoryMap.get(category);
 
-              return (
-                <Link
-                  key={category}
-                  href={buildEncyclopediaCategoryHref(category)}
-                  className="rounded-2xl border border-[#C9B27C]/20 bg-[#FFF9F3] p-5 transition hover:border-[#0D9488]/40"
-                >
-                  <h3 className="font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">
-                    {formatEncyclopediaCategoryLabel(category)}
-                  </h3>
-                  <div className="mt-3 space-y-1 font-[var(--font-manrope)] text-sm text-[#475569]">
-                    <div>{summary?.totalCount ?? 0} total</div>
-                    <div>{summary?.publishedCount ?? 0} published</div>
-                    <div>{summary?.draftCount ?? 0} draft</div>
-                    <div>{summary?.plannedCount ?? 0} planned</div>
-                  </div>
-                </Link>
-              );
-            })}
+                return (
+                  <EditorialCard
+                    key={category}
+                    href={buildEncyclopediaCategoryHref(category)}
+                    eyebrow="Pipeline category"
+                    title={formatEncyclopediaCategoryLabel(category)}
+                    summary={`${summary?.publishedCount ?? 0} published · ${summary?.draftCount ?? 0} draft · ${summary?.plannedCount ?? 0} planned · ${summary?.totalCount ?? 0} indexed`}
+                    ctaLabel="Open category"
+                  />
+                );
+              })}
+            </EditorialCardGrid>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-[#0D9488]/20 bg-[#F0FDFA]/50 p-5">
-            <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-              <span className="font-semibold text-[#0F172A]">Topic clusters</span>{" "}
-              group published problems, methods, and surfaces by shared intent—
-              problem-first hubs derived from the index only.
+          <div className="mt-10 rounded-[18px] border border-[#E8DFD0]/90 bg-white/70 p-6">
+            <p className="font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569]">
+              <span className="font-semibold text-[#0F172A]">Topic clusters</span> group published problems, methods, and
+              surfaces by shared intent—problem-first hubs derived from the index only.
             </p>
             <Link
               href="/encyclopedia/clusters"
-              className="mt-3 inline-block font-[var(--font-manrope)] text-sm font-semibold text-[#0D9488] hover:underline"
+              className="mt-4 inline-flex items-center gap-1 font-[var(--font-manrope)] text-sm font-semibold text-[#0D9488] underline-offset-4 hover:underline"
             >
               Browse topic clusters →
             </Link>
