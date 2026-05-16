@@ -65,6 +65,8 @@ import {
   BOOKING_SCHEDULE_CONFIRM_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED,
   BOOKING_SCHEDULE_HOLD_FAILED_HINT,
+  BOOKING_SCHEDULE_HOLD_REFRESHED,
+  BOOKING_SCHEDULE_HOLD_REFRESH_FAILED,
   BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_TITLE,
   BOOKING_SCHEDULE_SUMMARY_TITLE,
   BOOKING_SCHEDULE_ZERO_TEAMS_TITLE,
@@ -989,12 +991,12 @@ describe("BookingFlowClient", () => {
       expect(screen.getByText(BOOKING_SCHEDULE_CHOOSE_SLOT_HINT)).toBeInTheDocument();
     });
 
-    it("invalid signed slotId response does not proceed", async () => {
+    it("stale slot-in-past response does not proceed", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
       postPublicBookingHoldMock.mockRejectedValueOnce(
         new PublicBookingApiError({
-          code: "PUBLIC_BOOKING_INVALID_SLOT_ID",
+          code: "PUBLIC_BOOKING_SLOT_IN_PAST",
           status: 400,
           message: BOOKING_SCHEDULE_HOLD_FAILED,
         }),
@@ -1016,6 +1018,251 @@ describe("BookingFlowClient", () => {
         ).length;
         expect(after).toBeGreaterThan(1);
       });
+    });
+
+    it("expired signed slotId refreshes same window, recreates hold, and confirms", async () => {
+      let teamAvailabilityCalls = 0;
+      postPublicBookingAvailabilityMock.mockImplementation(async (body) => {
+        if (!body.foId) return defaultPostPublicBookingAvailability(body);
+        teamAvailabilityCalls += 1;
+        if (teamAvailabilityCalls === 1) return defaultPostPublicBookingAvailability(body);
+        return {
+          kind: "public_booking_team_availability" as const,
+          bookingId: body.bookingId,
+          selectedTeam: { id: body.foId, displayName: "North Team" },
+          windows: [
+            {
+              slotId: "fresh-slot-same-time",
+              foId: body.foId,
+              foDisplayName: "North Team",
+              startAt: "2030-04-15T14:00:00.000Z",
+              endAt: "2030-04-15T16:00:00.000Z",
+              durationMinutes: 120,
+            },
+          ],
+        };
+      });
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingHoldMock
+        .mockRejectedValueOnce(
+          new PublicBookingApiError({
+            code: "PUBLIC_BOOKING_INVALID_SLOT_ID",
+            status: 400,
+            message: "Selected arrival time is no longer valid. Please choose another time.",
+          }),
+        )
+        .mockResolvedValueOnce({
+          kind: "public_booking_hold" as const,
+          bookingId: "bk_test",
+          holdId: "hold_recovered",
+          expiresAt: "2030-04-15T18:00:00.000Z",
+          window: {
+            foId: "fo_test_pick",
+            startAt: "2030-04-15T14:00:00.000Z",
+            endAt: "2030-04-15T16:00:00.000Z",
+          },
+        });
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      const { confirm } = await selectNorthTeamAndFirstSlot();
+      fireEvent.click(confirm);
+
+      await waitFor(() =>
+        expect(postPublicBookingHoldMock).toHaveBeenLastCalledWith(
+          expect.objectContaining({ slotId: "fresh-slot-same-time" }),
+        ),
+      );
+      expect(screen.getByTestId("booking-schedule-summary")).toHaveTextContent("North Team");
+      expect(screen.getByTestId("booking-schedule-commit-error")).toHaveTextContent(
+        BOOKING_SCHEDULE_HOLD_REFRESHED,
+      );
+      expect(screen.queryByText("That time is no longer available.")).not.toBeInTheDocument();
+      await waitFor(() =>
+        expect(routerPush).toHaveBeenCalledWith(
+          expect.stringMatching(/^\/book\/confirmation\?/),
+        ),
+      );
+    });
+
+    it("expired signed slotId clears selection when refreshed same window is unavailable", async () => {
+      let teamAvailabilityCalls = 0;
+      postPublicBookingAvailabilityMock.mockImplementation(async (body) => {
+        if (!body.foId) return defaultPostPublicBookingAvailability(body);
+        teamAvailabilityCalls += 1;
+        if (teamAvailabilityCalls === 1) return defaultPostPublicBookingAvailability(body);
+        return {
+          kind: "public_booking_team_availability" as const,
+          bookingId: body.bookingId,
+          selectedTeam: { id: body.foId, displayName: "North Team" },
+          windows: [
+            {
+              slotId: "different-slot",
+              foId: body.foId,
+              foDisplayName: "North Team",
+              startAt: "2030-04-15T18:00:00.000Z",
+              endAt: "2030-04-15T20:00:00.000Z",
+              durationMinutes: 120,
+            },
+          ],
+        };
+      });
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingHoldMock.mockRejectedValueOnce(
+        new PublicBookingApiError({
+          code: "PUBLIC_BOOKING_INVALID_SLOT_ID",
+          status: 400,
+          message: "Selected arrival time is no longer valid. Please choose another time.",
+        }),
+      );
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      const { confirm } = await selectNorthTeamAndFirstSlot();
+      fireEvent.click(confirm);
+
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-schedule-commit-error")).toHaveTextContent(
+          BOOKING_SCHEDULE_HOLD_FAILED,
+        ),
+      );
+      expect(screen.queryByTestId("booking-schedule-summary")).not.toBeInTheDocument();
+      expect(screen.getByText(BOOKING_SCHEDULE_HOLD_FAILED_HINT)).toBeInTheDocument();
+      expect(postPublicBookingConfirmMock).not.toHaveBeenCalled();
+    });
+
+    it("expired hold during confirm refreshes same window and preserves selected team and time", async () => {
+      let teamAvailabilityCalls = 0;
+      postPublicBookingAvailabilityMock.mockImplementation(async (body) => {
+        if (!body.foId) return defaultPostPublicBookingAvailability(body);
+        teamAvailabilityCalls += 1;
+        if (teamAvailabilityCalls === 1) return defaultPostPublicBookingAvailability(body);
+        return {
+          kind: "public_booking_team_availability" as const,
+          bookingId: body.bookingId,
+          selectedTeam: { id: body.foId, displayName: "North Team" },
+          windows: [
+            {
+              slotId: "fresh-slot-after-confirm-expired",
+              foId: body.foId,
+              foDisplayName: "North Team",
+              startAt: "2030-04-15T14:00:00.000Z",
+              endAt: "2030-04-15T16:00:00.000Z",
+              durationMinutes: 120,
+            },
+          ],
+        };
+      });
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingHoldMock
+        .mockResolvedValueOnce({
+          kind: "public_booking_hold" as const,
+          bookingId: "bk_test",
+          holdId: "hold_expired",
+          expiresAt: "2030-04-15T18:00:00.000Z",
+          window: {
+            foId: "fo_test_pick",
+            startAt: "2030-04-15T14:00:00.000Z",
+            endAt: "2030-04-15T16:00:00.000Z",
+          },
+        })
+        .mockResolvedValueOnce({
+          kind: "public_booking_hold" as const,
+          bookingId: "bk_test",
+          holdId: "hold_recovered",
+          expiresAt: "2030-04-15T18:01:00.000Z",
+          window: {
+            foId: "fo_test_pick",
+            startAt: "2030-04-15T14:00:00.000Z",
+            endAt: "2030-04-15T16:00:00.000Z",
+          },
+        });
+      postPublicBookingConfirmMock
+        .mockRejectedValueOnce(
+          new PublicBookingApiError({
+            code: "PUBLIC_BOOKING_HOLD_EXPIRED",
+            status: 409,
+            message: "The selected slot hold expired before confirmation.",
+          }),
+        )
+        .mockResolvedValueOnce({
+          kind: "public_booking_confirmation" as const,
+          bookingId: "bk_test",
+          scheduledStart: "2030-04-15T14:00:00.000Z",
+          scheduledEnd: "2030-04-15T16:00:00.000Z",
+          status: "confirmed",
+          alreadyApplied: false,
+        });
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      const { confirm } = await selectNorthTeamAndFirstSlot();
+      fireEvent.click(confirm);
+
+      await waitFor(() =>
+        expect(postPublicBookingHoldMock).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            slotId: "fresh-slot-after-confirm-expired",
+            foId: "fo_test_pick",
+            startAt: "2030-04-15T14:00:00.000Z",
+            endAt: "2030-04-15T16:00:00.000Z",
+          }),
+        ),
+      );
+      expect(screen.getByTestId("booking-schedule-summary")).toHaveTextContent("North Team");
+      expect(screen.getByTestId("booking-schedule-summary")).toHaveTextContent("Apr 15");
+      await waitFor(() =>
+        expect(postPublicBookingConfirmMock).toHaveBeenLastCalledWith(
+          expect.objectContaining({ holdId: "hold_recovered" }),
+          expect.any(String),
+        ),
+      );
+      await waitFor(() =>
+        expect(routerPush).toHaveBeenCalledWith(
+          expect.stringMatching(/^\/book\/confirmation\?/),
+        ),
+      );
+    });
+
+    it("expired hold retry shows refresh failure copy when same-slot rehold fails", async () => {
+      postPublicBookingConfirmMock
+        .mockRejectedValueOnce(new Error("confirm fail"))
+        .mockRejectedValueOnce(
+          new PublicBookingApiError({
+            code: "BOOKING_SLOT_HOLD_EXPIRED",
+            status: 409,
+            message: "BOOKING_SLOT_HOLD_EXPIRED",
+          }),
+        );
+      postPublicBookingHoldMock
+        .mockResolvedValueOnce({
+          kind: "public_booking_hold" as const,
+          bookingId: "bk_test",
+          holdId: "hold_expired",
+          expiresAt: "2030-04-15T18:00:00.000Z",
+          window: {
+            foId: "fo_test_pick",
+            startAt: "2030-04-15T14:00:00.000Z",
+            endAt: "2030-04-15T16:00:00.000Z",
+          },
+        })
+        .mockRejectedValueOnce(new Error("rehold failed"));
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      const { confirm } = await selectNorthTeamAndFirstSlot();
+      fireEvent.click(confirm);
+      await screen.findByTestId("booking-schedule-retry-confirm");
+      fireEvent.click(screen.getByTestId("booking-schedule-retry-confirm"));
+
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-schedule-commit-error")).toHaveTextContent(
+          BOOKING_SCHEDULE_HOLD_REFRESH_FAILED,
+        ),
+      );
+      expect(screen.getByTestId("booking-schedule-summary")).toBeInTheDocument();
+      expect(routerPush).not.toHaveBeenCalled();
     });
 
     it("restored selected slot is not trusted unless present in latest availability", () => {
