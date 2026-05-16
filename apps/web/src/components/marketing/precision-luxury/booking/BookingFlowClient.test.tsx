@@ -161,26 +161,31 @@ async function fillReviewContactAndOptionalFirstTimePlan(timeout = 8000) {
   }, { timeout });
 }
 
-/** After home edits: advance location gate (ZIP) then review. */
+/** After home edits: fill consolidated arrival/contact fields, then advance to review. */
 async function continueThroughLocationGateToReview() {
-  fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-  await waitFor(() =>
-    expect(
-      screen.getByRole("heading", { level: 2, name: "Visit address" }),
-    ).toBeInTheDocument(),
-  );
-  fireEvent.change(screen.getByLabelText(/^street address$/i), {
-    target: { value: "100 Market St" },
-  });
-  fireEvent.change(screen.getByLabelText(/^city$/i), {
-    target: { value: "San Francisco" },
-  });
-  fireEvent.change(screen.getByLabelText(/^state$/i), {
-    target: { value: "CA" },
-  });
-  const zipInput = screen.getByLabelText(/^ZIP code$/i) as HTMLInputElement;
+  const streetInput = screen.getByLabelText(/^street address$/i) as HTMLInputElement;
+  if (!streetInput.value.trim()) {
+    fireEvent.change(streetInput, { target: { value: "100 Market St" } });
+  }
+  const cityInput = screen.getByLabelText(/^city$/i) as HTMLInputElement;
+  if (!cityInput.value.trim()) {
+    fireEvent.change(cityInput, { target: { value: "San Francisco" } });
+  }
+  const stateInput = screen.getByLabelText(/^state$/i) as HTMLInputElement;
+  if (!stateInput.value.trim()) {
+    fireEvent.change(stateInput, { target: { value: "CA" } });
+  }
+  const zipInput = screen.getByLabelText(/^zip code$/i) as HTMLInputElement;
   if (!zipInput.value || zipInput.value.replace(/\s/g, "").length < 5) {
     fireEvent.change(zipInput, { target: { value: "94103" } });
+  }
+  const nameInput = screen.getByLabelText(/full name/i) as HTMLInputElement;
+  if (!nameInput.value.trim()) {
+    fireEvent.change(nameInput, { target: { value: "Alex Rivera" } });
+  }
+  const emailInput = screen.getByLabelText(/^email$/i) as HTMLInputElement;
+  if (!emailInput.value.trim()) {
+    fireEvent.change(emailInput, { target: { value: "alex@example.com" } });
   }
   fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
   await waitFor(() =>
@@ -430,10 +435,6 @@ function buildReviewSearchStringForService(serviceId: string): string {
 }
 
 function goHomeFromReviewViaBackOnce() {
-  fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
-  expect(
-    screen.getByRole("heading", { level: 2, name: "Visit address" }),
-  ).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: /^back$/i }));
   expect(
     screen.getByRole("heading", { level: 2, name: /your home details/i }),
@@ -1376,7 +1377,7 @@ describe("BookingFlowClient", () => {
       await chooseResetIntentAndContinue();
     });
 
-    it("advances home → service location before review (ZIP gate)", async () => {
+    it("keeps home, address, and contact in one details step before review", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(
         `step=home&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&pets=&frequency=Weekly&preferredTime=Friday${TEST_INTENT_QUERY}&service=${encodeURIComponent(
           getBookingDefaultServiceId(),
@@ -1384,11 +1385,12 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
-      await waitFor(() =>
-        expect(
-          screen.getByRole("heading", { level: 2, name: "Visit address" }),
-        ).toBeInTheDocument(),
-      );
+      expect(
+        screen.getByText(
+          "Please add the service street address, city, state, and ZIP so we can prepare routing.",
+        ),
+      ).toBeInTheDocument();
+      await continueThroughLocationGateToReview();
     });
 
     it("home step has no early scheduling preference section", () => {
@@ -1401,7 +1403,7 @@ describe("BookingFlowClient", () => {
       expect(screen.queryByTestId("booking-home-cadence-section")).not.toBeInTheDocument();
     });
 
-    it("service location blocks Continue until street, city, state, and ZIP are present", async () => {
+    it("consolidated details block Continue until street, city, state, and ZIP are present", async () => {
       const svc = getBookingDefaultServiceId();
       const dc = isDeepCleaningBookingServiceId(svc) ? "&dcProgram=single_visit" : "";
       bookingFlowTestSearch.sp = new URLSearchParams(
@@ -1411,7 +1413,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
       expect(
         screen.getByText(
-          "Enter street address, city, state, and a valid ZIP code before continuing.",
+          "Please add the service street address, city, state, and ZIP so we can prepare routing.",
         ),
       ).toBeInTheDocument();
       fireEvent.change(screen.getByLabelText(/^street address$/i), {
@@ -1422,6 +1424,12 @@ describe("BookingFlowClient", () => {
       });
       fireEvent.change(screen.getByLabelText(/^state$/i), {
         target: { value: "CA" },
+      });
+      fireEvent.change(screen.getByLabelText(/full name/i), {
+        target: { value: "Alex Rivera" },
+      });
+      fireEvent.change(screen.getByLabelText(/^email$/i), {
+        target: { value: "alex@example.com" },
       });
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
       await waitFor(() =>
@@ -1482,6 +1490,12 @@ describe("BookingFlowClient", () => {
       });
       fireEvent.change(screen.getByLabelText(/^ZIP code$/i), {
         target: { value: "94103" },
+      });
+      fireEvent.change(screen.getByLabelText(/full name/i), {
+        target: { value: "Alex Rivera" },
+      });
+      fireEvent.change(screen.getByLabelText(/^email$/i), {
+        target: { value: "alex@example.com" },
       });
       fireEvent.click(screen.getByRole("button", { name: /^continue$/i }));
 
@@ -1968,13 +1982,13 @@ describe("BookingFlowClient", () => {
       expect(screen.getByTestId("booking-direction-send")).toBeInTheDocument();
     });
 
-    it("direct review URL without intent and incomplete location clamps to location", async () => {
+    it("direct review URL without intent and incomplete location clamps to consolidated details", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(
         buildReviewSearchStringWithIncompleteLocation(),
       );
       render(<BookingFlowClient />);
 
-      await screen.findByRole("heading", { level: 2, name: "Visit address" });
+      await screen.findByRole("heading", { level: 2, name: "Your home details" });
       expect(
         screen.queryByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE }),
       ).not.toBeInTheDocument();
@@ -1988,7 +2002,7 @@ describe("BookingFlowClient", () => {
       );
       render(<BookingFlowClient />);
 
-      await screen.findByRole("heading", { level: 2, name: "Visit address" });
+      await screen.findByRole("heading", { level: 2, name: "Your home details" });
       expect(
         screen.queryByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE }),
       ).not.toBeInTheDocument();
@@ -2012,7 +2026,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details before continuing.",
+          "Please complete the required home details so we can prepare an accurate estimate.",
         ),
       ).toBeInTheDocument();
       expect(continueBtn).toHaveAttribute("aria-invalid", "true");
@@ -2035,7 +2049,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details before continuing.",
+          "Please complete the required home details so we can prepare an accurate estimate.",
         ),
       ).toBeInTheDocument();
 
@@ -2046,7 +2060,7 @@ describe("BookingFlowClient", () => {
       await waitFor(() =>
         expect(
           screen.queryByText(
-            "Please complete your home details before continuing.",
+            "Please complete the required home details so we can prepare an accurate estimate.",
           ),
         ).not.toBeInTheDocument(),
       );
@@ -2074,7 +2088,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details before continuing.",
+          "Please complete the required home details so we can prepare an accurate estimate.",
         ),
       ).toBeInTheDocument();
       expect(
@@ -2094,7 +2108,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details before continuing.",
+          "Please complete the required home details so we can prepare an accurate estimate.",
         ),
       ).toBeInTheDocument();
 
@@ -2105,7 +2119,7 @@ describe("BookingFlowClient", () => {
       await waitFor(() =>
         expect(
           screen.queryByText(
-            "Please complete your home details before continuing.",
+            "Please complete the required home details so we can prepare an accurate estimate.",
           ),
         ).not.toBeInTheDocument(),
       );
@@ -2123,7 +2137,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.getByText(
-          "Please complete your home details before continuing.",
+          "Please complete the required home details so we can prepare an accurate estimate.",
         ),
       ).toBeInTheDocument();
 
@@ -2131,7 +2145,7 @@ describe("BookingFlowClient", () => {
 
       expect(
         screen.queryByText(
-          "Please complete your home details before continuing.",
+          "Please complete the required home details so we can prepare an accurate estimate.",
         ),
       ).not.toBeInTheDocument();
 
@@ -2594,7 +2608,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.click(screen.getByRole("radio", { name: /reset-level clean/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /major reset needed/i }));
       await continueThroughLocationGateToReview();
 
       await waitFor(() =>
@@ -2653,7 +2667,7 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(screen.getByRole("radio", { name: /maintenance clean/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /recently maintained/i }));
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.baseboards_detail }),
       );
@@ -2679,7 +2693,7 @@ describe("BookingFlowClient", () => {
       await fillReviewContactAndOptionalFirstTimePlan(5000);
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(screen.getByRole("radio", { name: /reset-level clean/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /major reset needed/i }));
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.interior_windows }),
       );
@@ -2734,7 +2748,7 @@ describe("BookingFlowClient", () => {
       );
 
       goHomeFromReviewViaBackOnce();
-      fireEvent.click(screen.getByRole("radio", { name: /reset-level clean/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /major reset needed/i }));
       await continueThroughLocationGateToReview();
 
       const send = screen.getByTestId("booking-direction-send");
@@ -2774,7 +2788,7 @@ describe("BookingFlowClient", () => {
       previewEstimateMock.mockClear();
       goHomeFromReviewViaBackOnce();
 
-      fireEvent.click(screen.getByRole("radio", { name: /maintenance clean/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /recently maintained/i }));
       await continueThroughLocationGateToReview();
 
       const reviewRoot = screen
@@ -3142,7 +3156,7 @@ describe("BookingFlowClient", () => {
       fireEvent.click(screen.getByRole("radio", { name: /heavy clutter/i }));
       fireEvent.click(screen.getByRole("radio", { name: /Many segmented rooms/i }));
       fireEvent.click(screen.getByRole("radio", { name: /Moderate clutter/i }));
-      fireEvent.click(screen.getByRole("radio", { name: /reset-level clean/i }));
+      fireEvent.click(screen.getByRole("radio", { name: /major reset needed/i }));
       fireEvent.click(
         screen.getByRole("button", { name: BOOKING_ADD_ON_LABELS.inside_oven }),
       );

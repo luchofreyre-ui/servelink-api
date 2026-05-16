@@ -63,12 +63,10 @@ import {
 } from "./bookingPublicSurfaceCopy";
 import {
   appendPublicIntakeContextToSearchParams,
-  applyContactFieldChangeToBookingFlowState,
   applyFirstTimePostEstimateVisitChoiceToBookingFlowState,
   applyHomeDetailsFieldChangeToBookingFlowState,
   applyScheduleFieldChangeToBookingFlowState,
   applyServiceChangeToBookingFlowState,
-  applyServiceLocationFieldChangeToBookingFlowState,
   buildBookingSearchParams,
   clampBookingStepToStructuralMax,
   computeMaxReadyStep,
@@ -101,7 +99,6 @@ import {
   type PublicBookingServiceCardSelection,
 } from "./BookingStepService";
 import { BookingStepHomeDetails } from "./BookingStepHomeDetails";
-import { BookingStepServiceLocation } from "./BookingStepServiceLocation";
 import {
   BookingStepSchedule,
   type BookingScheduleTeamDurationContext,
@@ -178,6 +175,7 @@ const PUBLIC_BOOKING_STALE_SLOT_CODES = new Set([
 ]);
 
 function getStepOrder(step: BookingStepId) {
+  if (step === "location") return 2;
   return bookingSteps.find((item) => item.id === step)?.order ?? 1;
 }
 
@@ -309,12 +307,16 @@ function getStepError(state: BookingFlowState): string | null {
     }
   }
 
-  if (state.step === "home" && !isHomeDetailsComplete(state)) {
-    return "Please complete your home details before continuing.";
-  }
-
-  if (state.step === "location" && !isServiceLocationComplete(state)) {
-    return "Enter street address, city, state, and a valid ZIP code before continuing.";
+  if (state.step === "home" || state.step === "location") {
+    if (!isHomeDetailsComplete(state)) {
+      return "Please complete the required home details so we can prepare an accurate estimate.";
+    }
+    if (!isServiceLocationComplete(state)) {
+      return "Please add the service street address, city, state, and ZIP so we can prepare routing.";
+    }
+    if (!isBookingContactValid(state.customerName, state.customerEmail)) {
+      return "Please add your name and a valid email so we can send the request summary and scheduling follow-up.";
+    }
   }
 
   if (state.step === "schedule") {
@@ -1631,13 +1633,29 @@ export function BookingFlowClient() {
   function goNext() {
     setAttemptedNext(true);
 
-    if (stepError) return;
+    if (stepError) {
+      window.setTimeout(() => {
+        const firstInvalid = document.querySelector<HTMLElement>(
+          "[aria-invalid='true'], #booking-step-continue-error",
+        );
+        firstInvalid?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+        if (
+          firstInvalid instanceof HTMLInputElement ||
+          firstInvalid instanceof HTMLSelectElement ||
+          firstInvalid instanceof HTMLTextAreaElement
+        ) {
+          firstInvalid.focus({ preventScroll: true });
+        }
+      }, 0);
+      return;
+    }
 
     setAttemptedNext(false);
 
     if (state.step === "service") return goToStep("home");
-    if (state.step === "home") return goToStep("location");
-    if (state.step === "location") return goToStep("review");
+    if (state.step === "home" || state.step === "location") {
+      return goToStep("review");
+    }
   }
 
   async function finalizeHeldBookingAfterDepositPaid(
@@ -2445,7 +2463,7 @@ export function BookingFlowClient() {
       setSubmitRecoverableFailure(false);
       setIsSubmitting(false);
       submitInFlightRef.current = false;
-      return goToStep("location");
+      return goToStep("home");
     }
     if (state.step === "schedule") {
       if (!state.schedulingConfirmed && state.schedulingBookingId.trim()) {
@@ -2537,6 +2555,33 @@ export function BookingFlowClient() {
             typeof applyHomeDetailsFieldChangeToBookingFlowState
           >[1],
         );
+        next = {
+          ...next,
+          ...(patch.serviceLocationStreet !== undefined
+            ? { serviceLocationStreet: patch.serviceLocationStreet }
+            : {}),
+          ...(patch.serviceLocationUnit !== undefined
+            ? { serviceLocationUnit: patch.serviceLocationUnit }
+            : {}),
+          ...(patch.serviceLocationCity !== undefined
+            ? { serviceLocationCity: patch.serviceLocationCity }
+            : {}),
+          ...(patch.serviceLocationState !== undefined
+            ? { serviceLocationState: patch.serviceLocationState }
+            : {}),
+          ...(patch.serviceLocationZip !== undefined
+            ? { serviceLocationZip: patch.serviceLocationZip }
+            : {}),
+          ...(patch.serviceLocationAddressLine !== undefined
+            ? { serviceLocationAddressLine: patch.serviceLocationAddressLine }
+            : {}),
+          ...(patch.customerName !== undefined
+            ? { customerName: patch.customerName }
+            : {}),
+          ...(patch.customerEmail !== undefined
+            ? { customerEmail: patch.customerEmail }
+            : {}),
+        };
       }
       return clampBookingStepToStructuralMax(next);
     });
@@ -2644,12 +2689,16 @@ export function BookingFlowClient() {
     setAttemptedNext(false);
     setAttemptedConfirm(false);
     setSubmitRecoverableFailure(false);
-    // Keep isSubmitting + submitInFlightRef while a review submit is in flight so the same-step
-    // contact editor cannot open a second overlapping intake; only readiness/certainty flags reset.
     setState((prev) =>
-      clampBookingStepToStructuralMax(
-        applyContactFieldChangeToBookingFlowState(prev, patch),
-      ),
+      clampBookingStepToStructuralMax({
+        ...prev,
+        ...(patch.customerName !== undefined
+          ? { customerName: patch.customerName }
+          : {}),
+        ...(patch.customerEmail !== undefined
+          ? { customerEmail: patch.customerEmail }
+          : {}),
+      }),
     );
   }
 
@@ -2703,10 +2752,10 @@ export function BookingFlowClient() {
               <div className="min-w-0 space-y-5 xl:sticky xl:top-24">
                 <div className="rounded-[24px] border border-[#C9B27C]/18 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)]">
                   <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
-                    Guided booking
+                    Booking guidance
                   </p>
                   <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-                    Home details, service details, your details, and review stay visible as a calm path to booking.
+                    Choose the service, share the home and arrival details once, then review the estimate before selecting a team and time.
                   </p>
                 </div>
                 <BookingFlowProgress
@@ -2731,10 +2780,12 @@ export function BookingFlowClient() {
             }
           >
             <div className="min-w-0 space-y-8 pb-28 md:pb-0">
-              <BookingServiceHandoffCard
-                serviceId={state.serviceId}
-                bookingPublicPath={state.bookingPublicPath}
-              />
+              {state.step !== "service" ? (
+                <BookingServiceHandoffCard
+                  serviceId={state.serviceId}
+                  bookingPublicPath={state.bookingPublicPath}
+                />
+              ) : null}
 
               {state.step === "service" ? (
                 <BookingStepService
@@ -2802,22 +2853,7 @@ export function BookingFlowClient() {
                     state.bookingPublicPath,
                   )}
                   deepCleanPlanLabel={null}
-                />
-              ) : null}
-
-              {state.step === "location" ? (
-                <BookingStepServiceLocation
-                  state={state}
-                  onChange={(patch) => {
-                    setAttemptedNext(false);
-                    setAttemptedConfirm(false);
-                    setSubmitRecoverableFailure(false);
-                    setState((prev) =>
-                      clampBookingStepToStructuralMax(
-                        applyServiceLocationFieldChangeToBookingFlowState(prev, patch),
-                      ),
-                    );
-                  }}
+                  showFieldErrors={attemptedNext}
                 />
               ) : null}
 
@@ -3178,23 +3214,37 @@ export function BookingFlowClient() {
             </div>
 
             <aside className="min-w-0 space-y-6">
-              <BookingSummaryCard
-                state={state}
-                step={state.step}
-                previewEstimate={previewEstimate}
-                previewLoading={previewLoading}
-                previewError={previewError}
-              />
+              {state.step !== "service" ? (
+                <BookingSummaryCard
+                  state={state}
+                  step={state.step}
+                  previewEstimate={previewEstimate}
+                  previewLoading={previewLoading}
+                  previewError={previewError}
+                />
+              ) : (
+                <section className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.05)] sm:p-8">
+                  <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
+                    Before you begin
+                  </p>
+                  <h2 className="mt-4 font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.03em] text-[#0F172A] sm:text-2xl">
+                    Start with the service that best matches the visit.
+                  </h2>
+                  <p className="mt-4 font-[var(--font-manrope)] text-sm leading-7 text-[#475569]">
+                    The summary appears after you choose a path. Until then, the corridor stays focused on helping you make the right first choice.
+                  </p>
+                </section>
+              )}
 
               <section className="rounded-[32px] border border-[#C9B27C]/16 bg-[#0F172A] p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8">
                 <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
-                  Why we ask
+                  Support
                 </p>
                 <h2 className="mt-4 font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.03em] text-white sm:text-2xl">
-                  Clear details mean a confident arrival.
+                  Clear details help the team arrive prepared.
                 </h2>
                 <p className="mt-4 font-[var(--font-manrope)] text-base leading-8 text-white/75">
-                  Home size and rooms help us scope time and pricing honestly—so the first visit reflects what you expected. Nu Standard teams are owner-led; that context lets your team plan standards and pacing before they cross your threshold.
+                  Home facts, arrival details, and contact information help us prepare the estimate, coordinate the visit, and keep expectations clear before anyone arrives.
                 </p>
               </section>
             </aside>

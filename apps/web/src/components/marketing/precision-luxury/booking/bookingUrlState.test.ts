@@ -487,7 +487,7 @@ describe("bookingUrlState", () => {
     expect(clamped.frequency).toBe("One-Time");
   });
 
-  it("clamp after applyServiceChange demotes to location because address is reset", () => {
+  it("clamp after applyServiceChange demotes to consolidated details because address is reset", () => {
     const { shallowId } = catalogDeepAndShallow();
     const prev: BookingFlowState = {
       ...defaultBookingFlowState,
@@ -513,7 +513,7 @@ describe("bookingUrlState", () => {
     const next = clampBookingStepToStructuralMax(
       applyServiceChangeToBookingFlowState(prev, shallowId),
     );
-    expect(next.step).toBe("location");
+    expect(next.step).toBe("home");
   });
 
   it("parseBookingSearchParams does not read confirmation session snapshot", () => {
@@ -575,7 +575,7 @@ describe("bookingUrlState", () => {
     );
   });
 
-  it("clampBookingStepToStructuralMax demotes review to location when street address is missing", () => {
+  it("clampBookingStepToStructuralMax demotes review to consolidated details when street address is missing", () => {
     const s: BookingFlowState = {
       ...defaultBookingFlowState,
       ...bookingHomeLayer1BaselineComplete,
@@ -592,7 +592,7 @@ describe("bookingUrlState", () => {
       serviceLocationUnit: "",
       serviceLocationAddressLine: "",
     };
-    expect(clampBookingStepToStructuralMax(s).step).toBe("location");
+    expect(clampBookingStepToStructuralMax(s).step).toBe("home");
   });
 
   it("clampBookingStepToStructuralMax demotes review to home when home is incomplete", () => {
@@ -614,7 +614,7 @@ describe("bookingUrlState", () => {
     expect(clampBookingStepToStructuralMax(s).step).toBe("home");
   });
 
-  it("clampBookingStepToStructuralMax demotes review to location when ZIP is missing", () => {
+  it("clampBookingStepToStructuralMax demotes review to consolidated details when ZIP is missing", () => {
     const s: BookingFlowState = {
       ...defaultBookingFlowState,
       ...bookingHomeLayer1BaselineComplete,
@@ -631,7 +631,7 @@ describe("bookingUrlState", () => {
       serviceLocationUnit: "",
       serviceLocationAddressLine: "",
     };
-    expect(clampBookingStepToStructuralMax(s).step).toBe("location");
+    expect(clampBookingStepToStructuralMax(s).step).toBe("home");
   });
 
   it("mergeConfirmationParamsFromSessionIfUrlEmpty keeps URL when it has keys", () => {
@@ -696,13 +696,13 @@ describe("bookingUrlState", () => {
     expect(s.step).toBe("review");
   });
 
-  it("clamps stale review URLs with incomplete structured location back to location", () => {
+  it("clamps stale review URLs with incomplete structured location back to consolidated details", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
         `step=review&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&locZip=94103&locStreet=100%20Market%20St`,
       ),
     );
-    expect(s.step).toBe("location");
+    expect(s.step).toBe("home");
   });
 
   it("does not treat legacy locAddr alone as enough for review readiness", () => {
@@ -711,7 +711,7 @@ describe("bookingUrlState", () => {
         `step=review&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&locZip=94103&locAddr=100%20Market%20St`,
       ),
     );
-    expect(s.step).toBe("location");
+    expect(s.step).toBe("home");
   });
 
   it("isHomeDetailsComplete is false when only square footage, bedrooms, and bathrooms are set", () => {
@@ -828,12 +828,12 @@ describe("bookingUrlState", () => {
     expect(s.step).toBe("home");
   });
 
-  it("parseBookingSearchParams allows step=location when Tier 1 home facts are present in the URL", () => {
+  it("parseBookingSearchParams normalizes legacy step=location to consolidated details", () => {
     const s = parseBookingSearchParams(
       new URLSearchParams(
         `step=location&homeSize=2000&bedrooms=2&bathrooms=2&${BOOKING_TEST_LAYER1_QUERY}&locZip=94103&locStreet=100%20Market%20St&locCity=SF&locState=CA`,
       ),
     );
-    expect(s.step).toBe("location");
+    expect(s.step).toBe("home");
   });
 });
