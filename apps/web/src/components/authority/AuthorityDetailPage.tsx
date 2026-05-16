@@ -266,7 +266,7 @@ export function AuthorityDetailPage(props: {
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
-      <main className="mx-auto max-w-3xl px-6 py-16 md:px-8">
+      <main className="mx-auto max-w-7xl px-6 py-8 md:px-8 md:py-12">
         <AuthorityBreadcrumbs items={crumbs} />
         <AuthorityHero eyebrow={eyebrow} title={data.title} description={data.summary} />
         <AuthorityTopicalCrossLinks pageKey={`${variant}-${data.slug}`} />

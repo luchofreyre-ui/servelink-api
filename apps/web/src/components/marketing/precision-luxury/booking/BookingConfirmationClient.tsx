@@ -535,41 +535,57 @@ export function BookingConfirmationClient() {
       <ServiceHeader />
 
       <main>
-        <section className="mx-auto max-w-7xl px-6 py-20 md:px-8 md:py-28">
-          <ConfirmationSuccessBadge />
-          <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
-            Thank you
-          </p>
-          <h1 className="mt-4 font-[var(--font-poppins)] text-4xl font-semibold tracking-[-0.04em] text-[#0F172A] md:text-5xl">
-            {headline}
-          </h1>
-          <p className="mt-6 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
-            Thank you.{" "}
-            {visitConfirmedFromRemote ? (
-              <>
-                {BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_LEAD}{" "}
-                {BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_DETAIL}
-              </>
-            ) : showBookingSavedIntro ? (
-              <>
-                {BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD}{" "}
-                {BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL}
-              </>
-            ) : (
-              <>
-                {BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD}{" "}
-                {BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL}
-                {intakeId ? (
+        <section className="mx-auto max-w-7xl px-6 py-10 md:px-8 md:py-14">
+          <div className="grid gap-7 rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:p-9">
+            <div className="rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
+              <ConfirmationSuccessBadge />
+              <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
+                We&apos;ve got it from here
+              </p>
+              <h1 className="mt-4 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] md:text-5xl">
+                {visitConfirmedFromRemote ? "You're all set. Your cleaning is confirmed." : headline}
+              </h1>
+              <p className="mt-6 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
+                Thank you.{" "}
+                {visitConfirmedFromRemote ? (
                   <>
-                    {" "}
-                    <span className="text-[#64748B]">
-                      Keep this handy: {intakeId}
-                    </span>
+                    {BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_LEAD}{" "}
+                    {BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_DETAIL}
                   </>
-                ) : null}
-              </>
-            )}
-          </p>
+                ) : showBookingSavedIntro ? (
+                  <>
+                    {BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD}{" "}
+                    {BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL}
+                  </>
+                ) : (
+                  <>
+                    {BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD}{" "}
+                    {BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL}
+                    {intakeId ? (
+                      <>
+                        {" "}
+                        <span className="text-[#64748B]">
+                          Keep this handy: {intakeId}
+                        </span>
+                      </>
+                    ) : null}
+                  </>
+                )}
+              </p>
+            </div>
+            <div className="rounded-[28px] border border-[#C9B27C]/18 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.05)] sm:p-8">
+              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                Next steps
+              </p>
+              <div className="mt-5 grid gap-3">
+                {["Clear communication", "Owner-led service", "Respectful arrival coordination"].map((item) => (
+                  <p key={item} className="rounded-2xl border border-[#E8DFD0]/90 bg-[#FFF9F3] px-4 py-3 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
+                    {item}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
 
           {visitConfirmedFromRemote && remote ? (
             <div className="mt-8 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">

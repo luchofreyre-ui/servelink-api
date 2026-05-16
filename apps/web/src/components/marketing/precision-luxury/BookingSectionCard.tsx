@@ -14,7 +14,7 @@ export function BookingSectionCard({
   children,
 }: BookingSectionCardProps) {
   return (
-    <section className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)] lg:p-10">
+    <section className="rounded-[28px] border border-[#E8DFD0]/95 bg-white p-6 shadow-[0_18px_50px_-36px_rgba(15,23,42,0.32)] sm:p-8 lg:p-10">
       <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
         {eyebrow}
       </p>

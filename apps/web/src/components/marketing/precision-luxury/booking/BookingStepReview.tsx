@@ -231,7 +231,7 @@ function ReviewSection({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
+    <div className="rounded-2xl border border-[#E8DFD0]/95 bg-[#FFFCF7] px-5 py-4 shadow-[0_12px_34px_-28px_rgba(15,23,42,0.28)] ring-1 ring-[#C9B27C]/8">
       <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
         {title}
       </p>

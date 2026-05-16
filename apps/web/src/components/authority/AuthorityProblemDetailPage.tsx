@@ -356,7 +356,7 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
-      <main className="mx-auto max-w-6xl scroll-smooth px-4 pb-12 pt-4 sm:px-6 sm:pt-5 lg:px-8">
+      <main className="mx-auto max-w-7xl scroll-smooth px-4 pb-12 pt-4 sm:px-6 sm:pt-5 lg:px-8">
         {useExecutionLayout ?
           // EXECUTION-FIRST TOP FOLD (see `isExecutionFirstProblemLayout`):
           // Single column only — H1 + definition line + full-width Quick fix + optional “Why this works”.

@@ -30,8 +30,8 @@ export function EncyclopediaPipelineArticle({ page, category }: Props) {
   const resolveInternalLink = makeResolveInternalLink(category);
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-16 md:px-8">
-      <article className="rounded-[32px] border border-[#C9B27C]/20 bg-white/80 p-8 shadow-sm">
+    <main className="mx-auto max-w-7xl px-6 py-8 md:px-8 md:py-12">
+      <article className="rounded-[34px] border border-[#E8DFD0]/95 bg-white/88 p-6 shadow-[0_24px_70px_-50px_rgba(15,23,42,0.32)] sm:p-8">
         <header className="space-y-4">
           {process.env.NODE_ENV !== "production" ? (
             <div style={{ fontSize: 12, opacity: 0.5 }}>LIVE PIPELINE</div>

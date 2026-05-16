@@ -20,7 +20,6 @@ import { MarketingSectionIntro } from "../shared/MarketingSectionIntro";
 import {
   HomepageHeroMedia,
   HomepageServiceMedia,
-  HomepageTrustOperationalRow,
 } from "./HomepageMedia";
 import { serviceSlugToHomepageVisualVariant } from "./homepageMediaAssets";
 import {
@@ -77,16 +76,16 @@ export function PrecisionLuxuryHomepage() {
 
       <main>
         {/* Hero — split layout: narrative + media + tighter vertical rhythm */}
-        <section className="relative overflow-hidden pb-8 pt-6 md:pb-11 md:pt-9 lg:pb-12 lg:pt-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(201,178,124,0.14),transparent_32%),radial-gradient(circle_at_85%_25%,rgba(13,148,136,0.1),transparent_28%)]" />
+        <section className="relative overflow-hidden pb-8 pt-6 md:pb-10 md:pt-8 lg:pb-12 lg:pt-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(201,178,124,0.12),transparent_30%),radial-gradient(circle_at_90%_10%,rgba(15,23,42,0.05),transparent_30%)]" />
           <div className="relative mx-auto max-w-7xl px-6 md:px-8">
-            <div className="grid gap-7 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-center lg:gap-10 xl:gap-11">
-              <div className="flex min-w-0 flex-col gap-5">
+            <div className="grid overflow-hidden rounded-[36px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-stretch lg:gap-7 lg:p-9">
+              <div className="flex min-w-0 flex-col justify-center rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
                 <div>
                   <PremiumEyebrow className="font-[var(--font-poppins)] text-[#C9B27C]">
                     Nu Standard
                   </PremiumEyebrow>
-                  <PremiumHeroTitle className="font-[var(--font-poppins)]">
+                  <PremiumHeroTitle className="font-[var(--font-poppins)] sm:text-5xl lg:text-[3.05rem]">
                     Premium home care—with owner-led accountability.
                   </PremiumHeroTitle>
                   <p className="mt-5 max-w-xl font-[var(--font-manrope)] text-base leading-relaxed text-zinc-700">
@@ -115,8 +114,20 @@ export function PrecisionLuxuryHomepage() {
                 </div>
               </div>
 
-              <div className="min-w-0 lg:pl-2">
+              <div className="relative min-w-0">
                 <HomepageHeroMedia />
+                <div className="mt-5 rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] lg:absolute lg:bottom-6 lg:left-6 lg:right-6 lg:mt-0">
+                  <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                    The Nu Standard difference
+                  </p>
+                  <div className="mt-4 grid gap-3 font-[var(--font-manrope)] text-sm text-[#475569] sm:grid-cols-3">
+                    {["Owner-led teams", "Clear coordination", "Documented standards"].map((item) => (
+                      <p key={item} className="rounded-full border border-[#E8DFD0]/90 bg-[#FFF9F3] px-3 py-2 text-center text-xs font-semibold text-[#0F172A]">
+                        {item}
+                      </p>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -132,7 +143,38 @@ export function PrecisionLuxuryHomepage() {
           </div>
         </section>
 
-        <HomepageTrustOperationalRow />
+        <section className="mx-auto max-w-7xl px-6 pt-12 md:px-8 md:pt-14">
+          <div className="grid gap-7 rounded-[34px] border border-[#E8DFD0]/95 bg-white p-6 shadow-[0_24px_70px_-50px_rgba(15,23,42,0.32)] md:p-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
+            <div>
+              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.24em] text-[#B89F6B]">
+                Experience the Nu Standard difference
+              </p>
+              <h2 className="mt-4 font-[var(--font-poppins)] text-3xl font-semibold leading-tight tracking-[-0.04em] text-[#0F172A]">
+                Prepared teams, respectful arrivals, and clear follow-through.
+              </h2>
+              <p className="mt-4 font-[var(--font-manrope)] text-base leading-7 text-[#475569]">
+                We keep the visible standard simple: coordinated arrival, documented expectations, and a service rhythm that respects the home.
+              </p>
+              <MarketingLinkButton href="/services" variant="secondary" className="mt-7 min-h-[46px] px-6">
+                Learn more
+              </MarketingLinkButton>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {[
+                ["Plan", "Clear service expectations before the visit starts."],
+                ["Prepare", "Owner-led teams arrive with documented standards."],
+                ["Deliver", "Respectful service rhythm with visible follow-through."],
+              ].map(([title, body]) => (
+                <div key={title} className="rounded-[24px] border border-[#E8DFD0]/90 bg-[#FFF9F3] p-5">
+                  <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                    {title}
+                  </p>
+                  <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">{body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* How we work */}
         <section id="how-we-work" className="scroll-mt-24 mx-auto max-w-7xl px-6 pb-14 pt-12 md:px-8 md:pb-16 md:pt-14">

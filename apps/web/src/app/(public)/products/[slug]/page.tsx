@@ -24,6 +24,8 @@ import { getTopAuthorityContextsForProduct } from "@/lib/products/productTopAuth
 import { getWhenProductLosesScenarios } from "@/lib/products/productWhenThisLoses";
 import { getProductBySlug } from "@/lib/products/productRegistry";
 import { getAllProductSlugs } from "@/lib/products/productPublishing";
+import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
+import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
 
 export function generateStaticParams() {
   return getAllProductSlugs().map((slug) => ({ slug }));
@@ -56,9 +58,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const priorityComparisonSlug = deriveComparisonSlug(product.slug);
 
   return (
-    <main className="mx-auto max-w-5xl space-y-10 px-6 py-10">
-      <div className="grid gap-8 lg:grid-cols-[minmax(280px,420px)_1fr]">
-        <div>
+    <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
+      <PublicSiteHeader />
+      <main className="mx-auto max-w-7xl space-y-10 px-6 py-8 md:px-8 md:py-12">
+      <div className="grid gap-7 overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-stretch lg:p-9">
+        <div className="rounded-[30px] border border-[#E8DFD0]/90 bg-white p-4 shadow-[0_18px_50px_-36px_rgba(15,23,42,0.32)]">
           <ProductImageGallery
             product={{
               name: product.name,
@@ -73,10 +77,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           />
         </div>
 
-        <div className="space-y-4">
+        <div className="flex min-w-0 flex-col justify-center space-y-4 rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
           <div>
-            <h1 className="text-3xl font-semibold">{product.name}</h1>
-            <p className="mt-2 text-gray-500">{product.brand}</p>
+            <p className="font-[var(--font-poppins)] text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B89F6B]">
+              Product reference
+            </p>
+            <h1 className="mt-4 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] sm:text-5xl lg:text-[3.05rem]">{product.name}</h1>
+            <p className="mt-3 font-[var(--font-manrope)] text-sm uppercase tracking-[0.18em] text-[#64748B]">{product.brand}</p>
           </div>
 
           <ProductVerdictStrip product={product} />
@@ -87,8 +94,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </p>
           ) : null}
 
-          <p className="text-sm text-neutral-600">
-            Selected based on what works for this problem and surface.
+          <p className="font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+            Selected based on what works for this problem and surface. Confirm label instructions and surface compatibility before use.
           </p>
 
           <ProductPurchaseActions product={product} />
@@ -457,6 +464,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </section>
       )}
 
-    </main>
+      </main>
+      <PublicSiteFooter />
+    </div>
   );
 }
