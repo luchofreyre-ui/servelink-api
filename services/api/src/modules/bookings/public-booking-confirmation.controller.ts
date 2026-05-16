@@ -5,7 +5,7 @@ import { serializeDeepCleanProgramForScreen } from "./serializers/deep-clean-pro
 import { resolveCanonicalBookingScheduledEnd } from "./booking-scheduled-window";
 
 type PublicRecurringCadence = "weekly" | "every_10_days" | "biweekly" | "monthly";
-type PublicVisitStructure = "one_visit" | "three_visit_reset";
+type PublicVisitStructure = "one_visit" | "two_visit" | "three_visit_reset";
 
 const cadenceDays: Record<PublicRecurringCadence, number> = {
   weekly: 7,
@@ -73,9 +73,11 @@ function parsePublicEstimateSnapshot(
       firstTimeVisitProgram === "three_visit_reset" ||
       firstTimeVisitProgram === "three_visit"
         ? "three_visit_reset"
-        : firstTimeVisitProgram === "one_visit"
-          ? "one_visit"
-          : null;
+        : firstTimeVisitProgram === "two_visit"
+          ? "two_visit"
+          : firstTimeVisitProgram === "one_visit"
+            ? "one_visit"
+            : null;
     return {
       estimatedPriceCents,
       estimatedDurationMinutes,
@@ -87,6 +89,37 @@ function parsePublicEstimateSnapshot(
   } catch {
     return null;
   }
+}
+
+function openingResetOffsetDays(visitStructure: PublicVisitStructure | null): number {
+  return visitStructure === "three_visit_reset"
+    ? 28
+    : visitStructure === "two_visit"
+      ? 14
+      : 0;
+}
+
+function buildResetSchedule(
+  visitStructure: PublicVisitStructure | null,
+  scheduledStart: Date | null,
+):
+  | {
+      visit1At: string;
+      visit2At?: string;
+      visit3At?: string;
+    }
+  | null {
+  if (!scheduledStart) return null;
+  if (visitStructure !== "two_visit" && visitStructure !== "three_visit_reset") {
+    return null;
+  }
+  return {
+    visit1At: scheduledStart.toISOString(),
+    visit2At: addDays(scheduledStart, 14).toISOString(),
+    ...(visitStructure === "three_visit_reset"
+      ? { visit3At: addDays(scheduledStart, 28).toISOString() }
+      : {}),
+  };
 }
 
 /**
@@ -155,18 +188,14 @@ export class PublicBookingConfirmationController {
       (booking.scheduledStart && selectedRecurringCadence
         ? addDays(
             booking.scheduledStart,
-            (visitStructure === "three_visit_reset" ? 28 : 0) +
+            openingResetOffsetDays(visitStructure) +
               cadenceDays[selectedRecurringCadence],
           ).toISOString()
         : null);
-    const resetSchedule =
-      visitStructure === "three_visit_reset" && booking.scheduledStart
-        ? {
-            visit1At: booking.scheduledStart.toISOString(),
-            visit2At: addDays(booking.scheduledStart, 14).toISOString(),
-            visit3At: addDays(booking.scheduledStart, 28).toISOString(),
-          }
-        : null;
+    const resetSchedule = buildResetSchedule(
+      visitStructure,
+      booking.scheduledStart,
+    );
 
     return {
       kind: "public_booking_confirmation" as const,

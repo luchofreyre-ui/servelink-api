@@ -3440,6 +3440,38 @@ describe("BookingFlowClient", () => {
       expect(screen.queryByTestId("deposit-mock-pay")).not.toBeInTheDocument();
     });
 
+    it("deposit screen uses compact review context without repeating the full contact block", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      postPublicBookingDepositPrepareMock.mockResolvedValue({
+        kind: "public_booking_deposit_prepare",
+        bookingId: "bk_test",
+        paymentMode: "deposit",
+        classification: "payment_required",
+        clientSecret: "cs_before_schedule",
+        paymentIntentId: "pi_before_schedule",
+        amountCents: 10000,
+        nextAction: "confirm_deposit",
+      });
+
+      render(<BookingFlowClient />);
+      await fillReviewContactAndOptionalFirstTimePlan(8000);
+      fireEvent.click(screen.getByTestId("booking-direction-send"));
+
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-review-deposit-compact-summary")).toBeInTheDocument(),
+      );
+      expect(screen.getByTestId("booking-review-deposit-compact-summary")).toHaveTextContent(
+        "Alex Rivera",
+      );
+      expect(screen.getByTestId("booking-review-deposit-compact-summary")).toHaveTextContent(
+        "bk_test",
+      );
+      expect(screen.queryByLabelText(/full name/i)).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(/^email$/i)).not.toBeInTheDocument();
+      expect(screen.getByTestId("deposit-mock-pay")).toBeInTheDocument();
+    });
+
     it("schedule confirm 402 renders deposit payment directly and never mirrors client_secret into URL or session snapshot", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
@@ -3843,6 +3875,87 @@ describe("BookingFlowClient", () => {
           "Payment succeeded, but we could not safely resume the booking. Please contact support before retrying.",
         ),
       ).toBeInTheDocument();
+    });
+  });
+
+  describe("Visit structure schedule preview", () => {
+    it("shows only Visit 1 and recurring start after Visit 1 for one_visit", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
+      render(<BookingFlowClient />);
+      await submitFromReviewToSchedule();
+      await selectNorthTeamAndFirstSlot();
+
+      const preview = await screen.findByTestId("schedule-preview");
+      expect(within(preview).getByText(/Visit 1:/)).toBeInTheDocument();
+      expect(within(preview).queryByText(/Visit 2:/)).not.toBeInTheDocument();
+      expect(within(preview).queryByText(/Visit 3:/)).not.toBeInTheDocument();
+      expect(within(preview).getByText(/Recurring begins:/)).toHaveTextContent(
+        /Apr 22|4\/22\/2030|22/,
+      );
+    });
+
+    it("shows Visit 1, Visit 2, and recurring start after Visit 2 for two_visit", async () => {
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
+      render(<BookingFlowClient />);
+      fillReviewContactFast();
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-post-estimate-two_visit")).toBeInTheDocument(),
+      );
+      fireEvent.click(screen.getByTestId("booking-post-estimate-two_visit"));
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
+      );
+      fireEvent.click(screen.getByTestId("booking-direction-send"));
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-schedule-team-section")).toBeInTheDocument(),
+      );
+      await selectNorthTeamAndFirstSlot();
+
+      const preview = await screen.findByTestId("schedule-preview");
+      expect(within(preview).getByText(/Visit 1:/)).toBeInTheDocument();
+      expect(within(preview).getByText(/Visit 2:/)).toBeInTheDocument();
+      expect(within(preview).queryByText(/Visit 3:/)).not.toBeInTheDocument();
+      expect(within(preview).getByText(/Recurring begins:/)).toHaveTextContent(
+        /May 6|5\/6\/2030|6/,
+      );
+    });
+
+    it("shows all three reset visits and recurring start after Visit 3 for three_visit_reset", async () => {
+      submitBookingDirectionIntakeMock.mockResolvedValue(submitSuccess);
+      previewEstimateMock.mockResolvedValue({
+        kind: "booking_direction_estimate_preview",
+        estimate: {
+          priceCents: 80000,
+          durationMinutes: 240,
+          confidence: 0.82,
+        },
+        recurringQuoteOptions,
+        deepCleanProgram: null,
+      });
+      bookingFlowTestSearch.sp = new URLSearchParams(buildRecurringReviewSearchString());
+      render(<BookingFlowClient />);
+      fillReviewContactFast();
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-post-estimate-three_visit_reset")).toBeInTheDocument(),
+      );
+      fireEvent.click(screen.getByTestId("booking-post-estimate-three_visit_reset"));
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-direction-send")).not.toBeDisabled(),
+      );
+      fireEvent.click(screen.getByTestId("booking-direction-send"));
+      await waitFor(() =>
+        expect(screen.getByTestId("booking-schedule-team-section")).toBeInTheDocument(),
+      );
+      await selectNorthTeamAndFirstSlot();
+
+      const preview = await screen.findByTestId("schedule-preview");
+      expect(within(preview).getByText(/Visit 1:/)).toBeInTheDocument();
+      expect(within(preview).getByText(/Visit 2:/)).toBeInTheDocument();
+      expect(within(preview).getByText(/Visit 3:/)).toBeInTheDocument();
+      expect(within(preview).getByText(/Recurring begins:/)).toHaveTextContent(
+        /May 20|5\/20\/2030|20/,
+      );
     });
   });
 });

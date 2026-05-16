@@ -8,7 +8,7 @@ export type RecurringCadenceValue =
   | 'biweekly'
   | 'monthly';
 export type RecurringCadenceV2 = RecurringCadenceValue;
-type RecurringVisitStructure = 'one_visit' | 'three_visit_reset';
+type RecurringVisitStructure = 'one_visit' | 'two_visit' | 'three_visit_reset';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -527,9 +527,13 @@ export class RecurringPlanService {
       root.inputJson.first_time_visit_program ??
       root.inputJson.firstTimeVisitProgram ??
       root.outputJson.first_time_visit_program;
-    return value === 'three_visit_reset' || value === 'three_visit'
-      ? 'three_visit_reset'
-      : 'one_visit';
+    if (value === 'three_visit_reset' || value === 'three_visit') {
+      return 'three_visit_reset';
+    }
+    if (value === 'two_visit') {
+      return 'two_visit';
+    }
+    return 'one_visit';
   }
 
   private getNextRunAt(params: {
@@ -538,7 +542,11 @@ export class RecurringPlanService {
     visitStructure?: RecurringVisitStructure;
   }): Date {
     const resetOffsetDays =
-      params.visitStructure === 'three_visit_reset' ? 28 : 0;
+      params.visitStructure === 'three_visit_reset'
+        ? 28
+        : params.visitStructure === 'two_visit'
+          ? 14
+          : 0;
     return this.addDays(
       params.scheduledStart,
       resetOffsetDays + this.cadenceDaysMap[params.cadence],

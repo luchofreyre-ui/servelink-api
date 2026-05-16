@@ -198,6 +198,31 @@ describe("RecurringPlanService V1", () => {
     expect(data.nextRunAt.toISOString()).toBe("2030-02-05T10:00:00.000Z");
   });
 
+  it("adds two-visit spacing before cadence for two_visit nextRunAt", async () => {
+    const { service, prisma } = createService({
+      booking: completedBooking({
+        estimateSnapshot: {
+          inputJson: {
+            first_time_visit_program: "two_visit",
+            recurring_cadence_intent: "weekly",
+          },
+          outputJson: {
+            estimatedDurationMinutes: 180,
+            estimatedPriceCents: 50000,
+          },
+        },
+      }),
+    });
+
+    await service.createFromBooking({
+      bookingId: "bk_completed",
+      cadence: "weekly",
+    });
+
+    const data = prisma.recurringPlan.create.mock.calls[0][0].data;
+    expect(data.nextRunAt.toISOString()).toBe("2030-01-22T10:00:00.000Z");
+  });
+
   it("keeps reset-only signals out of maintenance pricing", async () => {
     const { service } = createService({ booking: completedBooking() });
 

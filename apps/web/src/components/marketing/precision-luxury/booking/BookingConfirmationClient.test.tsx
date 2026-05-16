@@ -257,6 +257,97 @@ describe("BookingConfirmationClient", () => {
     expect(screen.queryByText(/Keep your home on a recurring plan/i)).toBeNull();
   });
 
+  it("renders two-visit recurring confirmation without a Visit 3 row", async () => {
+    mockConfirmationSearch.value = "intakeId=in_c&bookingId=bk_two_visit";
+    vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockResolvedValue({
+      kind: "public_booking_confirmation",
+      bookingId: "bk_two_visit",
+      bookingStatus: "assigned",
+      scheduledStart: "2030-01-01T10:00:00.000Z",
+      scheduledEnd: "2030-01-01T13:00:00.000Z",
+      assignedTeamDisplayName: "Test Team",
+      publicDepositPaid: true,
+      estimateSnapshot: {
+        estimatedPriceCents: 50000,
+        estimatedDurationMinutes: 180,
+        confidence: 0.8,
+        serviceType: "first_time",
+      },
+      deepCleanProgram: null,
+      selectedRecurringCadence: "weekly",
+      visitStructure: "two_visit",
+      recurringPlan: {
+        id: "rp_2",
+        cadence: "weekly",
+        status: "active",
+        pricePerVisitCents: 30000,
+        nextRunAt: "2030-01-22T10:00:00.000Z",
+      },
+      resetSchedule: {
+        visit1At: "2030-01-01T10:00:00.000Z",
+        visit2At: "2030-01-15T10:00:00.000Z",
+      },
+      recurringBeginsAt: "2030-01-22T10:00:00.000Z",
+    });
+
+    render(<BookingConfirmationClient />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Your recurring service is set")).toBeTruthy();
+    });
+    expect(screen.getByText("Weekly")).toBeTruthy();
+    expect(
+      screen.getByText(BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Visit 1:/)).toBeTruthy();
+    expect(screen.getByText(/Visit 2:/)).toBeTruthy();
+    expect(screen.queryByText(/Visit 3:/)).toBeNull();
+    expect(screen.getAllByText(/Recurring begins:/).length).toBeGreaterThan(0);
+    expect(document.body.textContent).toMatch(/Jan 22|1\/22\/2030|22/);
+  });
+
+  it("keeps one-visit recurring confirmation as first visit plus recurring start", async () => {
+    mockConfirmationSearch.value = "intakeId=in_c&bookingId=bk_one_visit";
+    vi.mocked(bookingsApi.fetchPublicBookingConfirmation).mockResolvedValue({
+      kind: "public_booking_confirmation",
+      bookingId: "bk_one_visit",
+      bookingStatus: "assigned",
+      scheduledStart: "2030-01-01T10:00:00.000Z",
+      scheduledEnd: "2030-01-01T13:00:00.000Z",
+      assignedTeamDisplayName: "Test Team",
+      publicDepositPaid: true,
+      estimateSnapshot: {
+        estimatedPriceCents: 50000,
+        estimatedDurationMinutes: 180,
+        confidence: 0.8,
+        serviceType: "first_time",
+      },
+      deepCleanProgram: null,
+      selectedRecurringCadence: "weekly",
+      visitStructure: "one_visit",
+      recurringPlan: {
+        id: "rp_1",
+        cadence: "weekly",
+        status: "active",
+        pricePerVisitCents: 30000,
+        nextRunAt: "2030-01-08T10:00:00.000Z",
+      },
+      resetSchedule: null,
+      recurringBeginsAt: "2030-01-08T10:00:00.000Z",
+    });
+
+    render(<BookingConfirmationClient />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Your recurring service is set")).toBeTruthy();
+    });
+    expect(screen.getByText(/First visit:/)).toBeTruthy();
+    expect(screen.queryByText(BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE)).toBeNull();
+    expect(screen.queryByText(/Visit 2:/)).toBeNull();
+    expect(screen.queryByText(/Visit 3:/)).toBeNull();
+    expect(screen.getAllByText(/Recurring begins:/).length).toBeGreaterThan(0);
+  });
+
   it("shows request-received headline when live booking estimate bundle is absent", () => {
     mockConfirmationSearch.value =
       "intakeId=in_test_1&bookingError=BOOKING_CREATE_FAILED&homeSize=2000&service=deep-cleaning";
