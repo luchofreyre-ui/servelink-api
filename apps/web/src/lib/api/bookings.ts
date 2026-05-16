@@ -82,8 +82,8 @@ export type PublicBookingConfirmationRecurringPlanApi = {
 
 export type PublicBookingConfirmationResetScheduleApi = {
   visit1At: string;
-  visit2At: string;
-  visit3At: string;
+  visit2At?: string;
+  visit3At?: string;
 };
 
 export type PublicBookingConfirmationResponse = {
@@ -104,7 +104,7 @@ export type PublicBookingConfirmationResponse = {
   } | null;
   deepCleanProgram: BookingScreenDeepCleanProgramApi | null;
   selectedRecurringCadence?: PublicRecurringCadenceApi | null;
-  visitStructure?: "one_visit" | "three_visit_reset" | null;
+  visitStructure?: "one_visit" | "two_visit" | "three_visit_reset" | null;
   recurringPlan?: PublicBookingConfirmationRecurringPlanApi | null;
   resetSchedule?: PublicBookingConfirmationResetScheduleApi | null;
   recurringBeginsAt?: string | null;

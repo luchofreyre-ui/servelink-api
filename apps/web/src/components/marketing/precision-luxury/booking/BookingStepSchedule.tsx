@@ -62,9 +62,9 @@ export type BookingScheduleTeamDurationContext = {
 
 export type DerivedSchedulePreview = {
   visit1: Date;
-  visit2: Date;
-  visit3: Date;
-  recurringStart: Date;
+  visit2: Date | null;
+  visit3: Date | null;
+  recurringStart: Date | null;
 };
 
 export type BookingScheduleTeamsEmptyState =
@@ -526,11 +526,17 @@ export function BookingStepSchedule({
                   </p>
                   <ul className="space-y-1 text-sm">
                     <li>Visit 1: {formatSchedulePreviewDate(schedulePreview.visit1)}</li>
-                    <li>Visit 2: {formatSchedulePreviewDate(schedulePreview.visit2)}</li>
-                    <li>Visit 3: {formatSchedulePreviewDate(schedulePreview.visit3)}</li>
-                    <li className="mt-2 font-medium">
-                      Recurring begins: {formatSchedulePreviewDate(schedulePreview.recurringStart)}
-                    </li>
+                    {schedulePreview.visit2 ? (
+                      <li>Visit 2: {formatSchedulePreviewDate(schedulePreview.visit2)}</li>
+                    ) : null}
+                    {schedulePreview.visit3 ? (
+                      <li>Visit 3: {formatSchedulePreviewDate(schedulePreview.visit3)}</li>
+                    ) : null}
+                    {schedulePreview.recurringStart ? (
+                      <li className="mt-2 font-medium">
+                        Recurring begins: {formatSchedulePreviewDate(schedulePreview.recurringStart)}
+                      </li>
+                    ) : null}
                   </ul>
                 </div>
               ) : null}

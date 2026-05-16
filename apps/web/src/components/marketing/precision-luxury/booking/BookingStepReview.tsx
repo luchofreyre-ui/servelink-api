@@ -196,6 +196,7 @@ type BookingStepReviewProps = {
     value: BookingFlowState["recurringCadenceIntent"],
   ) => void;
   schedulePreview: DerivedSchedulePreview | null;
+  depositResolutionActive?: boolean;
   funnelBookingId?: string;
   funnelIntakeId?: string;
 };
@@ -335,6 +336,7 @@ export function BookingStepReview({
   onTeamPlanningDetailsChange,
   onRecurringCadenceIntentChange,
   schedulePreview,
+  depositResolutionActive = false,
   funnelBookingId = "",
   funnelIntakeId = "",
 }: BookingStepReviewProps) {
@@ -778,6 +780,37 @@ export function BookingStepReview({
         <BookingTrustRibbon />
       </div>
 
+      {depositResolutionActive ? (
+        <div
+          data-testid="booking-review-deposit-compact-summary"
+          className="rounded-2xl border border-[#C9B27C]/18 bg-white px-5 py-4 shadow-sm"
+        >
+          <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+            Review locked for deposit
+          </p>
+          <div className="mt-3 space-y-2 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
+            <p>
+              <span className="font-semibold text-[#0F172A]">Service: </span>
+              {getPublicBookingMarketingTitle(state.bookingPublicPath)}
+            </p>
+            <p>
+              <span className="font-semibold text-[#0F172A]">Contact: </span>
+              {contactOk
+                ? `${state.customerName.trim()} · ${state.customerEmail.trim()}`
+                : "Contact details are already attached to this booking request."}
+            </p>
+            {state.schedulingBookingId.trim() ? (
+              <p>
+                <span className="font-semibold text-[#0F172A]">Reference: </span>
+                <span className="font-mono">{state.schedulingBookingId.trim()}</span>
+              </p>
+            ) : null}
+          </div>
+          <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+            Continue with the secure deposit below. Your saved review details stay attached without repeating the full contact form.
+          </p>
+        </div>
+      ) : (
       <div className="grid gap-4">
         <ReviewSection title="Service">
           <p className="font-medium">{getPublicBookingMarketingTitle(state.bookingPublicPath)}</p>
@@ -1520,12 +1553,18 @@ export function BookingStepReview({
             <p className="mb-2 font-semibold">Your scheduled visits</p>
             <ul className="space-y-1 text-sm">
               <li>Visit 1: {formatSchedulePreviewDateForReview(schedulePreview.visit1)}</li>
-              <li>Visit 2: {formatSchedulePreviewDateForReview(schedulePreview.visit2)}</li>
-              <li>Visit 3: {formatSchedulePreviewDateForReview(schedulePreview.visit3)}</li>
-              <li className="mt-2 font-medium">
-                Recurring begins:{" "}
-                {formatSchedulePreviewDateForReview(schedulePreview.recurringStart)}
-              </li>
+              {schedulePreview.visit2 ? (
+                <li>Visit 2: {formatSchedulePreviewDateForReview(schedulePreview.visit2)}</li>
+              ) : null}
+              {schedulePreview.visit3 ? (
+                <li>Visit 3: {formatSchedulePreviewDateForReview(schedulePreview.visit3)}</li>
+              ) : null}
+              {schedulePreview.recurringStart ? (
+                <li className="mt-2 font-medium">
+                  Recurring begins:{" "}
+                  {formatSchedulePreviewDateForReview(schedulePreview.recurringStart)}
+                </li>
+              ) : null}
             </ul>
           </div>
         ) : null}
@@ -1542,6 +1581,7 @@ export function BookingStepReview({
           </p>
         </div>
       </div>
+      )}
     </BookingSectionCard>
   );
 }

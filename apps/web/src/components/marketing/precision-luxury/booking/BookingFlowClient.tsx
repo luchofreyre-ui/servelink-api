@@ -207,7 +207,13 @@ type DerivedSchedulePreviewCadence =
 
 function resolveSchedulePreviewCadence(
   s: BookingFlowState,
-): DerivedSchedulePreviewCadence {
+): DerivedSchedulePreviewCadence | null {
+  const recurringSelected =
+    s.bookingPublicPath === "first_time_with_recurring" ||
+    s.recurringInterest?.interested === true ||
+    s.recurringCadenceIntent !== "none";
+  if (!recurringSelected) return null;
+
   const intent = s.recurringCadenceIntent;
   if (
     intent === "weekly" ||
@@ -225,9 +231,28 @@ function resolveSchedulePreviewCadence(
   return "weekly";
 }
 
+function resolveSchedulePreviewVisitStructure(
+  s: BookingFlowState,
+): "one_visit" | "two_visit" | "three_visit_reset" {
+  if (
+    s.firstTimePostEstimateVisitChoice === "three_visit_reset" ||
+    s.firstTimeVisitProgram === "three_visit"
+  ) {
+    return "three_visit_reset";
+  }
+  if (
+    s.firstTimePostEstimateVisitChoice === "two_visit" ||
+    s.firstTimeVisitProgram === "two_visit"
+  ) {
+    return "two_visit";
+  }
+  return "one_visit";
+}
+
 function buildDerivedSchedulePreview(params: {
   selectedStartAt?: string | null;
-  cadence: DerivedSchedulePreviewCadence;
+  cadence: DerivedSchedulePreviewCadence | null;
+  visitStructure: "one_visit" | "two_visit" | "three_visit_reset";
 }): DerivedSchedulePreview | null {
   const raw = params.selectedStartAt?.trim();
   if (!raw) return null;
@@ -241,26 +266,26 @@ function buildDerivedSchedulePreview(params: {
   };
 
   const visit1 = start;
-  const visit2 = addDays(start, 14);
-  const visit3 = addDays(start, 28);
-
-  let recurringStart: Date;
-  switch (params.cadence) {
-    case "weekly":
-      recurringStart = addDays(visit3, 7);
-      break;
-    case "biweekly":
-      recurringStart = addDays(visit3, 14);
-      break;
-    case "monthly":
-      recurringStart = addDays(visit3, 30);
-      break;
-    case "every_10_days":
-      recurringStart = addDays(visit3, 10);
-      break;
-    default:
-      recurringStart = addDays(visit3, 7);
-  }
+  const visit2 =
+    params.visitStructure === "two_visit" ||
+    params.visitStructure === "three_visit_reset"
+      ? addDays(start, 14)
+      : null;
+  const visit3 =
+    params.visitStructure === "three_visit_reset" ? addDays(start, 28) : null;
+  const recurringAnchor = visit3 ?? visit2 ?? visit1;
+  const recurringStart = params.cadence
+    ? addDays(
+        recurringAnchor,
+        params.cadence === "weekly"
+          ? 7
+          : params.cadence === "biweekly"
+            ? 14
+            : params.cadence === "monthly"
+              ? 30
+              : 10,
+      )
+    : null;
 
   return { visit1, visit2, visit3, recurringStart };
 }
@@ -1121,15 +1146,33 @@ export function BookingFlowClient() {
 
   const resolvedSchedulePreviewCadence = useMemo(
     () => resolveSchedulePreviewCadence(state),
-    [state.recurringCadenceIntent, state.recurringInterest?.cadence],
+    [
+      state.bookingPublicPath,
+      state.recurringCadenceIntent,
+      state.recurringInterest?.cadence,
+      state.recurringInterest?.interested,
+    ],
+  );
+
+  const resolvedSchedulePreviewVisitStructure = useMemo(
+    () => resolveSchedulePreviewVisitStructure(state),
+    [
+      state.firstTimePostEstimateVisitChoice,
+      state.firstTimeVisitProgram,
+    ],
   );
 
   const schedulePreview = useMemo(() => {
     return buildDerivedSchedulePreview({
       selectedStartAt: selectedStartAtForPreview,
       cadence: resolvedSchedulePreviewCadence,
+      visitStructure: resolvedSchedulePreviewVisitStructure,
     });
-  }, [selectedStartAtForPreview, resolvedSchedulePreviewCadence]);
+  }, [
+    selectedStartAtForPreview,
+    resolvedSchedulePreviewCadence,
+    resolvedSchedulePreviewVisitStructure,
+  ]);
 
   const wiredEstimateDriverFlags = useMemo(
     () => computeWiredEstimateDriverFlags(state),
@@ -3100,6 +3143,7 @@ export function BookingFlowClient() {
                     });
                   }}
                   schedulePreview={schedulePreview}
+                  depositResolutionActive={reviewAwaitingDepositPayment}
                   funnelBookingId={state.schedulingBookingId}
                   funnelIntakeId={state.schedulingIntakeId}
                 />
