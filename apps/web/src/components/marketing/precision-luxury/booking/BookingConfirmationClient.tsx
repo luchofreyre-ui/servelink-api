@@ -575,14 +575,51 @@ export function BookingConfirmationClient() {
             </div>
             <div className="rounded-[28px] border border-[#C9B27C]/18 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.05)] sm:p-8">
               <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
-                Next steps
+                Booking details
               </p>
               <div className="mt-5 grid gap-3">
-                {["Clear communication", "Owner-led service", "Respectful arrival coordination"].map((item) => (
-                  <p key={item} className="rounded-2xl border border-[#E8DFD0]/90 bg-[#FFF9F3] px-4 py-3 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
-                    {item}
+                {remote?.scheduledStart ? (
+                  <div className="rounded-2xl border border-[#E8DFD0]/90 bg-[#FFF9F3] px-4 py-3">
+                    <p className="font-[var(--font-manrope)] text-[11px] font-semibold uppercase tracking-[0.16em] text-[#64748B]">
+                      Date & time
+                    </p>
+                    <p className="mt-2 font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">
+                      {formatVisitWindowLabel(remote.scheduledStart, remote.scheduledEnd ?? null)}
+                    </p>
+                  </div>
+                ) : null}
+                {intakeEcho ? (
+                  <div className="rounded-2xl border border-[#E8DFD0]/90 bg-[#FFF9F3] px-4 py-3">
+                    <p className="font-[var(--font-manrope)] text-[11px] font-semibold uppercase tracking-[0.16em] text-[#64748B]">
+                      Service
+                    </p>
+                    <p className="mt-2 font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">
+                      {getBookingServiceCatalogItem(intakeEcho.serviceId).title}
+                    </p>
+                  </div>
+                ) : null}
+                {hasEstimate ? (
+                  <div className="rounded-2xl border border-[#0D9488]/18 bg-[#0D9488] px-4 py-3 text-white">
+                    <p className="font-[var(--font-manrope)] text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">
+                      Estimated total
+                    </p>
+                    <p className="mt-2 font-[var(--font-poppins)] text-2xl font-semibold text-white">
+                      {formatUsdFromCents(priceCents)}
+                    </p>
+                  </div>
+                ) : null}
+                {bookingId || intakeId ? (
+                  <p className="rounded-2xl border border-[#E8DFD0]/90 bg-[#FFF9F3] px-4 py-3 font-[var(--font-manrope)] text-sm text-[#64748B]">
+                    Reference: <span className="font-mono text-[#0F172A]">{bookingId || intakeId}</span>
                   </p>
-                ))}
+                ) : null}
+                <div className="grid gap-2 border-t border-[#E8DFD0]/80 pt-4">
+                  {["Clear communication", "Owner-led service", "Respectful arrival coordination"].map((item) => (
+                    <p key={item} className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
+                      {item}
+                    </p>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

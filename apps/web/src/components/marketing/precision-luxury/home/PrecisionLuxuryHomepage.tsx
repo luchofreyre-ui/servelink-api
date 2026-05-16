@@ -178,33 +178,36 @@ export function PrecisionLuxuryHomepage() {
 
         {/* How we work */}
         <section id="how-we-work" className="scroll-mt-24 mx-auto max-w-7xl px-6 pb-14 pt-12 md:px-8 md:pb-16 md:pt-14">
-          <div className="rounded-[36px] border border-[#C9B27C]/16 bg-white p-8 shadow-[0_24px_72px_rgba(15,23,42,0.06)] md:p-11 lg:p-12">
-            <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#C9B27C]">How we work</p>
-            <h2 className="mt-4 max-w-2xl font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.03em] text-[#0F172A] md:text-3xl">
-              A simple rhythm—built for clarity, not clutter.
-            </h2>
-            <p className="mt-4 max-w-2xl font-[var(--font-manrope)] text-base leading-relaxed text-[#475569]">
-              Guided steps, honest preview estimates when available, and predictable follow-through—without jargon or pressure.
-            </p>
+          <div className="grid gap-8 rounded-[36px] border border-[#C9B27C]/16 bg-white p-8 shadow-[0_24px_72px_rgba(15,23,42,0.06)] md:p-11 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:p-12">
+            <div className="lg:sticky lg:top-28 lg:self-start">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#C9B27C]">How we work</p>
+              <h2 className="mt-4 max-w-xl font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.03em] text-[#0F172A] md:text-3xl">
+                A simple rhythm—built for clarity, not clutter.
+              </h2>
+              <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-base leading-relaxed text-[#475569]">
+                Guided steps, honest preview estimates when available, and predictable follow-through—without jargon or pressure.
+              </p>
+            </div>
 
-            <div className="mt-10 grid gap-6 md:grid-cols-3 md:gap-8">
-              {steps.map((item) => (
+            <div className="space-y-5">
+              {steps.map((item, index) => (
                 <div
                   key={item.step}
-                  className="rounded-[26px] border border-[#C9B27C]/12 bg-[#FFF9F3]/70 px-6 py-7 md:px-7 md:py-8"
+                  className={`grid gap-5 rounded-[26px] border border-[#C9B27C]/12 bg-[#FFF9F3]/70 px-6 py-6 md:grid-cols-[96px_minmax(0,1fr)] md:px-7 ${
+                    index === 1 ? "md:ml-10" : index === 2 ? "md:mr-12" : ""
+                  }`}
                 >
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="font-[var(--font-poppins)] text-3xl font-semibold tracking-[-0.04em] text-[#0F172A]/90">
-                      {item.step}
-                    </span>
-                    <div className="h-px flex-1 bg-gradient-to-r from-[#C9B27C]/40 to-transparent" />
+                  <span className="font-[var(--font-poppins)] text-3xl font-semibold tracking-[-0.04em] text-[#0F172A]/90">
+                    {item.step}
+                  </span>
+                  <div>
+                    <h3 className="font-[var(--font-poppins)] text-lg font-semibold leading-snug text-[#0F172A]">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569] md:text-[15px] md:leading-7">
+                      {item.body}
+                    </p>
                   </div>
-                  <h3 className="mt-6 font-[var(--font-poppins)] text-lg font-semibold leading-snug text-[#0F172A]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569] md:text-[15px] md:leading-7">
-                    {item.body}
-                  </p>
                 </div>
               ))}
             </div>
@@ -219,11 +222,13 @@ export function PrecisionLuxuryHomepage() {
             body="Deep resets, recurring rhythm, and transition-ready scope—each delivered with honest preparation and disciplined execution."
           />
 
-          <div className="mt-11 grid gap-9 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-            {featuredServices.map((service) => (
+          <div className="mt-11 grid gap-7 lg:grid-cols-[minmax(0,1.16fr)_minmax(0,0.84fr)] lg:items-start">
+            {featuredServices.map((service, index) => (
               <article
                 key={service.slug}
-                className="flex min-w-0 flex-col overflow-hidden rounded-[28px] border border-[#C9B27C]/14 bg-white shadow-[0_18px_52px_rgba(15,23,42,0.055)]"
+                className={`flex min-w-0 flex-col overflow-hidden rounded-[28px] border border-[#C9B27C]/14 bg-white shadow-[0_18px_52px_rgba(15,23,42,0.055)] ${
+                  index === 0 ? "lg:row-span-2" : index === 1 ? "lg:mt-10" : "lg:mr-10"
+                }`}
               >
                 <HomepageServiceMedia
                   slug={service.slug}
@@ -263,6 +268,7 @@ export function PrecisionLuxuryHomepage() {
         {/* Proof commitments — standards, not testimonials */}
         <section className="border-y border-[#C9B27C]/12 bg-[#FFFCF8]/90">
           <div className="mx-auto max-w-7xl px-6 py-14 md:px-8 md:py-16">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,0.76fr)_minmax(0,1.24fr)] lg:items-start">
             <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#C9B27C]">{proofIntro.eyebrow}</p>
               <h2 className="mt-4 font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.03em] text-[#0F172A] md:text-[1.75rem] md:leading-snug">
@@ -273,20 +279,21 @@ export function PrecisionLuxuryHomepage() {
               </p>
             </div>
 
-            <div className="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            <div className="grid gap-3">
               {proofCommitments.map((item) => (
                 <div
                   key={item.title}
-                  className="flex min-h-full flex-col rounded-[22px] border border-[#C9B27C]/14 bg-white/95 px-5 py-6 shadow-[0_12px_36px_rgba(15,23,42,0.04)]"
+                  className="grid gap-3 rounded-[20px] border border-[#C9B27C]/14 bg-white/95 px-5 py-4 shadow-[0_12px_36px_rgba(15,23,42,0.04)] sm:grid-cols-[180px_minmax(0,1fr)] sm:items-start"
                 >
                   <p className="font-[var(--font-poppins)] text-[15px] font-semibold leading-snug text-[#0F172A]">
                     {item.title}
                   </p>
-                  <p className="mt-3 flex-1 font-[var(--font-manrope)] text-[13px] leading-relaxed text-[#64748B]">
+                  <p className="font-[var(--font-manrope)] text-[13px] leading-relaxed text-[#64748B]">
                     {item.body}
                   </p>
                 </div>
               ))}
+            </div>
             </div>
           </div>
         </section>

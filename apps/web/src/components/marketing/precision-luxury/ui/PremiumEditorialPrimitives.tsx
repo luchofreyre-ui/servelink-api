@@ -106,6 +106,7 @@ export function EditorialMediaFrame({
   return (
     <div
       className={`relative overflow-hidden rounded-[20px] border border-[#E5D9C8]/90 bg-[#F4EDE3] shadow-[0_18px_46px_-28px_rgba(15,23,42,0.35)] ${aspectClassName} ${frameClassName ?? ""}`}
+      style={{ position: "relative", overflow: "hidden", width: "100%" }}
     >
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element -- editorial stills from local public assets
@@ -113,6 +114,7 @@ export function EditorialMediaFrame({
           src={src}
           alt={alt}
           className={`h-full w-full object-cover ${editorialInteractiveTransition} motion-safe:duration-500 hover:scale-[1.015]`}
+          style={{ display: "block", height: "100%", width: "100%", objectFit: "cover" }}
           loading={priority ? "eager" : "lazy"}
         />
       ) : (

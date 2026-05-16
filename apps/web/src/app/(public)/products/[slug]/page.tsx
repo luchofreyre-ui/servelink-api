@@ -98,6 +98,29 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             Selected based on what works for this problem and surface. Confirm label instructions and surface compatibility before use.
           </p>
 
+          <div className="grid gap-3 sm:grid-cols-2">
+            {product.bestUseCases?.[0] ? (
+              <div className="rounded-2xl border border-[#E8DFD0]/90 bg-[#FFF9F3] p-4">
+                <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.18em] text-[#B89F6B]">
+                  What it is for
+                </p>
+                <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                  {product.bestUseCases[0]}
+                </p>
+              </div>
+            ) : null}
+            {product.avoidUseCases?.[0] ? (
+              <div className="rounded-2xl border border-[#E8DFD0]/90 bg-[#FFF9F3] p-4">
+                <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.18em] text-[#B89F6B]">
+                  What to avoid
+                </p>
+                <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                  {product.avoidUseCases[0]}
+                </p>
+              </div>
+            ) : null}
+          </div>
+
           <ProductPurchaseActions product={product} />
           <ProductAffiliateDisclosure />
         </div>
