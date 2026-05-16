@@ -221,7 +221,7 @@ export default function ProductsIndexPage() {
           </div>
         </div>
 
-        <div className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-8 px-6 pb-4 md:px-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-8 px-6 pb-4 md:px-8 lg:grid-cols-[240px_minmax(0,1fr)]">
           <ProductFilterSidebar
             groups={[
               {
@@ -262,23 +262,25 @@ export default function ProductsIndexPage() {
             ]}
           />
 
-          <section>
+          <section className="min-w-0">
             <div className="mb-5 flex items-center justify-between">
               <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
-                {filtered.length} product{filtered.length === 1 ? "" : "s"}
+                {filtered.length} professional-use reference{filtered.length === 1 ? "" : "s"}
               </p>
             </div>
 
-            <div className="mb-8 rounded-[28px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/90 p-5 sm:p-6">
+            <div className="mb-8 rounded-[30px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/90 p-5 sm:p-6">
               <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
-                Reference highlights
+                Professional-use references
               </p>
               <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569]">
                 Higher compatibility scores can narrow choices—still verify labels and patch-test sensitive finishes.
               </p>
-              <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] xl:grid-cols-3">
-                {TOP_RATED.map((product) => (
+              <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.92fr)_minmax(0,0.92fr)]">
+                {TOP_RATED.map((product, index) => (
+                  <div key={`top-wrap-${product.slug}`} className={index === 0 ? "xl:row-span-2" : index === 1 ? "xl:translate-y-8" : ""}>
                   <ProductCard key={`top-${product.slug}`} product={product} />
+                  </div>
                 ))}
               </div>
             </div>

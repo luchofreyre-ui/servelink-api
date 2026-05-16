@@ -230,8 +230,18 @@ function ReviewSection({
   title: string;
   children: ReactNode;
 }) {
+  const isEstimateSection =
+    title === BOOKING_REVIEW_ESTIMATED_TOTAL_HEADLINE ||
+    title === BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE;
+
   return (
-    <div className="rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
+    <div
+      className={`rounded-2xl border px-5 py-4 shadow-[0_12px_34px_-28px_rgba(15,23,42,0.28)] ring-1 ${
+        isEstimateSection
+          ? "border-[#C9B27C]/24 bg-white ring-[#C9B27C]/12 sm:px-6 sm:py-6"
+          : "border-[#E8DFD0]/95 bg-[#FFFCF7] ring-[#C9B27C]/8"
+      }`}
+    >
       <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
         {title}
       </p>
@@ -838,33 +848,47 @@ export function BookingStepReview({
             </div>
           ) : null}
           {previewEstimate ? (
-            <div className="space-y-2">
-              <p className="font-medium">
-                <span className="text-[#64748B]">
-                  {isRecurringContract
-                    ? BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL
-                    : BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL}
-                  :
-                </span>{" "}
-                {formatEstimateUsdFromCents(previewEstimate.priceCents)}
-              </p>
-              <p className="font-medium">
-                <span className="text-[#64748B]">Estimated labor effort:</span>{" "}
-                {formatEstimateDurationMinutes(previewEstimate.durationMinutes)}
-              </p>
+            <div className="space-y-5">
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+                <div className="rounded-[28px] border border-[#0D9488]/18 bg-[#0D9488] p-6 text-white shadow-[0_18px_46px_rgba(13,148,136,0.16)]">
+                  <p className="font-[var(--font-manrope)] text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70">
+                    {isRecurringContract
+                      ? BOOKING_REVIEW_PREVIEW_OPENING_PRICE_LABEL
+                      : BOOKING_REVIEW_PREVIEW_SINGLE_VISIT_PRICE_LABEL}
+                  </p>
+                  <p className="mt-3 font-[var(--font-poppins)] text-4xl font-semibold tracking-[-0.05em] text-white sm:text-5xl">
+                    {formatEstimateUsdFromCents(previewEstimate.priceCents)}
+                  </p>
+                  <p className="mt-4 font-[var(--font-manrope)] text-sm leading-6 text-white/80">
+                    Your price updates in real time based on your selections. Your choices stay visible as you move.
+                  </p>
+                </div>
+                <div className="grid gap-3">
+                  <div className="rounded-2xl border border-[#E8DFD0]/95 bg-[#FFFCF7] px-4 py-3">
+                    <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#64748B]">
+                      Estimated labor effort:
+                    </p>
+                    <p className="mt-2 font-[var(--font-poppins)] text-2xl font-semibold text-[#0F172A]">
+                      {formatEstimateDurationMinutes(previewEstimate.durationMinutes)}
+                    </p>
+                    <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                      {BOOKING_REVIEW_LABOR_EFFORT_GLOSS}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-[#E8DFD0]/95 bg-[#FFFCF7] px-4 py-3">
+                    <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#64748B]">
+                      {BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL}:
+                    </p>
+                    <p className="mt-2 font-[var(--font-manrope)] text-sm font-semibold leading-6 text-[#0F172A]">
+                      {formatScopePredictabilitySummary(previewEstimate.confidence)}
+                    </p>
+                    <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                      {BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE}
+                    </p>
+                  </div>
+                </div>
+              </div>
               <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
-                {BOOKING_REVIEW_LABOR_EFFORT_GLOSS}
-              </p>
-              <p className="font-medium">
-                <span className="text-[#64748B]">
-                  {BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL}:
-                </span>{" "}
-                {formatScopePredictabilitySummary(previewEstimate.confidence)}
-              </p>
-              <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
-                {BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE}
-              </p>
-              <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
                 {previewEstimate.source === "server"
                   ? "We’ll confirm final scope before we begin — no surprises."
                   : "Final details confirmed before service."}

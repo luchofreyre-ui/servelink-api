@@ -43,10 +43,10 @@ export function PublicSiteHeader() {
             />
           </div>
           <a
-            href="/products"
-            className={`hidden shrink-0 rounded-full border border-[#E8DFD0]/95 bg-white/70 px-3 py-1.5 font-[var(--font-manrope)] text-[11px] font-semibold text-[#0F172A] xl:inline-flex ${editorialInteractiveTransition} hover:border-[#C9B27C]/45 hover:bg-white active:translate-y-px`}
+            href="/book"
+            className={`hidden shrink-0 rounded-full bg-[#0F172A] px-4 py-2 font-[var(--font-manrope)] text-[11px] font-semibold text-white shadow-[0_12px_30px_-22px_rgba(15,23,42,0.5)] md:inline-flex ${editorialInteractiveTransition} hover:-translate-y-0.5 hover:bg-[#162131] active:translate-y-px`}
           >
-            View Products
+            Book Now
           </a>
         </div>
       </div>

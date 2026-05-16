@@ -266,13 +266,36 @@ export function AuthorityDetailPage(props: {
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
-      <main className="mx-auto max-w-3xl px-6 py-16 md:px-8">
+      <main className="mx-auto max-w-7xl px-6 py-8 md:px-8 md:py-12">
         <AuthorityBreadcrumbs items={crumbs} />
         <AuthorityHero eyebrow={eyebrow} title={data.title} description={data.summary} />
         <AuthorityTopicalCrossLinks pageKey={`${variant}-${data.slug}`} />
-        <div className="space-y-0">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,720px)_320px] lg:items-start">
+        <div className="rounded-[30px] border border-[#E8DFD0]/95 bg-white/82 p-6 shadow-[0_18px_54px_-42px_rgba(15,23,42,0.28)] sm:p-8">
           {variant === "method" ? <MethodBody data={data as AuthorityMethodPageData} /> : null}
           {variant === "surface" ? <SurfaceBody data={data as AuthoritySurfacePageData} /> : null}
+        </div>
+        <aside className="space-y-5 lg:sticky lg:top-28">
+          <div className="rounded-[24px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6">
+            <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+              Key takeaway
+            </p>
+            <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+              {data.summary}
+            </p>
+          </div>
+          <div className="rounded-[24px] border border-[#E8DFD0]/95 bg-white/90 p-6">
+            <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+              Standards
+            </p>
+            <div className="mt-4 space-y-3 font-[var(--font-manrope)] text-sm text-[#475569]">
+              <p>Surface-first</p>
+              <p>Test first</p>
+              <p>Gentle approach</p>
+              <p>Know when to stop</p>
+            </div>
+          </div>
+        </aside>
         </div>
         {compareSlugs.length ? (
           <AuthoritySection title="Compare related items">

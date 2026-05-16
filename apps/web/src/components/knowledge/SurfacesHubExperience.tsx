@@ -87,24 +87,7 @@ export function SurfacesHubExperience({
       <main className="mx-auto max-w-7xl px-6 pb-20 pt-8 md:px-8 md:pt-12">
         <EditorialBreadcrumb items={breadcrumbs} />
 
-        <section className="mt-7 grid gap-7 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-stretch">
-          <div className="relative min-w-0">
-            <EditorialMediaFrame
-              src="/media/services/recurring-cleaning.jpg"
-              alt="Nu Standard professional maintaining finishes with mindful technique."
-              aspectClassName="aspect-[16/10] lg:h-full lg:min-h-[520px]"
-              frameClassName="rounded-[32px]"
-            />
-            <div className="mt-5 rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] lg:absolute lg:bottom-6 lg:left-6 lg:right-6 lg:mt-0">
-              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
-                Material protection panel
-              </p>
-              <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-                Identify the finish first; moisture, abrasives, acidity, and dwell time behave differently across materials.
-              </p>
-            </div>
-          </div>
-
+        <section className="mt-7 grid gap-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-stretch">
           <div className="flex min-w-0 flex-col justify-between rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-8 lg:p-10">
             <div>
               <p className="font-[var(--font-poppins)] text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B89F6B]">
@@ -130,6 +113,23 @@ export function SurfacesHubExperience({
                   </p>
                 }
               />
+            </div>
+          </div>
+
+          <div className="relative min-w-0 lg:pt-10">
+            <EditorialMediaFrame
+              src="/media/services/recurring-cleaning.jpg"
+              alt="Nu Standard professional maintaining finishes with mindful technique."
+              aspectClassName="aspect-[16/10] lg:min-h-[420px]"
+              frameClassName="rounded-[32px]"
+            />
+            <div className="mt-5 rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] lg:absolute lg:bottom-6 lg:left-6 lg:right-6 lg:mt-0">
+              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                Material protection panel
+              </p>
+              <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                Identify the finish first; moisture, abrasives, acidity, and dwell time behave differently across materials.
+              </p>
             </div>
           </div>
         </section>

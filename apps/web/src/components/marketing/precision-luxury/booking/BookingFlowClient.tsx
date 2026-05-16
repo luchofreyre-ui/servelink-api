@@ -2658,15 +2658,15 @@ export function BookingFlowClient() {
       <ServiceHeader />
 
       <main>
-        <section className="border-b border-[#C9B27C]/14">
-          <div className="mx-auto max-w-7xl px-6 py-8 md:px-8 md:py-11 lg:py-14">
-            <div className="grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_minmax(280px,380px)] xl:items-start xl:gap-12">
-              <div className="min-w-0 space-y-5">
+        <section className="mx-auto max-w-7xl px-6 py-6 md:px-8 md:py-9">
+          <div className="overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:p-8">
+            <div className="grid gap-7 xl:grid-cols-[minmax(0,0.95fr)_minmax(300px,420px)] xl:items-start">
+              <div className="min-w-0 space-y-5 rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
                 <div>
                   <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
                     {BOOKING_FLOW_HERO_EYEBROW}
                   </p>
-                  <h1 className="mt-3 font-[var(--font-poppins)] text-4xl font-semibold leading-[1.06] tracking-[-0.04em] text-[#0F172A] sm:text-5xl lg:text-[3.15rem] lg:leading-[1.05]">
+                  <h1 className="mt-3 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] sm:text-5xl lg:text-[3.05rem]">
                     {BOOKING_FLOW_HERO_HEADLINE}
                   </h1>
                   <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-base leading-relaxed text-[#475569] md:text-lg md:leading-relaxed">
@@ -2701,6 +2701,14 @@ export function BookingFlowClient() {
               </div>
 
               <div className="min-w-0 space-y-5 xl:sticky xl:top-24">
+                <div className="rounded-[24px] border border-[#C9B27C]/18 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)]">
+                  <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                    Guided booking
+                  </p>
+                  <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                    Home details, service details, your details, and review stay visible as a calm path to booking.
+                  </p>
+                </div>
                 <BookingFlowProgress
                   currentStep={currentStepOrder}
                   steps={bookingSteps.map((step) => ({

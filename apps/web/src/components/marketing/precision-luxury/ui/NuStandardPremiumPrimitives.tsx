@@ -234,3 +234,31 @@ export function PremiumFormShell({ children, className = "" }: PremiumFormShellP
     </div>
   );
 }
+
+export function MockupPageShell({ children, className = "" }: PremiumPageShellProps) {
+  return <PremiumPageShell className={className}>{children}</PremiumPageShell>;
+}
+
+export function MockupCard({ children, className = "", interactive }: PremiumCardProps) {
+  return (
+    <PremiumCard
+      interactive={interactive}
+      className={`rounded-[24px] border-[#E8DFD0]/95 shadow-[0_16px_44px_-32px_rgba(15,23,42,0.3)] ${className}`}
+    >
+      {children}
+    </PremiumCard>
+  );
+}
+
+export function MockupMediaFrame(props: PremiumImageFrameProps) {
+  return (
+    <PremiumImageFrame
+      {...props}
+      className={`rounded-[30px] ${props.className ?? ""}`}
+    />
+  );
+}
+
+export function MockupTrustStrip({ items, className = "" }: TrustMetricStripProps) {
+  return <TrustMetricStrip items={items} className={className} />;
+}

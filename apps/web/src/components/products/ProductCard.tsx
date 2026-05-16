@@ -43,24 +43,24 @@ export function ProductCard({
   onSecondaryPurchaseClick,
   layout = "default",
   roleExplanation,
-  viewDetailsLabel,
+  viewDetailsLabel = "View guidance",
 }: ProductCardProps) {
   const scoreNum = product.rating.finalScore;
   const isSupporting = layout === "supporting";
 
   const rootClass = clsx(
-    "rounded-2xl bg-white transition",
+    "rounded-[24px] bg-white transition",
     isSupporting
       ? "border border-neutral-200/90 p-3 shadow-none"
       : "space-y-0",
     !isSupporting &&
       (highlight
-        ? "rounded-xl border-2 border-emerald-500 p-6 shadow-md"
+        ? "rounded-[26px] border border-[#0D9488]/24 p-6 shadow-sm"
         : label === "Best overall" || label === "Start here"
-          ? "border border-emerald-500 p-5 shadow-sm hover:shadow-sm"
+          ? "border border-[#0D9488]/24 p-5 shadow-sm hover:shadow-sm"
           : label
-            ? "border border-neutral-200 p-5 shadow-sm hover:shadow-sm"
-            : "border border-[#C9B27C] p-5 shadow-sm hover:shadow-sm"),
+            ? "border border-[#E8DFD0]/95 p-5 shadow-sm hover:shadow-sm"
+            : "border border-[#E8DFD0]/95 p-5 shadow-sm hover:shadow-sm"),
   );
 
   const labelChip = label ? (
@@ -169,9 +169,11 @@ export function ProductCard({
         <p className="mt-1 text-xs uppercase tracking-[0.18em] text-neutral-500">{product.brand}</p>
       </Link>
 
-      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-neutral-600">
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-neutral-600">
         {typeof scoreNum === "number" && Number.isFinite(scoreNum) ? (
-          <span className="font-medium text-neutral-800">Score: {scoreNum.toFixed(1)}</span>
+          <span className="rounded-full border border-[#E8DFD0]/90 bg-[#FFF9F3] px-2.5 py-1 text-xs font-medium text-neutral-800">
+            Compatibility reference: {scoreNum.toFixed(1)}
+          </span>
         ) : null}
         {fitLabel ? (
           <span className="rounded-full border border-neutral-200 px-2 py-0.5 text-xs text-neutral-700">
@@ -191,12 +193,12 @@ export function ProductCard({
         ))}
       </div>
 
-      <p className="mt-3 text-sm leading-6 text-neutral-600">
-        <span className="font-medium text-neutral-800">Used for:</span>{" "}
+      <p className="mt-4 text-sm leading-6 text-neutral-600">
+        <span className="font-medium text-neutral-800">Professional-use context:</span>{" "}
         {product.bestUseCases?.[0]?.trim() || "targeted cleaning applications"}
       </p>
 
-      <div className="mt-4 border-t border-neutral-100 pt-4">{actions}</div>
+      <div className="mt-4 border-t border-[#E8DFD0]/80 pt-4">{actions}</div>
     </div>
   );
 }

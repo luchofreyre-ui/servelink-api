@@ -23,11 +23,11 @@ export function AuthorityHero({
   if (variant === "problemCompact") {
     const support = firstSentence(description);
     return (
-      <header className="mb-6 max-w-4xl space-y-3">
-        <p className="font-[var(--font-manrope)] text-sm font-semibold uppercase tracking-[0.12em] text-[#64748B]">
+      <header className="mb-8 rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_24px_70px_-50px_rgba(15,23,42,0.32)] md:p-8">
+        <p className="font-[var(--font-poppins)] text-[11px] font-semibold uppercase tracking-[0.24em] text-[#B89F6B]">
           {eyebrow}
         </p>
-        <h1 className="font-[var(--font-poppins)] text-4xl font-semibold tracking-tight text-[#0F172A] md:text-5xl">
+        <h1 className="mt-4 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] md:text-5xl">
           {title}
         </h1>
         {subline ? (
@@ -45,11 +45,11 @@ export function AuthorityHero({
   }
 
   return (
-    <header className="mb-10 border-b border-[#C9B27C]/20 pb-6">
-      <p className="mb-2 font-[var(--font-manrope)] text-sm font-semibold uppercase tracking-[0.12em] text-[#64748B]">
+    <header className="mb-10 rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_24px_70px_-50px_rgba(15,23,42,0.32)] md:p-8">
+      <p className="font-[var(--font-poppins)] text-[11px] font-semibold uppercase tracking-[0.24em] text-[#B89F6B]">
         {eyebrow}
       </p>
-      <h1 className="mb-3 font-[var(--font-poppins)] text-3xl font-semibold tracking-tight text-[#0F172A]">
+      <h1 className="mb-3 mt-4 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] md:text-5xl">
         {title}
       </h1>
       <p className="max-w-3xl font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">{description}</p>
