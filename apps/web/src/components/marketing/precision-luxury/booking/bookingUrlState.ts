@@ -72,9 +72,9 @@ const validTimes: BookingTimeOption[] = [
 const STEP_RANK: Record<BookingStepId, number> = {
   service: 0,
   home: 1,
-  location: 2,
-  review: 3,
-  schedule: 4,
+  location: 1,
+  review: 2,
+  schedule: 3,
 };
 
 /** Serialized when the customer is on the recurring auth gate (never `service=recurring`). */
@@ -544,7 +544,9 @@ export function computeMaxReadyStep(s: BookingFlowState): BookingStepId {
   if (!isHomeDetailsComplete(s)) {
     return "home";
   }
-  if (!isServiceLocationComplete(s)) return "location";
+  if (!isServiceLocationComplete(s)) {
+    return "home";
+  }
   if (!String(s.schedulingBookingId ?? "").trim()) return "review";
   return "schedule";
 }
@@ -999,10 +1001,12 @@ export function resolveBookingStepFromUrl(
     return shaped ? maxStep : defaultBookingFlowState.step;
   }
 
-  if (STEP_RANK[rawStep] > STEP_RANK[maxStep]) {
+  const requestedStep = rawStep === "location" ? "home" : rawStep;
+
+  if (STEP_RANK[requestedStep] > STEP_RANK[maxStep]) {
     return maxStep;
   }
-  return rawStep;
+  return requestedStep;
 }
 
 export function buildBookingSearchParams(state: BookingFlowState) {

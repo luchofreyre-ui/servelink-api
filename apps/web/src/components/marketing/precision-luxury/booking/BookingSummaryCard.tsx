@@ -71,7 +71,7 @@ export function BookingSummaryCard({
   const locZip = normalizeBookingServiceLocationZipParam(state.serviceLocationZip);
   const locLine = (() => {
     if (!isServiceLocationComplete(state)) {
-      return "Add on location step";
+      return "Add service address";
     }
     const u = state.serviceLocationUnit.trim();
     const parts = [
@@ -198,11 +198,10 @@ export function BookingSummaryCard({
 
       <div className="mt-6 rounded-[24px] border border-[#0D9488]/18 bg-[#0D9488] p-5 text-white shadow-[0_14px_40px_rgba(13,148,136,0.16)]">
         <p className="font-[var(--font-manrope)] text-xs uppercase tracking-[0.16em] text-white/75">
-          Real-time estimate
+          Estimate guidance
         </p>
         <p className="mt-3 font-[var(--font-manrope)] text-sm leading-7 text-white">
-          {BOOKING_REVIEW_PRICE_UPDATES_LINE} Your selections stay visible here as you move—nothing gets lost between
-          screens.
+          {BOOKING_REVIEW_PRICE_UPDATES_LINE} Your review keeps the important details together so the estimate and scheduling step stay easy to understand.
         </p>
       </div>
       <p className="mt-4 font-[var(--font-manrope)] text-xs leading-relaxed text-[#64748B]">

@@ -31,11 +31,10 @@ export const bookingHomeLayer1BaselineComplete: Pick<
 };
 
 export const bookingSteps: BookingStepDefinition[] = [
-  { id: "service", order: 1, label: "Service details" },
-  { id: "home", order: 2, label: "Home details" },
-  { id: "location", order: 3, label: "Your details" },
-  { id: "review", order: 4, label: "Review & book" },
-  { id: "schedule", order: 5, label: "Team & time" },
+  { id: "service", order: 1, label: "Service" },
+  { id: "home", order: 2, label: "Details" },
+  { id: "review", order: 3, label: "Review & estimate" },
+  { id: "schedule", order: 4, label: "Team & time" },
 ];
 
 export const bookingServiceOptions = bookingServiceCatalog.map((service) => ({

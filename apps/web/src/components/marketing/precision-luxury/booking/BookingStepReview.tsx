@@ -1390,10 +1390,9 @@ export function BookingStepReview({
           )}
         </ReviewSection>
 
-        <ReviewSection title="Your contact">
+        <ReviewSection title="Contact">
           <p className="mb-4 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-            We will use this to confirm your direction and reach you with next
-            steps.
+            Confirm where we should send the request summary and scheduling follow-up.
           </p>
           <div className="space-y-4">
             <BookingTextField
@@ -1418,23 +1417,10 @@ export function BookingStepReview({
               helper={emailError ?? undefined}
             />
           </div>
-          {contactOk &&
-          estimatePreviewReady &&
-          !previewLoading &&
-          !previewError ? (
-            <div className="mt-4 border-t border-[#C9B27C]/14 pt-4">
-              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                Contact on file
-              </p>
-              <p className="mt-2 font-medium">
-                <span className="text-[#64748B]">Name:</span>{" "}
-                {state.customerName.trim()}
-              </p>
-              <p className="mt-1 font-medium">
-                <span className="text-[#64748B]">Email:</span>{" "}
-                {state.customerEmail.trim()}
-              </p>
-            </div>
+          {contactOk ? (
+            <p className="mt-4 rounded-2xl border border-[#0D9488]/18 bg-[rgba(13,148,136,0.06)] px-4 py-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+              Contact is ready for follow-up.
+            </p>
           ) : null}
         </ReviewSection>
 
