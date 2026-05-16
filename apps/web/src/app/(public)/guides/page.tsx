@@ -12,7 +12,7 @@ export const metadata: Metadata = buildAuthorityGuidesIndexMetadata();
 
 const GUIDES_TITLE = "Cleaning guides";
 const GUIDES_DESCRIPTION =
-  "Consolidated references for stains, failures, surface protection, and chemical safety.";
+  "Practical guidance for stains, surface care, chemical safety, and healthier upkeep—aligned with disciplined home standards.";
 
 export default function AuthorityGuidesIndexPage() {
   const guides = getAllGuidePages();

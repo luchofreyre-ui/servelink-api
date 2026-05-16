@@ -35,7 +35,7 @@ export const BOOKING_CONFIRMATION_HEADLINE_NEUTRAL_REENTRY =
 
 /** `/book/confirmation` — assigned booking with a scheduled start from the live API read. */
 export const BOOKING_CONFIRMATION_HEADLINE_VISIT_CONFIRMED =
-  "Your cleaning is confirmed.";
+  "You're all set. Your cleaning is confirmed.";
 
 export const BOOKING_CONFIRMATION_INTRO_VISIT_CONFIRMED_LEAD =
   "Your deposit is received and your visit is on the calendar.";
@@ -105,6 +105,14 @@ export const BOOKING_CONFIRMATION_OPENING_RESET_SCHEDULE_TITLE =
 /** Shared section title for confirmation “closure” blocks (neutral + standard outcomes). */
 export const BOOKING_CONFIRMATION_WHATS_NEXT_SECTION_TITLE =
   "What happens next";
+
+export const BOOKING_CONFIRMATION_TRUST_STRIP_ITEMS = [
+  "We've got it from here",
+  "Clear communication",
+  "Owner-led service",
+] as const;
+
+export const BOOKING_CONFIRMATION_VIEW_BOOKING_CTA = "View booking";
 
 /** Server-reported codes already passed through the confirmation URL today. */
 export function bookingConfirmationNoticeForBookingErrorCode(
@@ -504,6 +512,14 @@ export const BOOKING_REVIEW_STEP_TITLE = "Review your visit & estimate";
 export const BOOKING_REVIEW_STEP_BODY =
   "Confirm your home details and estimate look right. Continuing saves your request and opens owner-led team selection—your concrete arrival window comes next, with coordination that stays clear through confirmation.";
 
+/** Estimate rail headline — preview semantics unchanged */
+export const BOOKING_REVIEW_ESTIMATED_TOTAL_HEADLINE = "Here's your estimated total.";
+
+export const BOOKING_REVIEW_PRICE_UPDATES_LINE =
+  "Your price updates in real time based on your selections.";
+
+export const BOOKING_REVIEW_VIEW_FULL_BREAKDOWN = "View full breakdown";
+
 export const BOOKING_REVIEW_NEXT_SCHEDULE_TITLE = "Next: choose your team and arrival time";
 
 export const BOOKING_REVIEW_NEXT_SCHEDULE_BODY =
@@ -825,7 +841,7 @@ export const BOOKING_REVIEW_REC_CABINETS_DETAIL =
 
 /** Subtle trust ribbon — review, schedule, deposit (restrained). */
 export const BOOKING_TRUST_RIBBON_ACCOUNTABILITY = "Owner-led accountability";
-export const BOOKING_TRUST_RIBBON_INSURED = "Insured service";
+export const BOOKING_TRUST_RIBBON_ESTIMATE = "Honest real-time estimate";
 export const BOOKING_TRUST_RIBBON_COMMS = "Documented standards";
 export const BOOKING_TRUST_RIBBON_SUPPORT = "Transparent scheduling";
 
@@ -835,7 +851,7 @@ export const BOOKING_TRUST_RIBBON_SUBLINE =
 
 export const BOOKING_TRUST_RIBBON_ITEMS: readonly string[] = [
   BOOKING_TRUST_RIBBON_ACCOUNTABILITY,
-  BOOKING_TRUST_RIBBON_INSURED,
+  BOOKING_TRUST_RIBBON_ESTIMATE,
   BOOKING_TRUST_RIBBON_COMMS,
   BOOKING_TRUST_RIBBON_SUPPORT,
 ];

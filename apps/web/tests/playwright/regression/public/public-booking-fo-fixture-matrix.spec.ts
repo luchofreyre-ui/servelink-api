@@ -76,7 +76,7 @@ async function waitForReviewReady(
 ) {
   // Requires `bookingUrl()` to include Layer-1 home query params so step is not clamped to home details.
   await expect(
-    page.getByRole("heading", { name: /Review your visit/i }),
+    page.getByRole("heading", { name: /Review & book/i }),
   ).toBeVisible({
     timeout: 60_000,
   });
@@ -609,7 +609,7 @@ test.describe("public booking — controlled FO fixture matrix (browser)", () =>
       })}`,
     );
     await expect(
-      page.getByRole("heading", { name: /Review your visit/i }),
+      page.getByRole("heading", { name: /Review & book/i }),
     ).toBeVisible({
       timeout: 60_000,
     });

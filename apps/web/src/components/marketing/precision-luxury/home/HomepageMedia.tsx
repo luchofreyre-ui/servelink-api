@@ -38,7 +38,7 @@ export function HomepageHeroMedia() {
 
   return (
     <div className="relative w-full overflow-hidden rounded-[28px] border border-[#C9B27C]/22 bg-[#F4EFE8] shadow-[0_28px_90px_rgba(15,23,42,0.08)]">
-      <div className="relative aspect-[3/2] w-full min-h-[220px] sm:min-h-[252px] lg:aspect-[3/2] lg:max-h-[min(43vh,448px)] lg:min-h-[288px]">
+      <div className="relative aspect-[3/2] w-full min-h-[220px] sm:min-h-[248px] lg:aspect-[4/3] lg:max-h-[min(54vh,520px)] lg:min-h-[300px]">
         <HeroGradientFallback className="z-0" />
         {!failed ? (
           <Image
@@ -52,19 +52,6 @@ export function HomepageHeroMedia() {
             onError={() => setFailed(true)}
           />
         ) : null}
-
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] bg-gradient-to-t from-[#0F172A]/24 via-[#0F172A]/06 to-transparent pb-4 pt-16 sm:pb-5 sm:pt-20">
-          <div className="mx-auto max-w-lg px-4 sm:px-5">
-            <div className="rounded-2xl border border-white/35 bg-white/88 px-4 py-3 shadow-[0_12px_40px_rgba(15,23,42,0.12)] backdrop-blur-[10px] sm:px-5 sm:py-3.5">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#C9B27C]">
-                Owner-led service presence
-              </p>
-              <p className="mt-1.5 font-[var(--font-manrope)] text-[13px] leading-snug text-[#334155] sm:text-sm">
-                Beautiful homes, maintained by accountable professionals.
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -113,7 +100,7 @@ export function HomepageTrustOperationalRow() {
             Owner-led operations
           </p>
           <h2 className="mt-3 font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.03em] text-[#0F172A] md:text-2xl">
-            Calm presence. Serious standards.
+            Detail-focused presence. Serious standards.
           </h2>
           <p className="mt-3 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
             Presence and discipline you can recognize—not loud promises. Prepared teams, respectful arrivals, and documented

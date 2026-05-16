@@ -115,8 +115,11 @@ import {
   BOOKING_REVIEW_SCHEDULE_NOTE,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_FOOTNOTE,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
+  BOOKING_REVIEW_ESTIMATED_TOTAL_HEADLINE,
+  BOOKING_REVIEW_PRICE_UPDATES_LINE,
   BOOKING_REVIEW_STEP_BODY,
   BOOKING_REVIEW_STEP_TITLE,
+  BOOKING_REVIEW_VIEW_FULL_BREAKDOWN,
   BOOKING_REVIEW_SELECTED_ARRIVAL_LABEL,
   BOOKING_REVIEW_SELECTED_TEAM_LABEL,
   BOOKING_TRANSITION_STATE_LABELS,
@@ -657,7 +660,7 @@ export function BookingStepReview({
 
   return (
     <BookingSectionCard
-      eyebrow="Step 5"
+      eyebrow="Step 4"
       title={BOOKING_REVIEW_STEP_TITLE}
       body={BOOKING_REVIEW_STEP_BODY}
     >
@@ -738,7 +741,7 @@ export function BookingStepReview({
           title={
             isRecurringContract
               ? BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE
-              : "Estimated cleaning time & cost"
+              : BOOKING_REVIEW_ESTIMATED_TOTAL_HEADLINE
           }
         >
           {isRecurringContract ? (
@@ -754,6 +757,16 @@ export function BookingStepReview({
               </p>
             </div>
           ) : null}
+          <div id="booking-estimate-breakdown" className="scroll-mt-28">
+          <p className="mb-2 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B]">
+            {BOOKING_REVIEW_PRICE_UPDATES_LINE}{" "}
+            <a
+              href="#booking-estimate-breakdown"
+              className="font-semibold text-[#0F766E] underline decoration-[#0F766E]/30 underline-offset-4 transition hover:decoration-[#0F766E]"
+            >
+              {BOOKING_REVIEW_VIEW_FULL_BREAKDOWN}
+            </a>
+          </p>
           <p className="mb-4 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
             {isRecurringContract
               ? "Figures below are your opening visit preview. Final scope is confirmed before service."
@@ -946,6 +959,7 @@ export function BookingStepReview({
               No estimate to show for these selections yet.
             </p>
           ) : null}
+          </div>
         </ReviewSection>
 
         {isRecurringContract ? (
