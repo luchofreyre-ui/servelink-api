@@ -23,6 +23,7 @@ export type BookingPublicPath =
 export type BookingFirstTimePostEstimateVisitChoice =
   | ""
   | "one_visit"
+  | "two_visit"
   | "three_visit_reset";
 
 /** Client-only preview planning band (no scores or backend certainty). */
@@ -110,7 +111,7 @@ export type BookingOccupancyLevel = "ppl_1_2" | "ppl_3_4" | "ppl_5_plus";
 export type BookingChildrenInHome = "yes" | "no";
 export type BookingPetImpactLevel = "none" | "light" | "heavy";
 
-/** Layer 2 — labor multipliers. */
+/** Visit effort signals that influence labor planning. */
 export type BookingOverallLaborCondition =
   | "recently_maintained"
   | "normal_lived_in"
@@ -129,7 +130,7 @@ export type BookingSurfaceDetailToken =
   | "detailed_trim"
   | "many_touchpoints";
 
-/** Layer 3 — expectation / reset signals. */
+/** Customer-facing intent inferred from visit effort signals. */
 export type BookingPrimaryIntent =
   | "maintenance_clean"
   | "detailed_standard"

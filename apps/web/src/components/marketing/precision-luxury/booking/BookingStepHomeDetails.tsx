@@ -723,13 +723,13 @@ export function BookingStepHomeDetails({
         >
           <div className="mb-5">
             <p className="font-[var(--font-poppins)] text-xs font-semibold uppercase tracking-[0.14em] text-[#64748B]">
-              Layer 2 — Labor multipliers
+              Visit effort context
             </p>
             <p className="mt-2 font-[var(--font-poppins)] text-sm font-semibold tracking-[-0.02em] text-[#0F172A]">
               What drives time on site
             </p>
             <p className="mt-1 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-              These answers tune labor weighting—not just copy for the estimator.
+              These answers help estimate time, staffing, and preparation before the team arrives.
             </p>
           </div>
           <p

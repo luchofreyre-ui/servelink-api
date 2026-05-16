@@ -101,7 +101,7 @@ import {
 const TEST_REVIEW_LOC_QUERY =
   "&locZip=94103&locStreet=100%20Market%20St&locCity=San%20Francisco&locState=CA";
 const TEST_INTENT_QUERY = "&intent=RESET";
-/** Layer 1 baseline fields required for structural home completeness (matches bookingUrlState tests). */
+/** Baseline fields required for structural home completeness (matches bookingUrlState tests). */
 const BOOKING_TEST_LAYER1_QUERY =
   "halfBath=0&homeFloors=1&homeStairs=none&homePetImpact=none";
 const recurringQuoteOptions = [
@@ -1437,17 +1437,17 @@ describe("BookingFlowClient", () => {
       );
     });
 
-    it("first-time review shows only one-visit and three-visit reset options", async () => {
+    it("first-time review gates visit structure options by estimate size", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
       render(<BookingFlowClient />);
       await fillReviewContactAndOptionalFirstTimePlan(8000);
       const block = await screen.findByTestId("booking-first-time-post-estimate-options");
       expect(block).toBeInTheDocument();
       expect(screen.getByTestId("booking-post-estimate-one_visit")).toBeInTheDocument();
+      expect(screen.getByTestId("booking-post-estimate-two_visit")).toBeInTheDocument();
       expect(
-        screen.getByTestId("booking-post-estimate-three_visit_reset"),
-      ).toBeInTheDocument();
-      expect(screen.queryByTestId("booking-post-estimate-two_visits")).not.toBeInTheDocument();
+        screen.queryByTestId("booking-post-estimate-three_visit_reset"),
+      ).not.toBeInTheDocument();
       expect(
         screen.queryByTestId("booking-post-estimate-convert_recurring"),
       ).not.toBeInTheDocument();
