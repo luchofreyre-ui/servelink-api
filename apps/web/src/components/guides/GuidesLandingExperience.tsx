@@ -8,11 +8,11 @@ import type { AuthorityGuideCategory } from "@/authority/types/authorityPageType
 import {
   EditorialCard,
   EditorialCardGrid,
-  EditorialHero,
   EditorialBreadcrumb,
   EditorialMediaFrame,
   EditorialPageShell,
   EditorialTrustStrip,
+  editorialInteractiveTransition,
   type EditorialCrumb,
 } from "@/components/marketing/precision-luxury/ui/PremiumEditorialPrimitives";
 import {
@@ -134,76 +134,129 @@ export function GuidesLandingExperience({
     });
   }, [featured, query, topic]);
 
+  const primaryFeatured = filteredFeatured[0];
+  const supportingFeatured = filteredFeatured.slice(1);
+
   return (
     <EditorialPageShell>
       <PublicSiteHeader />
       {jsonLdSlot}
-      <main className="mx-auto max-w-7xl px-6 pb-20 pt-10 md:px-8 md:pt-14">
+      <main className="mx-auto max-w-7xl px-6 pb-20 pt-8 md:px-8 md:pt-12">
         <EditorialBreadcrumb items={breadcrumbs} />
 
-        <div className="mt-8">
-          <EditorialHero
-            eyebrow="THE NU STANDARD GUIDE"
-            title="Expert guidance for a cleaner, healthier home."
-            body="Practical cleaning knowledge, surface care, and safety guidance—organized so you can act with confidence."
-            aside={
-              <EditorialMediaFrame src={HERO_IMAGE} alt="Nu Standard cleaning professional caring for a calm home interior." priority />
-            }
-          />
-        </div>
+        <section className="mt-7 overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:p-9">
+          <div className="grid gap-7 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-stretch lg:gap-8">
+            <div className="flex min-w-0 flex-col justify-between rounded-[28px] border border-[#E8DFD0]/80 bg-white/75 p-6 sm:p-8">
+              <div>
+                <p className="font-[var(--font-poppins)] text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B89F6B]">
+                  THE NU STANDARD GUIDE
+                </p>
+                <h1 className="mt-5 font-[var(--font-poppins)] text-[2.45rem] font-semibold leading-[1.02] tracking-[-0.055em] text-[#0F172A] sm:text-5xl lg:text-[3.35rem]">
+                  Expert guidance for a cleaner, healthier home.
+                </h1>
+                <p className="mt-5 max-w-xl font-[var(--font-manrope)] text-base leading-7 text-[#475569] sm:text-lg sm:leading-8">
+                  Practical cleaning knowledge, surface care, and safety guidance—organized so you can act with confidence.
+                </p>
+              </div>
+              <div className="mt-8 grid gap-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569] sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                <div className="rounded-[20px] border border-[#E8DFD0]/80 bg-[#FFF9F3] p-4">
+                  <p className="font-semibold text-[#0F172A]">Surface-first</p>
+                  <p className="mt-1 text-xs leading-5">Start with the material before choosing method or chemistry.</p>
+                </div>
+                <div className="rounded-[20px] border border-[#E8DFD0]/80 bg-[#FFF9F3] p-4">
+                  <p className="font-semibold text-[#0F172A]">Safety before strength</p>
+                  <p className="mt-1 text-xs leading-5">Escalate carefully, with compatibility and stop-points visible.</p>
+                </div>
+              </div>
+            </div>
 
-        <div className="mt-10">
-          <EditorialTrustStrip
-            variant="mini"
-            items={[
-              {
-                title: "Trusted Knowledge",
-                body: "Researched and written with professional standards.",
-              },
-              {
-                title: "Safety First",
-                body: "Surface protection and chemical safety are at the core.",
-              },
-            ]}
-          />
-        </div>
+            <div className="relative min-w-0">
+              <EditorialMediaFrame
+                src={HERO_IMAGE}
+                alt="Nu Standard cleaning professional caring for a calm home interior."
+                priority
+                aspectClassName="aspect-[16/11] lg:h-full lg:min-h-[520px]"
+                frameClassName="rounded-[30px]"
+              />
+              {primaryFeatured ? (
+                <a
+                  href={`/guides/${primaryFeatured.slug}`}
+                  className={`group mt-5 block rounded-[26px] border border-[#C9B27C]/24 bg-white/95 p-5 shadow-[0_24px_70px_-48px_rgba(15,23,42,0.5)] outline-none lg:absolute lg:bottom-6 lg:left-6 lg:right-6 lg:mt-0 ${editorialInteractiveTransition} hover:-translate-y-0.5 hover:border-[#C9B27C]/45 focus-visible:ring-2 focus-visible:ring-[#C9B27C]/45`}
+                >
+                  <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.24em] text-[#B89F6B]">
+                    Featured guide · {guideCategoryEyebrow(primaryFeatured.category)}
+                  </p>
+                  <h2 className="mt-3 font-[var(--font-poppins)] text-2xl font-semibold leading-tight tracking-[-0.04em] text-[#0F172A]">
+                    {primaryFeatured.title}
+                  </h2>
+                  <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                    {primaryFeatured.summary ?? primaryFeatured.description}
+                  </p>
+                  <span className="mt-5 inline-flex items-center gap-1.5 font-[var(--font-manrope)] text-sm font-semibold text-[#0D9488] group-hover:gap-2">
+                    Read the feature <span aria-hidden>→</span>
+                  </span>
+                </a>
+              ) : null}
+            </div>
+          </div>
 
-        <div className="mt-10">
-          <EditorialSearchPanel
-            placeholder="Search surfaces, stains, methods, and guides…"
-            value={query}
-            onChange={setQuery}
-            chips={
-              <EditorialFilterChips chips={[...TOPIC_CHIPS]} activeKey={topic} onChange={setTopic} ariaLabel="Topics" />
-            }
-          />
-        </div>
+          <div className="mt-7 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.42fr)] lg:items-start">
+            <EditorialSearchPanel
+              placeholder="Search surfaces, stains, methods, and guides…"
+              value={query}
+              onChange={setQuery}
+              chips={
+                <EditorialFilterChips chips={[...TOPIC_CHIPS]} activeKey={topic} onChange={setTopic} ariaLabel="Topics" />
+              }
+              footer={
+                <p className="font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                  Search stays close to the feature so browsing feels guided, not like a raw index.
+                </p>
+              }
+            />
+            <div className="rounded-[20px] border border-[#E8DFD0]/90 bg-white/80 p-5 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                Knowledge path
+              </p>
+              <p className="mt-3">
+                Choose a topic, then use the guide cards to move from diagnosis to safer next steps.
+              </p>
+            </div>
+          </div>
+        </section>
 
         <section className="mt-14" aria-labelledby="featured-guides-heading">
-          <h2 id="featured-guides-heading" className="font-[var(--font-poppins)] text-xl font-semibold text-[#0F172A]">
-            Featured guides
-          </h2>
-          <div className="mt-6">
-            <EditorialCardGrid>
-              {filteredFeatured.map((guide, index) => (
-                <EditorialCard
-                  key={guide.slug}
-                  href={`/guides/${guide.slug}`}
-                  eyebrow={guideCategoryEyebrow(guide.category)}
-                  title={guide.title}
-                  summary={guide.summary ?? guide.description}
-                  ctaLabel="Read Guide"
-                  media={
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.24em] text-[#B89F6B]">
+                Curated first
+              </p>
+              <h2 id="featured-guides-heading" className="mt-2 font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.04em] text-[#0F172A]">
+                Featured paths through the library
+              </h2>
+            </div>
+          </div>
+          <div className="mt-7 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+            {supportingFeatured.map((guide, index) => (
+              <EditorialCard
+                key={guide.slug}
+                href={`/guides/${guide.slug}`}
+                eyebrow={guideCategoryEyebrow(guide.category)}
+                title={guide.title}
+                summary={guide.summary ?? guide.description}
+                ctaLabel="Read guide"
+                media={
+                  index === 0 ? (
                     <EditorialMediaFrame
-                      src={CARD_MEDIA[index % CARD_MEDIA.length]}
-                      alt={CARD_ALT[index % CARD_ALT.length] ?? "Nu Standard editorial photography."}
+                      src={CARD_MEDIA[(index + 1) % CARD_MEDIA.length]}
+                      alt={CARD_ALT[(index + 1) % CARD_ALT.length] ?? "Nu Standard editorial photography."}
                       aspectClassName="aspect-[16/10]"
                       frameClassName="rounded-none border-0 shadow-none"
                     />
-                  }
-                />
-              ))}
-            </EditorialCardGrid>
+                  ) : undefined
+                }
+              />
+            ))}
           </div>
           {filteredFeatured.length === 0 ? (
             <p className="mt-4 font-[var(--font-manrope)] text-sm text-[#64748B]">No guides match your filters.</p>

@@ -9,10 +9,10 @@ import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout
 import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
 import {
   EditorialBreadcrumb,
-  EditorialHero,
   EditorialMediaFrame,
   EditorialPageShell,
   EditorialTrustStrip,
+  editorialInteractiveTransition,
 } from "@/components/marketing/precision-luxury/ui/PremiumEditorialPrimitives";
 import { getAllPublishedProducts } from "@/lib/products/productPublishing";
 
@@ -100,7 +100,7 @@ export default function ProductsIndexPage() {
     <EditorialPageShell>
       <PublicSiteHeader />
       <main className="pb-16">
-        <section className="mx-auto max-w-7xl px-6 pt-10 md:px-8 md:pt-14">
+        <section className="mx-auto max-w-7xl px-6 pt-8 md:px-8 md:pt-12">
           <EditorialBreadcrumb
             items={[
               { label: "Home", href: "/" },
@@ -108,33 +108,75 @@ export default function ProductsIndexPage() {
               { label: "Products" },
             ]}
           />
-          <div className="mt-8">
-            <EditorialHero
-              eyebrow="PRODUCTS"
-              title="Understand the tools and chemistry behind responsible cleaning."
-              body="Product guidance built around surface compatibility, label respect, and safer routines."
-              aside={
+
+          <div className="mt-7 grid gap-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-stretch">
+            <div className="flex min-w-0 flex-col justify-between rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-8 lg:p-10">
+              <div>
+                <p className="font-[var(--font-poppins)] text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B89F6B]">
+                  PRODUCTS
+                </p>
+                <h1 className="mt-5 font-[var(--font-poppins)] text-[2.35rem] font-semibold leading-[1.03] tracking-[-0.055em] text-[#0F172A] sm:text-5xl lg:text-[3.1rem]">
+                  Label first. Surface second. Convenience third.
+                </h1>
+                <p className="mt-5 max-w-xl font-[var(--font-manrope)] text-base leading-7 text-[#475569] sm:text-lg sm:leading-8">
+                  Product guidance built around surface compatibility, label respect, and safer routines.
+                </p>
+              </div>
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                {[
+                  ["Label-first", "Always defer to manufacturer instructions."],
+                  ["Surface-aware", "Compatibility beats popularity scores."],
+                  ["Patch-test", "Sensitive finishes deserve a slower decision."],
+                ].map(([title, body]) => (
+                  <div key={title} className="rounded-[20px] border border-[#E8DFD0]/85 bg-white/78 p-4">
+                    <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.18em] text-[#B89F6B]">
+                      {title}
+                    </p>
+                    <p className="mt-2 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">{body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid gap-5">
+              <div className="relative">
                 <EditorialMediaFrame
                   src="/media/trust/oop-quality-inspection.jpg"
                   alt="Nu Standard technician inspecting finishes during detailed residential cleaning."
+                  aspectClassName="aspect-[16/10]"
+                  frameClassName="rounded-[30px]"
                 />
-              }
-            />
-          </div>
-          <div className="mt-10">
-            <EditorialTrustStrip
-              variant="mini"
-              items={[
-                { title: "Label-first", body: "Always defer to manufacturer instructions." },
-                { title: "Surface-aware", body: "Compatibility beats popularity scores." },
-              ]}
-            />
+                <div className="mt-5 rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] lg:absolute lg:bottom-5 lg:left-5 lg:right-5 lg:mt-0">
+                  <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                    Compatibility panel
+                  </p>
+                  <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                    Use the catalog to narrow options, then verify the label and the surface before applying anything.
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-[24px] border border-[#E8DFD0]/95 bg-white/85 p-5">
+                <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                  Product search
+                </p>
+                <div className="mt-4">
+                  <ProductSearchBar value={query} onChange={setQuery} />
+                </div>
+                <p className="mt-3 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                  Search by product, brand, chemistry, problem, or surface. Filters below refine compatibility context.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
-        <div className="mx-auto mt-6 flex max-w-7xl flex-col gap-4 px-6 md:px-8 lg:flex-row lg:items-center lg:justify-between">
-          <div className="w-full lg:max-w-2xl">
-            <ProductSearchBar value={query} onChange={setQuery} />
+        <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-4 px-6 md:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <div className="w-full">
+            <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+              Active compatibility context
+            </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {(
                 [
@@ -149,11 +191,16 @@ export default function ProductsIndexPage() {
                 .map((c) => (
                   <span
                     key={c.key}
-                    className="rounded-full bg-[#F5EFD9] px-3 py-1 text-xs text-neutral-800"
+                    className="rounded-full border border-[#C9B27C]/25 bg-[#F5EFD9] px-3 py-1 text-xs text-neutral-800"
                   >
                     {c.label}
                   </span>
                 ))}
+              {!brand && !category && !chemicalClass && !problem && !surface ? (
+                <span className="rounded-full border border-[#E8DFD0]/95 bg-white/85 px-3 py-1 text-xs text-[#64748B]">
+                  No filters selected
+                </span>
+              ) : null}
             </div>
           </div>
 
@@ -165,7 +212,7 @@ export default function ProductsIndexPage() {
               id="sort-by"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as "score" | "brand" | "category")}
-              className="rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm"
+              className={`rounded-xl border border-[#E8DFD0]/95 bg-white px-3 py-2 text-sm text-[#0F172A] outline-none focus-visible:ring-2 focus-visible:ring-[#C9B27C]/35 ${editorialInteractiveTransition}`}
             >
               <option value="score">Final score</option>
               <option value="brand">Brand</option>
@@ -216,20 +263,20 @@ export default function ProductsIndexPage() {
           />
 
           <section>
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-sm text-neutral-600">
+            <div className="mb-5 flex items-center justify-between">
+              <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
                 {filtered.length} product{filtered.length === 1 ? "" : "s"}
               </p>
             </div>
 
-            <div className="mb-8">
+            <div className="mb-8 rounded-[28px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/90 p-5 sm:p-6">
               <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                 Reference highlights
               </p>
-              <p className="mt-2 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569]">
+              <p className="mt-2 max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569]">
                 Higher compatibility scores can narrow choices—still verify labels and patch-test sensitive finishes.
               </p>
-              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] xl:grid-cols-3">
                 {TOP_RATED.map((product) => (
                   <ProductCard key={`top-${product.slug}`} product={product} />
                 ))}
@@ -252,7 +299,7 @@ export default function ProductsIndexPage() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:gap-6">
                 {filtered.map((product) => (
                   <ProductCard key={product.slug} product={product} />
                 ))}

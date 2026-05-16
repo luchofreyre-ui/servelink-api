@@ -21,9 +21,9 @@ import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout
 import { MarketingLinkButton } from "@/components/marketing/precision-luxury/shared/MarketingLinkButton";
 import {
   EditorialBreadcrumb,
-  EditorialHero,
   EditorialMediaFrame,
   EditorialTrustStrip,
+  editorialInteractiveTransition,
 } from "@/components/marketing/precision-luxury/ui/PremiumEditorialPrimitives";
 import { AuthorityFaq } from "./AuthorityFaq";
 import { AuthorityJsonLd } from "./AuthorityJsonLd";
@@ -136,7 +136,7 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
       <PublicSiteHeader />
       <AuthorityJsonLd data={jsonLd} />
 
-      <main className="mx-auto max-w-7xl px-6 pb-16 pt-10 md:px-8 md:pt-14">
+      <main className="mx-auto max-w-7xl px-6 pb-16 pt-8 md:px-8 md:pt-12">
         <EditorialBreadcrumb
           items={[
             { label: "Home", href: "/" },
@@ -146,19 +146,70 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
           ]}
         />
 
-        <div className="mt-8">
-          <EditorialHero
-            eyebrow={guideEyebrow(data.category)}
-            title={data.title}
-            body={lead}
-            aside={
-              <EditorialMediaFrame
-                src={asideImageSrc(data.slug)}
-                alt="Nu Standard editorial photography paired with educational cleaning guidance."
-              />
-            }
-          />
+        <div className="mt-7 grid overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.04fr)] lg:items-stretch lg:gap-7 lg:p-9">
+          <div className="flex min-w-0 flex-col justify-between rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
+            <div>
+              <p className="font-[var(--font-poppins)] text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B89F6B]">
+                {guideEyebrow(data.category)}
+              </p>
+              <h1 className="mt-5 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] sm:text-5xl lg:text-[3.05rem]">
+                {data.title}
+              </h1>
+              <p className="mt-5 max-w-2xl font-[var(--font-manrope)] text-base leading-7 text-[#475569] sm:text-lg sm:leading-8">
+                {lead}
+              </p>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-3 border-t border-[#E8DFD0]/90 pt-6">
+              <Link
+                href="/guides"
+                className={`font-[var(--font-manrope)] text-sm font-semibold text-[#0D9488] underline-offset-4 hover:underline ${editorialInteractiveTransition}`}
+              >
+                Browse all guides
+              </Link>
+              <span aria-hidden className="text-[#CBD5E1]">
+                ·
+              </span>
+              <Link
+                href="/encyclopedia"
+                className={`font-[var(--font-manrope)] text-sm font-semibold text-[#0D9488] underline-offset-4 hover:underline ${editorialInteractiveTransition}`}
+              >
+                Search encyclopedia
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative min-w-0">
+            <EditorialMediaFrame
+              src={asideImageSrc(data.slug)}
+              alt="Nu Standard editorial photography paired with educational cleaning guidance."
+              aspectClassName="aspect-[16/10] lg:h-full lg:min-h-[460px]"
+              frameClassName="rounded-[30px]"
+            />
+            {keyTakeaway ? (
+              <div className="mt-5 rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] lg:absolute lg:bottom-5 lg:left-5 lg:right-5 lg:mt-0">
+                <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                  Key takeaway
+                </p>
+                <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                  {keyTakeaway}
+                </p>
+              </div>
+            ) : null}
+          </div>
         </div>
+
+        {keyTakeaway ? (
+          <div className="mt-8 lg:hidden">
+            <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-white/90 p-5">
+              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                Key takeaway
+              </p>
+              <p className="mt-3 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569]">
+                {keyTakeaway}
+              </p>
+            </div>
+          </div>
+        ) : null}
 
         {quickAnswerText ? (
           <div className="mt-8">
@@ -168,8 +219,8 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
 
         <AuthorityTopicalCrossLinks pageKey={`guide-${data.slug}`} />
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_288px] lg:items-start">
-          <div>
+        <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,720px)_320px] lg:items-start lg:justify-between">
+          <div className="min-w-0">
             <div className="space-y-0">
               {data.sections.map((section) => (
                 <AuthoritySection key={section.id} id={section.id} title={section.title}>
@@ -244,9 +295,9 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
             </div>
           </div>
 
-          <aside className="hidden space-y-8 lg:sticky lg:top-28 lg:block">
+          <aside className="hidden space-y-7 lg:sticky lg:top-28 lg:block">
             {keyTakeaway && !quickAnswerText ? (
-              <div className="rounded-[18px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
+              <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
                 <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                   Key takeaway
                 </p>
@@ -254,7 +305,7 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
               </div>
             ) : null}
 
-            <div className="rounded-[18px] border border-[#E8DFD0]/95 bg-white/90 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
+            <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-white/90 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
               <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                 In this guide
               </p>
@@ -284,7 +335,7 @@ export function AuthorityGuidePage(props: { data: AuthorityGuidePageData }) {
             </div>
 
             {relatedGuides.length > 0 ? (
-              <div className="rounded-[18px] border border-[#E8DFD0]/95 bg-white/90 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
+              <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-white/90 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
                 <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                   Related guides
                 </p>

@@ -15,9 +15,9 @@ import { MarketingRichSection } from "./MarketingRichSection";
 import type { PublicArticleEntry } from "../content/publicContentRegistry";
 import {
   EditorialBreadcrumb,
-  EditorialHero,
   EditorialMediaFrame,
   EditorialTrustStrip,
+  editorialInteractiveTransition,
 } from "@/components/marketing/precision-luxury/ui/PremiumEditorialPrimitives";
 
 type MarketingArticleTemplateProps = {
@@ -69,7 +69,7 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
       <PublicSiteHeader />
 
       <main>
-        <section className="mx-auto max-w-7xl px-6 pb-10 pt-12 md:px-8 md:pt-16">
+        <section className="mx-auto max-w-7xl px-6 pb-10 pt-8 md:px-8 md:pt-12">
           <EditorialBreadcrumb
             items={[
               { label: "Home", href: "/" },
@@ -78,36 +78,66 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
             ]}
           />
 
-          <div className="mt-8">
-            <EditorialHero
-              eyebrow={article.eyebrow}
-              title={article.title}
-              body={article.heroBody}
-              aside={
-                <EditorialMediaFrame
-                  src={asideImageSrc(article.slug)}
-                  alt="Nu Standard editorial photography supporting educational cleaning guidance."
-                />
-              }
-            />
+          <div className="mt-7 grid overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-stretch lg:gap-7 lg:p-9">
+            <div className="flex min-w-0 flex-col justify-between rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
+              <div>
+                <p className="font-[var(--font-poppins)] text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B89F6B]">
+                  {article.eyebrow}
+                </p>
+                <h1 className="mt-5 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] sm:text-5xl lg:text-[3.05rem]">
+                  {article.title}
+                </h1>
+                <p className="mt-5 max-w-2xl font-[var(--font-manrope)] text-base leading-7 text-[#475569] sm:text-lg sm:leading-8">
+                  {article.heroBody}
+                </p>
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-4 border-t border-[#E8DFD0]/90 pt-6 font-[var(--font-manrope)] text-sm text-[#475569]">
+                <Link href="/book" className={`font-semibold text-[#0D9488] underline-offset-4 hover:underline ${editorialInteractiveTransition}`}>
+                  Book a cleaning
+                </Link>
+                <span aria-hidden className="text-[#CBD5E1]">
+                  ·
+                </span>
+                <Link href="/services" className={`font-semibold text-[#0D9488] underline-offset-4 hover:underline ${editorialInteractiveTransition}`}>
+                  Explore services
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative min-w-0">
+              <EditorialMediaFrame
+                src={asideImageSrc(article.slug)}
+                alt="Nu Standard editorial photography supporting educational cleaning guidance."
+                aspectClassName="aspect-[16/10] lg:h-full lg:min-h-[460px]"
+                frameClassName="rounded-[30px]"
+              />
+              <div className="mt-5 rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] lg:absolute lg:bottom-5 lg:left-5 lg:right-5 lg:mt-0">
+                <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                  Key takeaway
+                </p>
+                <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                  {article.sectionOne.callout}
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-4 border-t border-[#E8DFD0]/90 pt-8 font-[var(--font-manrope)] text-sm text-[#475569]">
-            <Link href="/book" className="font-semibold text-[#0D9488] underline-offset-4 hover:underline">
-              Book a cleaning
-            </Link>
-            <span aria-hidden className="text-[#CBD5E1]">
-              ·
-            </span>
-            <Link href="/services" className="font-semibold text-[#0D9488] underline-offset-4 hover:underline">
-              Explore services
-            </Link>
+          <div className="mt-8 lg:hidden">
+            <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-white/90 p-5">
+              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+                Key takeaway
+              </p>
+              <p className="mt-3 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569]">
+                {article.sectionOne.callout}
+              </p>
+            </div>
           </div>
         </section>
 
         <div className="mx-auto max-w-7xl px-6 pb-16 md:px-8">
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_288px] lg:items-start">
-            <div>
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,720px)_320px] lg:items-start lg:justify-between">
+            <div className="min-w-0">
               <MarketingRichSection
                 id="section-one"
                 sectionClassName="px-0 py-14 md:py-16"
@@ -180,8 +210,8 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
               </div>
             </div>
 
-            <aside className="hidden space-y-8 lg:block lg:sticky lg:top-28">
-              <div className="rounded-[18px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
+            <aside className="hidden space-y-7 lg:block lg:sticky lg:top-28">
+              <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
                 <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                   Key takeaway
                 </p>
@@ -190,7 +220,7 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
                 </p>
               </div>
 
-              <div className="rounded-[18px] border border-[#E8DFD0]/95 bg-white/90 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
+              <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-white/90 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
                 <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                   In this guide
                 </p>
@@ -214,7 +244,7 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
               </div>
 
               {relatedContent.length > 0 ? (
-                <div className="rounded-[18px] border border-[#E8DFD0]/95 bg-white/90 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
+                <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-white/90 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
                   <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                     {article.kind === "question" ? "Related answers" : "Related guides"}
                   </p>
@@ -257,6 +287,18 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
           title={article.faqTitle}
           items={article.faqs}
         />
+
+        <div className="mx-auto max-w-7xl px-6 pb-12 md:px-8">
+          <EditorialTrustStrip
+            variant="dense"
+            items={[
+              { title: "Surface-First" },
+              { title: "Test First" },
+              { title: "Gentle Approach" },
+              { title: "Know When to Stop" },
+            ]}
+          />
+        </div>
 
         <MarketingCtaBand eyebrow="Ready to book" title={article.ctaTitle} body={article.ctaBody} />
 
