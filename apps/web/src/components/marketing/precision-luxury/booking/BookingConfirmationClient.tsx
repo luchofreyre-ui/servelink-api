@@ -165,11 +165,12 @@ type LockedResetSchedule = {
   recurringBeginsAt?: string | null;
 };
 
-type ConfirmationWithRecurringContract = Awaited<
-  ReturnType<typeof fetchPublicBookingConfirmation>
+type ConfirmationWithRecurringContract = Omit<
+  Awaited<ReturnType<typeof fetchPublicBookingConfirmation>>,
+  "recurringPlan" | "resetSchedule" | "selectedRecurringCadence" | "visitStructure"
 > & {
   selectedRecurringCadence?: LockedRecurringCadence | null;
-  visitStructure?: "one_visit" | "three_visit_reset" | null;
+  visitStructure?: "one_visit" | "two_visit" | "three_visit_reset" | null;
   recurringPlan?: LockedRecurringPlan | null;
   resetSchedule?: LockedResetSchedule | null;
   recurringBeginsAt?: string | null;
@@ -929,7 +930,8 @@ export function BookingConfirmationClient() {
                 ) : null}
               </div>
 
-              {recurringContract.visitStructure === "three_visit_reset" &&
+              {(recurringContract.visitStructure === "three_visit_reset" ||
+                recurringContract.visitStructure === "two_visit") &&
               recurringContract.resetSchedule ? (
                 <div className="mt-6 rounded-2xl border border-[#0D9488]/18 bg-white px-5 py-4">
                   <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
@@ -952,7 +954,8 @@ export function BookingConfirmationClient() {
                         {formatVisitDateTime(recurringContract.resetSchedule.visit2At)}
                       </p>
                     ) : null}
-                    {recurringContract.resetSchedule.visit3At ? (
+                    {recurringContract.visitStructure === "three_visit_reset" &&
+                    recurringContract.resetSchedule.visit3At ? (
                       <p>
                         <span className="font-semibold text-[#0F172A]">
                           Visit 3:{" "}

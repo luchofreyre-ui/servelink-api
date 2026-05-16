@@ -127,6 +127,7 @@ import {
   BOOKING_POST_ESTIMATE_FIRST_TIME_TITLE,
   BOOKING_POST_ESTIMATE_VISIT_ONE,
   BOOKING_POST_ESTIMATE_VISIT_THREE,
+  BOOKING_POST_ESTIMATE_VISIT_TWO,
   BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
   BOOKING_PLAN_SUMMARY_LABEL,
   BOOKING_REVIEW_VISIT_STRUCTURE_LABEL,
@@ -262,6 +263,8 @@ function deepProgramFallbackLabel(state: BookingFlowState) {
     switch (state.firstTimePostEstimateVisitChoice) {
       case "three_visit_reset":
         return "3-visit program";
+      case "two_visit":
+        return "2-visit program";
       case "one_visit":
       default:
         return "One visit";
@@ -436,7 +439,7 @@ export function BookingStepReview({
     heavy: "Heavy pet impact",
   };
   type ReviewRecurringCadence = "weekly" | "every_10_days" | "biweekly" | "monthly";
-  type ReviewVisitStructure = "one_visit" | "three_visit_reset";
+  type ReviewVisitStructure = "one_visit" | "two_visit" | "three_visit_reset";
   const recurringCadenceDisplay: Record<ReviewRecurringCadence, string> = {
     weekly: "Weekly",
     every_10_days: "Every 10 days",
@@ -479,18 +482,67 @@ export function BookingStepReview({
     state.firstTimePostEstimateVisitChoice === "three_visit_reset" ||
     state.firstTimeVisitProgram === "three_visit"
       ? "three_visit_reset"
+      : state.firstTimePostEstimateVisitChoice === "two_visit" ||
+          state.firstTimeVisitProgram === "two_visit"
+        ? "two_visit"
       : "one_visit";
-  const threeVisitBreakdown = previewEstimate
+  const showTwoVisitStructure =
+    Boolean(previewEstimate) && (previewEstimate?.priceCents ?? 0) >= 40_000;
+  const showThreeVisitStructure =
+    Boolean(previewEstimate) && (previewEstimate?.priceCents ?? 0) >= 70_000;
+  const visitStructureOptions: {
+    value: ReviewVisitStructure;
+    label: string;
+    helper: string;
+  }[] = [
+    {
+      value: "one_visit",
+      label: BOOKING_POST_ESTIMATE_VISIT_ONE,
+      helper:
+        "Best when the scope can be completed comfortably in a single appointment.",
+    },
+    ...(showTwoVisitStructure
+      ? [
+          {
+            value: "two_visit" as const,
+            label: BOOKING_POST_ESTIMATE_VISIT_TWO,
+            helper:
+              "Useful when the opening reset is substantial enough to benefit from a second focused visit.",
+          },
+        ]
+      : []),
+    ...(showThreeVisitStructure
+      ? [
+          {
+            value: "three_visit_reset" as const,
+            label: BOOKING_POST_ESTIMATE_VISIT_THREE,
+            helper:
+              "Reserved for large reset scopes where spreading work protects quality and pacing.",
+          },
+        ]
+      : []),
+  ];
+  const visitBreakdown = previewEstimate
     ? (() => {
-        const visit1 = Math.round(previewEstimate.priceCents * 0.45);
-        const visit2 = Math.round(previewEstimate.priceCents * 0.35);
-        const visit3 = Math.max(0, previewEstimate.priceCents - visit1 - visit2);
-        return { visit1, visit2, visit3 };
+        if (selectedVisitStructure === "three_visit_reset") {
+          const visit1 = Math.round(previewEstimate.priceCents * 0.45);
+          const visit2 = Math.round(previewEstimate.priceCents * 0.35);
+          const visit3 = Math.max(0, previewEstimate.priceCents - visit1 - visit2);
+          return { title: "Three-visit reset breakdown", visit1, visit2, visit3 };
+        }
+        if (selectedVisitStructure === "two_visit") {
+          const visit1 = Math.round(previewEstimate.priceCents * 0.6);
+          const visit2 = Math.max(0, previewEstimate.priceCents - visit1);
+          return { title: "Two-visit reset breakdown", visit1, visit2, visit3: null };
+        }
+        return null;
       })()
     : null;
   const recurringTimingText =
     reviewRecurringCadence && selectedVisitStructure === "three_visit_reset"
       ? `Reset visits are spaced 14 days apart. After Visit 3, recurring visits follow your ${recurringCadenceDisplay[reviewRecurringCadence]} cadence—the recurring line is priced separately from these opening visits.`
+      : reviewRecurringCadence && selectedVisitStructure === "two_visit"
+        ? `Opening reset visits are spaced 14 days apart. After Visit 2, recurring visits follow your ${recurringCadenceDisplay[reviewRecurringCadence]} cadence—the recurring line is priced separately from these opening visits.`
       : reviewRecurringCadence
         ? `The preview above is your first visit. Recurring visits on a ${recurringCadenceDisplay[reviewRecurringCadence]} cadence are quoted separately and typically begin after that visit—changing cadence mainly affects the recurring line, not necessarily this opening price.`
         : null;
@@ -520,6 +572,24 @@ export function BookingStepReview({
     isRecurringContract,
     onFirstTimePostEstimateVisitChoiceChange,
     state.firstTimePostEstimateVisitChoice,
+  ]);
+
+  useEffect(() => {
+    if (!estimatePreviewReady) return;
+    if (selectedVisitStructure === "three_visit_reset" && !showThreeVisitStructure) {
+      onFirstTimePostEstimateVisitChoiceChange(
+        showTwoVisitStructure ? "two_visit" : "one_visit",
+      );
+    }
+    if (selectedVisitStructure === "two_visit" && !showTwoVisitStructure) {
+      onFirstTimePostEstimateVisitChoiceChange("one_visit");
+    }
+  }, [
+    estimatePreviewReady,
+    onFirstTimePostEstimateVisitChoiceChange,
+    selectedVisitStructure,
+    showThreeVisitStructure,
+    showTwoVisitStructure,
   ]);
 
   function changeRecurringCadence(cadence: ReviewRecurringCadence) {
@@ -860,7 +930,7 @@ export function BookingStepReview({
                     {formatEstimateUsdFromCents(previewEstimate.priceCents)}
                   </p>
                   <p className="mt-4 font-[var(--font-manrope)] text-sm leading-6 text-white/80">
-                    Your price updates in real time based on your selections. Your choices stay visible as you move.
+                    The estimate reflects the details you’ve shared so far, and the key drivers remain nearby while you review.
                   </p>
                 </div>
                 <div className="grid gap-3">
@@ -910,12 +980,7 @@ export function BookingStepReview({
                     {BOOKING_POST_ESTIMATE_FIRST_TIME_BODY}
                   </p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    {(
-                      [
-                        ["one_visit", BOOKING_POST_ESTIMATE_VISIT_ONE],
-                        ["three_visit_reset", BOOKING_POST_ESTIMATE_VISIT_THREE],
-                      ] as const
-                    ).map(([value, label]) => {
+                    {visitStructureOptions.map(({ value, label, helper }) => {
                       const selected = selectedVisitStructure === value;
                       return (
                         <button
@@ -930,48 +995,47 @@ export function BookingStepReview({
                           }`}
                         >
                           <span className="font-semibold text-[#0F172A]">{label}</span>
-                          {value === "one_visit" ? (
-                            <span className="mt-2 block text-xs leading-5 text-[#64748B]">
-                              One visit completes the opening reset. Recurring begins after your first visit.
-                            </span>
-                          ) : (
-                            <span className="mt-2 block text-xs leading-5 text-[#64748B]">
-                              Three visits spread the reset over time. Visit 1 is a deep reset, Visit 2 is a continuation, and Visit 3 is finalization.
-                            </span>
-                          )}
+                          <span className="mt-2 block text-xs leading-5 text-[#64748B]">
+                            {helper}
+                          </span>
                         </button>
                       );
                     })}
                   </div>
-                  {selectedVisitStructure === "three_visit_reset" &&
-                  threeVisitBreakdown ? (
+                  {visitBreakdown ? (
                     <div
                       className="mt-4 rounded-2xl border border-[#C9B27C]/18 bg-white px-4 py-3"
-                      data-testid="booking-three-visit-breakdown"
+                      data-testid={
+                        selectedVisitStructure === "two_visit"
+                          ? "booking-two-visit-breakdown"
+                          : "booking-three-visit-breakdown"
+                      }
                     >
                       <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A]">
-                        Three-visit reset breakdown
+                        {visitBreakdown.title}
                       </p>
                       <div className="mt-3 grid gap-2 font-[var(--font-manrope)] text-sm text-[#0F172A] sm:grid-cols-2">
                         <p>
                           <span className="text-[#64748B]">Visit 1 price:</span>{" "}
-                          {formatEstimateUsdFromCents(threeVisitBreakdown.visit1)}
+                          {formatEstimateUsdFromCents(visitBreakdown.visit1)}
                         </p>
                         <p>
                           <span className="text-[#64748B]">Visit 2 price:</span>{" "}
-                          {formatEstimateUsdFromCents(threeVisitBreakdown.visit2)}
+                          {formatEstimateUsdFromCents(visitBreakdown.visit2)}
                         </p>
-                        <p>
-                          <span className="text-[#64748B]">Visit 3 price:</span>{" "}
-                          {formatEstimateUsdFromCents(threeVisitBreakdown.visit3)}
-                        </p>
+                        {visitBreakdown.visit3 != null ? (
+                          <p>
+                            <span className="text-[#64748B]">Visit 3 price:</span>{" "}
+                            {formatEstimateUsdFromCents(visitBreakdown.visit3)}
+                          </p>
+                        ) : null}
                         <p>
                           <span className="text-[#64748B]">Program total:</span>{" "}
                           {formatEstimateUsdFromCents(previewEstimate.priceCents)}
                         </p>
                       </div>
                       <p className="mt-3 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
-                        Reset visits are spaced 14 days apart. Recurring service begins after Visit 3.
+                        Reset visits are spaced 14 days apart. Recurring service begins after the opening reset is complete.
                       </p>
                     </div>
                   ) : null}
@@ -1066,40 +1130,67 @@ export function BookingStepReview({
               </details>
 
               <div className="rounded-2xl border border-[#C9B27C]/14 bg-[#FFFCF8] px-4 py-3">
-                <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                  {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_TITLE}
-                </p>
-                <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-                  {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_LEAD}
-                </p>
-                <p className="mt-4 font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                  {BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD}
-                </p>
-                <div className="mt-3 grid gap-3 sm:grid-cols-4">
-                  {(
-                    ["weekly", "every_10_days", "biweekly", "monthly"] as const
-                  ).map((cadence) => {
-                    const selected = reviewRecurringCadence === cadence;
-                    return (
-                      <button
-                        key={cadence}
-                        type="button"
-                        onClick={() => changeRecurringCadence(cadence)}
-                        className={`rounded-2xl border px-4 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
-                          selected
-                            ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
-                            : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
-                        }`}
-                      >
-                        <span className="font-semibold text-[#0F172A]">
-                          {recurringCadenceDisplay[cadence]}
-                        </span>
-                        <span className="mt-1 block text-xs leading-5 text-[#64748B]">
-                          {recurringCadenceReviewHelpers[cadence]}
-                        </span>
-                      </button>
-                    );
-                  })}
+                <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+                  <div>
+                    <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                      {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_TITLE}
+                    </p>
+                    <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
+                      {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_LEAD}
+                    </p>
+                    {recurringQuote ? (
+                      <div className="mt-4 rounded-2xl border border-[#0D9488]/18 bg-white px-4 py-3">
+                        <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                          Selected cadence economics
+                        </p>
+                        <p className="mt-2 font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.04em] text-[#0F172A]">
+                          {formatEstimateUsdFromCents(recurringQuote.recurringPriceCents)}
+                        </p>
+                        <p className="mt-1 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
+                          {formatEstimateDurationMinutes(recurringQuote.estimatedMinutes)} per maintenance visit
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                  <div>
+                    <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                      {BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD}
+                    </p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      {(
+                        ["weekly", "every_10_days", "biweekly", "monthly"] as const
+                      ).map((cadence) => {
+                        const selected = reviewRecurringCadence === cadence;
+                        const quote = recurringQuoteOptions.find(
+                          (option) => option.cadence === cadence,
+                        );
+                        return (
+                          <button
+                            key={cadence}
+                            type="button"
+                            onClick={() => changeRecurringCadence(cadence)}
+                            className={`rounded-2xl border px-4 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
+                              selected
+                                ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
+                                : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
+                            }`}
+                          >
+                            <span className="font-semibold text-[#0F172A]">
+                              {recurringCadenceDisplay[cadence]}
+                            </span>
+                            {quote ? (
+                              <span className="mt-1 block text-xs font-semibold leading-5 text-[#0F766E]">
+                                {formatEstimateUsdFromCents(quote.recurringPriceCents)}
+                              </span>
+                            ) : null}
+                            <span className="mt-1 block text-xs leading-5 text-[#64748B]">
+                              {recurringCadenceReviewHelpers[cadence]}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
               </div>
 

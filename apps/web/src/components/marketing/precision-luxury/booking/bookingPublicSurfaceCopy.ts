@@ -145,7 +145,7 @@ export const BOOKING_REVIEW_SUBMIT_TRY_AGAIN = "Try sending again";
 /** Step 4 — while the live quote is catching up to the latest selections. */
 export const BOOKING_REVIEW_ESTIMATE_REFRESHING_TITLE = "Updating your estimate";
 export const BOOKING_REVIEW_ESTIMATE_REFRESHING_BODY =
-  "We’re refreshing pricing for what you just selected—usually just a moment.";
+  "We’re updating the estimate from your latest details—usually just a moment.";
 
 /** Step 4 — preview could not be produced for the current inputs. */
 export const BOOKING_REVIEW_ESTIMATE_UNAVAILABLE_LEAD =
@@ -159,17 +159,17 @@ export const BOOKING_REVIEW_ESTIMATE_NONE_AFTER_FETCH =
 
 /** Submit control — disabled states (no jargon). */
 export const BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_REFRESHING =
-  "Wait for refreshed quote…";
+  "Wait for updated estimate…";
 export const BOOKING_REVIEW_SUBMIT_WHILE_QUOTE_NEEDS_ATTENTION =
   "Preview needed to send";
 export const BOOKING_REVIEW_SUBMIT_AFTER_DETAILS_CHANGE =
-  "Refresh quote to send";
+  "Update estimate to send";
 export const BOOKING_REVIEW_SUBMIT_ADD_CONTACT_FIRST =
   "Add contact details to continue";
 
 /** Shown on earlier steps as a gentle continuity cue (no jargon). */
 export const BOOKING_STEP_EDIT_CONTINUITY_HINT =
-  "When you return to review, pricing refreshes from these answers.";
+  "These answers shape the estimate and help the team prepare before arrival.";
 
 export function bookingConfirmationDeepPlanEchoLabel(
   program: BookingDeepCleanProgramChoice,
@@ -267,7 +267,7 @@ export const BOOKING_POST_ESTIMATE_FIRST_TIME_BODY =
 
 export const BOOKING_POST_ESTIMATE_VISIT_ONE = "Book as one visit";
 
-export const BOOKING_POST_ESTIMATE_VISIT_TWO = "Legacy phased option";
+export const BOOKING_POST_ESTIMATE_VISIT_TWO = "Split across 2 visits";
 
 export const BOOKING_POST_ESTIMATE_VISIT_THREE = "Spread across 3 visits";
 

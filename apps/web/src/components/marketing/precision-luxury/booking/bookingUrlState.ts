@@ -710,7 +710,7 @@ export function applyServiceLocationFieldChangeToBookingFlowState(
 
 const BOOKING_FIRST_TIME_POST_ESTIMATE_VALUES = new Set<
   BookingFirstTimePostEstimateVisitChoice
->(["", "one_visit", "three_visit_reset"]);
+>(["", "one_visit", "two_visit", "three_visit_reset"]);
 
 export function parseBookingFirstTimePostEstimateVisitChoiceParam(
   raw: string | null | undefined,
@@ -729,7 +729,11 @@ export function applyFirstTimePostEstimateVisitChoiceToBookingFlowState(
 ): BookingFlowState {
   const normalized = parseBookingFirstTimePostEstimateVisitChoiceParam(choice);
   const firstTimeVisitProgram =
-    normalized === "three_visit_reset" ? "three_visit" : "one_visit";
+    normalized === "three_visit_reset"
+      ? "three_visit"
+      : normalized === "two_visit"
+        ? "two_visit"
+        : "one_visit";
   const deepCleanProgram: BookingDeepCleanProgramChoice | "" =
     isDeepCleaningBookingServiceId(prev.serviceId)
       ? normalized === "three_visit_reset"

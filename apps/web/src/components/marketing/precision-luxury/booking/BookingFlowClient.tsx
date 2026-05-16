@@ -2709,53 +2709,81 @@ export function BookingFlowClient() {
       <main>
         <section className="mx-auto max-w-7xl px-6 py-6 md:px-8 md:py-9">
           <div className="overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:p-8">
-            <div className="grid gap-7 xl:grid-cols-[minmax(0,0.95fr)_minmax(300px,420px)] xl:items-start">
+            <div className="grid gap-7 xl:grid-cols-[minmax(0,0.98fr)_minmax(280px,360px)] xl:items-start">
               <div className="min-w-0 space-y-5 rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
                 <div>
                   <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
                     {BOOKING_FLOW_HERO_EYEBROW}
                   </p>
-                  <h1 className="mt-3 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] sm:text-5xl lg:text-[3.05rem]">
-                    {BOOKING_FLOW_HERO_HEADLINE}
+                  <h1
+                    className={
+                      state.step === "service"
+                        ? "mt-3 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] sm:text-5xl lg:text-[3.05rem]"
+                        : "mt-3 font-[var(--font-poppins)] text-3xl font-semibold leading-tight tracking-[-0.045em] text-[#0F172A] sm:text-4xl"
+                    }
+                  >
+                    {state.step === "service"
+                      ? BOOKING_FLOW_HERO_HEADLINE
+                      : state.step === "home"
+                        ? "Share the details that prepare the visit."
+                        : state.step === "review"
+                          ? "Review the estimate before choosing a team."
+                          : "Choose the team and arrival window."}
                   </h1>
                   <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-base leading-relaxed text-[#475569] md:text-lg md:leading-relaxed">
-                    {BOOKING_FLOW_HERO_BODY}
+                    {state.step === "service"
+                      ? BOOKING_FLOW_HERO_BODY
+                      : state.step === "home"
+                        ? "Home facts, arrival context, and follow-up details stay together so the estimate has the right operational context."
+                        : state.step === "review"
+                          ? "Keep pricing, cadence, and visit structure in view before we save the request and show availability."
+                          : "Select from available teams and times, then confirm the arrival details."}
                   </p>
-                  <ul className="mt-5 space-y-2 font-[var(--font-manrope)] text-sm font-medium text-[#334155] md:text-[15px]">
-                    <li className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
-                      {BOOKING_FLOW_HERO_BULLET_ACCURATE_PRICING}
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
-                      {BOOKING_FLOW_HERO_BULLET_CLEAR_EXPECTATIONS}
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
-                      {BOOKING_FLOW_HERO_BULLET_EASY_PROCESS}
-                    </li>
-                  </ul>
-                  <div className="mt-5 space-y-2 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
-                    <p>{BOOKING_FLOW_HERO_REALTIME_LINE}</p>
-                    <p>{BOOKING_FLOW_HERO_CLEAR_NUMBERS_LINE}</p>
-                    <p>{BOOKING_FLOW_HERO_NO_PRESSURE_LINE}</p>
-                  </div>
-                  <p className="mt-5 max-w-2xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-base leading-relaxed text-[#334155] md:text-lg">
-                    {BOOKING_FLOW_HERO_ACCOUNTABILITY}
-                  </p>
-                  <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
-                    {BOOKING_FLOW_HERO_OPERATIONAL_TRANSPARENCY}
-                  </p>
+                  {state.step === "service" ? (
+                    <>
+                      <ul className="mt-5 space-y-2 font-[var(--font-manrope)] text-sm font-medium text-[#334155] md:text-[15px]">
+                        <li className="flex gap-2">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
+                          {BOOKING_FLOW_HERO_BULLET_ACCURATE_PRICING}
+                        </li>
+                        <li className="flex gap-2">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
+                          {BOOKING_FLOW_HERO_BULLET_CLEAR_EXPECTATIONS}
+                        </li>
+                        <li className="flex gap-2">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
+                          {BOOKING_FLOW_HERO_BULLET_EASY_PROCESS}
+                        </li>
+                      </ul>
+                      <div className="mt-5 space-y-2 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
+                        <p>{BOOKING_FLOW_HERO_REALTIME_LINE}</p>
+                        <p>{BOOKING_FLOW_HERO_CLEAR_NUMBERS_LINE}</p>
+                        <p>{BOOKING_FLOW_HERO_NO_PRESSURE_LINE}</p>
+                      </div>
+                      <p className="mt-5 max-w-2xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-base leading-relaxed text-[#334155] md:text-lg">
+                        {BOOKING_FLOW_HERO_ACCOUNTABILITY}
+                      </p>
+                      <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
+                        {BOOKING_FLOW_HERO_OPERATIONAL_TRANSPARENCY}
+                      </p>
+                    </>
+                  ) : null}
                 </div>
               </div>
 
-              <div className="min-w-0 space-y-5 xl:sticky xl:top-24">
+              <div className="min-w-0 space-y-4 xl:sticky xl:top-24">
                 <div className="rounded-[24px] border border-[#C9B27C]/18 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)]">
                   <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
-                    Booking guidance
+                    Guidance
                   </p>
                   <p className="mt-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
-                    Choose the service, share the home and arrival details once, then review the estimate before selecting a team and time.
+                    {state.step === "service"
+                      ? "Choose the path that best matches the visit."
+                      : state.step === "home"
+                        ? "Add home, arrival, and contact details once."
+                        : state.step === "review"
+                          ? "Review estimate, cadence, and visit pacing together."
+                          : "Choose team and arrival timing."}
                   </p>
                 </div>
                 <BookingFlowProgress
@@ -2765,7 +2793,9 @@ export function BookingFlowClient() {
                     label: step.label,
                   }))}
                 />
-                <TrustMetricStrip items={BOOKING_TRUST_RIBBON_ITEMS} />
+                {state.step === "service" ? (
+                  <TrustMetricStrip items={BOOKING_TRUST_RIBBON_ITEMS} />
+                ) : null}
               </div>
             </div>
           </div>
@@ -2780,7 +2810,7 @@ export function BookingFlowClient() {
             }
           >
             <div className="min-w-0 space-y-8 pb-28 md:pb-0">
-              {state.step !== "service" ? (
+              {state.step === "review" || state.step === "schedule" ? (
                 <BookingServiceHandoffCard
                   serviceId={state.serviceId}
                   bookingPublicPath={state.bookingPublicPath}
@@ -3214,7 +3244,7 @@ export function BookingFlowClient() {
             </div>
 
             <aside className="min-w-0 space-y-6">
-              {state.step !== "service" ? (
+              {state.step === "review" || state.step === "schedule" ? (
                 <BookingSummaryCard
                   state={state}
                   step={state.step}
@@ -3222,7 +3252,7 @@ export function BookingFlowClient() {
                   previewLoading={previewLoading}
                   previewError={previewError}
                 />
-              ) : (
+              ) : state.step === "service" ? (
                 <section className="rounded-[32px] border border-[#C9B27C]/16 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.05)] sm:p-8">
                   <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
                     Before you begin
@@ -3234,7 +3264,7 @@ export function BookingFlowClient() {
                     The summary appears after you choose a path. Until then, the corridor stays focused on helping you make the right first choice.
                   </p>
                 </section>
-              )}
+              ) : null}
 
               <section className="rounded-[32px] border border-[#C9B27C]/16 bg-[#0F172A] p-6 text-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8">
                 <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">

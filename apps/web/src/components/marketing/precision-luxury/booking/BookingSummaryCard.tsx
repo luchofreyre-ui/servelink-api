@@ -9,7 +9,6 @@ import {
 import { getBookingHomeSizeRangeLabel } from "./bookingHomeSizeRanges";
 import {
   BOOKING_PLAN_SUMMARY_LABEL,
-  BOOKING_REVIEW_PRICE_UPDATES_LINE,
   BOOKING_REVIEW_SCOPE_PREDICTABILITY_LABEL,
   BOOKING_SCHEDULE_CLEANING_EFFORT_LABEL,
   bookingPlanClassificationSummary,
@@ -17,7 +16,6 @@ import {
 import { NU_STANDARD_OWNER_OPERATOR_SUMMARY } from "../content/nuStandardTrustPositioning";
 import {
   formatEstimateDurationMinutes,
-  formatEstimateUsdFromCents,
   formatScopePredictabilitySummary,
 } from "./bookingIntakePreviewDisplay";
 import type { FunnelReviewEstimate } from "./bookingFunnelLocalEstimate";
@@ -61,6 +59,8 @@ export function BookingSummaryCard({
       switch (state.firstTimePostEstimateVisitChoice) {
         case "three_visit_reset":
           return "3 visits";
+        case "two_visit":
+          return "2 visits";
         case "one_visit":
         default:
           return "1 visit";
@@ -133,15 +133,11 @@ export function BookingSummaryCard({
           {
             label: "Estimate",
             value: previewLoading
-              ? "Getting estimate…"
+              ? "Updating in review"
               : previewError
                 ? "See note in review"
                 : previewEstimate
-                  ? `${formatEstimateUsdFromCents(previewEstimate.priceCents)}${
-                      previewEstimate.source === "local"
-                        ? " (approx.)"
-                        : ""
-                    }`
+                  ? "Shown in review"
                   : "—",
           },
           ...(previewEstimate && !previewLoading && !previewError
@@ -201,7 +197,7 @@ export function BookingSummaryCard({
           Estimate guidance
         </p>
         <p className="mt-3 font-[var(--font-manrope)] text-sm leading-7 text-white">
-          {BOOKING_REVIEW_PRICE_UPDATES_LINE} Your review keeps the important details together so the estimate and scheduling step stay easy to understand.
+          The full estimate stays in the review step, alongside the choices that affect price, cadence, and visit pacing.
         </p>
       </div>
       <p className="mt-4 font-[var(--font-manrope)] text-xs leading-relaxed text-[#64748B]">
