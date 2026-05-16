@@ -59,10 +59,20 @@ function sanitizeMilestonePayload(
   const cadence = clampStr(payload?.cadence, 64);
   const surface = clampStr(payload?.surface, 64);
   const paymentSessionKey = clampStr(payload?.paymentSessionKey, 160);
+  const teamId = clampStr(payload?.teamId, 128);
+  const slotId = clampStr(payload?.slotId, 160);
+  const holdId = clampStr(payload?.holdId, 160);
+  const reasonCode = clampStr(payload?.reasonCode, 96);
+  const phase = clampStr(payload?.phase, 96);
   const out: Record<string, string> = {};
   if (cadence) out.cadence = cadence;
   if (surface) out.surface = surface;
   if (paymentSessionKey) out.paymentSessionKey = paymentSessionKey;
+  if (teamId) out.teamId = teamId;
+  if (slotId) out.slotId = slotId;
+  if (holdId) out.holdId = holdId;
+  if (reasonCode) out.reasonCode = reasonCode;
+  if (phase) out.phase = phase;
   return out as Prisma.InputJsonValue;
 }
 
@@ -166,6 +176,124 @@ export class PublicBookingFunnelMilestoneService {
           note: "Public booking review viewed",
           payload: {
             funnelMilestone: "REVIEW_VIEWED",
+            ...(typeof args.payload === "object" &&
+            args.payload !== null &&
+            !Array.isArray(args.payload)
+              ? (args.payload as object)
+              : {}),
+          } as Prisma.InputJsonValue,
+        });
+      case "REVIEW_SUBMITTED":
+        return this.createIdempotentNote({
+          bookingId: args.bookingId,
+          idempotencyKey: `pb-funnel:review_submitted:${args.bookingId}`,
+          note: "Public booking review submitted",
+          payload: {
+            funnelMilestone: "REVIEW_SUBMITTED",
+            ...(typeof args.payload === "object" &&
+            args.payload !== null &&
+            !Array.isArray(args.payload)
+              ? (args.payload as object)
+              : {}),
+          } as Prisma.InputJsonValue,
+        });
+      case "SCHEDULE_REACHED":
+        return this.createIdempotentNote({
+          bookingId: args.bookingId,
+          idempotencyKey: `pb-funnel:schedule_reached:${args.bookingId}`,
+          note: "Public booking schedule step reached",
+          payload: {
+            funnelMilestone: "SCHEDULE_REACHED",
+            ...(typeof args.payload === "object" &&
+            args.payload !== null &&
+            !Array.isArray(args.payload)
+              ? (args.payload as object)
+              : {}),
+          } as Prisma.InputJsonValue,
+        });
+      case "TEAM_SELECTED": {
+        const obj = args.payload as Record<string, unknown>;
+        const teamId =
+          typeof obj?.teamId === "string" ? obj.teamId.trim().slice(0, 128) : "";
+        if (!teamId) return false;
+        return this.createIdempotentNote({
+          bookingId: args.bookingId,
+          idempotencyKey: `pb-funnel:team_selected:${args.bookingId}:${teamId}`,
+          note: "Public booking team selected",
+          payload: {
+            funnelMilestone: "TEAM_SELECTED",
+            teamId,
+          } as Prisma.InputJsonValue,
+        });
+      }
+      case "SLOT_SELECTED": {
+        const obj = args.payload as Record<string, unknown>;
+        const teamId =
+          typeof obj?.teamId === "string" ? obj.teamId.trim().slice(0, 128) : "";
+        const slotId =
+          typeof obj?.slotId === "string" ? obj.slotId.trim().slice(0, 160) : "";
+        if (!teamId && !slotId) return false;
+        return this.createIdempotentNote({
+          bookingId: args.bookingId,
+          idempotencyKey: `pb-funnel:slot_selected:${args.bookingId}:${slotId || teamId}`,
+          note: "Public booking slot selected",
+          payload: {
+            funnelMilestone: "SLOT_SELECTED",
+            ...(teamId ? { teamId } : {}),
+            ...(slotId ? { slotId } : {}),
+          } as Prisma.InputJsonValue,
+        });
+      }
+      case "HOLD_CREATED": {
+        const obj = args.payload as Record<string, unknown>;
+        const holdId =
+          typeof obj?.holdId === "string" ? obj.holdId.trim().slice(0, 160) : "";
+        if (!holdId) return false;
+        return this.createIdempotentNote({
+          bookingId: args.bookingId,
+          idempotencyKey: `pb-funnel:hold_created:${args.bookingId}:${holdId}`,
+          note: "Public booking slot hold created",
+          payload: {
+            funnelMilestone: "HOLD_CREATED",
+            holdId,
+          } as Prisma.InputJsonValue,
+        });
+      }
+      case "HOLD_FAILED":
+        await this.createEphemeralNote({
+          bookingId: args.bookingId,
+          note: "Public booking slot hold failed",
+          payload: {
+            funnelMilestone: "HOLD_FAILED",
+            ...(typeof args.payload === "object" &&
+            args.payload !== null &&
+            !Array.isArray(args.payload)
+              ? (args.payload as object)
+              : {}),
+          } as Prisma.InputJsonValue,
+        });
+        return true;
+      case "CONFIRM_FAILED":
+        await this.createEphemeralNote({
+          bookingId: args.bookingId,
+          note: "Public booking confirmation failed",
+          payload: {
+            funnelMilestone: "CONFIRM_FAILED",
+            ...(typeof args.payload === "object" &&
+            args.payload !== null &&
+            !Array.isArray(args.payload)
+              ? (args.payload as object)
+              : {}),
+          } as Prisma.InputJsonValue,
+        });
+        return true;
+      case "BOOKING_CONFIRMED":
+        return this.createIdempotentNote({
+          bookingId: args.bookingId,
+          idempotencyKey: `pb-funnel:booking_confirmed:${args.bookingId}`,
+          note: "Public booking confirmed from funnel",
+          payload: {
+            funnelMilestone: "BOOKING_CONFIRMED",
             ...(typeof args.payload === "object" &&
             args.payload !== null &&
             !Array.isArray(args.payload)

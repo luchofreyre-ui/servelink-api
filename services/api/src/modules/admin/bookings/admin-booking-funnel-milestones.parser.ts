@@ -12,12 +12,25 @@ export type AdminBookingFunnelMilestoneRow = {
   cadence?: string | null;
   /** Truncated / opaque hint for deposit submit sessions — never full secrets. */
   sessionHint?: string | null;
+  teamId?: string | null;
+  slotId?: string | null;
+  holdId?: string | null;
+  reasonCode?: string | null;
+  phase?: string | null;
 };
 
 const ALLOWED = new Set<string>(PUBLIC_BOOKING_FUNNEL_MILESTONE_KEYS);
 
 const NOTE_FALLBACK: Record<string, string> = {
   "Public booking review viewed": "REVIEW_VIEWED",
+  "Public booking review submitted": "REVIEW_SUBMITTED",
+  "Public booking schedule step reached": "SCHEDULE_REACHED",
+  "Public booking team selected": "TEAM_SELECTED",
+  "Public booking slot selected": "SLOT_SELECTED",
+  "Public booking slot hold created": "HOLD_CREATED",
+  "Public booking slot hold failed": "HOLD_FAILED",
+  "Public booking confirmation failed": "CONFIRM_FAILED",
+  "Public booking confirmed from funnel": "BOOKING_CONFIRMED",
   "Public booking deposit UI reached": "DEPOSIT_UI_REACHED",
   "Public booking deposit submission initiated": "DEPOSIT_SUBMIT_INITIATED",
   "Public booking review abandon signal": "REVIEW_ABANDONED",
@@ -53,6 +66,12 @@ function sanitizeSurface(raw: unknown): string | null {
   if (typeof raw !== "string") return null;
   const s = raw.trim();
   return s ? s.slice(0, 64) : null;
+}
+
+function sanitizeDetail(raw: unknown, max = 160): string | null {
+  if (typeof raw !== "string") return null;
+  const s = raw.trim();
+  return s ? s.slice(0, max) : null;
 }
 
 function milestoneFromPayload(payload: Record<string, unknown>): string | null {
@@ -121,6 +140,11 @@ export function parseBookingEventToFunnelRow(args: {
   let surface: string | null = null;
   let cadence: string | null = null;
   let sessionHint: string | null = null;
+  let teamId: string | null = null;
+  let slotId: string | null = null;
+  let holdId: string | null = null;
+  let reasonCode: string | null = null;
+  let phase: string | null = null;
 
   if (payload) {
     milestone =
@@ -128,6 +152,11 @@ export function parseBookingEventToFunnelRow(args: {
       milestoneFromDepositCapturedPayload(payload, args.note);
     surface = sanitizeSurface(payload.surface);
     cadence = sanitizeCadence(payload.cadence);
+    teamId = sanitizeDetail(payload.teamId, 128);
+    slotId = sanitizeDetail(payload.slotId, 160);
+    holdId = sanitizeDetail(payload.holdId, 160);
+    reasonCode = sanitizeDetail(payload.reasonCode, 96);
+    phase = sanitizeDetail(payload.phase, 96);
     const psk = payload.paymentSessionKey;
     if (typeof psk === "string" && psk.trim()) {
       sessionHint = clampHint(psk.trim(), 32);
@@ -164,6 +193,11 @@ export function parseBookingEventToFunnelRow(args: {
     surface,
     cadence,
     sessionHint,
+    teamId,
+    slotId,
+    holdId,
+    reasonCode,
+    phase,
   };
 }
 
@@ -192,6 +226,11 @@ export function parseIntakeFunnelMilestoneRows(
       sessionHint: p && typeof p.paymentSessionKey === "string"
         ? clampHint(p.paymentSessionKey.trim(), 32)
         : null,
+      teamId: p ? sanitizeDetail(p.teamId, 128) : null,
+      slotId: p ? sanitizeDetail(p.slotId, 160) : null,
+      holdId: p ? sanitizeDetail(p.holdId, 160) : null,
+      reasonCode: p ? sanitizeDetail(p.reasonCode, 96) : null,
+      phase: p ? sanitizeDetail(p.phase, 96) : null,
     });
   }
   return out;
