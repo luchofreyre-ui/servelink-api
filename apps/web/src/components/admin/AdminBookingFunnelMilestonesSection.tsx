@@ -10,6 +10,14 @@ import {
 function milestoneDisplayLabel(milestone: string): string {
   const map: Record<string, string> = {
     REVIEW_VIEWED: "Review viewed",
+    REVIEW_SUBMITTED: "Review submitted",
+    SCHEDULE_REACHED: "Schedule reached",
+    TEAM_SELECTED: "Team selected",
+    SLOT_SELECTED: "Slot selected",
+    HOLD_CREATED: "Hold created",
+    HOLD_FAILED: "Hold failed",
+    CONFIRM_FAILED: "Confirm failed",
+    BOOKING_CONFIRMED: "Booking confirmed",
     REVIEW_ABANDONED: "Review abandoned",
     DEPOSIT_UI_REACHED: "Deposit UI reached",
     DEPOSIT_SUBMIT_INITIATED: "Pay clicked (deposit submit)",
@@ -176,8 +184,36 @@ export function AdminBookingFunnelMilestonesSection(props: {
                       Session ref: {row.sessionHint}
                     </span>
                   ) : null}
+                  {row.phase ? (
+                    <span className="block text-white/55">Phase: {row.phase}</span>
+                  ) : null}
+                  {row.reasonCode ? (
+                    <span className="block text-white/55">
+                      Reason: {row.reasonCode}
+                    </span>
+                  ) : null}
+                  {row.teamId ? (
+                    <span className="block font-mono text-[11px] text-white/45">
+                      Team: {row.teamId}
+                    </span>
+                  ) : null}
+                  {row.slotId ? (
+                    <span className="block font-mono text-[11px] text-white/45">
+                      Slot: {row.slotId}
+                    </span>
+                  ) : null}
+                  {row.holdId ? (
+                    <span className="block font-mono text-[11px] text-white/45">
+                      Hold: {row.holdId}
+                    </span>
+                  ) : null}
                   {!row.surface &&
                   !row.sessionHint &&
+                  !row.phase &&
+                  !row.reasonCode &&
+                  !row.teamId &&
+                  !row.slotId &&
+                  !row.holdId &&
                   !(
                     row.milestone === "RECURRING_CADENCE_SELECTED" && row.cadence
                   ) ? (

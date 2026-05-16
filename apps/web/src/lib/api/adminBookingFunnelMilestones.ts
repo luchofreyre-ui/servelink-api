@@ -8,6 +8,11 @@ export type AdminBookingFunnelMilestoneRow = {
   surface?: string | null;
   cadence?: string | null;
   sessionHint?: string | null;
+  teamId?: string | null;
+  slotId?: string | null;
+  holdId?: string | null;
+  reasonCode?: string | null;
+  phase?: string | null;
 };
 
 export type AdminBookingFunnelMilestonesPayload = {

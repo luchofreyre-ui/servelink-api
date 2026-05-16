@@ -1690,6 +1690,18 @@ export function BookingFlowClient() {
           teamId: s.selectedTeamId,
           holdId,
         });
+        postPublicBookingFunnelMilestone({
+          milestone: "BOOKING_CONFIRMED",
+          bookingId,
+          ...(s.schedulingIntakeId.trim()
+            ? { intakeId: s.schedulingIntakeId.trim() }
+            : {}),
+          payload: {
+            holdId,
+            teamId: s.selectedTeamId,
+            phase: "deposit_finalize",
+          },
+        });
         clearDepositUi();
         clearBookingConfirmationPaymentSessionState(bookingId);
         setScheduleCommitError(null);
@@ -1792,6 +1804,12 @@ export function BookingFlowClient() {
     setScheduleSurfaceError(null);
     setScheduleCommitError(null);
     setScheduleCommitPhase("none");
+    postPublicBookingFunnelMilestone({
+      milestone: "SCHEDULE_REACHED",
+      bookingId,
+      ...(intakeId ? { intakeId } : {}),
+      payload: { surface: "deposit_satisfied" },
+    });
     setState((prev) =>
       clampBookingStepToStructuralMax({
         ...prev,
@@ -2102,6 +2120,12 @@ export function BookingFlowClient() {
         result.bookingId &&
         result.estimate
       ) {
+        postPublicBookingFunnelMilestone({
+          milestone: "REVIEW_SUBMITTED",
+          bookingId: result.bookingId,
+          intakeId: result.intakeId,
+          payload: { surface: "review_submit" },
+        });
         writeBookingConfirmationSessionSnapshot({
           intakeId: result.intakeId,
           bookingId: result.bookingId ?? "",
@@ -2263,6 +2287,18 @@ export function BookingFlowClient() {
         startAt: state.selectedSlotStart,
         endAt: state.selectedSlotEnd,
       });
+      postPublicBookingFunnelMilestone({
+        milestone: "HOLD_CREATED",
+        bookingId: state.schedulingBookingId,
+        ...(state.schedulingIntakeId.trim()
+          ? { intakeId: state.schedulingIntakeId.trim() }
+          : {}),
+        payload: {
+          holdId: hold.holdId,
+          teamId: state.selectedTeamId,
+          slotId: state.selectedSlotId.trim(),
+        },
+      });
       try {
         await postPublicBookingConfirm(
           {
@@ -2278,6 +2314,25 @@ export function BookingFlowClient() {
           bookingId: state.schedulingBookingId,
           teamId: state.selectedTeamId,
           holdId: hold.holdId,
+        });
+        postPublicBookingFunnelMilestone({
+          milestone: "CONFIRM_FAILED",
+          bookingId: state.schedulingBookingId,
+          ...(state.schedulingIntakeId.trim()
+            ? { intakeId: state.schedulingIntakeId.trim() }
+            : {}),
+          payload: {
+            holdId: hold.holdId,
+            teamId: state.selectedTeamId,
+            phase:
+              confirmErr instanceof PublicBookingPaymentRequiredError
+                ? "payment_required"
+                : "confirm_hold",
+            reasonCode:
+              confirmErr instanceof PublicBookingPaymentRequiredError
+                ? confirmErr.code
+                : undefined,
+          },
         });
         if (
           confirmErr instanceof PublicBookingPaymentRequiredError &&
@@ -2301,6 +2356,18 @@ export function BookingFlowClient() {
         teamId: state.selectedTeamId,
         holdId: hold.holdId,
       });
+      postPublicBookingFunnelMilestone({
+        milestone: "BOOKING_CONFIRMED",
+        bookingId: state.schedulingBookingId,
+        ...(state.schedulingIntakeId.trim()
+          ? { intakeId: state.schedulingIntakeId.trim() }
+          : {}),
+        payload: {
+          holdId: hold.holdId,
+          teamId: state.selectedTeamId,
+          phase: "schedule_confirm",
+        },
+      });
       setState((prev) => ({
         ...prev,
         schedulingConfirmed: true,
@@ -2318,6 +2385,20 @@ export function BookingFlowClient() {
         teamId: state.selectedTeamId,
         startAt: state.selectedSlotStart,
         endAt: state.selectedSlotEnd,
+      });
+      postPublicBookingFunnelMilestone({
+        milestone: "HOLD_FAILED",
+        bookingId: state.schedulingBookingId,
+        ...(state.schedulingIntakeId.trim()
+          ? { intakeId: state.schedulingIntakeId.trim() }
+          : {}),
+        payload: {
+          teamId: state.selectedTeamId,
+          slotId: state.selectedSlotId.trim(),
+          phase: isStaleSlotApiError(holdErr) ? "stale_slot" : "hold",
+          reasonCode:
+            holdErr instanceof PublicBookingApiError ? holdErr.code : undefined,
+        },
       });
       if (isStaleSlotApiError(holdErr)) {
         invalidateSelectedSlot();
@@ -2365,6 +2446,18 @@ export function BookingFlowClient() {
         holdId: pendingConfirmHoldId.trim(),
         retry: true,
       });
+      postPublicBookingFunnelMilestone({
+        milestone: "BOOKING_CONFIRMED",
+        bookingId: state.schedulingBookingId,
+        ...(state.schedulingIntakeId.trim()
+          ? { intakeId: state.schedulingIntakeId.trim() }
+          : {}),
+        payload: {
+          holdId: pendingConfirmHoldId.trim(),
+          teamId: state.selectedTeamId,
+          phase: "schedule_confirm_retry",
+        },
+      });
       setScheduleCommitError(null);
       setScheduleCommitPhase("none");
       const holdId = pendingConfirmHoldId.trim();
@@ -2384,6 +2477,23 @@ export function BookingFlowClient() {
       emitBookingFunnelEvent("confirm_failed", {
         bookingId: state.schedulingBookingId,
         retry: true,
+      });
+      postPublicBookingFunnelMilestone({
+        milestone: "CONFIRM_FAILED",
+        bookingId: state.schedulingBookingId,
+        ...(state.schedulingIntakeId.trim()
+          ? { intakeId: state.schedulingIntakeId.trim() }
+          : {}),
+        payload: {
+          holdId: pendingConfirmHoldId.trim(),
+          teamId: state.selectedTeamId,
+          phase:
+            err instanceof PublicBookingPaymentRequiredError
+              ? "payment_required_retry"
+              : "confirm_retry",
+          reasonCode:
+            err instanceof PublicBookingPaymentRequiredError ? err.code : undefined,
+        },
       });
       if (
         err instanceof PublicBookingPaymentRequiredError &&
@@ -2607,6 +2717,14 @@ export function BookingFlowClient() {
         teams.find((t) => t.isRecommended)?.id ?? teams[0]?.id ?? null,
       bookingId: state.schedulingBookingId,
     });
+    postPublicBookingFunnelMilestone({
+      milestone: "TEAM_SELECTED",
+      bookingId: state.schedulingBookingId,
+      ...(state.schedulingIntakeId.trim()
+        ? { intakeId: state.schedulingIntakeId.trim() }
+        : {}),
+      payload: { teamId: team.id },
+    });
     setState((prev) =>
       clampBookingStepToStructuralMax({
         ...prev,
@@ -2633,6 +2751,17 @@ export function BookingFlowClient() {
       endAt,
       teamId: state.selectedTeamId,
       bookingId: state.schedulingBookingId,
+    });
+    postPublicBookingFunnelMilestone({
+      milestone: "SLOT_SELECTED",
+      bookingId: state.schedulingBookingId,
+      ...(state.schedulingIntakeId.trim()
+        ? { intakeId: state.schedulingIntakeId.trim() }
+        : {}),
+      payload: {
+        teamId: state.selectedTeamId,
+        slotId: slotId?.trim() || "",
+      },
     });
     setState((prev) =>
       clampBookingStepToStructuralMax({

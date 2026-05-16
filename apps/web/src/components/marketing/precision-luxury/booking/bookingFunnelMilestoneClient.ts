@@ -3,6 +3,14 @@ import { API_BASE_URL } from "@/lib/api";
 /** Mirrors `PUBLIC_BOOKING_FUNNEL_MILESTONE_KEYS` on the API (minus server-only kinds clients must not send). */
 export type PublicBookingFunnelMilestoneClientKey =
   | "REVIEW_VIEWED"
+  | "REVIEW_SUBMITTED"
+  | "SCHEDULE_REACHED"
+  | "TEAM_SELECTED"
+  | "SLOT_SELECTED"
+  | "HOLD_CREATED"
+  | "HOLD_FAILED"
+  | "CONFIRM_FAILED"
+  | "BOOKING_CONFIRMED"
   | "REVIEW_ABANDONED"
   | "DEPOSIT_SUBMIT_INITIATED"
   | "BOOKING_REENTRY"
@@ -12,6 +20,11 @@ export type PublicBookingFunnelMilestonePayload = {
   cadence?: string;
   surface?: string;
   paymentSessionKey?: string;
+  teamId?: string;
+  slotId?: string;
+  holdId?: string;
+  reasonCode?: string;
+  phase?: string;
 };
 
 /**

@@ -32,14 +32,49 @@ describe("admin-booking-funnel-milestones.parser", () => {
     expect(row?.milestone).toBe("DEPOSIT_UI_REACHED");
   });
 
+  it("surfaces schedule transition diagnostics from payload", () => {
+    const row = parseBookingEventToFunnelRow({
+      id: "ev3",
+      createdAt: new Date("2026-05-01T12:10:00.000Z"),
+      note: "Public booking confirmation failed",
+      payload: {
+        funnelMilestone: "CONFIRM_FAILED",
+        teamId: "fo_north",
+        slotId: "slot_123",
+        holdId: "hold_123",
+        phase: "payment_required",
+        reasonCode: "PAYMENT_REQUIRED",
+      },
+      idempotencyKey: null,
+      bookingId,
+    });
+
+    expect(row).toEqual(
+      expect.objectContaining({
+        milestone: "CONFIRM_FAILED",
+        teamId: "fo_north",
+        slotId: "slot_123",
+        holdId: "hold_123",
+        phase: "payment_required",
+        reasonCode: "PAYMENT_REQUIRED",
+        source: "booking_event",
+      }),
+    );
+  });
+
   it("parses intake rows and drops unknown keys", () => {
     const rows = parseIntakeFunnelMilestoneRows([
       { at: "not-a-date", k: "REVIEW_VIEWED", p: {} },
-      { at: "2026-05-01T11:00:00.000Z", k: "REVIEW_VIEWED", p: {} },
+      {
+        at: "2026-05-01T11:00:00.000Z",
+        k: "TEAM_SELECTED",
+        p: { teamId: "fo_a" },
+      },
       { k: "UNKNOWN_THING", p: {} },
     ]);
     expect(rows).toHaveLength(2);
     expect(rows[1]?.occurredAt).toContain("2026-05-01");
+    expect(rows[1]?.teamId).toBe("fo_a");
     expect(rows[0]?.occurredAt).toBeNull();
   });
 
