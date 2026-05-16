@@ -355,10 +355,16 @@ export const BOOKING_SCHEDULE_NO_SLOTS_TRY_OTHER_TEAM_CTA = "Switch team";
 export const BOOKING_SCHEDULE_NO_SLOTS_BACK_TO_REVIEW_CTA = "Back to review";
 
 export const BOOKING_SCHEDULE_HOLD_FAILED =
-  "That time is no longer available. Please choose another time.";
+  "That time was released and is no longer available. Please choose another available time.";
 
 export const BOOKING_SCHEDULE_HOLD_FAILED_HINT =
   "Open times for this team were refreshed—pick another window below.";
+
+export const BOOKING_SCHEDULE_HOLD_REFRESHED =
+  "We refreshed your temporary hold for this time.";
+
+export const BOOKING_SCHEDULE_HOLD_REFRESH_FAILED =
+  "We could not refresh that time. Please choose another available opening.";
 
 export const BOOKING_SCHEDULE_CONFIRM_FAILED =
   "We couldn’t finalize your booking. Please try again.";

@@ -57,6 +57,8 @@ import {
   BOOKING_REVIEW_PAYMENT_COULD_NOT_START,
   BOOKING_REVIEW_PAYMENT_UNAVAILABLE_ENV,
   BOOKING_SCHEDULE_HOLD_FAILED,
+  BOOKING_SCHEDULE_HOLD_REFRESH_FAILED,
+  BOOKING_SCHEDULE_HOLD_REFRESHED,
   BOOKING_SERVICE_STEP_RECURRING_CONTINUE_BLOCKED,
   BOOKING_TRUST_RIBBON_ITEMS,
   PUBLIC_BOOKING_ORCHESTRATOR_LOCATION_NOT_RESOLVED_CODE,
@@ -172,6 +174,11 @@ const PUBLIC_BOOKING_STALE_SLOT_CODES = new Set([
   "PUBLIC_BOOKING_SLOT_NOT_AVAILABLE",
   "PUBLIC_BOOKING_INVALID_SLOT_ID",
   "PUBLIC_BOOKING_SLOT_IN_PAST",
+]);
+const PUBLIC_BOOKING_EXPIRED_SLOT_OR_HOLD_CODES = new Set([
+  "PUBLIC_BOOKING_INVALID_SLOT_ID",
+  "PUBLIC_BOOKING_HOLD_EXPIRED",
+  "BOOKING_SLOT_HOLD_EXPIRED",
 ]);
 
 function getStepOrder(step: BookingStepId) {
@@ -736,6 +743,124 @@ export function BookingFlowClient() {
 
   function isStaleSlotApiError(err: unknown): boolean {
     return err instanceof PublicBookingApiError && PUBLIC_BOOKING_STALE_SLOT_CODES.has(err.code);
+  }
+
+  function isExpiredSlotOrHoldError(err: unknown): boolean {
+    if (
+      err instanceof PublicBookingApiError &&
+      PUBLIC_BOOKING_EXPIRED_SLOT_OR_HOLD_CODES.has(err.code)
+    ) {
+      return true;
+    }
+    const message = err instanceof Error ? err.message : String(err ?? "");
+    return [...PUBLIC_BOOKING_EXPIRED_SLOT_OR_HOLD_CODES].some((code) =>
+      message.includes(code),
+    );
+  }
+
+  function sameSlotTime(aStart: string, aEnd: string, bStart: string, bEnd: string) {
+    const as = new Date(aStart);
+    const ae = new Date(aEnd);
+    const bs = new Date(bStart);
+    const be = new Date(bEnd);
+    return (
+      Number.isFinite(as.getTime()) &&
+      Number.isFinite(ae.getTime()) &&
+      as.getTime() === bs.getTime() &&
+      ae.getTime() === be.getTime()
+    );
+  }
+
+  async function refreshSelectedSlotForExpiredHoldRecovery(
+    snapshot: BookingFlowState,
+  ): Promise<
+    | {
+        status: "available";
+        slot: {
+          slotId: string;
+          startAt: string;
+          endAt: string;
+          durationMinutes?: number;
+        };
+      }
+    | { status: "unavailable" }
+    | { status: "failed" }
+  > {
+    const bookingId = snapshot.schedulingBookingId.trim();
+    const teamId = snapshot.selectedTeamId.trim();
+    const selectedStart = snapshot.selectedSlotStart.trim();
+    const selectedEnd = snapshot.selectedSlotEnd.trim();
+    if (!bookingId || !teamId || !selectedStart || !selectedEnd) {
+      return { status: "failed" };
+    }
+
+    setWindowsLoading(true);
+    try {
+      const res = await postPublicBookingAvailability({ bookingId, foId: teamId });
+      if (res.kind !== "public_booking_team_availability") {
+        return { status: "failed" };
+      }
+
+      const st = res.selectedTeam;
+      if (st?.id?.trim() === teamId) {
+        setScheduleTeamDurationContext({
+          teamId,
+          assignedCrewSize:
+            typeof st.assignedCrewSize === "number" &&
+            Number.isFinite(st.assignedCrewSize)
+              ? st.assignedCrewSize
+              : null,
+          estimatedInHomeMinutes:
+            typeof st.estimatedDurationMinutes === "number" &&
+            Number.isFinite(st.estimatedDurationMinutes)
+              ? st.estimatedDurationMinutes
+              : null,
+        });
+      }
+
+      const windows = (res.windows ?? []).map((w) => ({
+        slotId: w.slotId,
+        startAt: w.startAt,
+        endAt: w.endAt,
+        durationMinutes: w.durationMinutes,
+      }));
+      const match = windows.find((w) =>
+        sameSlotTime(selectedStart, selectedEnd, w.startAt, w.endAt),
+      );
+
+      setState((prev) => ({
+        ...prev,
+        availableWindows: windows,
+        ...(match
+          ? {
+              selectedSlotId: match.slotId?.trim() || "",
+              selectedSlotStart: match.startAt,
+              selectedSlotEnd: match.endAt,
+              schedulingConfirmed: false,
+              publicHoldId: "",
+            }
+          : {
+              selectedSlotId: "",
+              selectedSlotStart: "",
+              selectedSlotEnd: "",
+              schedulingConfirmed: false,
+              publicHoldId: "",
+            }),
+      }));
+      setSlotsEmptyForTeam(windows.length === 0);
+
+      if (!match?.slotId?.trim()) {
+        setScheduleCommitError(BOOKING_SCHEDULE_HOLD_FAILED);
+        setScheduleCommitPhase("hold_failed");
+        return { status: "unavailable" };
+      }
+      return { status: "available", slot: match };
+    } catch {
+      return { status: "failed" };
+    } finally {
+      setWindowsLoading(false);
+      setWindowsLoadSlowHint(false);
+    }
   }
 
   useEffect(() => {
@@ -2285,6 +2410,126 @@ export function BookingFlowClient() {
     void bootstrapReviewDepositPayment(bookingId, holdId);
   }
 
+  async function recoverExpiredSelectedSlotAndConfirm(): Promise<boolean> {
+    const snapshot = stateRefForBookingUrl.current;
+    const bookingId = snapshot.schedulingBookingId.trim();
+    const teamId = snapshot.selectedTeamId.trim();
+    const selectedStart = snapshot.selectedSlotStart.trim();
+    const selectedEnd = snapshot.selectedSlotEnd.trim();
+    if (!bookingId || !teamId || !selectedStart || !selectedEnd) {
+      setScheduleCommitError(BOOKING_SCHEDULE_HOLD_REFRESH_FAILED);
+      setScheduleCommitPhase("hold_failed");
+      return true;
+    }
+
+    const refreshed = await refreshSelectedSlotForExpiredHoldRecovery(snapshot);
+    if (refreshed.status === "unavailable") {
+      setPendingConfirmHoldId(null);
+      setWindowsRefreshKey((k) => k + 1);
+      return true;
+    }
+    if (refreshed.status === "failed") {
+      setScheduleCommitError(BOOKING_SCHEDULE_HOLD_REFRESH_FAILED);
+      setScheduleCommitPhase("hold_failed");
+      setWindowsRefreshKey((k) => k + 1);
+      return true;
+    }
+
+    setScheduleCommitError(BOOKING_SCHEDULE_HOLD_REFRESHED);
+    setScheduleCommitPhase("none");
+    let hold: Awaited<ReturnType<typeof postPublicBookingHold>>;
+    try {
+      hold = await postPublicBookingHold({
+        bookingId,
+        slotId: refreshed.slot.slotId.trim(),
+        foId: teamId,
+        startAt: refreshed.slot.startAt,
+        endAt: refreshed.slot.endAt,
+      });
+    } catch {
+      setPendingConfirmHoldId(null);
+      setScheduleCommitError(BOOKING_SCHEDULE_HOLD_REFRESH_FAILED);
+      setScheduleCommitPhase("hold_failed");
+      setWindowsRefreshKey((k) => k + 1);
+      return true;
+    }
+
+    postPublicBookingFunnelMilestone({
+      milestone: "HOLD_CREATED",
+      bookingId,
+      ...(snapshot.schedulingIntakeId.trim()
+        ? { intakeId: snapshot.schedulingIntakeId.trim() }
+        : {}),
+      payload: {
+        holdId: hold.holdId,
+        teamId,
+        slotId: refreshed.slot.slotId.trim(),
+        phase: "expired_hold_recovery",
+      },
+    });
+
+    try {
+      await postPublicBookingConfirm(
+        {
+          bookingId,
+          holdId: hold.holdId,
+          requestedEnhancementIds,
+        },
+        scheduleConfirmIdempotencyKeyRef.current,
+      );
+    } catch (confirmErr) {
+      if (
+        confirmErr instanceof PublicBookingPaymentRequiredError &&
+        confirmErr.code === "PAYMENT_REQUIRED"
+      ) {
+        handlePublicBookingPaymentRequiredFromConfirm({
+          error: confirmErr,
+          bookingId,
+          holdId: hold.holdId,
+          expiresAt: hold.expiresAt,
+        });
+        return true;
+      }
+      setPendingConfirmHoldId(hold.holdId);
+      setScheduleCommitError(BOOKING_SCHEDULE_CONFIRM_FAILED);
+      setScheduleCommitPhase("confirm_failed");
+      return true;
+    }
+
+    emitBookingFunnelEvent("booking_confirmed", {
+      bookingId,
+      teamId,
+      holdId: hold.holdId,
+      phase: "expired_hold_recovery",
+    });
+    postPublicBookingFunnelMilestone({
+      milestone: "BOOKING_CONFIRMED",
+      bookingId,
+      ...(snapshot.schedulingIntakeId.trim()
+        ? { intakeId: snapshot.schedulingIntakeId.trim() }
+        : {}),
+      payload: {
+        holdId: hold.holdId,
+        teamId,
+        phase: "expired_hold_recovery",
+      },
+    });
+    setState((prev) => ({
+      ...prev,
+      selectedSlotId: refreshed.slot.slotId.trim(),
+      selectedSlotStart: refreshed.slot.startAt,
+      selectedSlotEnd: refreshed.slot.endAt,
+      schedulingConfirmed: true,
+      publicHoldId: hold.holdId,
+    }));
+    const q = new URLSearchParams();
+    q.set("intakeId", snapshot.schedulingIntakeId.trim());
+    q.set("bookingId", bookingId);
+    appendPublicIntakeContextToSearchParams(q, snapshot);
+    router.push(`/book/confirmation?${q.toString()}`);
+    return true;
+  }
+
   async function confirmScheduleHoldAndFinish() {
     if (isDepositInFlightRef.current) {
       console.warn("BLOCKED: confirmScheduleHoldAndFinish during deposit");
@@ -2377,6 +2622,10 @@ export function BookingFlowClient() {
                 : undefined,
           },
         });
+        if (isExpiredSlotOrHoldError(confirmErr)) {
+          await recoverExpiredSelectedSlotAndConfirm();
+          return;
+        }
         if (
           confirmErr instanceof PublicBookingPaymentRequiredError &&
           confirmErr.code === "PAYMENT_REQUIRED"
@@ -2443,7 +2692,10 @@ export function BookingFlowClient() {
             holdErr instanceof PublicBookingApiError ? holdErr.code : undefined,
         },
       });
-      if (isStaleSlotApiError(holdErr)) {
+      if (isExpiredSlotOrHoldError(holdErr)) {
+        await recoverExpiredSelectedSlotAndConfirm();
+        return;
+      } else if (isStaleSlotApiError(holdErr)) {
         invalidateSelectedSlot();
       } else {
         setScheduleCommitError(BOOKING_SCHEDULE_HOLD_FAILED);
@@ -2538,6 +2790,10 @@ export function BookingFlowClient() {
             err instanceof PublicBookingPaymentRequiredError ? err.code : undefined,
         },
       });
+      if (isExpiredSlotOrHoldError(err)) {
+        await recoverExpiredSelectedSlotAndConfirm();
+        return;
+      }
       if (
         err instanceof PublicBookingPaymentRequiredError &&
         err.code === "PAYMENT_REQUIRED"
