@@ -277,7 +277,7 @@ export const COMMAND_CENTER_UX = {
   workspaceExportButton: "Export JSON handoff",
   workspaceImportButton: "Import workspaces JSON",
   workspaceEmptyList: "No saved workspaces yet — create one to persist continuity.",
-  workspaceImportError: "Import failed — file must be a valid ServeLink workspace export envelope.",
+  workspaceImportError: "Import failed — file must be a valid workspace export envelope.",
 
   escalationCoordinationTitle: "Escalation coordination rail",
   escalationCoordinationSubtitle:

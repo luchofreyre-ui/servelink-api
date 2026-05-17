@@ -82,7 +82,8 @@ Immediately after any production deploy:
 
 ## Related docs
 
-- **`ENABLE_*` operator matrix:** `docs/operations/ENABLE_RUNTIME_MATRIX_V1.md`
+- **`ENABLE_*` operator matrix:** `docs/operations/ENABLE_RUNTIME_MATRIX_V2.md`
+- **Launch runtime proof checklist:** `docs/operations/LAUNCH_RUNTIME_PROOF_CHECKLIST_V1.md`
 - **Deploy / runtime parity checklist:** `docs/operations/DEPLOY_RUNTIME_PARITY_CHECKLIST_V1.md`
 - **Controlled activation sequencing:** `docs/operations/CONTROLLED_ACTIVATION_PLAYBOOK_V1.md`
 - Warehouse refresh cadence (analytics snapshots): `docs/operations/warehouse-refresh-scheduling-governance-v1.md`

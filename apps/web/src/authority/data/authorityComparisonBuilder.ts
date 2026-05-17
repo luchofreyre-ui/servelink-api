@@ -688,7 +688,7 @@ export function buildProductComparisonPage(comparisonSlug: string): AuthorityCom
     leftSlug: left.slug,
     rightSlug: right.slug,
     title: `${left.name} vs ${right.name}`,
-    description: `Side-by-side cleaning product comparison: chemistry, best fits, and safety cues from the Servelink product library.`,
+    description: `Side-by-side cleaning product comparison: chemistry, best fits, and safety cues from the Nu Standard product library.`,
     intro: `Both products appear in the same decision system, but they win in different lanes. Use this page to see chemistry class, labeled use cases, and where each SKU is intentionally weaker—then jump into the full dossiers for implementation detail.`,
     ...conversion,
     quickAnswer:

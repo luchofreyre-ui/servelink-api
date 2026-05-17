@@ -192,7 +192,7 @@ export function buildAuthorityCompareProductsIndexMetadata(): Metadata {
   return authorityPublicMetadata("compare_index", getCompareHubCanonicalPath("products"), {
     title: "Compare Cleaning Products",
     description:
-      "Side-by-side cleaning product comparisons: chemistry, dossier strengths, avoid cases, and safety notes from the Servelink library.",
+      "Side-by-side cleaning product comparisons: chemistry, dossier strengths, avoid cases, and safety notes from the Nu Standard library.",
     type: "website",
   });
 }

@@ -40,7 +40,7 @@ function BrandMark() {
       className="flex shrink-0 flex-col leading-tight sm:flex-row sm:items-baseline sm:gap-2"
     >
       <span className="font-semibold tracking-tight text-gray-900">Nu Standard</span>
-      <span className="text-[11px] font-normal text-slate-500 sm:text-xs">ServeLink booking</span>
+      <span className="text-[11px] font-normal text-slate-500 sm:text-xs">Cleaning concierge</span>
     </Link>
   );
 }

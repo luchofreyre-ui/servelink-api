@@ -4,6 +4,15 @@ import { getCustomerKnowledgeRecommendations } from "@/customer/customerKnowledg
 import type { RoleTheme } from "@/lib/role-theme";
 import type { CustomerDashboardViewModel } from "@/dashboard/customer/customerDashboardViewModel";
 
+function humanizeCountLabel(key: string): string {
+  return key
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^./, (c) => c.toUpperCase());
+}
+
 export function CustomerDashboard({
   theme,
   vm,
@@ -14,11 +23,17 @@ export function CustomerDashboard({
   knowledgeContext?: CustomerKnowledgeContext;
 }) {
   const recs = getCustomerKnowledgeRecommendations(knowledgeContext ?? {});
+  const visitSummaryRows = Object.entries(vm.counts)
+    .filter(([, value]) => typeof value === "number" || typeof value === "string")
+    .slice(0, 6);
+
   return (
     <div className="space-y-6">
       <header>
-        <h1 className={`text-xl font-bold ${theme.accent}`}>Your bookings</h1>
-        <p className="mt-1 text-sm text-slate-600">Customer-safe view — no internal operations scores.</p>
+        <h1 className={`text-xl font-bold ${theme.accent}`}>Your visits</h1>
+        <p className="mt-1 text-sm text-slate-600">
+          A simple view of upcoming service and helpful Nu Standard guidance.
+        </p>
       </header>
 
       <section
@@ -60,11 +75,24 @@ export function CustomerDashboard({
         </div>
       ) : null}
 
-      <section className="rounded-lg border border-slate-200 bg-white p-4 text-xs text-slate-600">
-        <p className="font-medium text-slate-800">Summary (raw)</p>
-        <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap">
-          {JSON.stringify(vm.counts, null, 2)}
-        </pre>
+      <section className="rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
+        <p className="font-medium text-slate-800">Visit summary</p>
+        {visitSummaryRows.length > 0 ? (
+          <dl className="mt-3 grid gap-2 sm:grid-cols-2">
+            {visitSummaryRows.map(([key, value]) => (
+              <div key={key} className="rounded-lg bg-slate-50 px-3 py-2">
+                <dt className="text-xs uppercase tracking-wide text-slate-500">
+                  {humanizeCountLabel(key)}
+                </dt>
+                <dd className="mt-1 font-semibold text-slate-900">{String(value)}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <p className="mt-2 text-sm text-slate-600">
+            We&apos;ll show visit totals here once activity is available.
+          </p>
+        )}
       </section>
     </div>
   );

@@ -23,6 +23,7 @@ export function AdminBookingLifecyclePanel({
     booking.foId ?? FRANCHISE_OWNER_PROFILES[0]?.id ?? "",
   );
   const [note, setNote] = useState("");
+  const [actionError, setActionError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const transitionButtons = useMemo(
@@ -36,12 +37,13 @@ export function AdminBookingLifecyclePanel({
 
   async function handleHold() {
     setBusy(true);
+    setActionError(null);
     try {
       await holdBooking(booking.id, { actorRole: "admin" });
       setNote("");
       await onBookingUpdated();
     } catch (error) {
-      window.alert(error instanceof Error ? error.message : "Unable to hold booking.");
+      setActionError(error instanceof Error ? error.message : "Unable to hold booking.");
     } finally {
       setBusy(false);
     }
@@ -49,6 +51,7 @@ export function AdminBookingLifecyclePanel({
 
   async function handleTransition(kind: "start" | "complete") {
     setBusy(true);
+    setActionError(null);
     try {
       await transitionBooking(booking.id, {
         transition: kind,
@@ -57,7 +60,7 @@ export function AdminBookingLifecyclePanel({
       setNote("");
       await onBookingUpdated();
     } catch (error) {
-      window.alert(error instanceof Error ? error.message : "Unable to update booking.");
+      setActionError(error instanceof Error ? error.message : "Unable to update booking.");
     } finally {
       setBusy(false);
     }
@@ -65,6 +68,7 @@ export function AdminBookingLifecyclePanel({
 
   async function handleReassign() {
     setBusy(true);
+    setActionError(null);
     try {
       await assignBooking(booking.id, {
         foId: selectedFoId,
@@ -72,7 +76,7 @@ export function AdminBookingLifecyclePanel({
       });
       await onBookingUpdated();
     } catch (error) {
-      window.alert(error instanceof Error ? error.message : "Unable to reassign booking.");
+      setActionError(error instanceof Error ? error.message : "Unable to reassign booking.");
     } finally {
       setBusy(false);
     }
@@ -82,13 +86,26 @@ export function AdminBookingLifecyclePanel({
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">Lifecycle Control</h2>
+          <h2 className="text-lg font-semibold">Lifecycle control</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Server-backed transitions for this booking.
+            Server-backed actions for this booking. Errors stay visible here so operators can retry or escalate.
           </p>
         </div>
         <BookingStatusBadge status={booking.status} />
       </div>
+
+      {actionError ? (
+        <div
+          role="alert"
+          className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+        >
+          <p className="font-medium">Action did not complete</p>
+          <p className="mt-1">{actionError}</p>
+          <p className="mt-2 text-xs text-amber-800">
+            Check the booking state, then retry. If the state looks stale, refresh the detail page before changing assignment or status.
+          </p>
+        </div>
+      ) : null}
 
       <div className="mt-5 flex flex-wrap gap-3">
         <button

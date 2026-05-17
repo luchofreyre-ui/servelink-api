@@ -6,7 +6,8 @@ Companion artifacts:
 
 - [`production-deployment-governance-v1.md`](./production-deployment-governance-v1.md)
 - [`railway-deploy-hygiene-v1.md`](./railway-deploy-hygiene-v1.md)
-- [`ENABLE_RUNTIME_MATRIX_V1.md`](./ENABLE_RUNTIME_MATRIX_V1.md)
+- [`ENABLE_RUNTIME_MATRIX_V2.md`](./ENABLE_RUNTIME_MATRIX_V2.md)
+- [`LAUNCH_RUNTIME_PROOF_CHECKLIST_V1.md`](./LAUNCH_RUNTIME_PROOF_CHECKLIST_V1.md)
 - [`CONTROLLED_ACTIVATION_PLAYBOOK_V1.md`](./CONTROLLED_ACTIVATION_PLAYBOOK_V1.md)
 
 ---
@@ -32,7 +33,7 @@ Explicit axioms:
 - [ ] **Known-good SHA** from **`origin/main`** (merge URL / squash merge hash documented).
 - [ ] **`npm run check:railway-api-deploy-tree`** exits **0** immediately before **CLI** API uploads (`railway-deploy-hygiene-v1.md`).
 - [ ] **Dirty-tree STOP**: no stray **`services/api/src/**`** / **`services/api/prisma/**`** uploads absent intentional commits (`railway-deploy-hygiene-v1.md`).
-- [ ] **Web parity**: when UX-critical **`NEXT_PUBLIC_*`** toggles matter — verify preview/production bundle baked flags (**UNKNOWN until inspected**) (`ENABLE_RUNTIME_MATRIX_V1.md` companion rows).
+- [ ] **Web parity**: when UX-critical **`NEXT_PUBLIC_*`** toggles matter — verify preview/production bundle baked flags (**UNKNOWN until inspected**) (`ENABLE_RUNTIME_MATRIX_V2.md` companion rows).
 
 ---
 
@@ -99,18 +100,18 @@ Document captured timestamps / principals separately — **not embedded here.**
 
 | Rule | Rationale |
 |------|-----------|
-| **`CronRunLedger`** **`skipped`** ≠ malfunction — confirm **`disabled_by_env`** metadata aligns **`ENABLE_RUNTIME_MATRIX_V1.md`** semantics | Silent skips historically masked automation posture (`completion census`) |
+| **`CronRunLedger`** **`skipped`** ≠ malfunction — confirm **`disabled_by_env`** metadata aligns **`ENABLE_RUNTIME_MATRIX_V2.md`** semantics | Silent skips historically masked automation posture (`completion census`) |
 | Treat **`NODE_ENV=test`** CI skips **non-transferable** proof for prod toggles | Outbox cron explicitly gated |
-| **Inverted billing cron semantics** — **`ENABLE_PAYMENT_*`** pattern differs — absence env snapshot misleading (`ENABLE_RUNTIME_MATRIX_V1.md`) |
+| **Inverted billing cron semantics** — **`ENABLE_PAYMENT_*`** pattern differs — absence env snapshot misleading (`ENABLE_RUNTIME_MATRIX_V2.md`) |
 
 ---
 
 ## Forbidden assumptions
 
 - **`main` green ⇒ prod updated** — STOP (`production-deployment-governance-v1.md`).
-- **Cron code merged ⇒ cron executes** — STOP (`ENABLE_RUNTIME_MATRIX_V1.md`).
+- **Cron code merged ⇒ cron executes** — STOP (`ENABLE_RUNTIME_MATRIX_V2.md`).
 - **Warehouse staleness ⇒ ops outage** — STOP (**warehouse staleness interpretation table**).
-- **`grep` matrix ⇒ prod env truth** — STOP (`ENABLE_RUNTIME_MATRIX_V1.md` Authority §).
+- **`grep` matrix ⇒ prod env truth** — STOP (`ENABLE_RUNTIME_MATRIX_V2.md` Authority §).
 
 ---
 
