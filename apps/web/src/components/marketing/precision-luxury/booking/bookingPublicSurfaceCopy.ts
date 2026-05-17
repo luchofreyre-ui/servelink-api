@@ -421,7 +421,7 @@ export const BOOKING_REVIEW_DEPOSIT_CONFIRMING_RECORDED =
 
 /** Stripe publishable key missing (dev / misconfigured client). */
 export const BOOKING_REVIEW_PAYMENT_UNAVAILABLE_ENV =
-  "Card checkout isn’t enabled in this environment.";
+  "Secure card checkout isn’t available right now. Your estimate and selected time are still saved here.";
 
 /** Deposit prepare returned without usable PaymentIntent client secret. */
 export const BOOKING_REVIEW_PAYMENT_COULD_NOT_START =

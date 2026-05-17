@@ -76,38 +76,38 @@ export function PrecisionLuxuryHomepage() {
 
       <main>
         {/* Hero — split layout: narrative + media + tighter vertical rhythm */}
-        <section className="relative overflow-hidden pb-8 pt-6 md:pb-10 md:pt-8 lg:pb-12 lg:pt-10">
+        <section className="relative overflow-hidden pb-6 pt-4 md:pb-10 md:pt-8 lg:pb-12 lg:pt-10">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(201,178,124,0.12),transparent_30%),radial-gradient(circle_at_90%_10%,rgba(15,23,42,0.05),transparent_30%)]" />
-          <div className="relative mx-auto max-w-7xl px-6 md:px-8">
-            <div className="grid overflow-hidden rounded-[36px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-stretch lg:gap-7 lg:p-9">
-              <div className="flex min-w-0 flex-col justify-center rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+            <div className="grid overflow-hidden rounded-[28px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-4 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:rounded-[36px] sm:p-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-stretch lg:gap-7 lg:p-9">
+              <div className="flex min-w-0 flex-col justify-center rounded-[24px] border border-[#E8DFD0]/80 bg-white/76 p-5 sm:rounded-[28px] sm:p-8">
                 <div>
                   <PremiumEyebrow className="font-[var(--font-poppins)] text-[#C9B27C]">
                     Nu Standard
                   </PremiumEyebrow>
-                  <PremiumHeroTitle className="font-[var(--font-poppins)] sm:text-5xl lg:text-[3.05rem]">
+                  <PremiumHeroTitle className="font-[var(--font-poppins)] text-[2.35rem] leading-[0.98] sm:text-5xl lg:text-[3.05rem]">
                     Premium home care—with owner-led accountability.
                   </PremiumHeroTitle>
-                  <p className="mt-5 max-w-xl font-[var(--font-manrope)] text-base leading-relaxed text-zinc-700">
+                  <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-[15px] leading-7 text-zinc-700 sm:mt-5 sm:text-base sm:leading-relaxed">
                     {NU_STANDARD_OWNER_OPERATOR_ANCHOR}
                   </p>
-                  <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-sm leading-relaxed text-zinc-600">
+                  <p className="mt-3 max-w-xl font-[var(--font-manrope)] text-sm leading-relaxed text-zinc-600 sm:mt-4">
                     Honest, real-time estimates when preview is available—compare visit types anytime without pressure.
                   </p>
-                  <p className="mt-4 max-w-xl border-l-2 border-[#C9B27C]/35 pl-4 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B]">
+                  <p className="mt-4 hidden max-w-xl border-l-2 border-[#C9B27C]/35 pl-4 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] sm:block">
                     Owner-led teams bring documented professionalism to your door—clear coordination and respectful
                     standards, not vague promises.
                   </p>
                 </div>
 
-                <div className="flex w-full max-w-lg flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <div className="mt-6 flex w-full max-w-lg flex-col gap-3 sm:mt-7 sm:flex-row sm:flex-wrap">
                   <MarketingLinkButton href="/book" variant="primary" className="w-full min-h-[48px] sm:w-auto sm:flex-1 sm:flex-none">
                     Book your cleaning
                   </MarketingLinkButton>
                   <MarketingLinkButton
                     href="#how-we-work"
                     variant="secondary"
-                    className="w-full min-h-[48px] border-[#C9B27C]/35 bg-white/90 sm:w-auto sm:flex-1 sm:flex-none"
+                    className="hidden w-full min-h-[48px] border-[#C9B27C]/35 bg-white/90 sm:inline-flex sm:w-auto sm:flex-1 sm:flex-none"
                   >
                     See how it works
                   </MarketingLinkButton>
@@ -116,7 +116,7 @@ export function PrecisionLuxuryHomepage() {
 
               <div className="relative min-w-0">
                 <HomepageHeroMedia />
-                <div className="mt-5 rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] lg:absolute lg:bottom-6 lg:left-6 lg:right-6 lg:mt-0">
+                <div className="mt-5 hidden rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] sm:block lg:absolute lg:bottom-6 lg:left-6 lg:right-6 lg:mt-0">
                   <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                     The Nu Standard difference
                   </p>
@@ -135,7 +135,7 @@ export function PrecisionLuxuryHomepage() {
 
         {/* Trust strip */}
         <section className="border-y border-[#C9B27C]/14 bg-white/75">
-          <div className="mx-auto max-w-7xl px-6 py-7 md:px-8 md:py-8">
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-8 md:py-8">
             <p className="mb-5 max-w-3xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px] md:leading-7">
               Prepared teams, clear arrival coordination, and documented service standards—calm professionalism you can recognize.
             </p>
