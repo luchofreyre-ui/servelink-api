@@ -978,8 +978,44 @@ export class StripePaymentService {
         : null;
 
     const now = new Date();
-    await this.prisma.booking.update({
+    const before = await this.prisma.booking.findUnique({
       where: { id: args.bookingId },
+      select: {
+        publicDepositStatus: true,
+        publicDepositPaymentIntentId: true,
+      },
+    });
+    const existingPi = before?.publicDepositPaymentIntentId?.trim() || null;
+    if (
+      before?.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
+      existingPi &&
+      existingPi !== args.paymentIntentId
+    ) {
+      await this.paymentReliability.recordAnomaly({
+        bookingId: args.bookingId,
+        stripeEventId: args.stripeEventId,
+        kind: "public_deposit_duplicate_success_suppressed",
+        severity: "critical",
+        message:
+          "Stripe webhook attempted to replace an existing canonical public deposit PaymentIntent.",
+        details: {
+          existingPaymentIntentId: existingPi,
+          attemptedPaymentIntentId: args.paymentIntentId,
+          source: "stripe_webhook",
+        },
+      });
+      return;
+    }
+
+    const updated = await this.prisma.booking.updateMany({
+      where: {
+        id: args.bookingId,
+        OR: [
+          { publicDepositStatus: { not: BookingPublicDepositStatus.deposit_succeeded } },
+          { publicDepositPaymentIntentId: args.paymentIntentId },
+          { publicDepositPaymentIntentId: null },
+        ],
+      },
       data: {
         publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
         publicDepositPaidAt: now,
@@ -997,6 +1033,50 @@ export class StripePaymentService {
           : {}),
       },
     });
+    if (updated.count !== 1) {
+      const latest = await this.prisma.booking.findUnique({
+        where: { id: args.bookingId },
+        select: { publicDepositPaymentIntentId: true },
+      });
+      await this.paymentReliability.recordAnomaly({
+        bookingId: args.bookingId,
+        stripeEventId: args.stripeEventId,
+        kind: "public_deposit_duplicate_success_suppressed",
+        severity: "critical",
+        message:
+          "Concurrent Stripe webhook deposit success was suppressed because canonical ownership already exists.",
+        details: {
+          existingPaymentIntentId:
+            latest?.publicDepositPaymentIntentId?.trim() || null,
+          attemptedPaymentIntentId: args.paymentIntentId,
+          source: "stripe_webhook",
+        },
+      });
+      return;
+    }
+
+    const eventIdempotencyKey = `public-deposit-sync:${args.paymentIntentId}`;
+    try {
+      await this.prisma.bookingEvent.create({
+        data: {
+          bookingId: args.bookingId,
+          type: BookingEventType.NOTE,
+          idempotencyKey: eventIdempotencyKey,
+          note: "Public booking deposit captured",
+          actorRole: "system",
+          payload: {
+            publicDeposit: true,
+            paymentIntentId: args.paymentIntentId,
+            source: "stripe_webhook",
+            stripeEventId: args.stripeEventId,
+          } as Prisma.InputJsonValue,
+        },
+      });
+    } catch (err: any) {
+      if (err?.code !== "P2002") {
+        throw err;
+      }
+    }
   }
 
   private async findBookingForStripe(params: {

@@ -1549,8 +1549,10 @@ export function appendPublicIntakeContextToSearchParams(
 
 /** Same-origin snapshot so an empty confirmation URL can still show a truthful outcome after refresh. */
 export const BOOKING_CONFIRMATION_SESSION_KEY = "servelink.bookingConfirmation.v1";
+export const BOOKING_CONTINUITY_STORAGE_KEY = "servelink.bookingContinuity.v1";
 
 const BOOKING_CONFIRMATION_SESSION_MAX_MS = 45 * 60 * 1000;
+const BOOKING_CONTINUITY_STORAGE_MAX_MS = 7 * 24 * 60 * 60 * 1000;
 
 export type BookingConfirmationSessionSnapshotV1 = {
   v: 1;
@@ -1751,6 +1753,172 @@ export function clearBookingConfirmationSessionSnapshot(): void {
   if (typeof window === "undefined") return;
   try {
     window.sessionStorage.removeItem(BOOKING_CONFIRMATION_SESSION_KEY);
+  } catch {
+    // ignore
+  }
+}
+
+export type BookingContinuitySnapshotV1 = BookingConfirmationSessionSnapshotV1 & {
+  lastKnownCanonicalState?:
+    | "deposit_required"
+    | "deposit_succeeded"
+    | "booking_confirmed"
+    | "finalization_pending";
+};
+
+function normalizeContinuitySnapshot(
+  o: Partial<BookingContinuitySnapshotV1>,
+): BookingContinuitySnapshotV1 | null {
+  if (o.v !== 1 || typeof o.savedAt !== "number") return null;
+  if (Date.now() - o.savedAt > BOOKING_CONTINUITY_STORAGE_MAX_MS) return null;
+  if (typeof o.bookingId !== "string" || !o.bookingId.trim()) return null;
+  if (typeof o.intakeId !== "string" || !o.intakeId.trim()) return null;
+  return {
+    v: 1,
+    savedAt: o.savedAt,
+    intakeId: o.intakeId.trim(),
+    bookingId: o.bookingId.trim(),
+    priceCents:
+      typeof o.priceCents === "number" && Number.isFinite(o.priceCents)
+        ? o.priceCents
+        : null,
+    durationMinutes:
+      typeof o.durationMinutes === "number" && Number.isFinite(o.durationMinutes)
+        ? o.durationMinutes
+        : null,
+    confidence:
+      typeof o.confidence === "number" && Number.isFinite(o.confidence)
+        ? o.confidence
+        : null,
+    bookingErrorCode:
+      typeof o.bookingErrorCode === "string" ? o.bookingErrorCode.trim() : "",
+    publicDepositPaymentIntentId:
+      typeof o.publicDepositPaymentIntentId === "string"
+        ? o.publicDepositPaymentIntentId.trim()
+        : undefined,
+    publicDepositStatus:
+      typeof o.publicDepositStatus === "string"
+        ? o.publicDepositStatus.trim()
+        : undefined,
+    publicDepositHoldId:
+      typeof o.publicDepositHoldId === "string"
+        ? o.publicDepositHoldId.trim()
+        : undefined,
+    paymentSessionKey:
+      typeof o.paymentSessionKey === "string" ? o.paymentSessionKey.trim() : undefined,
+    selectedTeamId:
+      typeof o.selectedTeamId === "string" ? o.selectedTeamId.trim() : undefined,
+    selectedTeamDisplayName:
+      typeof o.selectedTeamDisplayName === "string"
+        ? o.selectedTeamDisplayName.trim()
+        : undefined,
+    selectedSlotStart:
+      typeof o.selectedSlotStart === "string" ? o.selectedSlotStart.trim() : undefined,
+    selectedSlotEnd:
+      typeof o.selectedSlotEnd === "string" ? o.selectedSlotEnd.trim() : undefined,
+    paymentSessionCreatedAt:
+      typeof o.paymentSessionCreatedAt === "string"
+        ? o.paymentSessionCreatedAt.trim()
+        : undefined,
+    paymentSessionExpiresAt:
+      typeof o.paymentSessionExpiresAt === "string"
+        ? o.paymentSessionExpiresAt.trim()
+        : undefined,
+    teamPlanningLines: Array.isArray(o.teamPlanningLines)
+      ? o.teamPlanningLines.filter((x): x is string => typeof x === "string")
+      : undefined,
+    lastKnownCanonicalState:
+      o.lastKnownCanonicalState === "deposit_required" ||
+      o.lastKnownCanonicalState === "deposit_succeeded" ||
+      o.lastKnownCanonicalState === "booking_confirmed" ||
+      o.lastKnownCanonicalState === "finalization_pending"
+        ? o.lastKnownCanonicalState
+        : undefined,
+  };
+}
+
+export function writeBookingContinuitySnapshot(
+  partial: Omit<BookingContinuitySnapshotV1, "v" | "savedAt">,
+): void {
+  if (typeof window === "undefined") return;
+  const bookingId = partial.bookingId.trim();
+  const intakeId = partial.intakeId.trim();
+  if (!bookingId || !intakeId) return;
+  try {
+    const payload: BookingContinuitySnapshotV1 = {
+      ...partial,
+      v: 1,
+      savedAt: Date.now(),
+      intakeId,
+      bookingId,
+      bookingErrorCode: partial.bookingErrorCode.trim(),
+      priceCents:
+        typeof partial.priceCents === "number" && Number.isFinite(partial.priceCents)
+          ? partial.priceCents
+          : null,
+      durationMinutes:
+        typeof partial.durationMinutes === "number" &&
+        Number.isFinite(partial.durationMinutes)
+          ? partial.durationMinutes
+          : null,
+      confidence:
+        typeof partial.confidence === "number" && Number.isFinite(partial.confidence)
+          ? partial.confidence
+          : null,
+    };
+    const raw = window.localStorage.getItem(BOOKING_CONTINUITY_STORAGE_KEY);
+    const existing = raw
+      ? (JSON.parse(raw) as Record<string, Partial<BookingContinuitySnapshotV1>>)
+      : {};
+    existing[bookingId] = payload;
+    window.localStorage.setItem(
+      BOOKING_CONTINUITY_STORAGE_KEY,
+      JSON.stringify(existing),
+    );
+    window.dispatchEvent(new CustomEvent("bookingContinuityUpdated"));
+  } catch {
+    // private mode / quota
+  }
+}
+
+export function readBookingContinuitySnapshot(
+  bookingId?: string | null,
+): BookingContinuitySnapshotV1 | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(BOOKING_CONTINUITY_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Record<string, Partial<BookingContinuitySnapshotV1>>;
+    const requested = bookingId?.trim();
+    if (requested) {
+      return normalizeContinuitySnapshot(parsed[requested] ?? {});
+    }
+    const snapshots = Object.values(parsed)
+      .map((value) => normalizeContinuitySnapshot(value ?? {}))
+      .filter((value): value is BookingContinuitySnapshotV1 => value != null)
+      .sort((a, b) => b.savedAt - a.savedAt);
+    return snapshots[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearBookingContinuitySnapshot(bookingId?: string | null): void {
+  if (typeof window === "undefined") return;
+  try {
+    const expectedBookingId = bookingId?.trim();
+    if (!expectedBookingId) {
+      window.localStorage.removeItem(BOOKING_CONTINUITY_STORAGE_KEY);
+      return;
+    }
+    const raw = window.localStorage.getItem(BOOKING_CONTINUITY_STORAGE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    delete parsed[expectedBookingId];
+    window.localStorage.setItem(
+      BOOKING_CONTINUITY_STORAGE_KEY,
+      JSON.stringify(parsed),
+    );
   } catch {
     // ignore
   }

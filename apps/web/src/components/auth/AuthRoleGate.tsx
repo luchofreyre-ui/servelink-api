@@ -85,6 +85,12 @@ export function AuthRoleGate({ role, children }: Props) {
   }
 
   if (!allowed) {
+    const loginHref =
+      typeof window !== "undefined" && role === "customer"
+        ? `${getLoginRouteForRole(role)}?bookingContinuation=${encodeURIComponent(
+            `${window.location.pathname}${window.location.search}`,
+          )}`
+        : getLoginRouteForRole(role);
     return (
       <div className="mx-auto max-w-5xl px-6 py-16">
         <h1 className="text-3xl font-semibold text-zinc-900">Authentication required</h1>
@@ -93,7 +99,7 @@ export function AuthRoleGate({ role, children }: Props) {
         </p>
         <div className="mt-8">
           <a
-            href={getLoginRouteForRole(role)}
+            href={loginHref}
             className="inline-flex rounded-2xl bg-zinc-900 px-6 py-3 text-base font-semibold text-white hover:bg-zinc-800"
           >
             Go to login

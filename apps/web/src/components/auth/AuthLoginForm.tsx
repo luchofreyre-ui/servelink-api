@@ -6,6 +6,8 @@ import { getAuthUser, hasRole, isAuthenticated, type UserRole } from "@/lib/auth
 import { getDefaultRouteForRole, getRoleLabel } from "@/lib/auth/authRoutes";
 import { loginWithApi } from "@/lib/auth/authApi";
 
+const BOOKING_CONTINUATION_PARAM = "bookingContinuation";
+
 interface AuthLoginFormProps {
   role: UserRole;
   title?: string;
@@ -23,6 +25,15 @@ export function AuthLoginForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const bookingContinuationHref =
+    mounted && typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get(BOOKING_CONTINUATION_PARAM)
+      : null;
+  const safeBookingContinuationHref =
+    bookingContinuationHref?.startsWith("/") &&
+    !bookingContinuationHref.startsWith("//")
+      ? bookingContinuationHref
+      : null;
 
   useEffect(() => {
     setMounted(true);
@@ -52,7 +63,7 @@ export function AuthLoginForm({
         expectedRole: role,
       });
 
-      router.replace(getDefaultRouteForRole(role));
+      router.replace(safeBookingContinuationHref ?? getDefaultRouteForRole(role));
       router.refresh();
     } catch (err) {
       const message =
@@ -64,7 +75,7 @@ export function AuthLoginForm({
   }
 
   function handleContinueAsCurrentRole() {
-    router.replace(getDefaultRouteForRole(role));
+    router.replace(safeBookingContinuationHref ?? getDefaultRouteForRole(role));
     router.refresh();
   }
 

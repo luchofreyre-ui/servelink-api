@@ -1,6 +1,7 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   BOOKING_CONFIRMATION_SESSION_KEY,
+  BOOKING_CONTINUITY_STORAGE_KEY,
   BOOKING_FLOW_FRESH_START_FLAG,
   BOOKING_URL_APPLIANCE_PRESENCE,
   BOOKING_URL_DEEP_CLEAN_FOCUS,
@@ -12,6 +13,7 @@ import {
   buildBookingSearchParams,
   clampBookingStepToStructuralMax,
   consumeBookingFlowFreshStartRequested,
+  clearBookingContinuitySnapshot,
   hasPublicIntakeEchoInSearchParams,
   markBookingFlowFreshStartRequested,
   mergeConfirmationParamsFromSessionIfUrlEmpty,
@@ -21,8 +23,10 @@ import {
   normalizeBookingAddOnsForPayload,
   normalizeBookingHomeSizeParam,
   parseBookingSearchParams,
+  readBookingContinuitySnapshot,
   isHomeDetailsComplete,
   type BookingConfirmationSessionSnapshotV1,
+  writeBookingContinuitySnapshot,
 } from "./bookingUrlState";
 import {
   defaultBookingFlowState,
@@ -36,6 +40,34 @@ import { isBookingMoveTransitionServiceId } from "./bookingDeepClean";
 /** Tier 1 (conversion-critical) home facts for URL fixtures — blocks continuation until complete. */
 const BOOKING_TEST_LAYER1_QUERY =
   "halfBath=0&homeFloors=1&homeStairs=none&homePetImpact=none";
+
+function installMemoryStorage(name: "localStorage" | "sessionStorage") {
+  const store = new Map<string, string>();
+  const storage = {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      store.set(key, String(value));
+    },
+    removeItem: (key: string) => {
+      store.delete(key);
+    },
+    clear: () => {
+      store.clear();
+    },
+    key: (index: number) => [...store.keys()][index] ?? null,
+    get length() {
+      return store.size;
+    },
+  };
+  Object.defineProperty(window, name, {
+    value: storage,
+    configurable: true,
+  });
+  Object.defineProperty(globalThis, name, {
+    value: storage,
+    configurable: true,
+  });
+}
 
 function catalogDeepAndShallow(): {
   deepId: string;
@@ -54,9 +86,15 @@ function catalogDeepAndShallow(): {
 }
 
 describe("bookingUrlState", () => {
+  beforeEach(() => {
+    installMemoryStorage("localStorage");
+    installMemoryStorage("sessionStorage");
+  });
+
   afterEach(() => {
     sessionStorage.removeItem(BOOKING_FLOW_FRESH_START_FLAG);
     sessionStorage.removeItem(BOOKING_CONFIRMATION_SESSION_KEY);
+    localStorage.removeItem(BOOKING_CONTINUITY_STORAGE_KEY);
   });
 
   it("marks and consumes booking fresh-start flag once", () => {
@@ -66,6 +104,54 @@ describe("bookingUrlState", () => {
     expect(consumeBookingFlowFreshStartRequested()).toBe(true);
     expect(sessionStorage.getItem(BOOKING_FLOW_FRESH_START_FLAG)).toBeNull();
     expect(consumeBookingFlowFreshStartRequested()).toBe(false);
+  });
+
+  it("persists non-secret booking continuity across tabs", () => {
+    writeBookingContinuitySnapshot({
+      intakeId: "intake_1",
+      bookingId: "bk_1",
+      priceCents: 27100,
+      durationMinutes: 180,
+      confidence: 0.8,
+      bookingErrorCode: "",
+      publicDepositPaymentIntentId: "pi_public",
+      publicDepositStatus: "deposit_succeeded",
+      publicDepositHoldId: "hold_1",
+      paymentSessionKey: "public-booking:bk_1:hold:hold_1",
+      lastKnownCanonicalState: "finalization_pending",
+    });
+
+    const stored = readBookingContinuitySnapshot("bk_1");
+    expect(stored?.bookingId).toBe("bk_1");
+    expect(stored?.publicDepositPaymentIntentId).toBe("pi_public");
+    expect(stored?.lastKnownCanonicalState).toBe("finalization_pending");
+    expect(JSON.stringify(stored)).not.toContain("client_secret");
+  });
+
+  it("clears booking continuity by booking id without removing other recoverable bookings", () => {
+    writeBookingContinuitySnapshot({
+      intakeId: "intake_1",
+      bookingId: "bk_1",
+      priceCents: null,
+      durationMinutes: null,
+      confidence: null,
+      bookingErrorCode: "",
+      lastKnownCanonicalState: "deposit_succeeded",
+    });
+    writeBookingContinuitySnapshot({
+      intakeId: "intake_2",
+      bookingId: "bk_2",
+      priceCents: null,
+      durationMinutes: null,
+      confidence: null,
+      bookingErrorCode: "",
+      lastKnownCanonicalState: "deposit_required",
+    });
+
+    clearBookingContinuitySnapshot("bk_1");
+
+    expect(readBookingContinuitySnapshot("bk_1")).toBeNull();
+    expect(readBookingContinuitySnapshot("bk_2")?.bookingId).toBe("bk_2");
   });
 
   it("normalizes home size commas consistently with preview intake", () => {
