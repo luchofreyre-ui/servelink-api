@@ -69,7 +69,7 @@ export function GlobalSearchForm({
     <div className={`relative ${className}`.trim()}>
       <form
         onSubmit={onSubmit}
-        className="flex w-full gap-3"
+        className="flex w-full gap-2 sm:gap-3"
         role="search"
         data-testid="global-search-form"
         action="/search"
@@ -81,14 +81,14 @@ export function GlobalSearchForm({
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={placeholder}
-          className="w-full rounded-2xl border border-[#C9B27C]/20 bg-white px-4 py-3 font-[var(--font-manrope)] text-sm text-[#0F172A] outline-none ring-0 placeholder:text-[#94A3B8]"
+          className="min-w-0 w-full rounded-2xl border border-[#C9B27C]/20 bg-white px-4 py-3 font-[var(--font-manrope)] text-sm text-[#0F172A] outline-none ring-0 placeholder:text-[#94A3B8]"
           aria-label="Search site"
           autoComplete="off"
           data-testid="global-search-input"
         />
         <button
           type="submit"
-          className="rounded-2xl bg-[#0D9488] px-5 py-3 font-[var(--font-manrope)] text-sm font-semibold text-white transition hover:bg-[#0B7F75]"
+          className="shrink-0 rounded-2xl bg-[#0D9488] px-4 py-3 font-[var(--font-manrope)] text-sm font-semibold text-white transition hover:bg-[#0B7F75] sm:px-5"
           data-testid="global-search-submit"
         >
           Search
