@@ -160,6 +160,25 @@ function GeneralShellNav() {
   );
 }
 
+function AuthShellNav() {
+  return (
+    <>
+      <Link href="/book" className={navLinkClass(true)}>
+        Book
+      </Link>
+      <Link href="/customer/auth" className={navLinkClass(true)}>
+        Customer sign in
+      </Link>
+      <Link href="/fo/auth" className={navLinkClass(true)}>
+        Partner sign in
+      </Link>
+      <Link href="/admin/auth" className={navLinkClass(true)}>
+        Admin sign in
+      </Link>
+    </>
+  );
+}
+
 export default function AppShellLayout({
   children,
 }: {
@@ -170,6 +189,7 @@ export default function AppShellLayout({
   const showDevSwitcher = process.env.NODE_ENV === "development";
   const authShell = pathname.includes("/auth");
   const reduceMobileShellSearch = authShell || mode === "admin";
+  const showShellSearch = !authShell;
 
   return (
     <>
@@ -180,12 +200,13 @@ export default function AppShellLayout({
               <BrandMark />
             </div>
 
-            <ShellSearchBar
-              className={`min-w-0 w-full lg:max-w-md xl:max-w-lg lg:flex-1 ${
-                reduceMobileShellSearch ? "hidden sm:block" : ""
-              }`}
-              placeholder={authShell ? "Search guides" : undefined}
-            />
+            {showShellSearch ? (
+              <ShellSearchBar
+                className={`min-w-0 w-full lg:max-w-md xl:max-w-lg lg:flex-1 ${
+                  reduceMobileShellSearch ? "hidden sm:block" : ""
+                }`}
+              />
+            ) : null}
 
             <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:justify-end md:gap-4">
               <SessionSignOutButton />
@@ -198,7 +219,9 @@ export default function AppShellLayout({
             aria-label="Application"
             className="-mx-1 flex gap-1 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible md:pb-0"
           >
-            {mode === "customer" ? (
+            {authShell ? (
+              <AuthShellNav />
+            ) : mode === "customer" ? (
               <CustomerShellNav />
             ) : mode === "fo" ? (
               <FOShellNav />

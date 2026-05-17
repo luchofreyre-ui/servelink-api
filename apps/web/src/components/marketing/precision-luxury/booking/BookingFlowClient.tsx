@@ -3170,10 +3170,10 @@ export function BookingFlowClient() {
       <ServiceHeader />
 
       <main>
-        <section className="mx-auto max-w-7xl px-4 py-3 max-[380px]:py-2 sm:px-6 md:px-8 md:py-8">
-          <div className="overflow-hidden rounded-[24px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-3 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] max-[380px]:p-2.5 sm:rounded-[34px] sm:p-7 lg:p-8">
-            <div className="grid gap-3 max-[380px]:gap-2 sm:gap-7 xl:grid-cols-[minmax(0,0.98fr)_minmax(280px,360px)] xl:items-start">
-              <div className="min-w-0 space-y-3 rounded-[22px] border border-[#E8DFD0]/80 bg-white/76 p-4 max-[380px]:space-y-2 max-[380px]:p-3 sm:space-y-5 sm:rounded-[28px] sm:p-8">
+        <section className="mx-auto max-w-7xl px-4 py-3 max-[380px]:py-2 sm:px-6 md:px-8 md:py-8 [@media(max-width:380px)_and_(max-height:700px)]:py-1">
+          <div className="overflow-hidden rounded-[24px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-3 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] max-[380px]:p-2.5 sm:rounded-[34px] sm:p-7 lg:p-8 [@media(max-width:380px)_and_(max-height:700px)]:p-2">
+            <div className="grid gap-3 max-[380px]:gap-2 sm:gap-7 xl:grid-cols-[minmax(0,0.98fr)_minmax(280px,360px)] xl:items-start [@media(max-width:380px)_and_(max-height:700px)]:gap-1.5">
+              <div className="min-w-0 space-y-3 rounded-[22px] border border-[#E8DFD0]/80 bg-white/76 p-4 max-[380px]:space-y-2 max-[380px]:p-3 sm:space-y-5 sm:rounded-[28px] sm:p-8 [@media(max-width:380px)_and_(max-height:700px)]:p-2.5">
                 <div>
                   <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C] max-[380px]:text-[10px]">
                     {BOOKING_FLOW_HERO_EYEBROW}
@@ -3223,7 +3223,7 @@ export function BookingFlowClient() {
                         <p>{BOOKING_FLOW_HERO_CLEAR_NUMBERS_LINE}</p>
                         <p>{BOOKING_FLOW_HERO_NO_PRESSURE_LINE}</p>
                       </div>
-                      <p className="mt-3 max-w-2xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-sm leading-6 text-[#334155] max-[380px]:mt-2 max-[380px]:pl-3 max-[380px]:text-[13px] max-[380px]:leading-5 md:mt-5 md:text-lg md:leading-relaxed">
+                      <p className="mt-3 max-w-2xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-sm leading-6 text-[#334155] max-[380px]:mt-2 max-[380px]:pl-3 max-[380px]:text-[13px] max-[380px]:leading-5 md:mt-5 md:text-lg md:leading-relaxed [@media(max-width:380px)_and_(max-height:700px)]:hidden">
                         {BOOKING_FLOW_HERO_ACCOUNTABILITY}
                       </p>
                       <p className="mt-3 hidden max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] sm:block md:text-[15px]">
@@ -3266,7 +3266,7 @@ export function BookingFlowClient() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-4 max-[380px]:py-3 sm:px-6 sm:py-12 md:px-8 lg:py-16">
+        <section className="mx-auto max-w-7xl px-4 py-4 max-[380px]:py-3 sm:px-6 sm:py-12 md:px-8 lg:py-16 [@media(max-width:380px)_and_(max-height:700px)]:py-2">
           <div
             className={
               state.step === "review"
@@ -3607,7 +3607,7 @@ export function BookingFlowClient() {
               ) : null}
 
               <div className="fixed bottom-0 left-0 right-0 z-40 md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto">
-                <div className="border-t border-[#C9B27C]/14 bg-[#FFF9F3]/92 px-4 py-2 pb-[max(0.7rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(15,23,42,0.045)] backdrop-blur-md md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none md:backdrop-blur-none">
+                <div className="border-t border-[#C9B27C]/14 bg-[#FFF9F3]/92 px-4 py-2 pb-[max(0.7rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(15,23,42,0.045)] backdrop-blur-md md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none md:backdrop-blur-none [@media(max-width:380px)_and_(max-height:700px)]:py-1 [@media(max-width:380px)_and_(max-height:700px)]:pb-[max(0.45rem,env(safe-area-inset-bottom))]">
                   <div className="mx-auto flex w-full max-w-7xl flex-col gap-2.5 sm:flex-row sm:flex-wrap md:max-w-none">
                 {state.step !== "service" ? (
                   <button
@@ -3640,7 +3640,7 @@ export function BookingFlowClient() {
                         ? "booking-step-continue-error"
                         : undefined
                     }
-                    className={`inline-flex min-h-[46px] flex-1 items-center justify-center rounded-full px-6 py-3.5 font-[var(--font-manrope)] text-base font-semibold text-white transition sm:flex-none ${
+                    className={`inline-flex min-h-[46px] flex-1 items-center justify-center rounded-full px-6 py-3.5 font-[var(--font-manrope)] text-base font-semibold text-white transition sm:flex-none [@media(max-width:380px)_and_(max-height:700px)]:min-h-[44px] [@media(max-width:380px)_and_(max-height:700px)]:py-2.5 ${
                       canContinue
                         ? "bg-[#0D9488] shadow-[0_8px_22px_rgba(13,148,136,0.16)] hover:-translate-y-0.5 hover:bg-[#0b7f76]"
                         : "bg-[#94A3B8] shadow-none"
