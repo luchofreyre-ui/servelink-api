@@ -78,8 +78,15 @@ export function AuthRoleGate({ role, children }: Props) {
 
   if (!ready) {
     return (
-      <div className="mx-auto max-w-5xl px-6 py-16 text-base text-zinc-500">
-        Preparing your secure workspace...
+      <div className="mx-auto max-w-5xl px-6 py-14 sm:py-16">
+        <div className="rounded-2xl border border-slate-200 bg-white px-5 py-6 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+            Secure workspace
+          </p>
+          <p className="mt-3 text-base leading-7 text-zinc-600">
+            Preparing your Nu Standard workspace...
+          </p>
+        </div>
       </div>
     );
   }
@@ -93,22 +100,24 @@ export function AuthRoleGate({ role, children }: Props) {
         : getLoginRouteForRole(role);
     return (
       <div className="mx-auto max-w-5xl px-6 py-14 sm:py-16">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-          Secure workspace
-        </p>
-        <h1 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">
-          Sign in to continue
-        </h1>
-        <p className="mt-3 max-w-xl text-base leading-7 text-zinc-600">
-          Use your Nu Standard credentials to open this workspace.
-        </p>
-        <div className="mt-8">
-          <a
-            href={loginHref}
-            className="inline-flex min-h-[46px] items-center rounded-2xl bg-zinc-900 px-6 py-3 text-base font-semibold text-white hover:bg-zinc-800"
-          >
-            Go to sign in
-          </a>
+        <div className="rounded-2xl border border-slate-200 bg-white px-5 py-6 shadow-sm sm:px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+            Secure workspace
+          </p>
+          <h1 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">
+            Sign in to continue
+          </h1>
+          <p className="mt-3 max-w-xl text-base leading-7 text-zinc-600">
+            Use your Nu Standard credentials to open this workspace.
+          </p>
+          <div className="mt-8">
+            <a
+              href={loginHref}
+              className="inline-flex min-h-[46px] items-center rounded-2xl bg-zinc-900 px-6 py-3 text-base font-semibold text-white hover:bg-zinc-800"
+            >
+              Go to sign in
+            </a>
+          </div>
         </div>
       </div>
     );
