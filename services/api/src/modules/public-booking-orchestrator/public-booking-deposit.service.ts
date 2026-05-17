@@ -411,6 +411,66 @@ export class PublicBookingDepositService {
     }
   }
 
+  private async recordConflictingSuccessfulDeposit(args: {
+    bookingId: string;
+    existingPaymentIntentId: string | null;
+    attemptedPaymentIntentId: string;
+    source: "prepare_or_confirm";
+  }) {
+    const idempotencyKey = `public-deposit-conflict:${args.bookingId}:${args.attemptedPaymentIntentId}`.slice(
+      0,
+      255,
+    );
+    try {
+      await this.prisma.bookingEvent.create({
+        data: {
+          bookingId: args.bookingId,
+          type: BookingEventType.NOTE,
+          idempotencyKey,
+          note: "Duplicate public booking deposit success suppressed.",
+          payload: {
+            reason: "DUPLICATE_PUBLIC_DEPOSIT_SUCCESS_SUPPRESSED",
+            existingPaymentIntentId: args.existingPaymentIntentId,
+            attemptedPaymentIntentId: args.attemptedPaymentIntentId,
+            source: args.source,
+          } as Prisma.InputJsonValue,
+        },
+      });
+    } catch (err: any) {
+      if (err?.code !== "P2002") {
+        throw err;
+      }
+    }
+
+    if (!this.prisma.paymentAnomaly?.create) return;
+    const existing = await this.prisma.paymentAnomaly.findFirst({
+      where: {
+        bookingId: args.bookingId,
+        kind: "public_deposit_duplicate_success_suppressed",
+        status: "open",
+      },
+      select: { id: true },
+    });
+    if (existing) return;
+
+    await this.prisma.paymentAnomaly.create({
+      data: {
+        bookingId: args.bookingId,
+        kind: "public_deposit_duplicate_success_suppressed",
+        severity: "critical",
+        status: "open",
+        message:
+          "A public booking deposit success attempted to replace an existing canonical deposit PaymentIntent.",
+        details: {
+          bookingId: args.bookingId,
+          existingPaymentIntentId: args.existingPaymentIntentId,
+          attemptedPaymentIntentId: args.attemptedPaymentIntentId,
+          source: args.source,
+        } as Prisma.InputJsonValue,
+      },
+    });
+  }
+
   /**
    * Ensures deposit succeeded (or skip flag). Otherwise throws structured HTTP errors.
    */
@@ -1067,6 +1127,28 @@ export class PublicBookingDepositService {
     remainingBalanceAfterDepositCents: number | null;
   }): Promise<void> {
     const now = new Date();
+    const existing = await this.prisma.booking.findUnique({
+      where: { id: args.bookingId },
+      select: {
+        publicDepositStatus: true,
+        publicDepositPaymentIntentId: true,
+      } as any,
+    } as any);
+    const existingPi = existing?.publicDepositPaymentIntentId?.trim() || null;
+    if (
+      existing?.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded &&
+      existingPi &&
+      existingPi !== args.paymentIntentId
+    ) {
+      await this.recordConflictingSuccessfulDeposit({
+        bookingId: args.bookingId,
+        existingPaymentIntentId: existingPi,
+        attemptedPaymentIntentId: args.paymentIntentId,
+        source: "prepare_or_confirm",
+      });
+      return;
+    }
+
     const patch: Prisma.BookingUpdateInput = {
       publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
       publicDepositPaidAt: now,
@@ -1085,10 +1167,42 @@ export class PublicBookingDepositService {
       );
     }
 
-    await this.prisma.booking.update({
-      where: { id: args.bookingId },
+    const bookingDelegate = this.prisma.booking as PrismaService["booking"] & {
+      updateMany?: (args: Prisma.BookingUpdateManyArgs) => Promise<{ count: number }>;
+    };
+    const guardedUpdateArgs = {
+      where: {
+        id: args.bookingId,
+        OR: [
+          { publicDepositStatus: { not: BookingPublicDepositStatus.deposit_succeeded } },
+          { publicDepositPaymentIntentId: args.paymentIntentId },
+          { publicDepositPaymentIntentId: null },
+        ],
+      },
       data: patch,
-    });
+    } satisfies Prisma.BookingUpdateManyArgs;
+    const updated =
+      typeof bookingDelegate.updateMany === "function"
+        ? await bookingDelegate.updateMany(guardedUpdateArgs)
+        : await this.prisma.booking
+            .update({
+              where: { id: args.bookingId },
+              data: patch,
+            })
+            .then(() => ({ count: 1 }));
+    if (updated.count !== 1) {
+      const latest = await this.prisma.booking.findUnique({
+        where: { id: args.bookingId },
+        select: { publicDepositPaymentIntentId: true },
+      });
+      await this.recordConflictingSuccessfulDeposit({
+        bookingId: args.bookingId,
+        existingPaymentIntentId: latest?.publicDepositPaymentIntentId?.trim() || null,
+        attemptedPaymentIntentId: args.paymentIntentId,
+        source: "prepare_or_confirm",
+      });
+      return;
+    }
 
     const idempotencyKey = `public-deposit-sync:${args.paymentIntentId}`;
     // Decision-layer idempotency:

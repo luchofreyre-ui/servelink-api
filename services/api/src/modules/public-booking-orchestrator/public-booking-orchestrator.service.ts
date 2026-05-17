@@ -5,7 +5,13 @@ import {
   Logger,
   NotFoundException,
 } from "@nestjs/common";
-import { BookingRecoveryStatus, BookingStatus, Prisma } from "@prisma/client";
+import {
+  BookingPaymentStatus,
+  BookingPublicDepositStatus,
+  BookingRecoveryStatus,
+  BookingStatus,
+  Prisma,
+} from "@prisma/client";
 import { PrismaService } from "../../prisma";
 import { FoService, type JobMatchInput } from "../fo/fo.service";
 import {
@@ -68,6 +74,9 @@ type BookingForOrchestration = {
   preferredFoId: string | null;
   scheduledStart: Date | null;
   scheduledEnd: Date | null;
+  paymentStatus: BookingPaymentStatus;
+  publicDepositStatus: BookingPublicDepositStatus;
+  publicDepositPaymentIntentId: string | null;
   estimatedHours: number;
   siteLat: number | null;
   siteLng: number | null;
@@ -242,6 +251,9 @@ export class PublicBookingOrchestratorService {
         preferredFoId: true,
         scheduledStart: true,
         scheduledEnd: true,
+        paymentStatus: true,
+        publicDepositStatus: true,
+        publicDepositPaymentIntentId: true,
         estimatedHours: true,
         siteLat: true,
         siteLng: true,
@@ -258,6 +270,9 @@ export class PublicBookingOrchestratorService {
       preferredFoId: row.preferredFoId,
       scheduledStart: row.scheduledStart,
       scheduledEnd: row.scheduledEnd,
+      paymentStatus: row.paymentStatus,
+      publicDepositStatus: row.publicDepositStatus,
+      publicDepositPaymentIntentId: row.publicDepositPaymentIntentId,
       estimatedHours: Number(row.estimatedHours ?? 0),
       siteLat: row.siteLat,
       siteLng: row.siteLng,
@@ -290,6 +305,58 @@ export class PublicBookingOrchestratorService {
         "This booking has no estimate snapshot.",
       );
     }
+  }
+
+  private hasCanonicalSuccessfulPublicDeposit(booking: BookingForOrchestration) {
+    return (
+      booking.publicDepositStatus === BookingPublicDepositStatus.deposit_succeeded ||
+      booking.paymentStatus === BookingPaymentStatus.authorized ||
+      booking.paymentStatus === BookingPaymentStatus.paid
+    );
+  }
+
+  private buildConfirmationResponse(args: {
+    result: {
+      id: string;
+      scheduledStart: Date | string | null;
+      scheduledEnd?: Date | string | null;
+      estimatedHours: number;
+      status: BookingStatus;
+      alreadyApplied?: boolean;
+    };
+    booking: BookingForOrchestration;
+    hold: { startAt: Date; endAt: Date };
+    alreadyApplied?: boolean;
+  }) {
+    const scheduledStart = args.result.scheduledStart
+      ? new Date(args.result.scheduledStart).toISOString()
+      : null;
+    const scheduledEnd =
+      resolveCanonicalBookingScheduledEnd({
+        scheduledStart: args.result.scheduledStart
+          ? new Date(args.result.scheduledStart)
+          : null,
+        scheduledEnd:
+          "scheduledEnd" in args.result && args.result.scheduledEnd != null
+            ? new Date(args.result.scheduledEnd as Date | string)
+            : null,
+        estimatedHours: args.result.estimatedHours,
+        estimateSnapshotOutputJson: args.booking.estimateSnapshot?.outputJson,
+        preferWallClockFromSnapshot: true,
+        hold: {
+          startAt: args.hold.startAt,
+          endAt: args.hold.endAt,
+        },
+      })?.toISOString() ?? null;
+
+    return {
+      kind: "public_booking_confirmation" as const,
+      bookingId: args.result.id,
+      scheduledStart,
+      scheduledEnd,
+      status: args.result.status,
+      alreadyApplied: Boolean(args.alreadyApplied ?? args.result.alreadyApplied),
+    };
   }
 
   private durationMinutesFromBooking(booking: BookingForOrchestration): number {
@@ -1387,6 +1454,47 @@ export class PublicBookingOrchestratorService {
     const now = new Date();
     if (hold.expiresAt.getTime() <= now.getTime()) {
       const code = "PUBLIC_BOOKING_HOLD_EXPIRED";
+      if (this.hasCanonicalSuccessfulPublicDeposit(booking)) {
+        const recovered = await this.attemptPostPaymentRecovery({
+          booking,
+          originalHold: {
+            id: hold.id,
+            bookingId: hold.bookingId,
+            foId: hold.foId,
+            startAt: hold.startAt,
+            endAt: hold.endAt,
+          },
+          note: dto.note,
+          idempotencyKey: idempotencyKey?.trim() || null,
+        });
+        if (recovered) {
+          this.logLifecycle({
+            event: "confirm_succeeded",
+            bookingId: recovered.result.id,
+            holdId: recovered.hold.id,
+            originalHoldId: dto.holdId,
+            recoveryReason: "HOLD_EXPIRED",
+            alreadyApplied: Boolean(recovered.result.alreadyApplied),
+          });
+          await this.autoCreateRecurringPlanAfterDeposit(recovered.result.id);
+          return this.buildConfirmationResponse({
+            result: recovered.result,
+            booking,
+            hold: recovered.hold,
+          });
+        }
+
+        await this.recordPostPaymentRecoveryFailure({
+          bookingId: dto.bookingId,
+          holdId: dto.holdId,
+          reason: "HOLD_EXPIRED",
+          err: new ConflictException({
+            code,
+            message:
+              "The selected slot hold expired before confirmation and no recovery slot was available.",
+          }),
+        });
+      }
       this.logLifecycle({
         event: "confirm_failed",
         bookingId: dto.bookingId,
@@ -1550,27 +1658,6 @@ export class PublicBookingOrchestratorService {
       }
     }
 
-    const scheduledStart = result.scheduledStart
-      ? new Date(result.scheduledStart).toISOString()
-      : null;
-    const scheduledEnd =
-      resolveCanonicalBookingScheduledEnd({
-        scheduledStart: result.scheduledStart
-          ? new Date(result.scheduledStart)
-          : null,
-        scheduledEnd:
-          "scheduledEnd" in result && result.scheduledEnd != null
-            ? new Date(result.scheduledEnd as Date | string)
-            : null,
-        estimatedHours: result.estimatedHours,
-        estimateSnapshotOutputJson: booking.estimateSnapshot?.outputJson,
-        preferWallClockFromSnapshot: true,
-        hold: {
-          startAt: responseHold.startAt,
-          endAt: responseHold.endAt,
-        },
-      })?.toISOString() ?? null;
-
     this.logLifecycle({
       event: "confirm_succeeded",
       bookingId: result.id,
@@ -1582,15 +1669,10 @@ export class PublicBookingOrchestratorService {
 
     await this.autoCreateRecurringPlanAfterDeposit(result.id);
 
-    return {
-      kind: "public_booking_confirmation" as const,
-      bookingId: result.id,
-      scheduledStart,
-      scheduledEnd,
-      status: result.status,
-      alreadyApplied: Boolean(
-        (result as { alreadyApplied?: boolean }).alreadyApplied,
-      ),
-    };
+    return this.buildConfirmationResponse({
+      result,
+      booking,
+      hold: responseHold,
+    });
   }
 }

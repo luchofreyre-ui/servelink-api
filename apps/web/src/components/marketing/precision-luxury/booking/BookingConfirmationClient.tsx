@@ -63,6 +63,8 @@ import { getBookingServiceCatalogItem } from "./bookingServiceCatalog";
 import {
   clearBookingConfirmationPaymentSessionState,
   clearBookingConfirmationSessionSnapshot,
+  clearBookingContinuitySnapshot,
+  readBookingContinuitySnapshot,
   hasPublicIntakeEchoInSearchParams,
   markBookingFlowFreshStartRequested,
   mergeConfirmationParamsFromSessionIfUrlEmpty,
@@ -246,7 +248,7 @@ export function BookingConfirmationClient() {
     setEffectiveSearchParams(
       mergeConfirmationParamsFromSessionIfUrlEmpty(
         url,
-        readBookingConfirmationSessionSnapshot(),
+        readBookingConfirmationSessionSnapshot() ?? readBookingContinuitySnapshot(),
       ),
     );
   }, [urlString]);
@@ -416,6 +418,9 @@ export function BookingConfirmationClient() {
     if (!remote) return;
     if (remote.bookingStatus !== "assigned" && remote.publicDepositPaid !== true) return;
     clearBookingConfirmationPaymentSessionState(remote.bookingId);
+    if (remote.bookingStatus === "assigned") {
+      clearBookingContinuitySnapshot(remote.bookingId);
+    }
     try {
       window.sessionStorage.removeItem("booking_deposit_in_flight");
     } catch {
@@ -471,6 +476,7 @@ export function BookingConfirmationClient() {
   const clearSessionAndNavigateProps = {
     onClick: () => {
       clearBookingConfirmationSessionSnapshot();
+      clearBookingContinuitySnapshot(bookingId || undefined);
       markBookingFlowFreshStartRequested();
     },
   };

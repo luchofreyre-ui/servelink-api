@@ -72,6 +72,7 @@ import {
   buildBookingSearchParams,
   clampBookingStepToStructuralMax,
   computeMaxReadyStep,
+  clearBookingContinuitySnapshot,
   clearBookingConfirmationPaymentSessionState,
   clearBookingConfirmationSessionSnapshot,
   consumeBookingFlowFreshStartRequested,
@@ -84,7 +85,9 @@ import {
   normalizeBookingProblemAreasForPayload,
   buildPublicServiceLocationPayload,
   parseBookingSearchParams,
+  readBookingContinuitySnapshot,
   readBookingConfirmationSessionSnapshot,
+  writeBookingContinuitySnapshot,
   writeBookingConfirmationSessionSnapshot,
 } from "./bookingUrlState";
 import {
@@ -689,6 +692,11 @@ export function BookingFlowClient() {
     holdId?: string | null;
     paymentIntentId?: string | null;
     expiresAt?: string | null;
+    canonicalState?:
+      | "deposit_required"
+      | "deposit_succeeded"
+      | "booking_confirmed"
+      | "finalization_pending";
   }) {
     const bookingId = args.bookingId.trim();
     const holdId = args.holdId?.trim() || "";
@@ -719,6 +727,11 @@ export function BookingFlowClient() {
     writeBookingConfirmationSessionSnapshot({
       ...payload,
       ...teamPlanningSnapshotForSession(),
+    });
+    writeBookingContinuitySnapshot({
+      ...payload,
+      ...teamPlanningSnapshotForSession(),
+      lastKnownCanonicalState: args.canonicalState ?? "deposit_required",
     });
   }
   /**
@@ -1872,6 +1885,7 @@ export function BookingFlowClient() {
         });
         clearDepositUi();
         clearBookingConfirmationPaymentSessionState(bookingId);
+        clearBookingContinuitySnapshot(bookingId);
         setScheduleCommitError(null);
         setScheduleCommitPhase("none");
         setPendingConfirmHoldId(null);
@@ -1950,6 +1964,21 @@ export function BookingFlowClient() {
       paymentSessionKey: currentPaymentSessionKey(bookingId, holdId),
       ...teamPlanningSnapshotForSession(),
     });
+    writeBookingContinuitySnapshot({
+      intakeId,
+      bookingId,
+      priceCents: priorMatchesBooking ? prior.priceCents : null,
+      durationMinutes: priorMatchesBooking ? prior.durationMinutes : null,
+      confidence: priorMatchesBooking ? prior.confidence : null,
+      bookingErrorCode: priorMatchesBooking ? prior.bookingErrorCode : "",
+      publicDepositPaymentIntentId: prep.paymentIntentId?.trim() || undefined,
+      publicDepositStatus:
+        prep.publicDepositStatus?.trim() || "deposit_succeeded",
+      publicDepositHoldId: holdId || undefined,
+      paymentSessionKey: currentPaymentSessionKey(bookingId, holdId),
+      lastKnownCanonicalState: holdId ? "finalization_pending" : "deposit_succeeded",
+      ...teamPlanningSnapshotForSession(),
+    });
     clearDepositUi();
     if (holdId) {
       setConfirmScheduleLoading(true);
@@ -2005,6 +2034,10 @@ export function BookingFlowClient() {
       bookingId: prep.bookingId,
       holdId: pendingConfirmHoldIdRef.current?.trim() || null,
       paymentIntentId: prep.paymentIntentId,
+      canonicalState:
+        prep.nextAction === "finalize_booking"
+          ? "deposit_succeeded"
+          : "deposit_required",
     });
     setDepositBackendProcessing(
       prep.paymentMode === "deposit" && prep.classification === "processing",
@@ -2050,7 +2083,8 @@ export function BookingFlowClient() {
     if (!isPaymentReturn) return;
     paymentResumeAttemptedRef.current = true;
 
-    const session = readBookingConfirmationSessionSnapshot();
+    const session =
+      readBookingConfirmationSessionSnapshot() ?? readBookingContinuitySnapshot();
     const bookingId =
       params.get("bookingId")?.trim() ||
       stateRefForBookingUrl.current.schedulingBookingId.trim() ||
@@ -2116,6 +2150,7 @@ export function BookingFlowClient() {
       holdId: holdId || null,
       paymentIntentId,
       expiresAt: session?.paymentSessionExpiresAt ?? null,
+      canonicalState: "finalization_pending",
     });
 
     void (async () => {

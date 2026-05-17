@@ -1,4 +1,9 @@
-import { BookingRecoveryStatus, BookingStatus } from "@prisma/client";
+import {
+  BookingPaymentStatus,
+  BookingPublicDepositStatus,
+  BookingRecoveryStatus,
+  BookingStatus,
+} from "@prisma/client";
 import { BadRequestException, ConflictException, Logger, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../src/prisma";
 import { BookingsService } from "../src/modules/bookings/bookings.service";
@@ -59,6 +64,9 @@ function schedulableHoldBooking() {
     preferredFoId: null,
     scheduledStart: null,
     scheduledEnd: null,
+    paymentStatus: BookingPaymentStatus.unpaid,
+    publicDepositStatus: BookingPublicDepositStatus.deposit_required,
+    publicDepositPaymentIntentId: null,
     estimatedHours: 1,
     siteLat: null,
     siteLng: null,
@@ -1042,6 +1050,97 @@ describe("PublicBookingOrchestratorService — public hold + confirm", () => {
           originalRequestedTime: scheduled,
           recoveryAttemptedAt: expect.any(Date),
         }),
+      }),
+    );
+    expect(anomalyCreate).not.toHaveBeenCalled();
+  });
+
+  it("confirmHold: canonical paid booking recovers when original hold is already expired", async () => {
+    const now = new Date("2030-06-01T14:30:00.000Z");
+    jest.useFakeTimers().setSystemTime(now);
+    const scheduled = new Date("2030-06-02T14:00:00.000Z");
+    const holdEnd = new Date(scheduled.getTime() + 60 * 60 * 1000);
+    const recoveryUpdate = jest.fn().mockResolvedValue({});
+    const anomalyCreate = jest.fn().mockResolvedValue({});
+    const confirmBookingFromHold = jest.fn().mockResolvedValue({
+      id: "bk_hold",
+      scheduledStart: scheduled,
+      estimatedHours: 1,
+      status: BookingStatus.assigned,
+      alreadyApplied: false,
+    });
+    const deposit = {
+      ensurePublicDepositResolvedBeforeConfirm: jest.fn().mockResolvedValue(undefined),
+    } as unknown as PublicBookingDepositService;
+
+    const prisma = {
+      booking: {
+        findUnique: jest.fn().mockResolvedValue({
+          ...schedulableHoldBooking(),
+          paymentStatus: BookingPaymentStatus.authorized,
+          publicDepositStatus: BookingPublicDepositStatus.deposit_succeeded,
+          publicDepositPaymentIntentId: "pi_paid",
+        }),
+        update: recoveryUpdate,
+      },
+      bookingSlotHold: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: "hold_1",
+          bookingId: "bk_hold",
+          foId: "fo_a",
+          startAt: scheduled,
+          endAt: holdEnd,
+          expiresAt: new Date("2030-06-01T14:00:00.000Z"),
+        }),
+      },
+      paymentAnomaly: { create: anomalyCreate },
+    } as unknown as PrismaService;
+    const slotAvailability = {
+      listAvailableWindows: jest
+        .fn()
+        .mockResolvedValue([{ startAt: scheduled, endAt: holdEnd }]),
+    } as unknown as SlotAvailabilityService;
+    const slotHolds = {
+      createHold: jest.fn().mockResolvedValue({
+        id: "hold_recovered",
+        bookingId: "bk_hold",
+        foId: "fo_a",
+        startAt: scheduled,
+        endAt: holdEnd,
+        expiresAt: new Date("2030-06-01T15:00:00.000Z"),
+      }),
+    } as unknown as SlotHoldsService;
+
+    const svc = new PublicBookingOrchestratorService(
+      prisma,
+      slotAvailability,
+      slotHolds,
+      { confirmBookingFromHold } as unknown as BookingsService,
+      {} as FoService,
+      deposit,
+    );
+
+    const res = await svc.confirmHold(
+      { bookingId: "bk_hold", holdId: "hold_1" },
+      "idem-key-1",
+    );
+
+    expect(res.status).toBe(BookingStatus.assigned);
+    expect(res.scheduledStart).toBe(scheduled.toISOString());
+    expect(deposit.ensurePublicDepositResolvedBeforeConfirm).not.toHaveBeenCalled();
+    expect(slotHolds.createHold).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bookingId: "bk_hold",
+        foId: "fo_a",
+        startAt: scheduled.toISOString(),
+        endAt: holdEnd.toISOString(),
+      }),
+    );
+    expect(confirmBookingFromHold).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bookingId: "bk_hold",
+        holdId: "hold_recovered",
+        idempotencyKey: "idem-key-1",
       }),
     );
     expect(anomalyCreate).not.toHaveBeenCalled();
