@@ -16,16 +16,16 @@ export function BookingFlowProgress({
   steps,
 }: BookingFlowProgressProps) {
   return (
-    <div className="rounded-[28px] border border-[#C9B27C]/16 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.05)] sm:p-6">
-      <div className="grid gap-3 sm:gap-4 lg:grid-cols-5">
+    <div className="rounded-[22px] border border-[#C9B27C]/16 bg-white p-3 shadow-[0_18px_50px_rgba(15,23,42,0.05)] sm:rounded-[28px] sm:p-6">
+      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:gap-4 lg:grid lg:grid-cols-5 lg:overflow-visible lg:pb-0">
         {steps.map((step, index) => {
           const isActive = step.id === currentStep;
           const isComplete = step.id < currentStep;
 
           return (
-            <div key={step.id} className="flex flex-1 items-center gap-3">
+            <div key={step.id} className="flex min-w-[8.25rem] flex-1 items-center gap-2 sm:min-w-0 sm:gap-3">
               <div
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-sm font-semibold font-[var(--font-manrope)] sm:h-11 sm:w-11 ${NU_PREMIUM_TRANSITION} ${nuPremiumFocusRing} ${
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold font-[var(--font-manrope)] sm:h-11 sm:w-11 sm:text-sm ${NU_PREMIUM_TRANSITION} ${nuPremiumFocusRing} ${
                   isActive
                     ? "border-[#0D9488] bg-[#0D9488] text-white shadow-[0_10px_30px_rgba(13,148,136,0.18)]"
                     : isComplete
@@ -38,7 +38,7 @@ export function BookingFlowProgress({
 
               <div className="min-w-0">
                 <p
-                  className={`font-[var(--font-manrope)] text-sm font-medium ${
+                  className={`truncate font-[var(--font-manrope)] text-xs font-medium sm:text-sm ${
                     isActive || isComplete ? "text-[#0F172A]" : "text-[#475569]"
                   }`}
                 >

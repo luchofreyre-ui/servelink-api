@@ -123,6 +123,8 @@ describe("BookingConfirmationClient", () => {
     expect(screen.getByText(/Estimated cleaning effort/i)).toBeInTheDocument();
     expect(screen.getByText(/3 hr/)).toBeInTheDocument();
     expect(screen.getByText(/Estimate for this visit/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Ref · bk_1/i).length).toBeGreaterThan(0);
+    expect(document.body.textContent).not.toContain("in_default");
   });
 
   it("shows visit-confirmed headline when API reports assigned booking with schedule", async () => {
