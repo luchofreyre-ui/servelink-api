@@ -22,6 +22,7 @@ import { AdminDispatchDecisionsModule } from "./modules/admin-dispatch-decisions
 import { TelemetryController } from "./modules/telemetry/telemetry.controller";
 import { HealthController } from "./health.controller";
 import { ReadinessController } from "./readiness.controller";
+import { RuntimeVersionController } from "./runtime-version.controller";
 import { MetricsController } from "./metrics.controller";
 import { DevModule } from "./dev/dev.module";
 import { FinancialModule } from "./modules/financial/financial.module";
@@ -98,6 +99,7 @@ const enableDevScenarioApi =
     TelemetryController,
     HealthController,
     ReadinessController,
+    RuntimeVersionController,
     MetricsController,
   ],
 })

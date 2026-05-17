@@ -54,6 +54,8 @@ Follow **`production-deployment-governance-v1.md`** canonical path:
 |------|--------|----------------|
 | Health probe | **`GET https://<prod-api>/api/v1/system/health`** | **200** + **`db: ok`** (or documented equivalent) |
 | Readiness | **`GET https://<prod-api>/api/v1/system/readiness`** | **200** + readiness semantics aligned Railway platform settings (`production-deployment-governance-v1.md`) |
+| API version proof | **`GET https://<prod-api>/api/v1/system/version`** | **200** + non-secret `service: "servelink-api"` and `version.gitSha` matching target `origin/main` SHA; if `unknown`, deploy parity is **not proven** |
+| Web version proof | **`GET https://<prod-web>/api/version`** | **200** + non-secret `service: "servelink-web"` and `version.gitSha` matching target `origin/main` SHA; if `unknown`, web deploy parity is **not proven** |
 | Migrations | Railway logs tail near boot | **`=== MIGRATION COMPLETE ===`** **when migrations landed**, **`=== CONTINUING TO NEST BOOT ===`** follow-through (`production-deployment-governance-v1.md`) |
 
 ---
@@ -86,6 +88,7 @@ Document captured timestamps / principals separately — **not embedded here.**
 - [ ] Route existence parity per **`production-deployment-governance-v1.md` § Deploy verification item **2** (**401 vs 404 discipline** for auth surfaces).
 - [ ] Cross-check **production web** targets API base URL verified above (**frontend/backend parity**).
 - [ ] Spot **`/book`** load — network tab shows **no systematic 404** storm on newly merged paths (`production-deployment-governance-v1.md`).
+- [ ] Compare API and web version endpoint `version.gitSha` values against the expected `origin/main` SHA. Healthy HTTP responses without matching version proof do **not** establish commit parity.
 
 ---
 
@@ -131,7 +134,8 @@ Minimum bundle after verification windows:
 
 1. Deploy SHA + Railway deployment ID + verifying actor identity.
 2. Timestamped HTTP excerpt (**health/readiness** minimal JSON subset acceptable redacted).
-3. Optional admin-route excerpt (**refresh-runs** header counts redacted) when OA lanes exercised intentionally.
+3. Timestamped non-secret version excerpts from **`/api/v1/system/version`** and **`/api/version`**, including `service`, `version.gitSha`, `version.shortGitSha`, `version.buildTime`, and `version.source`.
+4. Optional admin-route excerpt (**refresh-runs** header counts redacted) when OA lanes exercised intentionally.
 
 ---
 
