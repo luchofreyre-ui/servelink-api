@@ -135,16 +135,21 @@ export function PrecisionLuxuryHomepage() {
 
         {/* Trust strip */}
         <section className="border-y border-[#C9B27C]/14 bg-white/75">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-8 md:py-8">
-            <p className="mb-5 max-w-3xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px] md:leading-7">
+          <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 md:px-8 md:py-8">
+            <p className="mb-4 max-w-3xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:mb-5 md:text-[15px] md:leading-7">
               Prepared teams, clear arrival coordination, and documented service standards—calm professionalism you can recognize.
             </p>
-            <TrustMetricStrip items={trustStripItems} />
+            <div className="sm:hidden">
+              <TrustMetricStrip items={trustStripItems.slice(0, 3)} />
+            </div>
+            <div className="hidden sm:block">
+              <TrustMetricStrip items={trustStripItems} />
+            </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 pt-12 md:px-8 md:pt-14">
-          <div className="grid gap-7 rounded-[34px] border border-[#E8DFD0]/95 bg-white p-6 shadow-[0_24px_70px_-50px_rgba(15,23,42,0.32)] md:p-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
+        <section className="mx-auto max-w-7xl px-4 pt-9 sm:px-6 md:px-8 md:pt-14">
+          <div className="grid gap-6 rounded-[30px] border border-[#E8DFD0]/95 bg-white p-5 shadow-[0_24px_70px_-50px_rgba(15,23,42,0.32)] md:gap-7 md:rounded-[34px] md:p-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
             <div>
               <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.24em] text-[#B89F6B]">
                 Experience the Nu Standard difference
@@ -155,11 +160,11 @@ export function PrecisionLuxuryHomepage() {
               <p className="mt-4 font-[var(--font-manrope)] text-base leading-7 text-[#475569]">
                 We keep the visible standard simple: coordinated arrival, documented expectations, and a service rhythm that respects the home.
               </p>
-              <MarketingLinkButton href="/services" variant="secondary" className="mt-7 min-h-[46px] px-6">
+              <MarketingLinkButton href="/services" variant="secondary" className="mt-6 min-h-[46px] px-6 md:mt-7">
                 Learn more
               </MarketingLinkButton>
             </div>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-3 md:gap-4">
               {[
                 ["Plan", "Clear service expectations before the visit starts."],
                 ["Prepare", "Owner-led teams arrive with documented standards."],

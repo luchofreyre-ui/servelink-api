@@ -492,6 +492,11 @@ export function BookingConfirmationClient() {
       markBookingFlowFreshStartRequested();
     },
   };
+  const nextStepsText = visitConfirmedFromRemote
+    ? BOOKING_CONFIRMATION_NEXT_STEPS_VISIT_CONFIRMED
+    : showBookingSavedIntro
+      ? BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED
+      : BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED;
 
   if (outcomeMode === "neutral_reentry") {
     return (
@@ -554,17 +559,17 @@ export function BookingConfirmationClient() {
       <ServiceHeader />
 
       <main>
-        <section className="mx-auto max-w-7xl px-6 py-10 md:px-8 md:py-14">
-          <div className="grid gap-7 rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:p-9">
-            <div className="rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
+        <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:px-8 md:py-14">
+          <div className="grid gap-5 rounded-[30px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-4 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:gap-7 sm:rounded-[34px] sm:p-7 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:p-9">
+            <div className="rounded-[24px] border border-[#E8DFD0]/80 bg-white/76 p-5 sm:rounded-[28px] sm:p-8">
               <ConfirmationSuccessBadge />
               <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
                 We&apos;ve got it from here
               </p>
-              <h1 className="mt-4 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] md:text-5xl">
+              <h1 className="mt-4 font-[var(--font-poppins)] text-[2.05rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] md:text-5xl">
                 {visitConfirmedFromRemote ? "You're all set. Your cleaning is confirmed." : headline}
               </h1>
-              <p className="mt-6 font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
+              <p className="mt-5 font-[var(--font-manrope)] text-base leading-7 text-[#475569] sm:text-lg sm:leading-8">
                 Thank you.{" "}
                 {visitConfirmedFromRemote ? (
                   <>
@@ -591,8 +596,19 @@ export function BookingConfirmationClient() {
                   </>
                 )}
               </p>
+              <div className="mt-5 rounded-2xl border border-[#0D9488]/16 bg-[#F0FDFA] px-4 py-4">
+                <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#0F766E]">
+                  {BOOKING_CONFIRMATION_WHATS_NEXT_SECTION_TITLE}
+                </p>
+                <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#334155]">
+                  {nextStepsText}
+                </p>
+                <p className="mt-3 font-[var(--font-manrope)] text-xs font-semibold text-[#0F766E]">
+                  Questions or changes can stay in the confirmation email thread.
+                </p>
+              </div>
             </div>
-            <div className="rounded-[28px] border border-[#C9B27C]/18 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.05)] sm:p-8">
+            <div className="rounded-[24px] border border-[#C9B27C]/18 bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.05)] sm:rounded-[28px] sm:p-8">
               <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                 Booking details
               </p>
@@ -765,10 +781,10 @@ export function BookingConfirmationClient() {
           ) : null}
 
           {bookingId && remoteError ? (
-            <p className="mt-4 rounded-2xl border border-amber-200/80 bg-amber-50 px-4 py-3 font-[var(--font-manrope)] text-sm text-amber-950">
-              We couldn&apos;t refresh your saved visit plan from our servers.
-              What you confirmed is still valid—we&apos;ll follow up with full
-              details.
+            <p className="mt-4 rounded-2xl border border-[#C9B27C]/18 bg-white px-4 py-3 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+              We have your confirmation details. If the live visit plan takes a
+              moment to refresh here, we&apos;ll still follow up with the full
+              email summary.
             </p>
           ) : null}
 
@@ -892,21 +908,6 @@ export function BookingConfirmationClient() {
               show here, we&apos;ll confirm it when we reach out.
             </p>
           ) : null}
-
-          <div className="mt-10 space-y-6 rounded-[28px] border border-[#C9B27C]/18 bg-white p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">
-            <div>
-              <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                {BOOKING_CONFIRMATION_WHATS_NEXT_SECTION_TITLE}
-              </p>
-              <p className="mt-3 font-[var(--font-manrope)] text-base leading-7 text-[#334155]">
-                {visitConfirmedFromRemote
-                  ? BOOKING_CONFIRMATION_NEXT_STEPS_VISIT_CONFIRMED
-                  : showBookingSavedIntro
-                    ? BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED
-                    : BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED}
-              </p>
-            </div>
-          </div>
 
           {recurringContract ? (
             <div className="mt-10 rounded-[28px] border border-[#0D9488]/18 bg-[rgba(13,148,136,0.06)] p-8 shadow-[0_20px_60px_rgba(15,23,42,0.05)]">

@@ -45,11 +45,12 @@ function BrandMark() {
   );
 }
 
-function navLinkClass(activeOverflow?: boolean) {
+function navLinkClass(activeOverflow?: boolean, extraClass = "") {
   return [
     "rounded-lg px-2.5 py-2 text-sm text-gray-900 transition-colors min-h-[44px] inline-flex items-center",
     activeOverflow ? "whitespace-nowrap" : "",
     "hover:bg-slate-50 hover:underline",
+    extraClass,
   ].join(" ");
 }
 
@@ -94,28 +95,28 @@ function AdminShellNav() {
       <Link href="/admin" className={navLinkClass(true)}>
         Admin
       </Link>
-      <Link href="/admin/ops" className={navLinkClass(true)}>
+      <Link href="/admin/ops" className={navLinkClass(true, "hidden sm:inline-flex")}>
         Ops
       </Link>
-      <Link href="/admin/anomalies" className={navLinkClass(true)}>
+      <Link href="/admin/anomalies" className={navLinkClass(true, "hidden sm:inline-flex")}>
         Anomalies
       </Link>
-      <Link href="/admin/activity" className={navLinkClass(true)}>
+      <Link href="/admin/activity" className={navLinkClass(true, "hidden sm:inline-flex")}>
         Activity
       </Link>
-      <Link href="/admin/exceptions" className={navLinkClass(true)}>
+      <Link href="/admin/exceptions" className={navLinkClass(true, "hidden md:inline-flex")}>
         Exceptions
       </Link>
-      <Link href="/admin/system-tests" className={navLinkClass(true)}>
+      <Link href="/admin/system-tests" className={navLinkClass(true, "hidden md:inline-flex")}>
         System tests
       </Link>
-      <Link href="/notifications" className={navLinkClass(true)}>
+      <Link href="/notifications" className={navLinkClass(true, "hidden sm:inline-flex")}>
         Notifications
       </Link>
-      <Link href="/customer" className={navLinkClass(true)}>
+      <Link href="/customer" className={navLinkClass(true, "hidden lg:inline-flex")}>
         Customer view
       </Link>
-      <Link href="/fo" className={navLinkClass(true)}>
+      <Link href="/fo" className={navLinkClass(true, "hidden lg:inline-flex")}>
         Partner view
       </Link>
     </>
@@ -134,22 +135,25 @@ function GeneralShellNav() {
       <Link href="/fo" className={navLinkClass(true)}>
         Partner
       </Link>
-      <Link href="/admin/ops" className={navLinkClass(true)}>
+      <Link href="/admin" className={navLinkClass(true)}>
+        Admin
+      </Link>
+      <Link href="/admin/ops" className={navLinkClass(true, "hidden sm:inline-flex")}>
         Ops
       </Link>
-      <Link href="/admin/anomalies" className={navLinkClass(true)}>
+      <Link href="/admin/anomalies" className={navLinkClass(true, "hidden sm:inline-flex")}>
         Anomalies
       </Link>
-      <Link href="/admin/activity" className={navLinkClass(true)}>
+      <Link href="/admin/activity" className={navLinkClass(true, "hidden md:inline-flex")}>
         Activity
       </Link>
-      <Link href="/admin/exceptions" className={navLinkClass(true)}>
+      <Link href="/admin/exceptions" className={navLinkClass(true, "hidden md:inline-flex")}>
         Exceptions
       </Link>
-      <Link href="/admin/system-tests" className={navLinkClass(true)}>
+      <Link href="/admin/system-tests" className={navLinkClass(true, "hidden lg:inline-flex")}>
         System tests
       </Link>
-      <Link href="/notifications" className={navLinkClass(true)}>
+      <Link href="/notifications" className={navLinkClass(true, "hidden sm:inline-flex")}>
         Notifications
       </Link>
     </>
@@ -164,17 +168,23 @@ export default function AppShellLayout({
   const pathname = usePathname() ?? "";
   const mode = shellNavMode(pathname);
   const showDevSwitcher = process.env.NODE_ENV === "development";
+  const authShell = pathname.includes("/auth");
 
   return (
     <>
       <div className="border-b border-gray-200 bg-white px-3 py-3 md:p-4">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 md:gap-4">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-2.5 md:gap-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-4">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <BrandMark />
             </div>
 
-            <ShellSearchBar className="min-w-0 w-full lg:max-w-md xl:max-w-lg lg:flex-1" />
+            <ShellSearchBar
+              className={`min-w-0 w-full lg:max-w-md xl:max-w-lg lg:flex-1 ${
+                authShell ? "hidden sm:block" : ""
+              }`}
+              placeholder={authShell ? "Search guides" : undefined}
+            />
 
             <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:justify-end md:gap-4">
               <SessionSignOutButton />

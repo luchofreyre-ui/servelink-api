@@ -66,9 +66,9 @@ export const BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE =
   "Begins a clean request—your previous answers stay on the last screen only.";
 
 export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_LEAD =
-  "The estimate below reflects what you just confirmed with us.";
+  "Your booking is in our hands, and the details below are saved for our team.";
 export const BOOKING_CONFIRMATION_INTRO_BOOKING_SAVED_DETAIL =
-  `Final pricing and arrival timing are confirmed when we follow up by email—this screen is your snapshot, not the final calendar lock. ${NU_STANDARD_OWNER_OPERATOR_SUMMARY}`;
+  `We’ll confirm final arrival details by email, and this page gives you a clear saved snapshot to reference. ${NU_STANDARD_OWNER_OPERATOR_SUMMARY}`;
 
 export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD =
   "Your preferences and contact path are on file with Nu Standard.";
@@ -76,7 +76,7 @@ export const BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL =
   "If anything didn’t finish on this screen, your details are still safe—our team picks up personally from here.";
 
 export const BOOKING_CONFIRMATION_NEXT_STEPS_BOOKING_SAVED =
-  "Watch the inbox you used on the previous step—we may ask a brief follow-up before we lock timing. You can also start a fresh booking note if your home or cadence changes meaningfully.";
+  "Watch the inbox you used on the previous step. We’ll use that thread for timing, any brief follow-up, and support if something changes.";
 
 export const BOOKING_CONFIRMATION_NEXT_STEPS_REQUEST_RECEIVED =
   "We read what you sent and reply from the email you provided. If something urgent changed, mention it when we write—you do not need to resend this entire form unless your needs are materially different.";
@@ -182,7 +182,7 @@ export function bookingConfirmationDeepPlanEchoLabel(
 export const BOOKING_PUBLIC_SERVICE_SECTION_TITLE = "Choose your service";
 
 export const BOOKING_PUBLIC_SERVICE_SECTION_BODY =
-  "Pick how you’d like to work with us first. Nu Standard teams are owner-led—your visit isn’t random staffing. You’ll review numbers when they’re ready, choose your team next, and hold your spot with a deposit only when you’re comfortable.";
+  "Choose the visit path that fits your home. You’ll review the estimate next, then choose an owner-led team and arrival time before deposit.";
 
 export const BOOKING_PUBLIC_CARD_ONE_TIME_TITLE = "One-Time Cleaning";
 

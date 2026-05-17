@@ -84,7 +84,7 @@ export function AuthLoginForm({
   const existingUser = mounted ? getAuthUser() : null;
 
   return (
-    <div className="mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <div className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
           {resolvedTitle}
@@ -124,7 +124,7 @@ export function AuthLoginForm({
             autoComplete="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 outline-none"
+            className="min-h-[46px] w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 outline-none"
             placeholder="name@example.com"
             required
           />
@@ -144,7 +144,7 @@ export function AuthLoginForm({
             autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 outline-none"
+            className="min-h-[46px] w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 outline-none"
             placeholder="Enter password"
             required
           />
@@ -159,7 +159,7 @@ export function AuthLoginForm({
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white"
+          className="inline-flex min-h-[46px] w-full items-center justify-center rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white"
         >
           {submitting ? "Signing in..." : "Sign in"}
         </button>

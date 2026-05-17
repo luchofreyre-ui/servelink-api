@@ -78,8 +78,8 @@ export function AuthRoleGate({ role, children }: Props) {
 
   if (!ready) {
     return (
-      <div className="mx-auto max-w-5xl px-6 py-16 text-lg text-zinc-500">
-        Checking session...
+      <div className="mx-auto max-w-5xl px-6 py-16 text-base text-zinc-500">
+        Preparing your secure workspace...
       </div>
     );
   }
@@ -92,17 +92,22 @@ export function AuthRoleGate({ role, children }: Props) {
           )}`
         : getLoginRouteForRole(role);
     return (
-      <div className="mx-auto max-w-5xl px-6 py-16">
-        <h1 className="text-3xl font-semibold text-zinc-900">Authentication required</h1>
-        <p className="mt-4 text-lg text-zinc-600">
-          You must sign in to access the {role} workspace.
+      <div className="mx-auto max-w-5xl px-6 py-14 sm:py-16">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+          Secure workspace
+        </p>
+        <h1 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">
+          Sign in to continue
+        </h1>
+        <p className="mt-3 max-w-xl text-base leading-7 text-zinc-600">
+          Use your Nu Standard credentials to open this workspace.
         </p>
         <div className="mt-8">
           <a
             href={loginHref}
-            className="inline-flex rounded-2xl bg-zinc-900 px-6 py-3 text-base font-semibold text-white hover:bg-zinc-800"
+            className="inline-flex min-h-[46px] items-center rounded-2xl bg-zinc-900 px-6 py-3 text-base font-semibold text-white hover:bg-zinc-800"
           >
-            Go to login
+            Go to sign in
           </a>
         </div>
       </div>
