@@ -10,10 +10,11 @@ export function PublicSiteFooter() {
               Nu Standard Cleaning
             </p>
             <h2 className="mt-4 font-[var(--font-poppins)] text-3xl font-semibold tracking-[-0.03em] text-[#0F172A]">
-              A premium public experience for a category-defining cleaning company.
+              Calm, prepared home care from the first question to the final walkthrough.
             </h2>
             <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-base leading-8 text-[#475569]">
-              The brand system is designed to feel warm, calm, high-trust, and operationally serious — without looking like a commodity cleaning service.
+              Nu Standard pairs owner-led accountability with clear coordination, respectful arrivals, and
+              service guidance that helps every visit feel organized before the team reaches your door.
             </p>
           </div>
 

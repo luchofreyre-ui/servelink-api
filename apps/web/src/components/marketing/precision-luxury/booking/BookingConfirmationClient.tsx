@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { DeepCleanProgramCard } from "@/components/booking/deep-clean/DeepCleanProgramCard";
 import { RecurringPlanConversionCard } from "@/components/bookings/RecurringPlanConversionCard";
 import { fetchPublicBookingConfirmation } from "@/lib/api/bookings";
+import { formatBookingReferenceLabel } from "@/lib/bookings/bookingDisplay";
 import { mapBookingScreenProgramToDisplay } from "@/mappers/deepCleanProgramMappers";
 import { PublicSiteFooter } from "../layout/PublicSiteFooter";
 import { ServiceHeader } from "../layout/ServiceHeader";
@@ -100,6 +101,12 @@ function formatUsdFromCents(cents: number): string {
     currency: "USD",
     maximumFractionDigits: 0,
   }).format(n);
+}
+
+function formatRequestReferenceLabel(raw: string): string {
+  const value = raw.trim();
+  const tail = value.length > 8 ? value.slice(-8) : value;
+  return `Request ref · ${tail}`;
 }
 
 function formatVisitDateTime(iso: string): string {
@@ -255,6 +262,11 @@ export function BookingConfirmationClient() {
 
   const bookingId = effectiveSearchParams.get("bookingId")?.trim() || "";
   const intakeId = effectiveSearchParams.get("intakeId")?.trim() || "";
+  const customerReference = bookingId
+    ? formatBookingReferenceLabel(bookingId)
+    : intakeId
+      ? formatRequestReferenceLabel(intakeId)
+      : "";
 
   const [sessionTeamPrepLines, setSessionTeamPrepLines] = useState<string[]>(
     [],
@@ -568,11 +580,11 @@ export function BookingConfirmationClient() {
                   <>
                     {BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_LEAD}{" "}
                     {BOOKING_CONFIRMATION_INTRO_REQUEST_RECEIVED_DETAIL}
-                    {intakeId ? (
+                    {customerReference ? (
                       <>
                         {" "}
                         <span className="text-[#64748B]">
-                          Keep this handy: {intakeId}
+                          We’ll use {customerReference} if we need to confirm details.
                         </span>
                       </>
                     ) : null}
@@ -615,9 +627,9 @@ export function BookingConfirmationClient() {
                     </p>
                   </div>
                 ) : null}
-                {bookingId || intakeId ? (
+                {customerReference ? (
                   <p className="rounded-2xl border border-[#E8DFD0]/90 bg-[#FFF9F3] px-4 py-3 font-[var(--font-manrope)] text-sm text-[#64748B]">
-                    Reference: <span className="font-mono text-[#0F172A]">{bookingId || intakeId}</span>
+                    Reference: <span className="font-semibold text-[#0F172A]">{customerReference}</span>
                   </p>
                 ) : null}
                 <div className="grid gap-2 border-t border-[#E8DFD0]/80 pt-4">
@@ -839,7 +851,9 @@ export function BookingConfirmationClient() {
               {bookingId ? (
                 <p className="font-[var(--font-manrope)] text-sm text-[#64748B]">
                   Booking reference:{" "}
-                  <span className="font-mono text-[#0F172A]">{bookingId}</span>
+                  <span className="font-semibold text-[#0F172A]">
+                    {formatBookingReferenceLabel(bookingId)}
+                  </span>
                 </p>
               ) : null}
               {remoteLoading ? (
@@ -1004,17 +1018,17 @@ export function BookingConfirmationClient() {
             </div>
           ) : null}
 
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
             {bookingId.trim() ? (
               <MarketingLinkButton
                 href={`/customer/bookings/${bookingId.trim()}`}
                 variant="primary"
-                className="min-h-[46px] px-6 py-3 text-sm"
+                className="w-full min-h-[46px] px-6 py-3 text-sm sm:w-auto"
               >
                 {BOOKING_CONFIRMATION_VIEW_BOOKING_CTA}
               </MarketingLinkButton>
             ) : null}
-            <MarketingLinkButton href="/services" variant="secondary" className="min-h-[46px] px-6 py-3 text-sm">
+            <MarketingLinkButton href="/services" variant="secondary" className="w-full min-h-[46px] px-6 py-3 text-sm sm:w-auto">
               Browse services
             </MarketingLinkButton>
             <Link
@@ -1022,7 +1036,7 @@ export function BookingConfirmationClient() {
               replace
               title={BOOKING_CONFIRMATION_BEGIN_FRESH_REQUEST_TITLE}
               {...clearSessionAndNavigateProps}
-              className="inline-flex min-h-[46px] items-center justify-center rounded-full border border-[#C9B27C]/25 bg-white px-6 py-3 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] transition-[transform,box-shadow,border-color,background-color,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:bg-[#FFF9F3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F3] active:translate-y-0 active:scale-[0.99]"
+              className="inline-flex min-h-[46px] w-full items-center justify-center rounded-full border border-[#C9B27C]/25 bg-white px-6 py-3 font-[var(--font-manrope)] text-sm font-semibold text-[#0F172A] transition-[transform,box-shadow,border-color,background-color,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:bg-[#FFF9F3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F3] active:translate-y-0 active:scale-[0.99] sm:w-auto"
             >
               {BOOKING_CONFIRMATION_START_NEW_BOOKING_CTA}
             </Link>

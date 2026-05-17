@@ -145,6 +145,21 @@ describe("CustomerBookingDetail", () => {
     expect(screen.queryByText(/Booking direction intake/i)).toBeNull();
   });
 
+  it("renders customer-safe booking status copy", () => {
+    render(
+      <CustomerBookingDetail
+        screen={{
+          booking: { id: "booking_123456789", status: "assigned" },
+          estimateSnapshot: { serviceType: "maintenance" },
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Team assigned")).toBeInTheDocument();
+    expect(screen.getByText("Ref · 23456789")).toBeInTheDocument();
+    expect(screen.queryByText("assigned")).toBeNull();
+  });
+
   it("hides deep clean sections for non-deep-clean", () => {
     render(
       <CustomerBookingDetail

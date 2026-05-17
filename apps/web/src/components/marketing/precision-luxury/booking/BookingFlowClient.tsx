@@ -3170,10 +3170,10 @@ export function BookingFlowClient() {
       <ServiceHeader />
 
       <main>
-        <section className="mx-auto max-w-7xl px-6 py-6 md:px-8 md:py-9">
-          <div className="overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:p-8">
-            <div className="grid gap-7 xl:grid-cols-[minmax(0,0.98fr)_minmax(280px,360px)] xl:items-start">
-              <div className="min-w-0 space-y-5 rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
+        <section className="mx-auto max-w-7xl px-4 py-4 sm:px-6 md:px-8 md:py-8">
+          <div className="overflow-hidden rounded-[28px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-4 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:rounded-[34px] sm:p-7 lg:p-8">
+            <div className="grid gap-4 sm:gap-7 xl:grid-cols-[minmax(0,0.98fr)_minmax(280px,360px)] xl:items-start">
+              <div className="min-w-0 space-y-4 rounded-[24px] border border-[#E8DFD0]/80 bg-white/76 p-5 sm:space-y-5 sm:rounded-[28px] sm:p-8">
                 <div>
                   <p className="font-[var(--font-poppins)] text-xs uppercase tracking-[0.28em] text-[#C9B27C]">
                     {BOOKING_FLOW_HERO_EYEBROW}
@@ -3181,8 +3181,8 @@ export function BookingFlowClient() {
                   <h1
                     className={
                       state.step === "service"
-                        ? "mt-3 font-[var(--font-poppins)] text-[2.25rem] font-semibold leading-[1.04] tracking-[-0.055em] text-[#0F172A] sm:text-5xl lg:text-[3.05rem]"
-                        : "mt-3 font-[var(--font-poppins)] text-3xl font-semibold leading-tight tracking-[-0.045em] text-[#0F172A] sm:text-4xl"
+                        ? "mt-2 font-[var(--font-poppins)] text-[2.05rem] font-semibold leading-[1.02] tracking-[-0.055em] text-[#0F172A] sm:mt-3 sm:text-5xl lg:text-[3.05rem]"
+                        : "mt-2 font-[var(--font-poppins)] text-[1.9rem] font-semibold leading-tight tracking-[-0.045em] text-[#0F172A] sm:mt-3 sm:text-4xl"
                     }
                   >
                     {state.step === "service"
@@ -3193,7 +3193,7 @@ export function BookingFlowClient() {
                           ? "Review the estimate before choosing a team."
                           : "Choose the team and arrival window."}
                   </h1>
-                  <p className="mt-4 max-w-xl font-[var(--font-manrope)] text-base leading-relaxed text-[#475569] md:text-lg md:leading-relaxed">
+                  <p className="mt-3 max-w-xl font-[var(--font-manrope)] text-[15px] leading-7 text-[#475569] md:mt-4 md:text-lg md:leading-relaxed">
                     {state.step === "service"
                       ? BOOKING_FLOW_HERO_BODY
                       : state.step === "home"
@@ -3204,7 +3204,7 @@ export function BookingFlowClient() {
                   </p>
                   {state.step === "service" ? (
                     <>
-                      <ul className="mt-5 space-y-2 font-[var(--font-manrope)] text-sm font-medium text-[#334155] md:text-[15px]">
+                      <ul className="mt-4 space-y-2 font-[var(--font-manrope)] text-sm font-medium text-[#334155] md:mt-5 md:text-[15px]">
                         <li className="flex gap-2">
                           <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B27C]" aria-hidden />
                           {BOOKING_FLOW_HERO_BULLET_ACCURATE_PRICING}
@@ -3218,15 +3218,15 @@ export function BookingFlowClient() {
                           {BOOKING_FLOW_HERO_BULLET_EASY_PROCESS}
                         </li>
                       </ul>
-                      <div className="mt-5 space-y-2 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
+                      <div className="mt-4 space-y-2 font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:mt-5 md:text-[15px]">
                         <p>{BOOKING_FLOW_HERO_REALTIME_LINE}</p>
-                        <p>{BOOKING_FLOW_HERO_CLEAR_NUMBERS_LINE}</p>
-                        <p>{BOOKING_FLOW_HERO_NO_PRESSURE_LINE}</p>
+                        <p className="hidden sm:block">{BOOKING_FLOW_HERO_CLEAR_NUMBERS_LINE}</p>
+                        <p className="hidden sm:block">{BOOKING_FLOW_HERO_NO_PRESSURE_LINE}</p>
                       </div>
-                      <p className="mt-5 max-w-2xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-base leading-relaxed text-[#334155] md:text-lg">
+                      <p className="mt-4 max-w-2xl border-l-2 border-[#0D9488]/35 pl-4 font-[var(--font-manrope)] text-[15px] leading-7 text-[#334155] md:mt-5 md:text-lg md:leading-relaxed">
                         {BOOKING_FLOW_HERO_ACCOUNTABILITY}
                       </p>
-                      <p className="mt-3 max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] md:text-[15px]">
+                      <p className="mt-3 hidden max-w-2xl font-[var(--font-manrope)] text-sm leading-relaxed text-[#64748B] sm:block md:text-[15px]">
                         {BOOKING_FLOW_HERO_OPERATIONAL_TRANSPARENCY}
                       </p>
                     </>
@@ -3234,8 +3234,8 @@ export function BookingFlowClient() {
                 </div>
               </div>
 
-              <div className="min-w-0 space-y-4 xl:sticky xl:top-24">
-                <div className="rounded-[24px] border border-[#C9B27C]/18 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)]">
+              <div className="min-w-0 space-y-3 sm:space-y-4 xl:sticky xl:top-24">
+                <div className="hidden rounded-[24px] border border-[#C9B27C]/18 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] sm:block">
                   <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                     Guidance
                   </p>
@@ -3264,7 +3264,7 @@ export function BookingFlowClient() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-16 md:px-8 lg:py-20">
+        <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 md:px-8 lg:py-16">
           <div
             className={
               state.step === "review"
@@ -3272,7 +3272,7 @@ export function BookingFlowClient() {
                 : "grid gap-8 xl:grid-cols-[1.15fr_0.85fr]"
             }
           >
-            <div className="min-w-0 space-y-8 pb-28 md:pb-0">
+            <div className="min-w-0 space-y-6 pb-24 md:space-y-8 md:pb-0">
               {state.step === "review" || state.step === "schedule" ? (
                 <BookingServiceHandoffCard
                   serviceId={state.serviceId}
@@ -3605,7 +3605,7 @@ export function BookingFlowClient() {
               ) : null}
 
               <div className="fixed bottom-0 left-0 right-0 z-40 md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto">
-                <div className="border-t border-[#C9B27C]/14 bg-[#FFF9F3]/96 px-6 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-12px_40px_rgba(15,23,42,0.07)] backdrop-blur-md md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none md:backdrop-blur-none">
+                <div className="border-t border-[#C9B27C]/14 bg-[#FFF9F3]/96 px-4 py-2.5 pb-[max(0.65rem,env(safe-area-inset-bottom))] shadow-[0_-12px_40px_rgba(15,23,42,0.07)] backdrop-blur-md md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none md:backdrop-blur-none">
                   <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 sm:flex-row sm:flex-wrap md:max-w-none">
                 {state.step !== "service" ? (
                   <button
