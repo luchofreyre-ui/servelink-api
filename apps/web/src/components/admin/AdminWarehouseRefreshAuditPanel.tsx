@@ -69,11 +69,22 @@ export function AdminWarehouseRefreshAuditPanel(props: {
       r.warnings?.includes(STALE_WARNING_TOKEN),
   );
   const cronHint = cronAutomationLedgerHint(props.warehouseOperationalFreshness);
+  const operatorAction =
+    props.blockedAttempt ? "Wait for the active refresh to finish, then reload audit history."
+    : props.activeRun ? "Refresh is running. Avoid starting another run until this completes."
+    : !latest ? "Run a manual refresh before considering any scheduled warehouse cadence."
+    : latest.status === "failed" ? "Review the error below, keep cron disabled, then retry manual refresh after remediation."
+    : staleVisibleInRuns ? "Stale-started rows were reconciled. Review history, then continue with manual proof only."
+    : "No immediate action. Keep scheduled automation disabled until launch proof is captured.";
 
   return (
     <div className="mt-4 rounded-xl border border-white/10 bg-black/25 px-3 py-3 text-[11px] text-slate-300">
       <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
         Warehouse refresh audit
+      </p>
+      <p className="mt-2 rounded border border-white/10 bg-white/[0.04] px-2 py-1.5 text-[10px] leading-snug text-slate-300">
+        <span className="font-semibold text-slate-100">Operator action:</span>{" "}
+        {operatorAction}
       </p>
 
       {props.loadError ? (

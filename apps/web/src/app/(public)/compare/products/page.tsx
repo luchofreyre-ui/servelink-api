@@ -18,7 +18,7 @@ export const metadata: Metadata = buildAuthorityCompareProductsIndexMetadata();
 
 const HUB_TITLE = "Compare products";
 const HUB_DESCRIPTION =
-  "Head-to-head cleaning product comparisons from the Servelink library—chemistry class, best fits, dossier strengths, and safety cues.";
+  "Head-to-head cleaning product comparisons from the Nu Standard library—chemistry class, best fits, dossier strengths, and safety cues.";
 
 export default function CompareProductsIndexPage() {
   const seeds = getComparisonSeedsByType("product_comparison");

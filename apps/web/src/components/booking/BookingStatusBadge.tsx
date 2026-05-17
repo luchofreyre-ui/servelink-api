@@ -17,13 +17,29 @@ const STATUS_STYLES: Record<BookingStatus, string> = {
   exception: "bg-orange-100 text-orange-800",
 };
 
+const STATUS_LABELS: Record<BookingStatus, string> = {
+  pending_payment: "Payment needed",
+  pending_dispatch: "Team scheduling",
+  hold: "On hold",
+  review: "Under review",
+  offered: "Offered",
+  assigned: "Team assigned",
+  accepted: "Accepted",
+  en_route: "On the way",
+  active: "Active",
+  in_progress: "In progress",
+  completed: "Completed",
+  canceled: "Canceled",
+  cancelled: "Canceled",
+  exception: "Needs attention",
+};
+
 export function BookingStatusBadge({ status }: { status: BookingStatus }) {
-  const label = status.replace(/_/g, " ");
   return (
     <span
       className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${STATUS_STYLES[status]}`}
     >
-      {label}
+      {STATUS_LABELS[status]}
     </span>
   );
 }

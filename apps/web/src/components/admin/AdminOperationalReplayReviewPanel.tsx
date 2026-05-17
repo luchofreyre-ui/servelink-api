@@ -31,6 +31,7 @@ export function AdminOperationalReplayReviewPanel() {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const [activeSessionId, setActiveSessionId] = useState("");
   const [comments, setComments] = useState<ReplayReviewCommentRow[]>([]);
@@ -107,7 +108,14 @@ export function AdminOperationalReplayReviewPanel() {
     [sessions, activeSessionId],
   );
 
+  const reportActionError = useCallback((e: unknown) => {
+    setActionError(
+      e instanceof Error ? e.message : COMMAND_CENTER_UX.replayReviewUnknownError,
+    );
+  }, []);
+
   const onCreateSession = useCallback(async () => {
+    setActionError(null);
     try {
       const row = await createReplayReviewSession({
         title: newTitle.trim() || "Replay review",
@@ -120,17 +128,14 @@ export function AdminOperationalReplayReviewPanel() {
       setNewPrimary("");
       setNewCompare("");
     } catch (e) {
-      window.alert(
-        e instanceof Error ?
-          e.message
-        : COMMAND_CENTER_UX.replayReviewUnknownError,
-      );
+      reportActionError(e);
     }
-  }, [newCompare, newPrimary, newTitle, newWorkspaceId]);
+  }, [newCompare, newPrimary, newTitle, newWorkspaceId, reportActionError]);
 
   const onPatchReviewState = useCallback(
     async (investigationReviewState: string) => {
       if (!activeSession) return;
+      setActionError(null);
       try {
         const row = await patchReplayReviewSession(activeSession.id, {
           investigationReviewState,
@@ -139,18 +144,15 @@ export function AdminOperationalReplayReviewPanel() {
           prev.map((s) => (s.id === row.id ? row : s)),
         );
       } catch (e) {
-        window.alert(
-          e instanceof Error ?
-            e.message
-          : COMMAND_CENTER_UX.replayReviewUnknownError,
-        );
+        reportActionError(e);
       }
     },
-    [activeSession],
+    [activeSession, reportActionError],
   );
 
   const onPostComment = useCallback(async () => {
     if (!activeSession || !commentBody.trim()) return;
+    setActionError(null);
     try {
       await postReplayReviewComment(activeSession.id, {
         body: commentBody.trim(),
@@ -159,13 +161,9 @@ export function AdminOperationalReplayReviewPanel() {
       setCommentBody("");
       await loadComments(activeSession.id);
     } catch (e) {
-      window.alert(
-        e instanceof Error ?
-          e.message
-        : COMMAND_CENTER_UX.replayReviewUnknownError,
-      );
+      reportActionError(e);
     }
-  }, [activeSession, commentAnchor, commentBody, loadComments]);
+  }, [activeSession, commentAnchor, commentBody, loadComments, reportActionError]);
 
   if (loading) {
     return (
@@ -225,6 +223,21 @@ export function AdminOperationalReplayReviewPanel() {
       <p className="mt-3 text-xs text-slate-500">
         {COMMAND_CENTER_UX.replayReviewGovernanceNote}
       </p>
+
+      {actionError ? (
+        <div
+          role="alert"
+          className="mt-3 rounded-lg border border-amber-400/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-50"
+        >
+          <p className="font-semibold uppercase tracking-wide text-amber-100">
+            Replay action needs attention
+          </p>
+          <p className="mt-1">{actionError}</p>
+          <p className="mt-1 text-amber-100/80">
+            Retry after refreshing sessions. If it repeats, keep the review state unchanged and escalate with this message.
+          </p>
+        </div>
+      ) : null}
 
       <div className="mt-5 grid gap-6 xl:grid-cols-2">
         <div className="space-y-4 rounded-xl border border-white/10 bg-slate-950/40 p-4">

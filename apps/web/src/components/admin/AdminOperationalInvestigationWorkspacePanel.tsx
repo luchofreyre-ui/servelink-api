@@ -48,6 +48,7 @@ export function AdminOperationalInvestigationWorkspacePanel() {
 
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [timeline, setTimeline] = useState<WorkspaceTimelineEvent[]>([]);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const [shareEmail, setShareEmail] = useState("");
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -101,6 +102,10 @@ export function AdminOperationalInvestigationWorkspacePanel() {
   );
 
   const useLegacyLocal = serverOnline === false;
+
+  const reportActionError = useCallback((e: unknown) => {
+    setActionError(String(e instanceof Error ? e.message : e));
+  }, []);
 
   const [draft, setDraft] = useState({
     title: "",
@@ -209,6 +214,7 @@ export function AdminOperationalInvestigationWorkspacePanel() {
         COMMAND_CENTER_UX.workspaceContinuitySubtitle,
       );
       if (!summary?.trim()) return;
+      setActionError(null);
       try {
         await postPhaseFTeamContinuityMarker(activeServer.id, {
           markerKind,
@@ -224,10 +230,10 @@ export function AdminOperationalInvestigationWorkspacePanel() {
           /* timeline refresh optional */
         }
       } catch (e) {
-        window.alert(String(e instanceof Error ? e.message : e));
+        reportActionError(e);
       }
     },
-    [activeServer],
+    [activeServer, reportActionError],
   );
 
   const persistLocal = useCallback(
@@ -252,6 +258,7 @@ export function AdminOperationalInvestigationWorkspacePanel() {
       setActiveId(ws.id);
       return;
     }
+    setActionError(null);
     try {
       const ws = await createOperationalCommandWorkspace({
         title: "Untitled investigation",
@@ -259,9 +266,9 @@ export function AdminOperationalInvestigationWorkspacePanel() {
       setServerWorkspaces((prev) => [ws, ...prev]);
       setActiveId(ws.id);
     } catch (e) {
-      window.alert(String(e instanceof Error ? e.message : e));
+      reportActionError(e);
     }
-  }, [useLegacyLocal]);
+  }, [useLegacyLocal, reportActionError]);
 
   const onDelete = useCallback(async () => {
     if (useLegacyLocal && activeLocal) {
@@ -284,17 +291,19 @@ export function AdminOperationalInvestigationWorkspacePanel() {
     ) {
       return;
     }
+    setActionError(null);
     try {
       await deleteOperationalCommandWorkspace(activeServer.id);
       await refreshServer();
     } catch (e) {
-      window.alert(String(e instanceof Error ? e.message : e));
+      reportActionError(e);
     }
   }, [
     activeLocal,
     activeServer,
     refreshLocalOnly,
     refreshServer,
+    reportActionError,
     useLegacyLocal,
   ]);
 
@@ -416,14 +425,15 @@ export function AdminOperationalInvestigationWorkspacePanel() {
         const text = await file.text();
         const env = parseWorkspaceImportEnvelope(text);
         if (!env) {
-          window.alert(COMMAND_CENTER_UX.workspaceImportError);
+          setActionError(COMMAND_CENTER_UX.workspaceImportError);
           return;
         }
+        setActionError(null);
         const merged = mergeImportedWorkspaces(localWorkspaces, env.workspaces);
         saveInvestigationWorkspaces(merged);
         refreshLocalOnly();
       } catch {
-        window.alert(COMMAND_CENTER_UX.workspaceImportError);
+        setActionError(COMMAND_CENTER_UX.workspaceImportError);
       }
     },
     [localWorkspaces, refreshLocalOnly],
@@ -432,6 +442,7 @@ export function AdminOperationalInvestigationWorkspacePanel() {
   const migrateLocalToServer = useCallback(async () => {
     const local = loadInvestigationWorkspaces();
     if (local.length === 0) return;
+    setActionError(null);
     try {
       for (const w of local) {
         await createOperationalCommandWorkspace({
@@ -444,12 +455,13 @@ export function AdminOperationalInvestigationWorkspacePanel() {
       }
       await refreshServer();
     } catch (e) {
-      window.alert(String(e instanceof Error ? e.message : e));
+      reportActionError(e);
     }
-  }, [refreshServer]);
+  }, [refreshServer, reportActionError]);
 
   const onShare = useCallback(async () => {
     if (!activeServer || activeServer.myRole !== "owner") return;
+    setActionError(null);
     try {
       const ws = await shareOperationalCommandWorkspace(
         activeServer.id,
@@ -460,9 +472,9 @@ export function AdminOperationalInvestigationWorkspacePanel() {
       );
       setShareEmail("");
     } catch (e) {
-      window.alert(String(e instanceof Error ? e.message : e));
+      reportActionError(e);
     }
-  }, [activeServer, shareEmail]);
+  }, [activeServer, shareEmail, reportActionError]);
 
   const listWorkspaces = useLegacyLocal ? localWorkspaces : serverWorkspaces;
   const active =
@@ -552,6 +564,21 @@ export function AdminOperationalInvestigationWorkspacePanel() {
       <p className="mt-3 text-xs text-slate-500">
         {COMMAND_CENTER_UX.workspacePanelGovernanceNote}
       </p>
+
+      {actionError ? (
+        <div
+          role="alert"
+          className="mt-3 rounded-lg border border-amber-400/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-50"
+        >
+          <p className="font-semibold uppercase tracking-wide text-amber-100">
+            Workspace action needs attention
+          </p>
+          <p className="mt-1">{actionError}</p>
+          <p className="mt-1 text-amber-100/80">
+            Retry after refreshing the workspace list. If the issue repeats, preserve the current notes and escalate.
+          </p>
+        </div>
+      ) : null}
 
       {serverOnline === true ?
         <div className="mt-4 rounded-xl border border-white/10 bg-slate-950/35 p-4">
@@ -783,6 +810,7 @@ export function AdminOperationalInvestigationWorkspacePanel() {
                             onClick={() =>
                               void (async () => {
                                 try {
+                                  setActionError(null);
                                   const ws =
                                     await unshareOperationalCommandWorkspace(
                                       activeServer!.id,
@@ -794,13 +822,7 @@ export function AdminOperationalInvestigationWorkspacePanel() {
                                     ),
                                   );
                                 } catch (e) {
-                                  window.alert(
-                                    String(
-                                      e instanceof Error ?
-                                        e.message
-                                      : e,
-                                    ),
-                                  );
+                                  reportActionError(e);
                                 }
                               })()
                             }

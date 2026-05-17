@@ -15,6 +15,7 @@ import {
 import { DeepCleanExecutionReadOnlyPanel } from "../shared/DeepCleanExecutionReadOnlyPanel";
 import {
   extractCustomerTeamPrepFromBookingNotes,
+  formatBookingReferenceLabel,
 } from "@/lib/bookings/bookingDisplay";
 
 function asRecord(v: unknown): Record<string, unknown> | null {
@@ -26,6 +27,8 @@ export function CustomerBookingDetail({ screen }: { screen: unknown }) {
   const booking = s ? asRecord(s.booking) : null;
   const bookingId =
     booking && typeof booking.id === "string" ? booking.id : "—";
+  const bookingReference =
+    bookingId !== "—" ? formatBookingReferenceLabel(bookingId) : "Reference pending";
   const bookingStatus =
     booking && typeof booking.status === "string" ? booking.status : null;
 
@@ -53,7 +56,7 @@ export function CustomerBookingDetail({ screen }: { screen: unknown }) {
         <dl className="mt-3 grid gap-2">
           <div className="flex flex-wrap justify-between gap-2">
             <dt className="text-slate-500">Reference</dt>
-            <dd className="font-mono text-slate-900">{bookingId}</dd>
+            <dd className="text-slate-900">{bookingReference}</dd>
           </div>
           {bookingStatus ? (
             <div className="flex flex-wrap justify-between gap-2">

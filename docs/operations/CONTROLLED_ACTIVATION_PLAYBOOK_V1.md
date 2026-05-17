@@ -4,7 +4,8 @@ Phased discipline for turning **`ENABLE_*`** gates / cron ticks **on intentional
 
 Companion artifacts:
 
-- [`ENABLE_RUNTIME_MATRIX_V1.md`](./ENABLE_RUNTIME_MATRIX_V1.md)
+- [`ENABLE_RUNTIME_MATRIX_V2.md`](./ENABLE_RUNTIME_MATRIX_V2.md)
+- [`LAUNCH_RUNTIME_PROOF_CHECKLIST_V1.md`](./LAUNCH_RUNTIME_PROOF_CHECKLIST_V1.md)
 - [`DEPLOY_RUNTIME_PARITY_CHECKLIST_V1.md`](./DEPLOY_RUNTIME_PARITY_CHECKLIST_V1.md)
 - [`production-deployment-governance-v1.md`](./production-deployment-governance-v1.md)
 - [`warehouse-refresh-scheduling-governance-v1.md`](./warehouse-refresh-scheduling-governance-v1.md)
@@ -37,7 +38,7 @@ Companion artifacts:
 |------------|--------|
 | Merge SHA documented | Tag merge PR / squash merge hash |
 | Deploy parity incomplete assumption | Treat cron/automation **UNKNOWN inactive** until Phase 1 |
-| Matrix reconciled | Cross-read [`ENABLE_RUNTIME_MATRIX_V1.md`](./ENABLE_RUNTIME_MATRIX_V1.md) |
+| Matrix reconciled | Cross-read [`ENABLE_RUNTIME_MATRIX_V2.md`](./ENABLE_RUNTIME_MATRIX_V2.md) |
 
 ---
 
@@ -65,7 +66,7 @@ Stop gate — escalate if readiness failures unresolved (`rollback-and-recovery-
 | Document rationale | Reference CP lanes / MUST_HAVE ordering [`NU_STANDARD_MASTER_EXECUTION_PLAN_V1.md`](../governance/NU_STANDARD_MASTER_EXECUTION_PLAN_V1.md) |
 | Apply env change | Railway/Vercel variable mutation outside repo scope — capture screenshot/export |
 
-Rollback readiness — rehearse removal path (`ENABLE_RUNTIME_MATRIX_V1.md` Rollback column).
+Rollback readiness — rehearse removal path (`ENABLE_RUNTIME_MATRIX_V2.md` Rollback column).
 
 ---
 
