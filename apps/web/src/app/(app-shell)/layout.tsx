@@ -169,6 +169,7 @@ export default function AppShellLayout({
   const mode = shellNavMode(pathname);
   const showDevSwitcher = process.env.NODE_ENV === "development";
   const authShell = pathname.includes("/auth");
+  const reduceMobileShellSearch = authShell || mode === "admin";
 
   return (
     <>
@@ -181,7 +182,7 @@ export default function AppShellLayout({
 
             <ShellSearchBar
               className={`min-w-0 w-full lg:max-w-md xl:max-w-lg lg:flex-1 ${
-                authShell ? "hidden sm:block" : ""
+                reduceMobileShellSearch ? "hidden sm:block" : ""
               }`}
               placeholder={authShell ? "Search guides" : undefined}
             />
