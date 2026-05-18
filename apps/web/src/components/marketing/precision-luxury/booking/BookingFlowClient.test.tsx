@@ -70,6 +70,7 @@ import {
   BOOKING_SCHEDULE_NO_SLOTS_FOR_TEAM_TITLE,
   BOOKING_SCHEDULE_SUMMARY_TITLE,
   BOOKING_SCHEDULE_ZERO_TEAMS_TITLE,
+  BOOKING_TRUST_RIBBON_ITEMS,
   BOOKING_TRANSITION_STATE_LABELS,
   BOOKING_REVIEW_SCHEDULE_AFTER_TEAM_NOTE,
   BOOKING_REVIEW_DEPOSIT_SCHEDULE_GATE_MESSAGE,
@@ -1560,6 +1561,11 @@ describe("BookingFlowClient", () => {
       ).toBeInTheDocument();
       expect(within(root).getByText(BOOKING_PUBLIC_CARD_MOVE_TITLE)).toBeInTheDocument();
       expect(within(root).getByText(BOOKING_PUBLIC_CARD_RECURRING_TITLE)).toBeInTheDocument();
+      const trustRail = screen.getByTestId("booking-service-trust-rail");
+      for (const item of BOOKING_TRUST_RIBBON_ITEMS) {
+        expect(within(trustRail).getByText(item)).toBeInTheDocument();
+      }
+      expect(trustRail.firstElementChild?.getAttribute("class")).toContain("grid-cols-1");
     });
 
     it("does not present the default service as an active selection before a card is clicked", () => {

@@ -178,15 +178,22 @@ export type TrustMetricItem = {
 type TrustMetricStripProps = {
   items: readonly TrustMetricItem[] | readonly string[];
   className?: string;
+  layout?: "auto" | "stacked";
 };
 
-export function TrustMetricStrip({ items, className = "" }: TrustMetricStripProps) {
+export function TrustMetricStrip({
+  items,
+  className = "",
+  layout = "auto",
+}: TrustMetricStripProps) {
   const normalized: TrustMetricItem[] = items.map((item) =>
     typeof item === "string" ? { label: item } : item,
   );
 
   const gridCols =
-    normalized.length <= 2
+    layout === "stacked"
+      ? "grid-cols-1"
+      : normalized.length <= 2
       ? "sm:grid-cols-2"
       : normalized.length <= 3
         ? "sm:grid-cols-2 lg:grid-cols-3"
