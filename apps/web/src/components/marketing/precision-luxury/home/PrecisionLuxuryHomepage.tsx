@@ -37,6 +37,8 @@ function homepageServiceHeading(slug: string, fallbackTitle: string): string {
   switch (slug) {
     case "deep-cleaning":
       return "Deep cleaning";
+    case "first-time-clean-with-recurring-services":
+      return "First-time clean with recurring services";
     case "recurring-home-cleaning":
       return "Recurring cleaning";
     case "move-in-move-out":
@@ -195,12 +197,10 @@ export function PrecisionLuxuryHomepage() {
             </div>
 
             <div className="space-y-5">
-              {steps.map((item, index) => (
+              {steps.map((item) => (
                 <div
                   key={item.step}
-                  className={`grid gap-5 rounded-[26px] border border-[#C9B27C]/12 bg-[#FFF9F3]/70 px-6 py-6 md:grid-cols-[96px_minmax(0,1fr)] md:px-7 ${
-                    index === 1 ? "md:ml-10" : index === 2 ? "md:mr-12" : ""
-                  }`}
+                  className="grid gap-5 rounded-[26px] border border-[#C9B27C]/12 bg-[#FFF9F3]/70 px-6 py-6 md:grid-cols-[96px_minmax(0,1fr)] md:px-7"
                 >
                   <span className="font-[var(--font-poppins)] text-3xl font-semibold tracking-[-0.04em] text-[#0F172A]/90">
                     {item.step}
@@ -224,40 +224,38 @@ export function PrecisionLuxuryHomepage() {
           <MarketingSectionIntro
             eyebrow="Featured services"
             title="Cleaning shaped around how your home actually lives."
-            body="Deep resets, recurring rhythm, and transition-ready scope—each delivered with honest preparation and disciplined execution."
+            body="Deep resets, first-time recurring starts, ongoing rhythm, and transition-ready scope—each delivered with honest preparation and disciplined execution."
           />
 
-          <div className="mt-11 grid gap-7 lg:grid-cols-[minmax(0,1.16fr)_minmax(0,0.84fr)] lg:items-start">
-            {featuredServices.map((service, index) => (
+          <div className="mt-11 grid gap-7 md:grid-cols-2 xl:grid-cols-4">
+            {featuredServices.map((service) => (
               <article
-                key={service.slug}
-                className={`flex min-w-0 flex-col overflow-hidden rounded-[28px] border border-[#C9B27C]/14 bg-white shadow-[0_18px_52px_rgba(15,23,42,0.055)] ${
-                  index === 0 ? "lg:row-span-2" : index === 1 ? "lg:mt-10" : "lg:mr-10"
-                }`}
+                key={service.displaySlug}
+                className="flex min-w-0 flex-col overflow-hidden rounded-[28px] border border-[#C9B27C]/14 bg-white shadow-[0_18px_52px_rgba(15,23,42,0.055)]"
               >
                 <HomepageServiceMedia
-                  slug={service.slug}
-                  variant={serviceSlugToHomepageVisualVariant(service.slug)}
+                  slug={service.mediaSlug}
+                  variant={serviceSlugToHomepageVisualVariant(service.mediaSlug)}
                   flushCardTop
                 />
                 <div className="flex flex-1 flex-col px-8 pb-8 pt-7">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#C9B27C]">{service.serviceBadge}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#C9B27C]">{service.displayBadge}</p>
                   <h3 className="mt-4 font-[var(--font-poppins)] text-xl font-semibold tracking-[-0.03em] text-[#0F172A] sm:text-[1.35rem] sm:leading-snug">
-                    {homepageServiceHeading(service.slug, service.title)}
+                    {homepageServiceHeading(service.displaySlug, service.displayTitle)}
                   </h3>
                   <p className="mt-4 flex-1 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569] sm:text-[15px] sm:leading-7">
-                    {service.shortDescription}
+                    {service.displayDescription}
                   </p>
                   <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                     <MarketingLinkButton
-                      href={`/services/${service.slug}`}
+                      href={service.serviceHref}
                       variant="secondary"
                       className="w-full min-h-[46px] px-5 py-3 text-sm sm:w-auto sm:flex-1"
                     >
                       Learn more
                     </MarketingLinkButton>
                     <MarketingLinkButton
-                      href={`/book?service=${service.slug}`}
+                      href={service.bookingHref}
                       variant="primary"
                       className="w-full min-h-[46px] px-5 py-3 text-sm sm:w-auto sm:flex-1"
                     >

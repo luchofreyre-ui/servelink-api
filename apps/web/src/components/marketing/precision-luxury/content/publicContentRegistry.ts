@@ -72,11 +72,11 @@ export const publicContentRegistry: PublicContentEntry[] = [
     slug: "deep-cleaning",
     kind: "service",
     eyebrow: "Service detail",
-    title: "Deep cleaning, presented as a premium residential reset.",
+    title: "Deep cleaning for a premium residential reset.",
     description:
       "Premium deep cleaning service designed for first visits, seasonal resets, and homes that need more than standard upkeep.",
     heroBody:
-      "This page is the template direction for service-detail pages that need to feel useful, premium, clear, and directly connected to booking intent.",
+      "A deeper service for first visits, seasonal resets, and homes that need visible detail beyond routine upkeep.",
     relatedSlugs: [
       "recurring-home-cleaning",
       "move-in-move-out",
@@ -99,14 +99,14 @@ export const publicContentRegistry: PublicContentEntry[] = [
       "Permanent stain restoration on damaged materials",
       "Specialty restoration requiring trade-specific repair work",
     ],
-    processTitle: "Service pages should feel useful, not salesy.",
+    processTitle: "A clear plan for a deeper reset.",
     processBody:
-      "This section gives clients enough context to understand when they need the service, why it matters, and how it fits into a longer-term care plan.",
+      "We focus the visit around the areas that most affect how clean, calm, and complete the home feels.",
     processSteps: [
       {
         step: "01",
         title: "Assess the home",
-        body: "We frame the visit around layout, buildup level, moisture zones, and the areas most likely to affect the overall result.",
+        body: "We look at layout, buildup level, moisture zones, and the areas most likely to affect the overall result.",
       },
       {
         step: "02",
@@ -116,17 +116,16 @@ export const publicContentRegistry: PublicContentEntry[] = [
       {
         step: "03",
         title: "Leave the space feeling reset",
-        body: "The result should feel lighter, calmer, and visibly more complete — the kind of clean clients immediately notice when they walk in.",
+        body: "The result is designed to feel lighter, calmer, and visibly more complete when you walk in.",
       },
     ],
     positioningTitle:
-      "This is how Nu Standard avoids looking like a commodity cleaning company.",
+      "A deeper clean without noisy promises or discount pressure.",
     positioningBody:
-      "A page like this sells through clarity, restraint, and confidence. It does not need loud discounts, exaggerated promises, or overloaded visuals.",
+      "Nu Standard keeps the offer clear: thoughtful preparation, disciplined execution, and a standard that feels elevated without being overcomplicated.",
     positioningCallout:
-      "This is the direction that turns a service-detail page into part of the brand moat.",
-    faqTitle:
-      "The page should answer the questions premium clients ask before they book.",
+      "A deep clean is often the right first step when the home needs a stronger reset before ongoing care.",
+    faqTitle: "Questions clients ask before booking a deep clean",
     faqs: [
       {
         q: "Who is deep cleaning best for?",
@@ -155,11 +154,11 @@ export const publicContentRegistry: PublicContentEntry[] = [
     slug: "recurring-home-cleaning",
     kind: "service",
     eyebrow: "Service detail",
-    title: "Recurring home cleaning, positioned as an ongoing standard of calm and control.",
+    title: "Recurring home cleaning for an ongoing standard of calm and control.",
     description:
       "Premium recurring home cleaning built for consistency, presentation, and a calmer weekly household standard.",
     heroBody:
-      "This page demonstrates how recurring service should be framed: less as a chore solution and more as a dependable system for preserving presentation and reducing household-management stress.",
+      "A dependable rhythm for preserving presentation, reducing household-management stress, and keeping the home from slipping between visits.",
     relatedSlugs: [
       "deep-cleaning",
       "how-often-should-a-house-be-cleaned",
@@ -181,9 +180,9 @@ export const publicContentRegistry: PublicContentEntry[] = [
       "Exterior or trade-specific services",
       "Project-style one-time scope outside normal upkeep rhythm",
     ],
-    processTitle: "Clients should understand why recurring care changes the experience.",
+    processTitle: "Why recurring care changes the experience.",
     processBody:
-      "This template should make it clear that recurring cleaning is not just about frequency. It is about maintaining a standard before disorder becomes visible.",
+      "Recurring cleaning is not just about frequency. It is about maintaining a standard before disorder becomes visible.",
     processSteps: [
       {
         step: "01",
@@ -198,17 +197,16 @@ export const publicContentRegistry: PublicContentEntry[] = [
       {
         step: "03",
         title: "Reduce household-management stress",
-        body: "The service should create consistency, predictability, and less cleaning pressure between visits.",
+        body: "The service creates consistency, predictability, and less cleaning pressure between visits.",
       },
     ],
     positioningTitle:
-      "Recurring service should feel like a premium operating rhythm for the home.",
+      "Recurring service gives the home a steadier rhythm.",
     positioningBody:
-      "That framing gives the offer more value and more clarity than generic weekly-cleaning language.",
+      "The value is clearer than generic weekly-cleaning language: fewer resets, better presentation, and less pressure to catch up.",
     positioningCallout:
       "Recurring care is how premium presentation becomes easier to maintain, not harder to recover.",
-    faqTitle:
-      "The page should answer the questions clients ask before committing to a schedule.",
+    faqTitle: "Questions clients ask before choosing a recurring schedule",
     faqs: [
       {
         q: "Is recurring cleaning only for large homes?",
@@ -219,8 +217,8 @@ export const publicContentRegistry: PublicContentEntry[] = [
         a: "If the home needs a stronger reset first, deep cleaning usually creates the right baseline before recurring service begins.",
       },
       {
-        q: "Why does recurring service feel more premium in this system?",
-        a: "Because it is positioned as a standard-preserving service, not just a commodity task repeated on a schedule.",
+        q: "Why does recurring service feel more premium with Nu Standard?",
+        a: "Because the visit is planned around preserving a standard, not just repeating a commodity task on a schedule.",
       },
       {
         q: "How does Nu Standard maintain consistent service standards?",
@@ -237,11 +235,11 @@ export const publicContentRegistry: PublicContentEntry[] = [
     slug: "move-in-move-out",
     kind: "service",
     eyebrow: "Service detail",
-    title: "Move-in / move-out cleaning, positioned for transitions, presentation, and handoff readiness.",
+    title: "Move-in / move-out cleaning for transitions, presentation, and handoff readiness.",
     description:
       "Premium transition cleaning designed for handoffs, listings, fresh starts, and property-ready presentation.",
     heroBody:
-      "This page demonstrates how transition cleaning should be framed as a polished handoff service that supports fresh starts, listings, and property-ready presentation.",
+      "A polished transition service for fresh starts, listings, exit condition, and property-ready presentation.",
     relatedSlugs: [
       "deep-cleaning",
       "deep-cleaning-vs-recurring-cleaning",
@@ -262,9 +260,9 @@ export const publicContentRegistry: PublicContentEntry[] = [
       "Exterior property cleanup",
       "Hazard or specialty remediation",
     ],
-    processTitle: "Transition pages should emphasize readiness, not generic cleaning language.",
+    processTitle: "A transition clean built around readiness.",
     processBody:
-      "The client should understand that this is about handoff quality, listing presentation, and the confidence that comes with a visibly reset property.",
+      "The focus is handoff quality, listing presentation, and the confidence that comes with a visibly reset property.",
     processSteps: [
       {
         step: "01",
@@ -283,13 +281,12 @@ export const publicContentRegistry: PublicContentEntry[] = [
       },
     ],
     positioningTitle:
-      "Transition cleaning should feel like a presentation service, not a generic add-on.",
+      "Transition cleaning is presentation support, not a generic add-on.",
     positioningBody:
-      "That positioning creates better client fit and a stronger premium perception.",
+      "The service is built for moments when timing, first impressions, and property condition all matter at once.",
     positioningCallout:
       "The goal is a cleaner handoff, a stronger first impression, and more confidence around the transition itself.",
-    faqTitle:
-      "The page should resolve the questions clients ask when timing and presentation both matter.",
+    faqTitle: "Questions clients ask when timing and presentation both matter",
     faqs: [
       {
         q: "Is this better for move-in or move-out?",
@@ -297,7 +294,7 @@ export const publicContentRegistry: PublicContentEntry[] = [
       },
       {
         q: "Is this the same as deep cleaning?",
-        a: "Not exactly. The service overlaps in intensity, but transition cleaning is positioned around handoff readiness and presentation.",
+        a: "Not exactly. The service overlaps in intensity, but transition cleaning is planned around handoff readiness and presentation.",
       },
       {
         q: "Should this be booked before listing photos or after moving out?",
@@ -320,9 +317,9 @@ export const publicContentRegistry: PublicContentEntry[] = [
     eyebrow: "Nu Standard Q&A",
     title: "How often should a house be cleaned to maintain a premium standard?",
     description:
-      "A premium answer to how often a home should be cleaned, framed around presentation, traffic, and household-management pressure.",
+      "A practical answer to how often a home should be cleaned, based on presentation, traffic, and household-management pressure.",
     heroBody:
-      "This page demonstrates how Q&A content should feel inside the Precision Luxury system: useful, calm, premium, and clearly connected to booking intent.",
+      "The right cleaning cadence protects the way your home feels day to day, not just how it looks on cleaning day.",
     relatedSlugs: [
       "recurring-home-cleaning",
       "deep-cleaning",
@@ -338,7 +335,7 @@ export const publicContentRegistry: PublicContentEntry[] = [
     sectionTwo: {
       eyebrow: "What shapes the answer",
       title: "Cleaning frequency is really a presentation and management question.",
-      body: "This is how Nu Standard should frame expertise: not as generic cleaning advice, but as a smarter way to think about upkeep, consistency, and household pressure.",
+      body: "The right cadence depends on how quickly the home shows use, how much pressure the household carries, and how polished you want the space to feel between visits.",
       points: [
         "Children and pets increase visual drift faster.",
         "Bathrooms and kitchens set the emotional tone of the home.",
@@ -365,19 +362,19 @@ export const publicContentRegistry: PublicContentEntry[] = [
         a: "Transparent scheduling, documented service standards, and owner-led accountability—premium clarity from booking through arrival, not opaque quoting alone.",
       },
     ],
-    ctaTitle: "Turn useful guidance into a real booking path.",
+    ctaTitle: "Use the right cadence to protect the standard.",
     ctaBody:
-      "Q&A content should not sit in isolation. It should lead naturally into service understanding and booking intent.",
+      "If the home is already behind, start with a deeper reset. If the standard is in place, recurring care can help maintain it.",
   },
   {
     slug: "deep-cleaning-vs-recurring-cleaning",
     kind: "guide",
     eyebrow: "Nu Standard Guide",
-    title: "Deep cleaning vs recurring cleaning: how premium service pages should educate the difference.",
+    title: "Deep cleaning vs recurring cleaning: how to choose the right service.",
     description:
       "A premium guide comparing deep cleaning and recurring cleaning through service fit, presentation, and booking confidence.",
     heroBody:
-      "This guide sample demonstrates how encyclopedia and educational content can share the same visual language as the core conversion pages without feeling repetitive.",
+      "Deep cleaning and recurring cleaning solve different problems. Choosing the right one helps the visit match the condition of the home.",
     relatedSlugs: [
       "deep-cleaning",
       "recurring-home-cleaning",
@@ -387,19 +384,19 @@ export const publicContentRegistry: PublicContentEntry[] = [
     sectionOne: {
       eyebrow: "The distinction",
       title: "Recurring cleaning protects the standard. Deep cleaning restores it.",
-      body: "That distinction should be made visually and verbally throughout the site. It helps clients self-select correctly and improves confidence before booking.",
+      body: "That distinction helps clients self-select correctly and feel more confident before booking.",
       callout:
         "The best educational content reduces confusion and improves service fit before the first appointment happens.",
     },
     sectionTwo: {
-      eyebrow: "How to position it",
-      title: "This is where educational content becomes part of the moat.",
-      body: "The purpose of the content system is not just SEO volume. It is to make the company feel more informed, more useful, and more premium than generic competitors.",
+      eyebrow: "How to decide",
+      title: "Choose based on the current condition of the home.",
+      body: "If the home needs a stronger reset, start with deep cleaning. If the home already has a manageable baseline, recurring care helps preserve it.",
       points: [
-        "Use clear service-language, not jargon.",
-        "Tie education back to booking decisions.",
-        "Keep the visual structure premium and restrained.",
-        "Make every page feel connected to the main brand.",
+        "Choose deep cleaning for buildup, first visits, or seasonal resets.",
+        "Choose recurring cleaning for ongoing consistency and less catch-up work.",
+        "Use a deep clean first when maintenance alone would not be enough.",
+        "Move into recurring care once the home has a clear baseline.",
       ],
     },
     faqTitle: "Guide follow-up questions",
@@ -410,19 +407,19 @@ export const publicContentRegistry: PublicContentEntry[] = [
       },
       {
         q: "Can recurring cleaning recover a neglected home?",
-        a: "Not efficiently. Recovery and maintenance are different service states and should be framed that way.",
+        a: "Not efficiently. Recovery and maintenance are different service needs and call for different levels of service.",
       },
       {
-        q: "Why does this matter for conversion?",
-        a: "When clients understand the service fit more clearly, they feel more confident moving into booking.",
+        q: "Why does this matter before booking?",
+        a: "When the service fits the condition of the home, expectations are clearer and the visit is easier to plan well.",
       },
       {
         q: "How does Nu Standard keep visits accountable beyond pricing?",
         a: "Owner-led teams operate under documented standards with transparent scheduling—professional coordination rather than vague handoffs.",
       },
     ],
-    ctaTitle: "Build educational depth without losing conversion quality.",
+    ctaTitle: "Choose the service that matches the condition of the home.",
     ctaBody:
-      "The template system should scale across questions, guides, and encyclopedia pages while still looking like one premium brand.",
+      "Start with deep cleaning when the home needs a reset. Choose recurring cleaning when the goal is to preserve a standard over time.",
   },
 ];

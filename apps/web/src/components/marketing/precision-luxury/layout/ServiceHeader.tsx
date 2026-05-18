@@ -5,9 +5,13 @@ export function ServiceHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-[#E8DFD0]/80 bg-[#FFFCF7]/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2.5 md:px-6">
         {/* LEFT — BRAND */}
-        <div className="shrink-0 font-[var(--font-poppins)] text-sm font-semibold tracking-tight text-[#0F172A]">
+        <a
+          href="/"
+          aria-label="Nu Standard home"
+          className="shrink-0 font-[var(--font-poppins)] text-sm font-semibold tracking-tight text-[#0F172A] transition hover:text-[#0F172A]"
+        >
           Nu Standard
-        </div>
+        </a>
 
         {/* CENTER — NAV */}
         <nav className="hidden items-center gap-5 font-[var(--font-manrope)] text-[13px] text-[#64748B] md:flex">
