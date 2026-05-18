@@ -3261,8 +3261,14 @@ export function BookingFlowClient() {
                   }))}
                 />
                 {state.step === "service" ? (
-                  <div className="hidden sm:block">
-                    <TrustMetricStrip items={BOOKING_TRUST_RIBBON_ITEMS} />
+                  <div
+                    className="hidden sm:block"
+                    data-testid="booking-service-trust-rail"
+                  >
+                    <TrustMetricStrip
+                      items={BOOKING_TRUST_RIBBON_ITEMS}
+                      layout="stacked"
+                    />
                   </div>
                 ) : null}
               </div>
