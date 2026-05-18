@@ -610,7 +610,7 @@ export const BOOKING_ADD_ON_LABELS: Record<BookingAddOnToken, string> = {
 };
 
 /** Step 2 — deep-clean service only (Phase 4). */
-export const BOOKING_STEP2_DEEP_CLEAN_FOCUS_SECTION_TITLE = "Visit focus";
+export const BOOKING_STEP2_DEEP_CLEAN_FOCUS_SECTION_TITLE = "Deep-clean priority";
 export const BOOKING_STEP2_DEEP_CLEAN_FOCUS_SECTION_BODY =
   "Tell us where you want the deepest attention on this visit.";
 
@@ -679,7 +679,7 @@ export const BOOKING_REVIEW_ESTIMATOR_FOCUS_AREAS_LABEL = "Focus areas";
 export const BOOKING_REVIEW_ESTIMATOR_SURFACE_LABEL = "Furnishings & layout";
 export const BOOKING_REVIEW_SCOPE_OF_WORK_LABEL = "Scope of work";
 export const BOOKING_REVIEW_ADD_ONS_LABEL = "Add-ons";
-export const BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL = "Visit focus";
+export const BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL = "Deep-clean priority";
 export const BOOKING_REVIEW_TRANSITION_SETUP_LABEL = "Home transition setup";
 export const BOOKING_REVIEW_TRANSITION_APPLIANCES_LABEL = "Appliances included";
 

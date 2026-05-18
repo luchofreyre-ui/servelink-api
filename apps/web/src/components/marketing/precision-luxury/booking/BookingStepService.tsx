@@ -32,12 +32,14 @@ export type PublicBookingServiceCardSelection =
 type BookingStepServiceProps = {
   bookingPublicPath: BookingPublicPath;
   serviceId: string;
+  hasActiveServiceSelection: boolean;
   onSelectPublicService: (selection: PublicBookingServiceCardSelection) => void;
 };
 
 export function BookingStepService({
   bookingPublicPath,
   serviceId,
+  hasActiveServiceSelection,
   onSelectPublicService,
 }: BookingStepServiceProps) {
   const oneTimeSelected =
@@ -72,7 +74,7 @@ export function BookingStepService({
             title={BOOKING_PUBLIC_CARD_ONE_TIME_TITLE}
             body={BOOKING_PUBLIC_CARD_ONE_TIME_BODY}
             meta="Anonymous path"
-            selected={oneTimeSelected}
+            selected={hasActiveServiceSelection && oneTimeSelected}
           />
         </div>
         <div
@@ -90,7 +92,7 @@ export function BookingStepService({
             title={BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE}
             body={BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_BODY}
             meta="Anonymous path"
-            selected={firstRecurringSelected}
+            selected={hasActiveServiceSelection && firstRecurringSelected}
           />
         </div>
         <div
@@ -108,7 +110,7 @@ export function BookingStepService({
             title={BOOKING_PUBLIC_CARD_MOVE_TITLE}
             body={BOOKING_PUBLIC_CARD_MOVE_BODY}
             meta="Anonymous path"
-            selected={moveSelected}
+            selected={hasActiveServiceSelection && moveSelected}
           />
         </div>
         <div
@@ -126,7 +128,7 @@ export function BookingStepService({
             title={BOOKING_PUBLIC_CARD_RECURRING_TITLE}
             body={BOOKING_PUBLIC_CARD_RECURRING_BODY}
             meta="Login required"
-            selected={recurringGate}
+            selected={hasActiveServiceSelection && recurringGate}
           />
         </div>
       </div>
@@ -163,10 +165,12 @@ export function BookingStepService({
 
       <div className="mt-10 rounded-2xl border border-[#C9B27C]/16 bg-[#FFF9F3] px-5 py-4 ring-1 ring-[#C9B27C]/10">
         <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-          Your selection
+          {hasActiveServiceSelection ? "Your selection" : "Choose a service to begin"}
         </p>
         <p className="mt-2 font-[var(--font-poppins)] text-lg font-semibold text-[#0F172A]">
-          {oneTimeSelected
+          {!hasActiveServiceSelection
+            ? "No service selected yet"
+            : oneTimeSelected
             ? BOOKING_PUBLIC_CARD_ONE_TIME_TITLE
             : firstRecurringSelected
               ? BOOKING_PUBLIC_CARD_FIRST_TIME_WITH_RECURRING_TITLE
@@ -177,7 +181,9 @@ export function BookingStepService({
                   : "Choose a service to continue"}
         </p>
         <p className="mt-2 font-[var(--font-manrope)] text-sm text-[#64748B]">
-          {recurringGate
+          {!hasActiveServiceSelection
+            ? "Pick the card that best matches your visit. We will keep the booking defaults ready in the background until you choose."
+            : recurringGate
             ? "Choose First-Time Cleaning With Recurring Service above to price the opening reset and recurring cadence before deposit."
             : "You can change the service above before you continue."}
         </p>

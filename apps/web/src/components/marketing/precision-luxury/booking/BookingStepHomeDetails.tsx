@@ -106,6 +106,16 @@ export function BookingStepHomeDetails({
   const emailError = showFieldErrors
     ? getBookingCustomerEmailError(state.customerEmail)
     : null;
+  const missingFieldGroups = [
+    { ok: state.homeSize.trim().length > 0, label: "Home size range" },
+    { ok: state.bedrooms.trim().length > 0, label: "Bedrooms" },
+    { ok: state.bathrooms.trim().length > 0, label: "Bathrooms" },
+    { ok: state.halfBathrooms.trim().length > 0, label: "Half bathrooms" },
+    { ok: state.intakeFloors.trim().length > 0, label: "Home levels and stairs" },
+    { ok: Boolean(state.petImpactLevel), label: "Pet impact" },
+    { ok: locationComplete, label: "Arrival address" },
+    { ok: contactComplete, label: "Contact name and email" },
+  ].filter((item) => !item.ok);
 
   useEffect(() => {
     if (layer1Complete && !prevCoreHomeCompleteRef.current) {
@@ -287,6 +297,25 @@ export function BookingStepHomeDetails({
         </p>
       </div>
 
+      {showFieldErrors && missingFieldGroups.length > 0 ? (
+        <div
+          className="mb-8 rounded-2xl border border-[#B91C1C]/20 bg-[#FEF2F2] px-5 py-4"
+          data-testid="booking-home-missing-fields"
+        >
+          <p className="font-[var(--font-poppins)] text-sm font-semibold text-[#991B1B]">
+            Complete these required details to continue:
+          </p>
+          <ul className="mt-3 grid gap-2 font-[var(--font-manrope)] text-sm text-[#7F1D1D] sm:grid-cols-2">
+            {missingFieldGroups.map((item) => (
+              <li key={item.label} className="flex gap-2">
+                <span aria-hidden="true">•</span>
+                <span>{item.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       <div className="space-y-10">
         <div className="space-y-4" data-testid="booking-home-size-range">
           <div>
@@ -312,6 +341,11 @@ export function BookingStepHomeDetails({
               })),
             ]}
             placeholder="Select a size range"
+            helper={
+              showFieldErrors && !state.homeSize
+                ? "Choose a size range so we can prepare the estimate."
+                : undefined
+            }
           />
         </div>
 
@@ -499,6 +533,11 @@ export function BookingStepHomeDetails({
               }
               options={halfBathOptions}
               invalid={showFieldErrors && !state.halfBathrooms}
+              helper={
+                showFieldErrors && !state.halfBathrooms
+                  ? "Select none if the home does not have half bathrooms."
+                  : undefined
+              }
             />
             <BookingSelectField
               id="booking-home-levels"
@@ -524,6 +563,11 @@ export function BookingStepHomeDetails({
                 { value: "3_plus", label: "Three or more levels / multiple flights" },
               ]}
               invalid={showFieldErrors && !state.intakeFloors}
+              helper={
+                showFieldErrors && !state.intakeFloors
+                  ? "Choose the closest level and stairs option."
+                  : undefined
+              }
             />
           </div>
           <p

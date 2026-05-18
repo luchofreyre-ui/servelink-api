@@ -657,7 +657,15 @@ describe("BookingFlowClient", () => {
       within(scheduleBlock).getByText(BOOKING_PLAN_CLASSIFICATION_OPENING_AND_RECURRING),
     ).toBeInTheDocument();
     expect(screen.getByText(BOOKING_REVIEW_RECURRING_SECTION_TITLE)).toBeInTheDocument();
-    expect(screen.getByTestId("booking-review-recurring-maintenance")).toBeInTheDocument();
+    const maintenanceCard = screen.getByTestId("booking-review-recurring-maintenance");
+    expect(maintenanceCard).toBeInTheDocument();
+    const cadenceControls = within(maintenanceCard).getByTestId(
+      "booking-recurring-cadence-in-economics",
+    );
+    expect(within(cadenceControls).getByRole("button", { name: /^Weekly/i })).toBeInTheDocument();
+    expect(
+      within(cadenceControls).getByRole("button", { name: /Every 10 days/i }),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("booking-review-section-first-cleaning")).toBeInTheDocument();
     expect(screen.getByText(BOOKING_REVIEW_OPENING_VISIT_ESTIMATE_SECTION_TITLE)).toBeInTheDocument();
     expect(document.body.textContent).not.toMatch(/Savings/i);
@@ -1554,6 +1562,21 @@ describe("BookingFlowClient", () => {
       expect(within(root).getByText(BOOKING_PUBLIC_CARD_RECURRING_TITLE)).toBeInTheDocument();
     });
 
+    it("does not present the default service as an active selection before a card is clicked", () => {
+      bookingFlowTestSearch.sp = new URLSearchParams("step=service");
+      render(<BookingFlowClient />);
+
+      expect(screen.queryByText("Your selection")).not.toBeInTheDocument();
+      expect(screen.getByText("Choose a service to begin")).toBeInTheDocument();
+      expect(screen.getByText("No service selected yet")).toBeInTheDocument();
+
+      const options = screen.getByTestId("booking-public-service-options");
+      fireEvent.click(within(options).getByText(BOOKING_PUBLIC_CARD_ONE_TIME_TITLE));
+
+      expect(screen.getByText("Your selection")).toBeInTheDocument();
+      expect(screen.getAllByText(BOOKING_PUBLIC_CARD_ONE_TIME_TITLE).length).toBeGreaterThan(1);
+    });
+
     it("selecting recurring shows auth gate CTAs, blocks anonymous progression, and never reaches schedule", async () => {
       bookingFlowTestSearch.sp = new URLSearchParams("step=service");
       render(<BookingFlowClient />);
@@ -2276,6 +2299,11 @@ describe("BookingFlowClient", () => {
           "Please complete the required home details so we can prepare an accurate estimate.",
         ),
       ).toBeInTheDocument();
+      const missingFields = screen.getByTestId("booking-home-missing-fields");
+      expect(
+        within(missingFields).getByText("Complete these required details to continue:"),
+      ).toBeInTheDocument();
+      expect(within(missingFields).getByText("Home size range")).toBeInTheDocument();
       expect(continueBtn).toHaveAttribute("aria-invalid", "true");
       expect(continueBtn).toHaveAttribute(
         "aria-describedby",
@@ -2930,7 +2958,21 @@ describe("BookingFlowClient", () => {
       expect(
         within(homeBlock).getByText(BOOKING_ADD_ON_LABELS.baseboards_detail),
       ).toBeInTheDocument();
-      expect(within(homeBlock).getByText(/Primary intent:/)).toBeInTheDocument();
+      expect(within(homeBlock).getByText(/Overall cleaning goal:/)).toBeInTheDocument();
+      expect(
+        within(homeBlock).getByText(`${BOOKING_REVIEW_DEEP_CLEAN_FOCUS_LABEL}:`),
+      ).toBeInTheDocument();
+    });
+
+    it("keeps review details before the summary on mobile layout", async () => {
+      bookingFlowTestSearch.sp = new URLSearchParams(buildReviewSearchString());
+      render(<BookingFlowClient />);
+
+      await screen.findByRole("heading", { level: 2, name: BOOKING_REVIEW_STEP_TITLE });
+
+      const layout = screen.getByTestId("booking-step-layout");
+      expect(layout).toHaveClass("flex-col");
+      expect(layout).not.toHaveClass("flex-col-reverse");
     });
 
     it("driver block shows detail-heavy and add-on bullets when relevant", async () => {

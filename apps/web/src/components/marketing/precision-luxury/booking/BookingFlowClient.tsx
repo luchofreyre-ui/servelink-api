@@ -536,6 +536,10 @@ export function BookingFlowClient() {
   const [reviewDepositGateMessage, setReviewDepositGateMessage] = useState<
     string | null
   >(null);
+  const [hasActiveServiceSelection, setHasActiveServiceSelection] = useState(() => {
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
+    return Boolean(params.get("service") || params.get("pubPath"));
+  });
   const [attemptedNext, setAttemptedNext] = useState(false);
   const [attemptedConfirm, setAttemptedConfirm] = useState(false);
   const [submitRecoverableFailure, setSubmitRecoverableFailure] = useState(false);
@@ -3268,9 +3272,10 @@ export function BookingFlowClient() {
 
         <section className="mx-auto max-w-7xl px-4 py-4 max-[380px]:py-3 sm:px-6 sm:py-12 md:px-8 lg:py-16 [@media(max-width:380px)_and_(max-height:700px)]:py-2">
           <div
+            data-testid="booking-step-layout"
             className={
               state.step === "review"
-                ? "flex min-w-0 flex-col-reverse gap-6 xl:grid xl:grid-cols-[1.15fr_0.85fr] xl:gap-8"
+                ? "flex min-w-0 flex-col gap-6 xl:grid xl:grid-cols-[1.15fr_0.85fr] xl:gap-8"
                 : "grid gap-8 xl:grid-cols-[1.15fr_0.85fr]"
             }
           >
@@ -3286,7 +3291,9 @@ export function BookingFlowClient() {
                 <BookingStepService
                   bookingPublicPath={state.bookingPublicPath}
                   serviceId={state.serviceId}
+                  hasActiveServiceSelection={hasActiveServiceSelection}
                   onSelectPublicService={(selection: PublicBookingServiceCardSelection) => {
+                    setHasActiveServiceSelection(true);
                     setAttemptedNext(false);
                     setAttemptedConfirm(false);
                     setSubmitRecoverableFailure(false);

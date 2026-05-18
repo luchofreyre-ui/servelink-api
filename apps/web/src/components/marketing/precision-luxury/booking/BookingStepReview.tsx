@@ -1134,6 +1134,60 @@ export function BookingStepReview({
                       </p>
                     </div>
                   ) : null}
+                  <div className="mt-4 border-t border-[#0D9488]/16 pt-4">
+                    <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+                      <div>
+                        <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                          {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_TITLE}
+                        </p>
+                        <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+                          {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_LEAD}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
+                          {BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD}
+                        </p>
+                        <div
+                          className="mt-3 grid gap-3 sm:grid-cols-2"
+                          data-testid="booking-recurring-cadence-in-economics"
+                        >
+                          {(
+                            ["weekly", "every_10_days", "biweekly", "monthly"] as const
+                          ).map((cadence) => {
+                            const selected = reviewRecurringCadence === cadence;
+                            const quote = recurringQuoteOptions.find(
+                              (option) => option.cadence === cadence,
+                            );
+                            return (
+                              <button
+                                key={cadence}
+                                type="button"
+                                onClick={() => changeRecurringCadence(cadence)}
+                                className={`rounded-2xl border px-4 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
+                                  selected
+                                    ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
+                                    : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
+                                }`}
+                              >
+                                <span className="font-semibold text-[#0F172A]">
+                                  {recurringCadenceDisplay[cadence]}
+                                </span>
+                                {quote ? (
+                                  <span className="mt-1 block text-xs font-semibold leading-5 text-[#0F766E]">
+                                    {formatEstimateUsdFromCents(quote.recurringPriceCents)}
+                                  </span>
+                                ) : null}
+                                <span className="mt-1 block text-xs leading-5 text-[#64748B]">
+                                  {recurringCadenceReviewHelpers[cadence]}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <p className="font-[var(--font-manrope)] text-sm font-medium text-[#B45309]">
@@ -1161,71 +1215,6 @@ export function BookingStepReview({
                   {BOOKING_REVIEW_WHAT_CHANGES_BODY}
                 </p>
               </details>
-
-              <div className="rounded-2xl border border-[#C9B27C]/14 bg-[#FFFCF8] px-4 py-3">
-                <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
-                  <div>
-                    <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                      {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_TITLE}
-                    </p>
-                    <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#64748B]">
-                      {BOOKING_REVIEW_RECOMMENDED_SCHEDULE_LEAD}
-                    </p>
-                    {recurringQuote ? (
-                      <div className="mt-4 rounded-2xl border border-[#0D9488]/18 bg-white px-4 py-3">
-                        <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                          Selected cadence economics
-                        </p>
-                        <p className="mt-2 font-[var(--font-poppins)] text-2xl font-semibold tracking-[-0.04em] text-[#0F172A]">
-                          {formatEstimateUsdFromCents(recurringQuote.recurringPriceCents)}
-                        </p>
-                        <p className="mt-1 font-[var(--font-manrope)] text-xs leading-5 text-[#64748B]">
-                          {formatEstimateDurationMinutes(recurringQuote.estimatedMinutes)} per maintenance visit
-                        </p>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div>
-                    <p className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.16em] text-[#475569]">
-                      {BOOKING_REVIEW_RECURRING_CADENCE_SUBHEAD}
-                    </p>
-                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                      {(
-                        ["weekly", "every_10_days", "biweekly", "monthly"] as const
-                      ).map((cadence) => {
-                        const selected = reviewRecurringCadence === cadence;
-                        const quote = recurringQuoteOptions.find(
-                          (option) => option.cadence === cadence,
-                        );
-                        return (
-                          <button
-                            key={cadence}
-                            type="button"
-                            onClick={() => changeRecurringCadence(cadence)}
-                            className={`rounded-2xl border px-4 py-3 text-left font-[var(--font-manrope)] text-sm transition ${
-                              selected
-                                ? "border-[#0D9488] bg-white ring-2 ring-[#0D9488]/25"
-                                : "border-[#C9B27C]/18 bg-white hover:border-[#C9B27C]/40"
-                            }`}
-                          >
-                            <span className="font-semibold text-[#0F172A]">
-                              {recurringCadenceDisplay[cadence]}
-                            </span>
-                            {quote ? (
-                              <span className="mt-1 block text-xs font-semibold leading-5 text-[#0F766E]">
-                                {formatEstimateUsdFromCents(quote.recurringPriceCents)}
-                              </span>
-                            ) : null}
-                            <span className="mt-1 block text-xs leading-5 text-[#64748B]">
-                              {recurringCadenceReviewHelpers[cadence]}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {recurringTimingText ? (
                 <p className="rounded-2xl border border-[#0D9488]/18 bg-[rgba(13,148,136,0.06)] px-4 py-3 font-[var(--font-manrope)] text-sm leading-6 text-[#0F766E]">
@@ -1431,7 +1420,7 @@ export function BookingStepReview({
               </p>
               <p>
                 <span className="font-medium text-[#64748B]">
-                  Primary intent:
+                  Overall cleaning goal:
                 </span>{" "}
                 <span className="text-[#0F172A]">
                   {primaryIntentDisplay[state.primaryIntent]}
