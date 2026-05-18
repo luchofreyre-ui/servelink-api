@@ -14,6 +14,26 @@ export type PublicServiceEntry = BasePublicContentEntry & {
   kind: "service";
   primaryCtaLabel: string;
   secondaryCtaLabel: string;
+  serviceDepth: {
+    summaryEyebrow: string;
+    summaryTitle: string;
+    summaryBody: string;
+    bestFor: string[];
+    focusAreas: Array<{
+      title: string;
+      body: string;
+    }>;
+    zones: Array<{
+      zone: string;
+      emphasis: string;
+      examples: string[];
+    }>;
+    afterVisit: string[];
+    differentiation: {
+      title: string;
+      body: string;
+    };
+  };
   includedTitle: string;
   includedItems: string[];
   notIncludedTitle: string;
@@ -85,6 +105,58 @@ export const publicContentRegistry: PublicContentEntry[] = [
     ],
     primaryCtaLabel: "Book Deep Cleaning",
     secondaryCtaLabel: "Get Pricing",
+    serviceDepth: {
+      summaryEyebrow: "Residential reset",
+      summaryTitle: "Best when the home needs a stronger baseline before regular upkeep.",
+      summaryBody:
+        "Deep cleaning concentrates effort where visible buildup, edges, moisture, and touch points make the home feel behind. It is designed as a reset, not a routine maintenance pass.",
+      bestFor: [
+        "First appointments before recurring service begins",
+        "Seasonal resets after long stretches between visits",
+        "Homes with visible buildup in kitchens, baths, edges, or corners",
+        "Preparing for guests, hosting, or a cleaner household baseline",
+      ],
+      focusAreas: [
+        {
+          title: "Buildup recovery",
+          body: "More time goes toward areas that collect residue, fingerprints, mineral haze, and layered daily use.",
+        },
+        {
+          title: "Detail visibility",
+          body: "Edges, reachable corners, trim, fixtures, mirrors, and touch points receive closer attention than a standard upkeep visit.",
+        },
+        {
+          title: "Reset pacing",
+          body: "The visit is planned around condition and effort, so the team can prioritize the spaces that most affect the overall feel.",
+        },
+      ],
+      zones: [
+        {
+          zone: "Kitchens",
+          emphasis: "Degrease visible work zones and reset high-use surfaces.",
+          examples: ["Counter edges", "Cabinet fronts", "Appliance exteriors", "Sink and fixture detail"],
+        },
+        {
+          zone: "Bathrooms",
+          emphasis: "Lift the rooms where moisture, mirrors, tile, and fixtures show drift fastest.",
+          examples: ["Vanities", "Mirrors", "Shower glass", "Fixture shine"],
+        },
+        {
+          zone: "Detail areas",
+          emphasis: "Bring attention to the places routine cleaning often moves past quickly.",
+          examples: ["Baseboards", "Reachable corners", "Door touch points", "Trim ledges"],
+        },
+      ],
+      afterVisit: [
+        "Rooms feel easier to maintain because the baseline is cleaner.",
+        "High-touch and high-visibility areas read more finished.",
+        "Recurring service, if selected later, starts from a clearer standard.",
+      ],
+      differentiation: {
+        title: "Deep cleaning differs from routine upkeep by concentrating effort where recovery is needed.",
+        body: "Routine visits preserve a stable home. Deep cleaning is the better fit when buildup, detail areas, or first-visit expectations need more time and attention before maintenance makes sense.",
+      },
+    },
     includedTitle: "Built for a higher level of visible detail.",
     includedItems: [
       "High-touch surface cleaning throughout key living spaces",
@@ -166,6 +238,58 @@ export const publicContentRegistry: PublicContentEntry[] = [
     ],
     primaryCtaLabel: "Book Recurring Cleaning",
     secondaryCtaLabel: "Get Pricing",
+    serviceDepth: {
+      summaryEyebrow: "Maintenance rhythm",
+      summaryTitle: "Best when the goal is keeping a good baseline from slipping.",
+      summaryBody:
+        "Recurring cleaning protects the rooms and surfaces that shape day-to-day comfort. The work is planned for consistency, presentation, and less catch-up between visits.",
+      bestFor: [
+        "Homes that already have a manageable baseline",
+        "Busy households that want less reactive cleaning pressure",
+        "Clients who care about kitchens and bathrooms staying guest-ready",
+        "A weekly, bi-weekly, or monthly rhythm after an opening reset",
+      ],
+      focusAreas: [
+        {
+          title: "Repeatable upkeep",
+          body: "Each visit reinforces the core rooms and surfaces that determine how the home feels between appointments.",
+        },
+        {
+          title: "Presentation protection",
+          body: "Work is directed toward visible order, clean counters, polished fixtures, and surfaces that show daily use.",
+        },
+        {
+          title: "Cadence fit",
+          body: "The schedule should match household traffic; higher-use homes usually need tighter spacing than lower-use homes.",
+        },
+      ],
+      zones: [
+        {
+          zone: "Kitchens",
+          emphasis: "Keep everyday prep and gathering areas from sliding into catch-up mode.",
+          examples: ["Counters", "Sinks", "Stovetop surfaces", "Visible cabinet touch points"],
+        },
+        {
+          zone: "Bathrooms",
+          emphasis: "Maintain the rooms that influence freshness and presentation fastest.",
+          examples: ["Vanities", "Mirrors", "Fixtures", "Toilets and tubs"],
+        },
+        {
+          zone: "Living zones",
+          emphasis: "Support the spaces where daily traffic, dust, and touch points accumulate.",
+          examples: ["Floors", "High-touch surfaces", "Entry areas", "Common rooms"],
+        },
+      ],
+      afterVisit: [
+        "The home returns to a calmer, more maintained baseline.",
+        "Buildup has less time to become a reset project.",
+        "Household cleaning pressure is easier to manage between visits.",
+      ],
+      differentiation: {
+        title: "Recurring cleaning is maintenance, not recovery.",
+        body: "It works best after the home is already in a reasonable condition. If the home needs a heavy first reset, deep cleaning usually creates the better starting point.",
+      },
+    },
     includedTitle: "Designed to preserve the standard before it slips.",
     includedItems: [
       "Consistent upkeep across the rooms that define the day-to-day feel of the home",
@@ -246,6 +370,58 @@ export const publicContentRegistry: PublicContentEntry[] = [
     ],
     primaryCtaLabel: "Book Move-In / Move-Out",
     secondaryCtaLabel: "Get Pricing",
+    serviceDepth: {
+      summaryEyebrow: "Transition readiness",
+      summaryTitle: "Best when timing, presentation, and handoff condition all matter.",
+      summaryBody:
+        "Move-in and move-out cleaning focuses on the rooms and surfaces that shape a first impression. The service supports cleaner transitions without pretending to replace repairs, hauling, or restoration.",
+      bestFor: [
+        "Move-outs before walkthroughs, listings, or key handoff",
+        "Move-ins where the home needs a fresher starting point",
+        "Occupied-to-vacant transitions where presentation matters",
+        "Property-ready resets after furniture, traffic, or appliance use",
+      ],
+      focusAreas: [
+        {
+          title: "Handoff presentation",
+          body: "The service prioritizes the spaces people judge first when entering, listing, or turning over a home.",
+        },
+        {
+          title: "Empty or shifting rooms",
+          body: "Vacant areas expose floors, baseboards, cabinet faces, and corners that are often hidden during normal occupancy.",
+        },
+        {
+          title: "Move-related buildup",
+          body: "Attention goes to fingerprints, cabinet fronts, appliance exteriors, entry paths, and bathroom/kitchen surfaces.",
+        },
+      ],
+      zones: [
+        {
+          zone: "Entry and common areas",
+          emphasis: "Support the first impression as someone steps into the home.",
+          examples: ["Entry floors", "Visible baseboards", "Touch points", "Main living areas"],
+        },
+        {
+          zone: "Kitchens",
+          emphasis: "Clean the surfaces that most influence move-in confidence or listing presentation.",
+          examples: ["Cabinet faces", "Counters", "Sink detail", "Appliance exteriors"],
+        },
+        {
+          zone: "Bathrooms",
+          emphasis: "Reset the rooms where freshness and condition are noticed immediately.",
+          examples: ["Mirrors", "Fixtures", "Vanities", "Tub and shower surfaces"],
+        },
+      ],
+      afterVisit: [
+        "The property feels easier to hand off, list, or step into.",
+        "High-visibility rooms read cleaner and more intentional.",
+        "The service clarifies presentation; it does not mask repairs or damage.",
+      ],
+      differentiation: {
+        title: "Transition cleaning differs from occupied-home upkeep because the home is being judged as a handoff.",
+        body: "The focus shifts toward presentation, visible condition, and the rooms that influence move-in confidence. Repair work, debris removal, and restoration remain outside the cleaning scope.",
+      },
+    },
     includedTitle: "Built for transitions where presentation matters immediately.",
     includedItems: [
       "Whole-home visual reset designed for handoff readiness",
