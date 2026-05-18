@@ -3,15 +3,64 @@ import { getAllServiceEntries, getAllArticleEntries } from "./publicContentSelec
 
 const HOMEPAGE_SERVICE_SLUG_ORDER = [
   "deep-cleaning",
+  "first-time-clean-with-recurring-services",
   "recurring-home-cleaning",
   "move-in-move-out",
 ] as const;
 
-/** Deep, recurring, and transition cleaning — registry has no separate “standard” service slug. */
-export function getHomepageFeaturedServicesOrdered(): PublicServiceEntry[] {
+export type HomepageFeaturedService = PublicServiceEntry & {
+  displaySlug: string;
+  displayTitle: string;
+  displayDescription: string;
+  displayBadge: string;
+  serviceHref: string;
+  bookingHref: string;
+  mediaSlug: PublicServiceEntry["slug"];
+};
+
+function toHomepageFeaturedService(
+  service: PublicServiceEntry,
+  overrides: Partial<HomepageFeaturedService> = {},
+): HomepageFeaturedService {
+  return {
+    ...service,
+    displaySlug: service.slug,
+    displayTitle: service.title,
+    displayDescription: service.shortDescription,
+    displayBadge: service.serviceBadge,
+    serviceHref: `/services/${service.slug}`,
+    bookingHref: `/book?service=${service.slug}`,
+    mediaSlug: service.slug,
+    ...overrides,
+  };
+}
+
+/** Homepage cards include a presentation-only first-time recurring path without adding a new route. */
+export function getHomepageFeaturedServicesOrdered(): HomepageFeaturedService[] {
   const all = getAllServiceEntries();
-  return HOMEPAGE_SERVICE_SLUG_ORDER.map((slug) => all.find((s) => s.slug === slug)).filter(
-    (s): s is PublicServiceEntry => Boolean(s),
+  const deepClean = all.find((s) => s.slug === "deep-cleaning");
+  const recurring = all.find((s) => s.slug === "recurring-home-cleaning");
+  const moveOut = all.find((s) => s.slug === "move-in-move-out");
+
+  const featured = [
+    deepClean ? toHomepageFeaturedService(deepClean) : null,
+    recurring
+      ? toHomepageFeaturedService(recurring, {
+          displaySlug: "first-time-clean-with-recurring-services",
+          displayTitle: "First-time clean with recurring services",
+          displayDescription:
+            "Start with the right reset, then move into a recurring rhythm that keeps the home easier to maintain.",
+          displayBadge: "Best first step for upkeep",
+          serviceHref: "/services/recurring-home-cleaning",
+          bookingHref: "/book?service=recurring-home-cleaning",
+        })
+      : null,
+    recurring ? toHomepageFeaturedService(recurring) : null,
+    moveOut ? toHomepageFeaturedService(moveOut) : null,
+  ].filter((s): s is HomepageFeaturedService => Boolean(s));
+
+  return HOMEPAGE_SERVICE_SLUG_ORDER.map((slug) => featured.find((s) => s.displaySlug === slug)).filter(
+    (s): s is HomepageFeaturedService => Boolean(s),
   );
 }
 
