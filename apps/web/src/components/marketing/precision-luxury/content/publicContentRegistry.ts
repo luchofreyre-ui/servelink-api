@@ -14,6 +14,7 @@ export type PublicServiceEntry = BasePublicContentEntry & {
   kind: "service";
   primaryCtaLabel: string;
   secondaryCtaLabel: string;
+  bookingServiceSlug?: string;
   serviceDepth: {
     summaryEyebrow: string;
     summaryTitle: string;
@@ -221,6 +222,144 @@ export const publicContentRegistry: PublicContentEntry[] = [
     shortDescription:
       "For first visits, seasonal resets, or homes that need more than light maintenance.",
     serviceBadge: "Best for first visits",
+  },
+  {
+    slug: "first-time-clean-with-recurring-services",
+    kind: "service",
+    eyebrow: "Service detail",
+    title: "First-time clean with recurring services",
+    description:
+      "A reset-style first clean that prepares the home for easier recurring maintenance afterward.",
+    heroBody:
+      "Start with the right reset, then move into easier ongoing upkeep with a recurring rhythm that fits the home.",
+    relatedSlugs: [
+      "deep-cleaning",
+      "recurring-home-cleaning",
+      "deep-cleaning-vs-recurring-cleaning",
+      "how-often-should-a-house-be-cleaned",
+    ],
+    primaryCtaLabel: "Book First-Time Recurring",
+    secondaryCtaLabel: "View All Services",
+    bookingServiceSlug: "recurring-home-cleaning",
+    serviceDepth: {
+      summaryEyebrow: "First visit reset",
+      summaryTitle: "Start with the right reset, then move into easier ongoing upkeep.",
+      summaryBody:
+        "This service is for homes that need an initial catch-up before ongoing care begins. The first visit is more detailed than regular maintenance so the recurring rhythm starts from a clearer, more realistic baseline.",
+      bestFor: [
+        "Homes that want recurring service but need a stronger first clean",
+        "Clients who do not want the first recurring visit to be under-scoped",
+        "Busy households ready to move from catch-up cleaning into routine upkeep",
+        "Spaces where kitchens, bathrooms, edges, or high-touch areas need reset attention first",
+      ],
+      focusAreas: [
+        {
+          title: "What happens first",
+          body: "The opening visit is planned as a reset-style clean, with more attention on visible buildup, detail areas, and rooms that would make maintenance feel rushed if left for a standard recurring appointment.",
+        },
+        {
+          title: "What changes after the first visit",
+          body: "Once the baseline is stronger, recurring visits can focus on preserving the standard instead of repeatedly catching the home back up.",
+        },
+        {
+          title: "Recurring handoff",
+          body: "The first clean clarifies the condition of the home, then the ongoing rhythm protects kitchens, bathrooms, floors, touch points, and presentation between visits.",
+        },
+      ],
+      zones: [
+        {
+          zone: "Kitchen and dining areas",
+          emphasis:
+            "Reset the surfaces and touch points that usually determine whether the home feels ready for maintenance.",
+          examples: ["Counters", "Sink and fixtures", "Appliance exteriors", "Cabinet touch points"],
+        },
+        {
+          zone: "Bathrooms",
+          emphasis:
+            "Give moisture-prone rooms a stronger first pass before they move into routine upkeep.",
+          examples: ["Vanities", "Mirrors", "Fixtures", "Tubs and shower surfaces"],
+        },
+        {
+          zone: "Recurring maintenance zones",
+          emphasis:
+            "After the reset, ongoing visits maintain the areas that shape day-to-day comfort and presentation.",
+          examples: ["Floors", "High-touch surfaces", "Common rooms", "Entry areas"],
+        },
+      ],
+      afterVisit: [
+        "The home is better positioned for recurring maintenance rather than repeated catch-up.",
+        "Future recurring visits become easier to maintain because the first clean addressed the starting condition.",
+        "Expectations are clearer around what the opening visit resets and what the ongoing rhythm preserves.",
+      ],
+      differentiation: {
+        title: "The first visit is intentionally more detailed than regular maintenance.",
+        body: "A standard recurring visit is built to preserve a home that is already manageable. This first-time path helps bridge the gap when the home needs catch-up work before recurring service can do its job well.",
+      },
+    },
+    includedTitle: "Built to move from reset into rhythm.",
+    includedItems: [
+      "A more detailed first visit that addresses the starting condition of the home",
+      "Focused attention on kitchens, bathrooms, high-touch surfaces, and visible catch-up areas",
+      "A smoother transition into weekly, bi-weekly, or monthly recurring maintenance",
+      "Ongoing visits that maintain the baseline after the first reset-style clean",
+    ],
+    notIncludedTitle: "Not meant for every situation.",
+    notIncludedItems: [
+      "Homes that only need a one-time seasonal deep clean with no ongoing service plan",
+      "Restoration, repair, hazard cleanup, or specialty remediation",
+      "Project-style add-ons outside normal residential cleaning scope",
+      "A regular maintenance visit when the home clearly needs reset-level work first",
+    ],
+    processTitle: "How first-time recurring service works.",
+    processBody:
+      "The visit starts with reset-level attention, then shifts into a recurring rhythm once the home is easier to maintain.",
+    processSteps: [
+      {
+        step: "01",
+        title: "Start with a reset-style first clean",
+        body: "The opening visit gives more time and attention to catch-up areas so recurring service is not asked to solve a reset problem in a maintenance slot.",
+      },
+      {
+        step: "02",
+        title: "Clarify the ongoing handoff",
+        body: "After the first visit, the service rhythm can focus on maintaining the rooms, surfaces, and presentation standards that matter most.",
+      },
+      {
+        step: "03",
+        title: "Maintain the baseline over time",
+        body: "Recurring visits become easier to plan and easier to feel because the home is no longer starting from behind each appointment.",
+      },
+    ],
+    positioningTitle:
+      "A better starting path for homes that want recurring care but need catch-up first.",
+    positioningBody:
+      "This option helps prevent the first recurring visit from being under-scoped by naming the difference between first-visit reset work and future maintenance.",
+    positioningCallout:
+      "Use this when the goal is ongoing care, but the first appointment needs more detail than regular upkeep.",
+    faqTitle: "Questions clients ask before starting recurring service",
+    faqs: [
+      {
+        q: "Why is the first visit different from regular recurring cleaning?",
+        a: "The first visit may need to address buildup, detail areas, and catch-up work before the home is ready for easier maintenance.",
+      },
+      {
+        q: "What changes after the first clean?",
+        a: "Future visits focus more on preserving the baseline: kitchens, bathrooms, floors, touch points, and the areas that shape day-to-day presentation.",
+      },
+      {
+        q: "Is this the same as deep cleaning?",
+        a: "It borrows the reset logic of a deeper first clean, but the purpose is specifically to transition into recurring maintenance afterward.",
+      },
+      {
+        q: "When should I choose this instead of standard recurring cleaning?",
+        a: "Choose it when the home needs an initial catch-up before ongoing service would feel realistic, efficient, and properly scoped.",
+      },
+    ],
+    bookingTag: "Reset + rhythm",
+    bookingMeta: "First visit before recurring",
+    shortDescription:
+      "For homes that need an initial catch-up clean before moving into easier ongoing maintenance.",
+    serviceBadge: "Best first step for upkeep",
   },
   {
     slug: "recurring-home-cleaning",

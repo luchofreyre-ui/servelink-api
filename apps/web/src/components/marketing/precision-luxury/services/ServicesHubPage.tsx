@@ -112,6 +112,7 @@ export function ServicesHubPage() {
               const meta = getHomepageServiceImage(service.slug);
               const variant = serviceSlugToHomepageVisualVariant(service.slug);
               const title = service.title.replace(/, positioned.*$/i, "").replace(/, presented.*$/i, "");
+              const bookingServiceSlug = service.bookingServiceSlug ?? service.slug;
 
               return (
                 <article
@@ -156,7 +157,7 @@ export function ServicesHubPage() {
                         Learn more
                       </MarketingLinkButton>
                       <MarketingLinkButton
-                        href={`/book?service=${service.slug}`}
+                        href={`/book?service=${bookingServiceSlug}`}
                         variant="primary"
                         className="px-5 py-3 text-sm"
                       >

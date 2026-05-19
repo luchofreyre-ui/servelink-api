@@ -35,23 +35,18 @@ function toHomepageFeaturedService(
   };
 }
 
-/** Homepage cards include a presentation-only first-time recurring path without adding a new route. */
+/** Homepage cards use a dedicated first-time recurring detail page while booking into recurring service. */
 export function getHomepageFeaturedServicesOrdered(): HomepageFeaturedService[] {
   const all = getAllServiceEntries();
   const deepClean = all.find((s) => s.slug === "deep-cleaning");
+  const firstTimeRecurring = all.find((s) => s.slug === "first-time-clean-with-recurring-services");
   const recurring = all.find((s) => s.slug === "recurring-home-cleaning");
   const moveOut = all.find((s) => s.slug === "move-in-move-out");
 
   const featured = [
     deepClean ? toHomepageFeaturedService(deepClean) : null,
-    recurring
-      ? toHomepageFeaturedService(recurring, {
-          displaySlug: "first-time-clean-with-recurring-services",
-          displayTitle: "First-time clean with recurring services",
-          displayDescription:
-            "Start with the right reset, then move into a recurring rhythm that keeps the home easier to maintain.",
-          displayBadge: "Best first step for upkeep",
-          serviceHref: "/services/recurring-home-cleaning",
+    firstTimeRecurring
+      ? toHomepageFeaturedService(firstTimeRecurring, {
           bookingHref: "/book?service=recurring-home-cleaning",
         })
       : null,

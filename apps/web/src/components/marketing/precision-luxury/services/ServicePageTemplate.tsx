@@ -31,6 +31,11 @@ const serviceMedia: Record<
     alt: "Detailed home reset with bright residential surfaces prepared for deeper cleaning.",
     caption: "A deeper reset focuses on the rooms and details that make the home feel behind.",
   },
+  "first-time-clean-with-recurring-services": {
+    src: "/media/services/recurring-cleaning.jpg",
+    alt: "Calm residential room prepared for the transition from first-time reset to recurring home cleaning.",
+    caption: "A stronger first visit creates the baseline that recurring care can maintain.",
+  },
   "recurring-home-cleaning": {
     src: "/media/services/recurring-cleaning.jpg",
     alt: "Calm residential room prepared for recurring home cleaning maintenance.",
@@ -54,6 +59,7 @@ function CheckIcon() {
 export function ServicePageTemplate({ page }: ServicePageTemplateProps) {
   const relatedContent = getRelatedPublicContentBySlug(page.slug);
   const media = serviceMedia[page.slug];
+  const bookingServiceSlug = page.bookingServiceSlug ?? page.slug;
 
   const schemas = [
     buildServiceSchema(page),
@@ -84,7 +90,7 @@ export function ServicePageTemplate({ page }: ServicePageTemplateProps) {
           body={page.heroBody}
           primaryCtaLabel={page.primaryCtaLabel}
           secondaryCtaLabel={page.secondaryCtaLabel}
-          primaryCtaHref={`/book?service=${page.slug}`}
+          primaryCtaHref={`/book?service=${bookingServiceSlug}`}
           secondaryCtaHref="/services"
         />
 
