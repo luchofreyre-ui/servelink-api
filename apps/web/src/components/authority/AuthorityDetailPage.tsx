@@ -52,6 +52,8 @@ import {
 import { getBuiltBridgeMap } from "@/lib/encyclopedia/bridgeMap";
 import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
+import { EncyclopediaExampleImageBlock } from "@/components/encyclopedia/EncyclopediaExampleImageBlock";
+import { resolveEncyclopediaExampleImage } from "@/lib/encyclopedia/exampleImageResolver";
 
 function MethodBody({ data }: { data: AuthorityMethodPageData }) {
   return (
@@ -261,6 +263,10 @@ export function AuthorityDetailPage(props: {
     data.slug,
     bridgeMap,
   );
+  const exampleImage = resolveEncyclopediaExampleImage({
+    category: variant === "method" ? "methods" : "surfaces",
+    title: data.title,
+  });
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
@@ -269,6 +275,16 @@ export function AuthorityDetailPage(props: {
       <main className="mx-auto max-w-7xl px-6 py-8 md:px-8 md:py-12">
         <AuthorityBreadcrumbs items={crumbs} />
         <AuthorityHero eyebrow={eyebrow} title={data.title} description={data.summary} />
+        {exampleImage ? (
+          <div className="mb-10">
+            <EncyclopediaExampleImageBlock
+              src={exampleImage.src}
+              alt={exampleImage.alt}
+              eyebrow={exampleImage.eyebrow}
+              caption={exampleImage.caption}
+            />
+          </div>
+        ) : null}
         <AuthorityTopicalCrossLinks pageKey={`${variant}-${data.slug}`} />
         <div className="grid gap-10 lg:grid-cols-[minmax(0,720px)_320px] lg:items-start">
         <div className="rounded-[30px] border border-[#E8DFD0]/95 bg-white/82 p-6 shadow-[0_18px_54px_-42px_rgba(15,23,42,0.28)] sm:p-8">
