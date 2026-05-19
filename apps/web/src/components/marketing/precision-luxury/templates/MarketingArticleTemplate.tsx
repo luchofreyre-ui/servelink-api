@@ -78,7 +78,7 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
             ]}
           />
 
-          <div className="mt-7 grid overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-stretch lg:gap-7 lg:p-9">
+          <div className="mt-7 grid overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-5 shadow-[0_28px_80px_-54px_rgba(15,23,42,0.38)] sm:p-7 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:items-stretch xl:gap-7 xl:p-9">
             <div className="flex min-w-0 flex-col justify-between rounded-[28px] border border-[#E8DFD0]/80 bg-white/76 p-6 sm:p-8">
               <div>
                 <p className="font-[var(--font-poppins)] text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B89F6B]">
@@ -109,10 +109,10 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
               <EditorialMediaFrame
                 src={asideImageSrc(article.slug)}
                 alt="Nu Standard editorial photography supporting educational cleaning guidance."
-                aspectClassName="aspect-[16/10] lg:h-full lg:min-h-[460px]"
+                aspectClassName="aspect-[16/10] xl:h-full xl:min-h-[460px]"
                 frameClassName="rounded-[30px]"
               />
-              <div className="mt-5 rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] lg:absolute lg:bottom-5 lg:left-5 lg:right-5 lg:mt-0">
+              <div className="mt-5 rounded-[24px] border border-[#C9B27C]/20 bg-white/92 p-5 shadow-[0_22px_62px_-46px_rgba(15,23,42,0.46)] xl:absolute xl:bottom-5 xl:left-5 xl:right-5 xl:mt-0">
                 <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                   Key takeaway
                 </p>
@@ -123,24 +123,15 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
             </div>
           </div>
 
-          <div className="mt-8 lg:hidden">
-            <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-white/90 p-5">
-              <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
-                Key takeaway
-              </p>
-              <p className="mt-3 font-[var(--font-manrope)] text-sm leading-relaxed text-[#475569]">
-                {article.sectionOne.callout}
-              </p>
-            </div>
-          </div>
         </section>
 
         <div className="mx-auto max-w-7xl px-6 pb-16 md:px-8">
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,720px)_320px] lg:items-start lg:justify-between">
+          <div className="grid gap-12 xl:grid-cols-[minmax(0,820px)_300px] xl:items-start xl:justify-between">
             <div className="min-w-0">
               <MarketingRichSection
                 id="section-one"
                 sectionClassName="px-0 py-14 md:py-16"
+                layout="stacked"
                 eyebrow={article.sectionOne.eyebrow}
                 title={article.sectionOne.title}
                 body={article.sectionOne.body}
@@ -155,11 +146,12 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
               <MarketingRichSection
                 id="section-two"
                 sectionClassName="px-0 py-0 md:py-4"
+                layout="stacked"
                 eyebrow={article.sectionTwo.eyebrow}
                 title={article.sectionTwo.title}
                 body={article.sectionTwo.body}
               >
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 lg:grid-cols-2">
                   {article.sectionTwo.points.map((point) => (
                     <div key={point} className="rounded-[24px] border border-[#C9B27C]/16 bg-white p-5">
                       <div className="mb-4 h-px w-12 bg-[#C9B27C]" />
@@ -197,20 +189,9 @@ export function MarketingArticleTemplate({ article }: MarketingArticleTemplatePr
                 ) : null}
               </MarketingRichSection>
 
-              <div className="mt-12 lg:hidden">
-                <EditorialTrustStrip
-                  variant="dense"
-                  items={[
-                    { title: "Surface-First" },
-                    { title: "Test First" },
-                    { title: "Gentle Approach" },
-                    { title: "Know When to Stop" },
-                  ]}
-                />
-              </div>
             </div>
 
-            <aside className="hidden space-y-7 lg:block lg:sticky lg:top-28">
+            <aside className="space-y-7 xl:sticky xl:top-28">
               <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
                 <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
                   Key takeaway
