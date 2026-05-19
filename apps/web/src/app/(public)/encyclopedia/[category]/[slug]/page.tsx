@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { EncyclopediaPage } from "@/components/encyclopedia/EncyclopediaPage";
 import { EncyclopediaPipelineArticle } from "@/components/encyclopedia/EncyclopediaPipelineArticle";
+import { PublicSiteFooter } from "@/components/marketing/precision-luxury/layout/PublicSiteFooter";
+import { PublicSiteHeader } from "@/components/marketing/precision-luxury/layout/PublicSiteHeader";
 import { resolveEncyclopediaPageFromApi } from "@/lib/encyclopedia/encyclopediaApiPublic.server";
 import { getResolvedEncyclopediaPage } from "@/lib/encyclopedia/encyclopediaContentResolver";
 import { getEncyclopediaDocumentByCategoryAndSlug, getPublishedEncyclopediaParams } from "@/lib/encyclopedia/loader";
@@ -78,11 +80,15 @@ export default async function EncyclopediaDocPage({
     notFound();
   }
 
-  if (resolved.source === "live") {
-    return (
-      <EncyclopediaPipelineArticle page={resolved} category={category.data} />
-    );
-  }
-
-  return <EncyclopediaPage document={resolved.content as EncyclopediaDocument} />;
+  return (
+    <div className="min-h-screen bg-[#FFF9F3] text-[#0F172A]">
+      <PublicSiteHeader />
+      {resolved.source === "live" ? (
+        <EncyclopediaPipelineArticle page={resolved} category={category.data} />
+      ) : (
+        <EncyclopediaPage document={resolved.content as EncyclopediaDocument} />
+      )}
+      <PublicSiteFooter />
+    </div>
+  );
 }
