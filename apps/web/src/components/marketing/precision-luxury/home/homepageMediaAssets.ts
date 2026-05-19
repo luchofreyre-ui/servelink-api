@@ -17,6 +17,7 @@ export type HomepageServiceVisualVariant = "deep" | "recurring" | "transition";
 
 export function serviceSlugToHomepageVisualVariant(slug: string): HomepageServiceVisualVariant {
   if (slug === "deep-cleaning") return "deep";
+  if (slug === "first-time-clean-with-recurring-services") return "recurring";
   if (slug === "recurring-home-cleaning") return "recurring";
   return "transition";
 }
@@ -40,6 +41,7 @@ export function getHomepageServiceImage(slug: string): ServiceImageMeta | null {
         alt: "Calm kitchen environment—realistic premium residential surfaces suited to deep cleaning visits.",
       };
     case "recurring-home-cleaning":
+    case "first-time-clean-with-recurring-services":
       return {
         assetId: "NSM-ENV-004",
         src: "/media/services/recurring-cleaning.jpg",
