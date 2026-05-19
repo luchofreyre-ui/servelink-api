@@ -97,6 +97,7 @@ export interface EncyclopediaDocument {
   sections: EncyclopediaSection[];
   relatedEntries: EncyclopediaIndexEntry[];
   sourcePath: string;
+  imageAssetPath: string | null;
   linkedGroups: EncyclopediaLinkedGroup[];
 }
 

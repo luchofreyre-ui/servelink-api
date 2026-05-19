@@ -1,12 +1,21 @@
+import { EncyclopediaExampleImageBlock } from "./EncyclopediaExampleImageBlock";
 import { EncyclopediaLinkedGroups } from "./EncyclopediaLinkedGroups";
 import type { EncyclopediaDocument } from "@/lib/encyclopedia/types";
 import { ENCYCLOPEDIA_COMMON_MISTAKES } from "@/lib/encyclopedia/encyclopediaMisuseSnippets";
+import { resolveEncyclopediaExampleImage } from "@/lib/encyclopedia/exampleImageResolver";
 
 interface EncyclopediaPageProps {
   document: EncyclopediaDocument;
 }
 
 export function EncyclopediaPage({ document }: EncyclopediaPageProps) {
+  const exampleImage = resolveEncyclopediaExampleImage({
+    category: document.frontmatter.category,
+    title: document.frontmatter.title,
+    primaryImageAlt: document.frontmatter.primaryImageAlt,
+    imageAssetPath: document.imageAssetPath,
+  });
+
   return (
     <main className="mx-auto max-w-7xl px-6 py-8 md:px-8 md:py-12">
       <article className="grid gap-10 lg:grid-cols-[minmax(0,720px)_320px] lg:items-start lg:justify-between">
@@ -24,6 +33,15 @@ export function EncyclopediaPage({ document }: EncyclopediaPageProps) {
             {document.frontmatter.summary}
           </p>
         </header>
+
+        {exampleImage ? (
+          <EncyclopediaExampleImageBlock
+            src={exampleImage.src}
+            alt={exampleImage.alt}
+            eyebrow={exampleImage.eyebrow}
+            caption={exampleImage.caption}
+          />
+        ) : null}
 
         <div className="mt-10 space-y-10">
           {document.sections.map((section) => (

@@ -389,6 +389,7 @@ export const getEncyclopediaDocumentByCategoryAndSlug = encyclopediaCache(
       sections: parseSections(body),
       relatedEntries,
       sourcePath: filePath,
+      imageAssetPath: getImageAssetPathForEntry(matchingEntry),
       linkedGroups: buildLinkedGroupsForEntry(matchingEntry, publishedEntries),
     };
   },

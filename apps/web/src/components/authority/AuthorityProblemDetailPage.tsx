@@ -69,6 +69,8 @@ import type { PublishedProductLike } from "@/lib/products/getRecommendedProducts
 import { resolveProductRecommendationContextForProblemPage } from "@/lib/products/productRecommendationContext";
 import { isExecutionFirstProblemLayout } from "@/lib/authority/authorityProblemExecutionLayout";
 import { getOrderedScenarioProducts } from "@/lib/products/bestProductForContext";
+import { EncyclopediaExampleImageBlock } from "@/components/encyclopedia/EncyclopediaExampleImageBlock";
+import { resolveEncyclopediaExampleImage } from "@/lib/encyclopedia/exampleImageResolver";
 
 const DEFAULT_BEFORE_YOU_CLEAN = `Most people go too aggressive too early.
 
@@ -331,6 +333,10 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
   const diagnosticRows = buildDiagnosticRows(data.whatItUsuallyIs, data.commonOn);
   const precheckBullets = buildPrecheckBullets(beforeClean, voice);
   const useExecutionLayout = isExecutionFirstProblemLayout(data);
+  const exampleImage = resolveEncyclopediaExampleImage({
+    category: "problems",
+    title: data.title,
+  });
 
   const anchorNavItems: { href: string; label: string }[] = useExecutionLayout
     ? [
@@ -386,6 +392,14 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
                 title={data.title}
                 description={data.problemDefinitionLine!}
               />
+              {exampleImage ? (
+                <EncyclopediaExampleImageBlock
+                  src={exampleImage.src}
+                  alt={exampleImage.alt}
+                  eyebrow={exampleImage.eyebrow}
+                  caption={exampleImage.caption}
+                />
+              ) : null}
               <div className="w-full space-y-0" data-testid="execution-first-top-fold">
                 <AuthorityProblemQuickFix {...data.executionQuickFix!} />
                 {scenarioWithProducts && roleProducts.length > 0 ?
@@ -442,6 +456,14 @@ export function AuthorityProblemDetailPage(props: { data: AuthorityProblemPageDa
                   description={data.summary}
                   subline={data.heroSubline}
                 />
+                {exampleImage ? (
+                  <EncyclopediaExampleImageBlock
+                    src={exampleImage.src}
+                    alt={exampleImage.alt}
+                    eyebrow={exampleImage.eyebrow}
+                    caption={exampleImage.caption}
+                  />
+                ) : null}
               </div>
               <div className="lg:pt-10">
                 <AuthorityQuickAnswer text={quickAnswerText} variant="problemAnchor" methodsHref="#problem-methods" />
