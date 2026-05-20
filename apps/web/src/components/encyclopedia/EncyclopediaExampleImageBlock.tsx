@@ -18,8 +18,8 @@ export function EncyclopediaExampleImageBlock({
   }
 
   return (
-    <figure className="mt-8 overflow-hidden rounded-[28px] border border-[#C9B27C]/16 bg-[#FFFCF7] shadow-[0_22px_64px_-48px_rgba(15,23,42,0.38)]">
-      <div className="relative aspect-[16/10] min-h-[220px] bg-[#F4EFE8] sm:min-h-[280px]">
+    <figure className="mt-8 min-w-0 max-w-full overflow-hidden rounded-[28px] border border-[#C9B27C]/16 bg-[#FFFCF7] shadow-[0_22px_64px_-48px_rgba(15,23,42,0.38)]">
+      <div className="relative min-h-[220px] w-full max-w-full overflow-hidden bg-[#F4EFE8] sm:aspect-[16/10] sm:min-h-[280px]">
         <Image
           src={src}
           alt={alt}
@@ -28,11 +28,11 @@ export function EncyclopediaExampleImageBlock({
           className="object-cover object-center"
         />
       </div>
-      <figcaption className="border-t border-[#E8DFD0]/85 bg-white/86 px-5 py-4 sm:px-6">
-        <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
+      <figcaption className="min-w-0 border-t border-[#E8DFD0]/85 bg-white/86 px-5 py-4 sm:px-6">
+        <p className="break-words font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
           {eyebrow}
         </p>
-        <p className="mt-2 font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
+        <p className="mt-2 break-words font-[var(--font-manrope)] text-sm leading-6 text-[#475569]">
           {caption}
         </p>
       </figcaption>

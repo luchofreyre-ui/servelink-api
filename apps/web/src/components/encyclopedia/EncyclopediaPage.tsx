@@ -17,19 +17,19 @@ export function EncyclopediaPage({ document }: EncyclopediaPageProps) {
   });
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-8 md:px-8 md:py-12">
-      <article className="grid gap-10 lg:grid-cols-[minmax(0,720px)_320px] lg:items-start lg:justify-between">
-        <div className="rounded-[34px] border border-[#E8DFD0]/95 bg-white/88 p-6 shadow-[0_24px_70px_-50px_rgba(15,23,42,0.32)] sm:p-8">
-        <header className="space-y-4 rounded-[28px] border border-[#E8DFD0]/80 bg-[#FFFCF7]/85 p-6">
+    <main className="mx-auto w-full max-w-7xl overflow-x-hidden px-4 py-8 sm:px-6 md:px-8 md:py-12">
+      <article className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,720px)_320px] lg:items-start lg:justify-between">
+        <div className="min-w-0 max-w-full overflow-hidden rounded-[34px] border border-[#E8DFD0]/95 bg-white/88 p-5 shadow-[0_24px_70px_-50px_rgba(15,23,42,0.32)] sm:p-8">
+        <header className="min-w-0 max-w-full space-y-4 overflow-hidden rounded-[28px] border border-[#E8DFD0]/80 bg-[#FFFCF7]/85 p-5 sm:p-6">
           <div className="font-[var(--font-manrope)] text-xs font-semibold uppercase tracking-[0.14em] text-[#64748B]">
             {document.frontmatter.category.replace(/-/g, " ")}
           </div>
 
-          <h1 className="font-[var(--font-poppins)] text-4xl font-semibold tracking-tight text-[#0F172A]">
+          <h1 className="break-words font-[var(--font-poppins)] text-4xl font-semibold tracking-tight text-[#0F172A]">
             {document.frontmatter.title}
           </h1>
 
-          <p className="font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
+          <p className="break-words font-[var(--font-manrope)] text-lg leading-8 text-[#475569]">
             {document.frontmatter.summary}
           </p>
         </header>
@@ -43,13 +43,13 @@ export function EncyclopediaPage({ document }: EncyclopediaPageProps) {
           />
         ) : null}
 
-        <div className="mt-10 space-y-10">
+        <div className="mt-10 min-w-0 max-w-full space-y-10">
           {document.sections.map((section) => (
-            <section key={section.heading} className="space-y-3">
-              <h2 className="font-[var(--font-poppins)] text-2xl font-semibold text-[#0F172A]">
+            <section key={section.heading} className="min-w-0 max-w-full space-y-3">
+              <h2 className="break-words font-[var(--font-poppins)] text-2xl font-semibold text-[#0F172A]">
                 {section.heading}
               </h2>
-              <div className="font-[var(--font-manrope)] text-base leading-8 text-[#334155] whitespace-pre-line">
+              <div className="break-words font-[var(--font-manrope)] text-base leading-8 whitespace-pre-line text-[#334155]">
                 {section.body}
               </div>
             </section>
@@ -57,7 +57,7 @@ export function EncyclopediaPage({ document }: EncyclopediaPageProps) {
         </div>
         </div>
 
-        <aside className="space-y-6 lg:sticky lg:top-28">
+        <aside className="min-w-0 max-w-full space-y-6 lg:sticky lg:top-28">
           <div className="rounded-[22px] border border-[#E8DFD0]/95 bg-[#FFFCF7]/95 p-6 shadow-[0_14px_38px_-26px_rgba(15,23,42,0.28)]">
             <p className="font-[var(--font-poppins)] text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B89F6B]">
               Key takeaway
@@ -80,7 +80,7 @@ export function EncyclopediaPage({ document }: EncyclopediaPageProps) {
       </article>
 
       <section
-        className="mt-10 rounded-[28px] border border-amber-200/80 bg-amber-50/40 px-8 py-6"
+        className="mt-10 min-w-0 max-w-full overflow-hidden rounded-[28px] border border-amber-200/80 bg-amber-50/40 px-5 py-6 sm:px-8"
         aria-labelledby="ency-misuse-heading"
       >
         <h2
