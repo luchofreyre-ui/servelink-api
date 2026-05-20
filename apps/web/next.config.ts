@@ -40,6 +40,9 @@ const CONNECT_SRC_PARTS = [
   "https://servelink-web.vercel.app",
   "http://localhost:3001",
   "http://127.0.0.1:3001",
+  /** Google Analytics 4 collection endpoints. */
+  "https://www.google-analytics.com",
+  "https://region1.google-analytics.com",
   /** Stripe.js / Payment Element (public booking deposit). */
   "https://api.stripe.com",
   ...(apiOriginForConnectSrc() ? [apiOriginForConnectSrc() as string] : []),
@@ -48,7 +51,7 @@ const CONNECT_SRC_PARTS = [
 const CONTENT_SECURITY_POLICY =
   [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https://m.media-amazon.com https://images-na.ssl-images-amazon.com",
     "font-src 'self' data:",
