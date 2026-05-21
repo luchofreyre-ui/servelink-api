@@ -43,6 +43,7 @@ const CONNECT_SRC_PARTS = [
   /** Google Analytics 4 collection endpoints. */
   "https://www.google-analytics.com",
   "https://region1.google-analytics.com",
+  "https://www.google.com",
   /** Stripe.js / Payment Element (public booking deposit). */
   "https://api.stripe.com",
   ...(apiOriginForConnectSrc() ? [apiOriginForConnectSrc() as string] : []),
