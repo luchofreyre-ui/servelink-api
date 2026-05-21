@@ -12,6 +12,8 @@ imageQueries:
   - cleaning stainless steel appliance microfiber close up
   - stainless steel streak free cleaning professional
   - kitchen stainless steel cleaning no residue
+  - stainless steel fingerprint smudge removal close up
+  - brushed stainless steel grain microfiber detail
 relatedTopics:
   - M-DEG-001
   - M-NEU-001
@@ -40,6 +42,43 @@ Finish quality depends more on residue control and towel discipline than strong 
 ## Professional Insights
 
 Stainless steel often punishes excess. The cleanest-looking finish usually comes from the lightest effective chemistry and the best towel control.
+
+## Why This Surface Behaves Differently
+
+Stainless steel is durable but appearance-sensitive. Brushed grain, polish residue, lighting, and fingerprints make towel technique and product load more important than raw cleaner strength.
+
+## Common Contamination Patterns
+
+- Handles and fronts collect fingerprints, lotion, food oils, and sanitizer residue.
+- Range-adjacent panels collect grease film and cooked-on residue.
+- Sinks, trim, and wet appliance zones collect water spotting and mineral film.
+
+## Safe vs Unsafe Chemistry
+
+Mild degreasing and neutral maintenance work well when residue is fully removed. Harsh acids, chlorine residue, abrasive powders, and steel wool can change appearance or create corrosion-looking defects.
+
+## Abrasion and Polish Sensitivity
+
+Always read the grain before increasing pressure. Polish is an appearance step after cleaning, not a way to hide grease, sticky residue, or dirty towel trails.
+
+## Maintenance Rhythm
+
+Clean high-touch fronts frequently before oils polymerize. Deep-degrease range and hood-adjacent stainless before applying polish. Dry sinks and wet trim in hard-water homes.
+
+## Compatibility Graph
+
+- Related problems: fingerprints and smudges, grease buildup, appliance grime, water spotting, finish scratches.
+- Related methods: degreasing, neutral surface cleaning, touchpoint sanitization.
+- Related tools: clean microfiber, detail cloths, non-scratch pads only after compatibility is confirmed.
+- Related surfaces: appliances, sinks, fixtures, glass.
+
+## Visual Recognition Cues
+
+Directional streaks usually point to residue or towel overload. Fine linear marks that catch the light are likely abrasion. Rainbow or brown heat tint near cooking areas may not be removable soil.
+
+## Commercial and Professional Context
+
+Shared kitchens, office breakrooms, and commercial appliance banks need shorter degreasing cycles and strict towel separation. Professionals prioritize grain direction, residue removal, and electronics-safe moisture control.
 
 ## When to Call a Professional
 

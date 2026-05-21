@@ -126,11 +126,24 @@ function MethodBody({ data }: { data: AuthorityMethodPageData }) {
 }
 
 function SurfaceBody({ data }: { data: AuthoritySurfacePageData }) {
+  const renderList = (items: string[]) => (
+    <ul className="list-inside list-disc space-y-2">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
+
   return (
     <>
       <AuthoritySection title="What to know first">
         <p>{data.whatToKnowFirst}</p>
       </AuthoritySection>
+      {data.operationalSections.map((section) => (
+        <AuthoritySection key={section.title} title={section.title} density="compact">
+          {renderList(section.points)}
+        </AuthoritySection>
+      ))}
       <AuthoritySection title="Safe methods">
         <p>{data.safeMethods}</p>
       </AuthoritySection>
@@ -168,6 +181,18 @@ function SurfaceBody({ data }: { data: AuthoritySurfacePageData }) {
             </li>
           ))}
         </ul>
+      </AuthoritySection>
+      <AuthoritySection title="Visual recognition cues" density="compact">
+        {renderList(data.visualRecognition)}
+      </AuthoritySection>
+      <AuthoritySection title="Maintenance rhythm" density="compact">
+        {renderList(data.maintenanceRhythm)}
+      </AuthoritySection>
+      <AuthoritySection title="Commercial and professional context" density="compact">
+        {renderList(data.professionalContext)}
+      </AuthoritySection>
+      <AuthoritySection title="Preservation notes" density="compact">
+        {renderList(data.preservationNotes)}
       </AuthoritySection>
       <AuthoritySection title="Common mistakes">
         <div className="space-y-2">
@@ -222,7 +247,10 @@ function SurfaceBody({ data }: { data: AuthoritySurfacePageData }) {
       ) : null}
       <AuthorityRelatedLinks
         beforeProblems={[{ heading: "Related surfaces", links: data.relatedSurfaces }]}
-        afterProblems={[{ heading: "Related methods", links: data.relatedMethods }]}
+        afterProblems={[
+          { heading: "Related methods", links: data.relatedMethods },
+          { heading: "Related guides", links: data.relatedGuides },
+        ]}
       />
     </>
   );
@@ -281,7 +309,11 @@ export function AuthorityDetailPage(props: {
               src={exampleImage.src}
               alt={exampleImage.alt}
               eyebrow={exampleImage.eyebrow}
-              caption={exampleImage.caption}
+              caption={
+                variant === "surface"
+                  ? (data as AuthoritySurfacePageData).visualCaption ?? exampleImage.caption
+                  : exampleImage.caption
+              }
             />
           </div>
         ) : null}

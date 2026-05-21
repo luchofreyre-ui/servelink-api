@@ -12,6 +12,8 @@ imageQueries:
   - cleaning tile surface bathroom non scratch pad
   - tile cleaning professional close up
   - kitchen tile cleaning microfiber and brush
+  - textured tile residue rinse close up
+  - tile grout joint cleaning visual context
 relatedTopics:
   - S-GROUT-001
   - M-NEU-001
@@ -40,6 +42,43 @@ Tile outcomes depend heavily on soil identification and finish sensitivity. What
 ## Professional Insights
 
 Tile is often treated as a simple material, but the real challenge is the soil system sitting on top of it and inside the grout lines around it.
+
+## Why This Surface Behaves Differently
+
+Tile faces can be dense and durable while the grout, caulk, decorative glaze, texture, or adjacent stone is much more sensitive. The safe process depends on the tile system, not just the tile label.
+
+## Common Contamination Patterns
+
+- Bathroom tile collects soap film, hard-water deposits, light mildew, and biofilm around wet joints.
+- Kitchen tile collects grease film, exhaust residue, and food splatter.
+- Floor tile collects grit and cleaner residue that can create haze or abrasion.
+
+## Safe vs Unsafe Chemistry
+
+Neutral cleaning is the maintenance lane. Degreasing belongs on kitchen film. Soap-scum and mineral products belong in wet-room contexts and require grout and adjacent-surface awareness.
+
+## Moisture, Abrasion, and Heat Sensitivity
+
+Dense tile may tolerate moisture, but seams, grout, subfloor transitions, and trim may not. Matte, textured, decorative, or handmade finishes can dull if scrubbed with the wrong pad or dry grit.
+
+## Maintenance Rhythm
+
+Dry-remove grit before damp cleaning. Use weekly neutral maintenance in traffic zones and soil-specific correction when soap, minerals, or grease begin layering.
+
+## Compatibility Graph
+
+- Related problems: general soil, soap scum, hard-water deposits, grease buildup, bathroom buildup.
+- Related methods: neutral surface cleaning, soap-scum removal, degreasing, dwell-and-lift cleaning.
+- Related tools: microfiber, non-scratch pad, grout brush for joints, mop pad for floors.
+- Related surfaces: grout, natural stone, vinyl flooring, shower glass.
+
+## Visual Recognition Cues
+
+Glossy haze often indicates cleaner residue or hard-water film. Dark grout beside clean tile points to joint contamination. Patchy dullness on textured tile suggests soil trapped in low points.
+
+## Professional and Preservation Notes
+
+High-traffic tile floors need soil recovery, not just stronger chemistry. Stop when tile dulls, grout powders, caulk opens, or adjacent stone would be exposed to unsafe chemistry.
 
 ## When to Call a Professional
 
