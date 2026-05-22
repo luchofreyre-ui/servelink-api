@@ -115,6 +115,1136 @@ function prob(
   };
 }
 
+type ProblemDepthExpansion = Partial<Omit<AuthorityProblemPageData, "slug" | "title" | "category">>;
+type ProblemRecurrenceExpansion = ProblemDepthExpansion;
+
+function appendBlocks(...blocks: (string | undefined)[]): string {
+  return blocks.map((block) => block?.trim()).filter(Boolean).join("\n\n");
+}
+
+const AUTHORITY_PROBLEM_DEPTH_EXPANSIONS: Record<string, ProblemDepthExpansion> = {
+  "soap-scum": {
+    quickAnswer:
+      "Soap scum is a layered bathroom film: soap binders, body oils, minerals, and moisture history. Diagnose it by drag, gray-white film, and where water paths dry.",
+    heroSubline:
+      "Read it as a soap-mineral-oil system, then clean by layer instead of grinding at the surface.",
+    whatItUsuallyIs:
+      "Soap scum is a bonded bathroom film made from soap binders, body oils, conditioner residue, and hard-water minerals.\n\nIt usually looks gray-white, waxy, or cloudy; it feels grabby under a fingertip and often thickens on lower glass, grout edges, tub ledges, and shower door overlap zones.",
+    whyItHappens:
+      "It forms when rinse water leaves surfactants and oils behind, then humidity keeps the film soft enough to accept more mineral and skin oil on the next use.\n\nPoor ventilation, high shower frequency, bar soap, hard water, and skipped dry-downs create a recurrence loop. Once the layer is established, quick sprays often only soften the top while the base film remains.",
+    commonOn:
+      "Shower glass, tile, grout, acrylic surrounds, fixtures, and tub ledges.\n\nHospitality bathrooms and rental turnovers build it faster because repeated short resets rarely include full rinse, edge detail, and dry-down.",
+    bestMethods:
+      "Start by confirming film, not etch: wet a small area and check whether clarity improves temporarily.\n\nUse a non-abrasive bathroom or soap-scum workflow with short dwell, soft agitation, thorough rinse, and dry inspection. If minerals are part of the film, step toward hard-water chemistry only where the surface allows it.\n\nMaintenance matters: dry high-splash glass, improve airflow, and remove light film before it hardens into a soap-mineral crust.",
+    avoidMethods:
+      "Dry abrasive pads on coated glass or acrylic\nAcid guessing on natural stone, colored grout, or unknown sealers\nBleach as the first answer when the problem is soap-mineral film\nLeaving softened scum on the surface without a rinse and dry pass",
+    beforeYouClean:
+      "Separate soap scum from hard-water spotting: soap scum smears or feels waxy; mineral scale feels chalky and resists surfactants.\n\nTest the finish before acid or abrasive escalation. A cleaner that is safe on porcelain can still dull stone, coated glass, plated fixtures, or acrylic.",
+    commonMistakes: [
+      "Scrubbing harder instead of giving chemistry enough dwell time.",
+      "Using bleach for a mineral-soap film and assuming brightness equals removal.",
+      "Skipping rinse, which leaves new surfactant residue for the next layer to bond to.",
+      "Treating etched or coating-damaged glass as removable soap scum.",
+    ],
+    whenItFails:
+      "If the area clears while wet but returns uniformly dry, suspect bonded mineral film or glass etching. If it feels rough after cleaning, you may have exposed scale or damaged a coating.\n\nStop escalating when gloss drops, color changes, grout sheds, or the surface looks worse from more pressure.",
+    whenToEscalate:
+      "Escalate when buildup is layered across coated glass, stone showers, rental turnover bathrooms, or recurring hospitality wet rooms where chemistry choice, ventilation, and maintenance frequency all need to be reset.",
+    relatedProblems: [
+      rpRel("hard-water-deposits", "Hard water deposits"),
+      rpRel("soap-film", "Soap film"),
+      rpRel("bathroom-buildup", "Bathroom buildup"),
+      rpRel("cloudy-glass", "Cloudy glass"),
+      rpRel("light-mildew", "Light mildew appearance"),
+    ],
+    relatedSurfaces: [
+      esSurface("shower-glass", "Shower glass", "Shows film, spotting, and coating damage early."),
+      esSurface("tile", "Tile", "Handles bathroom film when chemistry matches the tile body."),
+      esSurface("grout", "Grout", "Collects soap film in porous joint lines."),
+    ],
+    relatedMethods: [
+      esMethod("soap-scum-removal", "Soap scum removal", "Primary film-removal lane for bath residue."),
+      esMethod("hard-water-deposit-removal", "Hard water deposit removal", "Use only when mineral bonding is confirmed and the surface allows acid."),
+      esMethod("glass-cleaning", "Glass cleaning", "Final clarity and dry inspection lane."),
+    ],
+  },
+  "hard-water-deposits": {
+    quickAnswer:
+      "Hard water deposits are evaporated minerals, not ordinary dirt. They need surface-safe dissolution, rinse, and recurrence control at the water path.",
+    heroSubline:
+      "Mineral buildup is a water-chemistry pattern first and a scrubbing problem last.",
+    whatItUsuallyIs:
+      "Hard water deposits are calcium, magnesium, and other dissolved minerals left behind as water evaporates.\n\nThey usually appear as white spotting, chalky crust, cloudy bands, or ring-shaped deposits. On glass they can mimic haze; on fixtures they can look like corrosion; on grout they can lock into the joint line.",
+    whyItHappens:
+      "Every wet-dry cycle leaves a little mineral behind. Heat, poor wipe-downs, slow leaks, splash zones, and humid bathrooms accelerate layering.\n\nRecurrence is normal when the source water stays hard or fixtures drip. Cleaning removes the deposit; maintenance frequency controls how fast the next layer bonds.",
+    commonOn:
+      "Shower glass, chrome and stainless fixtures, faucet bases, tile near shower spray, grout joints, sink rings, and bath floors with repeated splash.\n\nCommercial restrooms and rental bathrooms show heavier scale where high use meets short cleaning windows.",
+    bestMethods:
+      "Confirm mineral behavior: dry chalk, crisp spot edges, or a ring at evaporation points. Use acid-class chemistry only on compatible surfaces, let it dwell briefly, agitate lightly, then rinse completely.\n\nFor recurring zones, reduce standing water, dry glass and fixtures, repair drips, and schedule descaling before scale becomes crust.",
+    avoidMethods:
+      "Acids on marble, limestone, travertine, many stone sealers, or unknown finishes\nSteel wool or hard abrasives on plated fixtures and coated glass\nMixing acid products with bleach or disinfectants\nAssuming a cloudy surface is removable scale after careful chemistry has failed",
+    beforeYouClean:
+      "Name the surface before naming the cleaner. The same deposit that needs acid on glass can be a stop sign on stone.\n\nIf a small test spot dulls, pits, or changes sheen, stop and treat the surface as acid-sensitive.",
+    commonMistakes: [
+      "Using force when the bond is chemical.",
+      "Letting acid dwell too long on fixtures, grout, or coatings.",
+      "Cleaning the visible spots while ignoring the drip or splash path that rebuilds them.",
+      "Mistaking etching for mineral haze and escalating until the finish is permanently dull.",
+    ],
+    whenItFails:
+      "If compatible acid removes roughness but cloudiness remains, the surface may be etched or coating-damaged. If deposits return within days, the water path or leak is still active.\n\nPersistent white crust in grout can also signal absorbed minerals, not just surface scale.",
+    whenToEscalate:
+      "Escalate for natural stone, unknown coatings, heavy restroom scale, glass that may be etched, or recurring buildup tied to leaks, failed seals, or high-volume commercial use.",
+    relatedProblems: [
+      rpRel("limescale-buildup", "Limescale buildup"),
+      rpRel("water-spotting", "Water spotting"),
+      rpRel("mineral-film", "Mineral film"),
+      rpRel("cloudy-glass", "Cloudy glass"),
+      rpRel("soap-scum", "Soap scum"),
+    ],
+    relatedSurfaces: [
+      esSurface("shower-glass", "Shower glass", "Mineral spots and etched-looking haze show quickly."),
+      esSurface("grout", "Grout", "Porous lines need extra caution with acids."),
+      esSurface("stainless-steel", "Stainless steel", "Fixtures and trim can spot, pit, or discolor if mishandled."),
+      esSurface("granite-countertops", "Granite countertops", "Stone requires acid avoidance and sealer awareness."),
+    ],
+    relatedMethods: [
+      esMethod("hard-water-deposit-removal", "Hard water deposit removal"),
+      esMethod("glass-cleaning", "Glass cleaning"),
+      esMethod("neutral-surface-cleaning", "Neutral surface cleaning", "Maintenance lane after deposit removal."),
+    ],
+  },
+  "grease-buildup": {
+    quickAnswer:
+      "Grease buildup is layered lipid film from cooking aerosols, hand oils, and heat. Break the oil film, rinse it away, and stop cloths from redepositing it.",
+    heroSubline:
+      "Kitchen grease is an aerosol and heat problem, not just a dirty-counter problem.",
+    whatItUsuallyIs:
+      "Grease buildup is layered oil that has settled, cooled, and captured dust or food particles.\n\nIt can look yellow, gray, shiny, or matte depending on age. Fresh grease smears; older grease feels tacky, resists water, and darkens around handles, hood edges, cabinet rails, backsplash grout, and appliance fronts.",
+    whyItHappens:
+      "Cooking aerosol travels with steam and air movement, then condenses on cooler vertical surfaces. Heat polymerizes oils so they behave more like film than fresh splatter.\n\nRecurrence is driven by range use, ventilation quality, hood filter loading, microfiber saturation, over-diluted degreaser, and incomplete rinse.",
+    commonOn:
+      "Range hoods, cabinet fronts, backsplashes, stainless panels, appliance handles, nearby walls, and counter edges.\n\nCommercial kitchens, break rooms, vacation rentals, and high-turnover units load faster because cooking frequency outruns maintenance detail.",
+    bestMethods:
+      "Work from light to strong: remove loose dust first, apply kitchen-safe surfactant or degreaser, allow short dwell, wipe with clean faces, rinse or final-wipe to remove cleaner residue, then dry inspect.\n\nFor heavy films, rotate towels aggressively. A loaded microfiber becomes a grease applicator.",
+    avoidMethods:
+      "Oven-class caustics on cabinets, painted walls, counters, or appliance fronts unless the label explicitly allows it\nPolish-only passes on soil-heavy stainless\nHot surfaces that flash dry cleaner before it can work\nOver-dilution that turns degreasing into smearing",
+    beforeYouClean:
+      "Dust first if the film looks fuzzy or gray. Dry soil mixed into wet degreaser makes mud and streaking.\n\nVentilate and protect adjacent finishes before stronger degreasers; kitchen-safe does not mean safe for every paint, sealer, or coating.",
+    commonMistakes: [
+      "Using one towel across the whole kitchen until it redeposits grease.",
+      "Skipping a rinse or final wipe, leaving surfactant film that grabs dust.",
+      "Using stainless polish as the cleaning step instead of the appearance step.",
+      "Borrowing oven cleaner for surfaces it was never meant to touch.",
+    ],
+    whenItFails:
+      "If grease smears but does not lift, chemistry is too weak, dwell is too short, or the towel is saturated. If finish softens, color transfers, or sheen changes, stop before solvent or alkaline damage spreads.",
+    whenToEscalate:
+      "Escalate for heavy hood films, commercial aerosol loading, rental turnovers with polymerized cabinet grease, or any finish that shows color transfer or softening during a test.",
+    relatedProblems: [
+      rpRel("kitchen-grease-film", "Kitchen grease film"),
+      rpRel("greasy-grime", "Greasy grime"),
+      rpRel("cabinet-grime", "Cabinet grime"),
+      rpRel("appliance-buildup", "Appliance buildup"),
+      rpRel("product-residue-buildup", "Product residue buildup"),
+    ],
+    relatedSurfaces: [
+      esSurface("stainless-steel", "Stainless steel"),
+      esSurface("tile", "Tile"),
+      esSurface("laminate", "Laminate"),
+      esSurface("painted-walls", "Painted walls"),
+    ],
+    relatedMethods: [
+      esMethod("degreasing", "Degreasing"),
+      esMethod("dwell-and-lift-cleaning", "Dwell-and-lift cleaning"),
+      esMethod("neutral-surface-cleaning", "Neutral surface cleaning", "Reset and maintenance after degreasing."),
+    ],
+  },
+  "dust-buildup": {
+    quickAnswer:
+      "Dust buildup is a source-control and capture problem: fibers, skin cells, pollen, HVAC fines, pet dander, and static settle faster when filtration or cleaning order is weak.",
+    heroSubline:
+      "Recurring dust is usually a loop: source, airflow, static, and tool loading.",
+    whatItUsuallyIs:
+      "Dust buildup is loose particulate soil: textile fibers, skin flakes, pollen, outdoor grit, pet dander, construction fines, and HVAC-borne particles.\n\nIt appears as gray film, edge lines, fan-blade loading, baseboard bands, fuzzy corners, or quick-return haze on glossy surfaces.",
+    whyItHappens:
+      "Dust follows airflow and static. HVAC gaps, filter bypass, open windows, shedding textiles, pet traffic, dry indoor air, and vacuuming after dusting all reload surfaces.\n\nResidue also matters: tacky polish or cleaner film turns normal dust into recurring buildup.",
+    commonOn:
+      "Ceiling fans, baseboards, shelves, vents, blinds, electronics, finished wood, floors, and surfaces near doors, textiles, litter boxes, and pet beds.\n\nHigh-traffic offices, rental turnovers, and post-construction rooms need source control before cosmetic wiping.",
+    bestMethods:
+      "Work top-down with dry capture first: vacuum, HEPA where appropriate, microfiber or electrostatic tools, then damp-clean only where the finish allows.\n\nIf dust returns quickly, inspect filters, mats, textiles, pet zones, static, and whether the last cleaner left tack.",
+    avoidMethods:
+      "Spraying cleaner directly into dust clouds\nFeather dusting that launches particles into the room\nOily polishes that attract fibers\nDamp wiping unfinished wood, delicate electronics, or loaded dust without dry capture first",
+    beforeYouClean:
+      "Look for the pattern before wiping it away: vent streaks point to airflow, edge bands point to poor pickup, and fuzzy gray film points to textile or pet sources.\n\nIf the surface feels tacky after dusting, solve residue before blaming the HVAC system.",
+    commonMistakes: [
+      "Dusting before vacuuming high-shedding floors or textiles.",
+      "Using a damp cloth on heavy dust and creating muddy streaks.",
+      "Ignoring HVAC filters, return vents, door mats, and pet bedding.",
+      "Adding polish to make a surface look clean while building a dust magnet.",
+    ],
+    whenItFails:
+      "If dust returns within hours, the source is still active or the surface is tacky. If wiping creates gray streaks, dry capture was skipped or the cloth was overloaded.",
+    whenToEscalate:
+      "Escalate for post-construction dust, suspected duct or filtration issues, heavy pet dander cycles, commercial traffic lanes, or fine dust that requires HEPA containment rather than ordinary wiping.",
+    relatedProblems: [
+      rpRel("residue-buildup", "Residue buildup"),
+      rpRel("grime-buildup", "Grime buildup"),
+      rpRel("floor-buildup", "Floor buildup"),
+      rpRel("fingerprints-and-smudges", "Fingerprints and smudges"),
+    ],
+    relatedSurfaces: [
+      esSurface("finished-wood", "Finished wood"),
+      esSurface("vinyl-flooring", "Vinyl flooring"),
+      esSurface("painted-walls", "Painted walls"),
+      esSurface("laminate", "Laminate"),
+    ],
+    relatedMethods: [
+      esMethod("detail-dusting", "Detail dusting"),
+      esMethod("neutral-surface-cleaning", "Neutral surface cleaning"),
+    ],
+  },
+  "light-mildew": {
+    quickAnswer:
+      "Light mildew appearance is usually surface biofilm in damp, poorly ventilated zones. Remove the film, dry the area, and fix the moisture pattern.",
+    whatItUsuallyIs:
+      "Light mildew is a surface-level biological film or staining pattern that appears in damp corners, caulk lines, grout edges, and shower tracks.\n\nIt often looks gray, pink, tan, or black-speckled. Unlike soap scum, it clusters where moisture lingers rather than where soap simply dries.",
+    whyItHappens:
+      "Humidity, poor exhaust, slow-drying joints, organic residue, and repeated wet-dry cycles let surface biology establish.\n\nIf moisture remains, wiping the visible film only resets the clock; it does not break the recurrence cycle.",
+    commonOn:
+      "Bathrooms, shower tracks, grout lines, silicone, tub corners, laundry areas, and shaded sink zones.",
+    bestMethods:
+      "Ventilate first, clean soil and soap film, use a label-correct bathroom disinfectant or mildew product on compatible surfaces, respect dwell time, rinse where required, and dry thoroughly.\n\nFollow with airflow and maintenance frequency changes.",
+    avoidMethods:
+      "Bleach over heavy soap scum without removing the film\nSealing damp grout or caulk\nDry brushing visible growth into the room\nCalling recurring moisture a product failure when ventilation is the driver",
+    commonMistakes: [
+      "Treating mildew and soap scum as the same problem.",
+      "Skipping dry-down after chemistry.",
+      "Ignoring failed caulk, slow drains, and closed bathroom doors.",
+    ],
+    whenItFails:
+      "If it returns quickly in the same location, the moisture condition remains. If staining remains after film removal, the issue may be pigment, caulk staining, or deeper growth rather than removable surface mildew.",
+    whenToEscalate:
+      "Escalate when growth spreads, covers a large area, involves porous materials, returns with a musty odor, or appears connected to leaks, HVAC, wall cavities, or structural moisture.",
+    relatedProblems: [
+      rpRel("mold-growth", "Mold growth"),
+      rpRel("bathroom-buildup", "Bathroom buildup"),
+      rpRel("biofilm-buildup", "Biofilm buildup"),
+      rpRel("musty-odor", "Musty odor"),
+      rpRel("soap-scum", "Soap scum"),
+    ],
+    relatedSurfaces: [esSurface("grout", "Grout"), esSurface("tile", "Tile"), esSurface("shower-glass", "Shower glass")],
+    relatedMethods: [
+      esMethod("touchpoint-sanitization", "Touchpoint sanitization"),
+      esMethod("soap-scum-removal", "Soap scum removal"),
+      esMethod("neutral-surface-cleaning", "Neutral surface cleaning"),
+    ],
+  },
+  "mold-growth": {
+    quickAnswer:
+      "Mold growth is evidence of a moisture condition. Cleaning visible growth is only one step; source control and escalation boundaries matter.",
+    whatItUsuallyIs:
+      "Mold growth is active or recurring fungal growth on or into a material. It can appear fuzzy, spotted, smeared, or stained, and it often comes with musty odor or recurring dampness.\n\nSurface-limited bathroom growth is different from growth in drywall, HVAC, insulation, or cavities.",
+    whyItHappens:
+      "Mold persists when moisture, food source, and time align. Leaks, condensation, poor ventilation, wet porous materials, and trapped humidity are the operational drivers.\n\nIf the moisture source is not corrected, cleaning becomes a cosmetic reset instead of remediation.",
+    commonOn:
+      "Caulk, grout, tile edges, window frames, under sinks, laundry zones, HVAC-adjacent surfaces, and any material with persistent dampness.",
+    bestMethods:
+      "Identify and stop moisture first. For small surface-limited areas, use products labeled for the surface and follow dwell, removal, containment, and drying instructions.\n\nFor porous, hidden, or expanding growth, shift from cleaning to professional assessment.",
+    avoidMethods:
+      "Painting over active growth\nDry sanding or brushing growth without containment\nBleach guessing on porous materials\nContinuing cosmetic cleaning while a leak or humidity problem remains",
+    commonMistakes: [
+      "Treating mold as a fragrance or disinfectant-only problem.",
+      "Cleaning visible spots while ignoring wall, cabinet, or HVAC moisture.",
+      "Disturbing growth and spreading debris during dry removal.",
+      "Confusing old staining with active growth without checking moisture conditions.",
+    ],
+    whenItFails:
+      "If the stain remains but the surface is dry and clean, it may be residual staining. If growth returns, expands, smells musty, or appears after rain or plumbing use, the moisture source is unresolved.",
+    whenToEscalate:
+      "Escalate for large areas, porous materials, hidden cavities, HVAC involvement, recurring growth, health-sensitive occupants, or any situation where containment and source correction are unclear.",
+    relatedProblems: [
+      rpRel("light-mildew", "Light mildew appearance"),
+      rpRel("musty-odor", "Musty odor"),
+      rpRel("biofilm-buildup", "Biofilm buildup"),
+      rpRel("moisture-damage-indicators", "Moisture damage indicators"),
+    ].filter((p) => problemSlugExists(p.slug)),
+    relatedSurfaces: [esSurface("grout", "Grout"), esSurface("tile", "Tile"), esSurface("painted-walls", "Painted walls")],
+    relatedMethods: [esMethod("touchpoint-sanitization", "Touchpoint sanitization"), esMethod("neutral-surface-cleaning", "Neutral surface cleaning")],
+  },
+  "streaking-on-glass": {
+    quickAnswer:
+      "Glass streaking is dried residue geometry: towel load, product concentration, minerals, or evaporation lines. Fix pickup and dry-down before adding more spray.",
+    whatItUsuallyIs:
+      "Streaking on glass is visible wipe direction, squeegee chatter, drip trails, or rainbow film after the surface dries.\n\nIt usually means something remained on the surface: cleaner solids, minerals, oils, lint, or wet film left too thick.",
+    whyItHappens:
+      "Glass exposes small errors because it reflects light cleanly. Too much product, hard water, dirty cloths, sun-warmed panes, slow pickup, and saturated towels all leave residue edges.\n\nRecurring streaking often comes from towel management, not cleaner strength.",
+    commonOn:
+      "Shower glass, mirrors, windows, glass doors, stainless-adjacent panels, and high-touch glossy surfaces.",
+    bestMethods:
+      "Use less liquid, clean towel faces, and a defined wet-clean plus dry-buff sequence. On shower glass, remove soap or mineral film before expecting a glass cleaner to finish perfectly.",
+    avoidMethods:
+      "More spray on an already wet surface\nPaper or cloth that sheds lint\nCleaning hot glass in direct sun\nTreating etching or coating failure as streak residue",
+    commonMistakes: [
+      "Reusing the same towel face after it is loaded.",
+      "Skipping mineral or soap-film diagnosis on shower glass.",
+      "Letting product dry before pickup.",
+    ],
+    whenItFails:
+      "If streaks move with the towel, it is technique or residue. If the same cloudy pattern stays fixed after glass and mineral lanes, suspect etching, coating failure, or embedded damage.",
+    whenToEscalate:
+      "Escalate for coated glass, tall atrium glass, etched shower doors, or commercial glass where water quality, access, and quality checks need a system.",
+    relatedProblems: [
+      rpRel("surface-haze", "Surface haze"),
+      rpRel("cloudy-glass", "Cloudy glass"),
+      rpRel("product-residue-buildup", "Product residue buildup"),
+      rpRel("water-spotting", "Water spotting"),
+    ],
+    relatedSurfaces: [esSurface("shower-glass", "Shower glass"), esSurface("stainless-steel", "Stainless steel")],
+    relatedMethods: [esMethod("glass-cleaning", "Glass cleaning"), esMethod("hard-water-deposit-removal", "Hard water deposit removal")],
+  },
+  "surface-haze": {
+    quickAnswer:
+      "Surface haze is a light-scattering film until proven otherwise. Separate residue, minerals, oils, and actual finish damage before escalating chemistry.",
+    whatItUsuallyIs:
+      "Surface haze is a cloudy, foggy, rainbow, or uneven sheen that changes how light reflects.\n\nIt may be cleaner residue, mineral film, soap film, grease, dust on tacky residue, micro-scratching, etching, or failing coating.",
+    whyItHappens:
+      "Haze develops when thin layers dry unevenly or when a finish is altered. Product stacking, hard water, microfiber saturation, oily aerosols, humidity, and abrasive history all change the diagnosis.",
+    commonOn:
+      "Glass, mirrors, shower doors, glossy tile, quartz, laminate, stainless, and sealed stone.",
+    bestMethods:
+      "Run the diagnosis in lanes: dry dust if particulate is present, neutral rinse for product film, glass workflow for wipe residue, mineral chemistry only when the surface allows it, then stop if damage remains fixed.",
+    avoidMethods:
+      "Jumping from haze directly to acid\nAbrasive powders on glossy or coated surfaces\nLayering polish over dirty film\nCalling permanent etch a cleaning failure",
+    commonMistakes: [
+      "Judging haze while the surface is still wet.",
+      "Using shine products to hide residue instead of removing it.",
+      "Escalating chemistry without identifying the finish.",
+    ],
+    whenItFails:
+      "If haze moves, smears, or changes with a test lane, it is probably removable film. If it stays fixed from every angle after compatible cleaning, suspect etch, wear, or coating failure.",
+    whenToEscalate:
+      "Escalate for high-value stone, coated glass, polished concrete, commercial floors, or any haze that appeared after acid, bleach, abrasive pads, or solvent misuse.",
+    relatedProblems: [
+      rpRel("product-residue-buildup", "Product residue buildup"),
+      rpRel("mineral-film", "Mineral film"),
+      rpRel("surface-dullness", "Surface dullness"),
+      rpRel("etching-on-finishes", "Etching on finishes"),
+      rpRel("cloudy-glass", "Cloudy glass"),
+    ],
+    relatedSurfaces: [esSurface("shower-glass", "Shower glass"), esSurface("quartz-countertops", "Quartz countertops"), esSurface("laminate", "Laminate")],
+    relatedMethods: [esMethod("neutral-surface-cleaning", "Neutral surface cleaning"), esMethod("glass-cleaning", "Glass cleaning")],
+  },
+  "product-residue-buildup": {
+    quickAnswer:
+      "Product residue buildup is cleaner left behind: too much product, dirty water, incomplete rinse, or polish stacking. Reset with dilution, pickup, and dry inspection.",
+    whatItUsuallyIs:
+      "Residue buildup is old cleaner, polish, fragrance, soap, or soil suspended in product film.\n\nIt shows up as tackiness, streaking, footprints, dull lanes, dust attraction, or a surface that looks clean only while wet.",
+    whyItHappens:
+      "Over-concentration, skipped rinse, loaded mop water, frequent sprays, incompatible products, and insufficient dry pickup leave solids behind.\n\nThe film then grabs dust, fingerprints, pet hair, and traffic soil, causing recurring buildup cycles.",
+    commonOn:
+      "Floors, countertops, cabinets, glass, stainless, sealed stone, vinyl, and high-touch laminate.",
+    bestMethods:
+      "Reduce product load, use clean water or neutral cleaner as appropriate, change towels or mop solution often, and finish with a dry or rinse pass.\n\nFor waxy or adhesive residue, use a compatible remover only after a small test.",
+    avoidMethods:
+      "Adding stronger product before removing old product\nMixing disinfectants, glass cleaners, polishes, and floor concentrates on the same surface\nOver-wetting wood or laminate edges\nUsing shine as proof of cleanliness",
+    commonMistakes: [
+      "Blaming the surface when the dilution ratio is wrong.",
+      "Mopping with dirty solution across multiple rooms.",
+      "Leaving residue that becomes the next dust and fingerprint magnet.",
+    ],
+    whenItFails:
+      "If tackiness improves after rinse passes, residue was the driver. If dullness remains after a residue reset, inspect for wear, etch, finish failure, or traffic-pattern abrasion.",
+    whenToEscalate:
+      "Escalate for large floor resets, commercial residue cycles, finish-stripping decisions, stone or wood sensitivity, and rental turnovers where multiple unknown products were layered.",
+    relatedProblems: [
+      rpRel("residue-buildup", "Residue buildup"),
+      rpRel("floor-residue-buildup", "Floor residue buildup"),
+      rpRel("surface-streaking", "Surface streaking"),
+      rpRel("surface-haze", "Surface haze"),
+      rpRel("sticky-film", "Sticky film"),
+    ],
+    relatedSurfaces: [esSurface("vinyl-flooring", "Vinyl flooring"), esSurface("laminate", "Laminate"), esSurface("quartz-countertops", "Quartz countertops")],
+    relatedMethods: [esMethod("neutral-surface-cleaning", "Neutral surface cleaning"), esMethod("glass-cleaning", "Glass cleaning")],
+  },
+  "fingerprints-and-smudges": {
+    quickAnswer:
+      "Fingerprints are transfer soils: skin oils, lotion, food film, and touchpoint residue. They need soil removal and dry buffing, not just shine.",
+    whatItUsuallyIs:
+      "Fingerprints and smudges are oily transfer marks that distort gloss or darken matte surfaces.\n\nThey cluster at handles, appliance fronts, cabinet pulls, doors, switches, railings, glass edges, and child or pet-height zones.",
+    whyItHappens:
+      "Hands transfer oils, lotions, food residue, sanitizer film, and fine dust. Glossy surfaces show it first; textured or matte surfaces hold it longer.\n\nFrequent touchpoints in rentals, offices, hospitality rooms, and family kitchens need a maintenance rhythm, not occasional spot chasing.",
+    commonOn:
+      "Stainless steel, glass, painted doors, laminate cabinets, quartz, light switches, handrails, and appliance handles.",
+    bestMethods:
+      "Remove actual soil first with a low-residue cleaner matched to the surface, then dry buff. On stainless, follow grain and separate degreasing from appearance polish.",
+    avoidMethods:
+      "Oil polish over dirty fingerprints\nAggressive solvents on painted or coated surfaces\nWet wiping touchpoints without drying\nTreating hygiene disinfecting as a substitute for soil removal",
+    commonMistakes: [
+      "Polishing fingerprints into stainless instead of cleaning them off.",
+      "Using one damp towel across many handles.",
+      "Ignoring sanitizer and lotion residue as part of the film.",
+    ],
+    whenItFails:
+      "If smudges return immediately, the towel or polish is redepositing oil. If marks are permanent shadows, inspect for wear, abrasion, or finish burnishing at the touchpoint.",
+    whenToEscalate:
+      "Escalate for specialty appliance coatings, black stainless, matte paint, high-traffic commercial touchpoints, or finishes that color-transfer during cleaning.",
+    relatedProblems: [
+      rpRel("smudge-marks", "Smudge marks"),
+      rpRel("touchpoint-contamination", "Touchpoint contamination"),
+      rpRel("grease-buildup", "Grease buildup"),
+      rpRel("product-residue-buildup", "Product residue buildup"),
+    ],
+    relatedSurfaces: [esSurface("stainless-steel", "Stainless steel"), esSurface("shower-glass", "Shower glass"), esSurface("painted-walls", "Painted walls"), esSurface("laminate", "Laminate")],
+    relatedMethods: [esMethod("neutral-surface-cleaning", "Neutral surface cleaning"), esMethod("glass-cleaning", "Glass cleaning"), esMethod("touchpoint-sanitization", "Touchpoint sanitization")],
+  },
+  "odor-retention": {
+    quickAnswer:
+      "Odor retention means the source is still present or the material is holding odor compounds. Remove soil, match odor chemistry, and fix moisture or biology.",
+    whatItUsuallyIs:
+      "Odor retention is smell that returns after the surface looks clean. It can live in organic film, drains, trash zones, laundry, pet contamination, porous grout, soft goods, or damp cavities.\n\nA fragrance cover-up is not source removal.",
+    whyItHappens:
+      "Odor molecules bind to oils, proteins, damp fibers, biofilm, and porous materials. Heat and humidity release them again, so the room smells clean briefly and then rebounds.",
+    commonOn:
+      "Pet zones, bathrooms, kitchens, bins, drains, laundry areas, carpets, upholstery, grout, and rental turnover spaces.",
+    bestMethods:
+      "Find the source pattern first: organic stain, biofilm, moisture, drain debris, fabric, or trash. Clean visible soil, then use enzyme, neutralizer, disinfectant, or extraction only when it matches the source and label.",
+    avoidMethods:
+      "Fragrance-only masking\nDisinfectant as a universal odor fix\nOver-wetting fabrics or porous floors\nSealing in odor before the source is removed",
+    commonMistakes: [
+      "Treating pet urine like general room odor.",
+      "Skipping extraction or rinse after breaking down organic residue.",
+      "Ignoring dampness and biofilm in drains or grout.",
+    ],
+    whenItFails:
+      "If odor returns with humidity, moisture or porous absorption is likely. If it returns near drains or bins, hidden organic film is still active. If it returns after pet cleanup, contamination may extend below the visible surface.",
+    whenToEscalate:
+      "Escalate for pet contamination in subfloors, persistent musty odor, commercial restroom odor cycles, rental turnover odor, sewage or drain concerns, or soft surfaces requiring extraction.",
+    relatedProblems: [
+      rpRel("musty-odor", "Musty odor"),
+      rpRel("organic-stains", "Organic stains"),
+      rpRel("biofilm-buildup", "Biofilm buildup"),
+      rpRel("laundry-odor", "Laundry odor"),
+      rpRel("mold-growth", "Mold growth"),
+    ],
+    relatedSurfaces: [esSurface("tile", "Tile"), esSurface("grout", "Grout"), esSurface("vinyl-flooring", "Vinyl flooring")],
+    relatedMethods: [esMethod("neutral-surface-cleaning", "Neutral surface cleaning"), esMethod("dwell-and-lift-cleaning", "Dwell-and-lift cleaning")],
+  },
+  "surface-discoloration": {
+    quickAnswer:
+      "Discoloration can be soil, staining, UV/heat aging, chemical change, or moisture damage. Test removability before treating it like dirt.",
+    whatItUsuallyIs:
+      "Surface discoloration is a color shift: yellowing, darkening, brown rings, gray lanes, orange staining, or uneven patches.\n\nSome discoloration is removable soil; some is absorbed pigment, oxidation, UV aging, heat damage, sealer change, or moisture indicator.",
+    whyItHappens:
+      "Color changes follow exposure history: sunlight, heat, standing water, dyes, food acids, metal contact, pet accidents, cleaner misuse, and traffic abrasion.\n\nRecurring discoloration often means the cause is still present or the material has already changed.",
+    commonOn:
+      "Vinyl, laminate, painted walls, plastic trim, sealed stone, grout, appliance handles, and floors under mats or furniture.",
+    bestMethods:
+      "Compare with a protected baseline, test a small area, and identify whether color lifts, lightens, or stays fixed. Use stain-removal lanes only when the material allows it.",
+    avoidMethods:
+      "Bleach guessing on plastics, stone, grout, or colored finishes\nAbrasive brightening that removes finish\nAcid on stone or vulnerable sealers\nAssuming every yellow or brown mark is removable",
+    commonMistakes: [
+      "Over-cleaning permanent UV or heat aging.",
+      "Using stain removers without identifying the material.",
+      "Ignoring moisture indicators near edges, seams, and walls.",
+    ],
+    whenItFails:
+      "If color does not transfer or lighten in a safe test, it may be finish or material change. If discoloration expands, softens, bubbles, or smells musty, treat it as possible moisture damage.",
+    whenToEscalate:
+      "Escalate for stone staining, moisture indicators, widespread floor discoloration, unknown chemical burns, rental turnover stains, or surfaces with warranty-sensitive finishes.",
+    relatedProblems: [
+      rpRel("yellowing", "Yellowing"),
+      rpRel("plastic-yellowing", "Plastic yellowing"),
+      rpRel("organic-stains", "Organic stains"),
+      rpRel("surface-dullness", "Surface dullness"),
+      rpRel("heat-damage-marks", "Heat damage marks"),
+    ],
+    relatedSurfaces: [esSurface("vinyl-flooring", "Vinyl flooring"), esSurface("laminate", "Laminate"), esSurface("painted-walls", "Painted walls"), esSurface("granite-countertops", "Granite countertops")],
+    relatedMethods: [esMethod("neutral-surface-cleaning", "Neutral surface cleaning"), esMethod("dwell-and-lift-cleaning", "Dwell-and-lift cleaning")],
+  },
+  "surface-dullness": {
+    quickAnswer:
+      "Surface dullness is either removable film or finish change. Diagnose with rinse, dry inspection, and damage history before adding polish or acid.",
+    whatItUsuallyIs:
+      "Dullness is loss of sheen, clarity, or reflectivity. It may be residue, mineral haze, grease film, traffic wear, micro-scratches, etching, sealer fatigue, or moisture damage.\n\nThe key diagnostic question is whether the sheen changes after a controlled test.",
+    whyItHappens:
+      "Dullness develops from film stacking, abrasive pads, acidic or alkaline misuse, repeated traffic lanes, UV, heat, or worn coatings.\n\nFloors and counters often show dullness where maintenance frequency does not match use intensity.",
+    commonOn:
+      "Vinyl flooring, finished wood, sealed stone, quartz, laminate, glossy tile, glass, and appliance fronts.",
+    bestMethods:
+      "Reset residue first with neutral cleaning and dry inspection. If sheen returns while wet but disappears dry, inspect for haze, etch, wear, or coating failure.\n\nPreserve the finish: maintenance cleaning is not restoration.",
+    avoidMethods:
+      "Abrasive pads to chase shine\nAcids on stone or sealed finishes\nWax or polish over soil\nAssuming dull traffic lanes are just dirty",
+    commonMistakes: [
+      "Adding shine products before removing residue.",
+      "Over-scrubbing worn traffic lanes.",
+      "Missing acid or abrasive damage history.",
+    ],
+    whenItFails:
+      "If dullness remains fixed after residue removal, it is likely wear, etch, or finish change. More cleaning can widen the damaged area.",
+    whenToEscalate:
+      "Escalate for stone etch, wood finish dulling, commercial floor traffic lanes, wax/finish stripping questions, or any premium finish where restoration is different from cleaning.",
+    relatedProblems: [
+      rpRel("dullness", "Dullness"),
+      rpRel("surface-haze", "Surface haze"),
+      rpRel("etching-on-finishes", "Etching on finishes"),
+      rpRel("uneven-finish", "Uneven finish"),
+      rpRel("floor-buildup", "Floor buildup"),
+    ],
+    relatedSurfaces: [esSurface("vinyl-flooring", "Vinyl flooring"), esSurface("finished-wood", "Finished wood"), esSurface("granite-countertops", "Granite countertops"), esSurface("quartz-countertops", "Quartz countertops")],
+    relatedMethods: [esMethod("neutral-surface-cleaning", "Neutral surface cleaning")],
+  },
+  "floor-residue-buildup": {
+    quickAnswer:
+      "Floor residue buildup is usually mop redeposit: too much cleaner, dirty solution, hard water, or incomplete pickup. It shows as tack, dullness, footprints, and traffic lanes.",
+    whatItUsuallyIs:
+      "Floor residue is a thin film of cleaner, soil, minerals, or old finish that remains after mopping.\n\nIt often appears as dull lanes, sticky feel, shoe prints that return quickly, gray edges, or patchy gloss under light.",
+    whyItHappens:
+      "Floors receive the most soil and the dirtiest water. Over-concentrated product, infrequent water changes, dirty pads, high traffic, pet soil, and quick-dry passes leave residue behind.\n\nIn commercial or rental settings, short reset windows often clean appearance but leave the film cycle intact.",
+    commonOn:
+      "Vinyl, tile, laminate, sealed concrete, entry lanes, kitchens, bathrooms, pet routes, and high-traffic corridors.",
+    bestMethods:
+      "Dry remove grit first, use correct dilution, change solution or pads before they load, rinse if residue exists, and dry inspect traffic lanes separately from edges.",
+    avoidMethods:
+      "More concentrate for a dirtier floor\nSoaking seams or laminate edges\nSteam or harsh strippers on finishes not rated for them\nPolish layers over sticky soil",
+    commonMistakes: [
+      "Mopping before vacuuming grit and hair.",
+      "Using the same dirty solution across multiple rooms.",
+      "Confusing worn finish with removable film.",
+    ],
+    whenItFails:
+      "If tack improves after rinse, residue was the issue. If dull lanes remain fixed, inspect for wear, finish damage, or embedded traffic soil.",
+    whenToEscalate:
+      "Escalate for commercial traffic-pattern wear, rental turnover floors with unknown product layers, stripping decisions, pet contamination below seams, or moisture-sensitive flooring.",
+    relatedProblems: [
+      rpRel("floor-buildup", "Floor buildup"),
+      rpRel("product-residue-buildup", "Product residue buildup"),
+      rpRel("sticky-film", "Sticky film"),
+      rpRel("surface-dullness", "Surface dullness"),
+      rpRel("grime-buildup", "Grime buildup"),
+    ],
+    relatedSurfaces: [esSurface("vinyl-flooring", "Vinyl flooring"), esSurface("tile", "Tile"), esSurface("laminate", "Laminate")],
+    relatedMethods: [esMethod("neutral-surface-cleaning", "Neutral surface cleaning"), esMethod("detail-dusting", "Detail dusting")],
+  },
+  "sticky-film": {
+    quickAnswer:
+      "Sticky film is tacky residue from sugar, soap, grease, adhesive, or cleaner solids. Identify whether it dissolves, emulsifies, or gums before escalating.",
+    whatItUsuallyIs:
+      "Sticky film is surface tack that grabs dust, hair, lint, or fingerprints. It may come from sugary spills, kitchen aerosols, soap residue, adhesive plasticizers, floor cleaner, or over-applied polish.",
+    whyItHappens:
+      "Tack remains when residue is softened but not removed, when product is over-concentrated, or when warm oils cool into a film.\n\nIt recurs fast because dust and traffic stick to it immediately.",
+    commonOn:
+      "Counters, cabinet edges, appliance handles, floors, child-height walls, pet feeding zones, and adhesive or label areas.",
+    bestMethods:
+      "Test behavior: water-softening suggests sugar or soap, surfactant response suggests grease, solvent response suggests adhesive. Use short dwell, clean pickup, rinse, and dry inspection.",
+    avoidMethods:
+      "Grinding sticky residue into porous grout\nSolvents on paint, stone, or plastics without a spot test\nLeaving loosened residue wet on the surface\nAssuming tack is always food soil",
+    commonMistakes: [
+      "Wiping tack in a wider circle instead of lifting it.",
+      "Using hot water on finishes that cannot tolerate heat or moisture.",
+      "Skipping the final rinse that removes loosened film.",
+    ],
+    whenItFails:
+      "If tack smears, the chemistry is only softening it. If the surface dulls or swells, stop and reassess finish sensitivity.",
+    whenToEscalate:
+      "Escalate for adhesive-style residue on specialty finishes, widespread sticky floors, pet-related contamination, or surfaces showing swelling, color transfer, or coating softening.",
+    relatedProblems: [
+      rpRel("adhesive-residue", "Adhesive residue"),
+      rpRel("product-residue-buildup", "Product residue buildup"),
+      rpRel("grease-buildup", "Grease buildup"),
+      rpRel("floor-residue-buildup", "Floor residue buildup"),
+    ],
+    relatedSurfaces: [esSurface("laminate", "Laminate"), esSurface("vinyl-flooring", "Vinyl flooring"), esSurface("quartz-countertops", "Quartz countertops")],
+    relatedMethods: [esMethod("dwell-and-lift-cleaning", "Dwell-and-lift cleaning"), esMethod("neutral-surface-cleaning", "Neutral surface cleaning")],
+  },
+  "bathroom-buildup": {
+    quickAnswer:
+      "Bathroom buildup is a stack: soap film, minerals, biofilm, humidity, and rinse failure. Diagnose the dominant layer before choosing acid, disinfectant, or soap-scum chemistry.",
+    whatItUsuallyIs:
+      "Bathroom buildup is layered residue in wet rooms. It can show as gray soap film, white mineral spotting, pink or dark biofilm, musty odor, dull grout, or cloudy glass.\n\nCorners and edges tell the truth before broad tile fields do.",
+    whyItHappens:
+      "Bathrooms combine water hardness, body oils, soap, humidity, poor airflow, and frequent wet-dry cycles. Each shower adds a layer; poor dry-down and weak ventilation keep it active.",
+    commonOn:
+      "Shower glass, tile, grout, caulk, fixtures, tub ledges, shower tracks, sink bases, and restroom floors.",
+    bestMethods:
+      "Map the layer: mineral, soap, biofilm, or residue. Ventilate, pre-rinse, use matched chemistry with dwell, detail edges and grout, rinse thoroughly, and dry key zones.\n\nMaintenance frequency is the fix for recurrence.",
+    avoidMethods:
+      "One harsh product for every bathroom surface\nBleach over soap and mineral layers\nAcid on stone or unknown grout sealers\nIgnoring exhaust fan performance and standing water",
+    commonMistakes: [
+      "Cleaning open tile while leaving corners, tracks, and caulk loaded.",
+      "Confusing mildew staining with active growth.",
+      "Skipping dry-down after deep cleaning.",
+    ],
+    whenItFails:
+      "If buildup returns in the same path, moisture and use pattern are driving it. If dullness remains after film removal, inspect for etch, sealer damage, or scratched acrylic.",
+    whenToEscalate:
+      "Escalate for commercial restrooms, hospitality showers, rental turnovers, stone bathrooms, recurring mildew, or heavy mineral scale tied to leaks or ventilation failure.",
+    relatedProblems: [
+      rpRel("soap-scum", "Soap scum"),
+      rpRel("hard-water-deposits", "Hard water deposits"),
+      rpRel("light-mildew", "Light mildew appearance"),
+      rpRel("biofilm-buildup", "Biofilm buildup"),
+      rpRel("musty-odor", "Musty odor"),
+    ],
+    relatedSurfaces: [esSurface("shower-glass", "Shower glass"), esSurface("tile", "Tile"), esSurface("grout", "Grout")],
+    relatedMethods: [esMethod("soap-scum-removal", "Soap scum removal"), esMethod("hard-water-deposit-removal", "Hard water deposit removal"), esMethod("touchpoint-sanitization", "Touchpoint sanitization")],
+  },
+  "kitchen-grease-film": {
+    quickAnswer:
+      "Kitchen grease film is airborne oil that settles on cool surfaces. Ventilation, degreaser dwell, towel rotation, and rinse control determine whether it lifts or smears.",
+    whatItUsuallyIs:
+      "Kitchen grease film is a thin aerosolized lipid layer, often mixed with dust and food vapor.\n\nIt shows as yellow tack, matte haze, fingerprints that smear, sticky cabinet rails, and darkening near hoods, handles, and backsplash grout.",
+    whyItHappens:
+      "Cooking heat atomizes oils; exhaust pulls some out and spreads some onto nearby surfaces. Hood filters, poor capture, frequent frying, and hot surfaces increase loading.\n\nFilm becomes harder as oils oxidize and polymerize.",
+    commonOn:
+      "Hoods, cabinet faces, backsplash tile, stainless appliances, microwave fronts, counters near ranges, and painted walls close to cooking zones.",
+    bestMethods:
+      "Dust first if gray film is present, then use kitchen-safe degreaser or surfactant with short dwell. Wipe in controlled sections, rotate cloths, rinse where needed, and finish dry.",
+    avoidMethods:
+      "Oven cleaner overspray on cabinets or painted walls\nPolish-only stainless passes on oily soil\nCleaning hot surfaces that flash dry\nUnder-ventilated degreasing in tight kitchens",
+    commonMistakes: [
+      "Using weak dilution and calling the grease stubborn.",
+      "Spreading oil with a loaded towel.",
+      "Ignoring hood filters as the recurrence source.",
+    ],
+    whenItFails:
+      "If film smears, increase dwell or towel rotation before increasing strength. If paint or finish softens, stop and move to a finish-safe process.",
+    whenToEscalate:
+      "Escalate for commercial aerosol loading, heavy hood buildup, rental turnover kitchens, or cabinet finishes with unknown coatings.",
+    relatedProblems: [
+      rpRel("grease-buildup", "Grease buildup"),
+      rpRel("exhaust-hood-film", "Exhaust hood film"),
+      rpRel("cabinet-grime", "Cabinet grime"),
+      rpRel("appliance-buildup", "Appliance buildup"),
+    ],
+    relatedSurfaces: [esSurface("stainless-steel", "Stainless steel"), esSurface("tile", "Tile"), esSurface("laminate", "Laminate"), esSurface("painted-walls", "Painted walls")],
+    relatedMethods: [esMethod("degreasing", "Degreasing"), esMethod("neutral-surface-cleaning", "Neutral surface cleaning")],
+  },
+  "mineral-film": {
+    quickAnswer:
+      "Mineral film is thin hardness residue from drying water. It reads as haze before it becomes scale, and acid only belongs on compatible surfaces.",
+    whatItUsuallyIs:
+      "Mineral film is early-stage hard-water residue: a cloudy sheen, fine spotting, or faint drag instead of thick crust.\n\nIt often appears on glass, tile, fixtures, and grout near repeated splash or evaporation paths.",
+    whyItHappens:
+      "Water evaporates and leaves dissolved minerals. Heat, airflow, hard water, slow drying, and poor squeegee or towel habits control how quickly the film returns.",
+    commonOn:
+      "Shower glass, chrome, stainless, glossy tile, grout lines, sink bases, and bath floors near fixtures.",
+    bestMethods:
+      "Start with neutral or glass maintenance for light film, then escalate to surface-safe mineral chemistry only when needed. Rinse and dry so dissolved minerals do not redeposit.",
+    avoidMethods:
+      "Acids on stone or unknown sealers\nScrubbing mineral haze with abrasive pads\nSkipping rinse after descaling\nTreating etched glass as removable film",
+    commonMistakes: [
+      "Waiting until film becomes limescale.",
+      "Using acid as routine maintenance on vulnerable finishes.",
+      "Ignoring drips and splash patterns.",
+    ],
+    whenItFails:
+      "If mineral film returns quickly, the water path is unchanged. If compatible mineral chemistry does not improve clarity, inspect for etching, coating failure, or soap film.",
+    whenToEscalate:
+      "Escalate for stone bathrooms, recurring commercial restroom spotting, etched glass, or scale tied to plumbing leaks.",
+    relatedProblems: [
+      rpRel("hard-water-deposits", "Hard water deposits"),
+      rpRel("water-spots", "Water spots"),
+      rpRel("limescale-buildup", "Limescale buildup"),
+      rpRel("surface-haze", "Surface haze"),
+    ],
+    relatedSurfaces: [esSurface("shower-glass", "Shower glass"), esSurface("tile", "Tile"), esSurface("grout", "Grout"), esSurface("stainless-steel", "Stainless steel")],
+    relatedMethods: [esMethod("hard-water-deposit-removal", "Hard water deposit removal"), esMethod("glass-cleaning", "Glass cleaning")],
+  },
+  "cloudy-glass": {
+    quickAnswer:
+      "Cloudy glass can be soap film, mineral haze, product residue, or permanent etch. If clarity only improves while wet, diagnose before scrubbing harder.",
+    whatItUsuallyIs:
+      "Cloudy glass is reduced clarity: milkiness, fog, mineral haze, wipe film, or etched-looking patches.\n\nThe pattern matters: spots suggest minerals, broad waxy drag suggests soap film, fixed uniform milkiness can indicate etch or coating failure.",
+    whyItHappens:
+      "Soap, minerals, humidity, product residue, hard water, and aggressive cleaning history all interact on glass.\n\nCoated shower glass is especially sensitive because the wrong chemistry can damage the surface while the original film remains.",
+    commonOn:
+      "Shower doors, bath partitions, mirrors, glass tile, and high-humidity windows.",
+    bestMethods:
+      "Run sequential tests: glass cleaner for residue, soap-scum lane for waxy film, mineral lane only if compatible, then stop if the pattern remains fixed.\n\nUse dry inspection from multiple angles before declaring success.",
+    avoidMethods:
+      "Abrasive powders or pads on coated glass\nAcid guessing without knowing glass/coating rules\nContinuing to scrub fixed etching\nLeaving rinse water to dry back into new spots",
+    commonMistakes: [
+      "Calling every cloudy door hard water.",
+      "Using glass spray on heavy soap film and expecting clarity.",
+      "Over-cleaning permanent etch.",
+    ],
+    whenItFails:
+      "If the cloudiness clears wet and returns dry, film or etch is likely. If mineral and soap lanes both fail in safe tests, treat it as damage or coating failure.",
+    whenToEscalate:
+      "Escalate for coated shower glass, etched doors, rental turnover glass with unknown product history, or commercial glass where replacement versus restoration needs assessment.",
+    relatedProblems: [
+      rpRel("glass-cloudiness", "Glass cloudiness"),
+      rpRel("hard-water-deposits", "Hard water deposits"),
+      rpRel("soap-scum", "Soap scum"),
+      rpRel("surface-haze", "Surface haze"),
+      rpRel("etching-on-finishes", "Etching on finishes"),
+    ],
+    relatedSurfaces: [esSurface("shower-glass", "Shower glass"), esSurface("tile", "Tile")],
+    relatedMethods: [esMethod("glass-cleaning", "Glass cleaning"), esMethod("hard-water-deposit-removal", "Hard water deposit removal"), esMethod("soap-scum-removal", "Soap scum removal")],
+  },
+  "grime-buildup": {
+    quickAnswer:
+      "Grime buildup is mixed soil: dust plus oil plus traffic residue. Remove dry particulate first, then break the oily or sticky binder.",
+    whatItUsuallyIs:
+      "Grime is dark, textured, or sticky mixed soil. It collects where hands, air movement, cooking aerosol, pets, and foot traffic concentrate.\n\nIt often appears along trim, cabinet rails, floor edges, entry lanes, and textured surfaces.",
+    whyItHappens:
+      "Dry soil becomes grime when it binds with oils, humidity, food residue, or cleaner film. Traffic pressure and repeated light cleaning compact it into edges and textures.",
+    commonOn:
+      "Baseboards, cabinets, painted walls, tile, stainless, vinyl floors, entry zones, pet routes, and rental turnover kitchens.",
+    bestMethods:
+      "Vacuum or dry dust first, then use surfactant or degreasing chemistry matched to the finish. Work small sections and rinse where cleaner load is visible.",
+    avoidMethods:
+      "Wet wiping heavy dry soil into mud\nStrong degreasers on soft paint or wood without testing\nIgnoring edges and texture where grime actually lives\nAbrasive scrubbing that removes finish before soil",
+    commonMistakes: [
+      "Treating grime as just dust.",
+      "Using clean-looking but saturated cloths.",
+      "Skipping corner and edge detail in high-traffic rooms.",
+    ],
+    whenItFails:
+      "If darkening remains after soil removal, inspect for wear, staining, or finish burnishing. If grime returns quickly, source control or maintenance frequency is insufficient.",
+    whenToEscalate:
+      "Escalate for commercial traffic lanes, heavy rental turnover grime, smoke or cooking aerosol history, and finish-sensitive paint or wood.",
+    relatedProblems: [
+      rpRel("greasy-grime", "Greasy grime"),
+      rpRel("dust-buildup", "Dust buildup"),
+      rpRel("kitchen-grease-film", "Kitchen grease film"),
+      rpRel("floor-buildup", "Floor buildup"),
+    ],
+    relatedSurfaces: [esSurface("laminate", "Laminate"), esSurface("painted-walls", "Painted walls"), esSurface("vinyl-flooring", "Vinyl flooring"), esSurface("tile", "Tile")],
+    relatedMethods: [esMethod("detail-dusting", "Detail dusting"), esMethod("degreasing", "Degreasing"), esMethod("neutral-surface-cleaning", "Neutral surface cleaning")],
+  },
+  "biofilm-buildup": {
+    quickAnswer:
+      "Biofilm buildup is a moisture-fed organic film. It is not solved by scent; remove soil, use label-correct chemistry, and dry the habitat.",
+    whatItUsuallyIs:
+      "Biofilm is a slick or colored biological layer that forms where moisture and organic residue persist.\n\nIt can look pink, gray, tan, dark, or translucent, often with slippery feel or recurring odor.",
+    whyItHappens:
+      "Water, soap residue, skin oils, food particles, drains, and poor airflow create a habitat. The film protects itself, so casual wiping often leaves enough behind to regrow.",
+    commonOn:
+      "Shower corners, drains, sink rims, grout, tile, refrigerator gaskets, trash zones, pet bowls, and restroom floors.",
+    bestMethods:
+      "Remove gross soil first, apply compatible chemistry with proper dwell, agitate texture, rinse where required, and dry the zone. Maintenance should reduce moisture and food source.",
+    avoidMethods:
+      "Fragrance-only treatment\nDisinfecting over visible soil\nDry brushing film into the room\nIgnoring slow drains, splash zones, and poor airflow",
+    commonMistakes: [
+      "Confusing biofilm with simple soap film.",
+      "Missing underside edges and drain contact points.",
+      "Stopping before the surface is dry.",
+    ],
+    whenItFails:
+      "If slickness or odor returns, film remains in texture, drain edges, or wet seams. If dark growth spreads, reassess as mold or moisture damage.",
+    whenToEscalate:
+      "Escalate for recurring commercial restroom biofilm, food-service zones, musty odor, porous materials, or suspected hidden moisture.",
+    relatedProblems: [
+      rpRel("light-mildew", "Light mildew appearance"),
+      rpRel("mold-growth", "Mold growth"),
+      rpRel("odor-retention", "Odor retention"),
+      rpRel("bathroom-buildup", "Bathroom buildup"),
+    ],
+    relatedSurfaces: [esSurface("tile", "Tile"), esSurface("grout", "Grout"), esSurface("shower-glass", "Shower glass")],
+    relatedMethods: [esMethod("touchpoint-sanitization", "Touchpoint sanitization"), esMethod("soap-scum-removal", "Soap scum removal"), esMethod("neutral-surface-cleaning", "Neutral surface cleaning")],
+  },
+};
+
+function applyProblemDepthExpansion(
+  slug: string,
+  base: AuthorityProblemPageData,
+): AuthorityProblemPageData {
+  const expansion = AUTHORITY_PROBLEM_DEPTH_EXPANSIONS[slug];
+  if (!expansion) return base;
+  return { ...base, ...expansion };
+}
+
+const AUTHORITY_PROBLEM_RECURRENCE_SYSTEMS_V2: Record<
+  string,
+  (base: AuthorityProblemPageData) => ProblemRecurrenceExpansion
+> = {
+  "soap-scum": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: light shower film can reappear within 2-4 uses, visible lower-glass scum usually returns inside 1-2 weeks when dry-down is skipped, and heavy ledge or grout buildup signals a maintenance cycle that is already behind the use rate.",
+      "False-clean pattern: the surface looks clearer while wet, then dries back to haze because softened soap-mineral film was not fully rinsed and removed.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Check humidity, exhaust use, shower frequency, bar soap, and whether the last clean left a slick rinse film. If all four are active, the problem will return even after a correct one-time clean.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs are faster return after each cleaning, film that clears only while wet, rough lower glass, whitening grout edges, or cleaner drag that gets worse after stronger products. Those indicate layered recurrence or delayed surface damage, not a need for more pressure.",
+    ),
+    whenToEscalate:
+      "Escalate when soap scum returns within a week despite correct rinse and dry-down, when glass stays cloudy after soap and mineral lanes, when stone or coated glass is involved, or when rental/hospitality bathrooms need a maintenance interval reset rather than another deep clean.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Calling every recurring bathroom film hard water and jumping to acids before checking soap, humidity, and rinse failure.",
+      "Trusting wet clarity as proof of removal instead of waiting for a full dry inspection.",
+    ],
+  }),
+  "hard-water-deposits": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: new spotting can show after a single drying cycle, visible mineral film often returns within days in hard-water showers, and crust or limescale means the surface has gone through many unbroken wet-dry cycles.",
+      "Environmental drivers include hard source water, hot fixtures, slow leaks, humid rooms, poor squeegee habits, and airflow that dries droplets in place instead of removing them.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Look for active drivers before cleaning: faucet weep, shower spray pattern, standing water at trim, white edges around drains, or spots rebuilding in the same geometry. If the pattern is active, removal is only temporary.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation warning signs include deposits returning within 24-72 hours, pitting on plated fixtures, grout whitening after acid, fixed cloudy glass after safe descaling, or stone dulling after vinegar/CLR-class misuse.",
+    ),
+    whenToEscalate:
+      "Escalate when mineral buildup returns inside a few days, when a leak or fixture drip is feeding the cycle, when acid-sensitive stone or unknown coatings are nearby, or when repeated acid use has started to dull, pit, or whiten the surface.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Cleaning the deposit but leaving the active drip, splash path, or drying pattern unchanged.",
+      "Using routine acid maintenance until delayed etching or plating damage appears.",
+    ],
+  }),
+  "grease-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: fresh aerosol tack can return after one cooking session, cabinet and hood film usually reappears over 1-3 weeks of regular cooking, and polymerized buildup means heat and time have converted oil into a harder film.",
+      "Maintenance failure usually comes from a dirty hood filter, poor ventilation capture, towels that are already saturated, or degreaser diluted so far that it loosens grease without carrying it away.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Check whether the kitchen has an active aerosol source: loaded hood filters, frequent frying, warm cabinet fronts, dust stuck to vertical surfaces, or yellow tack around handles. If so, plan source reduction and towel rotation before stronger chemistry.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "False-clean outcome: the area looks brighter for a few hours but feels tacky the next day because oil and surfactant were spread thin instead of removed. Delayed damage shows as softened paint, color transfer, swollen cabinet edges, or stainless discoloration after alkaline misuse.",
+    ),
+    whenToEscalate:
+      "Escalate when grease returns after one or two cooking cycles, when hood filters and cabinet tops are loaded, when rental turnover grease has polymerized, or when paint, laminate, stainless, or stone reacts during a small test.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Treating recurring kitchen film as a product-strength issue when ventilation and towel saturation are the real loop.",
+      "Skipping hood filters, cabinet tops, and high ledges where aerosol keeps feeding the visible surfaces below.",
+    ],
+  }),
+  "dust-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: dust returning in hours points to active airflow, construction fines, HVAC bypass, or tacky residue; dust returning in 1-3 days often points to textiles, pets, open windows, or vacuum order; weekly edge bands usually indicate normal load plus incomplete capture.",
+      "Environmental recurrence comes from return vents, leaky filter frames, dry static-prone air, shedding rugs, litter boxes, pet bedding, door mats, and cleaning order that sends particles airborne after surfaces were finished.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Read the reload pattern: vent-shaped streaks point to HVAC, fuzzy lint points to textiles, low bands point to floor traffic, and dust that sticks to a freshly cleaned surface points to residue or polish.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation warning signs include fine dust returning in hours, gray film near supply or return vents, dust that smears into mud, or occupants noticing gritty surfaces after filter changes. Those indicate source control, not more spray.",
+    ),
+    whenToEscalate:
+      "Escalate for post-construction dust, suspected HVAC bypass, recurring fine particulate near vents, heavy pet dander cycles, or any environment where HEPA capture, filtration review, or cleaning sequence design matters more than routine dusting.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Blaming the duster while ignoring filtration, vacuum timing, static, and tacky product residue.",
+      "Cleaning surfaces before vacuuming textiles and floors, then watching airborne dust resettle.",
+    ],
+  }),
+  "light-mildew": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: film returning within days means the surface is staying wet; return over 1-2 weeks usually means ventilation and dry-down are below the room's use rate; staining that remains after cleaning may be pigment left behind rather than active mildew.",
+      "Humidity, closed doors, weak exhaust fans, slow drains, failed caulk, wet bath mats, and soap film all create the recurring habitat.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Check whether the area dries fully between uses. A surface that stays damp for hours after cleaning is already set up to rebuild mildew even when the visible film is removed.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include return in the same corner, musty odor, spreading from caulk into grout, soft or cracked sealant, or darkening that survives surface cleaning. That is a moisture pattern, not a simple wipe failure.",
+    ),
+    whenToEscalate:
+      "Escalate when mildew returns within days, spreads beyond caulk or grout edges, appears with musty odor, involves porous material, or points to ventilation, leak, or hidden moisture rather than surface soil.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Using bleach brightness as proof that the recurrence source is gone.",
+      "Ignoring exhaust run time, closed doors, wet mats, and slow drains after the visible film is removed.",
+    ],
+  }),
+  "mold-growth": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: visible return within days means active moisture or contaminated porous material; return after rain, shower use, HVAC cycles, or plumbing use is a source-pattern clue; fixed staining without moisture may be historic damage rather than active growth.",
+      "HVAC contribution matters when growth or musty odor clusters near registers, returns, condensate paths, closets, or rooms with poor pressure balance.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Document moisture clues before disturbing the area: size, location, odor, softness, bubbling paint, condensation, leak timing, and whether the pattern follows air movement or plumbing.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation thresholds include growth that expands, returns after drying claims, involves porous material, appears near HVAC, exceeds small surface-limited areas, or is paired with persistent musty odor.",
+    ),
+    whenToEscalate:
+      "Escalate when recurrence is tied to leaks, HVAC, condensation, hidden cavities, porous materials, health-sensitive occupants, or any area where containment and source correction are unclear. Repeated cosmetic cleaning is the wrong loop.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Cleaning the visible surface repeatedly while the moisture source continues.",
+      "Calling old staining active mold without checking dryness, odor, spread, and material condition.",
+    ],
+  }),
+  "surface-haze": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: haze that returns as soon as the surface dries usually means residue or mineral film; haze that returns after several cleanings often means product stacking; haze that stays fixed through safe test lanes points to delayed finish damage.",
+      "Improper chemistry loops are common: adding more spray leaves more solids, acid on the wrong surface creates dullness, and polish hides film while building the next haze layer.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Judge haze only after full dry-down under angled light. Wet shine can hide residue, etch, and micro-scratching long enough to create a false-clean outcome.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include haze that sharpens under raking light, fixed dull patches after neutral reset, rainbow film after polish, or expanding dullness after acid/abrasive attempts.",
+    ),
+    whenToEscalate:
+      "Escalate when haze survives neutral reset and compatible mineral/product-film tests, when high-value stone or coated glass is involved, or when prior acid, bleach, abrasive, or polish misuse may have created delayed surface damage.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Treating wet clarity as success before the surface fully dries.",
+      "Switching chemistry families repeatedly without resetting residue first.",
+    ],
+  }),
+  "product-residue-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: tack or streaks that return immediately after dry-down mean product was left behind; footprints returning within hours often mean floor cleaner overuse; dust attraction over days means residue is acting like a soil binder.",
+      "Maintenance-cycle failure usually starts with over-concentrate, dirty water, loaded pads, disinfectant layered over soil, or fragrance/polish products used as shortcuts.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Ask what was used before adding anything new. Unknown sprays, floor concentrates, polish, disinfectant, and glass cleaner layered together should be treated as a residue reset, not a stronger-cleaner problem.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "False-clean outcome: the surface looks uniform while damp, then dries tacky, streaky, or dull. Delayed damage risk rises when residue encourages repeated aggressive cleaning on stone, wood, laminate, and coatings.",
+    ),
+    whenToEscalate:
+      "Escalate when residue affects large floor areas, when multiple unknown products were layered, when a finish may need stripping or restoration, or when residue cleanup starts changing sheen, color, or surface feel.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Adding another product to solve a residue film created by too much product.",
+      "Ignoring dilution, pad loading, and rinse water quality as recurrence drivers.",
+    ],
+  }),
+  "odor-retention": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: odor returning in hours usually means volatile compounds were masked; odor returning with humidity or heat means the source is absorbed or moisture-fed; odor returning after use points to drains, trash zones, pets, laundry, or restroom biofilm.",
+      "Environmental contributors include humidity, poor ventilation, porous materials, slow drains, pet repeat spots, warm bins, damp textiles, and HVAC movement carrying odor from a hidden source.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Map when the smell returns: after showers, after HVAC starts, after cooking, overnight, during humidity, or after pets revisit the area. Timing often identifies the source better than scent type.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include odor returning faster after fragrance use, odor tied to humidity, repeat pet interest, musty smell near walls or vents, or clean-looking surfaces that still smell when warmed.",
+    ),
+    whenToEscalate:
+      "Escalate when odor returns after source cleaning, involves pet contamination below the visible surface, follows HVAC or moisture patterns, persists in porous materials, or affects rental turnover or commercial restroom readiness.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Using scent strength as a substitute for source removal.",
+      "Ignoring timing, humidity, and HVAC cycles that reveal where the odor is held.",
+    ],
+  }),
+  "surface-discoloration": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: color that returns immediately after drying is often residue or moisture; color that slowly expands points to ongoing exposure; color that never changes during safe tests may be material aging, staining, or delayed chemical damage.",
+      "Environmental recurrence includes UV, heat, standing water, mats trapping moisture, pet accidents, dye transfer, metal contact, and cleaning chemistry that keeps reacting after the visible pass.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Compare exposed and protected areas before treating discoloration. Under-mat outlines, window-side yellowing, seam darkening, and edge swelling are recurrence clues, not just cosmetic marks.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation warning signs include expanding edges, bubbling, softness, odor, recurring darkening after dry-down, color transfer during cleaning, or yellowing that follows UV or heat exposure.",
+    ),
+    whenToEscalate:
+      "Escalate when discoloration expands, is moisture-linked, involves stone or warranty-sensitive finishes, follows pet or dye contamination, or resists safe cleaning while the material condition changes.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Bleaching color change before deciding whether it is soil, stain, moisture, UV, or chemical damage.",
+      "Missing delayed damage because the first cleaning pass looked temporarily brighter.",
+    ],
+  }),
+  "surface-dullness": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: dullness that returns right after drying is usually film; dullness that returns in traffic paths over days or weeks is maintenance-cycle mismatch; dullness that stays fixed is wear, etch, coating failure, or finish loss.",
+      "Delayed damage often appears after repeated acid, alkaline, abrasive, steam, or polish misuse. The surface may look clean but lose reflectivity because the finish, not the soil, has changed.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Use a small neutral reset and full dry inspection before adding shine. If wetting restores gloss temporarily, diagnose film versus finish loss before escalating.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include dullness locked to traffic lanes, expanding matte patches after scrubbing, shine that only appears while wet, or uneven gloss after polish.",
+    ),
+    whenToEscalate:
+      "Escalate when dullness remains after residue reset, follows acid/abrasive history, affects stone or wood, appears in commercial traffic lanes, or requires restoration rather than cleaning.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Adding polish to a dirty or damaged finish and building the next dull residue layer.",
+      "Mistaking wear patterns for removable soil until the finish is thinned further.",
+    ],
+  }),
+  "floor-residue-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: tacky feel after dry-down means residue was left in the same cleaning event; footprints returning within hours point to cleaner concentration or dirty water; dull traffic lanes over weeks point to soil load exceeding maintenance frequency.",
+      "Environmental recurrence includes entry grit, pet routes, kitchen aerosol settling, bathroom humidity, hard water in mop solution, and high-traffic lanes that need more frequent solution changes.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Check the maintenance cycle before blaming the floor: dilution, water changes, pad loading, vacuuming order, dry time, pet soil, entry mats, and whether the same bucket crosses clean and dirty zones.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include sticky socks, gray mop water after a recent clean, lanes that reprint under shoes, edge buildup, or dullness that survives a residue rinse.",
+    ),
+    whenToEscalate:
+      "Escalate when residue covers multiple rooms, traffic lanes remain dull after rinse reset, pet contamination may be below seams, or the floor may need finish-safe restoration instead of routine mopping.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Using more concentrate because the floor is dirty, then creating the sticky film that captures more soil.",
+      "Skipping dry soil removal and turning grit into abrasive slurry.",
+    ],
+  }),
+  "sticky-film": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: tack returning immediately means loosened residue was smeared; tack returning overnight often points to sugar, oil, or cleaner solids drying back; tack that attracts dust over days has become a contamination layer.",
+      "Heat, humidity, food residue, pet feeding zones, adhesive plasticizers, and product overuse all keep sticky film active.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Identify the binder before choosing chemistry. Sugar softens with water, grease emulsifies with surfactant, adhesive gums with heat or solvent, and cleaner residue often improves with rinse discipline.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include tack spreading wider after wiping, dust sticking within hours, residue strings or gums under the cloth, and finish swelling or dulling during warm-water or solvent attempts.",
+    ),
+    whenToEscalate:
+      "Escalate when tack covers floors or cabinets broadly, behaves like adhesive on sensitive finishes, returns after correct rinse, or appears with pet contamination, swelling, color transfer, or coating softening.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Treating every sticky film as grease and missing sugar, adhesive, soap, or cleaner residue.",
+      "Stopping after the film softens instead of completing pickup, rinse, and dry inspection.",
+    ],
+  }),
+  "bathroom-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: odor or slickness in days points to biofilm and moisture; visible soap/mineral film in 1-2 weeks points to shower frequency and dry-down; heavy scale or dark grout means the maintenance interval is longer than the buildup cycle.",
+      "Humidity, weak exhaust, hard water, bar soap, standing water, closed doors, wet textiles, and short turnover cleans all stack into the same recurring system.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Separate the active layer before deep cleaning: soap drag, chalky mineral, slick biofilm, musty odor, or fixed discoloration. Each layer returns on a different timeline and needs a different prevention lever.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include same-path return, corners that stay wet, grout darkening after rinse, glass that clears only wet, or odor returning when humidity rises.",
+    ),
+    whenToEscalate:
+      "Escalate when bathrooms re-load faster than the maintenance schedule, when ventilation or leaks are involved, when stone/coated glass limits chemistry, or when commercial/restroom turnover standards require a repeatable recurrence-control plan.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Using one bathroom cleaner for soap, minerals, biofilm, odor, and finish damage without diagnosing the layer.",
+      "Ignoring the dry-down and exhaust cycle after a visually successful clean.",
+    ],
+  }),
+  "kitchen-grease-film": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: fresh tack can return after one frying session, visible haze can return inside a week of daily cooking, and sticky cabinet rails mean aerosol has been accumulating longer than the cleaning cycle.",
+      "Ventilation, hood filter condition, cooking frequency, cabinet temperature, and towel saturation decide whether the film is removed or spread thin.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Inspect hood filters, cabinet tops, microwave fronts, and backsplash grout before cleaning the obvious panels. If those reservoirs remain loaded, visible surfaces will re-contaminate quickly.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "False-clean outcome: vertical fronts look even immediately after wiping, then fingerprints and dust reappear fast because a thin oil layer remains.",
+    ),
+    whenToEscalate:
+      "Escalate when kitchen film returns after one or two cooking events, when hood or high ledge reservoirs are loaded, when cabinet finishes react, or when rental/commercial kitchens need source reduction and interval planning.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Cleaning appliance fronts while leaving hood filters and cabinet-top grease as active reservoirs.",
+      "Using polish to hide aerosol film instead of removing the lipid layer first.",
+    ],
+  }),
+  "mineral-film": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: faint film can return after one wet-dry cycle, visible haze often returns after several showers, and scale begins when early film is allowed to bond through repeated drying.",
+      "Humidity, heat, airflow, hard source water, and standing droplets control whether mineral film dries as light haze or progresses into limescale.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Look for same-shape return: drip trails, spray arcs, faucet rings, and lower-glass haze. Same-shape recurrence means the water path is still active.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include haze returning immediately after dry-down, gritty drag after glass cleaner, acid dulling nearby materials, or fixed cloudiness after compatible mineral removal.",
+    ),
+    whenToEscalate:
+      "Escalate when mineral film keeps returning in the same path, when stone or sealed surfaces are nearby, when glass may already be etched, or when plumbing leaks or hard-water intensity make routine cleaning ineffective.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Treating early mineral recurrence as ordinary streaking.",
+      "Using acid often enough that delayed finish damage becomes the bigger problem.",
+    ],
+  }),
+  "cloudy-glass": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: cloudiness that returns at dry-down points to film; cloudiness that rebuilds over days points to soap/mineral recurrence; cloudiness that never changes after safe lanes is likely etch, coating failure, or permanent wear.",
+      "Humidity, hard water, soap choice, squeegee habits, and prior acid or abrasive history all determine whether cloudy glass is a removable cycle or delayed surface damage.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Run small test lanes and wait for full dry-down. Wet glass often hides etch, coating failure, and residual film long enough to mislead the diagnosis.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation warning signs include uniform milkiness, clarity that only exists while wet, rough mineral texture with fixed haze underneath, or worsening after abrasive/acid attempts.",
+    ),
+    whenToEscalate:
+      "Escalate for coated shower glass, fixed cloudy fields, repeated acid history, rental turnover glass with unknown products, or any glass where replacement/restoration may be more realistic than cleaning.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Calling cloudy glass clean because it looked clear during the rinse.",
+      "Repeating acids or abrasives after the removable film has already been ruled out.",
+    ],
+  }),
+};
+
+function applyProblemRecurrenceSystemsV2(
+  slug: string,
+  base: AuthorityProblemPageData,
+): AuthorityProblemPageData {
+  const expansion = AUTHORITY_PROBLEM_RECURRENCE_SYSTEMS_V2[slug]?.(base);
+  if (!expansion) return base;
+  return { ...base, ...expansion };
+}
+
 const PROBLEMS: Record<string, AuthorityProblemPageData> = {
   "soap-scum": {
     ...prob("soap-scum", "Soap scum", "residue"),
@@ -1388,13 +2518,19 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 export function getProblemPageBySlug(slug: string): AuthorityProblemPageData | undefined {
   const base = PROBLEMS[slug];
   if (!base) return undefined;
-  return applyCoreProblemTone(slug, base);
+  return applyProblemRecurrenceSystemsV2(
+    slug,
+    applyProblemDepthExpansion(slug, applyCoreProblemTone(slug, base)),
+  );
 }
 
 export function getAllProblemPages(): AuthorityProblemPageData[] {
   return AUTHORITY_PROBLEM_SLUGS.map((s) => {
     const base = PROBLEMS[s];
-    return applyCoreProblemTone(s, base);
+    return applyProblemRecurrenceSystemsV2(
+      s,
+      applyProblemDepthExpansion(s, applyCoreProblemTone(s, base)),
+    );
   });
 }
 
