@@ -77,4 +77,31 @@ describe("CustomerBookingDetailPageContent", () => {
     );
     expect(screen.getByText(/Updates will appear here as your visit progresses/i)).toBeInTheDocument();
   });
+
+  it("surfaces payment continuation as the primary action when checkout is actionable", async () => {
+    vi.mocked(bookingStore.getBookingById).mockResolvedValue(
+      mockBooking({
+        paymentStatus: "failed",
+        paymentCheckoutUrl: "/checkout/retry",
+      }),
+    );
+    render(<CustomerBookingDetailPageContent />);
+    await waitFor(() =>
+      expect(screen.getByText(/Finish secure checkout to confirm your visit/i)).toBeInTheDocument(),
+    );
+    expect(screen.getByRole("link", { name: /Continue secure checkout/i })).toHaveAttribute(
+      "href",
+      "/checkout/retry",
+    );
+    expect(screen.getByText(/Use the checkout button above/i)).toBeInTheDocument();
+  });
+
+  it("keeps the booking reference secondary for support context", async () => {
+    vi.mocked(bookingStore.getBookingById).mockResolvedValue(mockBooking());
+    render(<CustomerBookingDetailPageContent />);
+    await waitFor(() =>
+      expect(screen.getByText(/Your visit summary, payment status, and team notes/i)).toBeInTheDocument(),
+    );
+    expect(screen.getByText(/include Ref · bk_1/i)).toBeInTheDocument();
+  });
 });

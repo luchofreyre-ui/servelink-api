@@ -84,28 +84,65 @@ export function CustomerBookingDetailPageContent() {
     (ps === "checkout_created" ||
       ps === "payment_pending" ||
       ps === "unpaid" ||
+      ps === "failed" ||
       ps === undefined);
 
   const assignedLabel =
     booking?.fo?.displayName?.trim() ||
     (booking?.foId ? "Professional cleaner assigning shortly" : "Assignment pending");
+  const bookingReference = booking ? formatBookingReferenceLabel(booking.id) : null;
 
   return (
     <main className="mx-auto min-h-screen max-w-2xl px-4 py-8 sm:px-6 sm:py-10">
       {loading ? (
-        <>
-          <div className="h-8 w-48 animate-pulse rounded-lg bg-slate-100" />
-          <p className="mt-6 text-slate-600">Loading your visit…</p>
-        </>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6" aria-busy="true">
+          <div className="h-4 w-44 animate-pulse rounded bg-slate-100" />
+          <div className="mt-4 h-8 w-64 animate-pulse rounded-lg bg-slate-100" />
+          <p className="mt-6 text-sm text-slate-600">Preparing your Nu Standard visit details…</p>
+        </div>
       ) : booking ? (
         <>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Your visit with Nu Standard
+            Nu Standard cleaning visit
           </p>
           <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             {formatVisitScheduleHeading(booking.scheduledStart)}
           </h1>
-          <p className="mt-2 text-sm text-slate-500">{formatBookingReferenceLabel(booking.id)}</p>
+          <p className="mt-2 text-sm text-slate-500">
+            Your visit summary, payment status, and team notes in one place.
+          </p>
+
+          {showContinuePayment && booking.paymentCheckoutUrl ? (
+            <div className="mt-6 rounded-2xl border border-slate-900 bg-slate-900 p-5 text-white shadow-sm sm:p-6">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">
+                Payment step still open
+              </p>
+              <h2 className="mt-2 text-xl font-semibold">Finish secure checkout to confirm your visit</h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-200">
+                Your visit details are saved. Complete the secure deposit step below, or reply to your confirmation
+                email if something looks off.
+              </p>
+              <p className="mt-4">
+                {booking.paymentCheckoutUrl.startsWith("http") ? (
+                  <a
+                    href={booking.paymentCheckoutUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-white px-5 py-3 text-center text-sm font-semibold text-slate-950 transition hover:bg-slate-100 sm:w-auto"
+                  >
+                    Continue secure checkout
+                  </a>
+                ) : (
+                  <Link
+                    href={booking.paymentCheckoutUrl}
+                    className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-white px-5 py-3 text-center text-sm font-semibold text-slate-950 transition hover:bg-slate-100 sm:w-auto"
+                  >
+                    Continue secure checkout
+                  </Link>
+                )}
+              </p>
+            </div>
+          ) : null}
 
           <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -128,10 +165,16 @@ export function CustomerBookingDetailPageContent() {
                   {booking.paymentStatus === "failed" ? (
                     <p className="mt-2 text-sm leading-relaxed text-slate-600">
                       Something interrupted checkout. When you retry below, we&apos;ll pick up where you left
-                      off — your confirmation email stays the source of truth once payment clears.
+                      off. Your confirmation email stays the source of truth once payment clears.
                     </p>
                   ) : null}
                   {showContinuePayment && booking.paymentCheckoutUrl ? (
+                    <p className="mt-4 text-sm leading-relaxed text-slate-600">
+                      Use the checkout button above when you&apos;re ready. We&apos;ll keep this page in sync after
+                      payment clears.
+                    </p>
+                  ) : null}
+                  {!showContinuePayment && booking.paymentCheckoutUrl && !paymentConfirmed ? (
                     <p className="mt-4">
                       {booking.paymentCheckoutUrl.startsWith("http") ? (
                         <a
@@ -179,6 +222,11 @@ export function CustomerBookingDetailPageContent() {
             <strong className="font-semibold text-slate-900">What happens next:</strong> we&apos;ll email any
             scheduling updates and reminders from the address you used at booking. Reply directly to that thread
             for fastest help — no need to repeat details here.
+            {bookingReference ? (
+              <span className="mt-2 block text-xs text-slate-500">
+                If you contact us, include {bookingReference} so we can find this visit quickly.
+              </span>
+            ) : null}
           </div>
 
           {teamPrepDetails ? (
@@ -237,8 +285,12 @@ export function CustomerBookingDetailPageContent() {
       ) : (
         <>
           <h1 className="text-2xl font-semibold text-slate-900">We couldn&apos;t open this visit</h1>
-          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-950">
-            {error ?? "Booking not found."}
+          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-relaxed text-amber-950">
+            <p className="font-medium">This link may be expired, or we may need to refresh your access.</p>
+            <p className="mt-2">
+              Reply to your Nu Standard confirmation email for help with scheduling, billing, or payment access.
+            </p>
+            {error ? <p className="mt-2 text-xs text-amber-800">Support detail: {error}</p> : null}
           </div>
 
           {id ? (

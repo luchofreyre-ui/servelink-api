@@ -7,12 +7,24 @@ import { BookingStatusBadge } from "@/components/booking/BookingStatusBadge";
 import { getAuthUser } from "@/lib/auth/authClient";
 import type { BookingRecord } from "@/lib/bookings/bookingApiTypes";
 import {
+  describePaymentStatusForCustomer,
   displayBookingPrice,
   formatBookingReferenceLabel,
   formatVisitScheduleHeading,
 } from "@/lib/bookings/bookingDisplay";
 import { listBookings } from "@/lib/bookings/bookingStore";
 import { NU_STANDARD_OWNER_OPERATOR_SUMMARY } from "@/components/marketing/precision-luxury/content/nuStandardTrustPositioning";
+
+function hasActionablePayment(booking: BookingRecord): boolean {
+  if (!booking.paymentCheckoutUrl) return false;
+  return (
+    booking.paymentStatus === "checkout_created" ||
+    booking.paymentStatus === "payment_pending" ||
+    booking.paymentStatus === "unpaid" ||
+    booking.paymentStatus === "failed" ||
+    booking.paymentStatus === undefined
+  );
+}
 
 function CustomerDashboardContent() {
   const user = typeof window !== "undefined" ? getAuthUser() : null;
@@ -61,9 +73,12 @@ function CustomerDashboardContent() {
       </p>
 
       {loadError ? (
-        <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-          {loadError}
-        </p>
+        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          <p className="font-medium">We couldn&apos;t refresh your visits just now.</p>
+          <p className="mt-1 text-amber-900">
+            Reply to your Nu Standard confirmation email if you need immediate help with scheduling or billing.
+          </p>
+        </div>
       ) : null}
 
       <div
@@ -109,17 +124,30 @@ function CustomerDashboardContent() {
             <Link
               key={booking.id}
               href={`/customer/bookings/${booking.id}`}
-              className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300 hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300 hover:shadow-md sm:flex-row sm:items-start sm:justify-between"
             >
               <div className="min-w-0 space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Nu Standard cleaning visit
+                </p>
                 <p className="text-lg font-semibold text-slate-900">
                   {formatVisitScheduleHeading(booking.scheduledStart)}
                 </p>
                 <p className="text-sm text-slate-600">
-                  {displayBookingPrice(booking)} · {formatBookingReferenceLabel(booking.id)}
+                  {displayBookingPrice(booking)} · {describePaymentStatusForCustomer(booking.paymentStatus)}
+                </p>
+                <p className="text-xs text-slate-400">
+                  For support: {formatBookingReferenceLabel(booking.id)}
                 </p>
               </div>
-              <BookingStatusBadge status={booking.status} />
+              <div className="flex flex-col items-start gap-2 sm:items-end">
+                <BookingStatusBadge status={booking.status} />
+                {hasActionablePayment(booking) ? (
+                  <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
+                    Finish secure checkout
+                  </span>
+                ) : null}
+              </div>
             </Link>
           ))
         )}
