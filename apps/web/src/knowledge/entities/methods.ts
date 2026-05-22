@@ -22,7 +22,7 @@ export const METHOD_ENTITIES: MethodEntity[] = [
     idealForSoilSlugs: ["soap-scum", "hard-water-stains"],
     compatibleSurfaceSlugs: ["glass", "ceramic-tile", "porcelain-tile", "fiberglass", "chrome"],
     incompatibleSurfaceSlugs: ["grout", "stainless-steel", "sealed-hardwood", "painted-drywall"],
-    recommendedToolSlugs: ["microfiber-towel", "non-scratch-scrub-pad", "grout-brush"],
+    recommendedToolSlugs: ["microfiber-towel", "glass-microfiber-towel", "non-scratch-scrub-pad", "grout-brush", "dilution-bottle", "trigger-sprayer", "restroom-cleaner-system"],
     dwellTimeGuidance: [
       "allow enough dwell time to soften mineral residue before agitation",
       "do not let the product dry on the surface",
@@ -61,7 +61,7 @@ export const METHOD_ENTITIES: MethodEntity[] = [
     idealForSoilSlugs: ["kitchen-grease", "grout-soiling"],
     compatibleSurfaceSlugs: ["stainless-steel", "painted-cabinetry", "laminate", "ceramic-tile", "porcelain-tile", "grout"],
     incompatibleSurfaceSlugs: ["sealed-hardwood"],
-    recommendedToolSlugs: ["microfiber-towel", "detail-brush", "non-scratch-scrub-pad", "grout-brush"],
+    recommendedToolSlugs: ["microfiber-towel", "high-pile-microfiber-towel", "low-pile-microfiber-towel", "detail-brush", "non-scratch-scrub-pad", "grout-brush", "commercial-degreaser", "dilution-bottle", "trigger-sprayer", "commercial-kitchen-maintenance-system"],
     dwellTimeGuidance: [
       "allow dwell time for grease softening before wiping",
       "do not over-dwell on sensitive painted finishes",
@@ -99,7 +99,7 @@ export const METHOD_ENTITIES: MethodEntity[] = [
     idealForSoilSlugs: ["pet-stains"],
     compatibleSurfaceSlugs: ["carpet", "upholstery"],
     incompatibleSurfaceSlugs: ["sealed-hardwood"],
-    recommendedToolSlugs: ["white-terry-towel", "extractor", "detail-brush"],
+    recommendedToolSlugs: ["white-terry-towel", "extractor", "detail-brush", "soft-bristle-brush", "hepa-vacuum"],
     dwellTimeGuidance: [
       "enzymes often need controlled dwell time to work effectively",
       "avoid rushing removal before the product has had time to act",
@@ -136,7 +136,7 @@ export const METHOD_ENTITIES: MethodEntity[] = [
     idealForSoilSlugs: ["mildew", "grout-soiling"],
     compatibleSurfaceSlugs: ["ceramic-tile", "porcelain-tile", "grout", "caulk"],
     incompatibleSurfaceSlugs: ["painted-drywall", "sealed-hardwood"],
-    recommendedToolSlugs: ["grout-brush", "detail-brush", "microfiber-towel"],
+    recommendedToolSlugs: ["grout-brush", "detail-brush", "soft-bristle-brush", "microfiber-towel", "peroxide-cleaner", "trigger-sprayer", "restroom-cleaner-system"],
     dwellTimeGuidance: [
       "allow the chemistry time to act before scrubbing",
       "do not let product dry uncontrolled on the surface",
@@ -173,7 +173,7 @@ export const METHOD_ENTITIES: MethodEntity[] = [
     idealForSoilSlugs: [],
     compatibleSurfaceSlugs: ["laminate", "painted-drywall", "sealed-hardwood"],
     incompatibleSurfaceSlugs: [],
-    recommendedToolSlugs: ["microfiber-towel", "mop-pad"],
+    recommendedToolSlugs: ["microfiber-towel", "mop-pad", "flat-mop-system", "microfiber-floor-pad-system", "neutral-floor-cleaner"],
     dwellTimeGuidance: [
       "routine neutral cleaners typically rely more on mechanical wiping than long dwell",
     ],
@@ -217,7 +217,7 @@ export const METHOD_ENTITIES: MethodEntity[] = [
       "sealed-hardwood",
     ],
     incompatibleSurfaceSlugs: [],
-    recommendedToolSlugs: ["microfiber-towel", "mop-pad"],
+    recommendedToolSlugs: ["microfiber-towel", "glass-microfiber-towel", "high-pile-microfiber-towel", "low-pile-microfiber-towel", "mop-pad", "flat-mop-system", "microfiber-floor-pad-system"],
     dwellTimeGuidance: [
       "microfiber performs best when paired with proper pre-softening or chemistry where needed",
     ],
@@ -252,7 +252,7 @@ export const METHOD_ENTITIES: MethodEntity[] = [
     idealForSoilSlugs: ["soap-scum", "grout-soiling", "mildew", "kitchen-grease"],
     compatibleSurfaceSlugs: ["glass", "ceramic-tile", "porcelain-tile", "grout", "fiberglass"],
     incompatibleSurfaceSlugs: ["painted-drywall"],
-    recommendedToolSlugs: ["grout-brush", "non-scratch-scrub-pad", "detail-brush"],
+    recommendedToolSlugs: ["grout-brush", "non-scratch-scrub-pad", "detail-brush", "soft-bristle-brush", "stiff-bristle-brush", "drill-brush-attachment"],
     dwellTimeGuidance: [
       "agitation should follow enough dwell time to avoid unnecessary force",
     ],
@@ -288,7 +288,7 @@ export const METHOD_ENTITIES: MethodEntity[] = [
     idealForSoilSlugs: ["pet-stains"],
     compatibleSurfaceSlugs: ["carpet", "upholstery"],
     incompatibleSurfaceSlugs: ["sealed-hardwood"],
-    recommendedToolSlugs: ["white-terry-towel", "extractor"],
+    recommendedToolSlugs: ["white-terry-towel", "extractor", "soft-bristle-brush", "hepa-vacuum"],
     dwellTimeGuidance: [
       "pair with appropriate chemistry dwell before extraction where needed",
     ],
@@ -322,7 +322,7 @@ export const METHOD_ENTITIES: MethodEntity[] = [
     idealForSoilSlugs: ["mildew", "soap-scum", "hard-water-stains"],
     compatibleSurfaceSlugs: ["glass", "ceramic-tile", "porcelain-tile", "grout", "caulk", "chrome"],
     incompatibleSurfaceSlugs: [],
-    recommendedToolSlugs: ["squeegee", "microfiber-towel"],
+    recommendedToolSlugs: ["squeegee", "microfiber-towel", "glass-microfiber-towel", "restroom-cleaner-system"],
     dwellTimeGuidance: [
       "apply immediately after rinsing or wet use events for best prevention",
     ],
@@ -478,5 +478,185 @@ export const METHOD_ENTITIES: MethodEntity[] = [
       "Acid use on grout should be deliberate and justified, not routine.",
     ],
     professionalEscalationThresholds: [],
+  },
+  {
+    slug: "dilution-control",
+    name: "Dilution Control",
+    kind: "method",
+    summary:
+      "A chemical control method that measures concentrates into task-appropriate working solutions to prevent residue, damage, and exposure problems.",
+    aliases: ["controlled dilution", "chemical dilution"],
+    relatedArticleSlugs: ["kitchen-cleaning-guide", "bathroom-cleaning-guide"],
+    relatedServiceSlugs: ["kitchen-cleaning", "bathroom-cleaning", "deep-cleaning"],
+    chemistryClass: "neutral",
+    mechanism: [
+      "matches product strength to soil load and surface tolerance",
+      "prevents overconcentration from creating residue or finish damage",
+    ],
+    idealForSoilSlugs: ["kitchen-grease", "soap-scum", "grout-soiling", "hard-water-stains"],
+    compatibleSurfaceSlugs: ["glass", "ceramic-tile", "porcelain-tile", "fiberglass", "chrome", "stainless-steel", "painted-cabinetry", "laminate", "grout", "sealed-hardwood"],
+    incompatibleSurfaceSlugs: [],
+    recommendedToolSlugs: ["dilution-bottle", "trigger-sprayer", "commercial-concentrate", "ready-to-use-cleaner"],
+    dwellTimeGuidance: [
+      "dwell time should follow the diluted product label, not the concentrate strength",
+    ],
+    moistureControlGuidance: [
+      "apply only enough working solution to maintain contact without flooding seams",
+    ],
+    residueConsiderations: [
+      "overconcentration leaves tacky, hazy, or odor-heavy residue even when the surface looks wet-cleaned",
+    ],
+    safetyNotes: [
+      "Never mix incompatible products or relabel unknown chemistry as a working solution.",
+    ],
+    professionalEscalationThresholds: [
+      "route teams are repeatedly seeing residue callbacks or finish dulling",
+      "commercial concentrate handling requires formal labeling and SDS control",
+    ],
+  },
+  {
+    slug: "commercial-degreasing",
+    name: "Commercial Degreasing",
+    kind: "method",
+    summary:
+      "An alkaline soil-removal method for grease-heavy kitchens and traffic films where dwell, agitation, and residue removal are managed together.",
+    aliases: ["degreasing workflow", "alkaline grease removal"],
+    relatedArticleSlugs: ["how-to-clean-kitchen", "how-to-clean-greasy-kitchen-cabinets", "kitchen-cleaning-guide"],
+    relatedServiceSlugs: ["kitchen-cleaning", "deep-cleaning"],
+    chemistryClass: "alkaline",
+    mechanism: [
+      "emulsifies oily films so they can be wiped or rinsed away",
+      "uses dwell to reduce the mechanical force required for bonded grease",
+    ],
+    idealForSoilSlugs: ["kitchen-grease", "grout-soiling"],
+    compatibleSurfaceSlugs: ["stainless-steel", "laminate", "ceramic-tile", "porcelain-tile", "grout"],
+    incompatibleSurfaceSlugs: ["sealed-hardwood", "painted-drywall"],
+    recommendedToolSlugs: ["commercial-degreaser", "commercial-kitchen-maintenance-system", "low-pile-microfiber-towel", "high-pile-microfiber-towel", "non-scratch-scrub-pad", "trigger-sprayer", "dilution-bottle"],
+    dwellTimeGuidance: [
+      "allow grease to soften before wiping or pad agitation",
+      "shorten dwell on painted or coated finishes",
+    ],
+    moistureControlGuidance: [
+      "use spray-to-towel control near seams, electronics, and cabinet edges",
+      "remove slurry with clean towels or pads before it dries",
+    ],
+    residueConsiderations: [
+      "degreaser residue can leave tacky surfaces that collect dust and resoil quickly",
+    ],
+    safetyNotes: [
+      "Use ventilation, gloves, and surface testing for stronger alkaline mixes.",
+    ],
+    professionalEscalationThresholds: [
+      "grease layering is heavy across vertical, overhead, and floor surfaces",
+      "finish stability is uncertain or already dulling",
+    ],
+  },
+  {
+    slug: "peroxide-oxidizing-cleaning",
+    name: "Peroxide Oxidizing Cleaning",
+    kind: "method",
+    summary:
+      "An oxidizing method for organic discoloration, grout brightening, restroom residue, and some odor-prone soils on compatible surfaces.",
+    aliases: ["peroxide cleaning", "oxygen-based cleaning"],
+    relatedArticleSlugs: ["how-to-clean-grout", "how-to-clean-shower", "bathroom-cleaning-guide"],
+    relatedServiceSlugs: ["bathroom-cleaning", "deep-cleaning"],
+    chemistryClass: "oxidizing",
+    mechanism: [
+      "oxidizes organic staining and residue",
+      "supports visual brightening where residue is compatible with oxidizing chemistry",
+    ],
+    idealForSoilSlugs: ["mildew", "grout-soiling", "pet-stains"],
+    compatibleSurfaceSlugs: ["ceramic-tile", "porcelain-tile", "grout", "caulk"],
+    incompatibleSurfaceSlugs: ["sealed-hardwood", "painted-drywall"],
+    recommendedToolSlugs: ["peroxide-cleaner", "restroom-cleaner-system", "grout-brush", "detail-brush", "soft-bristle-brush", "dilution-bottle", "trigger-sprayer"],
+    dwellTimeGuidance: [
+      "oxidizers need enough dwell to react before agitation",
+      "do not let oxidizer dry uncontrolled on sensitive edges",
+    ],
+    moistureControlGuidance: [
+      "rinse, wipe, or extract residue after the reaction period",
+      "dry wet areas to reduce recurrence",
+    ],
+    residueConsiderations: [
+      "leftover oxidizer film can continue reacting or dry into visible haze",
+    ],
+    safetyNotes: [
+      "Do not mix oxidizers with acids, ammonia, or unknown restroom chemicals.",
+    ],
+    professionalEscalationThresholds: [
+      "dark spotting returns quickly after treatment",
+      "caulk, grout, or backing material may be contaminated below the surface",
+    ],
+  },
+  {
+    slug: "restroom-maintenance-workflow",
+    name: "Restroom Maintenance Workflow",
+    kind: "method",
+    summary:
+      "A sequenced workflow for restroom cleaning that separates mineral removal, organic residue control, touchpoint cleaning, and contamination isolation.",
+    aliases: ["restroom cleaning workflow", "bathroom maintenance cycle"],
+    relatedArticleSlugs: ["bathroom-cleaning-guide", "how-to-clean-shower", "how-to-clean-grout"],
+    relatedServiceSlugs: ["bathroom-cleaning", "deep-cleaning"],
+    chemistryClass: "mechanical",
+    mechanism: [
+      "separates incompatible soil classes and tool zones",
+      "reduces cross-contamination while preserving fixtures and finishes",
+    ],
+    idealForSoilSlugs: ["soap-scum", "hard-water-stains", "mildew", "grout-soiling"],
+    compatibleSurfaceSlugs: ["glass", "ceramic-tile", "porcelain-tile", "fiberglass", "chrome", "grout", "caulk"],
+    incompatibleSurfaceSlugs: ["sealed-hardwood", "carpet", "upholstery"],
+    recommendedToolSlugs: ["restroom-cleaner-system", "peroxide-cleaner", "glass-microfiber-towel", "grout-brush", "detail-brush", "trigger-sprayer", "dilution-bottle"],
+    dwellTimeGuidance: [
+      "apply task-specific chemistry early enough to dwell before agitation and final wiping",
+    ],
+    moistureControlGuidance: [
+      "keep wet chemistry off drywall, wood, textiles, and unprotected seams",
+      "finish with drying and ventilation to reduce recurrence",
+    ],
+    residueConsiderations: [
+      "restroom residue left in grout, caulk, and fixture bases drives odor and visual failure",
+    ],
+    safetyNotes: [
+      "Keep acid, oxidizer, and disinfectant products separated unless the label explicitly permits combined use.",
+    ],
+    professionalEscalationThresholds: [
+      "odor or biological growth returns quickly",
+      "grout or caulk condition suggests repair rather than cleaning",
+    ],
+  },
+  {
+    slug: "high-traffic-floor-maintenance",
+    name: "High-Traffic Floor Maintenance",
+    kind: "method",
+    summary:
+      "A recurring floor-care method that combines dry soil removal, low-residue damp cleaning, pad changes, and periodic agitation for traffic lanes.",
+    aliases: ["commercial floor maintenance", "traffic lane maintenance"],
+    relatedArticleSlugs: ["how-to-clean-tile", "how-to-clean-laminate-floors", "best-floor-cleaning-tools"],
+    relatedServiceSlugs: ["deep-cleaning"],
+    chemistryClass: "neutral",
+    mechanism: [
+      "removes abrasive dry soil before it becomes wet slurry",
+      "maintains floors with low-residue chemistry between deeper agitation cycles",
+    ],
+    idealForSoilSlugs: ["grout-soiling", "kitchen-grease", "pet-stains"],
+    compatibleSurfaceSlugs: ["ceramic-tile", "porcelain-tile", "grout", "laminate", "sealed-hardwood"],
+    incompatibleSurfaceSlugs: ["carpet", "upholstery"],
+    recommendedToolSlugs: ["high-traffic-floor-care-system", "hepa-vacuum", "flat-mop-system", "microfiber-floor-pad-system", "neutral-floor-cleaner", "string-mop", "stiff-bristle-brush"],
+    dwellTimeGuidance: [
+      "routine neutral cleaning uses short contact time; deeper traffic soil needs scheduled agitation dwell",
+    ],
+    moistureControlGuidance: [
+      "control moisture on wood and laminate while changing pads before soil redistribution",
+    ],
+    residueConsiderations: [
+      "residue accelerates resoiling and can create slip risk in commercial routes",
+    ],
+    safetyNotes: [
+      "Wet floors need dry-time planning and product dilution control.",
+    ],
+    professionalEscalationThresholds: [
+      "traffic lanes remain dark after proper maintenance",
+      "finish wear, grout deterioration, or slip complaints appear",
+    ],
   },
 ];

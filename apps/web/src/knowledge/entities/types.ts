@@ -42,7 +42,9 @@ export type ToolCategory =
   | "steam-machine"
   | "mop"
   | "bucket"
-  | "applicator";
+  | "applicator"
+  | "chemistry"
+  | "workflow-system";
 
 export type KnowledgeEntityBase = {
   slug: string;
@@ -112,6 +114,16 @@ export type ToolEntity = KnowledgeEntityBase & {
   usePrinciples: string[];
   careInstructions: string[];
   safetyNotes: string[];
+  operationalRole?: string[];
+  shouldNotUseFor?: string[];
+  contaminationRisks?: string[];
+  compatibilityNotes?: string[];
+  misusePatterns?: string[];
+  maintenanceAndLifespan?: string[];
+  workflowSequencing?: string[];
+  homeownerProfessionalUsage?: string[];
+  commercialContext?: string[];
+  visualCues?: string[];
 };
 
 export type KnowledgeEntity = SoilEntity | SurfaceEntity | MethodEntity | ToolEntity;
