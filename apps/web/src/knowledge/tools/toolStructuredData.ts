@@ -31,6 +31,13 @@ export function buildToolDetailStructuredData(
       name: data.tool.name,
       description: data.tool.summary,
       inDefinedTermSet: "Cleaning Tools Encyclopedia",
+      additionalProperty: [
+        { name: "Category", value: data.tool.category },
+        { name: "Operational role", value: data.tool.operationalRole ?? [] },
+        { name: "Surface compatibility", value: data.tool.compatibilityNotes ?? [] },
+        { name: "Misuse prevention", value: data.tool.misusePatterns ?? [] },
+        { name: "Commercial context", value: data.tool.commercialContext ?? [] },
+      ],
     },
   };
 }

@@ -28,6 +28,22 @@ function BulletList({ items }: { items: string[] }) {
   );
 }
 
+function OptionalBulletSection({
+  title,
+  items,
+}: {
+  title: string;
+  items?: string[];
+}) {
+  if (!items || items.length === 0) return null;
+
+  return (
+    <Section title={title}>
+      <BulletList items={items} />
+    </Section>
+  );
+}
+
 function EntityLinkList({
   title,
   items,
@@ -133,8 +149,18 @@ export function ToolPage({ data }: ToolPageProps) {
         <EntityLinkList title="Best for these cleaning problems" items={data.idealForSoils} hrefBase="/cleaning-problems" />
         <EntityLinkList title="Best for these surfaces" items={data.idealForSurfaces} hrefBase="/cleaning-surfaces" />
         <EntityLinkList title="Not recommended for these surfaces" items={data.notRecommendedForSurfaces} hrefBase="/cleaning-surfaces" />
+        <OptionalBulletSection title="Operational role" items={tool.operationalRole} />
         <Section title="Use principles"><BulletList items={tool.usePrinciples} /></Section>
+        <OptionalBulletSection title="Where this tool should not be used" items={tool.shouldNotUseFor} />
+        <OptionalBulletSection title="Surface compatibility and finish preservation" items={tool.compatibilityNotes} />
+        <OptionalBulletSection title="Contamination transfer risks" items={tool.contaminationRisks} />
+        <OptionalBulletSection title="Common misuse patterns" items={tool.misusePatterns} />
+        <OptionalBulletSection title="Workflow sequencing" items={tool.workflowSequencing} />
         <Section title="Care instructions"><BulletList items={tool.careInstructions} /></Section>
+        <OptionalBulletSection title="Maintenance and lifespan" items={tool.maintenanceAndLifespan} />
+        <OptionalBulletSection title="Homeowner and professional usage" items={tool.homeownerProfessionalUsage} />
+        <OptionalBulletSection title="Commercial context" items={tool.commercialContext} />
+        <OptionalBulletSection title="Visual operational cues" items={tool.visualCues} />
         <Section title="Safety notes"><BulletList items={tool.safetyNotes} /></Section>
         {authorityGroups.length > 0 ? (
           <section className="mt-12 space-y-6">
