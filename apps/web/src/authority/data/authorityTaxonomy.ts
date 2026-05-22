@@ -15,15 +15,28 @@ export type AuthorityMethodSlug = (typeof AUTHORITY_METHOD_SLUGS)[number];
 
 export const AUTHORITY_SURFACE_SLUGS = [
   "shower-glass",
+  "glass",
+  "mirrors",
   "tile",
   "grout",
   "stainless-steel",
   "quartz-countertops",
   "granite-countertops",
+  "natural-stone",
   "laminate",
   "finished-wood",
+  "hardwood",
   "vinyl-flooring",
   "painted-walls",
+  "painted-surfaces",
+  "baseboards",
+  "cabinets",
+  "countertops",
+  "sinks",
+  "fixtures",
+  "appliances",
+  "sealed-surfaces",
+  "unsealed-surfaces",
 ] as const;
 
 export type AuthoritySurfaceSlug = (typeof AUTHORITY_SURFACE_SLUGS)[number];

@@ -76,6 +76,15 @@ export type AuthoritySurfacePageData = {
   whatToKnowFirst: string;
   safeMethods: string;
   avoidMethods: string;
+  operationalSections: {
+    title: string;
+    points: string[];
+  }[];
+  visualRecognition: string[];
+  maintenanceRhythm: string[];
+  professionalContext: string[];
+  preservationNotes: string[];
+  visualCaption?: string;
   commonProblems: AuthorityProblemSummary[];
   recommendedTools: AuthorityToolSummary[];
   recommendedChemicals: AuthorityChemicalSummary[];
@@ -83,6 +92,7 @@ export type AuthoritySurfacePageData = {
   whenToEscalate: string;
   relatedSurfaces: AuthorityEntitySummary[];
   relatedMethods: AuthorityEntitySummary[];
+  relatedGuides: AuthorityEntitySummary[];
 };
 
 export type AuthorityProblemPageData = {

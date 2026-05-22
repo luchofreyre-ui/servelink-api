@@ -12,6 +12,8 @@ imageQueries:
   - cleaning glass surface microfiber close up
   - interior glass cleaning professional technique
   - glass table cleaning no streaks
+  - glass hard water spotting close up
+  - mirror glass haze microfiber detail
 relatedTopics:
   - M-GLS-001
   - P-HARD-001
@@ -40,6 +42,43 @@ Routine glass cleaning depends more on towel quality and low-residue finishing t
 ## Professional Insights
 
 Glass care is a visibility discipline. Minor residue that would be invisible on many materials becomes obvious on glass, which is why process control matters so much.
+
+## Why This Surface Behaves Differently
+
+Glass is non-porous but visually unforgiving. Fingerprints, lint, minerals, overspray, and towel residue show immediately because the surface reflects light and reveals edge-to-edge clarity.
+
+## Common Contamination Patterns
+
+- Fingerprints collect around handles, table edges, doors, and mirrors.
+- Cleaner overspray creates haze or wipe-direction streaking.
+- Hard water creates white spots, rings, and cloudy mineral film where droplets dry.
+
+## Safe vs Unsafe Chemistry
+
+Low-residue glass cleaning is the routine lane. Hard-water removal is only appropriate when mineral deposits are confirmed and nearby frames, stone, coatings, or metals can tolerate the chemistry.
+
+## Abrasion Sensitivity
+
+Abrasive grit trapped in towels can scratch glass. Metal blades, rough pads, and dry scraping carry higher risk on coated, tinted, etched, or decorative glass.
+
+## Maintenance Rhythm
+
+Clean touch zones before oils spread across the pane. Dry wet glass in hard-water areas. Treat mineral deposits early before they shift from removable buildup into etching risk.
+
+## Compatibility Graph
+
+- Related problems: streaking on glass, hard-water deposits, fingerprints and smudges, cloudy glass.
+- Related methods: glass cleaning, hard-water deposit removal, neutral surface cleaning near frames.
+- Related tools: clean microfiber, squeegee, detail cloth.
+- Related surfaces: shower glass, mirrors, fixtures.
+
+## Visual Recognition Cues
+
+Directional streaks usually mean towel or product residue. Round spots point to evaporation minerals. Cloudiness that does not shift after proper cleaning may be etching or coating damage.
+
+## Commercial and Professional Context
+
+Large panes, storefront-style interior glass, and high-glare spaces need stricter towel rotation and edge control. Professionals identify coatings before escalating to restoration pads or stronger descaling.
 
 ## When to Call a Professional
 
