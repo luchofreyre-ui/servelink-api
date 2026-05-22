@@ -116,6 +116,11 @@ function prob(
 }
 
 type ProblemDepthExpansion = Partial<Omit<AuthorityProblemPageData, "slug" | "title" | "category">>;
+type ProblemRecurrenceExpansion = ProblemDepthExpansion;
+
+function appendBlocks(...blocks: (string | undefined)[]): string {
+  return blocks.map((block) => block?.trim()).filter(Boolean).join("\n\n");
+}
 
 const AUTHORITY_PROBLEM_DEPTH_EXPANSIONS: Record<string, ProblemDepthExpansion> = {
   "soap-scum": {
@@ -847,6 +852,395 @@ function applyProblemDepthExpansion(
   base: AuthorityProblemPageData,
 ): AuthorityProblemPageData {
   const expansion = AUTHORITY_PROBLEM_DEPTH_EXPANSIONS[slug];
+  if (!expansion) return base;
+  return { ...base, ...expansion };
+}
+
+const AUTHORITY_PROBLEM_RECURRENCE_SYSTEMS_V2: Record<
+  string,
+  (base: AuthorityProblemPageData) => ProblemRecurrenceExpansion
+> = {
+  "soap-scum": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: light shower film can reappear within 2-4 uses, visible lower-glass scum usually returns inside 1-2 weeks when dry-down is skipped, and heavy ledge or grout buildup signals a maintenance cycle that is already behind the use rate.",
+      "False-clean pattern: the surface looks clearer while wet, then dries back to haze because softened soap-mineral film was not fully rinsed and removed.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Check humidity, exhaust use, shower frequency, bar soap, and whether the last clean left a slick rinse film. If all four are active, the problem will return even after a correct one-time clean.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs are faster return after each cleaning, film that clears only while wet, rough lower glass, whitening grout edges, or cleaner drag that gets worse after stronger products. Those indicate layered recurrence or delayed surface damage, not a need for more pressure.",
+    ),
+    whenToEscalate:
+      "Escalate when soap scum returns within a week despite correct rinse and dry-down, when glass stays cloudy after soap and mineral lanes, when stone or coated glass is involved, or when rental/hospitality bathrooms need a maintenance interval reset rather than another deep clean.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Calling every recurring bathroom film hard water and jumping to acids before checking soap, humidity, and rinse failure.",
+      "Trusting wet clarity as proof of removal instead of waiting for a full dry inspection.",
+    ],
+  }),
+  "hard-water-deposits": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: new spotting can show after a single drying cycle, visible mineral film often returns within days in hard-water showers, and crust or limescale means the surface has gone through many unbroken wet-dry cycles.",
+      "Environmental drivers include hard source water, hot fixtures, slow leaks, humid rooms, poor squeegee habits, and airflow that dries droplets in place instead of removing them.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Look for active drivers before cleaning: faucet weep, shower spray pattern, standing water at trim, white edges around drains, or spots rebuilding in the same geometry. If the pattern is active, removal is only temporary.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation warning signs include deposits returning within 24-72 hours, pitting on plated fixtures, grout whitening after acid, fixed cloudy glass after safe descaling, or stone dulling after vinegar/CLR-class misuse.",
+    ),
+    whenToEscalate:
+      "Escalate when mineral buildup returns inside a few days, when a leak or fixture drip is feeding the cycle, when acid-sensitive stone or unknown coatings are nearby, or when repeated acid use has started to dull, pit, or whiten the surface.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Cleaning the deposit but leaving the active drip, splash path, or drying pattern unchanged.",
+      "Using routine acid maintenance until delayed etching or plating damage appears.",
+    ],
+  }),
+  "grease-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: fresh aerosol tack can return after one cooking session, cabinet and hood film usually reappears over 1-3 weeks of regular cooking, and polymerized buildup means heat and time have converted oil into a harder film.",
+      "Maintenance failure usually comes from a dirty hood filter, poor ventilation capture, towels that are already saturated, or degreaser diluted so far that it loosens grease without carrying it away.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Check whether the kitchen has an active aerosol source: loaded hood filters, frequent frying, warm cabinet fronts, dust stuck to vertical surfaces, or yellow tack around handles. If so, plan source reduction and towel rotation before stronger chemistry.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "False-clean outcome: the area looks brighter for a few hours but feels tacky the next day because oil and surfactant were spread thin instead of removed. Delayed damage shows as softened paint, color transfer, swollen cabinet edges, or stainless discoloration after alkaline misuse.",
+    ),
+    whenToEscalate:
+      "Escalate when grease returns after one or two cooking cycles, when hood filters and cabinet tops are loaded, when rental turnover grease has polymerized, or when paint, laminate, stainless, or stone reacts during a small test.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Treating recurring kitchen film as a product-strength issue when ventilation and towel saturation are the real loop.",
+      "Skipping hood filters, cabinet tops, and high ledges where aerosol keeps feeding the visible surfaces below.",
+    ],
+  }),
+  "dust-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: dust returning in hours points to active airflow, construction fines, HVAC bypass, or tacky residue; dust returning in 1-3 days often points to textiles, pets, open windows, or vacuum order; weekly edge bands usually indicate normal load plus incomplete capture.",
+      "Environmental recurrence comes from return vents, leaky filter frames, dry static-prone air, shedding rugs, litter boxes, pet bedding, door mats, and cleaning order that sends particles airborne after surfaces were finished.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Read the reload pattern: vent-shaped streaks point to HVAC, fuzzy lint points to textiles, low bands point to floor traffic, and dust that sticks to a freshly cleaned surface points to residue or polish.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation warning signs include fine dust returning in hours, gray film near supply or return vents, dust that smears into mud, or occupants noticing gritty surfaces after filter changes. Those indicate source control, not more spray.",
+    ),
+    whenToEscalate:
+      "Escalate for post-construction dust, suspected HVAC bypass, recurring fine particulate near vents, heavy pet dander cycles, or any environment where HEPA capture, filtration review, or cleaning sequence design matters more than routine dusting.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Blaming the duster while ignoring filtration, vacuum timing, static, and tacky product residue.",
+      "Cleaning surfaces before vacuuming textiles and floors, then watching airborne dust resettle.",
+    ],
+  }),
+  "light-mildew": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: film returning within days means the surface is staying wet; return over 1-2 weeks usually means ventilation and dry-down are below the room's use rate; staining that remains after cleaning may be pigment left behind rather than active mildew.",
+      "Humidity, closed doors, weak exhaust fans, slow drains, failed caulk, wet bath mats, and soap film all create the recurring habitat.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Check whether the area dries fully between uses. A surface that stays damp for hours after cleaning is already set up to rebuild mildew even when the visible film is removed.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include return in the same corner, musty odor, spreading from caulk into grout, soft or cracked sealant, or darkening that survives surface cleaning. That is a moisture pattern, not a simple wipe failure.",
+    ),
+    whenToEscalate:
+      "Escalate when mildew returns within days, spreads beyond caulk or grout edges, appears with musty odor, involves porous material, or points to ventilation, leak, or hidden moisture rather than surface soil.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Using bleach brightness as proof that the recurrence source is gone.",
+      "Ignoring exhaust run time, closed doors, wet mats, and slow drains after the visible film is removed.",
+    ],
+  }),
+  "mold-growth": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: visible return within days means active moisture or contaminated porous material; return after rain, shower use, HVAC cycles, or plumbing use is a source-pattern clue; fixed staining without moisture may be historic damage rather than active growth.",
+      "HVAC contribution matters when growth or musty odor clusters near registers, returns, condensate paths, closets, or rooms with poor pressure balance.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Document moisture clues before disturbing the area: size, location, odor, softness, bubbling paint, condensation, leak timing, and whether the pattern follows air movement or plumbing.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation thresholds include growth that expands, returns after drying claims, involves porous material, appears near HVAC, exceeds small surface-limited areas, or is paired with persistent musty odor.",
+    ),
+    whenToEscalate:
+      "Escalate when recurrence is tied to leaks, HVAC, condensation, hidden cavities, porous materials, health-sensitive occupants, or any area where containment and source correction are unclear. Repeated cosmetic cleaning is the wrong loop.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Cleaning the visible surface repeatedly while the moisture source continues.",
+      "Calling old staining active mold without checking dryness, odor, spread, and material condition.",
+    ],
+  }),
+  "surface-haze": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: haze that returns as soon as the surface dries usually means residue or mineral film; haze that returns after several cleanings often means product stacking; haze that stays fixed through safe test lanes points to delayed finish damage.",
+      "Improper chemistry loops are common: adding more spray leaves more solids, acid on the wrong surface creates dullness, and polish hides film while building the next haze layer.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Judge haze only after full dry-down under angled light. Wet shine can hide residue, etch, and micro-scratching long enough to create a false-clean outcome.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include haze that sharpens under raking light, fixed dull patches after neutral reset, rainbow film after polish, or expanding dullness after acid/abrasive attempts.",
+    ),
+    whenToEscalate:
+      "Escalate when haze survives neutral reset and compatible mineral/product-film tests, when high-value stone or coated glass is involved, or when prior acid, bleach, abrasive, or polish misuse may have created delayed surface damage.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Treating wet clarity as success before the surface fully dries.",
+      "Switching chemistry families repeatedly without resetting residue first.",
+    ],
+  }),
+  "product-residue-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: tack or streaks that return immediately after dry-down mean product was left behind; footprints returning within hours often mean floor cleaner overuse; dust attraction over days means residue is acting like a soil binder.",
+      "Maintenance-cycle failure usually starts with over-concentrate, dirty water, loaded pads, disinfectant layered over soil, or fragrance/polish products used as shortcuts.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Ask what was used before adding anything new. Unknown sprays, floor concentrates, polish, disinfectant, and glass cleaner layered together should be treated as a residue reset, not a stronger-cleaner problem.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "False-clean outcome: the surface looks uniform while damp, then dries tacky, streaky, or dull. Delayed damage risk rises when residue encourages repeated aggressive cleaning on stone, wood, laminate, and coatings.",
+    ),
+    whenToEscalate:
+      "Escalate when residue affects large floor areas, when multiple unknown products were layered, when a finish may need stripping or restoration, or when residue cleanup starts changing sheen, color, or surface feel.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Adding another product to solve a residue film created by too much product.",
+      "Ignoring dilution, pad loading, and rinse water quality as recurrence drivers.",
+    ],
+  }),
+  "odor-retention": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: odor returning in hours usually means volatile compounds were masked; odor returning with humidity or heat means the source is absorbed or moisture-fed; odor returning after use points to drains, trash zones, pets, laundry, or restroom biofilm.",
+      "Environmental contributors include humidity, poor ventilation, porous materials, slow drains, pet repeat spots, warm bins, damp textiles, and HVAC movement carrying odor from a hidden source.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Map when the smell returns: after showers, after HVAC starts, after cooking, overnight, during humidity, or after pets revisit the area. Timing often identifies the source better than scent type.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include odor returning faster after fragrance use, odor tied to humidity, repeat pet interest, musty smell near walls or vents, or clean-looking surfaces that still smell when warmed.",
+    ),
+    whenToEscalate:
+      "Escalate when odor returns after source cleaning, involves pet contamination below the visible surface, follows HVAC or moisture patterns, persists in porous materials, or affects rental turnover or commercial restroom readiness.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Using scent strength as a substitute for source removal.",
+      "Ignoring timing, humidity, and HVAC cycles that reveal where the odor is held.",
+    ],
+  }),
+  "surface-discoloration": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: color that returns immediately after drying is often residue or moisture; color that slowly expands points to ongoing exposure; color that never changes during safe tests may be material aging, staining, or delayed chemical damage.",
+      "Environmental recurrence includes UV, heat, standing water, mats trapping moisture, pet accidents, dye transfer, metal contact, and cleaning chemistry that keeps reacting after the visible pass.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Compare exposed and protected areas before treating discoloration. Under-mat outlines, window-side yellowing, seam darkening, and edge swelling are recurrence clues, not just cosmetic marks.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation warning signs include expanding edges, bubbling, softness, odor, recurring darkening after dry-down, color transfer during cleaning, or yellowing that follows UV or heat exposure.",
+    ),
+    whenToEscalate:
+      "Escalate when discoloration expands, is moisture-linked, involves stone or warranty-sensitive finishes, follows pet or dye contamination, or resists safe cleaning while the material condition changes.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Bleaching color change before deciding whether it is soil, stain, moisture, UV, or chemical damage.",
+      "Missing delayed damage because the first cleaning pass looked temporarily brighter.",
+    ],
+  }),
+  "surface-dullness": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: dullness that returns right after drying is usually film; dullness that returns in traffic paths over days or weeks is maintenance-cycle mismatch; dullness that stays fixed is wear, etch, coating failure, or finish loss.",
+      "Delayed damage often appears after repeated acid, alkaline, abrasive, steam, or polish misuse. The surface may look clean but lose reflectivity because the finish, not the soil, has changed.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Use a small neutral reset and full dry inspection before adding shine. If wetting restores gloss temporarily, diagnose film versus finish loss before escalating.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include dullness locked to traffic lanes, expanding matte patches after scrubbing, shine that only appears while wet, or uneven gloss after polish.",
+    ),
+    whenToEscalate:
+      "Escalate when dullness remains after residue reset, follows acid/abrasive history, affects stone or wood, appears in commercial traffic lanes, or requires restoration rather than cleaning.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Adding polish to a dirty or damaged finish and building the next dull residue layer.",
+      "Mistaking wear patterns for removable soil until the finish is thinned further.",
+    ],
+  }),
+  "floor-residue-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: tacky feel after dry-down means residue was left in the same cleaning event; footprints returning within hours point to cleaner concentration or dirty water; dull traffic lanes over weeks point to soil load exceeding maintenance frequency.",
+      "Environmental recurrence includes entry grit, pet routes, kitchen aerosol settling, bathroom humidity, hard water in mop solution, and high-traffic lanes that need more frequent solution changes.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Check the maintenance cycle before blaming the floor: dilution, water changes, pad loading, vacuuming order, dry time, pet soil, entry mats, and whether the same bucket crosses clean and dirty zones.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include sticky socks, gray mop water after a recent clean, lanes that reprint under shoes, edge buildup, or dullness that survives a residue rinse.",
+    ),
+    whenToEscalate:
+      "Escalate when residue covers multiple rooms, traffic lanes remain dull after rinse reset, pet contamination may be below seams, or the floor may need finish-safe restoration instead of routine mopping.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Using more concentrate because the floor is dirty, then creating the sticky film that captures more soil.",
+      "Skipping dry soil removal and turning grit into abrasive slurry.",
+    ],
+  }),
+  "sticky-film": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: tack returning immediately means loosened residue was smeared; tack returning overnight often points to sugar, oil, or cleaner solids drying back; tack that attracts dust over days has become a contamination layer.",
+      "Heat, humidity, food residue, pet feeding zones, adhesive plasticizers, and product overuse all keep sticky film active.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Identify the binder before choosing chemistry. Sugar softens with water, grease emulsifies with surfactant, adhesive gums with heat or solvent, and cleaner residue often improves with rinse discipline.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include tack spreading wider after wiping, dust sticking within hours, residue strings or gums under the cloth, and finish swelling or dulling during warm-water or solvent attempts.",
+    ),
+    whenToEscalate:
+      "Escalate when tack covers floors or cabinets broadly, behaves like adhesive on sensitive finishes, returns after correct rinse, or appears with pet contamination, swelling, color transfer, or coating softening.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Treating every sticky film as grease and missing sugar, adhesive, soap, or cleaner residue.",
+      "Stopping after the film softens instead of completing pickup, rinse, and dry inspection.",
+    ],
+  }),
+  "bathroom-buildup": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: odor or slickness in days points to biofilm and moisture; visible soap/mineral film in 1-2 weeks points to shower frequency and dry-down; heavy scale or dark grout means the maintenance interval is longer than the buildup cycle.",
+      "Humidity, weak exhaust, hard water, bar soap, standing water, closed doors, wet textiles, and short turnover cleans all stack into the same recurring system.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Separate the active layer before deep cleaning: soap drag, chalky mineral, slick biofilm, musty odor, or fixed discoloration. Each layer returns on a different timeline and needs a different prevention lever.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include same-path return, corners that stay wet, grout darkening after rinse, glass that clears only wet, or odor returning when humidity rises.",
+    ),
+    whenToEscalate:
+      "Escalate when bathrooms re-load faster than the maintenance schedule, when ventilation or leaks are involved, when stone/coated glass limits chemistry, or when commercial/restroom turnover standards require a repeatable recurrence-control plan.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Using one bathroom cleaner for soap, minerals, biofilm, odor, and finish damage without diagnosing the layer.",
+      "Ignoring the dry-down and exhaust cycle after a visually successful clean.",
+    ],
+  }),
+  "kitchen-grease-film": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: fresh tack can return after one frying session, visible haze can return inside a week of daily cooking, and sticky cabinet rails mean aerosol has been accumulating longer than the cleaning cycle.",
+      "Ventilation, hood filter condition, cooking frequency, cabinet temperature, and towel saturation decide whether the film is removed or spread thin.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Inspect hood filters, cabinet tops, microwave fronts, and backsplash grout before cleaning the obvious panels. If those reservoirs remain loaded, visible surfaces will re-contaminate quickly.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "False-clean outcome: vertical fronts look even immediately after wiping, then fingerprints and dust reappear fast because a thin oil layer remains.",
+    ),
+    whenToEscalate:
+      "Escalate when kitchen film returns after one or two cooking events, when hood or high ledge reservoirs are loaded, when cabinet finishes react, or when rental/commercial kitchens need source reduction and interval planning.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Cleaning appliance fronts while leaving hood filters and cabinet-top grease as active reservoirs.",
+      "Using polish to hide aerosol film instead of removing the lipid layer first.",
+    ],
+  }),
+  "mineral-film": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: faint film can return after one wet-dry cycle, visible haze often returns after several showers, and scale begins when early film is allowed to bond through repeated drying.",
+      "Humidity, heat, airflow, hard source water, and standing droplets control whether mineral film dries as light haze or progresses into limescale.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Look for same-shape return: drip trails, spray arcs, faucet rings, and lower-glass haze. Same-shape recurrence means the water path is still active.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Warning signs include haze returning immediately after dry-down, gritty drag after glass cleaner, acid dulling nearby materials, or fixed cloudiness after compatible mineral removal.",
+    ),
+    whenToEscalate:
+      "Escalate when mineral film keeps returning in the same path, when stone or sealed surfaces are nearby, when glass may already be etched, or when plumbing leaks or hard-water intensity make routine cleaning ineffective.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Treating early mineral recurrence as ordinary streaking.",
+      "Using acid often enough that delayed finish damage becomes the bigger problem.",
+    ],
+  }),
+  "cloudy-glass": (base) => ({
+    whyItHappens: appendBlocks(
+      base.whyItHappens,
+      "Recurrence timeline: cloudiness that returns at dry-down points to film; cloudiness that rebuilds over days points to soap/mineral recurrence; cloudiness that never changes after safe lanes is likely etch, coating failure, or permanent wear.",
+      "Humidity, hard water, soap choice, squeegee habits, and prior acid or abrasive history all determine whether cloudy glass is a removable cycle or delayed surface damage.",
+    ),
+    beforeYouClean: appendBlocks(
+      base.beforeYouClean,
+      "Run small test lanes and wait for full dry-down. Wet glass often hides etch, coating failure, and residual film long enough to mislead the diagnosis.",
+    ),
+    whenItFails: appendBlocks(
+      base.whenItFails,
+      "Escalation warning signs include uniform milkiness, clarity that only exists while wet, rough mineral texture with fixed haze underneath, or worsening after abrasive/acid attempts.",
+    ),
+    whenToEscalate:
+      "Escalate for coated shower glass, fixed cloudy fields, repeated acid history, rental turnover glass with unknown products, or any glass where replacement/restoration may be more realistic than cleaning.",
+    commonMistakes: [
+      ...base.commonMistakes,
+      "Calling cloudy glass clean because it looked clear during the rinse.",
+      "Repeating acids or abrasives after the removable film has already been ruled out.",
+    ],
+  }),
+};
+
+function applyProblemRecurrenceSystemsV2(
+  slug: string,
+  base: AuthorityProblemPageData,
+): AuthorityProblemPageData {
+  const expansion = AUTHORITY_PROBLEM_RECURRENCE_SYSTEMS_V2[slug]?.(base);
   if (!expansion) return base;
   return { ...base, ...expansion };
 }
@@ -2124,13 +2518,19 @@ const PROBLEMS: Record<string, AuthorityProblemPageData> = {
 export function getProblemPageBySlug(slug: string): AuthorityProblemPageData | undefined {
   const base = PROBLEMS[slug];
   if (!base) return undefined;
-  return applyProblemDepthExpansion(slug, applyCoreProblemTone(slug, base));
+  return applyProblemRecurrenceSystemsV2(
+    slug,
+    applyProblemDepthExpansion(slug, applyCoreProblemTone(slug, base)),
+  );
 }
 
 export function getAllProblemPages(): AuthorityProblemPageData[] {
   return AUTHORITY_PROBLEM_SLUGS.map((s) => {
     const base = PROBLEMS[s];
-    return applyProblemDepthExpansion(s, applyCoreProblemTone(s, base));
+    return applyProblemRecurrenceSystemsV2(
+      s,
+      applyProblemDepthExpansion(s, applyCoreProblemTone(s, base)),
+    );
   });
 }
 
