@@ -84,6 +84,7 @@ export type AuthoritySurfacePageData = {
   maintenanceRhythm: string[];
   professionalContext: string[];
   preservationNotes: string[];
+  compatibilityNotes: string[];
   visualCaption?: string;
   commonProblems: AuthorityProblemSummary[];
   recommendedTools: AuthorityToolSummary[];
