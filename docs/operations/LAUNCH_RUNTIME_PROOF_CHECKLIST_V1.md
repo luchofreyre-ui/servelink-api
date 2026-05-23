@@ -21,6 +21,7 @@ This is documentation only. It does not deploy, enable cron, mutate env, or clai
 
 - [ ] Capture expected source SHA from `origin/main`.
 - [ ] Confirm no dirty-tree API upload risk before any Railway CLI action.
+- [ ] Confirm API runtime metadata source: GitHub-connected Railway deploys use `RAILWAY_GIT_COMMIT_SHA`; CLI/manual deploys inject `GIT_COMMIT_SHA` or `COMMIT_SHA` equal to `origin/main` into the API runtime environment.
 - [ ] Capture Railway API deployment ID, timestamp, actor, and target environment.
 - [ ] Capture Vercel/web deployment URL, timestamp, actor, and target environment.
 - [ ] Capture **API version proof** from `GET https://<prod-api>/api/v1/system/version`.
@@ -29,7 +30,8 @@ This is documentation only. It does not deploy, enable cron, mutate env, or clai
 - [ ] Confirm `NEXT_PUBLIC_*` build-time toggles match the intended web artifact when customer UX depends on them.
 
 Do not infer deploy truth from merge truth.
-Do not infer commit parity from healthy routes alone. `version.gitSha` must match the expected `origin/main` SHA for the relevant API/web artifact. If either endpoint returns `unknown`, record the gap and treat commit parity as unproven until build metadata is wired for that environment.
+Do not infer commit parity from healthy routes alone. `version.gitSha` must match the expected `origin/main` SHA for the relevant API/web artifact. If the API endpoint returns `unknown`, STOP: API runtime parity is not proven. `version.buildTime` is recommended evidence context, but it does not replace SHA parity.
+Railway dashboard commit evidence may be attached as secondary evidence. It is not a replacement for API runtime metadata unless the proof artifact explicitly records an exception, the Railway deployment ID, deployed commit SHA, timestamp, actor, environment, and follow-up.
 
 ---
 
@@ -37,7 +39,7 @@ Do not infer commit parity from healthy routes alone. `version.gitSha` must matc
 
 - [ ] API health probe returns expected success shape.
 - [ ] API readiness probe returns expected success shape.
-- [ ] API version endpoint returns only non-secret metadata: `service`, `version.gitSha`, `version.shortGitSha`, `version.buildTime`, and `version.source`.
+- [ ] API version endpoint returns only non-secret metadata: `service`, non-`unknown` `version.gitSha`, `version.shortGitSha`, `version.buildTime`, and `version.source`.
 - [ ] Web version endpoint returns only non-secret metadata: `service`, `version.gitSha`, `version.shortGitSha`, `version.buildTime`, and `version.source`.
 - [ ] Railway boot logs show migration/boot markers appropriate to the release.
 - [ ] Authenticated admin/customer/FO routes return auth-appropriate statuses, not unexpected 404s.
@@ -118,7 +120,7 @@ Minimum launch runtime proof bundle:
 
 1. Source SHA and PR/merge reference.
 2. API deploy ID and web deploy URL.
-3. API and web version response excerpts, compared against the source SHA.
+3. API and web version response excerpts, compared against the source SHA; API `version.gitSha: "unknown"` fails the bundle unless an explicit dashboard-evidence exception is recorded.
 4. Health/readiness response excerpts.
 5. Auth route parity excerpt.
 6. Manual subsystem proof excerpts.
