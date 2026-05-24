@@ -62,6 +62,10 @@ function base(slug: string, title: string): AuthoritySurfacePageData {
       "Test hidden areas before stronger chemistry or pressure.",
       "Stop when a mark behaves like finish damage rather than removable contamination.",
     ],
+    compatibilityNotes: [
+      "Match chemistry to the material, finish, and contamination rather than the room label.",
+      "Treat unknown coatings, sealers, and matte finishes as caution surfaces until tested.",
+    ],
     visualCaption: `${title} should be read by finish, soil pattern, moisture exposure, and wear before choosing chemistry.`,
     commonProblems: [],
     recommendedTools: [{ name: "Microfiber", note: "Lint-free passes." }],
@@ -112,6 +116,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Mineral deposits left too long can move from removable buildup into etching risk.",
         ],
       },
+      {
+        title: "Coated vs untreated glass",
+        points: [
+          "Untreated clear glass usually tolerates more rinse-and-squeegee maintenance, but it still scratches when grit or metal tools are involved.",
+          "Coated glass should be treated as a specialty finish: avoid restoration pads, aggressive acids, and repeated friction unless the coating guidance allows it.",
+        ],
+      },
     ],
     visualRecognition: [
       "Directional streaks usually point to towel or product residue.",
@@ -130,6 +141,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Keep abrasive bathroom or kitchen pads away from clear glass unless they are confirmed glass-safe.",
       "Protect adjacent stone, metal, painted trim, and sealants when using mineral-removal chemistry.",
+      "Stop escalation when haze remains fixed after proper residue and mineral removal; the remaining issue may be coating failure or etching.",
+    ],
+    compatibilityNotes: [
+      "Low-residue glass cleaning is compatible with most untreated glass but still depends on clean towel control.",
+      "Hard-water chemistry is compatible only after confirming mineral deposits and protecting coatings, metal trim, stone, and painted frames.",
+      "Abrasive restoration belongs outside routine maintenance for coated, tinted, etched, antique, or unknown glass.",
     ],
     commonProblems: [
       rp("streaking-on-glass", "Streaking on glass", "Residue trails, towel drag, or poor drying technique."),
@@ -202,6 +219,20 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Textured tile needs better rinse and extraction so loosened soil does not settle back into low spots.",
         ],
       },
+      {
+        title: "Porcelain vs ceramic behavior",
+        points: [
+          "Porcelain is typically denser and less absorbent, so soil often sits on the surface or in texture rather than entering the body.",
+          "Ceramic tile can be more dependent on glaze condition; chips, crazing, and worn glaze make chemistry and moisture decisions more conservative.",
+        ],
+      },
+      {
+        title: "Matte vs gloss finishes",
+        points: [
+          "Gloss tile broadcasts water spots and cleaner residue but often releases soil with less friction.",
+          "Matte or textured tile hides streaks while holding fine soil, so rinse quality and soil recovery matter more than stronger scrubbing.",
+        ],
+      },
     ],
     commonProblems: [
       rp("general-soil", "General soil", "Routine dust, traffic, and mixed residue."),
@@ -241,6 +272,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Test matte, decorative, handmade, or stone-look finishes before stronger chemistry.",
       "Protect grout, caulk, and metal trim when using acids or oxidizers.",
+      "Treat cracked glaze, crazing, or unglazed edges as absorption paths rather than durable tile face.",
+    ],
+    compatibilityNotes: [
+      "Porcelain usually accepts neutral maintenance, controlled degreasing, and bathroom mineral correction better than softer or more porous ceramic contexts.",
+      "Ceramic compatibility depends on glaze health; worn, crazed, handmade, or decorative tile should stay in neutral and low-abrasion lanes.",
+      "Gloss tile compatibility is limited by visible residue; matte tile compatibility is limited by texture loading and abrasion risk.",
     ],
     relatedMethods: [
       esMethod("neutral-surface-cleaning", "Neutral surface cleaning"),
@@ -250,6 +287,8 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     ],
     relatedSurfaces: [
       esSurface("grout", "Grout", "The joint material that changes tile cleaning risk."),
+      esSurface("porcelain-tile", "Porcelain tile", "Dense tile behavior with finish-specific residue risk."),
+      esSurface("ceramic-tile", "Ceramic tile", "Glaze-dependent tile behavior."),
       esSurface("vinyl-flooring", "Vinyl flooring", "Another floor surface where residue control matters."),
       esSurface("natural-stone", "Natural stone", "A surface that cannot inherit tile chemistry assumptions."),
     ],
@@ -257,6 +296,189 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
       guide("best-cleaners-for-bathrooms", "Best cleaners for bathrooms"),
       guide("best-cleaners-for-floors", "Best cleaners for floors"),
       guide("chemical-usage-and-safety", "Chemical usage and safety"),
+    ],
+  },
+  "porcelain-tile": {
+    ...base("porcelain-tile", "Porcelain tile"),
+    summary:
+      "Porcelain tile guidance for dense tile behavior, matte and polished finishes, residue recovery, mineral compatibility, and abrasion limits.",
+    whatToKnowFirst:
+      "Porcelain is typically denser than ceramic tile, so most routine soil sits on the finish or in surface texture rather than absorbing into the body.",
+    safeMethods:
+      "Use neutral maintenance, controlled degreasing for kitchen film, and bathroom mineral or soap-scum correction when grout and adjacent materials are protected.",
+    avoidMethods:
+      "Avoid assuming density makes porcelain scratch-proof. Polished, matte, textured, rectified, or stone-look finishes still need finish-specific testing.",
+    operationalSections: [
+      {
+        title: "Porcelain vs ceramic behavior",
+        points: [
+          "Porcelain usually has lower absorption and stronger body density, making residue recovery and rinse discipline more important than deep soaking.",
+          "Ceramic tile depends more heavily on glaze condition; porcelain still depends on finish texture and edge conditions.",
+        ],
+      },
+      {
+        title: "Matte vs gloss finishes",
+        points: [
+          "Polished porcelain shows water spots, haze, and micro-scratches under side light.",
+          "Matte porcelain hides streaking but holds fine soil in texture and can look dull when residue is left behind.",
+        ],
+      },
+      {
+        title: "Abrasion escalation",
+        points: [
+          "Use stronger pads only after dwell has softened the soil and a test area confirms the finish does not haze.",
+          "Textured porcelain may need better extraction rather than more aggressive scrubbing.",
+        ],
+      },
+    ],
+    commonProblems: [
+      rp("surface-haze", "Surface haze", "Residue or mineral film on dense finishes."),
+      rp("water-spotting", "Water spotting", "Evaporation marks on polished faces."),
+      rp("greasy-grime", "Greasy grime", "Kitchen and floor traffic film."),
+      rp("floor-residue-buildup", "Floor residue buildup", "Mop-product film in traffic lanes."),
+    ],
+    recommendedTools: [
+      { name: "Microfiber mop or towel", note: "Primary residue pickup and dry finishing." },
+      { name: "Non-scratch pad", note: "Test first on polished or matte finishes." },
+      { name: "Grout brush", note: "Use only for adjacent joints." },
+    ],
+    recommendedChemicals: [
+      { name: "Neutral tile cleaner", note: "Daily and weekly maintenance lane." },
+      { name: "Label-compatible degreaser", note: "Kitchen film with full rinse or wipe recovery." },
+      { name: "Mineral remover", note: "Wet-zone deposits with grout and trim protection." },
+    ],
+    commonMistakes: [
+      "Treating polished porcelain as scratch-proof because the tile is dense.",
+      "Leaving cleaner residue in matte texture and calling it finish dullness.",
+      "Using grout chemistry across the tile face without checking finish impact.",
+    ],
+    visualRecognition: [
+      "Polished haze usually points to residue, mineral film, or micro-abrasion.",
+      "Matte patchiness often means soil or cleaner trapped in texture.",
+      "Dark joints beside clean porcelain indicate grout-line work, not tile failure.",
+    ],
+    maintenanceRhythm: [
+      "Dry-remove grit before mopping.",
+      "Use neutral cleaning frequently enough that residue does not require aggressive pads.",
+      "Periodically reset matte or textured porcelain with thorough rinse and recovery.",
+    ],
+    professionalContext: [
+      "Commercial porcelain floors need pad and chemistry selection by finish, not only by tile density.",
+      "Professionals separate tile-face residue recovery from grout restoration.",
+    ],
+    preservationNotes: [
+      "Do not use metal tools or abrasive powders on polished porcelain.",
+      "Stop if a test area becomes hazier or shinier than the surrounding finish.",
+    ],
+    compatibilityNotes: [
+      "Neutral cleaning is broadly compatible with porcelain when residue is recovered.",
+      "Degreasing and mineral removal are compatible by soil type, but grout, trim, and finish must be protected.",
+      "High-abrasion pads are caution tools on polished porcelain and textured finishes with unknown wear layers.",
+    ],
+    relatedSurfaces: [
+      esSurface("ceramic-tile", "Ceramic tile", "Glaze-dependent tile behavior."),
+      esSurface("grout", "Grout", "Adjacent joint compatibility."),
+      esSurface("tile", "Tile", "Broader tile system guidance."),
+    ],
+    relatedMethods: [
+      esMethod("neutral-surface-cleaning", "Neutral surface cleaning"),
+      esMethod("degreasing", "Degreasing"),
+      esMethod("hard-water-deposit-removal", "Hard water deposit removal"),
+    ],
+    relatedGuides: [
+      guide("best-cleaners-for-floors", "Best cleaners for floors"),
+      guide("chemical-usage-and-safety", "Chemical usage and safety"),
+    ],
+  },
+  "ceramic-tile": {
+    ...base("ceramic-tile", "Ceramic tile"),
+    summary:
+      "Ceramic tile guidance for glaze health, ceramic body absorption, matte and gloss finishes, grout interaction, and chemistry limits.",
+    whatToKnowFirst:
+      "Ceramic tile cleaning depends heavily on the glaze. A healthy glazed face behaves very differently from crazed, chipped, handmade, or unglazed ceramic.",
+    safeMethods:
+      "Use neutral maintenance, controlled soap-scum or grease cleaning by room, and low-abrasion tools matched to glaze condition.",
+    avoidMethods:
+      "Avoid aggressive acids, abrasive pads, and soaking when glaze damage, crazing, unglazed edges, or handmade tile is present.",
+    operationalSections: [
+      {
+        title: "Ceramic vs porcelain behavior",
+        points: [
+          "Ceramic tile often relies more on its glaze for cleanability, while porcelain is usually denser through the body.",
+          "Once glaze is compromised, ceramic can absorb stains and react more like a porous finish zone.",
+        ],
+      },
+      {
+        title: "Matte vs gloss finishes",
+        points: [
+          "Gloss ceramic shows streaks and mineral film quickly but may release routine soil with lower friction.",
+          "Matte ceramic can hold soil and cleaner residue while also burnishing if scrubbed aggressively.",
+        ],
+      },
+      {
+        title: "Long-term maintenance cycles",
+        points: [
+          "Healthy glazed ceramic can stay in neutral maintenance with soil-specific correction.",
+          "Older ceramic with crazing, chips, or worn glaze needs shorter dwell, softer tools, and faster drying.",
+        ],
+      },
+    ],
+    commonProblems: [
+      rp("soap-scum", "Soap scum", "Bath film on glazed faces and joints."),
+      rp("surface-haze", "Surface haze", "Cleaner or mineral residue on glaze."),
+      rp("greasy-grime", "Greasy grime", "Backsplash and kitchen film."),
+      rp("surface-discoloration", "Surface discoloration", "Possible absorption where glaze is compromised."),
+    ],
+    recommendedTools: [
+      { name: "Microfiber towel", note: "Residue removal and dry finishing." },
+      { name: "Non-scratch pad", note: "Only after glaze-safe testing." },
+      { name: "Detail brush", note: "Edges, corners, and adjacent joints." },
+    ],
+    recommendedChemicals: [
+      { name: "Neutral tile cleaner", note: "Default maintenance." },
+      { name: "Soil-specific bathroom or kitchen cleaner", note: "Use with glaze and grout caution." },
+    ],
+    commonMistakes: [
+      "Assuming ceramic and porcelain have the same absorption and abrasion tolerance.",
+      "Scrubbing old glaze until the finish changes.",
+      "Letting acidic bathroom cleaner dwell over crazed or handmade tile.",
+    ],
+    visualRecognition: [
+      "Crazing lines, chips, or unglazed edges signal absorption risk.",
+      "Gloss streaks often mean residue or minerals.",
+      "Matte unevenness can be trapped soil, burnishing, or worn glaze.",
+    ],
+    maintenanceRhythm: [
+      "Use frequent neutral cleaning on healthy glaze.",
+      "Shorten dwell and dry faster on older or decorative ceramic.",
+      "Treat grout and tile face as separate maintenance zones.",
+    ],
+    professionalContext: [
+      "Historic, handmade, decorative, and commercial ceramic should be tested before chemistry or pad escalation.",
+      "Professionals stop when a glaze problem, not soil, is controlling the result.",
+    ],
+    preservationNotes: [
+      "Protect cracked glaze and unglazed edges from soaking and acid dwell.",
+      "Stop when the test area changes sheen or absorbs water unevenly.",
+    ],
+    compatibilityNotes: [
+      "Neutral cleaning is compatible with most glazed ceramic.",
+      "Acid and alkaline correction are caution lanes when glaze is worn, crazed, handmade, or paired with sensitive grout.",
+      "Abrasive escalation is avoid on decorative ceramic until a hidden test proves the finish is stable.",
+    ],
+    relatedSurfaces: [
+      esSurface("porcelain-tile", "Porcelain tile", "Denser tile behavior."),
+      esSurface("grout", "Grout", "Joint sensitivity around tile."),
+      esSurface("tile", "Tile", "Broader tile system guidance."),
+    ],
+    relatedMethods: [
+      esMethod("neutral-surface-cleaning", "Neutral surface cleaning"),
+      esMethod("soap-scum-removal", "Soap scum removal"),
+      esMethod("degreasing", "Degreasing"),
+    ],
+    relatedGuides: [
+      guide("best-cleaners-for-bathrooms", "Best cleaners for bathrooms"),
+      guide("when-cleaning-damages-surfaces", "When cleaning damages surfaces"),
     ],
   },
   "shower-glass": {
@@ -290,6 +512,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
         points: [
           "Light daily squeegee habits prevent mineral layering better than occasional aggressive correction.",
           "Hard-water homes need shorter maintenance cycles because deposits bond between cleanings.",
+        ],
+      },
+      {
+        title: "Coated glass decision points",
+        points: [
+          "Factory-applied easy-clean coatings can be damaged by abrasive pads and repeated acid correction.",
+          "If water beads unevenly or only some panels stay cloudy, read the issue as coating performance before escalating chemistry.",
         ],
       },
     ],
@@ -331,6 +560,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Protect stone, grout, silicone, and metal trim during acid-class cleaning.",
       "Do not escalate to abrasive restoration without confirming the glass and coating type.",
+      "Stop if the door coating turns patchy, sticky, or uneven after a test pass.",
+    ],
+    compatibilityNotes: [
+      "Glass cleaner is compatible with light film; soap-scum removal is compatible when bath film is confirmed and surrounding materials are protected.",
+      "Hard-water deposit removal is compatible with untreated glass more often than coated glass; coated panels require manufacturer guidance.",
+      "Abrasive pads and restoration compounds are escalation tools, not maintenance tools, on shower glass.",
     ],
     relatedMethods: [
       esMethod("glass-cleaning", "Glass cleaning"),
@@ -380,6 +615,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Unsealed grout needs tighter moisture control and may need professional sealing after soil removal.",
         ],
       },
+      {
+        title: "Abrasion escalation",
+        points: [
+          "Brush stiffness should increase only after chemistry has loosened soil and the grout remains structurally sound.",
+          "Machine agitation is a professional escalation for larger sound grout fields, not a fix for powdering, missing, or cracked joints.",
+        ],
+      },
     ],
     commonProblems: [
       rp("general-soil", "General soil", "Embedded traffic and mixed residue in joints."),
@@ -413,6 +655,7 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
       "Dry wet grout lines and improve ventilation after showers.",
       "Use targeted brushing before discoloration becomes widespread.",
       "Reassess sealing cycles after deep cleaning, especially in showers and traffic floors.",
+      "Treat unsealed shower grout as a shorter-cycle surface: lighter, more frequent cleaning beats late aggressive correction.",
     ],
     professionalContext: [
       "High-traffic floors often need machine-assisted agitation and soil recovery rather than more chemical strength.",
@@ -421,6 +664,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Repeated acid exposure can weaken cementitious grout and compromise surrounding materials.",
       "Stop if grout powders, cracks, lifts, or releases sand during brushing.",
+      "Do not seal over damp, soiled, or chemically active grout; trapped contamination shortens the next maintenance cycle.",
+    ],
+    compatibilityNotes: [
+      "Sealed grout is compatible with neutral maintenance and controlled alkaline cleaning but still needs rinse and dry discipline.",
+      "Unsealed grout is a caution surface for pigments, acids, oils, and long dwell because absorption can outpace removal.",
+      "Acid mineral removal is compatible only for confirmed calcium or scale and should not be used as the default answer to dark grout.",
     ],
     whenToEscalate:
       "Escalate when grout remains dark after controlled cleaning, when joints are deteriorating, when sealing is due, or when mineral removal would require acid near sensitive surfaces.",
@@ -473,6 +722,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Food-contact and high-touch zones need residue awareness, not only shine.",
         ],
       },
+      {
+        title: "Brushed vs polished stainless",
+        points: [
+          "Brushed stainless hides some fingerprints but makes cross-grain abrasion and dirty towel trails easier to see.",
+          "Polished stainless shows fingerprints, water spots, and polish residue faster, so low-residue finishing matters more than product strength.",
+        ],
+      },
     ],
     commonProblems: [
       rp("fingerprints-and-smudges", "Fingerprints and smudges", "High-touch oil transfer."),
@@ -500,6 +756,7 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
       "Directional wipe marks usually mean residue or wrong towel technique.",
       "Fine linear damage that catches light is likely abrasion.",
       "Rainbow or brown heat tint near cooking areas may not be removable soil.",
+      "Cross-grain scratch patterns on brushed stainless are damage cues, not remaining grease.",
     ],
     maintenanceRhythm: [
       "Wipe handles and fronts frequently before oils polymerize.",
@@ -513,6 +770,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Keep chlorine and strong acid residues off stainless unless labels explicitly allow the use case.",
       "Do not use steel wool; embedded metal particles and scratches can create corrosion-looking defects.",
+      "Use polish sparingly on polished finishes and avoid loading brushed grain with oily residue.",
+    ],
+    compatibilityNotes: [
+      "Degreasing is compatible with stainless when it is followed by full residue removal and dry finishing.",
+      "Brushed stainless is compatible with with-grain microfiber maintenance; across-grain abrasion should be treated as avoid.",
+      "Polished stainless is compatible with low-residue neutral cleaning but less forgiving of over-applied oils, waxes, or polish.",
     ],
     relatedSurfaces: [
       esSurface("appliances", "Appliances", "High-touch panels and control areas."),
@@ -563,6 +826,14 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Pigmented spills and strong cleaners can create discoloration when allowed to dwell.",
         ],
       },
+      {
+        title: "Quartz vs granite vs marble",
+        points: [
+          "Quartz is resin-bound engineered stone; heat and solvent risk matter more than natural-stone acid etching myths.",
+          "Granite is natural stone plus sealer; absorption and sealer wear drive more decisions than quartz-style resin sensitivity.",
+          "Marble is more acid-reactive and should not inherit quartz or granite cleaner assumptions.",
+        ],
+      },
     ],
     commonProblems: [
       rp("countertop-residue", "Countertop residue", "Daily film from food, cleaner, and dish-soap residue."),
@@ -595,6 +866,7 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
       "Wipe food and pigment spills promptly.",
       "Use neutral daily maintenance and periodic residue resets in cooking zones.",
       "Dry sink edges to prevent water-spot loops.",
+      "Review heat and disinfectant habits seasonally in heavy-use kitchens before appearance changes become permanent.",
     ],
     professionalContext: [
       "Commercial breakrooms and kitchen islands need more frequent residue resets due to constant hand and food contact.",
@@ -603,6 +875,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Use trivets and heat pads; cleaning cannot reliably fix resin heat damage.",
       "Avoid abrasive powders and aggressive solvents that can change sheen.",
+      "Do not use marble or granite restoration assumptions on quartz; warranty-sensitive resin damage is a different lane.",
+    ],
+    compatibilityNotes: [
+      "Neutral countertop cleaning is compatible with quartz as the daily lane.",
+      "Mild degreasing is compatible for kitchen film when labels allow engineered stone and dwell stays short.",
+      "High heat, strong solvents, abrasive powders, and long alkaline or acid dwell are avoid lanes because they can affect resin, color, or sheen.",
     ],
     relatedSurfaces: [
       esSurface("countertops", "Countertops", "Broader countertop maintenance context."),
@@ -653,6 +931,14 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Acid mistakes can show as dullness or etching-like changes, especially around citrus, vinegar, and bathroom products.",
         ],
       },
+      {
+        title: "Granite vs quartz vs marble",
+        points: [
+          "Granite usually tolerates kitchen use through a sealer system; compatibility depends on sealer health, not only the stone name.",
+          "Quartz does not need sealing but carries resin and heat sensitivity that granite does not share.",
+          "Marble and limestone are more acid-reactive, so do not transfer granite habits to softer carbonate stone.",
+        ],
+      },
     ],
     commonProblems: [
       rp("countertop-residue", "Countertop residue", "Daily cleaner and food film."),
@@ -682,6 +968,7 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
       "Wipe spills promptly and dry wet zones.",
       "Use neutral stone maintenance routinely rather than strong occasional correction.",
       "Reassess sealer performance when water darkens the stone or stains linger.",
+      "Plan periodic sealer checks in sink, cooking, coffee, and bath vanity zones where water and acids repeat.",
     ],
     professionalContext: [
       "Hospitality, office kitchens, and heavy-use islands need more frequent neutral maintenance and sealer checks.",
@@ -690,9 +977,16 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Keep acid-class bath and mineral products away from natural stone unless stone-safe and label-approved.",
       "Stop when dullness does not respond to residue removal; it may need stone restoration.",
+      "Do not assume a polished shine means the sealer is still protecting wet or oily zones.",
+    ],
+    compatibilityNotes: [
+      "pH-neutral stone cleaning is the compatible daily lane for sealed granite.",
+      "Stone-safe degreasing is compatible only with short dwell and full removal so sealer films are not stressed.",
+      "Acidic mineral cleaners, vinegar, and abrasive powders are avoid lanes unless a stone professional has defined a compatible restoration process.",
     ],
     relatedSurfaces: [
       esSurface("natural-stone", "Natural stone", "The broader stone preservation lane."),
+      esSurface("marble", "Marble", "Acid-reactive natural stone with stricter preservation rules."),
       esSurface("countertops", "Countertops", "Daily food-contact maintenance context."),
       esSurface("quartz-countertops", "Quartz countertops", "Engineered stone with different risks."),
     ],
@@ -703,6 +997,96 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     relatedGuides: [
       guide("chemical-usage-and-safety", "Chemical usage and safety"),
       guide("when-cleaning-damages-surfaces", "When cleaning damages surfaces"),
+    ],
+  },
+  marble: {
+    ...base("marble", "Marble"),
+    summary:
+      "Marble surface guidance for acid etching, honed vs polished finishes, sealer limits, stain absorption, abrasion escalation, and long-term stone care.",
+    whatToKnowFirst:
+      "Marble is a carbonate stone, so acid contact can create actual finish damage. Treat marble as more acid-sensitive than granite and materially different from quartz.",
+    safeMethods:
+      "Use pH-neutral stone-safe cleaning, soft microfiber, minimal dwell, prompt drying, and stone-specific professional treatment for stains or etching.",
+    avoidMethods:
+      "Avoid vinegar, descalers, citrus-based cleaners, abrasive powders, generic bathroom products, and aggressive pads unless a stone restoration process has been specified.",
+    operationalSections: [
+      {
+        title: "Quartz vs granite vs marble",
+        points: [
+          "Quartz is engineered and resin-sensitive; granite is natural stone plus sealer; marble is acid-reactive and more prone to visible etching.",
+          "A quartz-safe or granite-safe cleaner should not be assumed marble-safe unless the label explicitly covers marble.",
+        ],
+      },
+      {
+        title: "Honed vs polished finishes",
+        points: [
+          "Polished marble shows etching and wipe marks quickly under side light.",
+          "Honed marble hides glare but can absorb oils and pigments more readily when the sealer is weak.",
+        ],
+      },
+      {
+        title: "Abrasion escalation",
+        points: [
+          "Scrubbing cannot remove chemical etching; it usually broadens the dull area.",
+          "Powders, pads, honing, and polishing belong to restoration, not routine cleaning.",
+        ],
+      },
+    ],
+    commonProblems: [
+      rp("etching-on-finishes", "Etching on finishes", "Acid-related dull marks."),
+      rp("surface-dullness", "Surface dullness", "Residue, wear, or etching."),
+      rp("organic-stains", "Organic stains", "Pigment or oil absorption."),
+      rp("water-spotting", "Water spotting", "Mineral or wet-zone marks requiring stone-safe handling."),
+    ],
+    recommendedTools: [
+      { name: "Soft microfiber", note: "Low-friction cleaning and dry finishing." },
+      { name: "White absorbent towel", note: "Blot spills and monitor transfer." },
+    ],
+    recommendedChemicals: [
+      { name: "pH-neutral marble-safe cleaner", note: "Default maintenance lane." },
+      { name: "Stone-specific treatment", note: "Use only for identified stain type or professional restoration." },
+    ],
+    commonMistakes: [
+      "Using vinegar or descaler to remove water marks from marble.",
+      "Trying to scrub etching back to shine.",
+      "Assuming a sealer prevents acid damage.",
+    ],
+    visualRecognition: [
+      "Dull splash-shaped marks often indicate etching.",
+      "Dark wet-looking spots indicate absorption or sealer weakness.",
+      "Circular glass rings can be etching, mineral residue, or absorption and should be diagnosed before cleaning strength increases.",
+    ],
+    maintenanceRhythm: [
+      "Blot acidic and pigmented spills immediately.",
+      "Use neutral cleaning regularly and keep water from lingering at vanity or countertop edges.",
+      "Review sealer performance and finish condition before stain work or polishing.",
+    ],
+    professionalContext: [
+      "Hospitality, bath vanity, and high-end kitchen marble need a stop-before-damage protocol because visible etching can happen quickly.",
+      "Professionals separate cleaning, poulticing, honing, polishing, and sealing into different scopes.",
+    ],
+    preservationNotes: [
+      "Treat every unknown marble finish as acid-sensitive and abrasion-sensitive.",
+      "Stop when dullness remains after neutral residue removal; the next step is stone assessment, not stronger household chemistry.",
+    ],
+    compatibilityNotes: [
+      "Neutral marble-safe cleaning is compatible with routine soil and light residue.",
+      "Acidic mineral removers, vinegar, citrus cleaners, and generic bathroom descalers are avoid lanes for marble.",
+      "Poultices, powders, honing, and polishing are professional or label-directed restoration lanes, not general maintenance compatibility.",
+    ],
+    relatedSurfaces: [
+      esSurface("natural-stone", "Natural stone", "Broader stone classification."),
+      esSurface("granite-countertops", "Granite countertops", "Sealer-aware stone with different acid behavior."),
+      esSurface("quartz-countertops", "Quartz countertops", "Engineered stone comparison."),
+    ],
+    relatedMethods: [
+      esMethod("neutral-surface-cleaning", "Neutral surface cleaning"),
+      esMethod("detail-dusting", "Detail dusting"),
+    ],
+    relatedGuides: [
+      guide("when-cleaning-damages-surfaces", "When cleaning damages surfaces"),
+      guide("chemical-usage-and-safety", "Chemical usage and safety"),
+      guide("how-to-remove-stains-safely", "How to remove stains safely"),
     ],
   },
   "natural-stone": {
@@ -738,6 +1122,20 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Recurring darkening after cleaning suggests absorption or moisture below the surface.",
         ],
       },
+      {
+        title: "Marble-specific caution",
+        points: [
+          "Marble, limestone, and travertine are carbonate stones, so acid contact can create true etching rather than removable residue.",
+          "Honed marble hides glare but absorbs and stains more visibly; polished marble shows etching quickly under side light.",
+        ],
+      },
+      {
+        title: "Quartz and granite comparison",
+        points: [
+          "Quartz belongs in an engineered-resin lane; granite belongs in a sealer-aware natural-stone lane.",
+          "A cleaner that is safe for quartz is not automatically safe for marble, and a granite sealer habit is not a quartz requirement.",
+        ],
+      },
     ],
     commonProblems: [
       rp("etching-on-finishes", "Etching on finishes", "Chemical dulling risk on acid-sensitive stone."),
@@ -767,6 +1165,7 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
       "Dry water and spills promptly.",
       "Use frequent gentle maintenance instead of infrequent aggressive cleaning.",
       "Monitor sealer performance in sink, shower, and food-prep zones.",
+      "Use longer-term stone cycles: daily neutral cleaning, periodic sealer checks, and professional restoration only when etching or wear replaces soil.",
     ],
     professionalContext: [
       "Commercial stone floors require dust control and scheduled maintenance to prevent grit abrasion.",
@@ -775,8 +1174,15 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "When stone type is unknown, treat it as acid-sensitive until identified.",
       "Do not use generic hard-water or soap-scum products on natural stone without explicit compatibility.",
+      "Treat poultices, polishing powders, and honing as restoration work rather than routine cleaning.",
+    ],
+    compatibilityNotes: [
+      "Neutral stone cleaner is the only broad compatibility lane across marble, granite, travertine, limestone, and sealed stone.",
+      "Acids are avoid for marble, limestone, and travertine; granite may still be sealer-limited even when the stone itself is less reactive.",
+      "Abrasion escalation depends on finish: honed stone may tolerate different restoration than polished stone, but both require stone-specific process control.",
     ],
     relatedSurfaces: [
+      esSurface("marble", "Marble", "Acid-reactive stone requiring stricter caution."),
       esSurface("granite-countertops", "Granite countertops"),
       esSurface("tile", "Tile"),
       esSurface("sealed-surfaces", "Sealed surfaces"),
@@ -825,6 +1231,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Heat marks and delamination are preservation issues, not cleaning targets.",
         ],
       },
+      {
+        title: "Matte vs gloss laminate",
+        points: [
+          "Gloss laminate shows streaking and cleaner film quickly, so dry finishing matters.",
+          "Matte or textured laminate hides streaks but traps grease and touch soil that needs full residue removal.",
+        ],
+      },
     ],
     commonProblems: [
       rp("grease-buildup", "Grease buildup", "Kitchen film on counters, cabinets, and edges."),
@@ -864,6 +1277,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Do not steam laminate floors or cabinet panels.",
       "Stop when marks reveal finish wear, delamination, or swelling.",
+      "Treat raised edges and bubbling as substrate failure; stronger cleaners only increase the damage path.",
+    ],
+    compatibilityNotes: [
+      "Neutral cleaning is compatible with most laminate when moisture is controlled at seams.",
+      "Mild degreasing is compatible for kitchen film when short dwell and dry finishing prevent edge saturation.",
+      "Steam, solvent-heavy spot removal, abrasive pads, and heat exposure are avoid lanes for laminate composites.",
     ],
     relatedSurfaces: [
       esSurface("cabinets", "Cabinets"),
@@ -913,6 +1332,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Repeated product layers can hide the original sheen and attract soil.",
         ],
       },
+      {
+        title: "Engineered wood vs hardwood",
+        points: [
+          "Engineered wood can have a real wood wear layer over a dimensionally different core, making edge and seam moisture especially important.",
+          "Solid hardwood gives more restoration options over its life, but routine cleaning still depends on the finish coat rather than raw wood strength.",
+        ],
+      },
     ],
     commonProblems: [
       rp("dust-buildup", "Dust buildup", "Dry soil that should be captured before damp wiping."),
@@ -951,6 +1377,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Keep moisture out of joints, end grain, veneer edges, and worn finish.",
       "Stop if color, sheen, or texture changes during cleaning.",
+      "Treat veneer lift, edge swelling, and white moisture marks as preservation issues rather than soil.",
+    ],
+    compatibilityNotes: [
+      "Dry dusting and lightly damp neutral maintenance are compatible with both engineered and solid finished wood when the finish is intact.",
+      "Water-heavy cleaning, steam, strong alkalinity, and acidic cleaners are avoid lanes because they stress finishes, cores, and seams.",
+      "Oil or polish products are compatible only when matched to the existing finish and applied after actual soil removal.",
     ],
     relatedSurfaces: [
       esSurface("hardwood", "Hardwood"),
@@ -999,6 +1431,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Overwet pads leave haze and can stress older finishes.",
         ],
       },
+      {
+        title: "Engineered wood vs hardwood",
+        points: [
+          "Engineered wood floors often have thinner wear layers, so abrasive escalation and repeated wet maintenance have less margin.",
+          "Solid hardwood can sometimes be screened or refinished, but routine cleaning should still preserve the existing finish instead of relying on future restoration.",
+        ],
+      },
     ],
     commonProblems: [
       rp("dust-buildup", "Dust buildup", "Grit that should be removed before damp cleaning."),
@@ -1028,6 +1467,7 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
       "Dry dust high-traffic lanes often.",
       "Damp-maintain with minimal product when residue or footprints appear.",
       "Use mats and grit control to reduce abrasion between cleanings.",
+      "Plan long-term cycles around finish wear: routine dust control, periodic residue reset, then professional screen/recoat before bare wood exposure.",
     ],
     professionalContext: [
       "Commercial hardwood needs scheduled dry soil control because traffic converts grit into finish wear.",
@@ -1036,6 +1476,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Do not use steam machines on hardwood.",
       "Stop if the finish becomes tacky, white, darkened, or rough during cleaning.",
+      "Treat gray traffic lanes and worn thresholds as finish-wear signals before increasing chemical strength.",
+    ],
+    compatibilityNotes: [
+      "Neutral hardwood floor cleaner is compatible when applied through a lightly damp pad and recovered before seams stay wet.",
+      "Engineered wood is a caution lane for abrasion and moisture because the wear layer and core limit restoration tolerance.",
+      "Wet mopping, steam, vinegar, high-alkaline degreasers, and abrasive pads are avoid lanes for both engineered wood and solid hardwood maintenance.",
     ],
     relatedSurfaces: [
       esSurface("finished-wood", "Finished wood"),
@@ -1084,6 +1530,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Scuffs often need controlled lift, not stronger whole-floor chemistry.",
         ],
       },
+      {
+        title: "Commercial flooring wear systems",
+        points: [
+          "Commercial vinyl may carry factory wear layers, topical finish, or maintenance coatings that respond differently to pads and chemistry.",
+          "Autoscrub, burnish, strip, and recoat decisions belong to a floor-care system, not ordinary residential mopping.",
+        ],
+      },
     ],
     commonProblems: [
       rp("floor-residue-buildup", "Floor residue buildup", "Cleaner or mop film."),
@@ -1118,10 +1571,17 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     professionalContext: [
       "Commercial vinyl needs autoscrub or controlled pad systems only when compatible with the wear layer.",
       "Professionals treat stripping, coating, and residential maintenance as separate systems.",
+      "High-traffic commercial entries need dry soil control first because grit accelerates wear-layer dullness.",
     ],
     preservationNotes: [
       "Keep steam and aggressive solvents away from seams and adhesive-sensitive areas.",
       "Stop when discoloration or dullness follows a wear pattern instead of a soil pattern.",
+      "Do not mix residential residue reset with commercial strip-and-finish assumptions.",
+    ],
+    compatibilityNotes: [
+      "Neutral floor cleaning is compatible with residential vinyl and many commercial vinyl systems when dilution and recovery are controlled.",
+      "Pads and machine agitation are compatible only after identifying the wear layer, coating system, and manufacturer floor-care lane.",
+      "Steam, aggressive solvents, black pads, and unplanned stripping are avoid lanes for unknown vinyl flooring.",
     ],
     relatedSurfaces: [
       esSurface("laminate", "Laminate"),
@@ -1132,6 +1592,98 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
       esMethod("neutral-surface-cleaning", "Neutral surface cleaning"),
       esMethod("dwell-and-lift-cleaning", "Dwell-and-lift cleaning"),
       esMethod("detail-dusting", "Detail dusting"),
+    ],
+    relatedGuides: [
+      guide("best-cleaners-for-floors", "Best cleaners for floors"),
+      guide("why-cleaning-fails", "Why cleaning fails"),
+    ],
+  },
+  "commercial-flooring": {
+    ...base("commercial-flooring", "Commercial flooring"),
+    summary:
+      "Commercial flooring guidance for wear systems, traffic soil, residue control, abrasion escalation, coated floors, and long-term maintenance cycles.",
+    whatToKnowFirst:
+      "Commercial flooring is a maintenance system, not just a surface. Wear layer, coating, finish program, traffic volume, and soil load define safe cleaning.",
+    safeMethods:
+      "Use dry soil control, neutral maintenance, correct dilution, clean recovery, and machine or pad escalation only after identifying the floor system.",
+    avoidMethods:
+      "Avoid unplanned stripping, harsh solvents, wrong pads, steam, over-alkaline cleaning, and treating every dull floor as dirty.",
+    operationalSections: [
+      {
+        title: "Commercial flooring wear systems",
+        points: [
+          "Some floors have factory wear layers, some have topical finish, and some rely on a scheduled strip-and-coat program.",
+          "Traffic soil, grit, and chemical residue can abrade or dull the system faster than routine household soil.",
+        ],
+      },
+      {
+        title: "Contamination behavior",
+        points: [
+          "Entry zones collect grit, salt, moisture, and oily traffic film.",
+          "Breakrooms and restrooms add grease, soap, mineral, and sanitizing residue.",
+          "Cleaner overuse creates tacky film that increases resoiling and slip-looking haze.",
+        ],
+      },
+      {
+        title: "Abrasion escalation",
+        points: [
+          "Pads, autoscrubbers, and burnishing are compatible only when matched to the coating or wear layer.",
+          "If dullness follows traffic lanes and does not release with residue removal, it may be wear rather than soil.",
+        ],
+      },
+    ],
+    commonProblems: [
+      rp("floor-buildup", "Floor buildup", "Traffic soil and old product."),
+      rp("floor-residue-buildup", "Floor residue buildup", "Cleaner or mop film."),
+      rp("scuff-marks", "Scuff marks", "Transfer and abrasion marks."),
+      rp("surface-dullness", "Surface dullness", "Wear, residue, or coating fatigue."),
+    ],
+    recommendedTools: [
+      { name: "Walk-off mat system", note: "Reduces grit before cleaning is needed." },
+      { name: "Microfiber mop pad", note: "Routine neutral maintenance." },
+      { name: "Floor machine or autoscrubber", note: "Only after system compatibility is known." },
+    ],
+    recommendedChemicals: [
+      { name: "Neutral floor cleaner", note: "Default maintenance for many commercial programs." },
+      { name: "System-specific restorer or stripper", note: "Only for defined floor-care programs." },
+    ],
+    commonMistakes: [
+      "Using stronger cleaner when the real issue is dirty recovery water or worn finish.",
+      "Using an aggressive pad on an unknown wear layer.",
+      "Skipping dry soil control and letting grit become abrasion.",
+    ],
+    visualRecognition: [
+      "Dull lanes that match traffic often indicate wear or embedded abrasion.",
+      "Sticky footprints after cleaning usually indicate residue or wrong dilution.",
+      "Patchy gloss can indicate coating fatigue, not uneven cleaning effort.",
+    ],
+    maintenanceRhythm: [
+      "Daily dry soil control in entries and traffic lanes.",
+      "Neutral cleaning with correct dilution and recovery on a predictable cadence.",
+      "Periodic scrub-and-recoat, burnish, or strip cycles only when the floor system calls for them.",
+    ],
+    professionalContext: [
+      "Commercial flooring needs a documented maintenance rhythm because traffic volume changes the chemistry and abrasion threshold.",
+      "Professionals identify substrate, coating, wear layer, and manufacturer system before machine escalation.",
+    ],
+    preservationNotes: [
+      "Do not strip, burnish, or autoscrub unknown flooring as a diagnostic shortcut.",
+      "Stop when finish lifts, softens, powders, or becomes uneven under a test pad.",
+    ],
+    compatibilityNotes: [
+      "Neutral maintenance is compatible with many commercial floor systems when dilution, pad, and recovery are correct.",
+      "Machine agitation is compatible only after identifying the floor type, wear layer, and coating program.",
+      "Wrong-pad abrasion, unplanned stripping, and high-alkaline correction are avoid lanes for unknown commercial flooring.",
+    ],
+    relatedSurfaces: [
+      esSurface("vinyl-flooring", "Vinyl flooring", "Common resilient floor context."),
+      esSurface("tile", "Tile", "Hard-surface floor comparison."),
+      esSurface("sealed-surfaces", "Sealed surfaces", "Coating maintenance context."),
+    ],
+    relatedMethods: [
+      esMethod("neutral-surface-cleaning", "Neutral surface cleaning"),
+      esMethod("detail-dusting", "Detail dusting"),
+      esMethod("dwell-and-lift-cleaning", "Dwell-and-lift cleaning"),
     ],
     relatedGuides: [
       guide("best-cleaners-for-floors", "Best cleaners for floors"),
@@ -1169,6 +1721,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
         points: [
           "Drywall-backed assemblies cannot be saturated.",
           "Water marks can spread if cleaning is too wet or not feathered.",
+        ],
+      },
+      {
+        title: "Matte vs gloss paint",
+        points: [
+          "Flat and matte paints are more likely to burnish or flash when scrubbed, even if the soil lifts.",
+          "Gloss and semi-gloss paints tolerate more wiping but show streaks, drip lines, and residue trails more clearly.",
         ],
       },
     ],
@@ -1210,6 +1769,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Stop if paint transfers to the towel or sheen changes.",
       "Treat recurring musty marks as moisture investigation, not repeated wiping.",
+      "Use touch-up or repainting when cleaning changes sheen faster than it removes the mark.",
+    ],
+    compatibilityNotes: [
+      "Neutral spot cleaning is compatible with washable satin and semi-gloss paint when moisture is controlled.",
+      "Matte and flat paint are caution lanes for abrasion, degreaser dwell, and repeated spot cleaning.",
+      "Strong degreasers are compatible only on confirmed washable coatings and should stay localized to grease-prone zones.",
     ],
     relatedSurfaces: [
       esSurface("painted-surfaces", "Painted surfaces"),
@@ -1259,6 +1824,13 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
           "Old or poorly bonded paint can transfer to towels under mild friction.",
         ],
       },
+      {
+        title: "Matte vs gloss finishes",
+        points: [
+          "Matte painted surfaces are appearance-sensitive because friction can polish the spot even when the surface becomes cleaner.",
+          "Gloss painted surfaces tolerate more wipe-downs but need better dry finishing to avoid visible cleaner trails.",
+        ],
+      },
     ],
     commonProblems: [
       rp("smudge-marks", "Smudge marks"),
@@ -1296,6 +1868,12 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     preservationNotes: [
       "Do not chase every scuff if the paint begins to burnish.",
       "Escalate to touch-up rather than stronger chemistry when coating wear is visible.",
+      "Treat softening, tackiness, or color transfer as a stop condition.",
+    ],
+    compatibilityNotes: [
+      "Neutral cleaning is compatible with most washable painted surfaces after a hidden-area test.",
+      "Degreasing is a caution lane reserved for kitchen grease on durable paint, not for whole-surface correction.",
+      "Abrasive pads, solvent spot removal, and long dwell are avoid lanes on matte, aged, or unknown painted finishes.",
     ],
     relatedSurfaces: [
       esSurface("painted-walls", "Painted walls"),
@@ -1557,6 +2135,7 @@ const SURFACES: Record<string, AuthoritySurfacePageData> = {
     relatedSurfaces: [
       esSurface("quartz-countertops", "Quartz countertops"),
       esSurface("granite-countertops", "Granite countertops"),
+      esSurface("marble", "Marble"),
       esSurface("laminate", "Laminate"),
       esSurface("sinks", "Sinks"),
     ],
@@ -2082,9 +2661,13 @@ const TITLE: Record<string, string> = {
   "stainless-steel": "Stainless steel",
   "quartz-countertops": "Quartz countertops",
   "granite-countertops": "Granite countertops",
+  "porcelain-tile": "Porcelain tile",
+  "ceramic-tile": "Ceramic tile",
+  marble: "Marble",
   laminate: "Laminate",
   "finished-wood": "Finished wood",
   "vinyl-flooring": "Vinyl flooring",
+  "commercial-flooring": "Commercial flooring",
   "painted-walls": "Painted walls",
   glass: "Glass",
   mirrors: "Mirrors",

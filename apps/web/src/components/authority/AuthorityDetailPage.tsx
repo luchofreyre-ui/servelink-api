@@ -194,6 +194,9 @@ function SurfaceBody({ data }: { data: AuthoritySurfacePageData }) {
       <AuthoritySection title="Preservation notes" density="compact">
         {renderList(data.preservationNotes)}
       </AuthoritySection>
+      <AuthoritySection title="Surface compatibility logic" density="compact">
+        {renderList(data.compatibilityNotes)}
+      </AuthoritySection>
       <AuthoritySection title="Common mistakes">
         <div className="space-y-2">
           {data.commonMistakes.map((m) => (
