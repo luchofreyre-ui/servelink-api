@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "npm run build:system-test-intelligence && ts-node src/main.ts",
     "build:system-test-intelligence": "npx tsc -p ../../packages/system-test-intelligence/tsconfig.json",
-    "build": "npm run build:system-test-intelligence && tsc -p tsconfig.json",
+    "write:runtime-version": "node scripts/write-runtime-version.mjs",
+    "build": "npm run build:system-test-intelligence && tsc -p tsconfig.json && npm run write:runtime-version",
     "start": "node dist/main.js",
     "test": "npm run build:system-test-intelligence && NODE_ENV=test NODE_OPTIONS=\"--localstorage-file=./.jest-localstorage.json\" jest --runInBand",
     "typecheck": "npm run build:system-test-intelligence && tsc -p tsconfig.typecheck.json",

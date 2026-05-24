@@ -2,6 +2,8 @@
 
 Operational rules for **`railway up`** / source uploads of **`servelink-api`** so experimental local files never leak into the Docker build.
 
+Railway API production is expected to use the root **`Dockerfile`** with repo-root context unless Railway service settings explicitly point elsewhere. `services/api/Dockerfile` is kept aligned as a fallback/reference path.
+
 ---
 
 ## Canonical hazard
@@ -30,6 +32,7 @@ Operational rules for **`railway up`** / source uploads of **`servelink-api`** s
 3. **STOP** if API runtime metadata cannot be proven:
    - GitHub-connected Railway deploys should use Railway-provided **`RAILWAY_GIT_COMMIT_SHA`**.
    - CLI/manual deploys must inject **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** equal to `origin/main` into the API runtime environment.
+   - Docker builds should pass **`GIT_COMMIT_SHA`** and optional **`BUILD_TIME`** as build args where Railway supports them; the API build writes a generated metadata artifact as fallback when runtime env metadata is absent.
    - **`BUILD_TIME`** is recommended for ordering evidence, but it is not a substitute for SHA parity.
 
 Resolve by **committing on a branch**, **`git stash`**, **`git clean`** (only when safe), or **moving experimental work outside the repo** (e.g. a dated quarantine folder on disk — **do not delete** uncommitted work).

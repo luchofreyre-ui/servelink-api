@@ -33,8 +33,9 @@ Explicit axioms:
 - [ ] **Known-good SHA** from **`origin/main`** (merge URL / squash merge hash documented).
 - [ ] **`npm run check:railway-api-deploy-tree`** exits **0** immediately before **CLI** API uploads (`railway-deploy-hygiene-v1.md`).
 - [ ] **Dirty-tree STOP**: no stray **`services/api/src/**`** / **`services/api/prisma/**`** uploads absent intentional commits (`railway-deploy-hygiene-v1.md`).
+- [ ] **Railway API Dockerfile path:** confirm production service settings use the root **`Dockerfile`** with repo-root context unless an explicit Railway setting says otherwise; keep `services/api/Dockerfile` aligned only as fallback/reference.
 - [ ] **API runtime metadata source:** for GitHub-connected Railway deploys, confirm **`RAILWAY_GIT_COMMIT_SHA`** is expected to populate runtime metadata; for CLI/manual deploys, inject **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** equal to the known-good `origin/main` SHA into the API runtime environment before upload.
-- [ ] **API build-time context:** set **`BUILD_TIME`** when available for evidence quality; do not treat it as commit parity proof.
+- [ ] **API build-time context:** pass **`GIT_COMMIT_SHA`** and **`BUILD_TIME`** as Docker build args when available so the generated runtime metadata artifact can serve as a fallback; do not treat `BUILD_TIME` as commit parity proof.
 - [ ] **Web parity**: when UX-critical **`NEXT_PUBLIC_*`** toggles matter — verify preview/production bundle baked flags (**UNKNOWN until inspected**) (`ENABLE_RUNTIME_MATRIX_V2.md` companion rows).
 
 ---
@@ -45,7 +46,8 @@ Follow **`production-deployment-governance-v1.md`** canonical path:
 
 1. Prefer GitHub-connected deploy **Wait-for-CI**, relying on Railway-provided **`RAILWAY_GIT_COMMIT_SHA`** for runtime version metadata.
 2. If using CLI/manual upload, run from **`git reset --hard`** clean **`origin/main`** at SHA and inject **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** equal to that SHA into the API runtime environment before deploy.
-3. Capture Railway deployment ID / timestamp / triggering actor (merge deploy discipline § Ownership).
+3. When Railway supports Docker build args for the service, also pass **`GIT_COMMIT_SHA`** and optional **`BUILD_TIME`** so the API build writes non-secret generated runtime metadata into the image.
+4. Capture Railway deployment ID / timestamp / triggering actor (merge deploy discipline § Ownership).
 
 *(Automations referenced below assume **`servelink-api`** production naming — unchanged governance posture.)*
 
