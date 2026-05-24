@@ -60,13 +60,92 @@ describe("RuntimeVersionController", () => {
     expect(serialized).not.toContain("sk_test_secret");
   });
 
+  it("uses generated metadata when env metadata is absent", () => {
+    expect(
+      buildApiRuntimeVersion(
+        {
+          NODE_ENV: "production",
+        },
+        {
+          gitSha: "abcdef1234567890abcdef1234567890abcdef12",
+          shortGitSha: "abcdef1",
+          buildTime: "2026-05-18T00:00:00.000Z",
+          source: {
+            gitSha: "generated",
+            buildTime: "generated",
+          },
+        },
+      ),
+    ).toEqual({
+      service: "servelink-api",
+      version: {
+        gitSha: "abcdef1234567890abcdef1234567890abcdef12",
+        shortGitSha: "abcdef1",
+        buildTime: "2026-05-18T00:00:00.000Z",
+        source: {
+          gitSha: "generated",
+          buildTime: "generated",
+        },
+      },
+      runtime: {
+        nodeEnv: "production",
+      },
+    });
+  });
+
+  it("prefers env metadata over generated metadata", () => {
+    expect(
+      buildApiRuntimeVersion(
+        {
+          NODE_ENV: "production",
+          GIT_COMMIT_SHA: "1111111111111111111111111111111111111111",
+          BUILD_TIME: "2026-05-19T00:00:00.000Z",
+        },
+        {
+          gitSha: "abcdef1234567890abcdef1234567890abcdef12",
+          shortGitSha: "abcdef1",
+          buildTime: "2026-05-18T00:00:00.000Z",
+          source: {
+            gitSha: "generated",
+            buildTime: "generated",
+          },
+        },
+      ),
+    ).toEqual({
+      service: "servelink-api",
+      version: {
+        gitSha: "1111111111111111111111111111111111111111",
+        shortGitSha: "1111111",
+        buildTime: "2026-05-19T00:00:00.000Z",
+        source: {
+          gitSha: "env",
+          buildTime: "env",
+        },
+      },
+      runtime: {
+        nodeEnv: "production",
+      },
+    });
+  });
+
   it("falls back to unknown for invalid or missing metadata", () => {
     expect(
-      buildApiRuntimeVersion({
-        NODE_ENV: "staging",
-        RAILWAY_GIT_COMMIT_SHA: "not a sha",
-        BUILD_TIME: "not a date",
-      }),
+      buildApiRuntimeVersion(
+        {
+          NODE_ENV: "staging",
+          RAILWAY_GIT_COMMIT_SHA: "not a sha",
+          BUILD_TIME: "not a date",
+        },
+        {
+          gitSha: "also not a sha",
+          shortGitSha: "unknown",
+          buildTime: "not a date",
+          source: {
+            gitSha: "unknown",
+            buildTime: "unknown",
+          },
+        },
+      ),
     ).toEqual({
       service: "servelink-api",
       version: {

@@ -27,10 +27,10 @@ Operational rules for **Nu Standard / Servelink** production delivery. Anti-chao
 
 - **CLI uploads:** **`railway up` ships your working tree**, including **untracked** files outside `.gitignore`. See **`docs/operations/railway-deploy-hygiene-v1.md`** before any manual upload deploy.
 - **Service:** `servelink-api` (production environment).
-- **Build:** `services/api/Dockerfile` with monorepo context as configured in Railway.
+- **Build:** Railway API production is expected to use the **root `Dockerfile`** with repo-root service context unless Railway service settings explicitly point elsewhere. `services/api/Dockerfile` is kept aligned as a fallback/reference path.
 - **Health:** Platform healthcheck uses **`/api/v1/system/readiness`** (see Railway service settings).
 - **Runtime:** API runs **`prisma migrate deploy`** before Nest boot (`services/api/src/main.ts`). Boot fails loud if migrations fail—no silent partial start.
-- **Runtime metadata:** API commit parity is proven through **`GET /api/v1/system/version`**. GitHub-connected Railway deploys should expose **`RAILWAY_GIT_COMMIT_SHA`** automatically. CLI/manual deploys must inject **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** equal to the exact `origin/main` SHA into the API runtime environment before deploy. **`BUILD_TIME`** is recommended evidence context, but it is not a substitute for SHA parity.
+- **Runtime metadata:** API commit parity is proven through **`GET /api/v1/system/version`**. GitHub-connected Railway deploys should expose **`RAILWAY_GIT_COMMIT_SHA`** automatically. CLI/manual deploys must inject **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** equal to the exact `origin/main` SHA into the API runtime environment before deploy. Docker builds may also pass **`GIT_COMMIT_SHA`** and **`BUILD_TIME`** as build args; the API build writes a generated runtime metadata artifact used only when runtime env metadata is absent. **`BUILD_TIME`** is recommended evidence context, but it is not a substitute for SHA parity.
 
 ---
 

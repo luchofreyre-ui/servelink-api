@@ -8,6 +8,11 @@
 FROM node:20-bookworm-slim
 WORKDIR /app
 
+ARG GIT_COMMIT_SHA=unknown
+ARG BUILD_TIME=unknown
+ENV GIT_COMMIT_SHA=$GIT_COMMIT_SHA
+ENV BUILD_TIME=$BUILD_TIME
+
 COPY packages/system-test-intelligence ./packages/system-test-intelligence
 COPY services/api ./services/api
 
