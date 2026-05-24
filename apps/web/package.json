@@ -17,6 +17,7 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:smoke": "playwright test tests/playwright/smoke",
+    "test:e2e:launch-mobile": "PLAYWRIGHT_LAUNCH_MOBILE_DEV_SERVER=true PLAYWRIGHT_WEB_PORT=3003 playwright test tests/playwright/smoke/launch-mobile.spec.ts --project=launch-mobile-iphone-14 --project=launch-mobile-pixel-7 --reporter=line",
     "test:e2e:fo": "playwright test tests/playwright/regression/fo tests/playwright/smoke/fo-smoke.spec.ts",
     "test:e2e:customer": "playwright test tests/playwright/regression/customer tests/playwright/smoke/customer-smoke.spec.ts",
     "test:e2e:public": "playwright test tests/playwright/regression/public tests/playwright/smoke/public-knowledge-smoke.spec.ts",
