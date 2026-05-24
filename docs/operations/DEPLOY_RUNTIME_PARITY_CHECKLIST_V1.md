@@ -33,6 +33,8 @@ Explicit axioms:
 - [ ] **Known-good SHA** from **`origin/main`** (merge URL / squash merge hash documented).
 - [ ] **`npm run check:railway-api-deploy-tree`** exits **0** immediately before **CLI** API uploads (`railway-deploy-hygiene-v1.md`).
 - [ ] **Dirty-tree STOP**: no stray **`services/api/src/**`** / **`services/api/prisma/**`** uploads absent intentional commits (`railway-deploy-hygiene-v1.md`).
+- [ ] **API runtime metadata source:** for GitHub-connected Railway deploys, confirm **`RAILWAY_GIT_COMMIT_SHA`** is expected to populate runtime metadata; for CLI/manual deploys, inject **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** equal to the known-good `origin/main` SHA into the API runtime environment before upload.
+- [ ] **API build-time context:** set **`BUILD_TIME`** when available for evidence quality; do not treat it as commit parity proof.
 - [ ] **Web parity**: when UX-critical **`NEXT_PUBLIC_*`** toggles matter — verify preview/production bundle baked flags (**UNKNOWN until inspected**) (`ENABLE_RUNTIME_MATRIX_V2.md` companion rows).
 
 ---
@@ -41,8 +43,9 @@ Explicit axioms:
 
 Follow **`production-deployment-governance-v1.md`** canonical path:
 
-1. Prefer GitHub-connected deploy **Wait-for-CI**, OR **`railway deployment up`** from **`git reset --hard`** clean **`origin/main`** at SHA.
-2. Capture Railway deployment ID / timestamp / triggering actor (merge deploy discipline § Ownership).
+1. Prefer GitHub-connected deploy **Wait-for-CI**, relying on Railway-provided **`RAILWAY_GIT_COMMIT_SHA`** for runtime version metadata.
+2. If using CLI/manual upload, run from **`git reset --hard`** clean **`origin/main`** at SHA and inject **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** equal to that SHA into the API runtime environment before deploy.
+3. Capture Railway deployment ID / timestamp / triggering actor (merge deploy discipline § Ownership).
 
 *(Automations referenced below assume **`servelink-api`** production naming — unchanged governance posture.)*
 
@@ -52,11 +55,13 @@ Follow **`production-deployment-governance-v1.md`** canonical path:
 
 | Step | Action | Pass criterion |
 |------|--------|----------------|
-| Health probe | **`GET https://<prod-api>/api/v1/system/health`** | **200** + **`db: ok`** (or documented equivalent) |
+| Health probe | **`GET https://<prod-api>/api/v1/system/health`** | **200** + service health OK |
 | Readiness | **`GET https://<prod-api>/api/v1/system/readiness`** | **200** + readiness semantics aligned Railway platform settings (`production-deployment-governance-v1.md`) |
-| API version proof | **`GET https://<prod-api>/api/v1/system/version`** | **200** + non-secret `service: "servelink-api"` and `version.gitSha` matching target `origin/main` SHA; if `unknown`, deploy parity is **not proven** |
+| API version proof | **`GET https://<prod-api>/api/v1/system/version`** | **200** + non-secret `service: "servelink-api"` and `version.gitSha` matching target `origin/main` SHA; if `unknown`, **STOP** — API runtime commit parity is **not proven** |
 | Web version proof | **`GET https://<prod-web>/api/version`** | **200** + non-secret `service: "servelink-web"` and `version.gitSha` matching target `origin/main` SHA; if `unknown`, web deploy parity is **not proven** |
 | Migrations | Railway logs tail near boot | **`=== MIGRATION COMPLETE ===`** **when migrations landed**, **`=== CONTINUING TO NEST BOOT ===`** follow-through (`production-deployment-governance-v1.md`) |
+
+`version.buildTime` is useful context for evidence ordering but is not equivalent to commit parity. A known `buildTime` with `version.gitSha: "unknown"` still fails API runtime parity proof.
 
 ---
 
@@ -89,6 +94,7 @@ Document captured timestamps / principals separately — **not embedded here.**
 - [ ] Cross-check **production web** targets API base URL verified above (**frontend/backend parity**).
 - [ ] Spot **`/book`** load — network tab shows **no systematic 404** storm on newly merged paths (`production-deployment-governance-v1.md`).
 - [ ] Compare API and web version endpoint `version.gitSha` values against the expected `origin/main` SHA. Healthy HTTP responses without matching version proof do **not** establish commit parity.
+- [ ] If Railway dashboard commit evidence is used because runtime metadata failed, record it as an explicit exception with deployment ID, deployed commit SHA, timestamp, actor, environment, and follow-up to restore `/api/v1/system/version` proof.
 
 ---
 
@@ -112,6 +118,7 @@ Document captured timestamps / principals separately — **not embedded here.**
 ## Forbidden assumptions
 
 - **`main` green ⇒ prod updated** — STOP (`production-deployment-governance-v1.md`).
+- **Railway dashboard SHA ⇒ runtime endpoint proof** — STOP unless recorded as an explicit exception; dashboard evidence is secondary to `/api/v1/system/version`.
 - **Cron code merged ⇒ cron executes** — STOP (`ENABLE_RUNTIME_MATRIX_V2.md`).
 - **Warehouse staleness ⇒ ops outage** — STOP (**warehouse staleness interpretation table**).
 - **`grep` matrix ⇒ prod env truth** — STOP (`ENABLE_RUNTIME_MATRIX_V2.md` Authority §).

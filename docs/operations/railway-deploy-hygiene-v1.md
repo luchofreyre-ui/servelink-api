@@ -20,12 +20,17 @@ Operational rules for **`railway up`** / source uploads of **`servelink-api`** s
 
 0. From the **repository root**, run **`npm run check:railway-api-deploy-tree`**. It must **exit 0** immediately before **`railway up`**.
    - **Hard stops:** anything untracked under **`services/api/src`** or **`services/api/prisma`**, or **uncommitted changes** (vs `HEAD`) under those trees plus **`services/api/package.json`**, **`services/api/package-lock.json`**, **`package.json`**, **`package-lock.json`**.
+   - **Metadata hard stops for CLI uploads:** local `HEAD` must match **`origin/main`**, and **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** must be injected into the API runtime environment with the exact `origin/main` SHA so `/api/v1/system/version` can prove the deployed commit at runtime.
    - **Warnings only:** **`apps/web`** untracked or modified paths — these **do not** fail the guard (API Docker build does not compile Next.js); treat them as separate web-deploy hygiene.
 1. Run **`git status --short`** from the repo root for human-readable context.
 2. **STOP** if **any** untracked (`??`) or unstaged/staged edits appear under:
    - **`services/api/src/`** — always deploy-critical for `tsc`.
    - **`services/api/prisma/`** — schema/migrations skew vs `main` can ship wrong DDL expectations.
    - **Root `package.json` / lockfiles** (and **`services/api/package.json`** / **`services/api/package-lock.json`**) — dependency drift vs `main`.
+3. **STOP** if API runtime metadata cannot be proven:
+   - GitHub-connected Railway deploys should use Railway-provided **`RAILWAY_GIT_COMMIT_SHA`**.
+   - CLI/manual deploys must inject **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** equal to `origin/main` into the API runtime environment.
+   - **`BUILD_TIME`** is recommended for ordering evidence, but it is not a substitute for SHA parity.
 
 Resolve by **committing on a branch**, **`git stash`**, **`git clean`** (only when safe), or **moving experimental work outside the repo** (e.g. a dated quarantine folder on disk — **do not delete** uncommitted work).
 
@@ -44,6 +49,8 @@ Resolve by **committing on a branch**, **`git stash`**, **`git clean`** (only wh
 - Working tree matches **`origin/main`** with **no** untracked deploy-risk paths under the directories above.
 
 Tracked-only experimental code still belongs on a branch — **`main`** should not carry unmerged modules.
+
+For CLI/manual uploads, clean tree alone is insufficient. The runtime proof contract requires `/api/v1/system/version` to return a non-`unknown` `version.gitSha` matching the deployed source SHA. Dashboard deployment commit evidence is secondary evidence, not a replacement, unless an explicit exception is recorded in the proof artifact.
 
 ---
 

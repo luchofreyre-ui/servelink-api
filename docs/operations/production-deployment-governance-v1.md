@@ -18,7 +18,7 @@ Operational rules for **Nu Standard / Servelink** production delivery. Anti-chao
 ## Canonical production deploy path
 
 1. **Source of truth:** `origin/main` at a **known SHA** (merge commits or squash merges as landed).
-2. **Deploy artifact:** Must match that SHA—prefer **GitHub-connected Railway deploy** from `main`, or **`railway deployment up`** only from a **clean** local tree **`git reset --hard origin/main`** (no uncommitted changes).
+2. **Deploy artifact:** Must match that SHA—prefer **GitHub-connected Railway deploy** from `main`, or **`railway deployment up`** only from a **clean** local tree **`git reset --hard origin/main`** (no uncommitted changes) with explicit API runtime metadata injected.
 3. **Never:** Deploy from a dirty working tree, unpushed branch, or “almost main.”
 
 ---
@@ -30,6 +30,7 @@ Operational rules for **Nu Standard / Servelink** production delivery. Anti-chao
 - **Build:** `services/api/Dockerfile` with monorepo context as configured in Railway.
 - **Health:** Platform healthcheck uses **`/api/v1/system/readiness`** (see Railway service settings).
 - **Runtime:** API runs **`prisma migrate deploy`** before Nest boot (`services/api/src/main.ts`). Boot fails loud if migrations fail—no silent partial start.
+- **Runtime metadata:** API commit parity is proven through **`GET /api/v1/system/version`**. GitHub-connected Railway deploys should expose **`RAILWAY_GIT_COMMIT_SHA`** automatically. CLI/manual deploys must inject **`GIT_COMMIT_SHA`** or **`COMMIT_SHA`** equal to the exact `origin/main` SHA into the API runtime environment before deploy. **`BUILD_TIME`** is recommended evidence context, but it is not a substitute for SHA parity.
 
 ---
 
@@ -58,10 +59,13 @@ Operational rules for **Nu Standard / Servelink** production delivery. Anti-chao
 
 Immediately after any production deploy:
 
-1. **`GET https://<prod-api>/api/v1/health`** → **200**, **`db`: `ok`** (or documented equivalent).
+1. **`GET https://<prod-api>/api/v1/system/health`** → **200**, service health OK.
 2. **Route existence** for critical new surfaces—e.g. expect **400** validation or **204**, **not 404**, for new POST routes; **401** **not 404** for new admin GET routes when unauthenticated.
 3. **Railway logs:** confirm **`=== MIGRATION COMPLETE ===`** and **`=== CONTINUING TO NEST BOOT ===`** on boot when schema changed.
-4. **Frontend/backend parity:** production web must target the same API base URL that was verified above; spot-check **Nu Standard** `/book` loads and **network tab** shows no systematic **404** on new API paths.
+4. **API version proof:** **`GET https://<prod-api>/api/v1/system/version`** must return non-secret `service: "servelink-api"` and a non-`unknown` `version.gitSha` matching the expected `origin/main` SHA. If `version.gitSha` is `unknown`, STOP: API runtime commit parity is not proven.
+5. **Frontend/backend parity:** production web must target the same API base URL that was verified above; spot-check **Nu Standard** `/book` loads and **network tab** shows no systematic **404** on new API paths.
+
+Dashboard commit evidence is useful secondary evidence, especially during incident reconstruction. It is not a replacement for runtime metadata unless the proof artifact explicitly records an exception, the Railway deployment ID, deployed commit SHA, timestamp, actor, environment, and why `/api/v1/system/version` could not establish parity.
 
 ---
 
