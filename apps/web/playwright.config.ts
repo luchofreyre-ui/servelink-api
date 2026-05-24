@@ -3,6 +3,7 @@ import { PLAYWRIGHT_NEST_API_ORIGIN } from "./tests/playwright/helpers/env";
 
 /** Full-corpus / pipeline / long-running checks (scheduled deep-integrity lane). */
 const DEEP_TEST_GLOBS = ["**/content.quality.spec.ts", "**/pipeline.integrity.spec.ts"] as const;
+const LAUNCH_MOBILE_TEST_GLOBS = ["**/launch-mobile.spec.ts"] as const;
 
 function resolvePlaywrightWebPort(): string {
   if (process.env.PLAYWRIGHT_WEB_PORT) {
@@ -37,6 +38,10 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL.replace(/\/$/, "");
 
 const skipWebServer =
   process.env.CI === "true" || process.env.PLAYWRIGHT_SKIP_WEBSERVER === "true";
+const useLaunchMobileDevServer = process.env.PLAYWRIGHT_LAUNCH_MOBILE_DEV_SERVER === "true";
+const webServerCommand = useLaunchMobileDevServer
+  ? `npx next dev -H 127.0.0.1 -p ${PLAYWRIGHT_WEB_PORT}`
+  : `npx next start -p ${PLAYWRIGHT_WEB_PORT}`;
 
 export default defineConfig({
   testDir: "./tests/playwright",
@@ -54,7 +59,7 @@ export default defineConfig({
     ? {}
     : {
         webServer: {
-          command: `npx next start -p ${PLAYWRIGHT_WEB_PORT}`,
+          command: webServerCommand,
           url: baseURL,
           reuseExistingServer: false,
           timeout: 120_000,
@@ -77,7 +82,7 @@ export default defineConfig({
   projects: [
     {
       name: "fast",
-      testIgnore: [...DEEP_TEST_GLOBS],
+      testIgnore: [...DEEP_TEST_GLOBS, ...LAUNCH_MOBILE_TEST_GLOBS],
       use: {
         ...devices["Desktop Chrome"],
       },
@@ -85,8 +90,27 @@ export default defineConfig({
     {
       name: "deep",
       testMatch: [...DEEP_TEST_GLOBS],
+      testIgnore: [...LAUNCH_MOBILE_TEST_GLOBS],
       use: {
         ...devices["Desktop Chrome"],
+      },
+    },
+    {
+      name: "launch-mobile-iphone-14",
+      testMatch: [...LAUNCH_MOBILE_TEST_GLOBS],
+      use: {
+        browserName: "chromium",
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+      },
+    },
+    {
+      name: "launch-mobile-pixel-7",
+      testMatch: [...LAUNCH_MOBILE_TEST_GLOBS],
+      use: {
+        ...devices["Pixel 7"],
       },
     },
   ],
