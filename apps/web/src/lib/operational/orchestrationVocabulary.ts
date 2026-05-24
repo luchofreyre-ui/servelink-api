@@ -5,7 +5,7 @@
 export const ORCHESTRATION_UX = {
   coordinationCardTitle: "Operational coordination",
   coordinationCardSubtitle:
-    "Servelink records governed operational signals after deliveries commit — nothing here auto-changes your booking or dispatches crews.",
+    "Nu Standard records governed operational signals after deliveries commit — nothing here auto-changes your booking or dispatches crews.",
   portfolioStripTitle: "Portfolio orchestration (deterministic)",
   portfolioStripSubtitle:
     "Snapshot counts across workflows — not prioritized or auto-routed.",
@@ -18,7 +18,7 @@ export const ORCHESTRATION_UX = {
   deterministicRecommendationsTitle: "What to watch next (deterministic)",
   trustBoundaryTitle: "Trust boundary",
   trustBoundaryBody:
-    "Recommendations explain persisted signals — they do not execute transitions, payments, or dispatch. Customers and crews still act only through explicit Servelink-controlled flows.",
+    "Recommendations explain persisted signals — they do not execute transitions, payments, or dispatch. Customers and crews still act only through explicit Nu Standard-controlled flows.",
   operationalIntelligenceStripTitle: "Operational intelligence (deterministic)",
   operationalIntelligenceStripSubtitle:
     "Live counts plus optional warehouse snapshots — nothing here auto-optimizes routing or billing.",

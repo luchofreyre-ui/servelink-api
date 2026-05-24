@@ -97,7 +97,7 @@ function approvalHeadline(
       return "Internal coordination checkpoint approved";
     }
     if (state === WORKFLOW_APPROVAL_RECORD_STATE.DENIED) {
-      return "Internal coordination checkpoint declined — Servelink will follow up";
+      return "Internal coordination checkpoint declined — Nu Standard will follow up";
     }
   }
   if (approvalType === WORKFLOW_APPROVAL_TYPE_BOOKING_TRANSITION_INVOKE_V1) {
@@ -128,7 +128,7 @@ function emptyDigest(): WorkflowOperationalDigestRow {
     governanceBlocked: false,
     completedSuccessfully: false,
     headlineCustomer:
-      "When Servelink records operational signals for this visit, a short summary will appear here.",
+      "When Nu Standard records operational signals for this visit, a short summary will appear here.",
     headlineFo:
       "No governed workflow row for this booking yet — deliveries still commit normally.",
     headlineAdmin:
@@ -294,7 +294,7 @@ export class WorkflowOperationalDigestService {
             : "Approval gate active",
         detail:
           params.viewerRole === "customer"
-            ? "Servelink may be confirming internal coordination before the next operational step. Your booking status on file still reflects what has already been committed."
+            ? "Nu Standard may be confirming internal coordination before the next operational step. Your booking status on file still reflects what has already been committed."
             : "Workflow engine is waiting on an explicit human approval before continuing governed steps. No autonomous mutations run from this pause.",
       });
     }
@@ -349,7 +349,7 @@ export class WorkflowOperationalDigestService {
         severity: "info",
         title: "Recurring context on file",
         detail:
-          "This booking links to recurring metadata Servelink uses for continuity — cadence does not auto-change dispatch.",
+          "This booking links to recurring metadata Nu Standard uses for continuity — cadence does not auto-change dispatch.",
       });
     }
 
@@ -425,14 +425,14 @@ export class WorkflowOperationalDigestService {
     }));
 
     let headlineCustomer =
-      "Servelink recorded operational coordination signals for this visit.";
+      "Nu Standard recorded operational coordination signals for this visit.";
     let headlineFo =
       "Governed observe workflow has recorded pipeline signals for this booking.";
     let headlineAdmin = `Workflow ${ex.workflowType} — state ${ex.state}, mode ${ex.executionMode}.`;
 
     if (waitingOnApproval) {
       headlineCustomer =
-        "Servelink is completing an internal coordination checkpoint before advancing governed operational recording.";
+        "Nu Standard is completing an internal coordination checkpoint before advancing governed operational recording.";
       headlineFo =
         "Workflow paused awaiting explicit approval — review admin approvals queue if you need status detail.";
       headlineAdmin =
