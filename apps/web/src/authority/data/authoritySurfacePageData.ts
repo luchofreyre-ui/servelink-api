@@ -1,5 +1,6 @@
 import type { AuthoritySurfacePageData } from "@/authority/types/authorityPageTypes";
 import { AUTHORITY_SURFACE_SLUGS, type AuthoritySurfaceSlug } from "@/authority/data/authorityTaxonomy";
+import { getSurfaceScienceProfile } from "@/authority/data/authoritySurfaceScienceModel";
 
 const M = (slug: string) => `/methods/${slug}`;
 const P = (slug: string) => `/problems/${slug}`;
@@ -23,9 +24,12 @@ function rp(slug: string, title: string, summary?: string) {
 }
 
 function base(slug: string, title: string): AuthoritySurfacePageData {
+  const surfaceSlug = slug as AuthoritySurfaceSlug;
+
   return {
     slug,
     title,
+    science: getSurfaceScienceProfile(surfaceSlug),
     summary: `${title}: first constraints, compatible methods, and escalation cues.`,
     whatToKnowFirst: "Finish type and manufacturer guidance define safe chemistry and moisture limits.",
     safeMethods: "Neutral maintenance, label-directed products, and controlled dwell.",
