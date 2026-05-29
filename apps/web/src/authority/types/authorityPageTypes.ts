@@ -1,5 +1,7 @@
 /** Public authority layer — educational content. */
 
+import type { AuthoritySurfaceScienceProfile } from "@/authority/types/authoritySurfaceScienceTypes";
+
 export type AuthorityEntityKind = "method" | "surface" | "guide" | "problem";
 
 export type AuthorityEntitySummary = {
@@ -72,6 +74,7 @@ export type AuthorityMethodPageData = {
 export type AuthoritySurfacePageData = {
   slug: string;
   title: string;
+  science: AuthoritySurfaceScienceProfile;
   summary: string;
   whatToKnowFirst: string;
   safeMethods: string;
