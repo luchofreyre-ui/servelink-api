@@ -54,6 +54,7 @@ import { resolveBridgeForLegacyPage } from "@/lib/encyclopedia/bridgeResolver";
 import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 import { EncyclopediaExampleImageBlock } from "@/components/encyclopedia/EncyclopediaExampleImageBlock";
 import { resolveEncyclopediaExampleImage } from "@/lib/encyclopedia/exampleImageResolver";
+import { AuthorityDensityBridgeSummary } from "./AuthorityDensityBridgeSummary";
 
 function MethodBody({ data }: { data: AuthorityMethodPageData }) {
   return (
@@ -243,6 +244,9 @@ function SurfaceBody({ data }: { data: AuthoritySurfacePageData }) {
                 >
                   Problem guide
                 </Link>
+                {data.commonProblems.some((problem) => problem.slug === slug) ? (
+                  <AuthorityDensityBridgeSummary surfaceSlug={data.slug} problemSlug={slug} />
+                ) : null}
               </li>
             ))}
           </ul>
