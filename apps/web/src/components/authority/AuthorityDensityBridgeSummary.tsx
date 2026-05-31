@@ -1,17 +1,10 @@
 import { getAuthorityDensityBridge } from "@/authority/data/authorityDensityBridgeSelectors";
+import { getAuthorityDensityPresentation } from "@/authority/data/authorityDensityPresentationSelectors";
 
 type AuthorityDensityBridgeSummaryProps = {
   surfaceSlug: string;
   problemSlug: string;
 };
-
-function formatDensityLabel(value: string): string {
-  return value
-    .split("_")
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-}
 
 export function AuthorityDensityBridgeSummary({
   surfaceSlug,
@@ -28,28 +21,19 @@ export function AuthorityDensityBridgeSummary({
     return null;
   }
 
-  const workflowStages = bridge.recommendedWorkflowStages.slice(0, 3);
+  const presentation = getAuthorityDensityPresentation(bridge);
+  const actionLabels = presentation.actionLabels.slice(0, 3);
 
   return (
     <div
       aria-label="Authority density summary"
-      className="mt-2 flex flex-wrap gap-2 text-xs leading-5 text-[#64748B]"
+      className="mt-2 space-y-1 text-xs leading-5 text-[#64748B]"
     >
-      <span className="rounded-full bg-[#F8FAFC] px-2 py-0.5">
-        Severity: {formatDensityLabel(bridge.normalizedSeverity)}
-      </span>
-      <span className="rounded-full bg-[#F8FAFC] px-2 py-0.5">
-        Confidence: {formatDensityLabel(bridge.normalizedConfidence)}
-      </span>
-      {bridge.normalizedEscalation.length ? (
-        <span className="rounded-full bg-[#F8FAFC] px-2 py-0.5">
-          Escalation: {bridge.normalizedEscalation.map(formatDensityLabel).join(", ")}
-        </span>
-      ) : null}
-      {workflowStages.length ? (
-        <span className="rounded-full bg-[#F8FAFC] px-2 py-0.5">
-          Workflow: {workflowStages.map(formatDensityLabel).join(", ")}
-        </span>
+      <div className="font-medium text-[#475569]">
+        {presentation.riskLabel} <span aria-hidden="true">·</span> {presentation.confidenceLabel}
+      </div>
+      {actionLabels.length ? (
+        <div>{actionLabels.join(" · ")}</div>
       ) : null}
     </div>
   );
