@@ -55,6 +55,7 @@ import { AuthorityTopicalCrossLinks } from "./AuthorityTopicalCrossLinks";
 import { EncyclopediaExampleImageBlock } from "@/components/encyclopedia/EncyclopediaExampleImageBlock";
 import { resolveEncyclopediaExampleImage } from "@/lib/encyclopedia/exampleImageResolver";
 import { AuthorityDensityBridgeSummary } from "./AuthorityDensityBridgeSummary";
+import { AuthoritySolutionPreview } from "./AuthoritySolutionPreview";
 import { AuthorityCompactHero } from "./AuthorityCompactHero";
 import { AuthorityRightRail } from "./AuthorityRightRail";
 import {
@@ -166,6 +167,7 @@ function SurfaceCommonIssuesSection({ data }: { data: AuthoritySurfacePageData }
                 <p className="mt-1 text-sm leading-6 text-[#64748B]">{commonProblem.summary}</p>
               ) : null}
               {commonProblem ? <AuthorityDensityBridgeSummary surfaceSlug={data.slug} problemSlug={slug} /> : null}
+              <AuthoritySolutionPreview surfaceSlug={data.slug} problemSlug={slug} />
             </li>
           );
         })}
